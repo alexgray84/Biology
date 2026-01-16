@@ -1,0 +1,1584 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IAL Biology: Calibrating an Eyepiece Graticule</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #1a5f4a;
+            --primary-light: #e8f5f0;
+            --primary-dark: #0d3d2f;
+            --accent: #f59e0b;
+            --accent-light: #fef3c7;
+            --bg: #fafbfc;
+            --surface: #ffffff;
+            --text: #1f2937;
+            --text-muted: #6b7280;
+            --border: #e5e7eb;
+            --success: #059669;
+            --success-bg: #d1fae5;
+            --error: #dc2626;
+            --error-bg: #fee2e2;
+            --info: #0369a1;
+            --info-bg: #e0f2fe;
+            --radius: 12px;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.07), 0 2px 4px -2px rgb(0 0 0 / 0.07);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.08), 0 4px 6px -4px rgb(0 0 0 / 0.08);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.7;
+            background: var(--bg);
+            color: var(--text);
+            font-size: 16px;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 3rem 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            opacity: 0.5;
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 1;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.02em;
+        }
+
+        .header .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            margin-bottom: 1.5rem;
+        }
+
+        .spec-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(255,255,255,0.15);
+            padding: 0.5rem 1rem;
+            border-radius: 2rem;
+            font-size: 0.875rem;
+            backdrop-filter: blur(4px);
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .progress-inner {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        .progress-label {
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .progress-count {
+            color: var(--text-muted);
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: var(--border);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            border-radius: 4px;
+            transition: width 0.5s ease;
+            width: 0%;
+        }
+
+        /* Main Content */
+        .main {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Learning Objectives */
+        .objectives {
+            background: var(--primary-light);
+            border: 2px solid var(--primary);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .objectives h2 {
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--primary);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .objectives ul {
+            list-style: none;
+            display: grid;
+            gap: 0.75rem;
+        }
+
+        .objectives li {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            font-size: 0.95rem;
+        }
+
+        .objectives .check {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--primary);
+            border-radius: 4px;
+            flex-shrink: 0;
+            margin-top: 2px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .objectives .check.completed {
+            background: var(--primary);
+        }
+
+        .objectives .check.completed svg {
+            opacity: 1;
+        }
+
+        .objectives .check svg {
+            width: 12px;
+            height: 12px;
+            stroke: white;
+            stroke-width: 3;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        /* Section Cards */
+        .section {
+            background: var(--surface);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+            overflow: hidden;
+        }
+
+        .section-header {
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .section-number {
+            width: 36px;
+            height: 36px;
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1rem;
+            flex-shrink: 0;
+        }
+
+        .section-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        .section-content {
+            padding: 1.5rem;
+        }
+
+        /* Video Link */
+        .video-link {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1.25rem;
+            background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+            border: 2px solid #ef4444;
+            border-radius: 12px;
+            text-decoration: none;
+            color: var(--text);
+            transition: all 0.2s;
+        }
+
+        .video-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
+        }
+
+        .video-link svg:first-child {
+            width: 40px;
+            height: 40px;
+            padding: 10px;
+            background: #ef4444;
+            border-radius: 50%;
+            stroke: white;
+            flex-shrink: 0;
+        }
+
+        .video-link span {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .video-link strong {
+            font-size: 1.05rem;
+        }
+
+        .video-link small {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        .video-link svg:last-child {
+            stroke: var(--text-muted);
+            flex-shrink: 0;
+        }
+
+        .video-tip {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: var(--accent-light);
+            border-radius: 8px;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            font-size: 0.9rem;
+        }
+
+        .video-tip svg {
+            width: 20px;
+            height: 20px;
+            stroke: var(--accent);
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        /* Equipment Diagram */
+        .diagram-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        @media (max-width: 640px) {
+            .diagram-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .diagram-card {
+            background: var(--bg);
+            border-radius: 8px;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .diagram-card h4 {
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+            color: var(--primary);
+        }
+
+        .diagram-card p {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+        }
+
+        .diagram-card svg {
+            max-width: 200px;
+            margin: 0 auto;
+        }
+
+        /* Question Boxes */
+        .question {
+            background: var(--bg);
+            border-radius: 8px;
+            padding: 1.25rem;
+            margin-bottom: 1rem;
+        }
+
+        .question:last-child {
+            margin-bottom: 0;
+        }
+
+        .question-label {
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
+        }
+
+        .question-label .marks {
+            margin-left: auto;
+            background: var(--primary);
+            color: white;
+            font-size: 0.75rem;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-weight: 500;
+        }
+
+        .hint-toggle {
+            background: none;
+            border: none;
+            color: var(--info);
+            font-size: 0.85rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            margin-top: 0.5rem;
+            font-family: inherit;
+        }
+
+        .hint-toggle:hover {
+            text-decoration: underline;
+        }
+
+        .hint-box {
+            background: var(--info-bg);
+            border-left: 3px solid var(--info);
+            padding: 0.75rem 1rem;
+            margin-top: 0.75rem;
+            font-size: 0.9rem;
+            border-radius: 0 6px 6px 0;
+            display: none;
+        }
+
+        .hint-box.visible {
+            display: block;
+        }
+
+        /* Inputs */
+        input[type="text"],
+        input[type="number"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 1rem;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            background: white;
+        }
+
+        input:focus,
+        textarea:focus,
+        select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px var(--primary-light);
+        }
+
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .inline-input {
+            width: 100px;
+            display: inline-block;
+            text-align: center;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* Calculation Box */
+        .calc-box {
+            background: white;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            padding: 1.25rem;
+            margin: 1rem 0;
+        }
+
+        .calc-formula {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.1rem;
+            text-align: center;
+            padding: 1rem;
+            background: var(--bg);
+            border-radius: 6px;
+            margin-bottom: 1rem;
+        }
+
+        .calc-step {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.625rem 1.25rem;
+            border: none;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+        }
+
+        .btn-secondary {
+            background: var(--bg);
+            color: var(--text);
+            border: 2px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        /* Feedback */
+        .feedback {
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            margin-top: 0.75rem;
+            display: none;
+            align-items: flex-start;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .feedback.visible {
+            display: flex;
+        }
+
+        .feedback.correct {
+            background: var(--success-bg);
+            color: var(--success);
+        }
+
+        .feedback.incorrect {
+            background: var(--error-bg);
+            color: var(--error);
+        }
+
+        .feedback svg {
+            width: 18px;
+            height: 18px;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+
+        /* Key Terms */
+        .key-term {
+            background: var(--accent-light);
+            padding: 0.1rem 0.4rem;
+            border-radius: 4px;
+            font-weight: 600;
+            color: #92400e;
+        }
+
+        /* Info Callout */
+        .callout {
+            padding: 1rem 1.25rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+        }
+
+        .callout svg {
+            width: 20px;
+            height: 20px;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .callout-info {
+            background: var(--info-bg);
+            border-left: 3px solid var(--info);
+        }
+
+        .callout-info svg {
+            stroke: var(--info);
+        }
+
+        .callout-warning {
+            background: var(--accent-light);
+            border-left: 3px solid var(--accent);
+        }
+
+        .callout-warning svg {
+            stroke: var(--accent);
+        }
+
+        .callout-success {
+            background: var(--success-bg);
+            border-left: 3px solid var(--success);
+        }
+
+        .callout-success svg {
+            stroke: var(--success);
+        }
+
+        /* Command Words */
+        .command-words {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .command-word {
+            background: var(--bg);
+            padding: 1rem;
+            border-radius: 8px;
+            border-left: 3px solid var(--primary);
+        }
+
+        .command-word strong {
+            display: block;
+            color: var(--primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .command-word span {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+        }
+
+        /* Misconceptions */
+        .misconception {
+            background: var(--error-bg);
+            border-radius: 8px;
+            padding: 1rem 1.25rem;
+            margin: 0.75rem 0;
+        }
+
+        .misconception-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+            color: var(--error);
+            margin-bottom: 0.5rem;
+        }
+
+        .misconception-header svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .correction {
+            background: var(--success-bg);
+            padding: 0.75rem 1rem;
+            border-radius: 6px;
+            margin-top: 0.75rem;
+            font-size: 0.9rem;
+        }
+
+        .correction strong {
+            color: var(--success);
+        }
+
+        /* Exam Practice */
+        .exam-question {
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            overflow: hidden;
+            margin: 1rem 0;
+        }
+
+        .exam-header {
+            background: var(--bg);
+            padding: 0.75rem 1rem;
+            border-bottom: 2px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .exam-type {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        .exam-marks {
+            background: var(--primary);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .exam-body {
+            padding: 1.25rem;
+        }
+
+        .mark-scheme {
+            background: var(--bg);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-top: 1rem;
+            display: none;
+        }
+
+        .mark-scheme.visible {
+            display: block;
+        }
+
+        .mark-scheme h5 {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--primary);
+            margin-bottom: 0.75rem;
+        }
+
+        .mark-scheme ul {
+            list-style: none;
+        }
+
+        .mark-scheme li {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .mark-scheme li:last-child {
+            border-bottom: none;
+        }
+
+        .mark-scheme .tick {
+            color: var(--success);
+            font-weight: bold;
+        }
+
+        /* Self Assessment */
+        .self-assessment {
+            background: linear-gradient(135deg, var(--primary-light), #f0fdf4);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .self-assessment h3 {
+            font-size: 1.1rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .assessment-grid {
+            display: grid;
+            gap: 0.75rem;
+        }
+
+        .assessment-item {
+            background: white;
+            padding: 1rem;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .assessment-item input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            accent-color: var(--primary);
+        }
+
+        .assessment-item label {
+            flex: 1;
+            cursor: pointer;
+        }
+
+        .confidence-select {
+            width: auto;
+            padding: 0.4rem 0.75rem;
+            font-size: 0.85rem;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-muted);
+            font-size: 0.875rem;
+            border-top: 1px solid var(--border);
+            margin-top: 2rem;
+        }
+
+        .footer a {
+            color: var(--primary);
+        }
+
+        /* Animations */
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .section {
+            animation: slideIn 0.4s ease-out;
+        }
+
+        /* Print Styles */
+        @media print {
+            .progress-container,
+            .video-wrapper,
+            .btn,
+            .hint-toggle {
+                display: none;
+            }
+            
+            .section {
+                break-inside: avoid;
+                box-shadow: none;
+                border: 1px solid #ddd;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="header">
+        <div class="header-content">
+            <h1>🔬 Calibrating an Eyepiece Graticule</h1>
+            <p class="subtitle">Practical Skills Workbook for IAL Biology</p>
+            <div class="spec-badge">
+                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+                Core Practical • Unit 1 • Measuring Cells
+            </div>
+        </div>
+    </header>
+
+    <div class="progress-container">
+        <div class="progress-inner">
+            <div class="progress-header">
+                <span class="progress-label">Your Progress</span>
+                <span class="progress-count"><span id="completed-count">0</span> of <span id="total-count">8</span> tasks complete</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill"></div>
+            </div>
+        </div>
+    </div>
+
+    <main class="main">
+
+        <!-- Learning Objectives -->
+        <div class="objectives">
+            <h2>
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+                </svg>
+                Learning Objectives
+            </h2>
+            <ul>
+                <li>
+                    <span class="check" data-obj="1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"/></svg></span>
+                    <span>Identify the eyepiece graticule and stage micrometer, explaining their functions</span>
+                </li>
+                <li>
+                    <span class="check" data-obj="2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"/></svg></span>
+                    <span>Calculate the calibration value for one eyepiece division</span>
+                </li>
+                <li>
+                    <span class="check" data-obj="3"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"/></svg></span>
+                    <span>Use the calibrated graticule to measure real specimens</span>
+                </li>
+                <li>
+                    <span class="check" data-obj="4"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"/></svg></span>
+                    <span>Explain why recalibration is needed when magnification changes</span>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Section 1: Video -->
+        <section class="section" id="section-1">
+            <div class="section-header">
+                <span class="section-number">1</span>
+                <h2 class="section-title">Watch the Tutorial</h2>
+            </div>
+            <div class="section-content">
+                <p style="margin-bottom: 1rem;">Watch the video carefully and take notes. You'll need this information to complete the questions below.</p>
+                
+                <a href="https://youtu.be/EZ8-91NNkoQ?si=FkdH4b_vSg3L6vrG" target="_blank" class="video-link">
+                    <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <polygon points="5 3 19 12 5 21 5 3"/>
+                    </svg>
+                    <span>
+                        <strong>Watch: Calibrating an Eyepiece Graticule</strong>
+                        <small>by Vanessa Christian • Opens in YouTube</small>
+                    </span>
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/>
+                    </svg>
+                </a>
+                
+                <div class="video-tip">
+                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    <div>
+                        <strong>Tip:</strong> Pay special attention at <strong>01:30</strong> (aligning the scales) and <strong>03:30</strong> (why recalibration matters). Pause and replay these sections if needed.
+                    </div>
+                </div>
+
+                <div class="question" style="margin-top: 1.5rem;">
+                    <label class="question-label">
+                        <span>✓ Tick when you've watched the full video:</span>
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                        <input type="checkbox" id="video-watched" onchange="updateProgress()" style="width: 20px; height: 20px; accent-color: var(--primary);">
+                        <span>I have watched and understood the video</span>
+                    </label>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: Equipment -->
+        <section class="section" id="section-2">
+            <div class="section-header">
+                <span class="section-number">2</span>
+                <h2 class="section-title">Understanding the Equipment</h2>
+            </div>
+            <div class="section-content">
+                
+                <p>Before we begin calculations, you need to understand the two key pieces of equipment used in calibration.</p>
+
+                <div class="diagram-container">
+                    <div class="diagram-card">
+                        <h4>Eyepiece Graticule</h4>
+                        <p>A glass disc with an arbitrary scale</p>
+                        <svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="100" cy="100" r="90" stroke="#1a5f4a" stroke-width="3" fill="#e8f5f0"/>
+                            <line x1="20" y1="100" x2="180" y2="100" stroke="#1a5f4a" stroke-width="2"/>
+                            <g stroke="#1a5f4a" stroke-width="1.5">
+                                <line x1="30" y1="95" x2="30" y2="105"/>
+                                <line x1="45" y1="97" x2="45" y2="103"/>
+                                <line x1="60" y1="95" x2="60" y2="105"/>
+                                <line x1="75" y1="97" x2="75" y2="103"/>
+                                <line x1="90" y1="95" x2="90" y2="105"/>
+                                <line x1="105" y1="97" x2="105" y2="103"/>
+                                <line x1="120" y1="95" x2="120" y2="105"/>
+                                <line x1="135" y1="97" x2="135" y2="103"/>
+                                <line x1="150" y1="95" x2="150" y2="105"/>
+                                <line x1="165" y1="97" x2="165" y2="103"/>
+                            </g>
+                            <text x="100" y="130" text-anchor="middle" font-size="11" fill="#1a5f4a" font-family="DM Sans">Arbitrary units</text>
+                        </svg>
+                    </div>
+                    <div class="diagram-card">
+                        <h4>Stage Micrometer</h4>
+                        <p>A slide with a precise, known scale</p>
+                        <svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <rect x="10" y="70" width="180" height="60" rx="4" stroke="#1a5f4a" stroke-width="2" fill="#f0fdf4"/>
+                            <line x1="30" y1="90" x2="170" y2="90" stroke="#1a5f4a" stroke-width="2"/>
+                            <g stroke="#1a5f4a" stroke-width="1.5">
+                                <line x1="30" y1="85" x2="30" y2="95"/>
+                                <line x1="44" y1="87" x2="44" y2="93"/>
+                                <line x1="58" y1="85" x2="58" y2="95"/>
+                                <line x1="72" y1="87" x2="72" y2="93"/>
+                                <line x1="86" y1="85" x2="86" y2="95"/>
+                                <line x1="100" y1="87" x2="100" y2="93"/>
+                                <line x1="114" y1="85" x2="114" y2="95"/>
+                                <line x1="128" y1="87" x2="128" y2="93"/>
+                                <line x1="142" y1="85" x2="142" y2="95"/>
+                                <line x1="156" y1="87" x2="156" y2="93"/>
+                                <line x1="170" y1="85" x2="170" y2="95"/>
+                            </g>
+                            <text x="30" y="110" font-size="9" fill="#1a5f4a" font-family="DM Sans">0</text>
+                            <text x="95" y="110" font-size="9" fill="#1a5f4a" font-family="DM Sans">50µm</text>
+                            <text x="160" y="110" font-size="9" fill="#1a5f4a" font-family="DM Sans">100µm</text>
+                        </svg>
+                    </div>
+                </div>
+
+                <div class="callout callout-info">
+                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <circle cx="12" cy="12" r="10"/><path d="M12 16v-4m0-4h.01"/>
+                    </svg>
+                    <div>
+                        <strong>Key difference:</strong> The stage micrometer has <em>real</em> measurements (micrometers), while the eyepiece graticule has <em>arbitrary</em> divisions with no inherent value — that's why we need to calibrate it!
+                    </div>
+                </div>
+
+                <div class="question">
+                    <label class="question-label">Where is the eyepiece graticule placed?</label>
+                    <input type="text" id="q1" placeholder="Type your answer...">
+                    <button class="btn btn-primary" style="margin-top: 0.75rem;" onclick="checkQ1()">Check Answer</button>
+                    <div class="feedback" id="q1-feedback"></div>
+                </div>
+
+                <div class="question">
+                    <label class="question-label">Where is the stage micrometer placed?</label>
+                    <input type="text" id="q2" placeholder="Type your answer...">
+                    <button class="btn btn-primary" style="margin-top: 0.75rem;" onclick="checkQ2()">Check Answer</button>
+                    <div class="feedback" id="q2-feedback"></div>
+                </div>
+
+                <div class="question">
+                    <label class="question-label">Which tool has the known, absolute scale?</label>
+                    <select id="q3">
+                        <option value="">Select an answer...</option>
+                        <option value="graticule">Eyepiece Graticule</option>
+                        <option value="micrometer">Stage Micrometer</option>
+                    </select>
+                    <button class="btn btn-primary" style="margin-top: 0.75rem;" onclick="checkQ3()">Check Answer</button>
+                    <div class="feedback" id="q3-feedback"></div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Section 3: Calibration Calculation -->
+        <section class="section" id="section-3">
+            <div class="section-header">
+                <span class="section-number">3</span>
+                <h2 class="section-title">The Calibration Calculation</h2>
+            </div>
+            <div class="section-content">
+
+                <p>To measure specimens, we need to find the <span class="key-term">calibration value</span> — how many micrometers (µm) one division on the eyepiece graticule represents.</p>
+
+                <div class="callout callout-warning">
+                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                    </svg>
+                    <div>
+                        <strong>Common exam mistake:</strong> Students often get the formula upside-down. Remember: we're finding µm <em>per</em> division, so stage micrometer value goes on <strong>top</strong>.
+                    </div>
+                </div>
+
+                <div class="calc-box">
+                    <div class="calc-formula">
+                        Calibration value = <sup>Stage micrometer reading (µm)</sup>/<sub>Number of graticule divisions</sub>
+                    </div>
+                </div>
+
+                <h4 style="margin: 1.5rem 0 1rem;">Worked Example (from the video)</h4>
+                
+                <p>The video shows that when the scales are aligned:</p>
+                <ul style="margin: 0.75rem 0 1rem 1.5rem;">
+                    <li><strong>10 divisions</strong> on the eyepiece graticule align with...</li>
+                    <li><strong>22 µm</strong> on the stage micrometer</li>
+                </ul>
+
+                <div class="question">
+                    <label class="question-label">
+                        <span>Calculate the calibration value (µm per division):</span>
+                        <span class="marks">1 mark</span>
+                    </label>
+                    <div class="calc-step">
+                        <span>22 µm ÷ 10 divisions =</span>
+                        <input type="number" step="0.1" class="inline-input" id="calc1" placeholder="?">
+                        <span>µm per division</span>
+                    </div>
+                    <button class="btn btn-primary" style="margin-top: 0.75rem;" onclick="checkCalc1()">Check Answer</button>
+                    <div class="feedback" id="calc1-feedback"></div>
+                </div>
+
+                <h4 style="margin: 1.5rem 0 1rem;">Practice Problem</h4>
+
+                <div class="question">
+                    <label class="question-label">
+                        <span>A student observes that 25 eyepiece divisions align with 50 µm on the stage micrometer. What is the calibration value?</span>
+                        <span class="marks">1 mark</span>
+                    </label>
+                    <div class="calc-step">
+                        <input type="number" step="0.1" class="inline-input" id="calc2" placeholder="?">
+                        <span>µm per division</span>
+                    </div>
+                    <button class="hint-toggle" onclick="toggleHint('hint1')">💡 Show hint</button>
+                    <div class="hint-box" id="hint1">
+                        Use the formula: 50 µm ÷ 25 divisions = ?
+                    </div>
+                    <button class="btn btn-primary" style="margin-top: 0.75rem;" onclick="checkCalc2()">Check Answer</button>
+                    <div class="feedback" id="calc2-feedback"></div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Section 4: Measuring Specimens -->
+        <section class="section" id="section-4">
+            <div class="section-header">
+                <span class="section-number">4</span>
+                <h2 class="section-title">Measuring a Specimen</h2>
+            </div>
+            <div class="section-content">
+
+                <p>Once calibrated, the stage micrometer is removed and replaced with your specimen slide. Now you can measure!</p>
+
+                <div class="calc-box">
+                    <div class="calc-formula">
+                        Actual size = Number of graticule divisions × Calibration value
+                    </div>
+                </div>
+
+                <h4 style="margin: 1.5rem 0 1rem;">From the Video</h4>
+                <p>The video shows a stoma (plant pore) that spans <strong>5 divisions</strong> on the calibrated eyepiece graticule.</p>
+
+                <div class="question">
+                    <label class="question-label">
+                        <span>Using the calibration value of 2.2 µm per division, calculate the actual length of the stoma:</span>
+                        <span class="marks">1 mark</span>
+                    </label>
+                    <div class="calc-step">
+                        <span>5 divisions × 2.2 µm =</span>
+                        <input type="number" step="0.1" class="inline-input" id="calc3" placeholder="?">
+                        <span>µm</span>
+                    </div>
+                    <button class="btn btn-primary" style="margin-top: 0.75rem;" onclick="checkCalc3()">Check Answer</button>
+                    <div class="feedback" id="calc3-feedback"></div>
+                </div>
+
+                <h4 style="margin: 1.5rem 0 1rem;">Practice Problems</h4>
+
+                <div class="question">
+                    <label class="question-label">
+                        <span>A red blood cell spans 3.5 divisions. Using a calibration of 2.0 µm per division, what is its diameter?</span>
+                        <span class="marks">1 mark</span>
+                    </label>
+                    <input type="number" step="0.1" id="calc4" placeholder="Answer in µm">
+                    <button class="btn btn-primary" style="margin-top: 0.75rem;" onclick="checkCalc4()">Check Answer</button>
+                    <div class="feedback" id="calc4-feedback"></div>
+                </div>
+
+                <div class="question">
+                    <label class="question-label">
+                        <span>A chloroplast measures 2 divisions. The calibration value is 2.5 µm per division. Calculate the size in µm, then convert to mm.</span>
+                        <span class="marks">2 marks</span>
+                    </label>
+                    <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                        <div>
+                            <label style="font-size: 0.85rem; color: var(--text-muted);">Size in µm:</label>
+                            <input type="number" step="0.1" id="calc5a" placeholder="?" style="width: 120px;">
+                        </div>
+                        <div>
+                            <label style="font-size: 0.85rem; color: var(--text-muted);">Size in mm:</label>
+                            <input type="number" step="0.0001" id="calc5b" placeholder="?" style="width: 120px;">
+                        </div>
+                    </div>
+                    <button class="hint-toggle" onclick="toggleHint('hint2')">💡 Show hint</button>
+                    <div class="hint-box" id="hint2">
+                        Remember: 1 mm = 1000 µm. To convert µm to mm, divide by 1000.
+                    </div>
+                    <button class="btn btn-primary" style="margin-top: 0.75rem;" onclick="checkCalc5()">Check Answer</button>
+                    <div class="feedback" id="calc5-feedback"></div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Section 5: Critical Understanding -->
+        <section class="section" id="section-5">
+            <div class="section-header">
+                <span class="section-number">5</span>
+                <h2 class="section-title">Why Recalibration Matters</h2>
+            </div>
+            <div class="section-content">
+
+                <p>This is a crucial concept that examiners love to test. Understanding <em>why</em> is more important than just knowing the rule.</p>
+
+                <div class="callout callout-warning">
+                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                    </svg>
+                    <div>
+                        <strong>The Rule:</strong> You MUST recalibrate the eyepiece graticule every time you change the objective lens (magnification).
+                    </div>
+                </div>
+
+                <div class="question">
+                    <label class="question-label">
+                        <span>Explain why the microscope needs recalibrating when you change magnification:</span>
+                        <span class="marks">3 marks</span>
+                    </label>
+                    <textarea id="q-explain" placeholder="Think about what happens to the image of the stage micrometer when you increase magnification..."></textarea>
+                    <button class="hint-toggle" onclick="toggleHint('hint3')">💡 Show hint</button>
+                    <div class="hint-box" id="hint3">
+                        Consider: The eyepiece graticule is inside the eyepiece — does it change when you switch objectives? What about the image of the specimen/stage micrometer?
+                    </div>
+                    <button class="btn btn-secondary" style="margin-top: 0.75rem;" onclick="showModelAnswer()">Show Model Answer</button>
+                    <div class="mark-scheme" id="model-answer">
+                        <h5>Model Answer (3 marks)</h5>
+                        <ul>
+                            <li><span class="tick">✓</span> The eyepiece graticule remains the same size (it's fixed inside the eyepiece)</li>
+                            <li><span class="tick">✓</span> When magnification increases, the image of the specimen/stage micrometer appears larger</li>
+                            <li><span class="tick">✓</span> Therefore, fewer graticule divisions will cover the same actual distance, changing the calibration value</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h4 style="margin: 1.5rem 0 1rem;">Common Misconceptions</h4>
+
+                <div class="misconception">
+                    <div class="misconception-header">
+                        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12"/></svg>
+                        "The graticule divisions get bigger at higher magnification"
+                    </div>
+                    <div class="correction">
+                        <strong>✓ Actually:</strong> The graticule never changes size — it's a physical piece of glass in the eyepiece. Only the <em>image</em> of the specimen changes size.
+                    </div>
+                </div>
+
+                <div class="misconception">
+                    <div class="misconception-header">
+                        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12"/></svg>
+                        "You only need to calibrate once per microscope"
+                    </div>
+                    <div class="correction">
+                        <strong>✓ Actually:</strong> You need to calibrate for <em>each magnification</em> you use. The calibration value will be different at ×100 vs ×400.
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Section 6: Exam Practice -->
+        <section class="section" id="section-6">
+            <div class="section-header">
+                <span class="section-number">6</span>
+                <h2 class="section-title">Exam-Style Questions</h2>
+            </div>
+            <div class="section-content">
+
+                <div class="command-words">
+                    <div class="command-word">
+                        <strong>Calculate</strong>
+                        <span>Work out using numbers given; show your working</span>
+                    </div>
+                    <div class="command-word">
+                        <strong>Explain</strong>
+                        <span>Give reasons for; say how or why something happens</span>
+                    </div>
+                    <div class="command-word">
+                        <strong>Describe</strong>
+                        <span>Give an account of; say what happens without explaining why</span>
+                    </div>
+                </div>
+
+                <div class="exam-question">
+                    <div class="exam-header">
+                        <span class="exam-type">Extended Response</span>
+                        <span class="exam-marks">6 marks</span>
+                    </div>
+                    <div class="exam-body">
+                        <p style="margin-bottom: 1rem;"><strong>Question:</strong> A student is using a light microscope to measure the diameter of onion epidermal cells. Describe how they would calibrate the eyepiece graticule and use it to measure cells at ×400 magnification.</p>
+                        <textarea id="exam1" placeholder="Write your answer here..." style="min-height: 150px;"></textarea>
+                        <button class="btn btn-secondary" style="margin-top: 0.75rem;" onclick="toggleMarkScheme('ms1')">Show Mark Scheme</button>
+                        <div class="mark-scheme" id="ms1">
+                            <h5>Mark Scheme (6 marks)</h5>
+                            <ul>
+                                <li><span class="tick">✓</span> Place stage micrometer on stage / eyepiece graticule in eyepiece</li>
+                                <li><span class="tick">✓</span> Focus on stage micrometer at ×400 magnification</li>
+                                <li><span class="tick">✓</span> Align the two scales / line up the zeros</li>
+                                <li><span class="tick">✓</span> Count where another line aligns / record how many graticule divisions match a known distance</li>
+                                <li><span class="tick">✓</span> Calculate: calibration value = stage micrometer reading ÷ number of graticule divisions</li>
+                                <li><span class="tick">✓</span> Replace stage micrometer with specimen, count divisions across cell, multiply by calibration value</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="exam-question">
+                    <div class="exam-header">
+                        <span class="exam-type">Calculation</span>
+                        <span class="exam-marks">3 marks</span>
+                    </div>
+                    <div class="exam-body">
+                        <p style="margin-bottom: 1rem;"><strong>Question:</strong> A student calibrates their microscope and finds that 40 eyepiece divisions align with 100 µm on the stage micrometer. They then measure a plant cell that spans 18 eyepiece divisions.</p>
+                        <p style="margin-bottom: 0.5rem;"><strong>(a)</strong> Calculate the calibration value. [1 mark]</p>
+                        <input type="number" step="0.01" id="exam2a" placeholder="µm per division">
+                        <p style="margin: 1rem 0 0.5rem;"><strong>(b)</strong> Calculate the actual length of the plant cell in µm. [1 mark]</p>
+                        <input type="number" step="0.1" id="exam2b" placeholder="µm">
+                        <p style="margin: 1rem 0 0.5rem;"><strong>(c)</strong> Express your answer in standard form. [1 mark]</p>
+                        <input type="text" id="exam2c" placeholder="e.g., 4.5 × 10⁻²">
+                        <button class="btn btn-primary" style="margin-top: 0.75rem;" onclick="checkExam2()">Check Answers</button>
+                        <div class="feedback" id="exam2-feedback"></div>
+                        <div class="mark-scheme" id="ms2">
+                            <h5>Answers</h5>
+                            <ul>
+                                <li><span class="tick">✓</span> (a) 2.5 µm per division (100 ÷ 40)</li>
+                                <li><span class="tick">✓</span> (b) 45 µm (18 × 2.5)</li>
+                                <li><span class="tick">✓</span> (c) 4.5 × 10¹ µm (or 4.5 × 10⁻² mm)</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Self Assessment -->
+        <div class="self-assessment">
+            <h3>
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+                Self-Assessment Checklist
+            </h3>
+            <div class="assessment-grid">
+                <div class="assessment-item">
+                    <input type="checkbox" id="sa1">
+                    <label for="sa1">I can identify the eyepiece graticule and stage micrometer</label>
+                    <select class="confidence-select" id="conf1">
+                        <option value="">Confidence?</option>
+                        <option value="1">🔴 Not confident</option>
+                        <option value="2">🟡 Somewhat</option>
+                        <option value="3">🟢 Confident</option>
+                    </select>
+                </div>
+                <div class="assessment-item">
+                    <input type="checkbox" id="sa2">
+                    <label for="sa2">I can calculate a calibration value from measurements</label>
+                    <select class="confidence-select" id="conf2">
+                        <option value="">Confidence?</option>
+                        <option value="1">🔴 Not confident</option>
+                        <option value="2">🟡 Somewhat</option>
+                        <option value="3">🟢 Confident</option>
+                    </select>
+                </div>
+                <div class="assessment-item">
+                    <input type="checkbox" id="sa3">
+                    <label for="sa3">I can use the calibration value to find actual specimen size</label>
+                    <select class="confidence-select" id="conf3">
+                        <option value="">Confidence?</option>
+                        <option value="1">🔴 Not confident</option>
+                        <option value="2">🟡 Somewhat</option>
+                        <option value="3">🟢 Confident</option>
+                    </select>
+                </div>
+                <div class="assessment-item">
+                    <input type="checkbox" id="sa4">
+                    <label for="sa4">I understand why recalibration is needed when magnification changes</label>
+                    <select class="confidence-select" id="conf4">
+                        <option value="">Confidence?</option>
+                        <option value="1">🔴 Not confident</option>
+                        <option value="2">🟡 Somewhat</option>
+                        <option value="3">🟢 Confident</option>
+                    </select>
+                </div>
+                <div class="assessment-item">
+                    <input type="checkbox" id="sa5">
+                    <label for="sa5">I can convert between µm and mm</label>
+                    <select class="confidence-select" id="conf5">
+                        <option value="">Confidence?</option>
+                        <option value="1">🔴 Not confident</option>
+                        <option value="2">🟡 Somewhat</option>
+                        <option value="3">🟢 Confident</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <footer class="footer">
+        <p>Digital workbook based on the tutorial by <a href="https://www.youtube.com/watch?v=EZ8-91NNkoQ" target="_blank">Vanessa Christian</a></p>
+        <p style="margin-top: 0.5rem;">Created for IAL Biology students • Core Practical Skills</p>
+    </footer>
+
+    <script>
+        // Progress tracking
+        let completedTasks = new Set();
+        const totalTasks = 8;
+
+        function updateProgress() {
+            // Check video watched
+            if (document.getElementById('video-watched').checked) {
+                completedTasks.add('video');
+                markObjective(1);
+            } else {
+                completedTasks.delete('video');
+            }
+            
+            updateProgressBar();
+        }
+
+        function updateProgressBar() {
+            const count = completedTasks.size;
+            document.getElementById('completed-count').textContent = count;
+            document.getElementById('progress-fill').style.width = `${(count / totalTasks) * 100}%`;
+        }
+
+        function markObjective(num) {
+            const check = document.querySelector(`.check[data-obj="${num}"]`);
+            if (check) check.classList.add('completed');
+        }
+
+        // Hint toggles
+        function toggleHint(id) {
+            const hint = document.getElementById(id);
+            hint.classList.toggle('visible');
+        }
+
+        // Show model answer
+        function showModelAnswer() {
+            document.getElementById('model-answer').classList.add('visible');
+            completedTasks.add('explain');
+            markObjective(4);
+            updateProgressBar();
+        }
+
+        // Toggle mark scheme
+        function toggleMarkScheme(id) {
+            document.getElementById(id).classList.toggle('visible');
+        }
+
+        // Question checking functions
+        function showFeedback(id, correct, message) {
+            const fb = document.getElementById(id);
+            fb.innerHTML = `
+                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    ${correct 
+                        ? '<path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>' 
+                        : '<path d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"/>'}
+                </svg>
+                <span>${message}</span>
+            `;
+            fb.className = `feedback visible ${correct ? 'correct' : 'incorrect'}`;
+        }
+
+        function checkQ1() {
+            const val = document.getElementById('q1').value.toLowerCase();
+            const correct = val.includes('eyepiece') || val.includes('inside') || val.includes('within');
+            showFeedback('q1-feedback', correct, 
+                correct ? 'Correct! The graticule sits inside the eyepiece lens.' 
+                        : 'Not quite. Think about where "eyepiece" graticule might go...');
+            if (correct) {
+                completedTasks.add('q1');
+                updateProgressBar();
+            }
+        }
+
+        function checkQ2() {
+            const val = document.getElementById('q2').value.toLowerCase();
+            const correct = val.includes('stage') || val.includes('platform');
+            showFeedback('q2-feedback', correct,
+                correct ? 'Correct! The stage micrometer is placed on the microscope stage.' 
+                        : 'Not quite. Where does a "stage" micrometer go?');
+            if (correct) {
+                completedTasks.add('q2');
+                updateProgressBar();
+            }
+        }
+
+        function checkQ3() {
+            const val = document.getElementById('q3').value;
+            const correct = val === 'micrometer';
+            showFeedback('q3-feedback', correct,
+                correct ? 'Correct! The stage micrometer has real, calibrated measurements in micrometers.' 
+                        : 'Not quite. The graticule has arbitrary divisions — the micrometer has the known scale.');
+            if (correct) {
+                completedTasks.add('q3');
+                markObjective(1);
+                updateProgressBar();
+            }
+        }
+
+        function checkCalc1() {
+            const val = parseFloat(document.getElementById('calc1').value);
+            const correct = val === 2.2;
+            showFeedback('calc1-feedback', correct,
+                correct ? 'Correct! 22 ÷ 10 = 2.2 µm per division.' 
+                        : 'Try again. Divide 22 by 10.');
+            if (correct) {
+                completedTasks.add('calc1');
+                markObjective(2);
+                updateProgressBar();
+            }
+        }
+
+        function checkCalc2() {
+            const val = parseFloat(document.getElementById('calc2').value);
+            const correct = val === 2 || val === 2.0;
+            showFeedback('calc2-feedback', correct,
+                correct ? 'Correct! 50 ÷ 25 = 2 µm per division.' 
+                        : 'Not quite. 50 µm ÷ 25 divisions = ?');
+            if (correct) {
+                completedTasks.add('calc2');
+                updateProgressBar();
+            }
+        }
+
+        function checkCalc3() {
+            const val = parseFloat(document.getElementById('calc3').value);
+            const correct = val === 11;
+            showFeedback('calc3-feedback', correct,
+                correct ? 'Correct! 5 × 2.2 = 11 µm.' 
+                        : 'Try again. Multiply 5 divisions × 2.2 µm.');
+            if (correct) {
+                completedTasks.add('calc3');
+                markObjective(3);
+                updateProgressBar();
+            }
+        }
+
+        function checkCalc4() {
+            const val = parseFloat(document.getElementById('calc4').value);
+            const correct = val === 7;
+            showFeedback('calc4-feedback', correct,
+                correct ? 'Correct! 3.5 × 2.0 = 7 µm. (Normal red blood cell diameter is about 7-8 µm!)' 
+                        : 'Not quite. 3.5 divisions × 2.0 µm per division = ?');
+            if (correct) {
+                completedTasks.add('calc4');
+                updateProgressBar();
+            }
+        }
+
+        function checkCalc5() {
+            const valA = parseFloat(document.getElementById('calc5a').value);
+            const valB = parseFloat(document.getElementById('calc5b').value);
+            const correctA = valA === 5;
+            const correctB = valB === 0.005;
+            const correct = correctA && correctB;
+            
+            let message = '';
+            if (correct) {
+                message = 'Correct! 2 × 2.5 = 5 µm, and 5 ÷ 1000 = 0.005 mm.';
+            } else if (correctA && !correctB) {
+                message = 'µm is correct! Check your mm conversion (divide by 1000).';
+            } else if (!correctA && correctB) {
+                message = 'mm is correct! Check your µm calculation.';
+            } else {
+                message = 'Try again. Size = 2 × 2.5 µm. Then divide by 1000 for mm.';
+            }
+            
+            showFeedback('calc5-feedback', correct, message);
+            if (correct) {
+                completedTasks.add('calc5');
+                updateProgressBar();
+            }
+        }
+
+        function checkExam2() {
+            const a = parseFloat(document.getElementById('exam2a').value);
+            const b = parseFloat(document.getElementById('exam2b').value);
+            const c = document.getElementById('exam2c').value.toLowerCase().replace(/\s/g, '');
+            
+            const correctA = a === 2.5;
+            const correctB = b === 45;
+            const correctC = c.includes('4.5') && (c.includes('10¹') || c.includes('10^1') || c.includes('×10'));
+            
+            let score = 0;
+            if (correctA) score++;
+            if (correctB) score++;
+            if (correctC) score++;
+            
+            const message = `You scored ${score}/3. ${score === 3 ? 'Excellent work!' : 'Check the mark scheme for model answers.'}`;
+            showFeedback('exam2-feedback', score === 3, message);
+            document.getElementById('ms2').classList.add('visible');
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            updateProgressBar();
+        });
+    </script>
+
+</body>
+</html>
