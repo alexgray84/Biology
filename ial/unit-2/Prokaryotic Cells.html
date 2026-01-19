@@ -1,0 +1,2111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prokaryotic Cells - Interactive Lesson</title>
+    <style>
+        :root {
+            --primary: #2E7D32;
+            --primary-light: #4CAF50;
+            --primary-dark: #1B5E20;
+            --secondary: #1565C0;
+            --secondary-light: #1976D2;
+            --accent: #FF6F00;
+            --accent-light: #FB8C00;
+            --success: #43A047;
+            --warning: #FB8C00;
+            --error: #E53935;
+            --bg-light: #F5F5F5;
+            --card-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            --text-dark: #333;
+            --text-muted: #666;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: linear-gradient(135deg, #E8F5E9 0%, #E3F2FD 100%);
+            min-height: 100vh;
+            line-height: 1.6;
+            color: var(--text-dark);
+        }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+
+        /* Header */
+        header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 20px;
+            margin-bottom: 20px;
+            box-shadow: var(--card-shadow);
+        }
+        header h1 { font-size: 2.5rem; margin-bottom: 10px; }
+        .back-link { 
+            color: rgba(255,255,255,0.8); 
+            text-decoration: none; 
+            font-size: 0.9rem;
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+        .back-link:hover { color: white; }
+        .spec-ref {
+            background: rgba(255,255,255,0.2);
+            padding: 8px 16px;
+            border-radius: 20px;
+            display: inline-block;
+            font-size: 0.9rem;
+            margin-top: 10px;
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: var(--card-shadow);
+        }
+        .progress-text {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+        .progress-bar {
+            height: 12px;
+            background: #e0e0e0;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-light), var(--primary));
+            width: 0%;
+            transition: width 0.5s ease;
+            border-radius: 6px;
+        }
+
+        /* Tab Navigation */
+        .tab-nav {
+            display: flex;
+            background: white;
+            border-radius: 15px;
+            padding: 8px;
+            margin-bottom: 20px;
+            box-shadow: var(--card-shadow);
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .tab-btn {
+            flex: 1;
+            min-width: 120px;
+            padding: 12px 20px;
+            border: none;
+            background: transparent;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .tab-btn:hover {
+            background: var(--bg-light);
+            color: var(--primary);
+        }
+        .tab-btn.active {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+        }
+        .tab-btn .tab-icon { font-size: 1.1rem; }
+        .tab-btn .tab-check {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+        }
+        .tab-btn.completed .tab-check {
+            background: var(--success);
+        }
+
+        /* Tab Content */
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Section Styling */
+        .section {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: var(--card-shadow);
+        }
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid var(--primary-light);
+        }
+        .section-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--primary-light), var(--primary));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+        .section-title { font-size: 1.5rem; color: var(--primary-dark); }
+
+        /* Learning Objectives */
+        .objectives-list {
+            list-style: none;
+        }
+        .objective-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            padding: 15px;
+            background: var(--bg-light);
+            border-radius: 10px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .objective-item:hover {
+            background: #E8F5E9;
+        }
+        .objective-item.completed {
+            background: #E8F5E9;
+            border-left: 4px solid var(--success);
+        }
+        .checkbox {
+            width: 28px;
+            height: 28px;
+            border: 2px solid var(--primary);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: transparent;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+        .objective-item.completed .checkbox {
+            background: var(--success);
+            border-color: var(--success);
+            color: white;
+        }
+
+        /* Quiz Styling */
+        .quiz-question {
+            background: var(--bg-light);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            border-left: 4px solid var(--accent);
+        }
+        .quiz-question h4 {
+            color: var(--accent);
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .quiz-question > p {
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            color: var(--text-dark);
+        }
+        .quiz-options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .quiz-option {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px 20px;
+            background: white;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+        .quiz-option:hover:not(.disabled) {
+            border-color: var(--secondary);
+            transform: translateX(5px);
+        }
+        .quiz-option.selected {
+            border-color: var(--secondary);
+            background: #E3F2FD;
+        }
+        .quiz-option.correct {
+            border-color: var(--success);
+            background: #E8F5E9;
+        }
+        .quiz-option.incorrect {
+            border-color: var(--error);
+            background: #FFEBEE;
+        }
+        .quiz-option.disabled {
+            cursor: default;
+            opacity: 0.7;
+        }
+        .option-marker {
+            width: 32px;
+            height: 32px;
+            background: var(--secondary);
+            color: white;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+        .quiz-option.correct .option-marker { background: var(--success); }
+        .quiz-option.incorrect .option-marker { background: var(--error); }
+
+        .feedback {
+            display: none;
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin-top: 15px;
+            font-weight: 500;
+        }
+        .feedback.show {
+            display: block;
+        }
+        .feedback.correct-feedback {
+            background: #E8F5E9;
+            color: var(--success);
+            border-left: 4px solid var(--success);
+        }
+        .feedback.incorrect-feedback {
+            background: #FFEBEE;
+            color: var(--error);
+            border-left: 4px solid var(--error);
+        }
+
+        /* Structure Cards */
+        .structure-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+        .structure-card {
+            background: var(--bg-light);
+            border-radius: 15px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+        .structure-card:hover {
+            border-color: var(--primary-light);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        }
+        .structure-card.expanded {
+            border-color: var(--primary);
+            background: white;
+        }
+        .structure-card h3 {
+            color: var(--primary-dark);
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .structure-card h3 .size {
+            font-size: 0.8rem;
+            background: var(--primary);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 15px;
+        }
+        .structure-card .preview {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+        .structure-card .details {
+            display: none;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 2px dashed var(--primary-light);
+        }
+        .structure-card.expanded .details {
+            display: block;
+        }
+        .structure-card .details h4 {
+            color: var(--secondary);
+            margin: 15px 0 8px 0;
+            font-size: 0.95rem;
+        }
+        .structure-card .details h4:first-child {
+            margin-top: 0;
+        }
+        .structure-card .details ul {
+            margin-left: 20px;
+            color: var(--text-dark);
+        }
+        .structure-card .details li {
+            margin-bottom: 5px;
+        }
+        .click-hint {
+            font-size: 0.8rem;
+            color: var(--secondary);
+            margin-top: 10px;
+            font-style: italic;
+        }
+        .structure-card.expanded .click-hint {
+            display: none;
+        }
+
+        /* Flip Cards */
+        .flip-cards-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        .flip-card {
+            height: 200px;
+            perspective: 1000px;
+            cursor: pointer;
+        }
+        .flip-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+        .flip-card.flipped .flip-card-inner {
+            transform: rotateY(180deg);
+        }
+        .flip-card-front, .flip-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            text-align: center;
+        }
+        .flip-card-front {
+            background: linear-gradient(135deg, var(--secondary) 0%, var(--secondary-light) 100%);
+            color: white;
+        }
+        .flip-card-front h3 {
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+        }
+        .flip-hint {
+            font-size: 0.85rem;
+            opacity: 0.8;
+            margin-top: auto;
+        }
+        .flip-card-back {
+            background: white;
+            border: 3px solid var(--secondary);
+            transform: rotateY(180deg);
+            color: var(--text-dark);
+        }
+        .flip-card-back p {
+            font-size: 0.95rem;
+        }
+
+        /* Fill in Blanks */
+        .fill-blanks-container {
+            background: var(--bg-light);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+        }
+        .fill-blanks-container p {
+            font-size: 1.1rem;
+            line-height: 2.2;
+        }
+        .blank-input {
+            width: 120px;
+            padding: 8px 12px;
+            border: 2px dashed var(--secondary);
+            border-radius: 8px;
+            font-size: 1rem;
+            text-align: center;
+            background: white;
+            transition: all 0.3s ease;
+        }
+        .blank-input:focus {
+            outline: none;
+            border-style: solid;
+            border-color: var(--primary);
+        }
+        .blank-input.correct {
+            border-color: var(--success);
+            border-style: solid;
+            background: #E8F5E9;
+        }
+        .blank-input.incorrect {
+            border-color: var(--error);
+            border-style: solid;
+            background: #FFEBEE;
+        }
+        .check-btn {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 12px 30px;
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .check-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255,111,0,0.3);
+        }
+
+        /* Diagram Area */
+        .diagram-container {
+            background: var(--bg-light);
+            border-radius: 15px;
+            padding: 30px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        .bacteria-diagram {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .bacteria-diagram svg {
+            width: 100%;
+            height: auto;
+        }
+
+        /* Comparison Table */
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            border-radius: 15px;
+            overflow: hidden;
+        }
+        .comparison-table th {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 15px;
+            text-align: left;
+        }
+        .comparison-table td {
+            padding: 15px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        .comparison-table tr:nth-child(even) {
+            background: var(--bg-light);
+        }
+        .comparison-table tr:hover {
+            background: #E8F5E9;
+        }
+        .gram-positive { color: #7B1FA2; font-weight: 600; }
+        .gram-negative { color: #C62828; font-weight: 600; }
+
+        /* Drag and Drop */
+        .drag-container {
+            display: flex;
+            gap: 30px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .drag-zone {
+            flex: 1;
+            min-width: 250px;
+            background: var(--bg-light);
+            border-radius: 15px;
+            padding: 20px;
+            min-height: 300px;
+        }
+        .drag-zone h4 {
+            text-align: center;
+            padding: 10px;
+            background: var(--primary);
+            color: white;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+        .drag-zone.positive h4 { background: #7B1FA2; }
+        .drag-zone.negative h4 { background: #C62828; }
+        .drag-items {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            min-height: 200px;
+        }
+        .drag-item {
+            padding: 12px 15px;
+            background: white;
+            border-radius: 8px;
+            cursor: grab;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            font-size: 0.95rem;
+        }
+        .drag-item:hover {
+            border-color: var(--secondary);
+            transform: translateX(5px);
+        }
+        .drag-item.dragging {
+            opacity: 0.5;
+        }
+        .drag-item.correct-place {
+            background: #E8F5E9;
+            border-color: var(--success);
+        }
+        .drag-item.wrong-place {
+            background: #FFEBEE;
+            border-color: var(--error);
+        }
+
+        /* Confidence Rating */
+        .confidence-section {
+            text-align: center;
+            padding: 30px;
+            background: var(--bg-light);
+            border-radius: 15px;
+            margin-top: 20px;
+        }
+        .confidence-section p {
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+        }
+        .confidence-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        .confidence-btn {
+            padding: 15px 25px;
+            border: 2px solid #e0e0e0;
+            background: white;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        .confidence-btn:hover {
+            border-color: var(--primary);
+            transform: translateY(-3px);
+        }
+        .confidence-btn.selected {
+            border-color: var(--primary);
+            background: #E8F5E9;
+        }
+
+        /* Score Display */
+        .score-display {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .score-display h3 {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            opacity: 0.9;
+        }
+        .score-number {
+            font-size: 3rem;
+            font-weight: bold;
+        }
+        .score-display p {
+            margin-top: 10px;
+            opacity: 0.9;
+        }
+
+        /* Navigation Buttons */
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            gap: 20px;
+        }
+        .nav-btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .nav-btn.prev {
+            background: var(--bg-light);
+            color: var(--text-dark);
+        }
+        .nav-btn.next {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            margin-left: auto;
+        }
+        .nav-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        /* Info Box */
+        .info-box {
+            background: #E3F2FD;
+            border-left: 4px solid var(--secondary);
+            padding: 20px;
+            border-radius: 0 10px 10px 0;
+            margin: 20px 0;
+        }
+        .info-box h4 {
+            color: var(--secondary);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Key Term */
+        .key-term {
+            color: var(--primary-dark);
+            font-weight: 600;
+            border-bottom: 2px dotted var(--primary);
+            cursor: help;
+        }
+
+        /* Matching Exercise */
+        .matching-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+        .matching-column h4 {
+            text-align: center;
+            padding: 12px;
+            background: var(--secondary);
+            color: white;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+        .matching-item {
+            padding: 15px;
+            background: var(--bg-light);
+            border-radius: 10px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+        .matching-item:hover {
+            border-color: var(--secondary);
+        }
+        .matching-item.selected {
+            border-color: var(--accent);
+            background: #FFF3E0;
+        }
+        .matching-item.matched {
+            background: #E8F5E9;
+            border-color: var(--success);
+        }
+
+        /* Summary Cards */
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        .summary-card {
+            background: var(--bg-light);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            border-top: 4px solid var(--primary);
+        }
+        .summary-card .icon {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+        .summary-card h4 {
+            color: var(--primary-dark);
+            margin-bottom: 8px;
+        }
+        .summary-card p {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            header h1 { font-size: 1.8rem; }
+            .section { padding: 20px; }
+            .tab-btn { 
+                font-size: 0.85rem; 
+                padding: 10px 15px;
+            }
+            .tab-btn span:not(.tab-icon):not(.tab-check) {
+                display: none;
+            }
+            .matching-container {
+                grid-template-columns: 1fr;
+            }
+            .drag-container {
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 480px) {
+            header h1 { font-size: 1.5rem; }
+            .quiz-option { padding: 12px 15px; }
+            .flip-card { height: 180px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <a href="index.html" class="back-link">← Back to Unit 2</a>
+            <h1>🦠 Prokaryotic Cells</h1>
+            <span class="spec-ref">Spec: 3.5(ii), 3.5(iii), 3.8, CP5</span>
+        </header>
+
+        <!-- Progress Bar -->
+        <div class="progress-container">
+            <div class="progress-text">
+                <span>Your Progress</span>
+                <span id="progress-percent">0%</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill"></div>
+            </div>
+        </div>
+
+        <!-- Tab Navigation -->
+        <div class="tab-nav">
+            <button class="tab-btn active" onclick="switchTab(0)">
+                <span class="tab-icon">🎯</span>
+                <span>Overview</span>
+                <span class="tab-check">✓</span>
+            </button>
+            <button class="tab-btn" onclick="switchTab(1)">
+                <span class="tab-icon">🔬</span>
+                <span>Structure</span>
+                <span class="tab-check">✓</span>
+            </button>
+            <button class="tab-btn" onclick="switchTab(2)">
+                <span class="tab-icon">🧪</span>
+                <span>Gram Staining</span>
+                <span class="tab-check">✓</span>
+            </button>
+            <button class="tab-btn" onclick="switchTab(3)">
+                <span class="tab-icon">✏️</span>
+                <span>Practice</span>
+                <span class="tab-check">✓</span>
+            </button>
+            <button class="tab-btn" onclick="switchTab(4)">
+                <span class="tab-icon">📝</span>
+                <span>Final Quiz</span>
+                <span class="tab-check">✓</span>
+            </button>
+        </div>
+
+        <!-- TAB 0: Overview -->
+        <div class="tab-content active" id="tab-0">
+            <!-- Learning Objectives -->
+            <div class="section">
+                <div class="section-header">
+                    <div class="section-icon">🎯</div>
+                    <h2 class="section-title">Learning Objectives</h2>
+                </div>
+                <ul class="objectives-list">
+                    <li class="objective-item" onclick="toggleObjective(this)">
+                        <div class="checkbox">✓</div>
+                        <span>Know the ultrastructure of prokaryotic cells, including the cell wall, capsule, plasmid, flagellum, pili, ribosomes, and circular DNA</span>
+                    </li>
+                    <li class="objective-item" onclick="toggleObjective(this)">
+                        <div class="checkbox">✓</div>
+                        <span>Understand the function of each structure in prokaryotic cells</span>
+                    </li>
+                    <li class="objective-item" onclick="toggleObjective(this)">
+                        <div class="checkbox">✓</div>
+                        <span>Describe the differences between Gram-positive and Gram-negative bacteria</span>
+                    </li>
+                    <li class="objective-item" onclick="toggleObjective(this)">
+                        <div class="checkbox">✓</div>
+                        <span>Explain how the Gram stain technique works and why it's useful</span>
+                    </li>
+                    <li class="objective-item" onclick="toggleObjective(this)">
+                        <div class="checkbox">✓</div>
+                        <span>Classify bacteria by shape: cocci, bacilli, spirilla, and vibrios</span>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Diagnostic Quiz -->
+            <div class="section">
+                <div class="section-header">
+                    <div class="section-icon">🧠</div>
+                    <h2 class="section-title">What Do You Already Know?</h2>
+                </div>
+                <p style="margin-bottom: 20px; color: var(--text-muted);">Let's test your prior knowledge before we begin!</p>
+                
+                <div class="quiz-question" id="diag-q1">
+                    <h4>Question 1</h4>
+                    <p>Which type of cell does NOT have a membrane-bound nucleus?</p>
+                    <div class="quiz-options">
+                        <div class="quiz-option" onclick="checkAnswer(this, false, 'diag-q1')">
+                            <span class="option-marker">A</span>
+                            <span>Eukaryotic cell</span>
+                        </div>
+                        <div class="quiz-option" onclick="checkAnswer(this, true, 'diag-q1')">
+                            <span class="option-marker">B</span>
+                            <span>Prokaryotic cell</span>
+                        </div>
+                        <div class="quiz-option" onclick="checkAnswer(this, false, 'diag-q1')">
+                            <span class="option-marker">C</span>
+                            <span>Plant cell</span>
+                        </div>
+                        <div class="quiz-option" onclick="checkAnswer(this, false, 'diag-q1')">
+                            <span class="option-marker">D</span>
+                            <span>Animal cell</span>
+                        </div>
+                    </div>
+                    <div class="feedback correct-feedback">✓ Correct! Prokaryotic cells (bacteria) lack a membrane-bound nucleus - their DNA is found in the nucleoid region.</div>
+                    <div class="feedback incorrect-feedback">✗ Not quite. Remember: "Pro" means before, "karyon" means nucleus. Think about which cells evolved first!</div>
+                </div>
+
+                <div class="quiz-question" id="diag-q2">
+                    <h4>Question 2</h4>
+                    <p>What is the main component of bacterial cell walls?</p>
+                    <div class="quiz-options">
+                        <div class="quiz-option" onclick="checkAnswer(this, false, 'diag-q2')">
+                            <span class="option-marker">A</span>
+                            <span>Cellulose</span>
+                        </div>
+                        <div class="quiz-option" onclick="checkAnswer(this, false, 'diag-q2')">
+                            <span class="option-marker">B</span>
+                            <span>Chitin</span>
+                        </div>
+                        <div class="quiz-option" onclick="checkAnswer(this, true, 'diag-q2')">
+                            <span class="option-marker">C</span>
+                            <span>Peptidoglycan</span>
+                        </div>
+                        <div class="quiz-option" onclick="checkAnswer(this, false, 'diag-q2')">
+                            <span class="option-marker">D</span>
+                            <span>Phospholipid</span>
+                        </div>
+                    </div>
+                    <div class="feedback correct-feedback">✓ Correct! Peptidoglycan (also called murein) is the key structural component of bacterial cell walls.</div>
+                    <div class="feedback incorrect-feedback">✗ Cellulose is found in plant cell walls, chitin in fungi. Bacterial walls have a unique polymer!</div>
+                </div>
+
+                <div class="quiz-question" id="diag-q3">
+                    <h4>Question 3</h4>
+                    <p>What size ribosomes do bacteria have?</p>
+                    <div class="quiz-options">
+                        <div class="quiz-option" onclick="checkAnswer(this, true, 'diag-q3')">
+                            <span class="option-marker">A</span>
+                            <span>70S</span>
+                        </div>
+                        <div class="quiz-option" onclick="checkAnswer(this, false, 'diag-q3')">
+                            <span class="option-marker">B</span>
+                            <span>80S</span>
+                        </div>
+                        <div class="quiz-option" onclick="checkAnswer(this, false, 'diag-q3')">
+                            <span class="option-marker">C</span>
+                            <span>60S</span>
+                        </div>
+                        <div class="quiz-option" onclick="checkAnswer(this, false, 'diag-q3')">
+                            <span class="option-marker">D</span>
+                            <span>90S</span>
+                        </div>
+                    </div>
+                    <div class="feedback correct-feedback">✓ Excellent! Bacterial ribosomes are 70S (30S + 50S subunits), smaller than eukaryotic 80S ribosomes.</div>
+                    <div class="feedback incorrect-feedback">✗ Remember: Prokaryotes have 70S, Eukaryotes have 80S. This difference is targeted by some antibiotics!</div>
+                </div>
+            </div>
+
+            <div class="nav-buttons">
+                <button class="nav-btn next" onclick="switchTab(1)">Continue to Structure →</button>
+            </div>
+        </div>
+
+        <!-- TAB 1: Structure -->
+        <div class="tab-content" id="tab-1">
+            <div class="section">
+                <div class="section-header">
+                    <div class="section-icon">🔬</div>
+                    <h2 class="section-title">Bacterial Cell Structure</h2>
+                </div>
+                
+                <p style="margin-bottom: 20px;">Bacteria, cyanobacteria, and archaebacteria are all <span class="key-term">prokaryotic organisms</span>. They share certain features but can vary greatly between species. Click each structure to learn more!</p>
+
+                <div class="structure-cards">
+                    <div class="structure-card" onclick="toggleCard(this)">
+                        <h3>Cell Wall <span class="size">Essential</span></h3>
+                        <p class="preview">Maintains shape and prevents bursting...</p>
+                        <p class="click-hint">Click to expand</p>
+                        <div class="details">
+                            <h4>Structure:</h4>
+                            <ul>
+                                <li>Made of <strong>peptidoglycan</strong> - polysaccharide chains with short peptide cross-linkages</li>
+                                <li>Creates a net-like structure</li>
+                            </ul>
+                            <h4>Function:</h4>
+                            <ul>
+                                <li>Prevents cell from swelling and bursting due to osmosis</li>
+                                <li>Maintains cell shape</li>
+                                <li>Provides support and protection</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="structure-card" onclick="toggleCard(this)">
+                        <h3>Capsule/Slime Layer <span class="size">Some bacteria</span></h3>
+                        <p class="preview">Protective outer coating found in some bacteria...</p>
+                        <p class="click-hint">Click to expand</p>
+                        <div class="details">
+                            <h4>Structure:</h4>
+                            <ul>
+                                <li>Made from starch, gelatin, protein, or glycolipid</li>
+                                <li>Thin and diffuse layer around the cell</li>
+                            </ul>
+                            <h4>Function:</h4>
+                            <ul>
+                                <li>Protects from phagocytosis by white blood cells</li>
+                                <li>Covers cell membrane markers (helps avoid immune detection)</li>
+                                <li>Helps bacteria survive very dry conditions</li>
+                                <li>Can make bacteria pathogenic (disease-causing)</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="structure-card" onclick="toggleCard(this)">
+                        <h3>Nucleoid <span class="size">Central region</span></h3>
+                        <p class="preview">Region containing the bacterial chromosome...</p>
+                        <p class="click-hint">Click to expand</p>
+                        <div class="details">
+                            <h4>Structure:</h4>
+                            <ul>
+                                <li>Single, circular strand of DNA</li>
+                                <li>NOT contained in a membrane-bound nucleus</li>
+                                <li>DNA is folded and coiled to fit</li>
+                                <li>Occupies about half the cytoplasm in E. coli</li>
+                            </ul>
+                            <h4>Function:</h4>
+                            <ul>
+                                <li>Contains genetic material for all cellular functions</li>
+                                <li>Key difference from eukaryotic cells!</li>
+                            </ul>
+                            <p style="margin-top: 10px; color: var(--accent); font-weight: 600;">⚠️ Don't confuse nucleoid with nucleus or nucleolus!</p>
+                        </div>
+                    </div>
+
+                    <div class="structure-card" onclick="toggleCard(this)">
+                        <h3>Plasmids <span class="size">Small circles</span></h3>
+                        <p class="preview">Small, independent DNA circles...</p>
+                        <p class="click-hint">Click to expand</p>
+                        <div class="details">
+                            <h4>Structure:</h4>
+                            <ul>
+                                <li>Small, circular pieces of DNA</li>
+                                <li>Separate from the main chromosome</li>
+                                <li>Can replicate independently</li>
+                            </ul>
+                            <h4>Function:</h4>
+                            <ul>
+                                <li>Code for specific traits (e.g., antibiotic resistance, toxin production)</li>
+                                <li>Can be transferred between bacteria via pili</li>
+                                <li>Important in genetic engineering!</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="structure-card" onclick="toggleCard(this)">
+                        <h3>Flagella <span class="size">~20nm diameter</span></h3>
+                        <p class="preview">Long, helical structures for movement...</p>
+                        <p class="click-hint">Click to expand</p>
+                        <div class="details">
+                            <h4>Structure:</h4>
+                            <ul>
+                                <li>Made of protein called <strong>flagellin</strong></li>
+                                <li>Many-stranded helix structure</li>
+                                <li>Can rotate at ~100 revolutions per second!</li>
+                            </ul>
+                            <h4>Function:</h4>
+                            <ul>
+                                <li>Movement through liquid environments</li>
+                                <li>Enables bacteria to move towards nutrients or away from harmful substances</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="structure-card" onclick="toggleCard(this)">
+                        <h3>Pili (Fimbriae) <span class="size">Thread-like</span></h3>
+                        <p class="preview">Short protein projections from the surface...</p>
+                        <p class="click-hint">Click to expand</p>
+                        <div class="details">
+                            <h4>Structure:</h4>
+                            <ul>
+                                <li>Thread-like protein projections</li>
+                                <li>100-several hundred per cell</li>
+                                <li>Found in E. coli, Salmonella, and many others</li>
+                            </ul>
+                            <h4>Function:</h4>
+                            <ul>
+                                <li>Attachment to host cells</li>
+                                <li>Sexual reproduction (conjugation) - transfer of plasmids</li>
+                                <li>Can act as entry points for bacteriophages</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="structure-card" onclick="toggleCard(this)">
+                        <h3>70S Ribosomes <span class="size">~20nm</span></h3>
+                        <p class="preview">Smaller than eukaryotic ribosomes...</p>
+                        <p class="click-hint">Click to expand</p>
+                        <div class="details">
+                            <h4>Structure:</h4>
+                            <ul>
+                                <li>70S total (30S small subunit + 50S large subunit)</li>
+                                <li>Smaller than eukaryotic 80S ribosomes</li>
+                                <li>No membrane-bound organelles!</li>
+                            </ul>
+                            <h4>Function:</h4>
+                            <ul>
+                                <li>Protein synthesis</li>
+                                <li>Target for many antibiotics (e.g., streptomycin)</li>
+                            </ul>
+                            <p style="margin-top: 10px; color: var(--secondary); font-weight: 600;">💡 Ribosomes are the ONLY organelles shared with eukaryotes!</p>
+                        </div>
+                    </div>
+
+                    <div class="structure-card" onclick="toggleCard(this)">
+                        <h3>Mesosomes <span class="size">Infoldings</span></h3>
+                        <p class="preview">Infoldings of the cell membrane...</p>
+                        <p class="click-hint">Click to expand</p>
+                        <div class="details">
+                            <h4>Structure:</h4>
+                            <ul>
+                                <li>Infoldings of the plasma membrane</li>
+                                <li>Found in some bacteria (e.g., Bacillus subtilis)</li>
+                                <li>May be artefacts of preparation!</li>
+                            </ul>
+                            <h4>Possible Functions:</h4>
+                            <ul>
+                                <li>Site of respiratory enzymes (like mitochondria)</li>
+                                <li>DNA separation during cell division</li>
+                                <li>Cell wall formation</li>
+                                <li>Photosynthesis (in some species)</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Structure Quiz -->
+            <div class="section">
+                <div class="section-header">
+                    <div class="section-icon">✏️</div>
+                    <h2 class="section-title">Quick Check: Structures</h2>
+                </div>
+
+                <div class="quiz-question" id="struct-q1">
+                    <h4>Question 1</h4>
+                    <p>Which structure allows bacteria to transfer genetic material to other bacteria?</p>
+                    <div class="quiz-options">
+                        <div class="quiz-option" onclick="checkAnswer(this, false, 'struct-q1')">
+                            <span class="option-marker">A</span>
+                            <span>Flagella</span>
+                        </div>
+                        <div class="quiz-option" onclick="checkAnswer(this, true, 'struct-q1')">
+                            <span class="option-marker">B</span>
+                            <span>Pili</span>
+                        </div>
+                        <div class="quiz-option" onclick="checkAnswer(this, false, 'struct-q1')">
+                            <span class="option-marker">C</span>
+                            <span>Capsule</span>
+                        </div>
+                        <div class="quiz-option" onclick="checkAnswer(this, false, 'struct-q1')">
+                            <span class="option-marker">D</span>
+                            <span>Mesosomes</span>
+                        </div>
+                    </div>
+                    <div class="feedback correct-feedback">✓ Correct! Pili are used for conjugation - the transfer of plasmids between bacteria.</div>
+                    <div class="feedback incorrect-feedback">✗ Think about which structure is involved in bacterial "mating" (conjugation).</div>
+                </div>
+
+                <div class="quiz-question" id="struct-q2">
+                    <h4>Question 2</h4>
+                    <p>What is the function of a bacterial capsule?</p>
+                    <div class="quiz-options">
+                        <div class="quiz-option" onclick="checkAnswer(this, false, 'struct-q2')">
+                            <span class="option-marker">A</span>
+                            <span>Movement through liquids</span>
+                        </div>
+                        <div class="quiz-option" onclick="checkAnswer(this, false, 'struct-q2')">
+                            <span class="option-marker">B</span>
+                            <span>Protein synthesis</span>
+                        </div>
+                        <div class="quiz-option" onclick="checkAnswer(this, true, 'struct-q2')">
+                            <span class="option-marker">C</span>
+                            <span>Protection from phagocytosis</span>
+                        </div>
+                        <div class="quiz-option" onclick="checkAnswer(this, false, 'struct-q2')">
+                            <span class="option-marker">D</span>
+                            <span>DNA replication</span>
+                        </div>
+                    </div>
+                    <div class="feedback correct-feedback">✓ Correct! The capsule helps bacteria evade the immune system by protecting against phagocytosis.</div>
+                    <div class="feedback incorrect-feedback">✗ The capsule is an outer protective layer. What might it protect against?</div>
+                </div>
+
+                <div class="quiz-question" id="struct-q3">
+                    <h4>Question 3</h4>
+                    <p>Why do some antibiotics target 70S ribosomes specifically?</p>
+                    <div class="quiz-options">
+                        <div class="quiz-option" onclick="checkAnswer(this, true, 'struct-q3')">
+                            <span class="option-marker">A</span>
+                            <span>They differ from human 80S ribosomes, so won't harm our cells</span>
+                        </div>
+                        <div class="quiz-option" onclick="checkAnswer(this, false, 'struct-q3')">
+                            <span class="option-marker">B</span>
+                            <span>70S ribosomes are easier to destroy</span>
+                        </div>
+                        <div class="quiz-option" onclick="checkAnswer(this, false, 'struct-q3')">
+                            <span class="option-marker">C</span>
+                            <span>70S ribosomes produce toxins</span>
+                        </div>
+                        <div class="quiz-option" onclick="checkAnswer(this, false, 'struct-q3')">
+                            <span class="option-marker">D</span>
+                            <span>Human cells don't have ribosomes</span>
+                        </div>
+                    </div>
+                    <div class="feedback correct-feedback">✓ Excellent! Because bacterial ribosomes (70S) differ from human ribosomes (80S), antibiotics can target bacteria without harming us!</div>
+                    <div class="feedback incorrect-feedback">✗ Think about why targeting bacterial ribosomes wouldn't affect human cells...</div>
+                </div>
+            </div>
+
+            <div class="nav-buttons">
+                <button class="nav-btn prev" onclick="switchTab(0)">← Back to Overview</button>
+                <button class="nav-btn next" onclick="switchTab(2)">Continue to Gram Staining →</button>
+            </div>
+        </div>
+
+        <!-- TAB 2: Gram Staining -->
+        <div class="tab-content" id="tab-2">
+            <div class="section">
+                <div class="section-header">
+                    <div class="section-icon">🧪</div>
+                    <h2 class="section-title">Gram Staining & Cell Walls</h2>
+                </div>
+
+                <div class="info-box">
+                    <h4>💡 Why is this important?</h4>
+                    <p>Different types of bacteria respond differently to antibiotics based on their cell wall structure. Doctors need to know if a pathogen is Gram-positive or Gram-negative to choose the right treatment!</p>
+                </div>
+
+                <h3 style="color: var(--primary-dark); margin: 25px 0 15px 0;">The Gram Staining Technique</h3>
+                <p>Developed by Christian Gram in 1884, this technique distinguishes bacteria by their cell wall structure.</p>
+
+                <table class="comparison-table">
+                    <tr>
+                        <th>Feature</th>
+                        <th><span class="gram-positive">Gram-Positive</span></th>
+                        <th><span class="gram-negative">Gram-Negative</span></th>
+                    </tr>
+                    <tr>
+                        <td><strong>Peptidoglycan layer</strong></td>
+                        <td>Thick layer</td>
+                        <td>Thin layer</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Teichoic acid</strong></td>
+                        <td>Present (in cell wall)</td>
+                        <td>Absent</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Outer membrane</strong></td>
+                        <td>Absent</td>
+                        <td>Present (with lipopolysaccharides)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Stain colour</strong></td>
+                        <td class="gram-positive">Purple/Blue</td>
+                        <td class="gram-negative">Red/Pink</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Examples</strong></td>
+                        <td>MRSA, Streptococcus</td>
+                        <td>E. coli, Salmonella</td>
+                    </tr>
+                </table>
+
+                <h3 style="color: var(--primary-dark); margin: 25px 0 15px 0;">How Does Gram Staining Work?</h3>
+                <ol style="margin-left: 20px; margin-bottom: 20px;">
+                    <li style="margin-bottom: 10px;"><strong>Crystal violet</strong> stain applied - all bacteria turn purple</li>
+                    <li style="margin-bottom: 10px;"><strong>Iodine</strong> added - forms complex trapped in peptidoglycan</li>
+                    <li style="margin-bottom: 10px;"><strong>Alcohol/acetone wash</strong> - dehydrates the bacteria</li>
+                    <li style="margin-bottom: 10px;"><strong>Safranin counterstain</strong> - stains decolourised cells red</li>
+                </ol>
+
+                <div class="info-box">
+                    <h4>🔑 Key Point</h4>
+                    <p><span class="gram-positive">Gram-positive bacteria</span> retain the purple crystal violet because their thick peptidoglycan layer traps the stain. <span class="gram-negative">Gram-negative bacteria</span> lose the purple stain when washed (their thin peptidoglycan can't hold it) and take up the red safranin counterstain instead.</p>
+                </div>
+
+                <h3 style="color: var(--primary-dark); margin: 25px 0 15px 0;">Antibiotics & Cell Walls</h3>
+                <p style="margin-bottom: 15px;">Different antibiotics work better against different types of bacteria:</p>
+                <ul style="margin-left: 20px;">
+                    <li style="margin-bottom: 10px;"><strong>Beta-lactam antibiotics</strong> (penicillins, cephalosporins): Very effective against <span class="gram-positive">Gram-positive</span> bacteria - inhibit peptidoglycan synthesis</li>
+                    <li style="margin-bottom: 10px;"><strong>Glycopeptide antibiotics</strong> (vancomycin): Effective against <span class="gram-positive">Gram-positive</span> bacteria, even antibiotic-resistant strains</li>
+                    <li style="margin-bottom: 10px;"><strong>Polypeptide antibiotics</strong> (polymyxins): Effective against <span class="gram-negative">Gram-negative</span> - target outer membrane phospholipids</li>
+                </ul>
+            </div>
+
+            <!-- Gram Staining Quiz -->
+            <div class="section">
+                <div class="section-header">
+                    <div class="section-icon">✏️</div>
+                    <h2 class="section-title">Quick Check: Gram Staining</h2>
+                </div>
+
+                <div class="quiz-question" id="gram-q1">
+                    <h4>Question 1</h4>
+                    <p>A bacterium appears purple after Gram staining. What can you conclude?</p>
+                    <div class="quiz-options">
+                        <div class="quiz-option" onclick="checkAnswer(this, true, 'gram-q1')">
+                            <span class="option-marker">A</span>
+                            <span>It has a thick peptidoglycan layer</span>
+                        </div>
+                        <div class="quiz-option" onclick="checkAnswer(this, false, 'gram-q1')">
+                            <span class="option-marker">B</span>
+                            <span>It has an outer membrane</span>
+                        </div>
+                        <div class="quiz-option" onclick="checkAnswer(this, false, 'gram-q1')">
+                            <span class="option-marker">C</span>
+                            <span>It lacks peptidoglycan</span>
+                        </div>
+                        <div class="quiz-option" onclick="checkAnswer(this, false, 'gram-q1')">
+                            <span class="option-marker">D</span>
+                            <span>It is resistant to all antibiotics</span>
+                        </div>
+                    </div>
+                    <div class="feedback correct-feedback">✓ Correct! Purple = Gram-positive = thick peptidoglycan layer that retains the crystal violet stain.</div>
+                    <div class="feedback incorrect-feedback">✗ Remember: Purple bacteria are Gram-positive. What's special about their cell wall?</div>
+                </div>
+
+                <div class="quiz-question" id="gram-q2">
+                    <h4>Question 2</h4>
+                    <p>Why are beta-lactam antibiotics (like penicillin) more effective against Gram-positive bacteria?</p>
+                    <div class="quiz-options">
+                        <div class="quiz-option" onclick="checkAnswer(this, false, 'gram-q2')">
+                            <span class="option-marker">A</span>
+                            <span>Gram-positive bacteria have no cell wall</span>
+                        </div>
+                        <div class="quiz-option" onclick="checkAnswer(this, true, 'gram-q2')">
+                            <span class="option-marker">B</span>
+                            <span>Gram-positive bacteria have a thick peptidoglycan layer exposed on the surface</span>
+                        </div>
+                        <div class="quiz-option" onclick="checkAnswer(this, false, 'gram-q2')">
+                            <span class="option-marker">C</span>
+                            <span>Gram-negative bacteria don't have ribosomes</span>
+                        </div>
+                        <div class="quiz-option" onclick="checkAnswer(this, false, 'gram-q2')">
+                            <span class="option-marker">D</span>
+                            <span>Gram-positive bacteria cannot reproduce</span>
+                        </div>
+                    </div>
+                    <div class="feedback correct-feedback">✓ Correct! Beta-lactams inhibit peptidoglycan synthesis. Gram-positive bacteria have a thick, exposed peptidoglycan layer, making them more vulnerable.</div>
+                    <div class="feedback incorrect-feedback">✗ Think about what beta-lactam antibiotics target (peptidoglycan) and which type has more of it exposed.</div>
+                </div>
+
+                <div class="quiz-question" id="gram-q3">
+                    <h4>Question 3</h4>
+                    <p>Which substance is found in Gram-positive cell walls but NOT in Gram-negative cell walls?</p>
+                    <div class="quiz-options">
+                        <div class="quiz-option" onclick="checkAnswer(this, false, 'gram-q3')">
+                            <span class="option-marker">A</span>
+                            <span>Lipopolysaccharides</span>
+                        </div>
+                        <div class="quiz-option" onclick="checkAnswer(this, false, 'gram-q3')">
+                            <span class="option-marker">B</span>
+                            <span>Peptidoglycan</span>
+                        </div>
+                        <div class="quiz-option" onclick="checkAnswer(this, true, 'gram-q3')">
+                            <span class="option-marker">C</span>
+                            <span>Teichoic acid</span>
+                        </div>
+                        <div class="quiz-option" onclick="checkAnswer(this, false, 'gram-q3')">
+                            <span class="option-marker">D</span>
+                            <span>Phospholipids</span>
+                        </div>
+                    </div>
+                    <div class="feedback correct-feedback">✓ Correct! Teichoic acid is unique to Gram-positive bacteria - it helps trap the crystal violet/iodine complex.</div>
+                    <div class="feedback incorrect-feedback">✗ Both types have peptidoglycan. What chemical is unique to Gram-positive walls?</div>
+                </div>
+            </div>
+
+            <!-- Bacterial Shapes Section -->
+            <div class="section">
+                <div class="section-header">
+                    <div class="section-icon">🔍</div>
+                    <h2 class="section-title">Bacterial Classification by Shape</h2>
+                </div>
+                <p style="margin-bottom: 20px;">Bacteria can also be classified by their shape - visible under a light microscope:</p>
+
+                <div class="flip-cards-container">
+                    <div class="flip-card" onclick="this.classList.toggle('flipped')">
+                        <div class="flip-card-inner">
+                            <div class="flip-card-front">
+                                <h3>Cocci</h3>
+                                <div style="font-size: 2rem; margin: 10px 0;">○○○</div>
+                                <p class="flip-hint">Click to reveal</p>
+                            </div>
+                            <div class="flip-card-back">
+                                <p><strong>Spherical bacteria</strong></p>
+                                <p style="margin-top: 10px;">Examples: Staphylococcus, Streptococcus</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flip-card" onclick="this.classList.toggle('flipped')">
+                        <div class="flip-card-inner">
+                            <div class="flip-card-front">
+                                <h3>Bacilli</h3>
+                                <div style="font-size: 2rem; margin: 10px 0;">▭ ▭ ▭</div>
+                                <p class="flip-hint">Click to reveal</p>
+                            </div>
+                            <div class="flip-card-back">
+                                <p><strong>Rod-shaped bacteria</strong></p>
+                                <p style="margin-top: 10px;">Examples: E. coli, Bacillus subtilis, Salmonella</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flip-card" onclick="this.classList.toggle('flipped')">
+                        <div class="flip-card-inner">
+                            <div class="flip-card-front">
+                                <h3>Spirilla</h3>
+                                <div style="font-size: 2rem; margin: 10px 0;">〰️〰️</div>
+                                <p class="flip-hint">Click to reveal</p>
+                            </div>
+                            <div class="flip-card-back">
+                                <p><strong>Twisted/spiral-shaped bacteria</strong></p>
+                                <p style="margin-top: 10px;">Example: Spirillum volutans</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flip-card" onclick="this.classList.toggle('flipped')">
+                        <div class="flip-card-inner">
+                            <div class="flip-card-front">
+                                <h3>Vibrios</h3>
+                                <div style="font-size: 2rem; margin: 10px 0;">〉 〉 〉</div>
+                                <p class="flip-hint">Click to reveal</p>
+                            </div>
+                            <div class="flip-card-back">
+                                <p><strong>Comma-shaped bacteria</strong></p>
+                                <p style="margin-top: 10px;">Example: Vibrio cholerae (causes cholera)</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="nav-buttons">
+                <button class="nav-btn prev" onclick="switchTab(1)">← Back to Structure</button>
+                <button class="nav-btn next" onclick="switchTab(3)">Continue to Practice →</button>
+            </div>
+        </div>
+
+        <!-- TAB 3: Practice -->
+        <div class="tab-content" id="tab-3">
+            <div class="section">
+                <div class="section-header">
+                    <div class="section-icon">✏️</div>
+                    <h2 class="section-title">Practice Activities</h2>
+                </div>
+                <p style="margin-bottom: 20px; color: var(--text-muted);">Test your understanding with these interactive exercises!</p>
+
+                <!-- Fill in the Blanks -->
+                <h3 style="color: var(--primary-dark); margin-bottom: 15px;">Fill in the Blanks</h3>
+                <div class="fill-blanks-container">
+                    <p>
+                        Prokaryotic cells have a region called the 
+                        <input type="text" class="blank-input" data-answer="nucleoid" placeholder="?"> 
+                        which contains a single, circular strand of 
+                        <input type="text" class="blank-input" data-answer="DNA" placeholder="?">. 
+                        Unlike eukaryotic cells, they have smaller 
+                        <input type="text" class="blank-input" data-answer="70S" placeholder="?"> 
+                        ribosomes. Some bacteria have thread-like 
+                        <input type="text" class="blank-input" data-answer="pili" placeholder="?"> 
+                        for attachment and conjugation.
+                    </p>
+                    <button class="check-btn" onclick="checkBlanks()">Check Answers</button>
+                    <div id="blanks-feedback" style="margin-top: 15px;"></div>
+                </div>
+            </div>
+
+            <!-- Vocabulary Matching -->
+            <div class="section">
+                <div class="section-header">
+                    <div class="section-icon">🔗</div>
+                    <h2 class="section-title">Key Vocabulary</h2>
+                </div>
+                <p style="margin-bottom: 20px;">Click a term, then click its matching definition:</p>
+
+                <div class="matching-container">
+                    <div class="matching-column">
+                        <h4>Terms</h4>
+                        <div class="matching-item" data-match="1" onclick="selectMatch(this, 'term')">Peptidoglycan</div>
+                        <div class="matching-item" data-match="2" onclick="selectMatch(this, 'term')">Plasmid</div>
+                        <div class="matching-item" data-match="3" onclick="selectMatch(this, 'term')">Bacteriophage</div>
+                        <div class="matching-item" data-match="4" onclick="selectMatch(this, 'term')">Obligate aerobe</div>
+                        <div class="matching-item" data-match="5" onclick="selectMatch(this, 'term')">Facultative anaerobe</div>
+                    </div>
+                    <div class="matching-column">
+                        <h4>Definitions</h4>
+                        <div class="matching-item" data-match="3" onclick="selectMatch(this, 'def')">A virus that attacks bacteria</div>
+                        <div class="matching-item" data-match="1" onclick="selectMatch(this, 'def')">Net-like molecule in bacterial cell walls</div>
+                        <div class="matching-item" data-match="5" onclick="selectMatch(this, 'def')">Organism that can survive with or without oxygen</div>
+                        <div class="matching-item" data-match="2" onclick="selectMatch(this, 'def')">Small circular DNA separate from chromosome</div>
+                        <div class="matching-item" data-match="4" onclick="selectMatch(this, 'def')">Organism that requires oxygen for respiration</div>
+                    </div>
+                </div>
+                <div id="matching-score" style="margin-top: 20px; text-align: center; font-weight: 600;"></div>
+            </div>
+
+            <!-- More Practice Questions -->
+            <div class="section">
+                <div class="section-header">
+                    <div class="section-icon">🎯</div>
+                    <h2 class="section-title">More Practice Questions</h2>
+                </div>
+
+                <div class="quiz-question" id="prac-q1">
+                    <h4>Question 1</h4>
+                    <p>A student observes bacteria under a microscope and sees rod-shaped cells. What term describes this shape?</p>
+                    <div class="quiz-options">
+                        <div class="quiz-option" onclick="checkAnswer(this, false, 'prac-q1')">
+                            <span class="option-marker">A</span>
+                            <span>Cocci</span>
+                        </div>
+                        <div class="quiz-option" onclick="checkAnswer(this, true, 'prac-q1')">
+                            <span class="option-marker">B</span>
+                            <span>Bacilli</span>
+                        </div>
+                        <div class="quiz-option" onclick="checkAnswer(this, false, 'prac-q1')">
+                            <span class="option-marker">C</span>
+                            <span>Spirilla</span>
+                        </div>
+                        <div class="quiz-option" onclick="checkAnswer(this, false, 'prac-q1')">
+                            <span class="option-marker">D</span>
+                            <span>Vibrios</span>
+                        </div>
+                    </div>
+                    <div class="feedback correct-feedback">✓ Correct! Bacilli are rod-shaped bacteria.</div>
+                    <div class="feedback incorrect-feedback">✗ Rod-shaped bacteria have a specific name. Think about the Latin root...</div>
+                </div>
+
+                <div class="quiz-question" id="prac-q2">
+                    <h4>Question 2</h4>
+                    <p>Which statement about bacterial plasmids is FALSE?</p>
+                    <div class="quiz-options">
+                        <div class="quiz-option" onclick="checkAnswer(this, false, 'prac-q2')">
+                            <span class="option-marker">A</span>
+                            <span>They can replicate independently</span>
+                        </div>
+                        <div class="quiz-option" onclick="checkAnswer(this, false, 'prac-q2')">
+                            <span class="option-marker">B</span>
+                            <span>They can be transferred between bacteria</span>
+                        </div>
+                        <div class="quiz-option" onclick="checkAnswer(this, true, 'prac-q2')">
+                            <span class="option-marker">C</span>
+                            <span>They contain the main bacterial chromosome</span>
+                        </div>
+                        <div class="quiz-option" onclick="checkAnswer(this, false, 'prac-q2')">
+                            <span class="option-marker">D</span>
+                            <span>They may code for antibiotic resistance</span>
+                        </div>
+                    </div>
+                    <div class="feedback correct-feedback">✓ Correct! Plasmids are SEPARATE from the main chromosome - they're small, additional pieces of circular DNA.</div>
+                    <div class="feedback incorrect-feedback">✗ Three of these are true about plasmids. Which one describes the nucleoid instead?</div>
+                </div>
+
+                <div class="quiz-question" id="prac-q3">
+                    <h4>Question 3</h4>
+                    <p>Obligate anaerobes can only respire in the absence of oxygen. Why might oxygen kill them?</p>
+                    <div class="quiz-options">
+                        <div class="quiz-option" onclick="checkAnswer(this, false, 'prac-q3')">
+                            <span class="option-marker">A</span>
+                            <span>Oxygen dissolves their cell walls</span>
+                        </div>
+                        <div class="quiz-option" onclick="checkAnswer(this, true, 'prac-q3')">
+                            <span class="option-marker">B</span>
+                            <span>They lack enzymes to detoxify reactive oxygen species</span>
+                        </div>
+                        <div class="quiz-option" onclick="checkAnswer(this, false, 'prac-q3')">
+                            <span class="option-marker">C</span>
+                            <span>Oxygen prevents DNA replication</span>
+                        </div>
+                        <div class="quiz-option" onclick="checkAnswer(this, false, 'prac-q3')">
+                            <span class="option-marker">D</span>
+                            <span>They cannot produce ATP in the presence of oxygen</span>
+                        </div>
+                    </div>
+                    <div class="feedback correct-feedback">✓ Correct! Obligate anaerobes lack enzymes like catalase and superoxide dismutase that protect against toxic oxygen radicals.</div>
+                    <div class="feedback incorrect-feedback">✗ Think about what happens when oxygen forms reactive species (free radicals) in cells...</div>
+                </div>
+
+                <div class="quiz-question" id="prac-q4">
+                    <h4>Question 4</h4>
+                    <p>What is the main difference between the nucleoid and a nucleus?</p>
+                    <div class="quiz-options">
+                        <div class="quiz-option" onclick="checkAnswer(this, false, 'prac-q4')">
+                            <span class="option-marker">A</span>
+                            <span>The nucleoid contains RNA, the nucleus contains DNA</span>
+                        </div>
+                        <div class="quiz-option" onclick="checkAnswer(this, false, 'prac-q4')">
+                            <span class="option-marker">B</span>
+                            <span>The nucleoid is larger than the nucleus</span>
+                        </div>
+                        <div class="quiz-option" onclick="checkAnswer(this, true, 'prac-q4')">
+                            <span class="option-marker">C</span>
+                            <span>The nucleoid has no surrounding membrane</span>
+                        </div>
+                        <div class="quiz-option" onclick="checkAnswer(this, false, 'prac-q4')">
+                            <span class="option-marker">D</span>
+                            <span>The nucleoid contains linear DNA</span>
+                        </div>
+                    </div>
+                    <div class="feedback correct-feedback">✓ Correct! The key difference is that the nucleoid is NOT membrane-bound, while the nucleus has a double membrane (nuclear envelope).</div>
+                    <div class="feedback incorrect-feedback">✗ Both contain DNA. What structural feature distinguishes prokaryotic DNA storage from eukaryotic?</div>
+                </div>
+            </div>
+
+            <div class="nav-buttons">
+                <button class="nav-btn prev" onclick="switchTab(2)">← Back to Gram Staining</button>
+                <button class="nav-btn next" onclick="switchTab(4)">Continue to Final Quiz →</button>
+            </div>
+        </div>
+
+        <!-- TAB 4: Final Quiz -->
+        <div class="tab-content" id="tab-4">
+            <div class="section">
+                <div class="section-header">
+                    <div class="section-icon">📝</div>
+                    <h2 class="section-title">Final Assessment</h2>
+                </div>
+                <p style="margin-bottom: 20px; color: var(--text-muted);">Test everything you've learned! Try to answer without looking back.</p>
+
+                <div class="quiz-question" id="final-q1">
+                    <h4>Question 1</h4>
+                    <p>Which of the following is NOT found in prokaryotic cells?</p>
+                    <div class="quiz-options">
+                        <div class="quiz-option" onclick="checkFinal(this, false, 'final-q1')">
+                            <span class="option-marker">A</span>
+                            <span>Ribosomes</span>
+                        </div>
+                        <div class="quiz-option" onclick="checkFinal(this, false, 'final-q1')">
+                            <span class="option-marker">B</span>
+                            <span>Cell membrane</span>
+                        </div>
+                        <div class="quiz-option" onclick="checkFinal(this, true, 'final-q1')">
+                            <span class="option-marker">C</span>
+                            <span>Mitochondria</span>
+                        </div>
+                        <div class="quiz-option" onclick="checkFinal(this, false, 'final-q1')">
+                            <span class="option-marker">D</span>
+                            <span>Cell wall</span>
+                        </div>
+                    </div>
+                    <div class="feedback correct-feedback">✓ Correct! Mitochondria are membrane-bound organelles found only in eukaryotes.</div>
+                    <div class="feedback incorrect-feedback">✗ Remember: prokaryotes have NO membrane-bound organelles.</div>
+                </div>
+
+                <div class="quiz-question" id="final-q2">
+                    <h4>Question 2</h4>
+                    <p>A Gram-negative bacterium would have:</p>
+                    <div class="quiz-options">
+                        <div class="quiz-option" onclick="checkFinal(this, false, 'final-q2')">
+                            <span class="option-marker">A</span>
+                            <span>Thick peptidoglycan and teichoic acid</span>
+                        </div>
+                        <div class="quiz-option" onclick="checkFinal(this, true, 'final-q2')">
+                            <span class="option-marker">B</span>
+                            <span>Thin peptidoglycan and an outer membrane with lipopolysaccharides</span>
+                        </div>
+                        <div class="quiz-option" onclick="checkFinal(this, false, 'final-q2')">
+                            <span class="option-marker">C</span>
+                            <span>No peptidoglycan</span>
+                        </div>
+                        <div class="quiz-option" onclick="checkFinal(this, false, 'final-q2')">
+                            <span class="option-marker">D</span>
+                            <span>80S ribosomes</span>
+                        </div>
+                    </div>
+                    <div class="feedback correct-feedback">✓ Correct! Gram-negative = thin peptidoglycan + outer membrane with LPS.</div>
+                    <div class="feedback incorrect-feedback">✗ Gram-negative bacteria stain red because their thin peptidoglycan doesn't retain the purple stain.</div>
+                </div>
+
+                <div class="quiz-question" id="final-q3">
+                    <h4>Question 3</h4>
+                    <p>Which structure enables bacteria to move through their environment?</p>
+                    <div class="quiz-options">
+                        <div class="quiz-option" onclick="checkFinal(this, false, 'final-q3')">
+                            <span class="option-marker">A</span>
+                            <span>Pili</span>
+                        </div>
+                        <div class="quiz-option" onclick="checkFinal(this, true, 'final-q3')">
+                            <span class="option-marker">B</span>
+                            <span>Flagella</span>
+                        </div>
+                        <div class="quiz-option" onclick="checkFinal(this, false, 'final-q3')">
+                            <span class="option-marker">C</span>
+                            <span>Capsule</span>
+                        </div>
+                        <div class="quiz-option" onclick="checkFinal(this, false, 'final-q3')">
+                            <span class="option-marker">D</span>
+                            <span>Plasmids</span>
+                        </div>
+                    </div>
+                    <div class="feedback correct-feedback">✓ Correct! Flagella are helical protein structures that rotate to propel bacteria.</div>
+                    <div class="feedback incorrect-feedback">✗ Pili are for attachment and conjugation. What's the whip-like structure for movement?</div>
+                </div>
+
+                <div class="quiz-question" id="final-q4">
+                    <h4>Question 4</h4>
+                    <p>Bacteria that can use oxygen if available but can also survive without it are called:</p>
+                    <div class="quiz-options">
+                        <div class="quiz-option" onclick="checkFinal(this, false, 'final-q4')">
+                            <span class="option-marker">A</span>
+                            <span>Obligate aerobes</span>
+                        </div>
+                        <div class="quiz-option" onclick="checkFinal(this, false, 'final-q4')">
+                            <span class="option-marker">B</span>
+                            <span>Obligate anaerobes</span>
+                        </div>
+                        <div class="quiz-option" onclick="checkFinal(this, true, 'final-q4')">
+                            <span class="option-marker">C</span>
+                            <span>Facultative anaerobes</span>
+                        </div>
+                        <div class="quiz-option" onclick="checkFinal(this, false, 'final-q4')">
+                            <span class="option-marker">D</span>
+                            <span>Microaerophiles</span>
+                        </div>
+                    </div>
+                    <div class="feedback correct-feedback">✓ Correct! Facultative anaerobes are flexible - they can use aerobic or anaerobic respiration.</div>
+                    <div class="feedback incorrect-feedback">✗ "Facultative" means optional/flexible. Which type can switch between oxygen and no oxygen?</div>
+                </div>
+
+                <div class="quiz-question" id="final-q5">
+                    <h4>Question 5</h4>
+                    <p>Which statement about mesosomes is correct?</p>
+                    <div class="quiz-options">
+                        <div class="quiz-option" onclick="checkFinal(this, false, 'final-q5')">
+                            <span class="option-marker">A</span>
+                            <span>They are found in all prokaryotic cells</span>
+                        </div>
+                        <div class="quiz-option" onclick="checkFinal(this, false, 'final-q5')">
+                            <span class="option-marker">B</span>
+                            <span>They are identical to mitochondria</span>
+                        </div>
+                        <div class="quiz-option" onclick="checkFinal(this, true, 'final-q5')">
+                            <span class="option-marker">C</span>
+                            <span>They may be infoldings associated with respiratory enzymes</span>
+                        </div>
+                        <div class="quiz-option" onclick="checkFinal(this, false, 'final-q5')">
+                            <span class="option-marker">D</span>
+                            <span>They contain the bacterial DNA</span>
+                        </div>
+                    </div>
+                    <div class="feedback correct-feedback">✓ Correct! Mesosomes are membrane infoldings that may house respiratory enzymes, though some may be preparation artefacts.</div>
+                    <div class="feedback incorrect-feedback">✗ Mesosomes are infoldings of the membrane. What might their function be?</div>
+                </div>
+
+                <div class="quiz-question" id="final-q6">
+                    <h4>Question 6</h4>
+                    <p>A bacterium is found to be resistant to penicillin. Which mechanism is MOST likely?</p>
+                    <div class="quiz-options">
+                        <div class="quiz-option" onclick="checkFinal(this, false, 'final-q6')">
+                            <span class="option-marker">A</span>
+                            <span>The bacterium lacks ribosomes</span>
+                        </div>
+                        <div class="quiz-option" onclick="checkFinal(this, true, 'final-q6')">
+                            <span class="option-marker">B</span>
+                            <span>The bacterium produces enzymes that break down the antibiotic</span>
+                        </div>
+                        <div class="quiz-option" onclick="checkFinal(this, false, 'final-q6')">
+                            <span class="option-marker">C</span>
+                            <span>The bacterium has no cell wall</span>
+                        </div>
+                        <div class="quiz-option" onclick="checkFinal(this, false, 'final-q6')">
+                            <span class="option-marker">D</span>
+                            <span>The bacterium is Gram-negative</span>
+                        </div>
+                    </div>
+                    <div class="feedback correct-feedback">✓ Correct! Many resistant bacteria produce beta-lactamase enzymes that destroy penicillin. Resistance genes are often carried on plasmids.</div>
+                    <div class="feedback incorrect-feedback">✗ While Gram-negative bacteria are naturally less susceptible, TRUE resistance often involves enzyme production...</div>
+                </div>
+            </div>
+
+            <!-- Score Display -->
+            <div class="section" id="final-results" style="display: none;">
+                <div class="score-display">
+                    <h3>Your Final Score</h3>
+                    <div class="score-number"><span id="final-score">0</span>/6</div>
+                    <p id="score-message">Keep practicing!</p>
+                </div>
+
+                <div class="confidence-section">
+                    <p>How confident do you feel about prokaryotic cells now?</p>
+                    <div class="confidence-buttons">
+                        <button class="confidence-btn" onclick="selectConfidence(this)">😟 Need more practice</button>
+                        <button class="confidence-btn" onclick="selectConfidence(this)">😐 Getting there</button>
+                        <button class="confidence-btn" onclick="selectConfidence(this)">😊 Confident!</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Summary -->
+            <div class="section">
+                <div class="section-header">
+                    <div class="section-icon">🎉</div>
+                    <h2 class="section-title">Key Takeaways</h2>
+                </div>
+                
+                <div class="summary-grid">
+                    <div class="summary-card">
+                        <div class="icon">🦠</div>
+                        <h4>No Membrane-Bound Organelles</h4>
+                        <p>Prokaryotes lack a nucleus and organelles like mitochondria</p>
+                    </div>
+                    <div class="summary-card">
+                        <div class="icon">🧬</div>
+                        <h4>Circular DNA</h4>
+                        <p>Single chromosome in nucleoid region + plasmids</p>
+                    </div>
+                    <div class="summary-card">
+                        <div class="icon">🧪</div>
+                        <h4>70S Ribosomes</h4>
+                        <p>Smaller than eukaryotic 80S - antibiotic target</p>
+                    </div>
+                    <div class="summary-card">
+                        <div class="icon">🔬</div>
+                        <h4>Peptidoglycan Walls</h4>
+                        <p>Gram+ = thick, purple; Gram- = thin + outer membrane, red</p>
+                    </div>
+                    <div class="summary-card">
+                        <div class="icon">🏃</div>
+                        <h4>Motility Structures</h4>
+                        <p>Flagella for movement, pili for attachment & conjugation</p>
+                    </div>
+                    <div class="summary-card">
+                        <div class="icon">🔷</div>
+                        <h4>Shape Classification</h4>
+                        <p>Cocci, bacilli, spirilla, vibrios</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="nav-buttons">
+                <button class="nav-btn prev" onclick="switchTab(3)">← Back to Practice</button>
+                <button class="nav-btn next" onclick="resetLesson()" style="background: var(--secondary);">🔄 Restart Lesson</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // State management
+        let currentTab = 0;
+        let tabsCompleted = [false, false, false, false, false];
+        let totalQuestions = 0;
+        let correctAnswers = 0;
+        let finalQuizScore = 0;
+        let finalQuizAnswered = 0;
+
+        // Matching game state
+        let selectedTerm = null;
+        let matchedPairs = 0;
+
+        // Tab switching
+        function switchTab(index) {
+            // Mark current tab as viewed (complete)
+            tabsCompleted[currentTab] = true;
+            
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            
+            // Show selected tab
+            document.getElementById('tab-' + index).classList.add('active');
+            document.querySelectorAll('.tab-btn')[index].classList.add('active');
+            
+            // Update tab completion indicators
+            updateTabIndicators();
+            
+            currentTab = index;
+            updateProgress();
+            
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function updateTabIndicators() {
+            document.querySelectorAll('.tab-btn').forEach((btn, i) => {
+                if (tabsCompleted[i]) {
+                    btn.classList.add('completed');
+                }
+            });
+        }
+
+        // Progress tracking
+        function updateProgress() {
+            const completedTabs = tabsCompleted.filter(t => t).length;
+            const progress = Math.round((completedTabs / 5) * 100);
+            document.getElementById('progress-fill').style.width = progress + '%';
+            document.getElementById('progress-percent').textContent = progress + '%';
+        }
+
+        // Learning objectives
+        function toggleObjective(element) {
+            element.classList.toggle('completed');
+        }
+
+        // Quiz answering
+        function checkAnswer(element, isCorrect, questionId) {
+            const question = document.getElementById(questionId);
+            const options = question.querySelectorAll('.quiz-option');
+            
+            // Prevent multiple answers
+            if (question.dataset.answered === 'true') return;
+            question.dataset.answered = 'true';
+            
+            // Find the correct option BEFORE disabling (by checking onclick attribute)
+            let correctOption = null;
+            options.forEach(opt => {
+                const onclickAttr = opt.getAttribute('onclick');
+                if (onclickAttr && onclickAttr.includes(', true,')) {
+                    correctOption = opt;
+                }
+            });
+            
+            // Now disable all options
+            options.forEach(opt => {
+                opt.classList.add('disabled');
+                opt.onclick = null;
+            });
+            
+            if (isCorrect) {
+                element.classList.add('correct');
+                question.querySelector('.feedback.correct-feedback').classList.add('show');
+                correctAnswers++;
+            } else {
+                element.classList.add('incorrect');
+                question.querySelector('.feedback.incorrect-feedback').classList.add('show');
+                // Show correct answer
+                if (correctOption) {
+                    correctOption.classList.add('correct');
+                }
+            }
+            totalQuestions++;
+        }
+
+        // Final quiz with scoring
+        function checkFinal(element, isCorrect, questionId) {
+            const question = document.getElementById(questionId);
+            const options = question.querySelectorAll('.quiz-option');
+            
+            if (question.dataset.answered === 'true') return;
+            question.dataset.answered = 'true';
+            
+            // Find the correct option BEFORE disabling
+            let correctOption = null;
+            options.forEach(opt => {
+                const onclickAttr = opt.getAttribute('onclick');
+                if (onclickAttr && onclickAttr.includes(', true,')) {
+                    correctOption = opt;
+                }
+            });
+            
+            // Disable all options
+            options.forEach(opt => {
+                opt.classList.add('disabled');
+                opt.onclick = null;
+            });
+            
+            if (isCorrect) {
+                element.classList.add('correct');
+                question.querySelector('.feedback.correct-feedback').classList.add('show');
+                finalQuizScore++;
+            } else {
+                element.classList.add('incorrect');
+                question.querySelector('.feedback.incorrect-feedback').classList.add('show');
+                // Show the correct answer
+                if (correctOption) {
+                    correctOption.classList.add('correct');
+                }
+            }
+            
+            finalQuizAnswered++;
+            
+            // Show results when all answered
+            if (finalQuizAnswered === 6) {
+                showFinalResults();
+            }
+        }
+
+        function showFinalResults() {
+            document.getElementById('final-results').style.display = 'block';
+            document.getElementById('final-score').textContent = finalQuizScore;
+            
+            const messages = [
+                "Keep practicing! Review the content and try again.",
+                "Getting there! Focus on the areas you found tricky.",
+                "Good effort! A bit more practice will help.",
+                "Nice work! You've got a solid understanding.",
+                "Great job! You really know your prokaryotes!",
+                "Excellent! You've mastered prokaryotic cells!"
+            ];
+            document.getElementById('score-message').textContent = messages[finalQuizScore];
+            
+            // Mark final tab as complete
+            tabsCompleted[4] = true;
+            updateTabIndicators();
+            updateProgress();
+        }
+
+        // Structure cards
+        function toggleCard(element) {
+            element.classList.toggle('expanded');
+        }
+
+        // Fill in the blanks
+        function checkBlanks() {
+            const inputs = document.querySelectorAll('.blank-input');
+            let allCorrect = true;
+            let score = 0;
+            
+            inputs.forEach(input => {
+                const answer = input.dataset.answer.toLowerCase();
+                const userAnswer = input.value.trim().toLowerCase();
+                
+                if (userAnswer === answer) {
+                    input.classList.remove('incorrect');
+                    input.classList.add('correct');
+                    score++;
+                } else {
+                    input.classList.remove('correct');
+                    input.classList.add('incorrect');
+                    allCorrect = false;
+                }
+            });
+            
+            const feedback = document.getElementById('blanks-feedback');
+            if (allCorrect) {
+                feedback.innerHTML = '<span style="color: var(--success); font-weight: 600;">✓ All correct! Well done!</span>';
+            } else {
+                feedback.innerHTML = `<span style="color: var(--accent); font-weight: 600;">You got ${score}/${inputs.length} correct. Try again!</span>`;
+            }
+        }
+
+        // Matching exercise
+        function selectMatch(element, type) {
+            if (element.classList.contains('matched')) return;
+            
+            if (type === 'term') {
+                // Deselect previous term
+                document.querySelectorAll('.matching-column:first-child .matching-item').forEach(item => {
+                    item.classList.remove('selected');
+                });
+                element.classList.add('selected');
+                selectedTerm = element;
+            } else if (type === 'def' && selectedTerm) {
+                // Check if match is correct
+                if (selectedTerm.dataset.match === element.dataset.match) {
+                    selectedTerm.classList.remove('selected');
+                    selectedTerm.classList.add('matched');
+                    element.classList.add('matched');
+                    matchedPairs++;
+                    
+                    if (matchedPairs === 5) {
+                        document.getElementById('matching-score').innerHTML = 
+                            '<span style="color: var(--success);">🎉 All matched correctly!</span>';
+                    }
+                } else {
+                    // Wrong match - flash red
+                    element.style.background = '#FFEBEE';
+                    setTimeout(() => {
+                        element.style.background = '';
+                    }, 500);
+                }
+                selectedTerm = null;
+            }
+        }
+
+        // Confidence rating
+        function selectConfidence(element) {
+            document.querySelectorAll('.confidence-btn').forEach(btn => {
+                btn.classList.remove('selected');
+            });
+            element.classList.add('selected');
+        }
+
+        // Reset lesson
+        function resetLesson() {
+            location.reload();
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            updateProgress();
+        });
+    </script>
+</body>
+</html>
