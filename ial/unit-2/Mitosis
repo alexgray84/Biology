@@ -1,0 +1,2167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mitosis | Interactive Biology Lesson</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-deep: #0c0a12;
+            --bg-card: #151320;
+            --bg-elevated: #1c1a28;
+            --bg-input: #232133;
+            --border: #2d2a40;
+            --border-light: #3d3a55;
+            --accent: #c084fc;
+            --accent-dim: #9333ea;
+            --accent-glow: rgba(192, 132, 252, 0.15);
+            --success: #4ade80;
+            --success-dim: #22c55e;
+            --error: #f87171;
+            --warning: #fbbf24;
+            --text: #f1f0f5;
+            --text-dim: #a5a3b5;
+            --text-muted: #6b6980;
+            --prophase: #ec4899;
+            --metaphase: #8b5cf6;
+            --anaphase: #f97316;
+            --telophase: #06b6d4;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: var(--bg-deep);
+            color: var(--text);
+            line-height: 1.7;
+            min-height: 100vh;
+        }
+
+        /* Animated background */
+        .bg-pattern {
+            position: fixed;
+            inset: 0;
+            background: 
+                radial-gradient(ellipse 80% 50% at 20% 40%, rgba(147, 51, 234, 0.08) 0%, transparent 50%),
+                radial-gradient(ellipse 60% 40% at 80% 60%, rgba(236, 72, 153, 0.06) 0%, transparent 50%),
+                radial-gradient(ellipse 50% 30% at 50% 90%, rgba(6, 182, 212, 0.05) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .app {
+            position: relative;
+            z-index: 1;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 32px 20px 100px;
+        }
+
+        /* Header */
+        header {
+            text-align: center;
+            margin-bottom: 32px;
+            animation: fadeUp 0.6s ease-out;
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .spec-badge {
+            display: inline-flex;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .spec-badge span {
+            padding: 6px 12px;
+            background: var(--bg-elevated);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-dim);
+            letter-spacing: 0.5px;
+        }
+
+        .spec-badge span.highlight {
+            background: var(--accent-glow);
+            border-color: var(--accent-dim);
+            color: var(--accent);
+        }
+
+        h1 {
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--text) 0%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 12px;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: var(--text-dim);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Learning Objectives */
+        .objectives {
+            background: linear-gradient(135deg, var(--bg-card) 0%, rgba(147, 51, 234, 0.05) 100%);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 28px;
+            animation: fadeUp 0.6s ease-out 0.1s both;
+        }
+
+        .objectives h2 {
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--accent);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .objectives ul {
+            list-style: none;
+        }
+
+        .objectives li {
+            position: relative;
+            padding-left: 28px;
+            margin-bottom: 10px;
+            color: var(--text-dim);
+            font-size: 0.95rem;
+        }
+
+        .objectives li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 8px;
+            width: 16px;
+            height: 16px;
+            border: 2px solid var(--accent);
+            border-radius: 4px;
+            opacity: 0.6;
+        }
+
+        .objectives li.complete::before {
+            background: var(--success);
+            border-color: var(--success);
+        }
+
+        .objectives li.complete::after {
+            content: '✓';
+            position: absolute;
+            left: 3px;
+            top: 6px;
+            font-size: 12px;
+            color: var(--bg-deep);
+            font-weight: bold;
+        }
+
+        /* Tab Navigation */
+        .tabs {
+            display: flex;
+            gap: 6px;
+            background: var(--bg-card);
+            padding: 6px;
+            border-radius: 14px;
+            margin-bottom: 24px;
+            border: 1px solid var(--border);
+            overflow-x: auto;
+            animation: fadeUp 0.6s ease-out 0.2s both;
+        }
+
+        .tab {
+            flex: 1;
+            min-width: 100px;
+            padding: 12px 16px;
+            background: transparent;
+            border: none;
+            border-radius: 10px;
+            color: var(--text-muted);
+            font-family: inherit;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            white-space: nowrap;
+        }
+
+        .tab:hover {
+            color: var(--text-dim);
+            background: var(--bg-elevated);
+        }
+
+        .tab.active {
+            background: var(--accent);
+            color: white;
+            box-shadow: 0 4px 15px rgba(192, 132, 252, 0.3);
+        }
+
+        .tab .num {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            line-height: 20px;
+            text-align: center;
+            background: rgba(255,255,255,0.15);
+            border-radius: 5px;
+            font-size: 0.75rem;
+            margin-right: 6px;
+        }
+
+        .tab.active .num {
+            background: rgba(255,255,255,0.25);
+        }
+
+        /* Panels */
+        .panel {
+            display: none;
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        .panel.active { display: block; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Cards */
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 28px;
+            margin-bottom: 20px;
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .card-icon {
+            width: 44px;
+            height: 44px;
+            background: var(--accent-glow);
+            border: 1px solid var(--accent-dim);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+        }
+
+        .card-header h3 {
+            font-size: 1.25rem;
+            font-weight: 700;
+        }
+
+        .card-header .tag {
+            margin-left: auto;
+            padding: 4px 12px;
+            background: var(--bg-elevated);
+            border-radius: 20px;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        /* Content Typography */
+        .content p {
+            color: var(--text-dim);
+            margin-bottom: 16px;
+            font-size: 0.95rem;
+        }
+
+        .content p:last-child { margin-bottom: 0; }
+
+        .content strong {
+            color: var(--text);
+            font-weight: 600;
+        }
+
+        .key-term {
+            color: var(--accent);
+            font-weight: 600;
+            border-bottom: 1px dashed var(--accent-dim);
+            cursor: help;
+        }
+
+        .highlight-box {
+            background: var(--accent-glow);
+            border-left: 3px solid var(--accent);
+            padding: 16px 20px;
+            border-radius: 0 10px 10px 0;
+            margin: 20px 0;
+        }
+
+        .highlight-box p {
+            color: var(--text);
+            margin: 0;
+        }
+
+        .exam-tip {
+            background: linear-gradient(135deg, rgba(251, 191, 36, 0.1) 0%, rgba(251, 191, 36, 0.02) 100%);
+            border: 1px solid rgba(251, 191, 36, 0.3);
+            border-radius: 12px;
+            padding: 16px 20px;
+            margin: 20px 0;
+        }
+
+        .exam-tip-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 700;
+            color: var(--warning);
+            font-size: 0.85rem;
+            margin-bottom: 8px;
+        }
+
+        .exam-tip p {
+            color: var(--text-dim);
+            margin: 0;
+            font-size: 0.9rem;
+        }
+
+        /* Stage Cards */
+        .stages-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 16px;
+            margin: 24px 0;
+        }
+
+        .stage-card {
+            background: var(--bg-elevated);
+            border: 2px solid var(--border);
+            border-radius: 14px;
+            padding: 24px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .stage-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.3);
+        }
+
+        .stage-card.prophase { border-color: var(--prophase); }
+        .stage-card.prophase:hover { box-shadow: 0 12px 30px rgba(236, 72, 153, 0.2); }
+        .stage-card.metaphase { border-color: var(--metaphase); }
+        .stage-card.metaphase:hover { box-shadow: 0 12px 30px rgba(139, 92, 246, 0.2); }
+        .stage-card.anaphase { border-color: var(--anaphase); }
+        .stage-card.anaphase:hover { box-shadow: 0 12px 30px rgba(249, 115, 22, 0.2); }
+        .stage-card.telophase { border-color: var(--telophase); }
+        .stage-card.telophase:hover { box-shadow: 0 12px 30px rgba(6, 182, 212, 0.2); }
+
+        .stage-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .stage-num {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 1rem;
+        }
+
+        .prophase .stage-num { background: rgba(236, 72, 153, 0.2); color: var(--prophase); }
+        .metaphase .stage-num { background: rgba(139, 92, 246, 0.2); color: var(--metaphase); }
+        .anaphase .stage-num { background: rgba(249, 115, 22, 0.2); color: var(--anaphase); }
+        .telophase .stage-num { background: rgba(6, 182, 212, 0.2); color: var(--telophase); }
+
+        .stage-name {
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+
+        .prophase .stage-name { color: var(--prophase); }
+        .metaphase .stage-name { color: var(--metaphase); }
+        .anaphase .stage-name { color: var(--anaphase); }
+        .telophase .stage-name { color: var(--telophase); }
+
+        .stage-card ul {
+            list-style: none;
+        }
+
+        .stage-card li {
+            position: relative;
+            padding-left: 20px;
+            margin-bottom: 8px;
+            color: var(--text-dim);
+            font-size: 0.9rem;
+        }
+
+        .stage-card li::before {
+            content: '→';
+            position: absolute;
+            left: 0;
+            color: var(--text-muted);
+        }
+
+        /* Cell Diagram */
+        .cell-diagram {
+            background: var(--bg-elevated);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 32px;
+            text-align: center;
+            margin: 24px 0;
+        }
+
+        .cell-visual {
+            width: 200px;
+            height: 200px;
+            margin: 0 auto 20px;
+            position: relative;
+        }
+
+        .cell-membrane {
+            width: 100%;
+            height: 100%;
+            border: 3px solid var(--accent);
+            border-radius: 50%;
+            position: relative;
+            animation: pulse 3s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.02); opacity: 0.9; }
+        }
+
+        .nucleus {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80px;
+            height: 80px;
+            background: rgba(192, 132, 252, 0.2);
+            border: 2px solid var(--accent);
+            border-radius: 50%;
+        }
+
+        .nucleolus {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 20px;
+            height: 20px;
+            background: var(--accent);
+            border-radius: 50%;
+        }
+
+        .chromatin {
+            position: absolute;
+            width: 40px;
+            height: 3px;
+            background: var(--prophase);
+            border-radius: 2px;
+        }
+
+        .chromatin:nth-child(1) { top: 25px; left: 15px; transform: rotate(30deg); }
+        .chromatin:nth-child(2) { top: 35px; left: 25px; transform: rotate(-20deg); }
+        .chromatin:nth-child(3) { top: 45px; left: 18px; transform: rotate(45deg); }
+
+        .centriole {
+            position: absolute;
+            width: 8px;
+            height: 20px;
+            background: var(--telophase);
+            border-radius: 3px;
+        }
+
+        .centriole:nth-child(1) { top: 20px; right: 30px; transform: rotate(45deg); }
+        .centriole:nth-child(2) { top: 25px; right: 22px; transform: rotate(-45deg); }
+
+        .diagram-label {
+            font-size: 0.85rem;
+            color: var(--text-dim);
+            margin-top: 12px;
+        }
+
+        /* Mnemonic Box */
+        .mnemonic {
+            background: linear-gradient(135deg, var(--bg-elevated) 0%, rgba(139, 92, 246, 0.08) 100%);
+            border: 2px dashed var(--metaphase);
+            border-radius: 14px;
+            padding: 24px;
+            text-align: center;
+            margin: 24px 0;
+        }
+
+        .mnemonic-title {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--metaphase);
+            margin-bottom: 12px;
+        }
+
+        .mnemonic-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 8px;
+        }
+
+        .mnemonic-text span {
+            color: var(--accent);
+        }
+
+        .mnemonic-sub {
+            font-size: 0.9rem;
+            color: var(--text-dim);
+        }
+
+        /* Quiz Section */
+        .quiz-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 28px;
+            margin-bottom: 20px;
+        }
+
+        .quiz-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .quiz-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .quiz-icon {
+            width: 36px;
+            height: 36px;
+            background: rgba(74, 222, 128, 0.15);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+        }
+
+        .quiz-title h3 {
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+
+        .quiz-progress {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .question {
+            margin-bottom: 24px;
+        }
+
+        .question-text {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: var(--text);
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .option {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 14px 18px;
+            background: var(--bg-elevated);
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .option:hover {
+            border-color: var(--accent-dim);
+            background: var(--bg-input);
+        }
+
+        .option.selected {
+            border-color: var(--accent);
+            background: var(--accent-glow);
+        }
+
+        .option.correct {
+            border-color: var(--success);
+            background: rgba(74, 222, 128, 0.1);
+        }
+
+        .option.incorrect {
+            border-color: var(--error);
+            background: rgba(248, 113, 113, 0.1);
+        }
+
+        .option-marker {
+            width: 28px;
+            height: 28px;
+            border: 2px solid var(--border-light);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            flex-shrink: 0;
+        }
+
+        .option.selected .option-marker {
+            border-color: var(--accent);
+            background: var(--accent);
+            color: white;
+        }
+
+        .option.correct .option-marker {
+            border-color: var(--success);
+            background: var(--success);
+            color: white;
+        }
+
+        .option.incorrect .option-marker {
+            border-color: var(--error);
+            background: var(--error);
+            color: white;
+        }
+
+        .option-text {
+            color: var(--text-dim);
+            font-size: 0.95rem;
+        }
+
+        .option.selected .option-text,
+        .option.correct .option-text {
+            color: var(--text);
+        }
+
+        .feedback {
+            display: none;
+            padding: 16px 20px;
+            border-radius: 12px;
+            margin-top: 16px;
+            font-size: 0.9rem;
+        }
+
+        .feedback.show { display: block; }
+
+        .feedback.correct {
+            background: rgba(74, 222, 128, 0.1);
+            border: 1px solid rgba(74, 222, 128, 0.3);
+            color: var(--success);
+        }
+
+        .feedback.incorrect {
+            background: rgba(248, 113, 113, 0.1);
+            border: 1px solid rgba(248, 113, 113, 0.3);
+            color: var(--error);
+        }
+
+        .feedback strong { display: block; margin-bottom: 6px; }
+
+        .check-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            background: var(--accent);
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-family: inherit;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-top: 8px;
+        }
+
+        .check-btn:hover {
+            background: var(--accent-dim);
+            transform: translateY(-2px);
+        }
+
+        .check-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Worked Example */
+        .worked-example {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            overflow: hidden;
+            margin: 24px 0;
+        }
+
+        .worked-header {
+            background: linear-gradient(135deg, var(--bg-elevated) 0%, rgba(6, 182, 212, 0.1) 100%);
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .worked-header h4 {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--telophase);
+        }
+
+        .worked-body {
+            padding: 24px;
+        }
+
+        .step {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .step:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+
+        .step-number {
+            width: 32px;
+            height: 32px;
+            background: var(--bg-elevated);
+            border: 2px solid var(--telophase);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.85rem;
+            color: var(--telophase);
+            flex-shrink: 0;
+        }
+
+        .step-content h5 {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 8px;
+        }
+
+        .step-content p {
+            color: var(--text-dim);
+            font-size: 0.9rem;
+            margin: 0;
+        }
+
+        .formula-box {
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 16px 20px;
+            margin: 12px 0;
+            font-family: 'Source Serif 4', serif;
+            font-size: 1.1rem;
+            color: var(--accent);
+            text-align: center;
+        }
+
+        .calculation {
+            background: var(--bg-elevated);
+            border-radius: 10px;
+            padding: 16px 20px;
+            margin: 12px 0;
+            font-family: 'Source Serif 4', serif;
+        }
+
+        .calculation .line {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin: 8px 0;
+            color: var(--text-dim);
+        }
+
+        .calculation .result {
+            color: var(--success);
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        /* Vocab List */
+        .vocab-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 12px;
+            margin: 20px 0;
+        }
+
+        .vocab-item {
+            background: var(--bg-elevated);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 16px 20px;
+        }
+
+        .vocab-term {
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 6px;
+        }
+
+        .vocab-def {
+            font-size: 0.9rem;
+            color: var(--text-dim);
+        }
+
+        /* Exam Question */
+        .exam-question {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            overflow: hidden;
+            margin: 24px 0;
+        }
+
+        .exam-header {
+            background: linear-gradient(135deg, rgba(251, 191, 36, 0.1) 0%, rgba(251, 191, 36, 0.02) 100%);
+            padding: 16px 24px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .exam-type {
+            font-weight: 700;
+            color: var(--warning);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .marks {
+            background: var(--bg-elevated);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-dim);
+        }
+
+        .exam-body {
+            padding: 24px;
+        }
+
+        .exam-body > p {
+            font-size: 1rem;
+            color: var(--text);
+            margin-bottom: 20px;
+        }
+
+        .support-section {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px dashed var(--border);
+        }
+
+        .support-toggle {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: none;
+            border: none;
+            color: var(--accent);
+            font-family: inherit;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            padding: 0;
+        }
+
+        .support-toggle:hover { text-decoration: underline; }
+
+        .support-content {
+            display: none;
+            margin-top: 16px;
+        }
+
+        .support-content.show { display: block; }
+
+        .structure-guide {
+            background: var(--bg-elevated);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 16px;
+        }
+
+        .structure-guide h5 {
+            font-size: 0.85rem;
+            color: var(--text);
+            margin-bottom: 12px;
+        }
+
+        .structure-guide ul {
+            list-style: none;
+        }
+
+        .structure-guide li {
+            position: relative;
+            padding-left: 20px;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+            color: var(--text-dim);
+        }
+
+        .structure-guide li::before {
+            content: '•';
+            position: absolute;
+            left: 6px;
+            color: var(--accent);
+        }
+
+        .key-words {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .key-word {
+            padding: 6px 12px;
+            background: var(--accent-glow);
+            border: 1px solid var(--accent-dim);
+            border-radius: 20px;
+            font-size: 0.8rem;
+            color: var(--accent);
+        }
+
+        .common-mistakes {
+            background: rgba(248, 113, 113, 0.08);
+            border: 1px solid rgba(248, 113, 113, 0.2);
+            border-radius: 12px;
+            padding: 16px 20px;
+            margin-top: 16px;
+        }
+
+        .common-mistakes h5 {
+            font-size: 0.85rem;
+            color: var(--error);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .common-mistakes ul {
+            list-style: none;
+        }
+
+        .common-mistakes li {
+            font-size: 0.85rem;
+            color: var(--text-dim);
+            margin-bottom: 6px;
+            padding-left: 16px;
+            position: relative;
+        }
+
+        .common-mistakes li::before {
+            content: '✗';
+            position: absolute;
+            left: 0;
+            color: var(--error);
+        }
+
+        /* Progress Tracker */
+        .progress-tracker {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(12, 10, 18, 0.95);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid var(--border);
+            padding: 16px 24px;
+            z-index: 100;
+        }
+
+        .progress-inner {
+            max-width: 1000px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .progress-text {
+            font-size: 0.85rem;
+            color: var(--text-dim);
+            white-space: nowrap;
+        }
+
+        .progress-text strong {
+            color: var(--accent);
+        }
+
+        .progress-bar {
+            flex: 1;
+            height: 6px;
+            background: var(--border);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent), var(--success));
+            border-radius: 3px;
+            transition: width 0.4s ease;
+        }
+
+        .nav-btns {
+            display: flex;
+            gap: 10px;
+        }
+
+        .nav-btn {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 10px 20px;
+            background: var(--bg-elevated);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            color: var(--text-dim);
+            font-family: inherit;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .nav-btn:hover {
+            background: var(--bg-input);
+            color: var(--text);
+        }
+
+        .nav-btn.primary {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: white;
+        }
+
+        .nav-btn.primary:hover {
+            background: var(--accent-dim);
+        }
+
+        /* Summary Cards */
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            margin: 24px 0;
+        }
+
+        @media (max-width: 600px) {
+            .summary-grid { grid-template-columns: 1fr; }
+        }
+
+        .summary-card {
+            background: var(--bg-elevated);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 20px;
+        }
+
+        .summary-card h4 {
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .summary-card ul {
+            list-style: none;
+        }
+
+        .summary-card li {
+            font-size: 0.9rem;
+            color: var(--text-dim);
+            margin-bottom: 8px;
+            padding-left: 16px;
+            position: relative;
+        }
+
+        .summary-card li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--success);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .tabs {
+                flex-wrap: nowrap;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+            
+            .tab {
+                flex: 0 0 auto;
+                min-width: 80px;
+                padding: 10px 14px;
+                font-size: 0.8rem;
+            }
+
+            .card { padding: 20px; }
+            
+            .stages-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .progress-inner {
+                flex-wrap: wrap;
+                gap: 12px;
+            }
+
+            .progress-text { order: 1; width: 100%; text-align: center; }
+            .progress-bar { order: 2; width: 100%; }
+            .nav-btns { order: 3; width: 100%; justify-content: center; }
+        }
+
+        /* Sequencing Game */
+        .sequence-game {
+            margin: 24px 0;
+        }
+
+        .sequence-slots {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .sequence-slot {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 16px 20px;
+            background: var(--bg-elevated);
+            border: 2px dashed var(--border-light);
+            border-radius: 12px;
+            min-height: 60px;
+        }
+
+        .slot-number {
+            width: 32px;
+            height: 32px;
+            background: var(--bg-input);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: var(--text-muted);
+            flex-shrink: 0;
+        }
+
+        .slot-content {
+            flex: 1;
+            font-size: 0.95rem;
+            color: var(--text-muted);
+        }
+
+        .sequence-slot.filled {
+            border-style: solid;
+            border-color: var(--accent);
+            background: var(--accent-glow);
+        }
+
+        .sequence-slot.filled .slot-content {
+            color: var(--text);
+        }
+
+        .sequence-slot.correct {
+            border-color: var(--success);
+            background: rgba(74, 222, 128, 0.1);
+        }
+
+        .sequence-slot.incorrect {
+            border-color: var(--error);
+            background: rgba(248, 113, 113, 0.1);
+        }
+
+        .sequence-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .sequence-option {
+            padding: 12px 18px;
+            background: var(--bg-card);
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            font-size: 0.9rem;
+            color: var(--text-dim);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .sequence-option:hover {
+            border-color: var(--accent);
+            color: var(--text);
+        }
+
+        .sequence-option.used {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        /* Completion Animation */
+        @keyframes celebrate {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .quiz-card.complete {
+            animation: celebrate 0.5s ease;
+            border-color: var(--success);
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-pattern"></div>
+    
+    <div class="app">
+        <header>
+            <div class="spec-badge">
+                <span>A-Level Biology</span>
+                <span class="highlight">3.14</span>
+                <span class="highlight">3.15</span>
+                <span class="highlight">3.16</span>
+                <span class="highlight">CP6</span>
+            </div>
+            <h1>Mitosis</h1>
+            <p class="subtitle">Cell division for growth and asexual reproduction</p>
+        </header>
+
+        <div class="objectives">
+            <h2>🎯 Learning Objectives</h2>
+            <ul>
+                <li id="obj1">Understand the role of mitosis in producing genetically identical daughter cells for growth and asexual reproduction</li>
+                <li id="obj2">Know how to calculate mitotic indices</li>
+            </ul>
+        </div>
+
+        <div class="tabs">
+            <button class="tab active" onclick="showTab(0)"><span class="num">1</span>Introduction</button>
+            <button class="tab" onclick="showTab(1)"><span class="num">2</span>Stages</button>
+            <button class="tab" onclick="showTab(2)"><span class="num">3</span>Cytokinesis</button>
+            <button class="tab" onclick="showTab(3)"><span class="num">4</span>Mitotic Index</button>
+            <button class="tab" onclick="showTab(4)"><span class="num">5</span>Practice</button>
+            <button class="tab" onclick="showTab(5)"><span class="num">6</span>Summary</button>
+        </div>
+
+        <!-- Tab 1: Introduction -->
+        <div class="panel active" id="panel0">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">🔬</div>
+                    <h3>What is Mitosis?</h3>
+                    <span class="tag">Core Concept</span>
+                </div>
+                <div class="content">
+                    <p>Mitosis is the process of nuclear division that produces two <strong>genetically identical daughter cells</strong>. It's essential for <strong>growth</strong>, <strong>repair</strong>, and <strong>asexual reproduction</strong> in organisms.</p>
+                    
+                    <p>Before mitosis begins, the cell spends most of its life in <span class="key-term" title="The phase between cell divisions when the cell grows and DNA replicates">interphase</span>. During interphase:</p>
+                    
+                    <ul style="margin-left: 20px; margin-bottom: 16px; color: var(--text-dim);">
+                        <li style="margin-bottom: 8px;">DNA replicates to form identical copies</li>
+                        <li style="margin-bottom: 8px;">New proteins and organelles are synthesised</li>
+                        <li style="margin-bottom: 8px;">ATP production increases to provide energy for division</li>
+                        <li style="margin-bottom: 8px;">The cell grows to prepare for producing two new cells</li>
+                    </ul>
+
+                    <div class="highlight-box">
+                        <p>⚡ <strong>Key Point:</strong> Interphase is NOT a resting phase – the cell is extremely active, preparing for division.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="cell-diagram">
+                <div class="cell-visual">
+                    <div class="cell-membrane">
+                        <div class="nucleus">
+                            <div class="chromatin"></div>
+                            <div class="chromatin"></div>
+                            <div class="chromatin"></div>
+                            <div class="nucleolus"></div>
+                        </div>
+                        <div class="centriole"></div>
+                        <div class="centriole"></div>
+                    </div>
+                </div>
+                <p class="diagram-label">A cell in <strong>interphase</strong> – chromatin threads visible, nucleolus present, centrioles paired</p>
+            </div>
+
+            <div class="mnemonic">
+                <div class="mnemonic-title">🧠 Remember the Stages</div>
+                <div class="mnemonic-text"><span>P</span>lease <span>M</span>ake <span>A</span>nother <span>T</span>ea</div>
+                <div class="mnemonic-sub">Prophase → Metaphase → Anaphase → Telophase</div>
+            </div>
+
+            <!-- Quick Check 1 -->
+            <div class="quiz-card" id="quiz1">
+                <div class="quiz-header">
+                    <div class="quiz-title">
+                        <div class="quiz-icon">✓</div>
+                        <h3>Quick Check</h3>
+                    </div>
+                    <span class="quiz-progress">Retrieval Practice</span>
+                </div>
+                <div class="question">
+                    <p class="question-text">What happens to DNA during interphase?</p>
+                    <div class="options">
+                        <div class="option" onclick="selectOption(this, 'quiz1')">
+                            <div class="option-marker">A</div>
+                            <div class="option-text">DNA condenses into visible chromosomes</div>
+                        </div>
+                        <div class="option" onclick="selectOption(this, 'quiz1')">
+                            <div class="option-marker">B</div>
+                            <div class="option-text">DNA replicates to form identical copies</div>
+                        </div>
+                        <div class="option" onclick="selectOption(this, 'quiz1')">
+                            <div class="option-marker">C</div>
+                            <div class="option-text">DNA is broken down and recycled</div>
+                        </div>
+                        <div class="option" onclick="selectOption(this, 'quiz1')">
+                            <div class="option-marker">D</div>
+                            <div class="option-text">DNA moves to opposite poles of the cell</div>
+                        </div>
+                    </div>
+                    <div class="feedback" id="feedback-quiz1"></div>
+                </div>
+                <button class="check-btn" onclick="checkAnswer('quiz1', 1, 'Correct! DNA replication during interphase ensures each daughter cell will receive a complete copy of the genetic information.', 'Not quite. During interphase, DNA replicates to create identical copies before the cell divides.')">Check Answer</button>
+            </div>
+        </div>
+
+        <!-- Tab 2: Stages of Mitosis -->
+        <div class="panel" id="panel1">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">🔄</div>
+                    <h3>The Stages of Mitosis</h3>
+                    <span class="tag">PMAT</span>
+                </div>
+                <div class="content">
+                    <p>Mitosis is a continuous process, but scientists divide it into four distinct stages for easier study. The German cytologist <strong>Walther Flemming</strong> (1843-1905) first described this process as the "dance of the chromosomes".</p>
+                </div>
+            </div>
+
+            <div class="stages-grid">
+                <div class="stage-card prophase">
+                    <div class="stage-header">
+                        <div class="stage-num">P</div>
+                        <div class="stage-name">Prophase</div>
+                    </div>
+                    <ul>
+                        <li>Chromosomes coil up and become visible</li>
+                        <li>Each chromosome consists of two <strong>sister chromatids</strong> joined at the <strong>centromere</strong></li>
+                        <li>Nucleolus breaks down</li>
+                        <li>Centrioles move to opposite poles</li>
+                        <li>Spindle fibres begin to form</li>
+                    </ul>
+                </div>
+
+                <div class="stage-card metaphase">
+                    <div class="stage-header">
+                        <div class="stage-num">M</div>
+                        <div class="stage-name">Metaphase</div>
+                    </div>
+                    <ul>
+                        <li>Nuclear membrane breaks down completely</li>
+                        <li>Centrioles at opposite poles</li>
+                        <li>Spindle fibres fully formed</li>
+                        <li>Chromosomes line up at the <strong>metaphase plate</strong> (equator)</li>
+                        <li>Each centromere attaches to a spindle fibre</li>
+                    </ul>
+                </div>
+
+                <div class="stage-card anaphase">
+                    <div class="stage-header">
+                        <div class="stage-num">A</div>
+                        <div class="stage-name">Anaphase</div>
+                    </div>
+                    <ul>
+                        <li>Centromeres split</li>
+                        <li>Sister chromatids separate – they are now individual chromosomes</li>
+                        <li>Spindle fibres pull chromosomes to opposite poles</li>
+                        <li>This happens quickly (minutes)</li>
+                        <li>Motor proteins "walk" along microtubules</li>
+                    </ul>
+                </div>
+
+                <div class="stage-card telophase">
+                    <div class="stage-header">
+                        <div class="stage-num">T</div>
+                        <div class="stage-name">Telophase</div>
+                    </div>
+                    <ul>
+                        <li>Spindle fibres break down</li>
+                        <li>Nuclear envelopes reform around each set</li>
+                        <li>Nucleoli and centrioles reform</li>
+                        <li>Chromosomes uncoil and become less visible</li>
+                        <li>Two nuclei now present</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="exam-tip">
+                <div class="exam-tip-header">⚠️ EXAM HINT</div>
+                <p>The <strong>spindle</strong> is what moves the chromosomes. It must form <em>before</em> the chromosomes start to move. Questions often ask about the sequence of events – make sure you know that spindle formation happens in prophase/metaphase, not anaphase.</p>
+            </div>
+
+            <!-- Sequencing Quiz -->
+            <div class="quiz-card" id="quiz2">
+                <div class="quiz-header">
+                    <div class="quiz-title">
+                        <div class="quiz-icon">🔢</div>
+                        <h3>Put in Order</h3>
+                    </div>
+                    <span class="quiz-progress">Sequencing Challenge</span>
+                </div>
+                <div class="question">
+                    <p class="question-text">Arrange these events in the correct order (click to place):</p>
+                    <div class="sequence-game">
+                        <div class="sequence-slots" id="sequenceSlots">
+                            <div class="sequence-slot" data-slot="0">
+                                <div class="slot-number">1</div>
+                                <div class="slot-content">Click an option below...</div>
+                            </div>
+                            <div class="sequence-slot" data-slot="1">
+                                <div class="slot-number">2</div>
+                                <div class="slot-content">Click an option below...</div>
+                            </div>
+                            <div class="sequence-slot" data-slot="2">
+                                <div class="slot-number">3</div>
+                                <div class="slot-content">Click an option below...</div>
+                            </div>
+                            <div class="sequence-slot" data-slot="3">
+                                <div class="slot-number">4</div>
+                                <div class="slot-content">Click an option below...</div>
+                            </div>
+                        </div>
+                        <div class="sequence-options" id="sequenceOptions">
+                            <div class="sequence-option" data-correct="2" onclick="placeSequence(this)">Centromeres split and chromatids separate</div>
+                            <div class="sequence-option" data-correct="0" onclick="placeSequence(this)">Chromosomes condense and become visible</div>
+                            <div class="sequence-option" data-correct="3" onclick="placeSequence(this)">Nuclear envelopes reform</div>
+                            <div class="sequence-option" data-correct="1" onclick="placeSequence(this)">Chromosomes line up at the equator</div>
+                        </div>
+                    </div>
+                    <div class="feedback" id="feedback-quiz2"></div>
+                </div>
+                <button class="check-btn" onclick="checkSequence()">Check Sequence</button>
+            </div>
+        </div>
+
+        <!-- Tab 3: Cytokinesis -->
+        <div class="panel" id="panel2">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">🔀</div>
+                    <h3>Cytokinesis</h3>
+                    <span class="tag">Final Division</span>
+                </div>
+                <div class="content">
+                    <p>After mitosis divides the nucleus, <span class="key-term" title="The division of the cytoplasm to form two separate cells">cytokinesis</span> divides the cytoplasm to create two separate daughter cells.</p>
+                    
+                    <div class="highlight-box">
+                        <p>📌 <strong>Result:</strong> Two genetically identical daughter cells, each with the same number of chromosomes as the parent cell.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stages-grid">
+                <div class="stage-card" style="border-color: var(--accent);">
+                    <div class="stage-header">
+                        <div class="stage-num" style="background: rgba(192, 132, 252, 0.2); color: var(--accent);">🐾</div>
+                        <div class="stage-name" style="color: var(--accent);">Animal Cells</div>
+                    </div>
+                    <ul>
+                        <li>A ring of <strong>contractile fibres</strong> forms</li>
+                        <li>Fibres tighten like a belt around the middle</li>
+                        <li>Cell "pinches" inward (like a drawstring bag)</li>
+                        <li>Forms a <strong>cleavage furrow</strong></li>
+                        <li>Eventually splits into two cells</li>
+                    </ul>
+                </div>
+
+                <div class="stage-card" style="border-color: var(--success);">
+                    <div class="stage-header">
+                        <div class="stage-num" style="background: rgba(74, 222, 128, 0.2); color: var(--success);">🌱</div>
+                        <div class="stage-name" style="color: var(--success);">Plant Cells</div>
+                    </div>
+                    <ul>
+                        <li>Cannot pinch inward (rigid cell wall)</li>
+                        <li><strong>Golgi vesicles</strong> collect at equator</li>
+                        <li>Vesicles fuse to form <strong>cell plate</strong></li>
+                        <li>Cellulose wall builds up from inside</li>
+                        <li><strong>Plasmodesmata</strong> form in small gaps</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">⭐</div>
+                    <h3>Why is Mitosis Important?</h3>
+                </div>
+                <div class="content">
+                    <p>Mitosis is essential for several biological processes:</p>
+                    
+                    <div class="vocab-grid" style="margin-top: 16px;">
+                        <div class="vocab-item">
+                            <div class="vocab-term">🌱 Growth</div>
+                            <div class="vocab-def">Organisms grow by increasing their number of cells through mitosis</div>
+                        </div>
+                        <div class="vocab-item">
+                            <div class="vocab-term">🩹 Repair</div>
+                            <div class="vocab-def">Damaged tissues are replaced by new cells produced through mitosis</div>
+                        </div>
+                        <div class="vocab-item">
+                            <div class="vocab-term">🔄 Asexual Reproduction</div>
+                            <div class="vocab-def">Some organisms reproduce by mitosis, creating genetically identical <strong>clones</strong></div>
+                        </div>
+                        <div class="vocab-item">
+                            <div class="vocab-term">⚠️ Disadvantage</div>
+                            <div class="vocab-def">No genetic variation – if conditions change, all individuals may be affected equally</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Check 3 -->
+            <div class="quiz-card" id="quiz3">
+                <div class="quiz-header">
+                    <div class="quiz-title">
+                        <div class="quiz-icon">✓</div>
+                        <h3>Quick Check</h3>
+                    </div>
+                    <span class="quiz-progress">Retrieval Practice</span>
+                </div>
+                <div class="question">
+                    <p class="question-text">How does cytokinesis differ between animal and plant cells?</p>
+                    <div class="options">
+                        <div class="option" onclick="selectOption(this, 'quiz3')">
+                            <div class="option-marker">A</div>
+                            <div class="option-text">Animal cells form a cell plate; plant cells pinch inward</div>
+                        </div>
+                        <div class="option" onclick="selectOption(this, 'quiz3')">
+                            <div class="option-marker">B</div>
+                            <div class="option-text">Animal cells pinch inward; plant cells form a cell plate</div>
+                        </div>
+                        <div class="option" onclick="selectOption(this, 'quiz3')">
+                            <div class="option-marker">C</div>
+                            <div class="option-text">Both cell types pinch inward from the outside</div>
+                        </div>
+                        <div class="option" onclick="selectOption(this, 'quiz3')">
+                            <div class="option-marker">D</div>
+                            <div class="option-text">Neither cell type undergoes cytokinesis</div>
+                        </div>
+                    </div>
+                    <div class="feedback" id="feedback-quiz3"></div>
+                </div>
+                <button class="check-btn" onclick="checkAnswer('quiz3', 1, 'Correct! Animal cells use contractile fibres to pinch inward, while plant cells build a cell plate from the inside due to their rigid cell wall.', 'Not quite. Animal cells pinch inward using contractile fibres, while plant cells form a cell plate because their rigid cell wall prevents pinching.')">Check Answer</button>
+            </div>
+        </div>
+
+        <!-- Tab 4: Mitotic Index -->
+        <div class="panel" id="panel3">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">📊</div>
+                    <h3>Mitotic Index</h3>
+                    <span class="tag">Calculation</span>
+                </div>
+                <div class="content">
+                    <p>The <span class="key-term" title="The ratio of cells undergoing mitosis to the total number of cells observed">mitotic index</span> tells us how actively cells are dividing in a tissue sample. It's an important measurement in both research and medicine.</p>
+                    
+                    <div class="formula-box">
+                        Mitotic Index = <sup>Number of cells in mitosis</sup>&frasl;<sub>Total number of cells</sub>
+                    </div>
+
+                    <p>Cells in mitosis can be identified by <strong>visible chromosomes</strong>. In interphase, the genetic material appears as diffuse chromatin threads.</p>
+                </div>
+            </div>
+
+            <div class="worked-example">
+                <div class="worked-header">
+                    <span>📝</span>
+                    <h4>Worked Example</h4>
+                </div>
+                <div class="worked-body">
+                    <p style="color: var(--text); margin-bottom: 20px;"><strong>Question:</strong> A microscope image of root tip cells shows 25 cells in total. 12 of these cells have visible chromosomes. Calculate the mitotic index.</p>
+                    
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <h5>Identify the values</h5>
+                            <p>Cells in mitosis = 12 (those with visible chromosomes)<br>Total cells = 25</p>
+                        </div>
+                    </div>
+                    
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <h5>Apply the formula</h5>
+                            <div class="calculation">
+                                <div class="line">Mitotic Index = 12 ÷ 25</div>
+                                <div class="line result">Mitotic Index = 0.48</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <h5>Interpret the result</h5>
+                            <p>48% of cells are undergoing mitosis – this indicates highly active cell division, typical of growth regions like root tips.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">🏥</div>
+                    <h3>Clinical Application</h3>
+                </div>
+                <div class="content">
+                    <p>The mitotic index is used to identify <strong>cancerous tissue</strong>. Cancer cells divide uncontrollably, so tumours have a much higher mitotic index than normal tissue.</p>
+                    
+                    <p>Doctors can also use the mitotic index to monitor whether cancer treatment is working – a falling mitotic index indicates the treatment is reducing cell division.</p>
+
+                    <div class="exam-tip">
+                        <div class="exam-tip-header">⚠️ EXAM HINT</div>
+                        <p>Mathematical skills are an important part of science! Simple calculations like the mitotic index will often appear in examination papers. Always show your working.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Practice Calculation -->
+            <div class="quiz-card" id="quiz4">
+                <div class="quiz-header">
+                    <div class="quiz-title">
+                        <div class="quiz-icon">🧮</div>
+                        <h3>Practice Calculation</h3>
+                    </div>
+                    <span class="quiz-progress">Apply the Formula</span>
+                </div>
+                <div class="question">
+                    <p class="question-text">A tissue sample contains 80 cells. 20 cells show visible chromosomes. What is the mitotic index?</p>
+                    <div class="options">
+                        <div class="option" onclick="selectOption(this, 'quiz4')">
+                            <div class="option-marker">A</div>
+                            <div class="option-text">0.20</div>
+                        </div>
+                        <div class="option" onclick="selectOption(this, 'quiz4')">
+                            <div class="option-marker">B</div>
+                            <div class="option-text">0.25</div>
+                        </div>
+                        <div class="option" onclick="selectOption(this, 'quiz4')">
+                            <div class="option-marker">C</div>
+                            <div class="option-text">0.40</div>
+                        </div>
+                        <div class="option" onclick="selectOption(this, 'quiz4')">
+                            <div class="option-marker">D</div>
+                            <div class="option-text">4.00</div>
+                        </div>
+                    </div>
+                    <div class="feedback" id="feedback-quiz4"></div>
+                </div>
+                <button class="check-btn" onclick="checkAnswer('quiz4', 1, 'Correct! Mitotic Index = 20 ÷ 80 = 0.25. This means 25% of cells are dividing.', 'Not quite. Mitotic Index = cells in mitosis ÷ total cells = 20 ÷ 80 = 0.25')">Check Answer</button>
+            </div>
+        </div>
+
+        <!-- Tab 5: Practice Questions -->
+        <div class="panel" id="panel4">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">📝</div>
+                    <h3>Exam Practice</h3>
+                    <span class="tag">Test Yourself</span>
+                </div>
+                <div class="content">
+                    <p>Practice with these exam-style questions. Use the support features if you need help structuring your answer.</p>
+                </div>
+            </div>
+
+            <!-- MCQ Section -->
+            <div class="quiz-card" id="quiz5">
+                <div class="quiz-header">
+                    <div class="quiz-title">
+                        <div class="quiz-icon">✓</div>
+                        <h3>Multiple Choice</h3>
+                    </div>
+                    <span class="quiz-progress">1 mark each</span>
+                </div>
+                
+                <div class="question">
+                    <p class="question-text">1. At which stage of mitosis do the centromeres split?</p>
+                    <div class="options">
+                        <div class="option" onclick="selectOption(this, 'quiz5a')">
+                            <div class="option-marker">A</div>
+                            <div class="option-text">Prophase</div>
+                        </div>
+                        <div class="option" onclick="selectOption(this, 'quiz5a')">
+                            <div class="option-marker">B</div>
+                            <div class="option-text">Metaphase</div>
+                        </div>
+                        <div class="option" onclick="selectOption(this, 'quiz5a')">
+                            <div class="option-marker">C</div>
+                            <div class="option-text">Anaphase</div>
+                        </div>
+                        <div class="option" onclick="selectOption(this, 'quiz5a')">
+                            <div class="option-marker">D</div>
+                            <div class="option-text">Telophase</div>
+                        </div>
+                    </div>
+                    <div class="feedback" id="feedback-quiz5a"></div>
+                    <button class="check-btn" onclick="checkAnswer('quiz5a', 2, 'Correct! Centromeres split during anaphase, allowing the sister chromatids to separate and move to opposite poles.', 'Not quite. Centromeres split during anaphase – this is what allows the sister chromatids to separate.')">Check Answer</button>
+                </div>
+
+                <div class="question" style="margin-top: 30px; padding-top: 20px; border-top: 1px solid var(--border);">
+                    <p class="question-text">2. Which structure is responsible for moving chromosomes during mitosis?</p>
+                    <div class="options">
+                        <div class="option" onclick="selectOption(this, 'quiz5b')">
+                            <div class="option-marker">A</div>
+                            <div class="option-text">Nuclear membrane</div>
+                        </div>
+                        <div class="option" onclick="selectOption(this, 'quiz5b')">
+                            <div class="option-marker">B</div>
+                            <div class="option-text">Spindle fibres</div>
+                        </div>
+                        <div class="option" onclick="selectOption(this, 'quiz5b')">
+                            <div class="option-marker">C</div>
+                            <div class="option-text">Cell membrane</div>
+                        </div>
+                        <div class="option" onclick="selectOption(this, 'quiz5b')">
+                            <div class="option-marker">D</div>
+                            <div class="option-text">Nucleolus</div>
+                        </div>
+                    </div>
+                    <div class="feedback" id="feedback-quiz5b"></div>
+                    <button class="check-btn" onclick="checkAnswer('quiz5b', 1, 'Correct! Spindle fibres (made of microtubules) attach to centromeres and pull chromosomes to opposite poles.', 'Not quite. Spindle fibres are responsible for moving chromosomes – they attach to centromeres and pull the chromatids apart.')">Check Answer</button>
+                </div>
+            </div>
+
+            <!-- Exam Question: Explain -->
+            <div class="exam-question">
+                <div class="exam-header">
+                    <div class="exam-type">📝 Explain Question</div>
+                    <div class="marks">4 marks</div>
+                </div>
+                <div class="exam-body">
+                    <p>Explain why mitosis is important for growth in multicellular organisms.</p>
+                    
+                    <div class="support-section">
+                        <button class="support-toggle" onclick="toggleSupport('support1')">💡 Show support →</button>
+                        <div class="support-content" id="support1">
+                            <div class="structure-guide">
+                                <h5>Structure your answer:</h5>
+                                <ul>
+                                    <li>Define what mitosis produces</li>
+                                    <li>Explain how this relates to growth</li>
+                                    <li>Mention genetic consistency</li>
+                                    <li>Give a specific example</li>
+                                </ul>
+                                <div class="key-words">
+                                    <span class="key-word">genetically identical</span>
+                                    <span class="key-word">daughter cells</span>
+                                    <span class="key-word">increase cell number</span>
+                                    <span class="key-word">same chromosomes</span>
+                                </div>
+                            </div>
+                            <div class="common-mistakes">
+                                <h5>⚠️ Common mistakes</h5>
+                                <ul>
+                                    <li>Confusing mitosis with meiosis</li>
+                                    <li>Forgetting to mention "genetically identical"</li>
+                                    <li>Not explaining the link to growth</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Exam Question: Describe -->
+            <div class="exam-question">
+                <div class="exam-header">
+                    <div class="exam-type">📝 Describe Question</div>
+                    <div class="marks">6 marks</div>
+                </div>
+                <div class="exam-body">
+                    <p>Describe the events that occur during prophase and metaphase of mitosis.</p>
+                    
+                    <div class="support-section">
+                        <button class="support-toggle" onclick="toggleSupport('support2')">💡 Show support →</button>
+                        <div class="support-content" id="support2">
+                            <div class="structure-guide">
+                                <h5>Structure your answer:</h5>
+                                <ul>
+                                    <li>Start with prophase events (3 marks worth)</li>
+                                    <li>Then metaphase events (3 marks worth)</li>
+                                    <li>Use specific terminology</li>
+                                    <li>Describe in correct sequence</li>
+                                </ul>
+                                <div class="key-words">
+                                    <span class="key-word">chromosomes condense</span>
+                                    <span class="key-word">sister chromatids</span>
+                                    <span class="key-word">centromere</span>
+                                    <span class="key-word">nucleolus disappears</span>
+                                    <span class="key-word">spindle fibres</span>
+                                    <span class="key-word">centrioles</span>
+                                    <span class="key-word">metaphase plate</span>
+                                    <span class="key-word">equator</span>
+                                </div>
+                            </div>
+                            <div class="common-mistakes">
+                                <h5>⚠️ Common mistakes</h5>
+                                <ul>
+                                    <li>Mixing up the sequence of events</li>
+                                    <li>Using "chromosome" when you mean "chromatid"</li>
+                                    <li>Forgetting the spindle must form before chromosomes line up</li>
+                                    <li>Not mentioning that the nuclear membrane breaks down</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 6: Summary -->
+        <div class="panel" id="panel5">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">🎯</div>
+                    <h3>Lesson Summary</h3>
+                    <span class="tag">Review</span>
+                </div>
+                <div class="content">
+                    <p>Well done for completing this lesson on mitosis! Let's review the key points.</p>
+                </div>
+            </div>
+
+            <div class="summary-grid">
+                <div class="summary-card">
+                    <h4>🔬 Key Concepts</h4>
+                    <ul>
+                        <li>Mitosis produces two genetically identical daughter cells</li>
+                        <li>Interphase is the preparation phase (DNA replication)</li>
+                        <li>Four stages: PMAT (Prophase, Metaphase, Anaphase, Telophase)</li>
+                        <li>Cytokinesis divides the cytoplasm</li>
+                    </ul>
+                </div>
+                <div class="summary-card">
+                    <h4>📊 Calculations</h4>
+                    <ul>
+                        <li>Mitotic Index = cells in mitosis ÷ total cells</li>
+                        <li>Higher index = more active division</li>
+                        <li>Used to identify cancerous tissue</li>
+                        <li>Look for visible chromosomes to identify dividing cells</li>
+                    </ul>
+                </div>
+                <div class="summary-card">
+                    <h4>🔑 Key Terms</h4>
+                    <ul>
+                        <li><strong>Chromatid:</strong> One copy of a replicated chromosome</li>
+                        <li><strong>Centromere:</strong> Region joining sister chromatids</li>
+                        <li><strong>Spindle:</strong> Fibres that move chromosomes</li>
+                        <li><strong>Metaphase plate:</strong> Cell equator where chromosomes align</li>
+                    </ul>
+                </div>
+                <div class="summary-card">
+                    <h4>⭐ Importance</h4>
+                    <ul>
+                        <li>Growth – increasing cell number</li>
+                        <li>Repair – replacing damaged cells</li>
+                        <li>Asexual reproduction – creating clones</li>
+                        <li>Maintains chromosome number</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="vocab-grid">
+                <div class="vocab-item">
+                    <div class="vocab-term">Interphase</div>
+                    <div class="vocab-def">The phase between cell divisions when DNA replicates and the cell prepares for mitosis</div>
+                </div>
+                <div class="vocab-item">
+                    <div class="vocab-term">Chromatid</div>
+                    <div class="vocab-def">One of the two identical copies of DNA making up a replicated chromosome, joined at the centromere</div>
+                </div>
+                <div class="vocab-item">
+                    <div class="vocab-term">Centromere</div>
+                    <div class="vocab-def">The region of a chromosome where sister chromatids are joined and where spindle fibres attach</div>
+                </div>
+                <div class="vocab-item">
+                    <div class="vocab-term">Spindle fibres</div>
+                    <div class="vocab-def">Protein structures (microtubules) that move chromosomes during cell division</div>
+                </div>
+                <div class="vocab-item">
+                    <div class="vocab-term">Centrioles</div>
+                    <div class="vocab-def">Organelles that organise the spindle fibres in animal cells (found at poles)</div>
+                </div>
+                <div class="vocab-item">
+                    <div class="vocab-term">Cytokinesis</div>
+                    <div class="vocab-def">Division of the cytoplasm following mitosis to form two separate cells</div>
+                </div>
+                <div class="vocab-item">
+                    <div class="vocab-term">Clones</div>
+                    <div class="vocab-def">Genetically identical organisms produced by asexual reproduction</div>
+                </div>
+                <div class="vocab-item">
+                    <div class="vocab-term">Mitotic Index</div>
+                    <div class="vocab-def">The ratio of cells in mitosis to total cells; indicates how actively a tissue is dividing</div>
+                </div>
+            </div>
+
+            <div class="mnemonic">
+                <div class="mnemonic-title">🧠 Final Review</div>
+                <div class="mnemonic-text"><span>P</span>lease <span>M</span>ake <span>A</span>nother <span>T</span>ea</div>
+                <div class="mnemonic-sub">You now know the dance of the chromosomes! 🎉</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="progress-tracker">
+        <div class="progress-inner">
+            <span class="progress-text">Section <strong id="currentSection">1</strong> of 6</span>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill" style="width: 16.67%"></div>
+            </div>
+            <div class="nav-btns">
+                <button class="nav-btn" id="prevBtn" onclick="prevTab()" style="display: none;">← Back</button>
+                <button class="nav-btn primary" id="nextBtn" onclick="nextTab()">Next →</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentTab = 0;
+        const totalTabs = 6;
+        let sequenceSlot = 0;
+        let placedSequence = [];
+        let correctSequence = [0, 1, 2, 3]; // Correct order indices
+
+        // Tab Navigation
+        function showTab(index) {
+            currentTab = index;
+            
+            // Update panels
+            document.querySelectorAll('.panel').forEach((panel, i) => {
+                panel.classList.toggle('active', i === index);
+            });
+            
+            // Update tabs
+            document.querySelectorAll('.tab').forEach((tab, i) => {
+                tab.classList.toggle('active', i === index);
+            });
+            
+            // Update progress
+            document.getElementById('currentSection').textContent = index + 1;
+            document.getElementById('progressFill').style.width = ((index + 1) / totalTabs * 100) + '%';
+            
+            // Update nav buttons
+            document.getElementById('prevBtn').style.display = index === 0 ? 'none' : 'flex';
+            document.getElementById('nextBtn').textContent = index === totalTabs - 1 ? 'Complete ✓' : 'Next →';
+            
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            // Update learning objectives
+            if (index >= 3) {
+                document.getElementById('obj2').classList.add('complete');
+            }
+            if (index >= 2) {
+                document.getElementById('obj1').classList.add('complete');
+            }
+        }
+
+        function nextTab() {
+            if (currentTab < totalTabs - 1) {
+                showTab(currentTab + 1);
+            }
+        }
+
+        function prevTab() {
+            if (currentTab > 0) {
+                showTab(currentTab - 1);
+            }
+        }
+
+        // Quiz Functions
+        let selectedOptions = {};
+
+        function selectOption(element, quizId) {
+            const options = element.parentElement.querySelectorAll('.option');
+            options.forEach(opt => opt.classList.remove('selected'));
+            element.classList.add('selected');
+            
+            // Store selected index
+            const optionIndex = Array.from(options).indexOf(element);
+            selectedOptions[quizId] = optionIndex;
+        }
+
+        function checkAnswer(quizId, correctIndex, correctFeedback, incorrectFeedback) {
+            const feedbackEl = document.getElementById('feedback-' + quizId);
+            const selected = selectedOptions[quizId];
+            
+            if (selected === undefined) {
+                feedbackEl.textContent = 'Please select an answer first.';
+                feedbackEl.className = 'feedback show incorrect';
+                return;
+            }
+
+            const options = feedbackEl.parentElement.querySelectorAll('.option');
+            
+            options.forEach((opt, i) => {
+                opt.classList.remove('selected');
+                if (i === correctIndex) {
+                    opt.classList.add('correct');
+                } else if (i === selected) {
+                    opt.classList.add('incorrect');
+                }
+            });
+
+            if (selected === correctIndex) {
+                feedbackEl.innerHTML = '<strong>✓ Correct!</strong> ' + correctFeedback;
+                feedbackEl.className = 'feedback show correct';
+            } else {
+                feedbackEl.innerHTML = '<strong>✗ Not quite.</strong> ' + incorrectFeedback;
+                feedbackEl.className = 'feedback show incorrect';
+            }
+        }
+
+        // Sequence Game
+        function placeSequence(element) {
+            if (element.classList.contains('used') || sequenceSlot >= 4) return;
+            
+            element.classList.add('used');
+            
+            const slots = document.querySelectorAll('.sequence-slot');
+            const slot = slots[sequenceSlot];
+            slot.classList.add('filled');
+            slot.querySelector('.slot-content').textContent = element.textContent;
+            slot.dataset.placed = element.dataset.correct;
+            
+            placedSequence.push(parseInt(element.dataset.correct));
+            sequenceSlot++;
+        }
+
+        function checkSequence() {
+            const feedbackEl = document.getElementById('feedback-quiz2');
+            
+            if (sequenceSlot < 4) {
+                feedbackEl.textContent = 'Please place all four options first.';
+                feedbackEl.className = 'feedback show incorrect';
+                return;
+            }
+
+            const slots = document.querySelectorAll('.sequence-slot');
+            let allCorrect = true;
+            
+            slots.forEach((slot, i) => {
+                const placed = parseInt(slot.dataset.placed);
+                if (placed === i) {
+                    slot.classList.add('correct');
+                } else {
+                    slot.classList.add('incorrect');
+                    allCorrect = false;
+                }
+            });
+
+            if (allCorrect) {
+                feedbackEl.innerHTML = '<strong>✓ Perfect!</strong> You got the correct sequence: Prophase → Metaphase → Anaphase → Telophase';
+                feedbackEl.className = 'feedback show correct';
+            } else {
+                feedbackEl.innerHTML = '<strong>✗ Not quite right.</strong> The correct order is: Chromosomes condense → Line up at equator → Centromeres split → Nuclear envelopes reform';
+                feedbackEl.className = 'feedback show incorrect';
+            }
+        }
+
+        // Support Toggle
+        function toggleSupport(id) {
+            const content = document.getElementById(id);
+            const btn = content.previousElementSibling;
+            
+            if (content.classList.contains('show')) {
+                content.classList.remove('show');
+                btn.textContent = '💡 Show support →';
+            } else {
+                content.classList.add('show');
+                btn.textContent = '💡 Hide support ←';
+            }
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') nextTab();
+            if (e.key === 'ArrowLeft') prevTab();
+        });
+
+        // Initialize
+        showTab(0);
+    </script>
+</body>
+</html>
