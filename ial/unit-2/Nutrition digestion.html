@@ -1,0 +1,1309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IGCSE Biology: Nutrition & Digestion | Interactive Revision</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Fraunces:wght@600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0a1628;
+            --bg-secondary: #111d32;
+            --bg-card: #162035;
+            --bg-elevated: #1a2744;
+            --text-primary: #f0f4f8;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --accent-foundation: #22c55e;
+            --accent-foundation-bg: rgba(34, 197, 94, 0.12);
+            --accent-core: #3b82f6;
+            --accent-core-bg: rgba(59, 130, 246, 0.12);
+            --accent-extended: #a855f7;
+            --accent-extended-bg: rgba(168, 85, 247, 0.12);
+            --accent-challenge: #f59e0b;
+            --accent-challenge-bg: rgba(245, 158, 11, 0.12);
+            --border-color: rgba(148, 163, 184, 0.15);
+            --success: #22c55e;
+            --error: #ef4444;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'DM Sans', sans-serif; background: var(--bg-primary); color: var(--text-primary); line-height: 1.7; min-height: 100vh; }
+        .header { background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-primary) 100%); border-bottom: 1px solid var(--border-color); padding: 2rem; position: sticky; top: 0; z-index: 100; }
+        .header-content { max-width: 1400px; margin: 0 auto; }
+        .header-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem; }
+        .title-section h1 { font-family: 'Fraunces', serif; font-size: 2rem; font-weight: 700; background: linear-gradient(135deg, #f0f4f8 0%, #94a3b8 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 0.25rem; }
+        .title-section .subtitle { color: var(--text-secondary); font-size: 0.95rem; }
+        .spec-badge { display: inline-flex; align-items: center; gap: 0.5rem; background: var(--bg-elevated); padding: 0.5rem 1rem; border-radius: 2rem; font-size: 0.85rem; color: var(--text-secondary); border: 1px solid var(--border-color); }
+        .path-selector { display: flex; gap: 0.5rem; background: var(--bg-elevated); padding: 0.35rem; border-radius: 0.75rem; flex-wrap: wrap; }
+        .path-btn { padding: 0.75rem 1.25rem; border: none; background: transparent; color: var(--text-secondary); font-family: inherit; font-size: 0.9rem; font-weight: 500; border-radius: 0.5rem; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; gap: 0.5rem; }
+        .path-btn:hover { color: var(--text-primary); background: rgba(255, 255, 255, 0.05); }
+        .path-btn.active { color: white; }
+        .path-btn[data-path="foundation"].active { background: var(--accent-foundation); }
+        .path-btn[data-path="core"].active { background: var(--accent-core); }
+        .path-btn[data-path="extended"].active { background: var(--accent-extended); }
+        .path-btn[data-path="challenge"].active { background: var(--accent-challenge); }
+        .main-container { max-width: 1400px; margin: 0 auto; padding: 2rem; }
+        .path-description { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 1rem; padding: 1.5rem; margin-bottom: 2rem; display: none; }
+        .path-description.active { display: block; animation: fadeIn 0.4s ease; }
+        .path-description h3 { font-family: 'Fraunces', serif; font-size: 1.25rem; margin-bottom: 0.5rem; }
+        .path-description p { color: var(--text-secondary); font-size: 0.95rem; }
+        .path-description[data-path="foundation"] { border-left: 4px solid var(--accent-foundation); }
+        .path-description[data-path="core"] { border-left: 4px solid var(--accent-core); }
+        .path-description[data-path="extended"] { border-left: 4px solid var(--accent-extended); }
+        .path-description[data-path="challenge"] { border-left: 4px solid var(--accent-challenge); }
+        .topic-nav { display: flex; gap: 0.5rem; margin-bottom: 2rem; overflow-x: auto; padding-bottom: 0.5rem; flex-wrap: wrap; }
+        .topic-btn { padding: 0.6rem 1.2rem; background: var(--bg-card); border: 1px solid var(--border-color); color: var(--text-secondary); font-family: inherit; font-size: 0.85rem; border-radius: 0.5rem; cursor: pointer; transition: all 0.3s ease; white-space: nowrap; }
+        .topic-btn:hover { border-color: var(--text-muted); color: var(--text-primary); }
+        .topic-btn.active { background: var(--bg-elevated); border-color: var(--accent-core); color: var(--text-primary); }
+        .topic-content { display: none; }
+        .topic-content.active { display: block; animation: fadeIn 0.4s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .content-card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 1rem; padding: 1.75rem; margin-bottom: 1.5rem; }
+        .card-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.25rem; flex-wrap: wrap; }
+        .card-icon { width: 40px; height: 40px; border-radius: 0.75rem; display: flex; align-items: center; justify-content: center; }
+        .card-icon.learn { background: var(--accent-core-bg); color: var(--accent-core); }
+        .card-icon.practice { background: var(--accent-foundation-bg); color: var(--accent-foundation); }
+        .card-icon.challenge { background: var(--accent-challenge-bg); color: var(--accent-challenge); }
+        .card-icon.visual { background: var(--accent-extended-bg); color: var(--accent-extended); }
+        .card-header h3 { font-family: 'Fraunces', serif; font-size: 1.2rem; font-weight: 600; }
+        .card-header .spec-ref { margin-left: auto; font-size: 0.75rem; color: var(--text-muted); background: var(--bg-elevated); padding: 0.25rem 0.75rem; border-radius: 1rem; }
+        .key-point { background: var(--bg-elevated); border-left: 3px solid var(--accent-core); padding: 1rem 1.25rem; margin: 1rem 0; border-radius: 0 0.5rem 0.5rem 0; }
+        .key-point strong { color: var(--accent-core); }
+        .definition-box { background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(168, 85, 247, 0.05) 100%); border: 1px solid rgba(59, 130, 246, 0.3); border-radius: 0.75rem; padding: 1.25rem; margin: 1rem 0; }
+        .definition-box .term { font-weight: 700; color: var(--accent-core); font-size: 1.05rem; }
+        .definition-box .definition { color: var(--text-secondary); margin-top: 0.5rem; }
+        .scaffold-tip { background: var(--accent-foundation-bg); border: 1px solid rgba(34, 197, 94, 0.3); border-radius: 0.75rem; padding: 1rem; margin: 1rem 0; display: flex; gap: 0.75rem; align-items: flex-start; }
+        .scaffold-tip p { color: var(--text-secondary); font-size: 0.9rem; }
+        .data-table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.9rem; }
+        .data-table th, .data-table td { padding: 0.75rem 1rem; text-align: left; border-bottom: 1px solid var(--border-color); }
+        .data-table th { background: var(--bg-elevated); font-weight: 600; color: var(--text-primary); }
+        .data-table td { color: var(--text-secondary); }
+        .quiz-container { background: var(--bg-elevated); border-radius: 0.75rem; padding: 1.5rem; margin: 1rem 0; }
+        .quiz-question { font-weight: 500; margin-bottom: 1rem; color: var(--text-primary); }
+        .quiz-options { display: flex; flex-direction: column; gap: 0.5rem; }
+        .quiz-option { padding: 0.85rem 1rem; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 0.5rem; cursor: pointer; transition: all 0.2s ease; color: var(--text-secondary); }
+        .quiz-option:hover { border-color: var(--accent-core); color: var(--text-primary); }
+        .quiz-option.correct { background: var(--accent-foundation-bg); border-color: var(--accent-foundation); color: var(--accent-foundation); }
+        .quiz-option.incorrect { background: rgba(239, 68, 68, 0.1); border-color: var(--error); color: var(--error); }
+        .quiz-feedback { margin-top: 1rem; padding: 1rem; border-radius: 0.5rem; display: none; }
+        .quiz-feedback.show { display: block; animation: fadeIn 0.3s ease; }
+        .quiz-feedback.correct { background: var(--accent-foundation-bg); border: 1px solid rgba(34, 197, 94, 0.3); color: var(--accent-foundation); }
+        .quiz-feedback.incorrect { background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); color: #fca5a5; }
+        .fill-blank { background: var(--bg-elevated); border-radius: 0.75rem; padding: 1.5rem; margin: 1rem 0; }
+        .fill-blank-text { line-height: 2.2; font-size: 1rem; }
+        .blank-input { width: 140px; padding: 0.35rem 0.5rem; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 0.35rem; color: var(--text-primary); font-family: inherit; font-size: 0.9rem; text-align: center; margin: 0 0.25rem; }
+        .blank-input:focus { outline: none; border-color: var(--accent-core); }
+        .blank-input.correct { border-color: var(--accent-foundation); background: var(--accent-foundation-bg); }
+        .blank-input.incorrect { border-color: var(--error); background: rgba(239, 68, 68, 0.1); }
+        .btn { padding: 0.75rem 1.5rem; border: none; border-radius: 0.5rem; font-family: inherit; font-size: 0.9rem; font-weight: 500; cursor: pointer; transition: all 0.2s ease; }
+        .btn-primary { background: var(--accent-core); color: white; }
+        .btn-primary:hover { filter: brightness(1.1); }
+        .mnemonic-box { background: linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, rgba(249, 115, 22, 0.05) 100%); border: 1px solid rgba(245, 158, 11, 0.3); border-radius: 0.75rem; padding: 1.25rem; margin: 1rem 0; }
+        .mnemonic-box .title { font-weight: 700; color: var(--accent-challenge); display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem; }
+        .mnemonic-box .mnemonic { font-size: 1.1rem; color: var(--text-primary); font-weight: 600; margin: 0.25rem 0; }
+        .mnemonic-box .explanation { color: var(--text-secondary); font-size: 0.9rem; margin-top: 0.5rem; }
+        .comparison-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin: 1rem 0; }
+        .comparison-card { background: var(--bg-elevated); border-radius: 0.75rem; padding: 1.25rem; border: 1px solid var(--border-color); }
+        .comparison-card h4 { font-size: 1rem; margin-bottom: 0.75rem; padding-bottom: 0.5rem; border-bottom: 2px solid; }
+        .comparison-card.carbs h4 { color: #22c55e; border-color: #22c55e; }
+        .comparison-card.proteins h4 { color: #3b82f6; border-color: #3b82f6; }
+        .comparison-card.lipids h4 { color: #f59e0b; border-color: #f59e0b; }
+        .comparison-card ul { list-style: none; }
+        .comparison-card li { color: var(--text-secondary); font-size: 0.9rem; padding: 0.35rem 0; padding-left: 1.25rem; position: relative; }
+        .comparison-card li::before { content: "•"; position: absolute; left: 0; color: var(--text-muted); }
+        .exam-tip { background: rgba(239, 68, 68, 0.08); border: 1px solid rgba(239, 68, 68, 0.25); border-radius: 0.75rem; padding: 1rem 1.25rem; margin: 1rem 0; }
+        .exam-tip .title { color: #f87171; font-weight: 600; display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem; }
+        .exam-tip p { color: var(--text-secondary); font-size: 0.9rem; }
+        .practical-box { background: linear-gradient(135deg, rgba(168, 85, 247, 0.1) 0%, rgba(139, 92, 246, 0.05) 100%); border: 1px solid rgba(168, 85, 247, 0.3); border-radius: 0.75rem; padding: 1.5rem; margin: 1rem 0; }
+        .practical-box .header { display: flex; align-items: center; gap: 0.5rem; font-weight: 700; color: var(--accent-extended); margin-bottom: 1rem; }
+        .practical-box .steps { counter-reset: step; }
+        .practical-box .step { position: relative; padding-left: 2.5rem; margin-bottom: 0.75rem; color: var(--text-secondary); }
+        .practical-box .step::before { counter-increment: step; content: counter(step); position: absolute; left: 0; top: 0; width: 24px; height: 24px; background: var(--accent-extended-bg); color: var(--accent-extended); border-radius: 50%; font-size: 0.8rem; font-weight: 600; display: flex; align-items: center; justify-content: center; }
+        .diagram-container { background: var(--bg-elevated); border-radius: 0.75rem; padding: 1.5rem; margin: 1rem 0; text-align: center; }
+        .diagram-container svg { max-width: 100%; height: auto; }
+        .diagram-caption { margin-top: 1rem; color: var(--text-muted); font-size: 0.85rem; }
+        .word-bank { display: flex; flex-wrap: wrap; gap: 0.5rem; padding: 1rem; background: var(--bg-card); border-radius: 0.5rem; margin-bottom: 1rem; }
+        .word-bank-item { padding: 0.4rem 0.8rem; background: var(--accent-core-bg); border: 1px solid var(--accent-core); border-radius: 0.35rem; font-size: 0.85rem; color: var(--text-primary); }
+        .extended-response { background: var(--bg-elevated); border-radius: 0.75rem; padding: 1.5rem; margin: 1rem 0; }
+        .response-textarea { width: 100%; min-height: 150px; padding: 1rem; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 0.5rem; color: var(--text-primary); font-family: inherit; font-size: 0.95rem; resize: vertical; margin-top: 1rem; }
+        .response-textarea:focus { outline: none; border-color: var(--accent-core); }
+        .reveal-answer { margin: 1rem 0; }
+        .reveal-btn { width: 100%; padding: 1rem; background: var(--bg-card); border: 1px dashed var(--border-color); border-radius: 0.5rem; color: var(--text-secondary); font-family: inherit; cursor: pointer; transition: all 0.2s ease; }
+        .reveal-btn:hover { border-color: var(--accent-core); color: var(--text-primary); }
+        .reveal-content { display: none; padding: 1rem; background: var(--bg-card); border-radius: 0.5rem; margin-top: 0.5rem; }
+        .reveal-content.show { display: block; animation: fadeIn 0.3s ease; }
+        .mark-scheme { background: var(--bg-card); border-radius: 0.5rem; padding: 1rem; }
+        .mark-scheme h5 { color: var(--accent-extended); margin-bottom: 0.75rem; }
+        .mark-scheme li { color: var(--text-secondary); font-size: 0.9rem; padding: 0.25rem 0; }
+        .two-column { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; }
+        .progress-tracker { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 0.75rem; padding: 1rem 1.5rem; margin-bottom: 2rem; display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap; }
+        .progress-label { color: var(--text-secondary); font-size: 0.9rem; }
+        .progress-bar { flex: 1; min-width: 200px; height: 8px; background: var(--bg-elevated); border-radius: 4px; overflow: hidden; }
+        .progress-fill { height: 100%; background: linear-gradient(90deg, var(--accent-foundation), var(--accent-core)); border-radius: 4px; transition: width 0.5s ease; }
+        .progress-text { font-weight: 600; color: var(--text-primary); }
+        .spec-checklist { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 1rem; padding: 1.5rem; margin-top: 2rem; }
+        .spec-checklist h3 { font-family: 'Fraunces', serif; margin-bottom: 1rem; }
+        .checklist-item { display: flex; align-items: flex-start; gap: 0.75rem; padding: 0.75rem 0; border-bottom: 1px solid var(--border-color); }
+        .checklist-item:last-child { border-bottom: none; }
+        .checklist-checkbox { width: 20px; height: 20px; border: 2px solid var(--border-color); border-radius: 4px; cursor: pointer; transition: all 0.2s ease; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; }
+        .checklist-checkbox.checked { background: var(--accent-foundation); border-color: var(--accent-foundation); }
+        .checklist-checkbox svg { width: 14px; height: 14px; color: white; opacity: 0; }
+        .checklist-checkbox.checked svg { opacity: 1; }
+        .checklist-item .spec-number { color: var(--text-muted); font-size: 0.8rem; min-width: 40px; }
+        .checklist-item .spec-text { color: var(--text-secondary); font-size: 0.9rem; }
+        [data-show-path] { display: none; }
+        [data-show-path].visible { display: block; }
+        @media (max-width: 768px) {
+            .header { padding: 1rem; }
+            .title-section h1 { font-size: 1.5rem; }
+            .path-selector { width: 100%; }
+            .path-btn { flex: 1; justify-content: center; padding: 0.6rem 0.75rem; font-size: 0.8rem; }
+            .main-container { padding: 1rem; }
+            .content-card { padding: 1.25rem; }
+            .two-column { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="header-top">
+                <div class="title-section">
+                    <h1>🧬 Nutrition & Digestion</h1>
+                    <p class="subtitle">Biological Molecules, Enzymes, Diet & the Digestive System</p>
+                </div>
+                <div class="spec-badge">📚 IGCSE Edexcel Biology (Specs 2.7-2.13, 2.24-2.32)</div>
+            </div>
+            <div class="path-selector">
+                <button class="path-btn active" data-path="foundation">🌱 Foundation</button>
+                <button class="path-btn" data-path="core">⚡ Core</button>
+                <button class="path-btn" data-path="extended">💡 Extended</button>
+                <button class="path-btn" data-path="challenge">⭐ Challenge</button>
+            </div>
+        </div>
+    </header>
+    <main class="main-container">
+        <div class="path-description active" data-path="foundation">
+            <h3>🌱 Foundation Pathway</h3>
+            <p>Build confidence with scaffolded explanations, visual aids, word banks, and guided activities. Perfect if you're working towards grades 4-5 or need extra support with the basics.</p>
+        </div>
+        <div class="path-description" data-path="core">
+            <h3>⚡ Core Pathway</h3>
+            <p>Master the essential content for grades 5-6. Clear explanations with practice questions and retrieval activities.</p>
+        </div>
+        <div class="path-description" data-path="extended">
+            <h3>💡 Extended Pathway</h3>
+            <p>Push for grades 7-8 with deeper explanations, application questions, and exam-style practice.</p>
+        </div>
+        <div class="path-description" data-path="challenge">
+            <h3>⭐ Challenge Pathway</h3>
+            <p>Aim for grades 8-9 with complex scenarios, evaluation questions, and extended responses.</p>
+        </div>
+        <div class="progress-tracker">
+            <span class="progress-label">Your progress:</span>
+            <div class="progress-bar"><div class="progress-fill" style="width: 0%"></div></div>
+            <span class="progress-text">0%</span>
+        </div>
+        <nav class="topic-nav">
+            <button class="topic-btn active" data-topic="molecules">Biological Molecules</button>
+            <button class="topic-btn" data-topic="food-tests">Food Tests</button>
+            <button class="topic-btn" data-topic="enzymes">Enzymes</button>
+            <button class="topic-btn" data-topic="diet">Balanced Diet</button>
+            <button class="topic-btn" data-topic="digestive">Digestive System</button>
+            <button class="topic-btn" data-topic="absorption">Digestion & Absorption</button>
+        </nav>
+
+        <!-- TOPIC 1: BIOLOGICAL MOLECULES -->
+        <section class="topic-content active" data-topic="molecules">
+            <div class="content-card">
+                <div class="card-header">
+                    <div class="card-icon learn">📘</div>
+                    <h3>Chemical Elements in Biological Molecules</h3>
+                    <span class="spec-ref">2.7</span>
+                </div>
+                <div data-show-path="foundation" class="visible">
+                    <div class="scaffold-tip">
+                        <p>💡 <strong>What you need to know:</strong> The three main food molecules (carbohydrates, proteins, and lipids) are made from different chemical elements. Let's learn which elements are in each one!</p>
+                    </div>
+                    <div class="mnemonic-box">
+                        <div class="title">🧠 Memory Trick</div>
+                        <p class="mnemonic">"CHO" = Carbs, "CHON" = Proteins (with Nitrogen!)</p>
+                        <p class="explanation">All three contain Carbon (C), Hydrogen (H), and Oxygen (O). Proteins have an extra letter - N for Nitrogen!</p>
+                    </div>
+                    <div class="comparison-grid">
+                        <div class="comparison-card carbs">
+                            <h4>🍞 Carbohydrates</h4>
+                            <ul><li><strong>C</strong>arbon</li><li><strong>H</strong>ydrogen</li><li><strong>O</strong>xygen</li></ul>
+                            <p style="margin-top: 0.5rem; font-size: 0.85rem; color: var(--text-muted);">Think: Sugars, starch, bread</p>
+                        </div>
+                        <div class="comparison-card proteins">
+                            <h4>🥩 Proteins</h4>
+                            <ul><li><strong>C</strong>arbon</li><li><strong>H</strong>ydrogen</li><li><strong>O</strong>xygen</li><li><strong>N</strong>itrogen ⭐</li></ul>
+                            <p style="margin-top: 0.5rem; font-size: 0.85rem; color: var(--text-muted);">Think: Meat, eggs, beans</p>
+                        </div>
+                        <div class="comparison-card lipids">
+                            <h4>🧈 Lipids (Fats & Oils)</h4>
+                            <ul><li><strong>C</strong>arbon</li><li><strong>H</strong>ydrogen</li><li><strong>O</strong>xygen</li></ul>
+                            <p style="margin-top: 0.5rem; font-size: 0.85rem; color: var(--text-muted);">Think: Butter, olive oil</p>
+                        </div>
+                    </div>
+                    <div class="key-point"><strong>Key Point:</strong> The only molecule with <strong>nitrogen</strong> is protein! This is a common exam question.</div>
+                    <div class="quiz-container">
+                        <p class="quiz-question">Which element is found in proteins but NOT in carbohydrates?</p>
+                        <div class="quiz-options">
+                            <div class="quiz-option" data-correct="false">Carbon</div>
+                            <div class="quiz-option" data-correct="false">Hydrogen</div>
+                            <div class="quiz-option" data-correct="true">Nitrogen</div>
+                            <div class="quiz-option" data-correct="false">Oxygen</div>
+                        </div>
+                        <div class="quiz-feedback"></div>
+                    </div>
+                </div>
+                <div data-show-path="core">
+                    <p>All biological molecules contain the elements <strong>carbon (C), hydrogen (H), and oxygen (O)</strong>. However, proteins additionally contain <strong>nitrogen (N)</strong>, which is essential for forming amino acids.</p>
+                    <table class="data-table">
+                        <thead><tr><th>Molecule</th><th>Elements Present</th><th>Key Feature</th></tr></thead>
+                        <tbody>
+                            <tr><td>Carbohydrates</td><td>C, H, O</td><td>H:O ratio usually 2:1</td></tr>
+                            <tr><td>Proteins</td><td>C, H, O, N</td><td>Contains nitrogen (sometimes sulfur)</td></tr>
+                            <tr><td>Lipids</td><td>C, H, O</td><td>Much more C and H than O</td></tr>
+                        </tbody>
+                    </table>
+                    <div class="exam-tip">
+                        <div class="title">⚠️ Exam Tip</div>
+                        <p>When asked "Which element is found in proteins but not in carbohydrates?" the answer is always <strong>nitrogen</strong>.</p>
+                    </div>
+                </div>
+                <div data-show-path="extended">
+                    <p>The elemental composition of biological molecules determines their properties and functions.</p>
+                    <table class="data-table">
+                        <thead><tr><th>Molecule</th><th>Elements</th><th>Why These Elements?</th></tr></thead>
+                        <tbody>
+                            <tr><td>Carbohydrates</td><td>C, H, O</td><td>C-H bonds store energy; O allows hydrogen bonding</td></tr>
+                            <tr><td>Proteins</td><td>C, H, O, N (+ sometimes S)</td><td>N is essential in the amino group (-NH₂); S forms disulfide bridges</td></tr>
+                            <tr><td>Lipids</td><td>C, H, O (small amount)</td><td>High C:H ratio = high energy density; low O = hydrophobic</td></tr>
+                        </tbody>
+                    </table>
+                    <div class="key-point"><strong>Higher-level understanding:</strong> Lipids have proportionally less oxygen than carbohydrates. This means lipids release more energy per gram when oxidised during respiration.</div>
+                </div>
+                <div data-show-path="challenge">
+                    <p>At the molecular level, the elemental composition reflects evolutionary optimisation for specific functions.</p>
+                    <div class="extended-response">
+                        <p class="quiz-question">🎯 <strong>Challenge Question (6 marks):</strong> Explain why lipids contain proportionally less oxygen than carbohydrates, and analyse how this affects their role as energy storage molecules.</p>
+                        <textarea class="response-textarea" placeholder="Write your answer here..."></textarea>
+                        <div class="reveal-answer">
+                            <button class="reveal-btn" onclick="toggleReveal(this)">Show Mark Scheme</button>
+                            <div class="reveal-content">
+                                <div class="mark-scheme">
+                                    <h5>Mark Scheme (6 marks)</h5>
+                                    <ul>
+                                        <li>• Lipids have a high proportion of C-H bonds relative to C-O bonds (1)</li>
+                                        <li>• This means lipids are more 'reduced' than carbohydrates (1)</li>
+                                        <li>• More energy is released when C-H bonds are oxidised (1)</li>
+                                        <li>• Lipids release ~37 kJ/g vs ~17 kJ/g for carbohydrates (1)</li>
+                                        <li>• Lipids are hydrophobic so don't require water for storage (1)</li>
+                                        <li>• This makes lipids more efficient for long-term energy storage (1)</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-card">
+                <div class="card-header">
+                    <div class="card-icon visual">🔬</div>
+                    <h3>Structure: From Small Units to Large Molecules</h3>
+                    <span class="spec-ref">2.8</span>
+                </div>
+                <div data-show-path="foundation" class="visible">
+                    <div class="scaffold-tip">
+                        <p>💡 <strong>Think of it like LEGO:</strong> Large biological molecules are built by joining small building blocks together!</p>
+                    </div>
+                    <table class="data-table">
+                        <thead><tr><th>Large Molecule</th><th>Made From</th><th>Example</th></tr></thead>
+                        <tbody>
+                            <tr><td>🍞 Starch & Glycogen</td><td>Simple sugars (glucose)</td><td>Potatoes, pasta</td></tr>
+                            <tr><td>🥩 Proteins</td><td>Amino acids</td><td>Meat, eggs</td></tr>
+                            <tr><td>🧈 Lipids</td><td>Fatty acids + Glycerol</td><td>Butter, oil</td></tr>
+                        </tbody>
+                    </table>
+                    <div class="fill-blank">
+                        <p><strong>Complete the sentences using the word bank:</strong></p>
+                        <div class="word-bank">
+                            <span class="word-bank-item">amino acids</span>
+                            <span class="word-bank-item">simple sugars</span>
+                            <span class="word-bank-item">fatty acids</span>
+                            <span class="word-bank-item">glycerol</span>
+                        </div>
+                        <p class="fill-blank-text">
+                            1. Proteins are made from <input type="text" class="blank-input" data-answer="amino acids"> joined together.<br><br>
+                            2. Starch is made from <input type="text" class="blank-input" data-answer="simple sugars"> joined together.<br><br>
+                            3. Lipids are made from <input type="text" class="blank-input" data-answer="fatty acids"> and <input type="text" class="blank-input" data-answer="glycerol">.
+                        </p>
+                        <button class="btn btn-primary" onclick="checkBlanks(this)" style="margin-top: 1rem;">Check Answers</button>
+                    </div>
+                </div>
+                <div data-show-path="core">
+                    <p>Large biological molecules are polymers - chains of smaller repeating units called monomers.</p>
+                    <table class="data-table">
+                        <thead><tr><th>Large Molecule</th><th>Building Blocks</th><th>Where Found</th></tr></thead>
+                        <tbody>
+                            <tr><td><strong>Starch</strong></td><td>Glucose (simple sugar)</td><td>Plants (energy storage)</td></tr>
+                            <tr><td><strong>Glycogen</strong></td><td>Glucose (simple sugar)</td><td>Animals (liver, muscles)</td></tr>
+                            <tr><td><strong>Proteins</strong></td><td>Amino acids</td><td>All living cells</td></tr>
+                            <tr><td><strong>Lipids</strong></td><td>Fatty acids + Glycerol</td><td>Cell membranes, fat stores</td></tr>
+                        </tbody>
+                    </table>
+                    <div class="definition-box">
+                        <p class="term">Condensation Reaction</p>
+                        <p class="definition">The chemical reaction that joins monomers together, releasing a molecule of water each time a bond forms.</p>
+                    </div>
+                </div>
+                <div data-show-path="extended">
+                    <table class="data-table">
+                        <thead><tr><th>Molecule</th><th>Monomers</th><th>Bond Type</th><th>Features</th></tr></thead>
+                        <tbody>
+                            <tr><td>Starch (amylose)</td><td>α-glucose</td><td>Glycosidic</td><td>Unbranched helix</td></tr>
+                            <tr><td>Glycogen</td><td>α-glucose</td><td>Glycosidic</td><td>Highly branched</td></tr>
+                            <tr><td>Proteins</td><td>20 amino acids</td><td>Peptide</td><td>Folds into 3D shapes</td></tr>
+                            <tr><td>Triglycerides</td><td>1 glycerol + 3 fatty acids</td><td>Ester</td><td>Long hydrocarbon tails</td></tr>
+                        </tbody>
+                    </table>
+                    <div class="key-point"><strong>Structure-Function Link:</strong> Glycogen is more branched than starch because animals need to release glucose quickly during activity.</div>
+                </div>
+                <div data-show-path="challenge">
+                    <div class="extended-response">
+                        <p class="quiz-question">🎯 <strong>Challenge Question (6 marks):</strong> Compare the structure and function of starch and glycogen as energy storage molecules. Explain how their structural differences relate to the metabolic needs of plants and animals.</p>
+                        <textarea class="response-textarea" placeholder="Write your answer here..."></textarea>
+                        <div class="reveal-answer">
+                            <button class="reveal-btn" onclick="toggleReveal(this)">Show Mark Scheme</button>
+                            <div class="reveal-content">
+                                <div class="mark-scheme">
+                                    <h5>Mark Scheme (6 marks)</h5>
+                                    <ul>
+                                        <li>• Both made from α-glucose monomers joined by glycosidic bonds (1)</li>
+                                        <li>• Starch: amylose (unbranched) + amylopectin (slightly branched) (1)</li>
+                                        <li>• Glycogen is highly branched with many end points (1)</li>
+                                        <li>• Animals have higher metabolic rates/need rapid glucose release (1)</li>
+                                        <li>• More branches = more ends where enzymes can act simultaneously (1)</li>
+                                        <li>• Plants don't need rapid release as they don't move (1)</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TOPIC 2: FOOD TESTS -->
+        <section class="topic-content" data-topic="food-tests">
+            <div class="content-card">
+                <div class="card-header">
+                    <div class="card-icon practice">🧪</div>
+                    <h3>Food Tests Practical</h3>
+                    <span class="spec-ref">2.9</span>
+                </div>
+                <div data-show-path="foundation" class="visible">
+                    <div class="scaffold-tip">
+                        <p>💡 <strong>Practical Skills:</strong> You need to know how to test for different nutrients in food. Each test uses a different reagent and gives a specific colour change.</p>
+                    </div>
+                    <div class="mnemonic-box">
+                        <div class="title">🧠 Memory Tricks for Colour Changes</div>
+                        <p class="mnemonic">"Benedict's goes Brick red" (B-B)</p>
+                        <p class="mnemonic">"Iodine goes Inky-black" (I-I)</p>
+                        <p class="mnemonic">"Biuret goes Blue to Purple" (B-B-P)</p>
+                    </div>
+                    <table class="data-table">
+                        <thead><tr><th>Testing For</th><th>Reagent</th><th>Positive Result</th></tr></thead>
+                        <tbody>
+                            <tr><td>🍯 <strong>Glucose</strong></td><td>Benedict's + heat</td><td>Blue → Brick red/orange</td></tr>
+                            <tr><td>🍞 <strong>Starch</strong></td><td>Iodine</td><td>Brown → Blue-black</td></tr>
+                            <tr><td>🥩 <strong>Protein</strong></td><td>Biuret reagent</td><td>Blue → Purple/lilac</td></tr>
+                            <tr><td>🧈 <strong>Fat/Oil</strong></td><td>Filter paper</td><td>Translucent mark</td></tr>
+                        </tbody>
+                    </table>
+                    <div class="quiz-container">
+                        <p class="quiz-question">A student adds Benedict's solution to a food sample and heats it. The solution turns orange. What does this show?</p>
+                        <div class="quiz-options">
+                            <div class="quiz-option" data-correct="false">Starch is present</div>
+                            <div class="quiz-option" data-correct="true">Glucose (reducing sugar) is present</div>
+                            <div class="quiz-option" data-correct="false">Protein is present</div>
+                            <div class="quiz-option" data-correct="false">Fat is present</div>
+                        </div>
+                        <div class="quiz-feedback"></div>
+                    </div>
+                </div>
+                <div data-show-path="core">
+                    <div class="practical-box">
+                        <div class="header">🔬 Benedict's Test for Reducing Sugars</div>
+                        <div class="steps">
+                            <p class="step">Add food sample to a test tube with distilled water</p>
+                            <p class="step">Add equal volume of Benedict's solution (blue)</p>
+                            <p class="step">Heat in a water bath at 80°C for 2-3 minutes</p>
+                            <p class="step">Observe colour: green → yellow → orange → brick red</p>
+                        </div>
+                    </div>
+                    <div class="practical-box">
+                        <div class="header">🔬 Iodine Test for Starch</div>
+                        <div class="steps">
+                            <p class="step">Add food sample to a spotting tile</p>
+                            <p class="step">Add a few drops of iodine solution (brown)</p>
+                            <p class="step">Blue-black colour = starch present</p>
+                        </div>
+                    </div>
+                    <div class="exam-tip">
+                        <div class="title">⚠️ Common Exam Mistake</div>
+                        <p>Don't write "sugar is present" - be specific! Benedict's tests for <strong>reducing sugars</strong> like glucose. Sucrose gives a negative result.</p>
+                    </div>
+                </div>
+                <div data-show-path="extended">
+                    <table class="data-table">
+                        <thead><tr><th>Test</th><th>Chemical Principle</th><th>Limitations</th></tr></thead>
+                        <tbody>
+                            <tr><td>Benedict's</td><td>Cu²⁺ reduced to Cu₂O</td><td>Only detects reducing sugars</td></tr>
+                            <tr><td>Iodine</td><td>I₂ trapped in starch helix</td><td>Heat destroys colour</td></tr>
+                            <tr><td>Biuret</td><td>Cu²⁺ complexes with peptide bonds</td><td>Needs 2+ peptide bonds</td></tr>
+                            <tr><td>Emulsion</td><td>Lipids form milky suspension</td><td>Ethanol can denature proteins</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div data-show-path="challenge">
+                    <div class="extended-response">
+                        <p class="quiz-question">🎯 <strong>Challenge Question (6 marks):</strong> Design an experiment to compare the reducing sugar content of three different fruits, making it a fair test and explaining how to make results more quantitative.</p>
+                        <textarea class="response-textarea" placeholder="Write your answer here..."></textarea>
+                        <div class="reveal-answer">
+                            <button class="reveal-btn" onclick="toggleReveal(this)">Show Mark Scheme</button>
+                            <div class="reveal-content">
+                                <div class="mark-scheme">
+                                    <h5>Mark Scheme (6 marks)</h5>
+                                    <ul>
+                                        <li>• Use same mass/volume of each fruit sample (1)</li>
+                                        <li>• Grind with same volume of distilled water (1)</li>
+                                        <li>• Add same volume of Benedict's reagent (1)</li>
+                                        <li>• Heat at same temperature for same time (1)</li>
+                                        <li>• Compare to colour chart with known concentrations (1)</li>
+                                        <li>• Repeat and calculate mean for reliability (1)</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TOPIC 3: ENZYMES -->
+        <section class="topic-content" data-topic="enzymes">
+            <div class="content-card">
+                <div class="card-header">
+                    <div class="card-icon learn">⚡</div>
+                    <h3>Enzymes as Biological Catalysts</h3>
+                    <span class="spec-ref">2.10-2.11</span>
+                </div>
+                <div data-show-path="foundation" class="visible">
+                    <div class="scaffold-tip">
+                        <p>💡 <strong>What are enzymes?</strong> Think of enzymes like helpful machines in a factory. They speed up chemical reactions without getting used up!</p>
+                    </div>
+                    <div class="definition-box">
+                        <p class="term">Enzyme</p>
+                        <p class="definition">A biological catalyst - a protein that speeds up chemical reactions in living organisms without being used up.</p>
+                    </div>
+                    <div class="definition-box">
+                        <p class="term">Active Site</p>
+                        <p class="definition">A special pocket on the enzyme where the substrate fits perfectly - like a lock and key!</p>
+                    </div>
+                    <div class="key-point">
+                        <strong>Key Points to Remember:</strong><br>
+                        ✓ Enzymes are proteins<br>
+                        ✓ They speed up reactions<br>
+                        ✓ They are NOT used up (can be reused)<br>
+                        ✓ Each enzyme only works on one type of substrate (specific)
+                    </div>
+                    <div class="quiz-container">
+                        <p class="quiz-question">What is the name for the special part of an enzyme where the substrate attaches?</p>
+                        <div class="quiz-options">
+                            <div class="quiz-option" data-correct="false">The reaction site</div>
+                            <div class="quiz-option" data-correct="true">The active site</div>
+                            <div class="quiz-option" data-correct="false">The enzyme pocket</div>
+                            <div class="quiz-option" data-correct="false">The binding zone</div>
+                        </div>
+                        <div class="quiz-feedback"></div>
+                    </div>
+                </div>
+                <div data-show-path="core">
+                    <p>Enzymes are biological catalysts that speed up metabolic reactions without being changed or used up.</p>
+                    <div class="key-point">
+                        <strong>Lock and Key Model:</strong> The substrate fits precisely into the enzyme's active site, forming an enzyme-substrate complex. The reaction occurs, products are released, and the enzyme is free to work again.
+                    </div>
+                    <div class="exam-tip">
+                        <div class="title">⚠️ Exam Tip</div>
+                        <p>Always describe enzymes as "biological catalysts" not just "catalysts" - this shows you understand they are found in living organisms.</p>
+                    </div>
+                </div>
+                <div data-show-path="extended">
+                    <div class="definition-box">
+                        <p class="term">Induced Fit Model</p>
+                        <p class="definition">The active site changes shape slightly when the substrate binds, moulding around it for a closer fit and helping to catalyse the reaction.</p>
+                    </div>
+                    <div class="key-point">
+                        <strong>How enzymes lower activation energy:</strong><br>
+                        • Bringing substrates together correctly<br>
+                        • Putting strain on bonds within the substrate<br>
+                        • Providing a microenvironment with different conditions
+                    </div>
+                </div>
+                <div data-show-path="challenge">
+                    <div class="extended-response">
+                        <p class="quiz-question">🎯 <strong>Challenge Question (6 marks):</strong> Compare the lock and key model with the induced fit model. Explain which better accounts for enzyme specificity.</p>
+                        <textarea class="response-textarea" placeholder="Write your answer here..."></textarea>
+                        <div class="reveal-answer">
+                            <button class="reveal-btn" onclick="toggleReveal(this)">Show Mark Scheme</button>
+                            <div class="reveal-content">
+                                <div class="mark-scheme">
+                                    <h5>Mark Scheme (6 marks)</h5>
+                                    <ul>
+                                        <li>• Lock and key: rigid active site, substrate fits exactly (1)</li>
+                                        <li>• Induced fit: active site changes shape when substrate binds (1)</li>
+                                        <li>• Induced fit explains action on similar substrates (1)</li>
+                                        <li>• Induced fit explains how binding strains substrate bonds (1)</li>
+                                        <li>• Shape change helps release products (1)</li>
+                                        <li>• Induced fit better accounts for competitive inhibitor binding (1)</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-card">
+                <div class="card-header">
+                    <div class="card-icon challenge">🌡️</div>
+                    <h3>Effect of Temperature on Enzymes</h3>
+                    <span class="spec-ref">2.11-2.12</span>
+                </div>
+                <div data-show-path="foundation" class="visible">
+                    <div class="scaffold-tip">
+                        <p>💡 <strong>Think about cooking an egg:</strong> When you heat an egg, the proteins change shape. This is similar to what happens to enzymes if they get too hot!</p>
+                    </div>
+                    <div class="key-point">
+                        <strong>What happens at different temperatures:</strong><br><br>
+                        🥶 <strong>Too cold:</strong> Molecules move slowly → fewer collisions → slow reaction<br><br>
+                        ✅ <strong>Optimum (37-40°C):</strong> Perfect balance → fastest reaction<br><br>
+                        🔥 <strong>Too hot:</strong> Enzyme changes shape (DENATURED) → stops working
+                    </div>
+                    <div class="definition-box">
+                        <p class="term">Denaturation</p>
+                        <p class="definition">When an enzyme's shape is permanently changed (usually by heat or wrong pH), so the substrate can no longer fit in the active site.</p>
+                    </div>
+                </div>
+                <div data-show-path="core">
+                    <div class="two-column">
+                        <div class="key-point" style="border-color: var(--accent-foundation);">
+                            <strong style="color: var(--accent-foundation);">Increasing temp (up to optimum):</strong><br>
+                            • More kinetic energy<br>
+                            • More collisions<br>
+                            • Faster reaction
+                        </div>
+                        <div class="key-point" style="border-color: var(--error);">
+                            <strong style="color: #f87171;">Beyond optimum:</strong><br>
+                            • Hydrogen bonds break<br>
+                            • Active site changes shape<br>
+                            • Enzyme denatured (permanent)
+                        </div>
+                    </div>
+                    <div class="exam-tip">
+                        <div class="title">⚠️ Exam Tip</div>
+                        <p>Never say the enzyme is "killed" - enzymes are not alive! Say the enzyme is <strong>denatured</strong> and the active site <strong>changes shape</strong>.</p>
+                    </div>
+                    <div class="quiz-container">
+                        <p class="quiz-question">Why does enzyme activity decrease above the optimum temperature?</p>
+                        <div class="quiz-options">
+                            <div class="quiz-option" data-correct="false">The enzyme is killed by the heat</div>
+                            <div class="quiz-option" data-correct="false">The substrate moves too fast</div>
+                            <div class="quiz-option" data-correct="true">The active site changes shape so substrate can't fit</div>
+                            <div class="quiz-option" data-correct="false">The enzyme runs out of energy</div>
+                        </div>
+                        <div class="quiz-feedback"></div>
+                    </div>
+                </div>
+                <div data-show-path="extended">
+                    <div class="key-point">
+                        <strong>Q₁₀ coefficient:</strong> For every 10°C rise, the rate approximately doubles (up to optimum). This is due to increased kinetic energy and more successful collisions.
+                    </div>
+                    <div class="practical-box">
+                        <div class="header">🔬 Required Practical: Effect of Temperature on Amylase</div>
+                        <div class="steps">
+                            <p class="step">Set up water baths at 20°C, 30°C, 40°C, 50°C, 60°C</p>
+                            <p class="step">Pre-warm amylase and starch solutions separately</p>
+                            <p class="step">Mix amylase and starch, start timer</p>
+                            <p class="step">Every 30 seconds, test a drop with iodine</p>
+                            <p class="step">Record time for starch to be fully digested</p>
+                            <p class="step">Calculate rate = 1/time</p>
+                        </div>
+                    </div>
+                </div>
+                <div data-show-path="challenge">
+                    <div class="extended-response">
+                        <p class="quiz-question">🎯 <strong>Challenge Question (6 marks):</strong> A student found that amylase activity increased from 20°C to 40°C, then rapidly decreased above 50°C. Explain these results in terms of molecular interactions and collision theory.</p>
+                        <textarea class="response-textarea" placeholder="Write your answer here..."></textarea>
+                        <div class="reveal-answer">
+                            <button class="reveal-btn" onclick="toggleReveal(this)">Show Mark Scheme</button>
+                            <div class="reveal-content">
+                                <div class="mark-scheme">
+                                    <h5>Mark Scheme (6 marks)</h5>
+                                    <ul>
+                                        <li>• Increasing temperature provides more kinetic energy (1)</li>
+                                        <li>• More enzyme-substrate collisions per unit time (1)</li>
+                                        <li>• More collisions with sufficient energy (1)</li>
+                                        <li>• Above 50°C, hydrogen bonds in enzyme break (1)</li>
+                                        <li>• Active site changes shape (1)</li>
+                                        <li>• Substrate can no longer fit (denaturation is permanent) (1)</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-card">
+                <div class="card-header">
+                    <div class="card-icon practice">📊</div>
+                    <h3>Effect of pH on Enzymes</h3>
+                    <span class="spec-ref">2.13</span>
+                </div>
+                <div data-show-path="foundation" class="visible">
+                    <div class="mnemonic-box">
+                        <div class="title">🧠 Remember These Optimum pH Values!</div>
+                        <p class="mnemonic">"Pepsin likes the stomach's acid (pH 2)"</p>
+                        <p class="mnemonic">"Amylase likes your mouth - nearly neutral (pH 7)"</p>
+                        <p class="mnemonic">"Lipase works in alkaline intestines (pH 8-9)"</p>
+                    </div>
+                    <table class="data-table">
+                        <thead><tr><th>Enzyme</th><th>Where it works</th><th>Optimum pH</th></tr></thead>
+                        <tbody>
+                            <tr><td>Pepsin</td><td>Stomach</td><td>pH 2 (very acidic)</td></tr>
+                            <tr><td>Amylase</td><td>Mouth & intestine</td><td>pH 7 (neutral)</td></tr>
+                            <tr><td>Lipase</td><td>Small intestine</td><td>pH 8-9 (alkaline)</td></tr>
+                        </tbody>
+                    </table>
+                    <div class="key-point">
+                        <strong>What happens at the wrong pH?</strong><br>
+                        Too acidic or too alkaline → active site changes shape → substrate can't fit → enzyme is denatured!
+                    </div>
+                </div>
+                <div data-show-path="core">
+                    <div class="key-point">
+                        <strong>Why does pH affect enzymes?</strong><br>
+                        • pH measures H⁺ ion concentration<br>
+                        • H⁺ ions interact with ionic and hydrogen bonds<br>
+                        • These bonds hold the enzyme's 3D shape<br>
+                        • Wrong pH → bonds break → active site changes shape
+                    </div>
+                    <div class="quiz-container">
+                        <p class="quiz-question">Pepsin works best at pH 2. What would happen in the small intestine (pH 8)?</p>
+                        <div class="quiz-options">
+                            <div class="quiz-option" data-correct="false">It would work faster</div>
+                            <div class="quiz-option" data-correct="true">It would be denatured</div>
+                            <div class="quiz-option" data-correct="false">It would work at the same rate</div>
+                            <div class="quiz-option" data-correct="false">It would become more concentrated</div>
+                        </div>
+                        <div class="quiz-feedback"></div>
+                    </div>
+                </div>
+                <div data-show-path="extended">
+                    <div class="key-point">
+                        <strong>Molecular mechanism:</strong><br>
+                        • Amino acids like histidine have ionisable R-groups<br>
+                        • The charge on these groups depends on pH<br>
+                        • Correct charges are needed for substrate binding<br>
+                        • Wrong pH = wrong charges = reduced activity
+                    </div>
+                </div>
+                <div data-show-path="challenge">
+                    <div class="extended-response">
+                        <p class="quiz-question">🎯 <strong>Challenge Question (6 marks):</strong> Explain why pepsin has an optimum pH of 2 while trypsin has an optimum pH of 8, and how cells ensure these enzymes are only activated in the correct location.</p>
+                        <textarea class="response-textarea" placeholder="Write your answer here..."></textarea>
+                        <div class="reveal-answer">
+                            <button class="reveal-btn" onclick="toggleReveal(this)">Show Mark Scheme</button>
+                            <div class="reveal-content">
+                                <div class="mark-scheme">
+                                    <h5>Mark Scheme (6 marks)</h5>
+                                    <ul>
+                                        <li>• Different amino acid compositions in active sites (1)</li>
+                                        <li>• R-groups have different optimal ionisation states (1)</li>
+                                        <li>• Pepsin adapted to acidic stomach (1)</li>
+                                        <li>• Trypsin adapted to alkaline small intestine (1)</li>
+                                        <li>• Both produced as inactive precursors (1)</li>
+                                        <li>• Activated by specific conditions in target location (1)</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TOPIC 4: BALANCED DIET -->
+        <section class="topic-content" data-topic="diet">
+            <div class="content-card">
+                <div class="card-header">
+                    <div class="card-icon learn">🥗</div>
+                    <h3>Components of a Balanced Diet</h3>
+                    <span class="spec-ref">2.24-2.26</span>
+                </div>
+                <div data-show-path="foundation" class="visible">
+                    <div class="mnemonic-box">
+                        <div class="title">🧠 Remember the 7 Nutrients: "CAMP VWF"</div>
+                        <p class="mnemonic">C - Carbohydrates | A - (f)At (lipids) | M - Minerals | P - Proteins</p>
+                        <p class="mnemonic">V - Vitamins | W - Water | F - Fibre</p>
+                    </div>
+                    <table class="data-table">
+                        <thead><tr><th>Nutrient</th><th>Main Function</th><th>Good Sources</th></tr></thead>
+                        <tbody>
+                            <tr><td>🍞 Carbohydrates</td><td>Energy</td><td>Bread, pasta, rice</td></tr>
+                            <tr><td>🥩 Proteins</td><td>Growth and repair</td><td>Meat, fish, eggs, beans</td></tr>
+                            <tr><td>🧈 Lipids</td><td>Energy store, insulation</td><td>Butter, oil, nuts</td></tr>
+                            <tr><td>💊 Vitamins</td><td>Various body functions</td><td>Fruits, vegetables</td></tr>
+                            <tr><td>⚗️ Minerals</td><td>Various body functions</td><td>Meat, vegetables, dairy</td></tr>
+                            <tr><td>💧 Water</td><td>Transport, reactions</td><td>Drinks, foods</td></tr>
+                            <tr><td>🥬 Fibre</td><td>Helps digestion</td><td>Wholegrain, vegetables</td></tr>
+                        </tbody>
+                    </table>
+                    <div class="quiz-container">
+                        <p class="quiz-question">Which nutrient is needed for growth and repair of body tissues?</p>
+                        <div class="quiz-options">
+                            <div class="quiz-option" data-correct="false">Carbohydrates</div>
+                            <div class="quiz-option" data-correct="true">Proteins</div>
+                            <div class="quiz-option" data-correct="false">Lipids</div>
+                            <div class="quiz-option" data-correct="false">Fibre</div>
+                        </div>
+                        <div class="quiz-feedback"></div>
+                    </div>
+                </div>
+                <div data-show-path="core">
+                    <table class="data-table">
+                        <thead><tr><th>Nutrient</th><th>Function</th><th>Deficiency</th></tr></thead>
+                        <tbody>
+                            <tr><td>Vitamin A</td><td>Vision, immune system</td><td>Night blindness</td></tr>
+                            <tr><td>Vitamin C</td><td>Connective tissue</td><td>Scurvy</td></tr>
+                            <tr><td>Vitamin D</td><td>Calcium absorption</td><td>Rickets</td></tr>
+                            <tr><td>Calcium</td><td>Bones, teeth</td><td>Weak bones</td></tr>
+                            <tr><td>Iron</td><td>Haemoglobin</td><td>Anaemia</td></tr>
+                        </tbody>
+                    </table>
+                    <div class="key-point">
+                        <strong>Energy Requirements Vary With:</strong><br><br>
+                        <strong>Activity Level:</strong> More active = more energy needed<br>
+                        <strong>Age:</strong> Teenagers need more for growth<br>
+                        <strong>Pregnancy:</strong> Extra energy and nutrients for baby
+                    </div>
+                </div>
+                <div data-show-path="extended">
+                    <table class="data-table">
+                        <thead><tr><th>Nutrient</th><th>Biochemical Role</th><th>Source</th><th>Deficiency</th></tr></thead>
+                        <tbody>
+                            <tr><td>Vitamin A</td><td>Component of rhodopsin</td><td>Liver, carrots</td><td>Night blindness</td></tr>
+                            <tr><td>Vitamin C</td><td>Collagen synthesis</td><td>Citrus fruits</td><td>Scurvy</td></tr>
+                            <tr><td>Vitamin D</td><td>Ca²⁺/PO₄³⁻ absorption</td><td>Sunlight, oily fish</td><td>Rickets</td></tr>
+                            <tr><td>Calcium</td><td>Bone matrix, muscle</td><td>Dairy, leafy greens</td><td>Osteoporosis</td></tr>
+                            <tr><td>Iron</td><td>Haemoglobin (O₂ binding)</td><td>Red meat, spinach</td><td>Anaemia</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div data-show-path="challenge">
+                    <div class="extended-response">
+                        <p class="quiz-question">🎯 <strong>Challenge Question (6 marks):</strong> Explain why a pregnant woman has increased requirements for protein, iron, and calcium. Link each nutrient to specific physiological processes.</p>
+                        <textarea class="response-textarea" placeholder="Write your answer here..."></textarea>
+                        <div class="reveal-answer">
+                            <button class="reveal-btn" onclick="toggleReveal(this)">Show Mark Scheme</button>
+                            <div class="reveal-content">
+                                <div class="mark-scheme">
+                                    <h5>Mark Scheme (6 marks)</h5>
+                                    <ul>
+                                        <li>• Extra protein for growth of fetal tissues (1)</li>
+                                        <li>• Protein for placenta development (1)</li>
+                                        <li>• Extra iron for increased blood volume (1)</li>
+                                        <li>• Iron for fetal red blood cell production (1)</li>
+                                        <li>• Extra calcium for fetal skeleton development (1)</li>
+                                        <li>• Calcium for fetal teeth formation (1)</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TOPIC 5: DIGESTIVE SYSTEM -->
+        <section class="topic-content" data-topic="digestive">
+            <div class="content-card">
+                <div class="card-header">
+                    <div class="card-icon visual">🫁</div>
+                    <h3>Structure of the Alimentary Canal</h3>
+                    <span class="spec-ref">2.27-2.28</span>
+                </div>
+                <div data-show-path="foundation" class="visible">
+                    <div class="mnemonic-box">
+                        <div class="title">🧠 Remember the Order: "My Old Stomach Starts Its Large Adventure"</div>
+                        <p class="mnemonic"><strong>M</strong>outh → <strong>O</strong>esophagus → <strong>S</strong>tomach → <strong>S</strong>mall intestine → <strong>I</strong>n → <strong>L</strong>arge intestine → <strong>A</strong>nus</p>
+                    </div>
+                    <table class="data-table">
+                        <thead><tr><th>Organ</th><th>What happens here?</th></tr></thead>
+                        <tbody>
+                            <tr><td>👄 Mouth</td><td>Teeth break up food; saliva adds amylase</td></tr>
+                            <tr><td>🔽 Oesophagus</td><td>Pushes food to stomach (peristalsis)</td></tr>
+                            <tr><td>🫙 Stomach</td><td>Acid kills bacteria; protease digests protein</td></tr>
+                            <tr><td>🧬 Small intestine</td><td>Digestion completes; nutrients absorbed</td></tr>
+                            <tr><td>💧 Large intestine</td><td>Water absorbed; faeces formed</td></tr>
+                        </tbody>
+                    </table>
+                    <div class="definition-box">
+                        <p class="term">Peristalsis</p>
+                        <p class="definition">Wave-like muscle contractions that push food through the digestive system - like squeezing toothpaste from a tube!</p>
+                    </div>
+                </div>
+                <div data-show-path="core">
+                    <table class="data-table">
+                        <thead><tr><th>Organ</th><th>Functions</th></tr></thead>
+                        <tbody>
+                            <tr><td><strong>Mouth</strong></td><td>Mechanical (teeth) + chemical digestion (amylase)</td></tr>
+                            <tr><td><strong>Oesophagus</strong></td><td>Transports food by peristalsis</td></tr>
+                            <tr><td><strong>Stomach</strong></td><td>Churns food, acid kills bacteria, pepsin digests proteins</td></tr>
+                            <tr><td><strong>Duodenum</strong></td><td>Receives bile and pancreatic juice</td></tr>
+                            <tr><td><strong>Ileum</strong></td><td>Main site of absorption (villi)</td></tr>
+                            <tr><td><strong>Colon</strong></td><td>Absorbs water, forms faeces</td></tr>
+                            <tr><td><strong>Pancreas</strong></td><td>Produces amylase, protease, lipase</td></tr>
+                        </tbody>
+                    </table>
+                    <div class="key-point">
+                        <strong>Peristalsis:</strong> Circular muscles contract behind the food, longitudinal muscles contract in front. This wave-like action pushes food along.
+                    </div>
+                </div>
+                <div data-show-path="extended">
+                    <div class="key-point">
+                        <strong>Stomach adaptations:</strong><br>
+                        • Thick muscular wall for churning<br>
+                        • Mucus lining protects against acid<br>
+                        • Gastric pits secrete HCl and pepsinogen<br>
+                        • Pyloric sphincter controls release
+                    </div>
+                </div>
+                <div data-show-path="challenge">
+                    <div class="extended-response">
+                        <p class="quiz-question">🎯 <strong>Challenge Question (6 marks):</strong> Explain how the stomach wall is adapted for its functions and how it protects itself from self-digestion.</p>
+                        <textarea class="response-textarea" placeholder="Write your answer here..."></textarea>
+                        <div class="reveal-answer">
+                            <button class="reveal-btn" onclick="toggleReveal(this)">Show Mark Scheme</button>
+                            <div class="reveal-content">
+                                <div class="mark-scheme">
+                                    <h5>Mark Scheme (6 marks)</h5>
+                                    <ul>
+                                        <li>• Thick muscular wall for churning (1)</li>
+                                        <li>• Gastric glands secrete HCl (1)</li>
+                                        <li>• Chief cells secrete pepsinogen (inactive) (1)</li>
+                                        <li>• Parietal cells secrete HCl for acidic pH (1)</li>
+                                        <li>• Goblet cells secrete alkaline mucus (1)</li>
+                                        <li>• Mucus prevents acid/pepsin digesting wall (1)</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TOPIC 6: DIGESTION & ABSORPTION -->
+        <section class="topic-content" data-topic="absorption">
+            <div class="content-card">
+                <div class="card-header">
+                    <div class="card-icon learn">⚡</div>
+                    <h3>Digestive Enzymes</h3>
+                    <span class="spec-ref">2.29-2.31</span>
+                </div>
+                <div data-show-path="foundation" class="visible">
+                    <div class="mnemonic-box">
+                        <div class="title">🧠 The "-ase" Ending Pattern</div>
+                        <p class="mnemonic">Amyl<strong>ase</strong> breaks down starch</p>
+                        <p class="mnemonic">Prote<strong>ase</strong> breaks down proteins</p>
+                        <p class="mnemonic">Lip<strong>ase</strong> breaks down lipids</p>
+                    </div>
+                    <table class="data-table">
+                        <thead><tr><th>Enzyme</th><th>Breaks Down</th><th>Into</th></tr></thead>
+                        <tbody>
+                            <tr><td>🍞 Amylase</td><td>Starch</td><td>Maltose (then glucose)</td></tr>
+                            <tr><td>🍞 Maltase</td><td>Maltose</td><td>Glucose</td></tr>
+                            <tr><td>🥩 Proteases</td><td>Proteins</td><td>Amino acids</td></tr>
+                            <tr><td>🧈 Lipase</td><td>Lipids</td><td>Fatty acids + Glycerol</td></tr>
+                        </tbody>
+                    </table>
+                    <div class="key-point">
+                        <strong>Why break down food?</strong><br>
+                        Large molecules are too big to pass through the gut wall. Small molecules (glucose, amino acids) can be absorbed.
+                    </div>
+                    <div class="fill-blank">
+                        <p><strong>Complete the sentences:</strong></p>
+                        <div class="word-bank">
+                            <span class="word-bank-item">amino acids</span>
+                            <span class="word-bank-item">glucose</span>
+                            <span class="word-bank-item">fatty acids</span>
+                        </div>
+                        <p class="fill-blank-text">
+                            1. Proteins are digested into <input type="text" class="blank-input" data-answer="amino acids">.<br><br>
+                            2. Starch is digested into <input type="text" class="blank-input" data-answer="glucose">.<br><br>
+                            3. Lipids are digested into <input type="text" class="blank-input" data-answer="fatty acids"> and glycerol.
+                        </p>
+                        <button class="btn btn-primary" onclick="checkBlanks(this)" style="margin-top: 1rem;">Check Answers</button>
+                    </div>
+                </div>
+                <div data-show-path="core">
+                    <table class="data-table">
+                        <thead><tr><th>Enzyme</th><th>Substrate</th><th>Products</th><th>Where Produced</th></tr></thead>
+                        <tbody>
+                            <tr><td>Salivary amylase</td><td>Starch</td><td>Maltose</td><td>Salivary glands</td></tr>
+                            <tr><td>Pancreatic amylase</td><td>Starch</td><td>Maltose</td><td>Pancreas</td></tr>
+                            <tr><td>Maltase</td><td>Maltose</td><td>Glucose</td><td>Small intestine</td></tr>
+                            <tr><td>Pepsin</td><td>Proteins</td><td>Peptides</td><td>Stomach</td></tr>
+                            <tr><td>Trypsin</td><td>Proteins</td><td>Amino acids</td><td>Pancreas</td></tr>
+                            <tr><td>Lipase</td><td>Lipids</td><td>Fatty acids + glycerol</td><td>Pancreas</td></tr>
+                        </tbody>
+                    </table>
+                    <div class="key-point">
+                        <strong>Role of Bile:</strong><br>
+                        • Made in the <strong>liver</strong>, stored in the <strong>gall bladder</strong><br>
+                        • <strong>Neutralises</strong> stomach acid<br>
+                        • <strong>Emulsifies</strong> fats (breaks them into tiny droplets)<br>
+                        • NOT an enzyme!
+                    </div>
+                    <div class="exam-tip">
+                        <div class="title">⚠️ Key Exam Point</div>
+                        <p>Starch digestion requires TWO enzymes: Amylase (starch → maltose) then Maltase (maltose → glucose). Don't forget the second step!</p>
+                    </div>
+                </div>
+                <div data-show-path="extended">
+                    <div class="key-point">
+                        <strong>Bile functions in detail:</strong><br>
+                        • Bile salts are amphipathic (hydrophobic + hydrophilic ends)<br>
+                        • They coat fat droplets, preventing them rejoining<br>
+                        • Emulsification increases surface area for lipase<br>
+                        • Bile is alkaline - neutralises acidic chyme from stomach
+                    </div>
+                </div>
+                <div data-show-path="challenge">
+                    <div class="extended-response">
+                        <p class="quiz-question">🎯 <strong>Challenge Question (6 marks):</strong> Explain why patients who have had their gall bladder removed are advised to eat low-fat diets.</p>
+                        <textarea class="response-textarea" placeholder="Write your answer here..."></textarea>
+                        <div class="reveal-answer">
+                            <button class="reveal-btn" onclick="toggleReveal(this)">Show Mark Scheme</button>
+                            <div class="reveal-content">
+                                <div class="mark-scheme">
+                                    <h5>Mark Scheme (6 marks)</h5>
+                                    <ul>
+                                        <li>• Gall bladder stores bile between meals (1)</li>
+                                        <li>• Without storage, bile drips continuously (1)</li>
+                                        <li>• Cannot release large amounts when needed (1)</li>
+                                        <li>• Less bile for emulsification (1)</li>
+                                        <li>• Larger fat droplets = smaller surface area for lipase (1)</li>
+                                        <li>• Slower/incomplete fat digestion causes discomfort (1)</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-card">
+                <div class="card-header">
+                    <div class="card-icon practice">🔬</div>
+                    <h3>Absorption in the Small Intestine</h3>
+                    <span class="spec-ref">2.32</span>
+                </div>
+                <div data-show-path="foundation" class="visible">
+                    <div class="scaffold-tip">
+                        <p>💡 <strong>Villi</strong> are tiny finger-like projections lining the small intestine - like thousands of tiny fingers reaching into the food to grab nutrients!</p>
+                    </div>
+                    <div class="mnemonic-box">
+                        <div class="title">🧠 4 Adaptations of Villi - "SLIM"</div>
+                        <p class="mnemonic"><strong>S</strong>urface area - large (finger-like shape)</p>
+                        <p class="mnemonic"><strong>L</strong>acteal - absorbs fats into lymph</p>
+                        <p class="mnemonic"><strong>I</strong>nside wall is thin - one cell thick</p>
+                        <p class="mnemonic"><strong>M</strong>any blood capillaries - carry away nutrients</p>
+                    </div>
+                    <div class="quiz-container">
+                        <p class="quiz-question">Why do villi have a good blood supply?</p>
+                        <div class="quiz-options">
+                            <div class="quiz-option" data-correct="false">To keep the villi warm</div>
+                            <div class="quiz-option" data-correct="true">To carry absorbed nutrients away quickly</div>
+                            <div class="quiz-option" data-correct="false">To digest food faster</div>
+                            <div class="quiz-option" data-correct="false">To make the intestine stretchy</div>
+                        </div>
+                        <div class="quiz-feedback"></div>
+                    </div>
+                </div>
+                <div data-show-path="core">
+                    <table class="data-table">
+                        <thead><tr><th>Adaptation</th><th>How it Helps</th></tr></thead>
+                        <tbody>
+                            <tr><td>Finger-like villi</td><td>Increase surface area for absorption</td></tr>
+                            <tr><td>Microvilli (brush border)</td><td>Further increase surface area</td></tr>
+                            <tr><td>Thin epithelium (1 cell)</td><td>Short diffusion distance</td></tr>
+                            <tr><td>Dense capillary network</td><td>Maintains concentration gradient</td></tr>
+                            <tr><td>Central lacteal</td><td>Absorbs fatty acids into lymph</td></tr>
+                        </tbody>
+                    </table>
+                    <div class="key-point">
+                        <strong>What gets absorbed where:</strong><br>
+                        • <strong>Blood capillaries:</strong> Glucose, amino acids, vitamins, minerals<br>
+                        • <strong>Lacteal:</strong> Fatty acids and glycerol (reform as lipids)
+                    </div>
+                </div>
+                <div data-show-path="extended">
+                    <div class="key-point">
+                        <strong>Mechanisms of absorption:</strong><br>
+                        • <strong>Simple diffusion:</strong> Fatty acids, fat-soluble vitamins<br>
+                        • <strong>Facilitated diffusion:</strong> Fructose (via carriers)<br>
+                        • <strong>Active transport:</strong> Glucose, amino acids (requires ATP)
+                    </div>
+                </div>
+                <div data-show-path="challenge">
+                    <div class="extended-response">
+                        <p class="quiz-question">🎯 <strong>Challenge Question (6 marks):</strong> Coeliac disease damages villi. Explain why patients often experience malnutrition despite eating normally.</p>
+                        <textarea class="response-textarea" placeholder="Write your answer here..."></textarea>
+                        <div class="reveal-answer">
+                            <button class="reveal-btn" onclick="toggleReveal(this)">Show Mark Scheme</button>
+                            <div class="reveal-content">
+                                <div class="mark-scheme">
+                                    <h5>Mark Scheme (6 marks)</h5>
+                                    <ul>
+                                        <li>• Damaged villi have reduced surface area (1)</li>
+                                        <li>• Less surface for absorption (1)</li>
+                                        <li>• Microvilli also damaged (1)</li>
+                                        <li>• Membrane enzymes may be reduced (1)</li>
+                                        <li>• Blood supply may be impaired (1)</li>
+                                        <li>• Nutrients pass through without being absorbed (1)</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SPECIFICATION CHECKLIST -->
+        <div class="spec-checklist">
+            <h3>📋 Specification Checklist</h3>
+            <p style="color: var(--text-secondary); margin-bottom: 1rem; font-size: 0.9rem;">Tick off each learning objective as you master it!</p>
+            
+            <div class="checklist-item">
+                <div class="checklist-checkbox" onclick="toggleCheck(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg></div>
+                <span class="spec-number">2.7</span>
+                <span class="spec-text">Identify chemical elements in carbohydrates, proteins and lipids</span>
+            </div>
+            <div class="checklist-item">
+                <div class="checklist-checkbox" onclick="toggleCheck(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg></div>
+                <span class="spec-number">2.8</span>
+                <span class="spec-text">Describe structure of large molecules from smaller units</span>
+            </div>
+            <div class="checklist-item">
+                <div class="checklist-checkbox" onclick="toggleCheck(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg></div>
+                <span class="spec-number">2.9</span>
+                <span class="spec-text">Investigate food samples for glucose, starch, protein and fat</span>
+            </div>
+            <div class="checklist-item">
+                <div class="checklist-checkbox" onclick="toggleCheck(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg></div>
+                <span class="spec-number">2.10</span>
+                <span class="spec-text">Understand enzymes as biological catalysts</span>
+            </div>
+            <div class="checklist-item">
+                <div class="checklist-checkbox" onclick="toggleCheck(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg></div>
+                <span class="spec-number">2.11</span>
+                <span class="spec-text">Understand temperature effects on enzyme function</span>
+            </div>
+            <div class="checklist-item">
+                <div class="checklist-checkbox" onclick="toggleCheck(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg></div>
+                <span class="spec-number">2.12</span>
+                <span class="spec-text">Investigate enzyme activity at different temperatures</span>
+            </div>
+            <div class="checklist-item">
+                <div class="checklist-checkbox" onclick="toggleCheck(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg></div>
+                <span class="spec-number">2.13</span>
+                <span class="spec-text">Understand pH effects on enzyme function</span>
+            </div>
+            <div class="checklist-item">
+                <div class="checklist-checkbox" onclick="toggleCheck(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg></div>
+                <span class="spec-number">2.24</span>
+                <span class="spec-text">Understand balanced diet components</span>
+            </div>
+            <div class="checklist-item">
+                <div class="checklist-checkbox" onclick="toggleCheck(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg></div>
+                <span class="spec-number">2.25</span>
+                <span class="spec-text">Identify sources and functions of dietary components</span>
+            </div>
+            <div class="checklist-item">
+                <div class="checklist-checkbox" onclick="toggleCheck(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg></div>
+                <span class="spec-number">2.26</span>
+                <span class="spec-text">Understand variation in energy requirements</span>
+            </div>
+            <div class="checklist-item">
+                <div class="checklist-checkbox" onclick="toggleCheck(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg></div>
+                <span class="spec-number">2.27</span>
+                <span class="spec-text">Describe structure and function of alimentary canal</span>
+            </div>
+            <div class="checklist-item">
+                <div class="checklist-checkbox" onclick="toggleCheck(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg></div>
+                <span class="spec-number">2.28</span>
+                <span class="spec-text">Understand peristalsis</span>
+            </div>
+            <div class="checklist-item">
+                <div class="checklist-checkbox" onclick="toggleCheck(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg></div>
+                <span class="spec-number">2.29</span>
+                <span class="spec-text">Understand role of digestive enzymes</span>
+            </div>
+            <div class="checklist-item">
+                <div class="checklist-checkbox" onclick="toggleCheck(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg></div>
+                <span class="spec-number">2.30</span>
+                <span class="spec-text">Understand bile production and storage</span>
+            </div>
+            <div class="checklist-item">
+                <div class="checklist-checkbox" onclick="toggleCheck(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg></div>
+                <span class="spec-number">2.31</span>
+                <span class="spec-text">Understand role of bile</span>
+            </div>
+            <div class="checklist-item">
+                <div class="checklist-checkbox" onclick="toggleCheck(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg></div>
+                <span class="spec-number">2.32</span>
+                <span class="spec-text">Understand small intestine adaptations for absorption</span>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Path switching
+        const pathBtns = document.querySelectorAll('.path-btn');
+        const pathDescriptions = document.querySelectorAll('.path-description');
+        let currentPath = 'foundation';
+
+        pathBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const path = btn.dataset.path;
+                currentPath = path;
+                
+                pathBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                
+                pathDescriptions.forEach(desc => {
+                    desc.classList.remove('active');
+                    if (desc.dataset.path === path) desc.classList.add('active');
+                });
+                
+                document.querySelectorAll('[data-show-path]').forEach(el => {
+                    el.classList.remove('visible');
+                    if (el.dataset.showPath === path) el.classList.add('visible');
+                });
+            });
+        });
+
+        // Topic switching
+        const topicBtns = document.querySelectorAll('.topic-btn');
+        const topicContents = document.querySelectorAll('.topic-content');
+
+        topicBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const topic = btn.dataset.topic;
+                topicBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                topicContents.forEach(content => {
+                    content.classList.remove('active');
+                    if (content.dataset.topic === topic) content.classList.add('active');
+                });
+            });
+        });
+
+        // Quiz functionality
+        document.querySelectorAll('.quiz-options').forEach(container => {
+            container.querySelectorAll('.quiz-option').forEach(option => {
+                option.addEventListener('click', () => {
+                    if (container.querySelector('.correct') || container.querySelector('.incorrect')) return;
+                    
+                    const isCorrect = option.dataset.correct === 'true';
+                    const feedback = container.parentElement.querySelector('.quiz-feedback');
+                    
+                    option.classList.add('selected');
+                    
+                    if (isCorrect) {
+                        option.classList.add('correct');
+                        feedback.textContent = '✓ Correct! Well done!';
+                        feedback.className = 'quiz-feedback show correct';
+                        updateProgress();
+                    } else {
+                        option.classList.add('incorrect');
+                        container.querySelectorAll('.quiz-option').forEach(opt => {
+                            if (opt.dataset.correct === 'true') opt.classList.add('correct');
+                        });
+                        feedback.textContent = '✗ Not quite. The correct answer is highlighted above.';
+                        feedback.className = 'quiz-feedback show incorrect';
+                    }
+                });
+            });
+        });
+
+        // Fill in the blank checking
+        function checkBlanks(button) {
+            const container = button.parentElement;
+            const inputs = container.querySelectorAll('.blank-input');
+            
+            inputs.forEach(input => {
+                const userAnswer = input.value.trim().toLowerCase();
+                const correctAnswer = input.dataset.answer.toLowerCase();
+                
+                if (userAnswer === correctAnswer) {
+                    input.classList.remove('incorrect');
+                    input.classList.add('correct');
+                } else {
+                    input.classList.remove('correct');
+                    input.classList.add('incorrect');
+                }
+            });
+            
+            const allCorrect = Array.from(inputs).every(input => 
+                input.value.trim().toLowerCase() === input.dataset.answer.toLowerCase()
+            );
+            if (allCorrect) updateProgress();
+        }
+
+        // Reveal answer toggle
+        function toggleReveal(button) {
+            const content = button.nextElementSibling;
+            content.classList.toggle('show');
+            button.textContent = content.classList.contains('show') ? 'Hide Mark Scheme' : 'Show Mark Scheme';
+        }
+
+        // Checkbox toggle
+        function toggleCheck(checkbox) {
+            checkbox.classList.toggle('checked');
+            updateProgress();
+        }
+
+        // Progress tracking
+        const totalItems = 16;
+        function updateProgress() {
+            const completedItems = document.querySelectorAll('.checklist-checkbox.checked').length;
+            const percentage = Math.round((completedItems / totalItems) * 100);
+            document.querySelector('.progress-fill').style.width = percentage + '%';
+            document.querySelector('.progress-text').textContent = percentage + '%';
+        }
+
+        // Initialize foundation path
+        document.querySelectorAll('[data-show-path="foundation"]').forEach(el => el.classList.add('visible'));
+    </script>
+</body>
+</html>
