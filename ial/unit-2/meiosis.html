@@ -1,0 +1,2224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sexual Reproduction & Meiosis | IAL Biology</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Source+Sans+Pro:wght@300;400;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #1a365d;
+            --primary-light: #2c5282;
+            --secondary: #553c9a;
+            --accent: #d69e2e;
+            --accent-light: #f6e05e;
+            --success: #276749;
+            --success-light: #48bb78;
+            --danger: #c53030;
+            --warning: #dd6b20;
+            --bg-dark: #0d1b2a;
+            --bg-medium: #1b263b;
+            --bg-light: #415a77;
+            --text-light: #e0e7ff;
+            --text-muted: #a0aec0;
+            --card-bg: rgba(27, 38, 59, 0.95);
+            --glass: rgba(255, 255, 255, 0.05);
+            --border: rgba(255, 255, 255, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Source Sans Pro', sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-light);
+            line-height: 1.7;
+            min-height: 100vh;
+        }
+
+        /* Animated DNA Background */
+        .dna-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+            background: 
+                radial-gradient(ellipse at 20% 20%, rgba(85, 60, 154, 0.15) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 80%, rgba(26, 54, 93, 0.2) 0%, transparent 50%),
+                var(--bg-dark);
+        }
+
+        .helix {
+            position: absolute;
+            width: 4px;
+            height: 100%;
+            opacity: 0.1;
+        }
+
+        .helix::before, .helix::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 20px;
+            background: var(--accent);
+            border-radius: 50%;
+            animation: helixMove 3s ease-in-out infinite;
+        }
+
+        .helix::after {
+            animation-delay: 1.5s;
+        }
+
+        @keyframes helixMove {
+            0%, 100% { transform: translateY(0) scale(1); opacity: 0.3; }
+            50% { transform: translateY(100vh) scale(0.5); opacity: 0.8; }
+        }
+
+        /* Header */
+        .hero {
+            position: relative;
+            padding: 80px 20px 60px;
+            text-align: center;
+            background: linear-gradient(135deg, var(--bg-medium) 0%, var(--bg-dark) 100%);
+            border-bottom: 1px solid var(--border);
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: 
+                radial-gradient(circle at 30% 70%, rgba(214, 158, 46, 0.08) 0%, transparent 40%),
+                radial-gradient(circle at 70% 30%, rgba(85, 60, 154, 0.1) 0%, transparent 40%);
+            animation: heroGlow 20s ease-in-out infinite;
+        }
+
+        @keyframes heroGlow {
+            0%, 100% { transform: rotate(0deg); }
+            50% { transform: rotate(180deg); }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .spec-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 20px;
+            background: var(--glass);
+            border: 1px solid var(--border);
+            border-radius: 30px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            color: var(--accent);
+            margin-bottom: 24px;
+            backdrop-filter: blur(10px);
+        }
+
+        .spec-badge::before {
+            content: '3B.3';
+            background: var(--accent);
+            color: var(--bg-dark);
+            padding: 4px 10px;
+            border-radius: 15px;
+            font-size: 0.75rem;
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: 16px;
+            background: linear-gradient(135deg, var(--text-light) 0%, var(--accent-light) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            font-size: 1.3rem;
+            color: var(--text-muted);
+            max-width: 600px;
+            margin: 0 auto 40px;
+        }
+
+        /* Navigation Progress */
+        .nav-progress {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            padding: 20px;
+            background: var(--bg-medium);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid var(--border);
+            backdrop-filter: blur(20px);
+        }
+
+        .nav-item {
+            padding: 8px 16px;
+            background: var(--glass);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            background: var(--accent);
+            color: var(--bg-dark);
+            border-color: var(--accent);
+        }
+
+        .nav-item.completed {
+            background: var(--success);
+            color: white;
+            border-color: var(--success);
+        }
+
+        /* Main Content */
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        /* Learning Objectives */
+        .objectives-card {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            border-radius: 24px;
+            padding: 40px;
+            margin-bottom: 60px;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .objectives-card::before {
+            content: '🎯';
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            font-size: 4rem;
+            opacity: 0.2;
+        }
+
+        .objectives-card h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            margin-bottom: 24px;
+            color: white;
+        }
+
+        .objectives-list {
+            list-style: none;
+        }
+
+        .objectives-list li {
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            padding: 16px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 1.05rem;
+        }
+
+        .objectives-list li:last-child {
+            border-bottom: none;
+        }
+
+        .obj-icon {
+            width: 32px;
+            height: 32px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 0.9rem;
+        }
+
+        /* Section Styling */
+        .section {
+            margin-bottom: 80px;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 0.6s ease forwards;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 32px;
+        }
+
+        .section-number {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--accent) 0%, var(--warning) 100%);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--bg-dark);
+        }
+
+        h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            color: var(--text-light);
+        }
+
+        h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            color: var(--accent-light);
+            margin: 32px 0 16px;
+        }
+
+        p {
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+            color: var(--text-light);
+        }
+
+        /* Content Cards */
+        .content-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 36px;
+            margin-bottom: 32px;
+            border: 1px solid var(--border);
+            backdrop-filter: blur(10px);
+        }
+
+        /* Key Term Highlighting */
+        .key-term {
+            background: linear-gradient(90deg, rgba(214, 158, 46, 0.3), rgba(214, 158, 46, 0.1));
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: 600;
+            color: var(--accent-light);
+            border-bottom: 2px solid var(--accent);
+        }
+
+        /* Comparison Table */
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+            margin: 32px 0;
+        }
+
+        @media (max-width: 768px) {
+            .comparison-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .comparison-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 32px;
+            border: 2px solid var(--border);
+            transition: all 0.3s ease;
+        }
+
+        .comparison-card.sexual {
+            border-color: var(--success);
+        }
+
+        .comparison-card.asexual {
+            border-color: var(--secondary);
+        }
+
+        .comparison-card h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.4rem;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .comparison-card.sexual h4 {
+            color: var(--success-light);
+        }
+
+        .comparison-card.asexual h4 {
+            color: #b794f4;
+        }
+
+        .comparison-card ul {
+            list-style: none;
+        }
+
+        .comparison-card li {
+            padding: 10px 0;
+            padding-left: 28px;
+            position: relative;
+            color: var(--text-light);
+        }
+
+        .comparison-card li::before {
+            content: '→';
+            position: absolute;
+            left: 0;
+            color: var(--accent);
+        }
+
+        /* Diploid/Haploid Visual */
+        .chromosome-visual {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 40px;
+            margin: 40px 0;
+            padding: 40px;
+            background: var(--glass);
+            border-radius: 24px;
+            border: 1px solid var(--border);
+        }
+
+        @media (max-width: 768px) {
+            .chromosome-visual {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .chromosome-box {
+            text-align: center;
+            padding: 30px;
+        }
+
+        .chromosome-diagram {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 20px;
+            background: var(--bg-medium);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 3px solid var(--accent);
+            position: relative;
+        }
+
+        .chromosome-diagram.diploid {
+            border-color: var(--success-light);
+        }
+
+        .chromosome-diagram.haploid {
+            border-color: var(--secondary);
+        }
+
+        .chromosome-notation {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 2rem;
+            font-weight: 700;
+        }
+
+        .chromosome-diagram.diploid .chromosome-notation {
+            color: var(--success-light);
+        }
+
+        .chromosome-diagram.haploid .chromosome-notation {
+            color: #b794f4;
+        }
+
+        .chromosome-label {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .chromosome-desc {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        /* Meiosis Stages */
+        .meiosis-timeline {
+            position: relative;
+            padding: 40px 0;
+        }
+
+        .division-header {
+            background: linear-gradient(90deg, var(--secondary), transparent);
+            padding: 16px 24px;
+            border-radius: 12px;
+            margin: 40px 0 30px;
+            font-family: 'Playfair Display', serif;
+            font-size: 1.4rem;
+            color: white;
+        }
+
+        .stage-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+            margin-bottom: 30px;
+        }
+
+        @media (max-width: 900px) {
+            .stage-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .stage-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            transition: all 0.3s ease;
+        }
+
+        .stage-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .stage-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 15px;
+        }
+
+        .stage-image img {
+            max-width: 100%;
+            max-height: 170px;
+            object-fit: contain;
+            border-radius: 8px;
+        }
+
+        .stage-svg {
+            width: 100%;
+            height: 170px;
+        }
+
+        .cell-membrane {
+            fill: none;
+            stroke: #4fd1c5;
+            stroke-width: 3;
+        }
+
+        .chromosome-maternal {
+            fill: #f56565;
+            stroke: #c53030;
+            stroke-width: 1;
+        }
+
+        .chromosome-paternal {
+            fill: #4299e1;
+            stroke: #2b6cb0;
+            stroke-width: 1;
+        }
+
+        .spindle-fiber {
+            stroke: #a0aec0;
+            stroke-width: 1.5;
+            stroke-dasharray: 4,2;
+        }
+
+        .centromere {
+            fill: #f6e05e;
+        }
+
+        .stage-content {
+            padding: 24px;
+        }
+
+        .stage-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.3rem;
+            color: var(--accent-light);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .stage-badge {
+            background: var(--accent);
+            color: var(--bg-dark);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            font-family: 'Source Sans Pro', sans-serif;
+        }
+
+        .stage-events {
+            list-style: none;
+        }
+
+        .stage-events li {
+            padding: 8px 0;
+            padding-left: 20px;
+            position: relative;
+            font-size: 0.95rem;
+            color: var(--text-light);
+        }
+
+        .stage-events li::before {
+            content: '•';
+            position: absolute;
+            left: 0;
+            color: var(--accent);
+            font-weight: bold;
+        }
+
+        /* Genetic Variation Cards */
+        .variation-cards {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 32px;
+            margin: 40px 0;
+        }
+
+        @media (max-width: 768px) {
+            .variation-cards {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .variation-card {
+            background: var(--card-bg);
+            border-radius: 24px;
+            padding: 36px;
+            border: 2px solid var(--border);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .variation-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 6px;
+        }
+
+        .variation-card.crossing::before {
+            background: linear-gradient(90deg, #f56565, #ed64a6);
+        }
+
+        .variation-card.assortment::before {
+            background: linear-gradient(90deg, #4299e1, #667eea);
+        }
+
+        .variation-card h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.4rem;
+            margin-bottom: 16px;
+            color: var(--text-light);
+        }
+
+        .variation-card .when {
+            background: var(--glass);
+            padding: 12px 16px;
+            border-radius: 12px;
+            margin: 20px 0;
+            font-size: 0.9rem;
+            border-left: 4px solid var(--accent);
+        }
+
+        .variation-card .when strong {
+            color: var(--accent-light);
+        }
+
+        /* Progress Check Styling */
+        .progress-check {
+            background: linear-gradient(135deg, rgba(39, 103, 73, 0.3) 0%, rgba(39, 103, 73, 0.1) 100%);
+            border: 2px solid var(--success);
+            border-radius: 24px;
+            padding: 40px;
+            margin: 60px 0;
+            position: relative;
+        }
+
+        .progress-check::before {
+            content: '✓ PROGRESS CHECK';
+            position: absolute;
+            top: -14px;
+            left: 40px;
+            background: var(--success);
+            color: white;
+            padding: 6px 20px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        .progress-check h3 {
+            color: var(--success-light);
+            margin-top: 0;
+        }
+
+        /* Question Styling */
+        .question-block {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 28px;
+            margin: 24px 0;
+            border: 1px solid var(--border);
+        }
+
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .question-number {
+            font-weight: 700;
+            color: var(--accent);
+            font-size: 0.9rem;
+        }
+
+        .marks-badge {
+            background: var(--accent);
+            color: var(--bg-dark);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 700;
+        }
+
+        .question-text {
+            font-size: 1.1rem;
+            color: var(--text-light);
+            margin-bottom: 20px;
+            line-height: 1.8;
+        }
+
+        .answer-toggle {
+            background: var(--glass);
+            border: 1px solid var(--border);
+            color: var(--text-light);
+            padding: 12px 24px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+        }
+
+        .answer-toggle:hover {
+            background: var(--accent);
+            color: var(--bg-dark);
+            border-color: var(--accent);
+        }
+
+        .answer-content {
+            display: none;
+            margin-top: 20px;
+            padding: 24px;
+            background: rgba(39, 103, 73, 0.2);
+            border-radius: 12px;
+            border-left: 4px solid var(--success);
+        }
+
+        .answer-content.show {
+            display: block;
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .answer-content h5 {
+            color: var(--success-light);
+            margin-bottom: 12px;
+            font-size: 1rem;
+        }
+
+        .mark-point {
+            display: flex;
+            gap: 12px;
+            padding: 8px 0;
+            font-size: 0.95rem;
+        }
+
+        .mark-point::before {
+            content: '✓';
+            color: var(--success-light);
+            font-weight: bold;
+        }
+
+        /* Exam Technique Box */
+        .exam-technique {
+            background: linear-gradient(135deg, rgba(214, 158, 46, 0.2) 0%, rgba(214, 158, 46, 0.05) 100%);
+            border: 2px solid var(--accent);
+            border-radius: 24px;
+            padding: 40px;
+            margin: 40px 0;
+            position: relative;
+        }
+
+        .exam-technique::before {
+            content: '📝 EXAM TECHNIQUE';
+            position: absolute;
+            top: -14px;
+            left: 40px;
+            background: var(--accent);
+            color: var(--bg-dark);
+            padding: 6px 20px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        .technique-step {
+            display: flex;
+            gap: 20px;
+            margin: 20px 0;
+            padding: 20px;
+            background: var(--glass);
+            border-radius: 12px;
+        }
+
+        .step-number {
+            width: 40px;
+            height: 40px;
+            background: var(--accent);
+            color: var(--bg-dark);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        /* Retrieval Practice */
+        .retrieval-practice {
+            background: linear-gradient(135deg, rgba(85, 60, 154, 0.3) 0%, rgba(85, 60, 154, 0.1) 100%);
+            border: 2px solid var(--secondary);
+            border-radius: 24px;
+            padding: 40px;
+            margin: 40px 0;
+            position: relative;
+        }
+
+        .retrieval-practice::before {
+            content: '🧠 RETRIEVAL PRACTICE';
+            position: absolute;
+            top: -14px;
+            left: 40px;
+            background: var(--secondary);
+            color: white;
+            padding: 6px 20px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        .flashcard {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 24px;
+            margin: 16px 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid var(--border);
+        }
+
+        .flashcard:hover {
+            border-color: var(--secondary);
+            transform: scale(1.01);
+        }
+
+        .flashcard-question {
+            font-weight: 600;
+            color: var(--text-light);
+            margin-bottom: 8px;
+        }
+
+        .flashcard-answer {
+            display: none;
+            padding-top: 16px;
+            border-top: 1px solid var(--border);
+            margin-top: 16px;
+            color: var(--text-muted);
+        }
+
+        .flashcard-answer.show {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .tap-hint {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            font-style: italic;
+        }
+
+        /* Vocabulary Section */
+        .vocabulary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 32px 0;
+        }
+
+        .vocab-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 24px;
+            border-left: 4px solid var(--accent);
+            transition: all 0.3s ease;
+        }
+
+        .vocab-card:hover {
+            transform: translateX(5px);
+            background: var(--bg-medium);
+        }
+
+        .vocab-term {
+            font-weight: 700;
+            color: var(--accent-light);
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+        }
+
+        .vocab-def {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        /* Image Container */
+        .image-container {
+            background: var(--bg-medium);
+            border-radius: 16px;
+            overflow: hidden;
+            margin: 24px 0;
+            border: 1px solid var(--border);
+        }
+
+        .image-container img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .image-caption {
+            padding: 16px 20px;
+            background: var(--glass);
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            border-top: 1px solid var(--border);
+        }
+
+        .image-caption strong {
+            color: var(--accent-light);
+        }
+
+        /* Interactive Quiz */
+        .quiz-container {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 32px;
+            margin: 32px 0;
+            border: 1px solid var(--border);
+        }
+
+        .quiz-question {
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            color: var(--text-light);
+        }
+
+        .quiz-options {
+            display: grid;
+            gap: 12px;
+        }
+
+        .quiz-option {
+            padding: 16px 20px;
+            background: var(--glass);
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: var(--text-light);
+        }
+
+        .quiz-option:hover {
+            border-color: var(--accent);
+            background: rgba(214, 158, 46, 0.1);
+        }
+
+        .quiz-option.correct {
+            border-color: var(--success);
+            background: rgba(39, 103, 73, 0.3);
+        }
+
+        .quiz-option.incorrect {
+            border-color: var(--danger);
+            background: rgba(197, 48, 48, 0.3);
+        }
+
+        .quiz-feedback {
+            display: none;
+            padding: 16px;
+            margin-top: 16px;
+            border-radius: 12px;
+        }
+
+        .quiz-feedback.show {
+            display: block;
+        }
+
+        .quiz-feedback.correct {
+            background: rgba(39, 103, 73, 0.2);
+            border-left: 4px solid var(--success);
+        }
+
+        .quiz-feedback.incorrect {
+            background: rgba(197, 48, 48, 0.2);
+            border-left: 4px solid var(--danger);
+        }
+
+        /* Think Box */
+        .think-box {
+            background: linear-gradient(135deg, rgba(66, 153, 225, 0.2) 0%, rgba(66, 153, 225, 0.05) 100%);
+            border: 2px solid #4299e1;
+            border-radius: 16px;
+            padding: 24px;
+            margin: 24px 0;
+        }
+
+        .think-box h4 {
+            color: #63b3ed;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Self-Test Input */
+        .self-test {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 24px;
+            margin: 20px 0;
+        }
+
+        .self-test textarea {
+            width: 100%;
+            min-height: 100px;
+            padding: 16px;
+            background: var(--bg-dark);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            color: var(--text-light);
+            font-family: inherit;
+            font-size: 1rem;
+            resize: vertical;
+            margin: 12px 0;
+        }
+
+        .self-test textarea:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        .self-test label {
+            font-weight: 600;
+            color: var(--accent-light);
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            background: var(--bg-medium);
+            border-top: 1px solid var(--border);
+            margin-top: 80px;
+        }
+
+        footer p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-dark);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--bg-light);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--accent);
+        }
+    </style>
+</head>
+<body>
+    <div class="dna-background">
+        <div class="helix" style="left: 10%;"></div>
+        <div class="helix" style="left: 30%;"></div>
+        <div class="helix" style="left: 50%;"></div>
+        <div class="helix" style="left: 70%;"></div>
+        <div class="helix" style="left: 90%;"></div>
+    </div>
+
+    <header class="hero">
+        <div class="hero-content">
+            <div class="spec-badge">IAL Biology • Specification Reference 3.10</div>
+            <h1>Sexual Reproduction & Meiosis</h1>
+            <p class="subtitle">Understanding how genetic variation is created through the specialized cell division that produces gametes</p>
+        </div>
+    </header>
+
+    <nav class="nav-progress">
+        <div class="nav-item active" onclick="scrollToSection('objectives')">Objectives</div>
+        <div class="nav-item" onclick="scrollToSection('why-sexual')">Why Sexual?</div>
+        <div class="nav-item" onclick="scrollToSection('gametes')">Gametes</div>
+        <div class="nav-item" onclick="scrollToSection('meiosis')">Meiosis Stages</div>
+        <div class="nav-item" onclick="scrollToSection('variation')">Genetic Variation</div>
+        <div class="nav-item" onclick="scrollToSection('exam')">Exam Practice</div>
+        <div class="nav-item" onclick="scrollToSection('vocab')">Vocabulary</div>
+    </nav>
+
+    <main class="container">
+        <!-- Learning Objectives -->
+        <section id="objectives" class="section" style="animation-delay: 0.1s;">
+            <div class="objectives-card">
+                <h2>Learning Objectives</h2>
+                <ul class="objectives-list">
+                    <li>
+                        <span class="obj-icon">🔬</span>
+                        <span>Understand the role of meiosis in ensuring genetic variation through the production of non-identical gametes</span>
+                    </li>
+                    <li>
+                        <span class="obj-icon">🧬</span>
+                        <span>Explain how <strong>independent assortment</strong> of chromosomes in metaphase 1 creates genetic variation</span>
+                    </li>
+                    <li>
+                        <span class="obj-icon">🔀</span>
+                        <span>Describe how <strong>crossing over</strong> of alleles between chromatids in prophase 1 increases variation</span>
+                    </li>
+                    <li>
+                        <span class="obj-icon">📊</span>
+                        <span>Compare and contrast the stages of meiosis with those of mitosis</span>
+                    </li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Why Sexual Reproduction? -->
+        <section id="why-sexual" class="section" style="animation-delay: 0.2s;">
+            <div class="section-header">
+                <div class="section-number">1</div>
+                <h2>Why Sexual Reproduction Matters</h2>
+            </div>
+
+            <div class="content-card">
+                <p>Organisms need to reproduce to pass on their genes to the next generation. But why have most complex organisms evolved to use <span class="key-term">sexual reproduction</span> when asexual reproduction is simpler and faster?</p>
+                
+                <p>The answer lies in <strong>genetic variation</strong> – the key to survival in a changing environment.</p>
+            </div>
+
+            <div class="comparison-grid">
+                <div class="comparison-card asexual">
+                    <h4>🔄 Asexual Reproduction</h4>
+                    <ul>
+                        <li>Produces genetically <strong>identical</strong> offspring (clones)</li>
+                        <li>Only requires <strong>one parent</strong></li>
+                        <li>Fast and energy efficient</li>
+                        <li>Very limited genetic variation (only from mutations)</li>
+                        <li>Population vulnerable to environmental changes</li>
+                        <li>Common in bacteria, some plants, some invertebrates</li>
+                    </ul>
+                </div>
+                <div class="comparison-card sexual">
+                    <h4>🧬 Sexual Reproduction</h4>
+                    <ul>
+                        <li>Produces genetically <strong>unique</strong> offspring</li>
+                        <li>Requires <strong>two parents</strong> (usually)</li>
+                        <li>Slower and requires more energy</li>
+                        <li>High genetic variation from multiple mechanisms</li>
+                        <li>Population can adapt to changing conditions</li>
+                        <li>Dominant in animals and flowering plants</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="think-box">
+                <h4>💭 Think About It</h4>
+                <p>In a changing environment (new diseases, climate change, new predators), which population would be more likely to survive – one with high genetic variation or one where all individuals are identical? Why?</p>
+            </div>
+        </section>
+
+        <!-- Progress Check 1 -->
+        <div class="progress-check">
+            <h3>Check Your Understanding</h3>
+            
+            <div class="question-block">
+                <div class="question-header">
+                    <span class="question-number">Question 1</span>
+                    <span class="marks-badge">2 marks</span>
+                </div>
+                <p class="question-text">State <strong>two</strong> advantages of sexual reproduction over asexual reproduction.</p>
+                <button class="answer-toggle" onclick="toggleAnswer(this)">
+                    <span>📖</span> Reveal Model Answer
+                </button>
+                <div class="answer-content">
+                    <h5>Mark Scheme</h5>
+                    <div class="mark-point">Sexual reproduction produces genetic variation / genetically different offspring (1)</div>
+                    <div class="mark-point">This allows the population to adapt to changing environments / increases chance of survival when conditions change (1)</div>
+                    <p style="margin-top: 16px; font-style: italic; color: var(--text-muted);">Alternative acceptable answers: removes harmful mutations from population; increases evolutionary potential</p>
+                </div>
+            </div>
+
+            <div class="question-block">
+                <div class="question-header">
+                    <span class="question-number">Question 2</span>
+                    <span class="marks-badge">3 marks</span>
+                </div>
+                <p class="question-text">Explain why organisms that only reproduce asexually may be at a disadvantage if a new disease enters their population.</p>
+                <button class="answer-toggle" onclick="toggleAnswer(this)">
+                    <span>📖</span> Reveal Model Answer
+                </button>
+                <div class="answer-content">
+                    <h5>Mark Scheme</h5>
+                    <div class="mark-point">Asexual reproduction produces genetically identical offspring / clones (1)</div>
+                    <div class="mark-point">If one individual is susceptible to the disease, all individuals will be susceptible (1)</div>
+                    <div class="mark-point">No genetic variation means no individuals likely to have resistance / whole population could be wiped out (1)</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Gametes Section -->
+        <section id="gametes" class="section" style="animation-delay: 0.3s;">
+            <div class="section-header">
+                <div class="section-number">2</div>
+                <h2>What Are Gametes?</h2>
+            </div>
+
+            <div class="content-card">
+                <p>Sexual reproduction requires the fusion of two specialised sex cells called <span class="key-term">gametes</span>. When gametes fuse during <span class="key-term">fertilisation</span>, they form a <span class="key-term">zygote</span> – the first cell of a new individual.</p>
+                
+                <p>For this to work without doubling the chromosome number each generation, gametes must contain <strong>half</strong> the normal number of chromosomes.</p>
+            </div>
+
+            <div class="chromosome-visual">
+                <div class="chromosome-box">
+                    <div class="chromosome-diagram diploid">
+                        <span class="chromosome-notation">2n</span>
+                    </div>
+                    <div class="chromosome-label">Diploid Cells</div>
+                    <div class="chromosome-desc">Two complete sets of chromosomes (e.g., 46 in humans). Found in all body cells.</div>
+                </div>
+                <div class="chromosome-box">
+                    <div class="chromosome-diagram haploid">
+                        <span class="chromosome-notation">n</span>
+                    </div>
+                    <div class="chromosome-label">Haploid Cells</div>
+                    <div class="chromosome-desc">One complete set of chromosomes (e.g., 23 in humans). Found only in gametes.</div>
+                </div>
+            </div>
+
+            <h3>Where Are Gametes Formed?</h3>
+            
+            <div class="content-card">
+                <p>Gametes are produced in specialised sex organs called <span class="key-term">gonads</span>:</p>
+                
+                <div class="comparison-grid">
+                    <div class="comparison-card">
+                        <h4>👨 In Males</h4>
+                        <ul>
+                            <li><strong>Testes</strong> produce <span class="key-term">sperm</span> (spermatozoa)</li>
+                            <li>Sperm are small, numerous, and motile</li>
+                            <li>In plants: <strong>anthers</strong> produce <span class="key-term">pollen</span></li>
+                        </ul>
+                    </div>
+                    <div class="comparison-card">
+                        <h4>👩 In Females</h4>
+                        <ul>
+                            <li><strong>Ovaries</strong> produce <span class="key-term">ova</span> (eggs)</li>
+                            <li>Ova are large, few in number, and immotile</li>
+                            <li>In plants: <strong>ovules</strong> produce egg cells</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Retrieval Practice -->
+            <div class="retrieval-practice">
+                <h3>Quick Retrieval Practice</h3>
+                <p>Click each card to test yourself, then reveal the answer:</p>
+                
+                <div class="flashcard" onclick="toggleFlashcard(this)">
+                    <div class="flashcard-question">What term describes a cell with two complete sets of chromosomes?</div>
+                    <div class="flashcard-answer">Diploid (2n)</div>
+                    <span class="tap-hint">Tap to reveal</span>
+                </div>
+                
+                <div class="flashcard" onclick="toggleFlashcard(this)">
+                    <div class="flashcard-question">What is the name of the cell formed when two gametes fuse?</div>
+                    <div class="flashcard-answer">Zygote</div>
+                    <span class="tap-hint">Tap to reveal</span>
+                </div>
+                
+                <div class="flashcard" onclick="toggleFlashcard(this)">
+                    <div class="flashcard-question">What are the male and female gonads called in animals?</div>
+                    <div class="flashcard-answer">Testes (male) and Ovaries (female)</div>
+                    <span class="tap-hint">Tap to reveal</span>
+                </div>
+                
+                <div class="flashcard" onclick="toggleFlashcard(this)">
+                    <div class="flashcard-question">Why must gametes be haploid?</div>
+                    <div class="flashcard-answer">So that when they fuse during fertilisation, the resulting zygote has the correct diploid number of chromosomes (otherwise the chromosome number would double each generation)</div>
+                    <span class="tap-hint">Tap to reveal</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Meiosis Section -->
+        <section id="meiosis" class="section" style="animation-delay: 0.4s;">
+            <div class="section-header">
+                <div class="section-number">3</div>
+                <h2>The Stages of Meiosis</h2>
+            </div>
+
+            <div class="content-card">
+                <p><span class="key-term">Meiosis</span> is a special type of cell division that produces <strong>four haploid daughter cells</strong>, each genetically different from each other and from the parent cell.</p>
+                
+                <p>Unlike mitosis (one division), meiosis involves <strong>two successive divisions</strong>:</p>
+                <ul style="margin-left: 20px; margin-top: 16px;">
+                    <li style="margin-bottom: 8px;"><strong>Meiosis I</strong> – The reduction division (separates homologous pairs)</li>
+                    <li><strong>Meiosis II</strong> – Similar to mitosis (separates sister chromatids)</li>
+                </ul>
+            </div>
+
+            <div class="meiosis-timeline">
+                <div class="division-header">🔬 MEIOSIS I – The Reduction Division</div>
+                
+                <div class="stage-grid">
+                    <div class="stage-card">
+                        <div class="stage-image">
+                            <svg class="stage-svg" viewBox="0 0 200 170">
+                                <!-- Cell membrane -->
+                                <ellipse cx="100" cy="85" rx="90" ry="75" class="cell-membrane"/>
+                                <!-- Homologous pair 1 - synapsed -->
+                                <g transform="translate(60, 50)">
+                                    <path d="M0,0 Q15,-10 30,0 Q15,10 0,0" fill="#f56565" stroke="#c53030" stroke-width="1.5"/>
+                                    <path d="M2,5 Q17,-5 32,5 Q17,15 2,5" fill="#f56565" stroke="#c53030" stroke-width="1.5"/>
+                                    <path d="M4,10 Q19,-1 34,10 Q19,21 4,10" fill="#4299e1" stroke="#2b6cb0" stroke-width="1.5"/>
+                                    <path d="M6,15 Q21,5 36,15 Q21,25 6,15" fill="#4299e1" stroke="#2b6cb0" stroke-width="1.5"/>
+                                    <!-- Chiasma mark -->
+                                    <circle cx="18" cy="8" r="3" fill="#f6e05e"/>
+                                </g>
+                                <!-- Homologous pair 2 - synapsed -->
+                                <g transform="translate(110, 70)">
+                                    <path d="M0,0 Q12,-8 24,0 Q12,8 0,0" fill="#f56565" stroke="#c53030" stroke-width="1.5"/>
+                                    <path d="M2,4 Q14,-4 26,4 Q14,12 2,4" fill="#f56565" stroke="#c53030" stroke-width="1.5"/>
+                                    <path d="M4,8 Q16,0 28,8 Q16,16 4,8" fill="#4299e1" stroke="#2b6cb0" stroke-width="1.5"/>
+                                    <path d="M6,12 Q18,4 30,12 Q18,20 6,12" fill="#4299e1" stroke="#2b6cb0" stroke-width="1.5"/>
+                                    <circle cx="15" cy="6" r="3" fill="#f6e05e"/>
+                                </g>
+                                <!-- Labels -->
+                                <text x="100" cy="155" text-anchor="middle" fill="#a0aec0" font-size="10">Bivalents forming, crossing over</text>
+                            </svg>
+                        </div>
+                        <div class="stage-content">
+                            <div class="stage-name">
+                                Prophase 1
+                                <span class="stage-badge">CRITICAL</span>
+                            </div>
+                            <ul class="stage-events">
+                                <li>Chromosomes condense and become visible</li>
+                                <li>Each chromosome consists of two sister chromatids</li>
+                                <li><strong>Homologous pairs</strong> come together (synapsis)</li>
+                                <li><strong>Crossing over occurs</strong> – chromatids exchange genetic material at <span class="key-term">chiasmata</span></li>
+                                <li>Nuclear membrane breaks down</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="stage-card">
+                        <div class="stage-image">
+                            <svg class="stage-svg" viewBox="0 0 200 170">
+                                <!-- Cell membrane -->
+                                <ellipse cx="100" cy="85" rx="90" ry="75" class="cell-membrane"/>
+                                <!-- Metaphase plate line -->
+                                <line x1="100" y1="20" x2="100" y2="150" stroke="#a0aec0" stroke-width="1" stroke-dasharray="3,3" opacity="0.5"/>
+                                <!-- Spindle fibers -->
+                                <line x1="20" y1="85" x2="80" y2="60" class="spindle-fiber"/>
+                                <line x1="20" y1="85" x2="80" y2="110" class="spindle-fiber"/>
+                                <line x1="180" y1="85" x2="120" y2="60" class="spindle-fiber"/>
+                                <line x1="180" y1="85" x2="120" y2="110" class="spindle-fiber"/>
+                                <!-- Bivalent 1 on metaphase plate -->
+                                <g transform="translate(85, 45)">
+                                    <rect x="0" y="0" width="8" height="25" rx="2" fill="#f56565"/>
+                                    <rect x="10" y="0" width="8" height="25" rx="2" fill="#f56565"/>
+                                    <rect x="20" y="0" width="8" height="25" rx="2" fill="#4299e1"/>
+                                    <rect x="30" y="0" width="8" height="25" rx="2" fill="#4299e1"/>
+                                    <circle cx="19" cy="12" r="3" fill="#f6e05e"/>
+                                </g>
+                                <!-- Bivalent 2 on metaphase plate -->
+                                <g transform="translate(85, 95)">
+                                    <rect x="0" y="0" width="8" height="25" rx="2" fill="#4299e1"/>
+                                    <rect x="10" y="0" width="8" height="25" rx="2" fill="#4299e1"/>
+                                    <rect x="20" y="0" width="8" height="25" rx="2" fill="#f56565"/>
+                                    <rect x="30" y="0" width="8" height="25" rx="2" fill="#f56565"/>
+                                    <circle cx="19" cy="12" r="3" fill="#f6e05e"/>
+                                </g>
+                                <!-- Centrioles -->
+                                <circle cx="20" cy="85" r="5" fill="#a0aec0"/>
+                                <circle cx="180" cy="85" r="5" fill="#a0aec0"/>
+                                <text x="100" cy="160" text-anchor="middle" fill="#a0aec0" font-size="10">Bivalents aligned at equator</text>
+                            </svg>
+                        </div>
+                        <div class="stage-content">
+                            <div class="stage-name">
+                                Metaphase 1
+                                <span class="stage-badge">CRITICAL</span>
+                            </div>
+                            <ul class="stage-events">
+                                <li>Spindle fibres form and attach to centromeres</li>
+                                <li><strong>Homologous pairs</strong> line up on the metaphase plate</li>
+                                <li><strong>Random orientation</strong> of each pair – maternal or paternal chromosome can face either pole</li>
+                                <li>This is <span class="key-term">independent assortment</span></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="stage-card">
+                        <div class="stage-image">
+                            <svg class="stage-svg" viewBox="0 0 200 170">
+                                <!-- Cell membrane -->
+                                <ellipse cx="100" cy="85" rx="90" ry="75" class="cell-membrane"/>
+                                <!-- Spindle fibers pulling -->
+                                <line x1="20" y1="85" x2="45" y2="50" class="spindle-fiber"/>
+                                <line x1="20" y1="85" x2="45" y2="120" class="spindle-fiber"/>
+                                <line x1="180" y1="85" x2="155" y2="50" class="spindle-fiber"/>
+                                <line x1="180" y1="85" x2="155" y2="120" class="spindle-fiber"/>
+                                <!-- Chromosomes moving to left pole -->
+                                <g transform="translate(35, 40)">
+                                    <rect x="0" y="0" width="8" height="20" rx="2" fill="#f56565"/>
+                                    <rect x="10" y="0" width="8" height="20" rx="2" fill="#f56565"/>
+                                    <circle cx="9" cy="10" r="2" fill="#f6e05e"/>
+                                </g>
+                                <g transform="translate(35, 100)">
+                                    <rect x="0" y="0" width="8" height="20" rx="2" fill="#4299e1"/>
+                                    <rect x="10" y="0" width="8" height="20" rx="2" fill="#4299e1"/>
+                                    <circle cx="9" cy="10" r="2" fill="#f6e05e"/>
+                                </g>
+                                <!-- Chromosomes moving to right pole -->
+                                <g transform="translate(145, 40)">
+                                    <rect x="0" y="0" width="8" height="20" rx="2" fill="#4299e1"/>
+                                    <rect x="10" y="0" width="8" height="20" rx="2" fill="#4299e1"/>
+                                    <circle cx="9" cy="10" r="2" fill="#f6e05e"/>
+                                </g>
+                                <g transform="translate(145, 100)">
+                                    <rect x="0" y="0" width="8" height="20" rx="2" fill="#f56565"/>
+                                    <rect x="10" y="0" width="8" height="20" rx="2" fill="#f56565"/>
+                                    <circle cx="9" cy="10" r="2" fill="#f6e05e"/>
+                                </g>
+                                <!-- Arrows showing movement -->
+                                <path d="M70,55 L55,55" stroke="#f6e05e" stroke-width="2" marker-end="url(#arrowhead)"/>
+                                <path d="M130,55 L145,55" stroke="#f6e05e" stroke-width="2"/>
+                                <text x="100" cy="160" text-anchor="middle" fill="#a0aec0" font-size="10">Homologs separating (n still 2c)</text>
+                            </svg>
+                        </div>
+                        <div class="stage-content">
+                            <div class="stage-name">Anaphase 1</div>
+                            <ul class="stage-events">
+                                <li>Homologous chromosomes are pulled apart</li>
+                                <li>One chromosome from each pair moves to each pole</li>
+                                <li><strong>Centromeres do NOT divide</strong> – sister chromatids stay together</li>
+                                <li>Chromosome number is <strong>halved</strong></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="stage-card">
+                        <div class="stage-image">
+                            <svg class="stage-svg" viewBox="0 0 200 170">
+                                <!-- Two cells forming -->
+                                <ellipse cx="55" cy="85" rx="45" ry="70" class="cell-membrane"/>
+                                <ellipse cx="145" cy="85" rx="45" ry="70" class="cell-membrane"/>
+                                <!-- Cleavage furrow -->
+                                <path d="M100,15 Q95,85 100,155" stroke="#4fd1c5" stroke-width="2" fill="none"/>
+                                <!-- Nuclear envelopes reforming -->
+                                <ellipse cx="55" cy="85" rx="30" ry="45" fill="none" stroke="#a0aec0" stroke-width="1" stroke-dasharray="3,2"/>
+                                <ellipse cx="145" cy="85" rx="30" ry="45" fill="none" stroke="#a0aec0" stroke-width="1" stroke-dasharray="3,2"/>
+                                <!-- Left cell chromosomes -->
+                                <g transform="translate(40, 55)">
+                                    <rect x="0" y="0" width="6" height="18" rx="2" fill="#f56565"/>
+                                    <rect x="8" y="0" width="6" height="18" rx="2" fill="#f56565"/>
+                                </g>
+                                <g transform="translate(40, 90)">
+                                    <rect x="0" y="0" width="6" height="18" rx="2" fill="#4299e1"/>
+                                    <rect x="8" y="0" width="6" height="18" rx="2" fill="#4299e1"/>
+                                </g>
+                                <!-- Right cell chromosomes -->
+                                <g transform="translate(130, 55)">
+                                    <rect x="0" y="0" width="6" height="18" rx="2" fill="#4299e1"/>
+                                    <rect x="8" y="0" width="6" height="18" rx="2" fill="#4299e1"/>
+                                </g>
+                                <g transform="translate(130, 90)">
+                                    <rect x="0" y="0" width="6" height="18" rx="2" fill="#f56565"/>
+                                    <rect x="8" y="0" width="6" height="18" rx="2" fill="#f56565"/>
+                                </g>
+                                <text x="100" cy="160" text-anchor="middle" fill="#a0aec0" font-size="10">Two haploid cells (n, 2c each)</text>
+                            </svg>
+                        </div>
+                        <div class="stage-content">
+                            <div class="stage-name">Telophase 1</div>
+                            <ul class="stage-events">
+                                <li>Chromosomes reach opposite poles</li>
+                                <li>Nuclear membranes may re-form</li>
+                                <li>Cytokinesis produces <strong>two haploid cells</strong></li>
+                                <li>Each cell has one chromosome from each homologous pair</li>
+                                <li><strong>No DNA replication</strong> before meiosis II</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="division-header">🔬 MEIOSIS II – Separating Sister Chromatids</div>
+
+                <div class="stage-grid">
+                    <div class="stage-card">
+                        <div class="stage-image">
+                            <svg class="stage-svg" viewBox="0 0 200 170">
+                                <!-- Two cells side by side -->
+                                <ellipse cx="55" cy="85" rx="45" ry="70" class="cell-membrane"/>
+                                <ellipse cx="145" cy="85" rx="45" ry="70" class="cell-membrane"/>
+                                <!-- Left cell - chromosomes condensing -->
+                                <g transform="translate(40, 60)">
+                                    <rect x="0" y="0" width="6" height="20" rx="2" fill="#f56565"/>
+                                    <rect x="8" y="0" width="6" height="20" rx="2" fill="#f56565"/>
+                                    <circle cx="7" cy="10" r="2" fill="#f6e05e"/>
+                                </g>
+                                <g transform="translate(50, 90)">
+                                    <rect x="0" y="0" width="6" height="20" rx="2" fill="#4299e1"/>
+                                    <rect x="8" y="0" width="6" height="20" rx="2" fill="#4299e1"/>
+                                    <circle cx="7" cy="10" r="2" fill="#f6e05e"/>
+                                </g>
+                                <!-- Right cell - chromosomes condensing -->
+                                <g transform="translate(130, 60)">
+                                    <rect x="0" y="0" width="6" height="20" rx="2" fill="#4299e1"/>
+                                    <rect x="8" y="0" width="6" height="20" rx="2" fill="#4299e1"/>
+                                    <circle cx="7" cy="10" r="2" fill="#f6e05e"/>
+                                </g>
+                                <g transform="translate(140, 90)">
+                                    <rect x="0" y="0" width="6" height="20" rx="2" fill="#f56565"/>
+                                    <rect x="8" y="0" width="6" height="20" rx="2" fill="#f56565"/>
+                                    <circle cx="7" cy="10" r="2" fill="#f6e05e"/>
+                                </g>
+                                <!-- Centrioles forming -->
+                                <circle cx="25" cy="85" r="3" fill="#a0aec0"/>
+                                <circle cx="85" cy="85" r="3" fill="#a0aec0"/>
+                                <circle cx="115" cy="85" r="3" fill="#a0aec0"/>
+                                <circle cx="175" cy="85" r="3" fill="#a0aec0"/>
+                                <text x="100" cy="160" text-anchor="middle" fill="#a0aec0" font-size="10">Chromosomes re-condense</text>
+                            </svg>
+                        </div>
+                        <div class="stage-content">
+                            <div class="stage-name">Prophase 2</div>
+                            <ul class="stage-events">
+                                <li>Chromosomes condense (if they decondensed)</li>
+                                <li>New spindle fibres form at right angles to first spindle</li>
+                                <li>Nuclear membrane breaks down</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="stage-card">
+                        <div class="stage-image">
+                            <svg class="stage-svg" viewBox="0 0 200 170">
+                                <!-- Two cells -->
+                                <ellipse cx="55" cy="85" rx="45" ry="70" class="cell-membrane"/>
+                                <ellipse cx="145" cy="85" rx="45" ry="70" class="cell-membrane"/>
+                                <!-- Metaphase plate lines -->
+                                <line x1="55" y1="25" x2="55" y2="145" stroke="#a0aec0" stroke-width="1" stroke-dasharray="3,3" opacity="0.5"/>
+                                <line x1="145" y1="25" x2="145" y2="145" stroke="#a0aec0" stroke-width="1" stroke-dasharray="3,3" opacity="0.5"/>
+                                <!-- Spindle fibers -->
+                                <line x1="20" y1="85" x2="45" y2="65" class="spindle-fiber"/>
+                                <line x1="20" y1="85" x2="45" y2="105" class="spindle-fiber"/>
+                                <line x1="90" y1="85" x2="65" y2="65" class="spindle-fiber"/>
+                                <line x1="90" y1="85" x2="65" y2="105" class="spindle-fiber"/>
+                                <line x1="110" y1="85" x2="135" y2="65" class="spindle-fiber"/>
+                                <line x1="110" y1="85" x2="135" y2="105" class="spindle-fiber"/>
+                                <line x1="180" y1="85" x2="155" y2="65" class="spindle-fiber"/>
+                                <line x1="180" y1="85" x2="155" y2="105" class="spindle-fiber"/>
+                                <!-- Left cell - aligned chromosomes -->
+                                <g transform="translate(48, 55)">
+                                    <rect x="0" y="0" width="6" height="18" rx="2" fill="#f56565"/>
+                                    <rect x="8" y="0" width="6" height="18" rx="2" fill="#f56565"/>
+                                    <circle cx="7" cy="9" r="2" fill="#f6e05e"/>
+                                </g>
+                                <g transform="translate(48, 95)">
+                                    <rect x="0" y="0" width="6" height="18" rx="2" fill="#4299e1"/>
+                                    <rect x="8" y="0" width="6" height="18" rx="2" fill="#4299e1"/>
+                                    <circle cx="7" cy="9" r="2" fill="#f6e05e"/>
+                                </g>
+                                <!-- Right cell - aligned chromosomes -->
+                                <g transform="translate(138, 55)">
+                                    <rect x="0" y="0" width="6" height="18" rx="2" fill="#4299e1"/>
+                                    <rect x="8" y="0" width="6" height="18" rx="2" fill="#4299e1"/>
+                                    <circle cx="7" cy="9" r="2" fill="#f6e05e"/>
+                                </g>
+                                <g transform="translate(138, 95)">
+                                    <rect x="0" y="0" width="6" height="18" rx="2" fill="#f56565"/>
+                                    <rect x="8" y="0" width="6" height="18" rx="2" fill="#f56565"/>
+                                    <circle cx="7" cy="9" r="2" fill="#f6e05e"/>
+                                </g>
+                                <text x="100" cy="160" text-anchor="middle" fill="#a0aec0" font-size="10">Chromosomes align at equator</text>
+                            </svg>
+                        </div>
+                        <div class="stage-content">
+                            <div class="stage-name">Metaphase 2</div>
+                            <ul class="stage-events">
+                                <li>Individual chromosomes line up on the metaphase plate</li>
+                                <li>Spindle fibres attach to centromeres</li>
+                                <li>Similar to metaphase in mitosis</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="stage-card">
+                        <div class="stage-image">
+                            <svg class="stage-svg" viewBox="0 0 200 170">
+                                <!-- Two cells -->
+                                <ellipse cx="55" cy="85" rx="45" ry="70" class="cell-membrane"/>
+                                <ellipse cx="145" cy="85" rx="45" ry="70" class="cell-membrane"/>
+                                <!-- Left cell - sister chromatids separating -->
+                                <g transform="translate(25, 50)">
+                                    <rect x="0" y="0" width="5" height="15" rx="1" fill="#f56565"/>
+                                </g>
+                                <g transform="translate(25, 100)">
+                                    <rect x="0" y="0" width="5" height="15" rx="1" fill="#4299e1"/>
+                                </g>
+                                <g transform="translate(70, 50)">
+                                    <rect x="0" y="0" width="5" height="15" rx="1" fill="#f56565"/>
+                                </g>
+                                <g transform="translate(70, 100)">
+                                    <rect x="0" y="0" width="5" height="15" rx="1" fill="#4299e1"/>
+                                </g>
+                                <!-- Right cell - sister chromatids separating -->
+                                <g transform="translate(115, 50)">
+                                    <rect x="0" y="0" width="5" height="15" rx="1" fill="#4299e1"/>
+                                </g>
+                                <g transform="translate(115, 100)">
+                                    <rect x="0" y="0" width="5" height="15" rx="1" fill="#f56565"/>
+                                </g>
+                                <g transform="translate(160, 50)">
+                                    <rect x="0" y="0" width="5" height="15" rx="1" fill="#4299e1"/>
+                                </g>
+                                <g transform="translate(160, 100)">
+                                    <rect x="0" y="0" width="5" height="15" rx="1" fill="#f56565"/>
+                                </g>
+                                <!-- Spindle fibers pulling -->
+                                <line x1="20" y1="85" x2="28" y2="58" class="spindle-fiber"/>
+                                <line x1="90" y1="85" x2="73" y2="58" class="spindle-fiber"/>
+                                <line x1="110" y1="85" x2="118" y2="58" class="spindle-fiber"/>
+                                <line x1="180" y1="85" x2="163" y2="58" class="spindle-fiber"/>
+                                <text x="100" cy="160" text-anchor="middle" fill="#a0aec0" font-size="10">Sister chromatids separate</text>
+                            </svg>
+                        </div>
+                        <div class="stage-content">
+                            <div class="stage-name">Anaphase 2</div>
+                            <ul class="stage-events">
+                                <li><strong>Centromeres divide</strong></li>
+                                <li>Sister chromatids are pulled to opposite poles</li>
+                                <li>Sister chromatids are now individual chromosomes</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="stage-card">
+                        <div class="stage-image">
+                            <svg class="stage-svg" viewBox="0 0 200 170">
+                                <!-- Four cells -->
+                                <ellipse cx="35" cy="50" rx="28" ry="40" class="cell-membrane"/>
+                                <ellipse cx="75" cy="50" rx="28" ry="40" class="cell-membrane"/>
+                                <ellipse cx="125" cy="50" rx="28" ry="40" class="cell-membrane"/>
+                                <ellipse cx="165" cy="50" rx="28" ry="40" class="cell-membrane"/>
+                                <!-- Nuclear envelopes -->
+                                <ellipse cx="35" cy="50" rx="18" ry="25" fill="none" stroke="#a0aec0" stroke-width="1" stroke-dasharray="2,2"/>
+                                <ellipse cx="75" cy="50" rx="18" ry="25" fill="none" stroke="#a0aec0" stroke-width="1" stroke-dasharray="2,2"/>
+                                <ellipse cx="125" cy="50" rx="18" ry="25" fill="none" stroke="#a0aec0" stroke-width="1" stroke-dasharray="2,2"/>
+                                <ellipse cx="165" cy="50" rx="18" ry="25" fill="none" stroke="#a0aec0" stroke-width="1" stroke-dasharray="2,2"/>
+                                <!-- Cell 1 chromosomes -->
+                                <rect x="30" y="40" width="4" height="12" rx="1" fill="#f56565"/>
+                                <rect x="36" y="48" width="4" height="12" rx="1" fill="#4299e1"/>
+                                <!-- Cell 2 chromosomes -->
+                                <rect x="70" y="40" width="4" height="12" rx="1" fill="#f56565"/>
+                                <rect x="76" y="48" width="4" height="12" rx="1" fill="#4299e1"/>
+                                <!-- Cell 3 chromosomes -->
+                                <rect x="120" y="40" width="4" height="12" rx="1" fill="#4299e1"/>
+                                <rect x="126" y="48" width="4" height="12" rx="1" fill="#f56565"/>
+                                <!-- Cell 4 chromosomes -->
+                                <rect x="160" y="40" width="4" height="12" rx="1" fill="#4299e1"/>
+                                <rect x="166" y="48" width="4" height="12" rx="1" fill="#f56565"/>
+                                <!-- Labels -->
+                                <text x="35" cy="100" text-anchor="middle" fill="#48bb78" font-size="8" font-weight="bold">n</text>
+                                <text x="75" cy="100" text-anchor="middle" fill="#48bb78" font-size="8" font-weight="bold">n</text>
+                                <text x="125" cy="100" text-anchor="middle" fill="#48bb78" font-size="8" font-weight="bold">n</text>
+                                <text x="165" cy="100" text-anchor="middle" fill="#48bb78" font-size="8" font-weight="bold">n</text>
+                                <text x="100" cy="125" text-anchor="middle" fill="#a0aec0" font-size="10">Four genetically unique haploid cells</text>
+                                <text x="100" cy="140" text-anchor="middle" fill="#48bb78" font-size="9" font-weight="bold">GAMETES</text>
+                            </svg>
+                        </div>
+                        <div class="stage-content">
+                            <div class="stage-name">Telophase 2</div>
+                            <ul class="stage-events">
+                                <li>Chromosomes reach poles and decondense</li>
+                                <li>Nuclear membranes re-form</li>
+                                <li>Cytokinesis produces <strong>four haploid daughter cells</strong></li>
+                                <li>Each cell is genetically unique</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <h3>Meiosis Under the Microscope</h3>
+            <div class="content-card">
+                <p>This diagram shows the complete process of meiosis from a single diploid cell to four haploid daughter cells:</p>
+                
+                <div class="image-container">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/74/Meiosis_Overview.svg/1200px-Meiosis_Overview.svg.png" alt="Complete meiosis diagram showing all stages" onerror="this.onerror=null; this.src='https://upload.wikimedia.org/wikipedia/commons/thumb/4/4a/Meiosis_diagram.jpg/800px-Meiosis_diagram.jpg';">
+                    <div class="image-caption"><strong>Fig 1:</strong> Complete overview of meiosis showing the progression from a single diploid cell to four haploid daughter cells through two sequential divisions. Note how crossing over during Prophase I and independent assortment during Metaphase I contribute to genetic variation.</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Progress Check 2 -->
+        <div class="progress-check">
+            <h3>Check Your Understanding</h3>
+            
+            <div class="question-block">
+                <div class="question-header">
+                    <span class="question-number">Question 3</span>
+                    <span class="marks-badge">4 marks</span>
+                </div>
+                <p class="question-text">Compare and contrast the events of anaphase 1 and anaphase 2 in meiosis.</p>
+                <button class="answer-toggle" onclick="toggleAnswer(this)">
+                    <span>📖</span> Reveal Model Answer
+                </button>
+                <div class="answer-content">
+                    <h5>Mark Scheme</h5>
+                    <div class="mark-point"><strong>Anaphase 1:</strong> Homologous chromosomes / pairs of chromosomes separate (1)</div>
+                    <div class="mark-point"><strong>Anaphase 1:</strong> Centromeres do NOT divide / sister chromatids remain joined (1)</div>
+                    <div class="mark-point"><strong>Anaphase 2:</strong> Centromeres divide / split (1)</div>
+                    <div class="mark-point"><strong>Anaphase 2:</strong> Sister chromatids separate and move to opposite poles (1)</div>
+                </div>
+            </div>
+
+            <div class="question-block">
+                <div class="question-header">
+                    <span class="question-number">Question 4</span>
+                    <span class="marks-badge">3 marks</span>
+                </div>
+                <p class="question-text">Explain why there is no DNA replication between meiosis I and meiosis II.</p>
+                <button class="answer-toggle" onclick="toggleAnswer(this)">
+                    <span>📖</span> Reveal Model Answer
+                </button>
+                <div class="answer-content">
+                    <h5>Mark Scheme</h5>
+                    <div class="mark-point">Meiosis needs to produce haploid cells / cells with half the chromosome number (1)</div>
+                    <div class="mark-point">DNA replication would restore the diploid number / double the DNA content (1)</div>
+                    <div class="mark-point">The chromosomes still consist of two sister chromatids at the start of meiosis II / there is already sufficient DNA (1)</div>
+                </div>
+            </div>
+
+            <!-- Interactive Quiz -->
+            <div class="quiz-container">
+                <div class="quiz-question">
+                    <strong>Quick Check:</strong> During which stage of meiosis does crossing over occur?
+                </div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkQuiz(this, false)">Metaphase 1</div>
+                    <div class="quiz-option" onclick="checkQuiz(this, true)">Prophase 1</div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false)">Anaphase 1</div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false)">Prophase 2</div>
+                </div>
+                <div class="quiz-feedback"></div>
+            </div>
+        </div>
+
+        <!-- Genetic Variation Section -->
+        <section id="variation" class="section" style="animation-delay: 0.5s;">
+            <div class="section-header">
+                <div class="section-number">4</div>
+                <h2>How Meiosis Creates Genetic Variation</h2>
+            </div>
+
+            <div class="content-card">
+                <p>Meiosis is crucial for sexual reproduction because it generates <strong>genetic variation</strong> through two key mechanisms. This variation is why you don't look identical to your siblings (unless you're an identical twin!).</p>
+            </div>
+
+            <div class="variation-cards">
+                <div class="variation-card crossing">
+                    <h4>🔀 Crossing Over (Recombination)</h4>
+                    <p>During prophase 1, homologous chromosomes pair up closely. At points called <span class="key-term">chiasmata</span>, the chromatids break and exchange segments of DNA.</p>
+                    
+                    <div class="when">
+                        <strong>When:</strong> Prophase 1<br>
+                        <strong>What happens:</strong> Maternal and paternal chromatids exchange genetic material
+                    </div>
+                    
+                    <p>This creates <strong>recombinant chromosomes</strong> that contain a unique mixture of alleles from both parents. The more chiasmata that form, the more genetic variation is produced.</p>
+                    
+                    <p style="margin-top: 16px; color: var(--text-muted); font-style: italic;">💡 Errors during crossing over can also introduce mutations, adding even more variation.</p>
+                </div>
+
+                <div class="variation-card assortment">
+                    <h4>🎲 Independent Assortment</h4>
+                    <p>During metaphase 1, homologous pairs line up randomly on the metaphase plate. Which way each pair faces is completely independent of the others.</p>
+                    
+                    <div class="when">
+                        <strong>When:</strong> Metaphase 1<br>
+                        <strong>What happens:</strong> Random orientation of homologous pairs
+                    </div>
+                    
+                    <p>In humans with 23 pairs of chromosomes, this creates <strong>2²³ = over 8 million</strong> possible combinations in the gametes!</p>
+                    
+                    <p style="margin-top: 16px; color: var(--text-muted); font-style: italic;">💡 Combined with crossing over, the number of unique gametes is essentially infinite.</p>
+                </div>
+            </div>
+
+            <div class="image-container">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/Chromosomal_Crossover.svg/800px-Chromosomal_Crossover.svg.png" alt="Diagram showing crossing over between homologous chromosomes" onerror="this.onerror=null; this.src='https://upload.wikimedia.org/wikipedia/commons/thumb/0/0c/Crossover_genes.svg/600px-Crossover_genes.svg.png';">
+                <div class="image-caption"><strong>Fig 2:</strong> Crossing over during prophase 1. Homologous chromosomes exchange genetic material at chiasmata, creating recombinant chromosomes with new combinations of alleles. The maternal (red) and paternal (blue) chromosomes swap segments, producing chromosomes with mixed genetic content.</div>
+            </div>
+
+            <div class="think-box">
+                <h4>💭 Mathematical Connection</h4>
+                <p>Calculate the number of possible chromosome combinations from independent assortment alone for an organism with:</p>
+                <ul style="margin-left: 20px; margin-top: 12px;">
+                    <li>4 pairs of chromosomes: 2⁴ = 16 combinations</li>
+                    <li>10 pairs of chromosomes: 2¹⁰ = 1,024 combinations</li>
+                    <li>23 pairs of chromosomes (humans): 2²³ = 8,388,608 combinations</li>
+                </ul>
+                <p style="margin-top: 16px;">And remember – this is just from independent assortment. Crossing over creates countless more variations!</p>
+            </div>
+        </section>
+
+        <!-- Progress Check 3 -->
+        <div class="progress-check">
+            <h3>Check Your Understanding</h3>
+            
+            <div class="question-block">
+                <div class="question-header">
+                    <span class="question-number">Question 5</span>
+                    <span class="marks-badge">4 marks</span>
+                </div>
+                <p class="question-text">Describe how crossing over during meiosis leads to genetic variation in gametes.</p>
+                <button class="answer-toggle" onclick="toggleAnswer(this)">
+                    <span>📖</span> Reveal Model Answer
+                </button>
+                <div class="answer-content">
+                    <h5>Mark Scheme</h5>
+                    <div class="mark-point">Crossing over occurs during prophase 1 (1)</div>
+                    <div class="mark-point">Homologous chromosomes / non-sister chromatids pair up closely / synapsis (1)</div>
+                    <div class="mark-point">Chromatids break and rejoin at points called chiasmata (1)</div>
+                    <div class="mark-point">Sections of chromatid / alleles are exchanged between maternal and paternal chromosomes, creating new combinations (1)</div>
+                </div>
+            </div>
+
+            <div class="question-block">
+                <div class="question-header">
+                    <span class="question-number">Question 6</span>
+                    <span class="marks-badge">6 marks</span>
+                </div>
+                <p class="question-text">Explain how meiosis produces genetically different gametes through the processes of crossing over and independent assortment.</p>
+                <button class="answer-toggle" onclick="toggleAnswer(this)">
+                    <span>📖</span> Reveal Model Answer
+                </button>
+                <div class="answer-content">
+                    <h5>Mark Scheme – Crossing Over (3 marks)</h5>
+                    <div class="mark-point">Occurs in prophase 1 when homologous chromosomes pair up (1)</div>
+                    <div class="mark-point">Chromatids break and exchange segments at chiasmata (1)</div>
+                    <div class="mark-point">Creates recombinant chromosomes with new combinations of alleles (1)</div>
+                    
+                    <h5 style="margin-top: 20px;">Mark Scheme – Independent Assortment (3 marks)</h5>
+                    <div class="mark-point">Occurs in metaphase 1 when homologous pairs line up on the metaphase plate (1)</div>
+                    <div class="mark-point">The orientation of each pair is random / independent of other pairs (1)</div>
+                    <div class="mark-point">Creates 2ⁿ possible combinations where n = number of chromosome pairs (1)</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Exam Technique Section -->
+        <section id="exam" class="section" style="animation-delay: 0.6s;">
+            <div class="section-header">
+                <div class="section-number">5</div>
+                <h2>Exam Practice & Technique</h2>
+            </div>
+
+            <div class="exam-technique">
+                <h3>How to Approach 6-Mark Questions on Meiosis</h3>
+                
+                <div class="technique-step">
+                    <div class="step-number">1</div>
+                    <div>
+                        <strong>Identify the command word</strong><br>
+                        "Describe" = say what happens. "Explain" = say what happens AND why. "Compare" = identify similarities and differences.
+                    </div>
+                </div>
+
+                <div class="technique-step">
+                    <div class="step-number">2</div>
+                    <div>
+                        <strong>Plan your structure</strong><br>
+                        For meiosis questions, think: WHERE does it happen? WHEN in the process? WHAT exactly occurs? WHY does it matter for variation?
+                    </div>
+                </div>
+
+                <div class="technique-step">
+                    <div class="step-number">3</div>
+                    <div>
+                        <strong>Use precise terminology</strong><br>
+                        Examiners look for key terms: homologous pairs, sister chromatids, chiasmata, centromere, spindle fibres, metaphase plate, haploid, diploid.
+                    </div>
+                </div>
+
+                <div class="technique-step">
+                    <div class="step-number">4</div>
+                    <div>
+                        <strong>Link processes to outcomes</strong><br>
+                        Always connect what happens to WHY it matters. Crossing over → new allele combinations. Independent assortment → 2ⁿ combinations.
+                    </div>
+                </div>
+            </div>
+
+            <h3>Worked Example</h3>
+            
+            <div class="question-block">
+                <div class="question-header">
+                    <span class="question-number">Example Question</span>
+                    <span class="marks-badge">6 marks</span>
+                </div>
+                <p class="question-text">Describe the events of meiosis I that lead to the production of two haploid cells from one diploid cell.</p>
+                <button class="answer-toggle" onclick="toggleAnswer(this)">
+                    <span>📖</span> Reveal Model Answer with Annotations
+                </button>
+                <div class="answer-content">
+                    <h5>Model Answer</h5>
+                    <p style="line-height: 2; background: var(--glass); padding: 20px; border-radius: 12px;">
+                        During <strong style="color: var(--accent-light);">prophase 1</strong>, chromosomes condense and become visible. <span style="color: var(--success-light);">[Stage identified ✓]</span> Homologous chromosomes pair up in a process called synapsis, forming bivalents. <span style="color: var(--success-light);">[Key terminology ✓]</span> Crossing over may occur at points called chiasmata, where non-sister chromatids exchange genetic material. <span style="color: var(--success-light);">[Process described ✓]</span>
+                        <br><br>
+                        In <strong style="color: var(--accent-light);">metaphase 1</strong>, the homologous pairs line up on the metaphase plate. <span style="color: var(--success-light);">[Stage identified ✓]</span> Spindle fibres attach to the centromeres of each chromosome. The orientation of each pair is random, leading to independent assortment. <span style="color: var(--success-light);">[Key concept ✓]</span>
+                        <br><br>
+                        During <strong style="color: var(--accent-light);">anaphase 1</strong>, the homologous chromosomes are pulled to opposite poles by the spindle fibres. <span style="color: var(--success-light);">[Process described ✓]</span> Importantly, the centromeres do not divide, so sister chromatids remain together. This halves the chromosome number.
+                        <br><br>
+                        In <strong style="color: var(--accent-light);">telophase 1</strong>, the chromosomes reach the poles and nuclear membranes may reform. <span style="color: var(--success-light);">[Stage identified ✓]</span> Cytokinesis divides the cytoplasm, producing two haploid cells, each containing one chromosome from each homologous pair. <span style="color: var(--success-light);">[Outcome stated ✓]</span>
+                    </p>
+                </div>
+            </div>
+
+            <h3>Practice Question</h3>
+            
+            <div class="question-block">
+                <div class="question-header">
+                    <span class="question-number">Your Turn</span>
+                    <span class="marks-badge">5 marks</span>
+                </div>
+                <p class="question-text">A student states that "meiosis is just mitosis happening twice." Evaluate this statement, explaining the key differences between meiosis and mitosis.</p>
+                
+                <div class="self-test">
+                    <label>Write your answer here before checking the model answer:</label>
+                    <textarea placeholder="Type your answer..."></textarea>
+                </div>
+                
+                <button class="answer-toggle" onclick="toggleAnswer(this)">
+                    <span>📖</span> Reveal Model Answer
+                </button>
+                <div class="answer-content">
+                    <h5>Mark Scheme</h5>
+                    <div class="mark-point">The statement is incorrect / an oversimplification (1)</div>
+                    <div class="mark-point">Meiosis produces 4 haploid cells, mitosis produces 2 diploid cells (1)</div>
+                    <div class="mark-point">Meiosis involves pairing of homologous chromosomes / synapsis / crossing over, which does not occur in mitosis (1)</div>
+                    <div class="mark-point">Meiosis has independent assortment at metaphase 1, mitosis does not (1)</div>
+                    <div class="mark-point">Daughter cells in meiosis are genetically different, in mitosis they are genetically identical (1)</div>
+                    <div class="mark-point">In meiosis I, centromeres do not divide at anaphase, in mitosis they do (1)</div>
+                    <p style="margin-top: 16px; font-style: italic; color: var(--text-muted);">Award max 5 marks</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Vocabulary Section -->
+        <section id="vocab" class="section" style="animation-delay: 0.7s;">
+            <div class="section-header">
+                <div class="section-number">6</div>
+                <h2>Key Vocabulary</h2>
+            </div>
+
+            <p>Make sure you understand and can use these terms correctly:</p>
+
+            <div class="vocabulary-grid">
+                <div class="vocab-card">
+                    <div class="vocab-term">Diploid (2n)</div>
+                    <div class="vocab-def">A cell with a nucleus containing two full sets of chromosomes</div>
+                </div>
+                <div class="vocab-card">
+                    <div class="vocab-term">Haploid (n)</div>
+                    <div class="vocab-def">A cell with a nucleus containing one complete set of chromosomes</div>
+                </div>
+                <div class="vocab-card">
+                    <div class="vocab-term">Zygote</div>
+                    <div class="vocab-def">The cell formed when two haploid gametes fuse at fertilisation</div>
+                </div>
+                <div class="vocab-card">
+                    <div class="vocab-term">Fertilisation</div>
+                    <div class="vocab-def">The fusing of haploid nuclei from two gametes to form a diploid zygote</div>
+                </div>
+                <div class="vocab-card">
+                    <div class="vocab-term">Gametes</div>
+                    <div class="vocab-def">Specialised haploid sex cells (sperm and ova in animals)</div>
+                </div>
+                <div class="vocab-card">
+                    <div class="vocab-term">Gonads</div>
+                    <div class="vocab-def">The sex organs in animals (testes and ovaries)</div>
+                </div>
+                <div class="vocab-card">
+                    <div class="vocab-term">Homologous pairs</div>
+                    <div class="vocab-def">Matching pairs of chromosomes that carry the same genes but may have different alleles</div>
+                </div>
+                <div class="vocab-card">
+                    <div class="vocab-term">Sister chromatids</div>
+                    <div class="vocab-def">Two identical copies of a chromosome joined at the centromere after DNA replication</div>
+                </div>
+                <div class="vocab-card">
+                    <div class="vocab-term">Crossing over</div>
+                    <div class="vocab-def">The exchange of genetic material between non-sister chromatids during prophase 1</div>
+                </div>
+                <div class="vocab-card">
+                    <div class="vocab-term">Chiasmata</div>
+                    <div class="vocab-def">The points where chromatids break and rejoin during crossing over</div>
+                </div>
+                <div class="vocab-card">
+                    <div class="vocab-term">Independent assortment</div>
+                    <div class="vocab-def">The random distribution of maternal and paternal chromosomes into gametes</div>
+                </div>
+                <div class="vocab-card">
+                    <div class="vocab-term">Bivalent</div>
+                    <div class="vocab-def">A pair of homologous chromosomes associated together during meiosis</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Final Retrieval Practice -->
+        <div class="retrieval-practice">
+            <h3>Final Review - Test Yourself!</h3>
+            <p>Cover the answers and see how many you can recall:</p>
+            
+            <div class="flashcard" onclick="toggleFlashcard(this)">
+                <div class="flashcard-question">How many cells are produced at the end of meiosis, and what is their ploidy?</div>
+                <div class="flashcard-answer">Four haploid cells, each genetically unique</div>
+                <span class="tap-hint">Tap to reveal</span>
+            </div>
+            
+            <div class="flashcard" onclick="toggleFlashcard(this)">
+                <div class="flashcard-question">What are the two mechanisms by which meiosis creates genetic variation?</div>
+                <div class="flashcard-answer">Crossing over (in prophase 1) and independent assortment (in metaphase 1)</div>
+                <span class="tap-hint">Tap to reveal</span>
+            </div>
+            
+            <div class="flashcard" onclick="toggleFlashcard(this)">
+                <div class="flashcard-question">What is the key difference between anaphase 1 and anaphase 2?</div>
+                <div class="flashcard-answer">Anaphase 1: homologous chromosomes separate, centromeres don't divide. Anaphase 2: sister chromatids separate, centromeres divide.</div>
+                <span class="tap-hint">Tap to reveal</span>
+            </div>
+            
+            <div class="flashcard" onclick="toggleFlashcard(this)">
+                <div class="flashcard-question">Why is meiosis described as a 'reduction division'?</div>
+                <div class="flashcard-answer">Because it reduces the chromosome number from diploid (2n) to haploid (n)</div>
+                <span class="tap-hint">Tap to reveal</span>
+            </div>
+            
+            <div class="flashcard" onclick="toggleFlashcard(this)">
+                <div class="flashcard-question">How many possible chromosome combinations can independent assortment produce in humans?</div>
+                <div class="flashcard-answer">2²³ = 8,388,608 (over 8 million) possible combinations</div>
+                <span class="tap-hint">Tap to reveal</span>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>IAL Biology | Sexual Reproduction & Meiosis | Specification Reference 3.10</p>
+        <p style="margin-top: 8px; font-size: 0.8rem;">Created for A-Level Biology Students</p>
+    </footer>
+
+    <script>
+        // Toggle answer visibility
+        function toggleAnswer(button) {
+            const content = button.nextElementSibling;
+            content.classList.toggle('show');
+            button.innerHTML = content.classList.contains('show') 
+                ? '<span>📕</span> Hide Answer' 
+                : '<span>📖</span> Reveal Model Answer';
+        }
+
+        // Toggle flashcard
+        function toggleFlashcard(card) {
+            const answer = card.querySelector('.flashcard-answer');
+            const hint = card.querySelector('.tap-hint');
+            answer.classList.toggle('show');
+            if (answer.classList.contains('show')) {
+                hint.textContent = 'Tap to hide';
+            } else {
+                hint.textContent = 'Tap to reveal';
+            }
+        }
+
+        // Quiz functionality
+        function checkQuiz(option, isCorrect) {
+            const container = option.closest('.quiz-container');
+            const options = container.querySelectorAll('.quiz-option');
+            const feedback = container.querySelector('.quiz-feedback');
+            
+            // Reset all options
+            options.forEach(opt => {
+                opt.classList.remove('correct', 'incorrect');
+                opt.style.pointerEvents = 'none';
+            });
+            
+            if (isCorrect) {
+                option.classList.add('correct');
+                feedback.className = 'quiz-feedback show correct';
+                feedback.innerHTML = '✓ Correct! Crossing over occurs during prophase 1 when homologous chromosomes pair up and exchange genetic material at chiasmata.';
+            } else {
+                option.classList.add('incorrect');
+                // Find and highlight correct answer
+                options.forEach(opt => {
+                    if (opt.textContent === 'Prophase 1') {
+                        opt.classList.add('correct');
+                    }
+                });
+                feedback.className = 'quiz-feedback show incorrect';
+                feedback.innerHTML = '✗ Not quite. Crossing over occurs during <strong>Prophase 1</strong> when homologous chromosomes pair up closely.';
+            }
+        }
+
+        // Smooth scroll to section
+        function scrollToSection(id) {
+            const section = document.getElementById(id);
+            if (section) {
+                section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+            
+            // Update nav
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            event.target.classList.add('active');
+        }
+
+        // Intersection Observer for animations
+        const sections = document.querySelectorAll('.section');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.animationPlayState = 'running';
+                }
+            });
+        }, { threshold: 0.1 });
+
+        sections.forEach(section => {
+            section.style.animationPlayState = 'paused';
+            observer.observe(section);
+        });
+
+        // Update nav on scroll
+        window.addEventListener('scroll', () => {
+            const scrollPos = window.scrollY + 200;
+            
+            document.querySelectorAll('section[id]').forEach(section => {
+                const top = section.offsetTop;
+                const bottom = top + section.offsetHeight;
+                const id = section.getAttribute('id');
+                
+                if (scrollPos >= top && scrollPos < bottom) {
+                    document.querySelectorAll('.nav-item').forEach(item => {
+                        item.classList.remove('active');
+                        if (item.getAttribute('onclick')?.includes(id)) {
+                            item.classList.add('active');
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
