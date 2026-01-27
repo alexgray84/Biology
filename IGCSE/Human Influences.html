@@ -1,0 +1,2585 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Human Influences on the Environment | IGCSE Biology</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fraunces:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0a1628;
+            --bg-secondary: #0f1f3a;
+            --bg-card: #162544;
+            --bg-card-hover: #1e3158;
+            --accent-green: #22c55e;
+            --accent-green-glow: rgba(34, 197, 94, 0.3);
+            --accent-amber: #f59e0b;
+            --accent-red: #ef4444;
+            --accent-blue: #3b82f6;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --border-subtle: rgba(255,255,255,0.08);
+            --border-active: rgba(34, 197, 94, 0.5);
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 20px;
+            --transition-fast: 0.15s ease;
+            --transition-med: 0.3s ease;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.7;
+            min-height: 100vh;
+        }
+
+        /* Main Layout */
+        .app-container {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Header */
+        .header {
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-subtle);
+            padding: 16px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo-icon {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, var(--accent-green), var(--accent-blue));
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logo-icon svg {
+            width: 20px;
+            height: 20px;
+            color: white;
+        }
+
+        .logo-text {
+            font-family: 'Fraunces', serif;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .logo-text span {
+            color: var(--accent-green);
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .score-badge {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            padding: 8px 16px;
+            border-radius: 50px;
+            font-size: 14px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .score-badge svg {
+            width: 16px;
+            height: 16px;
+            color: var(--accent-amber);
+        }
+
+        .score-value {
+            color: var(--accent-green);
+        }
+
+        .progress-mini {
+            width: 120px;
+            height: 6px;
+            background: var(--bg-card);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .progress-mini-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-green), var(--accent-blue));
+            width: 0%;
+            transition: width var(--transition-med);
+        }
+
+        /* Tabs Navigation */
+        .tabs-container {
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-subtle);
+            padding: 0 24px;
+            overflow-x: auto;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 4px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .tab {
+            padding: 14px 20px;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-muted);
+            background: none;
+            border: none;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            border-bottom: 3px solid transparent;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .tab:hover {
+            color: var(--text-secondary);
+            background: rgba(255,255,255,0.03);
+        }
+
+        .tab.active {
+            color: var(--accent-green);
+            border-bottom-color: var(--accent-green);
+        }
+
+        .tab-number {
+            width: 22px;
+            height: 22px;
+            background: var(--bg-card);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .tab.active .tab-number {
+            background: var(--accent-green);
+            color: var(--bg-primary);
+        }
+
+        .tab.completed .tab-number {
+            background: var(--accent-green);
+            color: var(--bg-primary);
+        }
+
+        .tab.completed .tab-number::after {
+            content: '✓';
+            font-size: 10px;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            padding: 32px 24px;
+            max-width: 900px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        /* Tab Panel */
+        .tab-panel {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .tab-panel.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Section Header */
+        .section-header {
+            margin-bottom: 32px;
+        }
+
+        .section-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--bg-card);
+            padding: 6px 12px;
+            border-radius: 50px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--accent-green);
+            margin-bottom: 12px;
+        }
+
+        .section-title {
+            font-family: 'Fraunces', serif;
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .section-desc {
+            color: var(--text-secondary);
+            font-size: 16px;
+        }
+
+        /* Content Card */
+        .content-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-lg);
+            padding: 28px;
+            margin-bottom: 24px;
+        }
+
+        .content-card h3 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .content-card p {
+            color: var(--text-secondary);
+            margin-bottom: 14px;
+        }
+
+        .content-card p:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Key Point */
+        .key-point {
+            background: linear-gradient(135deg, rgba(34, 197, 94, 0.1), rgba(59, 130, 246, 0.05));
+            border-left: 4px solid var(--accent-green);
+            border-radius: 0 var(--radius-md) var(--radius-md) 0;
+            padding: 18px 22px;
+            margin: 20px 0;
+        }
+
+        .key-point-label {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--accent-green);
+            margin-bottom: 6px;
+        }
+
+        .key-point p {
+            color: var(--text-primary);
+            margin: 0;
+        }
+
+        /* Quiz Container */
+        .quiz-container {
+            background: var(--bg-secondary);
+            border: 2px solid var(--border-subtle);
+            border-radius: var(--radius-lg);
+            padding: 28px;
+            margin: 28px 0;
+            position: relative;
+        }
+
+        .quiz-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent-green), var(--accent-blue));
+            border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+        }
+
+        .quiz-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--bg-card);
+            padding: 6px 12px;
+            border-radius: 50px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--accent-amber);
+            margin-bottom: 16px;
+        }
+
+        .quiz-question {
+            font-family: 'Fraunces', serif;
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        /* Multiple Choice */
+        .mc-options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .mc-option {
+            background: var(--bg-card);
+            border: 2px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            padding: 16px 18px;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .mc-option:hover {
+            border-color: var(--border-active);
+            transform: translateX(4px);
+        }
+
+        .mc-option.selected {
+            border-color: var(--accent-blue);
+            background: rgba(59, 130, 246, 0.1);
+        }
+
+        .mc-option.correct {
+            border-color: var(--accent-green);
+            background: rgba(34, 197, 94, 0.15);
+        }
+
+        .mc-option.incorrect {
+            border-color: var(--accent-red);
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+        .mc-marker {
+            width: 28px;
+            height: 28px;
+            border: 2px solid var(--text-muted);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 12px;
+            flex-shrink: 0;
+        }
+
+        .mc-option.selected .mc-marker {
+            border-color: var(--accent-blue);
+            color: var(--accent-blue);
+        }
+
+        .mc-option.correct .mc-marker {
+            border-color: var(--accent-green);
+            background: var(--accent-green);
+            color: var(--bg-primary);
+        }
+
+        .mc-option.incorrect .mc-marker {
+            border-color: var(--accent-red);
+            color: var(--accent-red);
+        }
+
+        .mc-text {
+            color: var(--text-secondary);
+            font-size: 15px;
+        }
+
+        /* True/False */
+        .tf-grid {
+            display: grid;
+            gap: 14px;
+        }
+
+        .tf-card {
+            background: var(--bg-card);
+            border: 2px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            padding: 18px;
+        }
+
+        .tf-statement {
+            color: var(--text-secondary);
+            margin-bottom: 14px;
+            font-size: 15px;
+        }
+
+        .tf-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .tf-btn {
+            flex: 1;
+            padding: 10px;
+            border: 2px solid var(--border-subtle);
+            border-radius: var(--radius-sm);
+            background: var(--bg-secondary);
+            color: var(--text-muted);
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+
+        .tf-btn:hover {
+            border-color: var(--border-active);
+        }
+
+        .tf-btn.selected {
+            border-color: var(--accent-blue);
+            background: rgba(59, 130, 246, 0.1);
+            color: var(--accent-blue);
+        }
+
+        .tf-btn.correct {
+            border-color: var(--accent-green);
+            background: rgba(34, 197, 94, 0.15);
+            color: var(--accent-green);
+        }
+
+        .tf-btn.incorrect {
+            border-color: var(--accent-red);
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--accent-red);
+        }
+
+        /* Drag and Drop */
+        .drag-items {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .drag-item {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            padding: 10px 16px;
+            border-radius: var(--radius-sm);
+            cursor: grab;
+            font-size: 14px;
+            color: var(--text-secondary);
+            transition: all var(--transition-fast);
+        }
+
+        .drag-item:hover {
+            border-color: var(--border-active);
+            transform: translateY(-2px);
+        }
+
+        .drag-item.dragging {
+            opacity: 0.5;
+            cursor: grabbing;
+        }
+
+        .drag-zones {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        @media (max-width: 600px) {
+            .drag-zones {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .drag-zone {
+            background: var(--bg-card);
+            border: 2px dashed var(--border-subtle);
+            border-radius: var(--radius-md);
+            padding: 16px;
+            min-height: 140px;
+        }
+
+        .drag-zone.dragover {
+            border-color: var(--accent-green);
+            background: rgba(34, 197, 94, 0.05);
+        }
+
+        .drag-zone-title {
+            font-weight: 700;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .drag-zone-title.green { color: var(--accent-green); }
+        .drag-zone-title.amber { color: var(--accent-amber); }
+
+        .dropped-items {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .dropped-items .drag-item {
+            cursor: default;
+            background: rgba(34, 197, 94, 0.1);
+            border-color: var(--accent-green);
+        }
+
+        /* Fill in Blank */
+        .fill-sentence {
+            color: var(--text-secondary);
+            font-size: 16px;
+            line-height: 2.2;
+            margin-bottom: 16px;
+        }
+
+        .blank-input {
+            display: inline-block;
+            min-width: 140px;
+            padding: 4px 12px;
+            background: var(--bg-card);
+            border: 2px solid var(--border-subtle);
+            border-radius: var(--radius-sm);
+            color: var(--text-primary);
+            font-family: inherit;
+            font-size: 15px;
+            vertical-align: middle;
+        }
+
+        .blank-input:focus {
+            outline: none;
+            border-color: var(--accent-green);
+        }
+
+        .blank-input.correct {
+            border-color: var(--accent-green);
+            background: rgba(34, 197, 94, 0.1);
+        }
+
+        .blank-input.incorrect {
+            border-color: var(--accent-red);
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+        .word-bank {
+            background: var(--bg-card);
+            border-radius: var(--radius-md);
+            padding: 16px;
+            margin-top: 16px;
+        }
+
+        .word-bank-title {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            margin-bottom: 10px;
+        }
+
+        .word-bank-items {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .word-option {
+            padding: 8px 14px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-sm);
+            font-size: 14px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+
+        .word-option:hover {
+            border-color: var(--border-active);
+        }
+
+        .word-option.selected {
+            border-color: var(--accent-green);
+            background: rgba(34, 197, 94, 0.1);
+        }
+
+        .word-option.used {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        /* Order Quiz */
+        .order-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .order-item {
+            background: var(--bg-card);
+            border: 2px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            padding: 14px 18px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            cursor: grab;
+            transition: all var(--transition-fast);
+        }
+
+        .order-item:hover {
+            border-color: var(--border-active);
+        }
+
+        .order-item.dragging {
+            opacity: 0.5;
+        }
+
+        .order-number {
+            width: 28px;
+            height: 28px;
+            background: var(--bg-secondary);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 13px;
+            flex-shrink: 0;
+        }
+
+        .order-item.correct .order-number {
+            background: var(--accent-green);
+            color: var(--bg-primary);
+        }
+
+        .order-item.incorrect .order-number {
+            background: var(--accent-red);
+            color: white;
+        }
+
+        .order-text {
+            color: var(--text-secondary);
+            font-size: 14px;
+            flex: 1;
+        }
+
+        .order-handle {
+            color: var(--text-muted);
+            opacity: 0.5;
+        }
+
+        /* Matching */
+        .match-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 600px) {
+            .match-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .match-column h4 {
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+        }
+
+        .match-item {
+            background: var(--bg-card);
+            border: 2px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            padding: 12px 16px;
+            margin-bottom: 10px;
+            font-size: 14px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+
+        .match-item:hover {
+            border-color: var(--border-active);
+        }
+
+        .match-item.selected {
+            border-color: var(--accent-blue);
+            background: rgba(59, 130, 246, 0.1);
+        }
+
+        .match-item.matched {
+            border-color: var(--accent-green);
+            background: rgba(34, 197, 94, 0.1);
+            cursor: default;
+        }
+
+        .match-item.wrong {
+            border-color: var(--accent-red);
+            animation: shake 0.4s ease;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-6px); }
+            75% { transform: translateX(6px); }
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 12px 24px;
+            border-radius: var(--radius-md);
+            font-family: inherit;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent-green), #16a34a);
+            color: var(--bg-primary);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px var(--accent-green-glow);
+        }
+
+        .btn-secondary {
+            background: var(--bg-card);
+            color: var(--text-secondary);
+            border: 1px solid var(--border-subtle);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--border-active);
+        }
+
+        .quiz-actions {
+            margin-top: 20px;
+            display: flex;
+            gap: 12px;
+        }
+
+        /* Feedback */
+        .feedback {
+            margin-top: 18px;
+            padding: 14px 18px;
+            border-radius: var(--radius-md);
+            display: none;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .feedback.show {
+            display: flex;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .feedback.correct {
+            background: rgba(34, 197, 94, 0.15);
+            border: 1px solid var(--accent-green);
+        }
+
+        .feedback.incorrect {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid var(--accent-red);
+        }
+
+        .feedback-icon {
+            width: 20px;
+            height: 20px;
+            flex-shrink: 0;
+        }
+
+        .feedback.correct .feedback-icon { color: var(--accent-green); }
+        .feedback.incorrect .feedback-icon { color: var(--accent-red); }
+
+        .feedback-text {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        /* Data Table */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            border-radius: var(--radius-md);
+            overflow: hidden;
+        }
+
+        .data-table th {
+            background: var(--bg-secondary);
+            padding: 14px 16px;
+            text-align: left;
+            font-weight: 700;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--accent-green);
+        }
+
+        .data-table td {
+            padding: 14px 16px;
+            background: var(--bg-card);
+            border-bottom: 1px solid var(--border-subtle);
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .data-table select {
+            padding: 8px 12px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-sm);
+            color: var(--text-primary);
+            font-family: inherit;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .data-table select:focus {
+            outline: none;
+            border-color: var(--accent-green);
+        }
+
+        .data-table select.correct {
+            border-color: var(--accent-green);
+            background: rgba(34, 197, 94, 0.1);
+        }
+
+        .data-table select.incorrect {
+            border-color: var(--accent-red);
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+        /* Info Grid */
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 14px;
+            margin: 20px 0;
+        }
+
+        .info-card {
+            background: var(--bg-secondary);
+            border-radius: var(--radius-md);
+            padding: 18px;
+            text-align: center;
+        }
+
+        .info-card-icon {
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+
+        .info-card-title {
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .info-card-desc {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        /* Two Column */
+        .two-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin: 20px 0;
+        }
+
+        @media (max-width: 600px) {
+            .two-col {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .col-card {
+            background: var(--bg-secondary);
+            border-radius: var(--radius-md);
+            padding: 20px;
+            border-left: 4px solid var(--accent-green);
+        }
+
+        .col-card.amber {
+            border-left-color: var(--accent-amber);
+        }
+
+        .col-card h4 {
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        .col-card h4.green { color: var(--accent-green); }
+        .col-card h4.amber { color: var(--accent-amber); }
+
+        .col-card ul {
+            color: var(--text-muted);
+            font-size: 14px;
+            padding-left: 18px;
+            margin-top: 10px;
+        }
+
+        .col-card li {
+            margin-bottom: 6px;
+        }
+
+        /* Summary Section */
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 16px;
+            margin: 24px 0;
+        }
+
+        .summary-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+        }
+
+        .summary-icon {
+            width: 44px;
+            height: 44px;
+            background: linear-gradient(135deg, var(--accent-green), var(--accent-blue));
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 14px;
+        }
+
+        .summary-icon svg {
+            width: 22px;
+            height: 22px;
+            color: white;
+        }
+
+        .summary-card h4 {
+            font-size: 16px;
+            margin-bottom: 8px;
+        }
+
+        .summary-card p {
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        /* Progress Ring */
+        .progress-ring-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 32px;
+            background: var(--bg-card);
+            border-radius: var(--radius-xl);
+            margin: 32px auto;
+            max-width: 360px;
+        }
+
+        .progress-ring {
+            width: 160px;
+            height: 160px;
+            position: relative;
+        }
+
+        .progress-ring svg {
+            transform: rotate(-90deg);
+        }
+
+        .progress-ring-bg {
+            fill: none;
+            stroke: var(--bg-secondary);
+            stroke-width: 12;
+        }
+
+        .progress-ring-fill {
+            fill: none;
+            stroke: var(--accent-green);
+            stroke-width: 12;
+            stroke-linecap: round;
+            stroke-dasharray: 408;
+            stroke-dashoffset: 408;
+            transition: stroke-dashoffset 1s ease;
+        }
+
+        .progress-ring-text {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .progress-percent {
+            font-family: 'Fraunces', serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+        }
+
+        .progress-label {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        .progress-message {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .progress-message h3 {
+            font-family: 'Fraunces', serif;
+            font-size: 1.3rem;
+            margin-bottom: 6px;
+        }
+
+        .progress-message p {
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+
+        /* Badges */
+        .badges {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px;
+            justify-content: center;
+            margin-top: 24px;
+        }
+
+        .badge {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            padding: 14px 20px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            opacity: 0.4;
+            transition: all var(--transition-med);
+        }
+
+        .badge.earned {
+            opacity: 1;
+            border-color: var(--accent-amber);
+            background: rgba(245, 158, 11, 0.1);
+        }
+
+        .badge-icon {
+            font-size: 24px;
+        }
+
+        .badge-name {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+
+        .badge.earned .badge-name {
+            color: var(--accent-amber);
+        }
+
+        /* Tab Navigation Footer */
+        .tab-nav-footer {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+            padding-top: 24px;
+            border-top: 1px solid var(--border-subtle);
+        }
+
+        .nav-btn {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 20px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            color: var(--text-secondary);
+            font-size: 14px;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+
+        .nav-btn:hover {
+            border-color: var(--border-active);
+            color: var(--text-primary);
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .nav-btn svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        /* Flip Cards */
+        .flip-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin: 20px 0;
+        }
+
+        .flip-card {
+            height: 160px;
+            perspective: 1000px;
+            cursor: pointer;
+        }
+
+        .flip-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+
+        .flip-card.flipped .flip-card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .flip-card-front,
+        .flip-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: var(--radius-md);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .flip-card-front {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+        }
+
+        .flip-card-back {
+            background: linear-gradient(135deg, var(--accent-green), #16a34a);
+            transform: rotateY(180deg);
+        }
+
+        .flip-card-front h4 {
+            font-size: 15px;
+            margin-bottom: 6px;
+        }
+
+        .flip-card-front p {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .flip-card-back p {
+            font-size: 13px;
+            color: white;
+            line-height: 1.5;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header {
+                padding: 12px 16px;
+                flex-wrap: wrap;
+                gap: 12px;
+            }
+
+            .tabs-container {
+                padding: 0 12px;
+            }
+
+            .tab {
+                padding: 12px 14px;
+                font-size: 13px;
+            }
+
+            .main-content {
+                padding: 24px 16px;
+            }
+
+            .section-title {
+                font-size: 26px;
+            }
+
+            .content-card {
+                padding: 20px;
+            }
+
+            .quiz-container {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-left">
+                <div class="logo">
+                    <div class="logo-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                            <path d="M2 17l10 5 10-5M2 12l10 5 10-5"/>
+                        </svg>
+                    </div>
+                    <div class="logo-text">IGCSE <span>Biology</span></div>
+                </div>
+            </div>
+            <div class="header-right">
+                <div class="progress-mini">
+                    <div class="progress-mini-fill" id="progressBar"></div>
+                </div>
+                <div class="score-badge">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                    </svg>
+                    <span class="score-value" id="scoreDisplay">0</span>/100
+                </div>
+            </div>
+        </header>
+
+        <!-- Tabs -->
+        <div class="tabs-container">
+            <div class="tabs">
+                <button class="tab active" onclick="switchTab(0)">
+                    <span class="tab-number">1</span>
+                    Overview
+                </button>
+                <button class="tab" onclick="switchTab(1)">
+                    <span class="tab-number">2</span>
+                    Population
+                </button>
+                <button class="tab" onclick="switchTab(2)">
+                    <span class="tab-number">3</span>
+                    Glasshouses
+                </button>
+                <button class="tab" onclick="switchTab(3)">
+                    <span class="tab-number">4</span>
+                    Nitrogen & Fertilisers
+                </button>
+                <button class="tab" onclick="switchTab(4)">
+                    <span class="tab-number">5</span>
+                    Pest Control
+                </button>
+                <button class="tab" onclick="switchTab(5)">
+                    <span class="tab-number">6</span>
+                    Summary
+                </button>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Tab 0: Overview -->
+            <div class="tab-panel active" id="tab-0">
+                <div class="section-header">
+                    <div class="section-badge">📚 Chapter 15</div>
+                    <h1 class="section-title">Human Influences on the Environment</h1>
+                    <p class="section-desc">Explore how human activities impact ecosystems through agriculture, pollution, and resource management.</p>
+                </div>
+
+                <div class="content-card">
+                    <h3>🎯 Learning Objectives</h3>
+                    <p>By the end of this lesson, you will be able to:</p>
+                    <ul style="color: var(--text-secondary); padding-left: 20px; margin-top: 12px;">
+                        <li>Describe how glasshouses and polytunnels increase crop yield</li>
+                        <li>Explain how fertilisers increase crop yield</li>
+                        <li>Compare pesticides and biological control methods</li>
+                        <li>Identify greenhouse gases and their effects</li>
+                        <li>Understand pollution consequences on ecosystems</li>
+                        <li>Explain eutrophication from fertiliser runoff</li>
+                    </ul>
+                </div>
+
+                <div class="key-point">
+                    <div class="key-point-label">💡 Key Concept</div>
+                    <p>As human population grows exponentially, we place increasing demands on the environment for food, materials, fuel, and space. Modern farming is a managed ecosystem where humans control many factors to maximise yield.</p>
+                </div>
+
+                <div class="tab-nav-footer">
+                    <button class="nav-btn" disabled>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+                        Previous
+                    </button>
+                    <button class="nav-btn" onclick="switchTab(1)">
+                        Next: Population
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Tab 1: Population & Agriculture -->
+            <div class="tab-panel" id="tab-1">
+                <div class="section-header">
+                    <div class="section-badge">Section 2</div>
+                    <h1 class="section-title">Population Growth & Agriculture</h1>
+                    <p class="section-desc">Human population has grown exponentially, creating unprecedented demands on our environment.</p>
+                </div>
+
+                <div class="content-card">
+                    <h3>📈 Exponential Population Growth</h3>
+                    <p>Human population remained relatively stable for thousands of years, but has grown exponentially since the Industrial Revolution. By 2050, the global population is projected to reach <strong>10 billion</strong> people.</p>
+                    <p>This creates increasing demands for:</p>
+                    <div class="info-grid">
+                        <div class="info-card">
+                            <div class="info-card-icon">🍽️</div>
+                            <div class="info-card-title">Food</div>
+                            <div class="info-card-desc">To sustain the growing population</div>
+                        </div>
+                        <div class="info-card">
+                            <div class="info-card-icon">🏗️</div>
+                            <div class="info-card-title">Materials</div>
+                            <div class="info-card-desc">For homes, schools, industries</div>
+                        </div>
+                        <div class="info-card">
+                            <div class="info-card-icon">⚡</div>
+                            <div class="info-card-title">Fuel</div>
+                            <div class="info-card-desc">To heat homes and power vehicles</div>
+                        </div>
+                        <div class="info-card">
+                            <div class="info-card-icon">🏠</div>
+                            <div class="info-card-title">Space</div>
+                            <div class="info-card-desc">For living and waste disposal</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quiz 1 -->
+                <div class="quiz-container" data-quiz="1">
+                    <div class="quiz-label">⚡ Progress Check</div>
+                    <div class="quiz-question">Based on population trends, approximately what was the global population in 1900?</div>
+                    <div class="mc-options">
+                        <div class="mc-option" data-answer="a" onclick="selectMC(this)">
+                            <span class="mc-marker">A</span>
+                            <span class="mc-text">1 billion</span>
+                        </div>
+                        <div class="mc-option" data-answer="b" onclick="selectMC(this)">
+                            <span class="mc-marker">B</span>
+                            <span class="mc-text">2 billion</span>
+                        </div>
+                        <div class="mc-option" data-answer="c" onclick="selectMC(this)">
+                            <span class="mc-marker">C</span>
+                            <span class="mc-text">4 billion</span>
+                        </div>
+                        <div class="mc-option" data-answer="d" onclick="selectMC(this)">
+                            <span class="mc-marker">D</span>
+                            <span class="mc-text">6 billion</span>
+                        </div>
+                    </div>
+                    <div class="quiz-actions">
+                        <button class="btn btn-primary" onclick="checkMC(1, 'b')">Check Answer</button>
+                    </div>
+                    <div class="feedback" id="feedback-1">
+                        <svg class="feedback-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>
+                        <span class="feedback-text"></span>
+                    </div>
+                </div>
+
+                <div class="content-card">
+                    <h3>🌾 Modern Farms as Managed Ecosystems</h3>
+                    <p>A modern farm is a <strong>managed ecosystem</strong> where humans control many interactions that occur naturally. Crop plants act as producers, livestock as primary consumers, and humans as top consumers.</p>
+                    <p>The food web on a farm is simplified compared to natural ecosystems, but follows the same energy flow principles.</p>
+                </div>
+
+                <!-- Quiz 2 -->
+                <div class="quiz-container" data-quiz="2">
+                    <div class="quiz-label">⚡ Progress Check</div>
+                    <div class="quiz-question">Which statements about farm food webs are TRUE or FALSE?</div>
+                    <div class="tf-grid">
+                        <div class="tf-card" data-correct="true" data-index="0">
+                            <p class="tf-statement">Crop plants are producers because they make food through photosynthesis.</p>
+                            <div class="tf-buttons">
+                                <button class="tf-btn" data-value="true" onclick="selectTF(this, 0)">True</button>
+                                <button class="tf-btn" data-value="false" onclick="selectTF(this, 0)">False</button>
+                            </div>
+                        </div>
+                        <div class="tf-card" data-correct="false" data-index="1">
+                            <p class="tf-statement">Humans are primary consumers in the farm food web.</p>
+                            <div class="tf-buttons">
+                                <button class="tf-btn" data-value="true" onclick="selectTF(this, 1)">True</button>
+                                <button class="tf-btn" data-value="false" onclick="selectTF(this, 1)">False</button>
+                            </div>
+                        </div>
+                        <div class="tf-card" data-correct="true" data-index="2">
+                            <p class="tf-statement">Cattle convert plant material into protein for humans.</p>
+                            <div class="tf-buttons">
+                                <button class="tf-btn" data-value="true" onclick="selectTF(this, 2)">True</button>
+                                <button class="tf-btn" data-value="false" onclick="selectTF(this, 2)">False</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="quiz-actions">
+                        <button class="btn btn-primary" onclick="checkTF(2)">Check Answers</button>
+                    </div>
+                    <div class="feedback" id="feedback-2">
+                        <svg class="feedback-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>
+                        <span class="feedback-text"></span>
+                    </div>
+                </div>
+
+                <div class="tab-nav-footer">
+                    <button class="nav-btn" onclick="switchTab(0)">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+                        Overview
+                    </button>
+                    <button class="nav-btn" onclick="switchTab(2)">
+                        Next: Glasshouses
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Tab 2: Glasshouses -->
+            <div class="tab-panel" id="tab-2">
+                <div class="section-header">
+                    <div class="section-badge">Section 3</div>
+                    <h1 class="section-title">Glasshouses & Controlled Environments</h1>
+                    <p class="section-desc">Farmers control environmental factors to maximise crop yield using glasshouses and polytunnels.</p>
+                </div>
+
+                <div class="content-card">
+                    <h3>🏠 How Glasshouses Increase Yield</h3>
+                    <p>Glasshouses (greenhouses) and polytunnels create controlled conditions for optimal plant growth. They allow farmers to manipulate factors that limit photosynthesis.</p>
+                </div>
+
+                <div class="flip-grid">
+                    <div class="flip-card" onclick="this.classList.toggle('flipped')">
+                        <div class="flip-card-inner">
+                            <div class="flip-card-front">
+                                <h4>🌞 Light Control</h4>
+                                <p>Click to reveal</p>
+                            </div>
+                            <div class="flip-card-back">
+                                <p>Transparent walls allow natural light. Additional lighting extends "day" during winter months.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flip-card" onclick="this.classList.toggle('flipped')">
+                        <div class="flip-card-inner">
+                            <div class="flip-card-front">
+                                <h4>🌡️ Temperature</h4>
+                                <p>Click to reveal</p>
+                            </div>
+                            <div class="flip-card-back">
+                                <p>Greenhouse effect traps heat. Short-wave infrared converts to long-wave that can't escape.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flip-card" onclick="this.classList.toggle('flipped')">
+                        <div class="flip-card-inner">
+                            <div class="flip-card-front">
+                                <h4>💨 CO₂ Enrichment</h4>
+                                <p>Click to reveal</p>
+                            </div>
+                            <div class="flip-card-back">
+                                <p>Burning fuels releases CO₂ and heat. Higher CO₂ increases photosynthesis rate.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flip-card" onclick="this.classList.toggle('flipped')">
+                        <div class="flip-card-inner">
+                            <div class="flip-card-front">
+                                <h4>💧 Humidity</h4>
+                                <p>Click to reveal</p>
+                            </div>
+                            <div class="flip-card-back">
+                                <p>Water vapour maintains moisture, reducing water loss by transpiration.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="key-point">
+                    <div class="key-point-label">💡 Key Point</div>
+                    <p>Heating glasshouses to the <strong>optimum temperature</strong> for photosynthesis maximises yield. Heating above this wastes money with no further increase in yield.</p>
+                </div>
+
+                <!-- Quiz 3 -->
+                <div class="quiz-container" data-quiz="3">
+                    <div class="quiz-label">⚡ Progress Check</div>
+                    <div class="quiz-question">Match each factor to its primary effect on plant growth:</div>
+                    <table class="data-table">
+                        <thead>
+                            <tr><th>Factor</th><th>Primary Effect</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Soil nitrates</td>
+                                <td>
+                                    <select data-correct="protein">
+                                        <option value="">Select...</option>
+                                        <option value="protein">Protein synthesis</option>
+                                        <option value="drainage">Water drainage</option>
+                                        <option value="ion">Ion absorption</option>
+                                        <option value="photo">Photosynthesis rate</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Soil structure</td>
+                                <td>
+                                    <select data-correct="drainage">
+                                        <option value="">Select...</option>
+                                        <option value="protein">Protein synthesis</option>
+                                        <option value="drainage">Water drainage</option>
+                                        <option value="ion">Ion absorption</option>
+                                        <option value="photo">Photosynthesis rate</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Soil pH</td>
+                                <td>
+                                    <select data-correct="ion">
+                                        <option value="">Select...</option>
+                                        <option value="protein">Protein synthesis</option>
+                                        <option value="drainage">Water drainage</option>
+                                        <option value="ion">Ion absorption</option>
+                                        <option value="photo">Photosynthesis rate</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>CO₂ levels</td>
+                                <td>
+                                    <select data-correct="photo">
+                                        <option value="">Select...</option>
+                                        <option value="protein">Protein synthesis</option>
+                                        <option value="drainage">Water drainage</option>
+                                        <option value="ion">Ion absorption</option>
+                                        <option value="photo">Photosynthesis rate</option>
+                                    </select>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="quiz-actions">
+                        <button class="btn btn-primary" onclick="checkTable(3)">Check Answers</button>
+                    </div>
+                    <div class="feedback" id="feedback-3">
+                        <svg class="feedback-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>
+                        <span class="feedback-text"></span>
+                    </div>
+                </div>
+
+                <!-- Quiz 4 -->
+                <div class="quiz-container" data-quiz="4">
+                    <div class="quiz-label">⚡ Progress Check</div>
+                    <div class="quiz-question">Complete the sentences using the word bank:</div>
+                    <div class="fill-sentence">
+                        1. The <input type="text" class="blank-input" data-answer="greenhouse"> effect in glasshouses traps heat inside the structure.
+                    </div>
+                    <div class="fill-sentence">
+                        2. Polytunnels are made of transparent <input type="text" class="blank-input" data-answer="polythene"> instead of glass.
+                    </div>
+                    <div class="fill-sentence">
+                        3. Burning fuels increases <input type="text" class="blank-input" data-answer="carbon dioxide"> levels for photosynthesis.
+                    </div>
+                    <div class="word-bank">
+                        <div class="word-bank-title">Word Bank</div>
+                        <div class="word-bank-items">
+                            <span class="word-option" onclick="selectWord(this)">polythene</span>
+                            <span class="word-option" onclick="selectWord(this)">greenhouse</span>
+                            <span class="word-option" onclick="selectWord(this)">carbon dioxide</span>
+                            <span class="word-option" onclick="selectWord(this)">oxygen</span>
+                            <span class="word-option" onclick="selectWord(this)">plastic</span>
+                        </div>
+                    </div>
+                    <div class="quiz-actions">
+                        <button class="btn btn-primary" onclick="checkFill(4)">Check Answers</button>
+                    </div>
+                    <div class="feedback" id="feedback-4">
+                        <svg class="feedback-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>
+                        <span class="feedback-text"></span>
+                    </div>
+                </div>
+
+                <div class="tab-nav-footer">
+                    <button class="nav-btn" onclick="switchTab(1)">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+                        Population
+                    </button>
+                    <button class="nav-btn" onclick="switchTab(3)">
+                        Next: Nitrogen & Fertilisers
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Tab 3: Nitrogen & Fertilisers -->
+            <div class="tab-panel" id="tab-3">
+                <div class="section-header">
+                    <div class="section-badge">Section 4</div>
+                    <h1 class="section-title">Nitrogen Cycle & Fertilisers</h1>
+                    <p class="section-desc">Nitrogen is essential for plant protein synthesis. Farmers must replace nitrogen lost when crops are sold.</p>
+                </div>
+
+                <div class="content-card">
+                    <h3>🔄 The Nitrogen Cycle on Farms</h3>
+                    <p>When crops and livestock are <strong>sold off the farm</strong>, nitrogen is lost. Farmers must replace this nitrogen through:</p>
+                    <ul style="color: var(--text-secondary); padding-left: 20px; margin-top: 12px;">
+                        <li>Growing legumes (peas, beans, clover) with nitrogen-fixing bacteria</li>
+                        <li>Adding organic fertilisers (farmyard manure)</li>
+                        <li>Adding inorganic fertilisers (NPK)</li>
+                    </ul>
+                </div>
+
+                <div class="two-col">
+                    <div class="col-card">
+                        <h4 class="green">🌿 Organic Fertilisers</h4>
+                        <p style="color: var(--text-secondary); font-size: 14px;">Made from animal faeces mixed with straw (farmyard manure).</p>
+                        <ul>
+                            <li>Contains decaying matter</li>
+                            <li>Improves soil structure</li>
+                            <li>Only replaces some lost nitrogen</li>
+                        </ul>
+                    </div>
+                    <div class="col-card amber">
+                        <h4 class="amber">🧪 Inorganic Fertilisers</h4>
+                        <p style="color: var(--text-secondary); font-size: 14px;">Chemical compounds like potassium nitrate (NPK).</p>
+                        <ul>
+                            <li>Provides precise nutrient amounts</li>
+                            <li>Can replace all lost minerals</li>
+                            <li>Does NOT improve soil structure</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Quiz 5 -->
+                <div class="quiz-container" data-quiz="5">
+                    <div class="quiz-label">⚡ Progress Check</div>
+                    <div class="quiz-question">Put the nitrogen cycle steps in the correct order:</div>
+                    <div class="order-list" id="orderList">
+                        <div class="order-item" draggable="true" data-order="3">
+                            <span class="order-number">?</span>
+                            <span class="order-text">Plants use ammonium ions to make proteins</span>
+                            <span class="order-handle">⋮⋮</span>
+                        </div>
+                        <div class="order-item" draggable="true" data-order="1">
+                            <span class="order-number">?</span>
+                            <span class="order-text">Nitrogen-fixing bacteria convert N₂ gas in root nodules</span>
+                            <span class="order-handle">⋮⋮</span>
+                        </div>
+                        <div class="order-item" draggable="true" data-order="5">
+                            <span class="order-number">?</span>
+                            <span class="order-text">Nitrifying bacteria convert ammonia to nitrate</span>
+                            <span class="order-handle">⋮⋮</span>
+                        </div>
+                        <div class="order-item" draggable="true" data-order="4">
+                            <span class="order-number">?</span>
+                            <span class="order-text">Decomposers break down plant material, releasing ammonia</span>
+                            <span class="order-handle">⋮⋮</span>
+                        </div>
+                        <div class="order-item" draggable="true" data-order="2">
+                            <span class="order-number">?</span>
+                            <span class="order-text">Bacteria produce ammonium ions from nitrogen gas</span>
+                            <span class="order-handle">⋮⋮</span>
+                        </div>
+                    </div>
+                    <div class="quiz-actions">
+                        <button class="btn btn-primary" onclick="checkOrder(5)">Check Order</button>
+                    </div>
+                    <div class="feedback" id="feedback-5">
+                        <svg class="feedback-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>
+                        <span class="feedback-text"></span>
+                    </div>
+                </div>
+
+                <!-- Quiz 6 -->
+                <div class="quiz-container" data-quiz="6">
+                    <div class="quiz-label">⚡ Progress Check</div>
+                    <div class="quiz-question">Drag each characteristic to the correct fertiliser type:</div>
+                    <div class="drag-items" id="dragItems-6">
+                        <div class="drag-item" draggable="true" data-category="organic">Improves soil structure</div>
+                        <div class="drag-item" draggable="true" data-category="inorganic">Precise nutrient amounts</div>
+                        <div class="drag-item" draggable="true" data-category="organic">Contains decaying matter</div>
+                        <div class="drag-item" draggable="true" data-category="inorganic">Can cause pollution</div>
+                        <div class="drag-item" draggable="true" data-category="organic">Made from animal waste</div>
+                        <div class="drag-item" draggable="true" data-category="inorganic">Fast-acting</div>
+                    </div>
+                    <div class="drag-zones">
+                        <div class="drag-zone" data-accept="organic">
+                            <div class="drag-zone-title green">Organic Fertilisers</div>
+                            <div class="dropped-items"></div>
+                        </div>
+                        <div class="drag-zone" data-accept="inorganic">
+                            <div class="drag-zone-title amber">Inorganic Fertilisers</div>
+                            <div class="dropped-items"></div>
+                        </div>
+                    </div>
+                    <div class="quiz-actions">
+                        <button class="btn btn-primary" onclick="checkDrag(6)">Check Answer</button>
+                    </div>
+                    <div class="feedback" id="feedback-6">
+                        <svg class="feedback-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>
+                        <span class="feedback-text"></span>
+                    </div>
+                </div>
+
+                <div class="tab-nav-footer">
+                    <button class="nav-btn" onclick="switchTab(2)">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+                        Glasshouses
+                    </button>
+                    <button class="nav-btn" onclick="switchTab(4)">
+                        Next: Pest Control
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Tab 4: Pest Control -->
+            <div class="tab-panel" id="tab-4">
+                <div class="section-header">
+                    <div class="section-badge">Section 5</div>
+                    <h1 class="section-title">Pest Control Methods</h1>
+                    <p class="section-desc">Pests reduce crop yield. Farmers use chemical and biological methods to control them.</p>
+                </div>
+
+                <div class="key-point" style="background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(239, 68, 68, 0.05)); border-left-color: var(--accent-amber);">
+                    <div class="key-point-label" style="color: var(--accent-amber);">⚠️ Did You Know?</div>
+                    <p>In Britain, about <strong>30%</strong> of the potential maize crop is lost to weeds, insects, and fungal diseases each year.</p>
+                </div>
+
+                <div class="content-card">
+                    <h3>🐛 What is a Pest?</h3>
+                    <p>A pest is any organism that reduces the yield of crop plants or stock animals. Pests include weeds, insects, fungi, bacteria, and viruses.</p>
+                    <p>Pests harm crops by: damaging leaves (reducing photosynthesis) and affecting appearance (making crops unsuitable for sale).</p>
+                </div>
+
+                <div class="content-card">
+                    <h3>🧪 Types of Pesticides</h3>
+                    <div class="info-grid">
+                        <div class="info-card">
+                            <div class="info-card-icon">🌿</div>
+                            <div class="info-card-title">Herbicides</div>
+                            <div class="info-card-desc">Kill plant pests (weeds)</div>
+                        </div>
+                        <div class="info-card">
+                            <div class="info-card-icon">🐛</div>
+                            <div class="info-card-title">Insecticides</div>
+                            <div class="info-card-desc">Kill insects</div>
+                        </div>
+                        <div class="info-card">
+                            <div class="info-card-icon">🍄</div>
+                            <div class="info-card-title">Fungicides</div>
+                            <div class="info-card-desc">Kill fungi</div>
+                        </div>
+                        <div class="info-card">
+                            <div class="info-card-icon">🐌</div>
+                            <div class="info-card-title">Molluscicides</div>
+                            <div class="info-card-desc">Kill snails and slugs</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quiz 7 -->
+                <div class="quiz-container" data-quiz="7">
+                    <div class="quiz-label">⚡ Progress Check</div>
+                    <div class="quiz-question">Match each pesticide to the pest it controls:</div>
+                    <div class="match-container" id="matchContainer-7">
+                        <div class="match-column">
+                            <h4>Pesticide</h4>
+                            <div class="match-item" data-match="weeds" onclick="selectMatch(this, 'left', 7)">Herbicide</div>
+                            <div class="match-item" data-match="insects" onclick="selectMatch(this, 'left', 7)">Insecticide</div>
+                            <div class="match-item" data-match="fungi" onclick="selectMatch(this, 'left', 7)">Fungicide</div>
+                            <div class="match-item" data-match="slugs" onclick="selectMatch(this, 'left', 7)">Molluscicide</div>
+                        </div>
+                        <div class="match-column">
+                            <h4>Target Pest</h4>
+                            <div class="match-item" data-match="slugs" onclick="selectMatch(this, 'right', 7)">Snails and slugs</div>
+                            <div class="match-item" data-match="weeds" onclick="selectMatch(this, 'right', 7)">Weeds</div>
+                            <div class="match-item" data-match="fungi" onclick="selectMatch(this, 'right', 7)">Fungal diseases</div>
+                            <div class="match-item" data-match="insects" onclick="selectMatch(this, 'right', 7)">Aphids and caterpillars</div>
+                        </div>
+                    </div>
+                    <div class="quiz-actions">
+                        <button class="btn btn-primary" onclick="checkMatch(7)">Check Matches</button>
+                    </div>
+                    <div class="feedback" id="feedback-7">
+                        <svg class="feedback-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>
+                        <span class="feedback-text"></span>
+                    </div>
+                </div>
+
+                <div class="content-card">
+                    <h3>🐞 Biological Control</h3>
+                    <p>Biological control uses natural predators, parasites, or pathogens to reduce pest populations. For example, introducing ladybirds to control aphids.</p>
+                </div>
+
+                <!-- Quiz 8 -->
+                <div class="quiz-container" data-quiz="8">
+                    <div class="quiz-label">⚡ Progress Check</div>
+                    <div class="quiz-question">Categorise each statement as an advantage or disadvantage of PESTICIDES:</div>
+                    <div class="drag-items" id="dragItems-8">
+                        <div class="drag-item" draggable="true" data-category="advantage">Works quickly</div>
+                        <div class="drag-item" draggable="true" data-category="disadvantage">May harm beneficial organisms</div>
+                        <div class="drag-item" draggable="true" data-category="advantage">Easy to apply</div>
+                        <div class="drag-item" draggable="true" data-category="disadvantage">Pests may develop resistance</div>
+                        <div class="drag-item" draggable="true" data-category="advantage">Highly effective</div>
+                        <div class="drag-item" draggable="true" data-category="disadvantage">Can accumulate in food chains</div>
+                    </div>
+                    <div class="drag-zones">
+                        <div class="drag-zone" data-accept="advantage">
+                            <div class="drag-zone-title green">Advantages ✓</div>
+                            <div class="dropped-items"></div>
+                        </div>
+                        <div class="drag-zone" data-accept="disadvantage">
+                            <div class="drag-zone-title amber">Disadvantages ✗</div>
+                            <div class="dropped-items"></div>
+                        </div>
+                    </div>
+                    <div class="quiz-actions">
+                        <button class="btn btn-primary" onclick="checkDrag(8)">Check Answer</button>
+                    </div>
+                    <div class="feedback" id="feedback-8">
+                        <svg class="feedback-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>
+                        <span class="feedback-text"></span>
+                    </div>
+                </div>
+
+                <!-- Quiz 9: Greenhouse Gases -->
+                <div class="quiz-container" data-quiz="9">
+                    <div class="quiz-label">⚡ Progress Check</div>
+                    <div class="quiz-question">Which of the following are greenhouse gases?</div>
+                    <div class="tf-grid">
+                        <div class="tf-card" data-correct="true" data-index="10">
+                            <p class="tf-statement">Water vapour</p>
+                            <div class="tf-buttons">
+                                <button class="tf-btn" data-value="true" onclick="selectTF(this, 10)">Yes</button>
+                                <button class="tf-btn" data-value="false" onclick="selectTF(this, 10)">No</button>
+                            </div>
+                        </div>
+                        <div class="tf-card" data-correct="true" data-index="11">
+                            <p class="tf-statement">Carbon dioxide (CO₂)</p>
+                            <div class="tf-buttons">
+                                <button class="tf-btn" data-value="true" onclick="selectTF(this, 11)">Yes</button>
+                                <button class="tf-btn" data-value="false" onclick="selectTF(this, 11)">No</button>
+                            </div>
+                        </div>
+                        <div class="tf-card" data-correct="false" data-index="12">
+                            <p class="tf-statement">Nitrogen (N₂)</p>
+                            <div class="tf-buttons">
+                                <button class="tf-btn" data-value="true" onclick="selectTF(this, 12)">Yes</button>
+                                <button class="tf-btn" data-value="false" onclick="selectTF(this, 12)">No</button>
+                            </div>
+                        </div>
+                        <div class="tf-card" data-correct="true" data-index="13">
+                            <p class="tf-statement">Methane (CH₄)</p>
+                            <div class="tf-buttons">
+                                <button class="tf-btn" data-value="true" onclick="selectTF(this, 13)">Yes</button>
+                                <button class="tf-btn" data-value="false" onclick="selectTF(this, 13)">No</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="quiz-actions">
+                        <button class="btn btn-primary" onclick="checkGHG(9)">Check Answers</button>
+                    </div>
+                    <div class="feedback" id="feedback-9">
+                        <svg class="feedback-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>
+                        <span class="feedback-text"></span>
+                    </div>
+                </div>
+
+                <div class="tab-nav-footer">
+                    <button class="nav-btn" onclick="switchTab(3)">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+                        Nitrogen & Fertilisers
+                    </button>
+                    <button class="nav-btn" onclick="switchTab(5)">
+                        Next: Summary
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Tab 5: Summary -->
+            <div class="tab-panel" id="tab-5">
+                <div class="section-header">
+                    <div class="section-badge">Section 6</div>
+                    <h1 class="section-title">Summary & Final Assessment</h1>
+                    <p class="section-desc">Review the key concepts and test your understanding.</p>
+                </div>
+
+                <div class="summary-grid">
+                    <div class="summary-card">
+                        <div class="summary-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+                        </div>
+                        <h4>Population Growth</h4>
+                        <p>Exponential growth creates demands for food, materials, fuel, and space.</p>
+                    </div>
+                    <div class="summary-card">
+                        <div class="summary-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/><polyline points="9,22 9,12 15,12 15,22"/></svg>
+                        </div>
+                        <h4>Controlled Environments</h4>
+                        <p>Glasshouses control light, temperature, CO₂, and humidity for maximum yield.</p>
+                    </div>
+                    <div class="summary-card">
+                        <div class="summary-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
+                        </div>
+                        <h4>Nitrogen Cycle</h4>
+                        <p>Lost nitrogen replaced with organic or inorganic fertilisers.</p>
+                    </div>
+                    <div class="summary-card">
+                        <div class="summary-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                        </div>
+                        <h4>Pest Control</h4>
+                        <p>Chemical pesticides vs biological control - each with pros and cons.</p>
+                    </div>
+                </div>
+
+                <!-- Quiz 10 -->
+                <div class="quiz-container" data-quiz="10">
+                    <div class="quiz-label">🎯 Final Assessment</div>
+                    <div class="quiz-question">Which practice would BEST maintain soil structure while providing nutrients?</div>
+                    <div class="mc-options">
+                        <div class="mc-option" data-answer="a" onclick="selectMC(this)">
+                            <span class="mc-marker">A</span>
+                            <span class="mc-text">Only using inorganic NPK fertilisers</span>
+                        </div>
+                        <div class="mc-option" data-answer="b" onclick="selectMC(this)">
+                            <span class="mc-marker">B</span>
+                            <span class="mc-text">Combining organic manure with targeted inorganic fertilisers</span>
+                        </div>
+                        <div class="mc-option" data-answer="c" onclick="selectMC(this)">
+                            <span class="mc-marker">C</span>
+                            <span class="mc-text">Using pesticides to kill all soil organisms</span>
+                        </div>
+                        <div class="mc-option" data-answer="d" onclick="selectMC(this)">
+                            <span class="mc-marker">D</span>
+                            <span class="mc-text">Removing all vegetation to expose the soil</span>
+                        </div>
+                    </div>
+                    <div class="quiz-actions">
+                        <button class="btn btn-primary" onclick="checkMC(10, 'b')">Check Answer</button>
+                    </div>
+                    <div class="feedback" id="feedback-10">
+                        <svg class="feedback-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>
+                        <span class="feedback-text"></span>
+                    </div>
+                </div>
+
+                <!-- Quiz 11 -->
+                <div class="quiz-container" data-quiz="11">
+                    <div class="quiz-label">🎯 Final Assessment</div>
+                    <div class="quiz-question">A farmer wants to reduce aphid damage sustainably. Which method is BEST?</div>
+                    <div class="mc-options">
+                        <div class="mc-option" data-answer="a" onclick="selectMC(this)">
+                            <span class="mc-marker">A</span>
+                            <span class="mc-text">Spraying broad-spectrum insecticides weekly</span>
+                        </div>
+                        <div class="mc-option" data-answer="b" onclick="selectMC(this)">
+                            <span class="mc-marker">B</span>
+                            <span class="mc-text">Introducing ladybirds as biological control agents</span>
+                        </div>
+                        <div class="mc-option" data-answer="c" onclick="selectMC(this)">
+                            <span class="mc-marker">C</span>
+                            <span class="mc-text">Increasing nitrogen fertiliser to help plants outgrow damage</span>
+                        </div>
+                        <div class="mc-option" data-answer="d" onclick="selectMC(this)">
+                            <span class="mc-marker">D</span>
+                            <span class="mc-text">Applying molluscicide to eliminate pests</span>
+                        </div>
+                    </div>
+                    <div class="quiz-actions">
+                        <button class="btn btn-primary" onclick="checkMC(11, 'b')">Check Answer</button>
+                    </div>
+                    <div class="feedback" id="feedback-11">
+                        <svg class="feedback-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>
+                        <span class="feedback-text"></span>
+                    </div>
+                </div>
+
+                <!-- Progress Ring -->
+                <div class="progress-ring-container">
+                    <div class="progress-ring">
+                        <svg width="160" height="160">
+                            <circle class="progress-ring-bg" cx="80" cy="80" r="65"/>
+                            <circle class="progress-ring-fill" id="progressRing" cx="80" cy="80" r="65"/>
+                        </svg>
+                        <div class="progress-ring-text">
+                            <span class="progress-percent" id="finalPercent">0%</span>
+                            <span class="progress-label">Complete</span>
+                        </div>
+                    </div>
+                    <div class="progress-message">
+                        <h3 id="progressTitle">Keep Going!</h3>
+                        <p id="progressDesc">Complete all quizzes to master this topic.</p>
+                    </div>
+                </div>
+
+                <!-- Badges -->
+                <div class="badges">
+                    <div class="badge" id="badge-1">
+                        <div class="badge-icon">🌱</div>
+                        <div class="badge-name">Getting Started</div>
+                    </div>
+                    <div class="badge" id="badge-2">
+                        <div class="badge-icon">🌿</div>
+                        <div class="badge-name">Growing Strong</div>
+                    </div>
+                    <div class="badge" id="badge-3">
+                        <div class="badge-icon">🌳</div>
+                        <div class="badge-name">Flourishing</div>
+                    </div>
+                    <div class="badge" id="badge-4">
+                        <div class="badge-icon">🏆</div>
+                        <div class="badge-name">Ecology Expert</div>
+                    </div>
+                </div>
+
+                <div style="text-align: center; margin-top: 32px;">
+                    <button class="btn btn-secondary" onclick="resetLesson()">
+                        🔄 Restart Lesson
+                    </button>
+                </div>
+
+                <div class="tab-nav-footer">
+                    <button class="nav-btn" onclick="switchTab(4)">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+                        Pest Control
+                    </button>
+                    <button class="nav-btn" disabled>
+                        Completed
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+                    </button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // State
+        let score = 0;
+        const totalQuizzes = 11;
+        let completedQuizzes = new Set();
+        let tfAnswers = {};
+        let selectedWord = null;
+        let matchSelections = {};
+
+        // Feedback messages
+        const feedbackMessages = {
+            1: { correct: "Correct! Around 1900, the global population was approximately 2 billion.", incorrect: "Not quite. Around 1900, the population was approximately 2 billion." },
+            2: { correct: "Well done! You understand farm food webs.", incorrect: "Review: Humans are TOP consumers (not primary) as we eat both plants AND animals." },
+            3: { correct: "Perfect! You understand how each factor affects plant growth.", incorrect: "Some matches are incorrect. Think about what each factor directly influences." },
+            4: { correct: "Excellent! You've mastered controlled environment concepts.", incorrect: "Check your answers using the word bank provided." },
+            5: { correct: "Great work! You understand the nitrogen cycle.", incorrect: "The order isn't quite right. Think: fixation → plant uptake → decomposition → nitrification." },
+            6: { correct: "Perfect! You correctly distinguished fertiliser types.", incorrect: "Remember: organic fertilisers contain decaying matter, inorganic are pure chemicals." },
+            7: { correct: "Excellent matching! You know your pesticide types.", incorrect: "Remember: the name tells you what it kills (herb- = plants, insect- = insects)." },
+            8: { correct: "Great understanding of pesticide pros and cons!", incorrect: "Think: quick action is good, environmental harm is bad." },
+            9: { correct: "Perfect! Note: nitrogen (N₂) is NOT a greenhouse gas.", incorrect: "Remember: water vapour, CO₂, methane are greenhouse gases. Nitrogen (N₂) is NOT." },
+            10: { correct: "Excellent! Combining organic + inorganic gives best results.", incorrect: "Think about what each fertiliser type provides." },
+            11: { correct: "Perfect! Biological control is sustainable and specific to the pest.", incorrect: "Which method targets aphids specifically without harming the environment?" }
+        };
+
+        // Tab switching
+        function switchTab(index) {
+            document.querySelectorAll('.tab').forEach((tab, i) => {
+                tab.classList.toggle('active', i === index);
+            });
+            document.querySelectorAll('.tab-panel').forEach((panel, i) => {
+                panel.classList.toggle('active', i === index);
+            });
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Multiple choice
+        function selectMC(el) {
+            if (el.style.pointerEvents === 'none') return;
+            const container = el.closest('.quiz-container');
+            container.querySelectorAll('.mc-option').forEach(opt => opt.classList.remove('selected'));
+            el.classList.add('selected');
+        }
+
+        function checkMC(quizNum, correct) {
+            const container = document.querySelector(`[data-quiz="${quizNum}"]`);
+            const options = container.querySelectorAll('.mc-option');
+            let selected = null;
+            options.forEach(opt => {
+                if (opt.classList.contains('selected')) selected = opt.dataset.answer;
+            });
+            if (!selected) { alert('Please select an answer first!'); return; }
+            
+            const isCorrect = selected === correct;
+            options.forEach(opt => {
+                opt.style.pointerEvents = 'none';
+                if (opt.dataset.answer === correct) opt.classList.add('correct');
+                else if (opt.classList.contains('selected')) opt.classList.add('incorrect');
+            });
+            showFeedback(quizNum, isCorrect);
+            if (!completedQuizzes.has(quizNum)) {
+                completedQuizzes.add(quizNum);
+                if (isCorrect) score += Math.round(100 / totalQuizzes);
+                updateProgress();
+            }
+        }
+
+        // True/False
+        function selectTF(btn, index) {
+            const card = btn.closest('.tf-card');
+            card.querySelectorAll('.tf-btn').forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+            tfAnswers[index] = btn.dataset.value;
+        }
+
+        function checkTF(quizNum) {
+            const container = document.querySelector(`[data-quiz="${quizNum}"]`);
+            const cards = container.querySelectorAll('.tf-card');
+            let allCorrect = true, allAnswered = true;
+            
+            cards.forEach(card => {
+                const index = card.dataset.index;
+                const correct = card.dataset.correct;
+                if (!tfAnswers[index]) { allAnswered = false; return; }
+                
+                card.querySelectorAll('.tf-btn').forEach(btn => {
+                    btn.style.pointerEvents = 'none';
+                    if (btn.dataset.value === correct) btn.classList.add('correct');
+                    else if (btn.classList.contains('selected')) {
+                        btn.classList.add('incorrect');
+                        allCorrect = false;
+                    }
+                });
+            });
+            
+            if (!allAnswered) { alert('Please answer all questions!'); return; }
+            showFeedback(quizNum, allCorrect);
+            if (!completedQuizzes.has(quizNum)) {
+                completedQuizzes.add(quizNum);
+                if (allCorrect) score += Math.round(100 / totalQuizzes);
+                updateProgress();
+            }
+        }
+
+        function checkGHG(quizNum) {
+            const container = document.querySelector(`[data-quiz="${quizNum}"]`);
+            const cards = container.querySelectorAll('.tf-card');
+            let allCorrect = true, allAnswered = true;
+            
+            cards.forEach(card => {
+                const index = card.dataset.index;
+                const correct = card.dataset.correct;
+                if (!tfAnswers[index]) { allAnswered = false; return; }
+                
+                card.querySelectorAll('.tf-btn').forEach(btn => {
+                    btn.style.pointerEvents = 'none';
+                    if (btn.dataset.value === correct) btn.classList.add('correct');
+                    else if (btn.classList.contains('selected')) {
+                        btn.classList.add('incorrect');
+                        allCorrect = false;
+                    }
+                });
+            });
+            
+            if (!allAnswered) { alert('Please answer all questions!'); return; }
+            showFeedback(quizNum, allCorrect);
+            if (!completedQuizzes.has(quizNum)) {
+                completedQuizzes.add(quizNum);
+                if (allCorrect) score += Math.round(100 / totalQuizzes);
+                updateProgress();
+            }
+        }
+
+        // Table quiz
+        function checkTable(quizNum) {
+            const container = document.querySelector(`[data-quiz="${quizNum}"]`);
+            const selects = container.querySelectorAll('select');
+            let allCorrect = true, allAnswered = true;
+            
+            selects.forEach(sel => {
+                if (!sel.value) { allAnswered = false; return; }
+                sel.disabled = true;
+                if (sel.value === sel.dataset.correct) sel.classList.add('correct');
+                else { sel.classList.add('incorrect'); allCorrect = false; }
+            });
+            
+            if (!allAnswered) { alert('Please complete all selections!'); return; }
+            showFeedback(quizNum, allCorrect);
+            if (!completedQuizzes.has(quizNum)) {
+                completedQuizzes.add(quizNum);
+                if (allCorrect) score += Math.round(100 / totalQuizzes);
+                updateProgress();
+            }
+        }
+
+        // Fill in blank
+        function selectWord(el) {
+            if (el.classList.contains('used')) return;
+            document.querySelectorAll('.word-option').forEach(w => w.classList.remove('selected'));
+            el.classList.add('selected');
+            selectedWord = el.textContent;
+        }
+
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('blank-input') && selectedWord && !e.target.disabled) {
+                e.target.value = selectedWord;
+                document.querySelector('.word-option.selected').classList.add('used');
+                document.querySelector('.word-option.selected').classList.remove('selected');
+                selectedWord = null;
+            }
+        });
+
+        function checkFill(quizNum) {
+            const container = document.querySelector(`[data-quiz="${quizNum}"]`);
+            const inputs = container.querySelectorAll('.blank-input');
+            let allCorrect = true, allFilled = true;
+            
+            inputs.forEach(input => {
+                if (!input.value.trim()) { allFilled = false; return; }
+                input.disabled = true;
+                if (input.value.toLowerCase().trim() === input.dataset.answer.toLowerCase()) {
+                    input.classList.add('correct');
+                } else {
+                    input.classList.add('incorrect');
+                    allCorrect = false;
+                }
+            });
+            
+            if (!allFilled) { alert('Please fill in all blanks!'); return; }
+            showFeedback(quizNum, allCorrect);
+            if (!completedQuizzes.has(quizNum)) {
+                completedQuizzes.add(quizNum);
+                if (allCorrect) score += Math.round(100 / totalQuizzes);
+                updateProgress();
+            }
+        }
+
+        // Order quiz
+        function initOrderQuiz() {
+            const list = document.getElementById('orderList');
+            if (!list) return;
+            let draggedItem = null;
+            
+            list.querySelectorAll('.order-item').forEach(item => {
+                item.addEventListener('dragstart', function() {
+                    draggedItem = this;
+                    this.classList.add('dragging');
+                });
+                item.addEventListener('dragend', function() {
+                    this.classList.remove('dragging');
+                    updateOrderNumbers();
+                });
+                item.addEventListener('dragover', function(e) {
+                    e.preventDefault();
+                    if (draggedItem && draggedItem !== this) {
+                        const rect = this.getBoundingClientRect();
+                        if (e.clientY < rect.top + rect.height / 2) {
+                            list.insertBefore(draggedItem, this);
+                        } else {
+                            list.insertBefore(draggedItem, this.nextSibling);
+                        }
+                    }
+                });
+            });
+        }
+
+        function updateOrderNumbers() {
+            document.querySelectorAll('#orderList .order-item').forEach((item, i) => {
+                item.querySelector('.order-number').textContent = i + 1;
+            });
+        }
+
+        function checkOrder(quizNum) {
+            const list = document.getElementById('orderList');
+            const items = list.querySelectorAll('.order-item');
+            let allCorrect = true;
+            
+            items.forEach((item, i) => {
+                item.draggable = false;
+                if (parseInt(item.dataset.order) === i + 1) {
+                    item.classList.add('correct');
+                } else {
+                    item.classList.add('incorrect');
+                    allCorrect = false;
+                }
+            });
+            
+            showFeedback(quizNum, allCorrect);
+            if (!completedQuizzes.has(quizNum)) {
+                completedQuizzes.add(quizNum);
+                if (allCorrect) score += Math.round(100 / totalQuizzes);
+                updateProgress();
+            }
+        }
+
+        // Drag and drop
+        function initDragDrop() {
+            document.querySelectorAll('.drag-item').forEach(item => {
+                item.addEventListener('dragstart', function(e) {
+                    this.classList.add('dragging');
+                    e.dataTransfer.setData('text', this.textContent);
+                    e.dataTransfer.setData('category', this.dataset.category);
+                });
+                item.addEventListener('dragend', function() {
+                    this.classList.remove('dragging');
+                });
+            });
+            
+            document.querySelectorAll('.drag-zone').forEach(zone => {
+                zone.addEventListener('dragover', function(e) {
+                    e.preventDefault();
+                    this.classList.add('dragover');
+                });
+                zone.addEventListener('dragleave', function() {
+                    this.classList.remove('dragover');
+                });
+                zone.addEventListener('drop', function(e) {
+                    e.preventDefault();
+                    this.classList.remove('dragover');
+                    const draggedItem = document.querySelector('.drag-item.dragging');
+                    if (draggedItem) {
+                        const clone = draggedItem.cloneNode(true);
+                        clone.classList.remove('dragging');
+                        clone.draggable = false;
+                        this.querySelector('.dropped-items').appendChild(clone);
+                        draggedItem.style.display = 'none';
+                    }
+                });
+            });
+        }
+
+        function checkDrag(quizNum) {
+            const container = document.querySelector(`[data-quiz="${quizNum}"]`);
+            const zones = container.querySelectorAll('.drag-zone');
+            let allCorrect = true, hasItems = false;
+            
+            zones.forEach(zone => {
+                const accept = zone.dataset.accept;
+                const items = zone.querySelectorAll('.dropped-items .drag-item');
+                if (items.length > 0) hasItems = true;
+                items.forEach(item => {
+                    if (item.dataset.category !== accept) {
+                        allCorrect = false;
+                        item.style.borderColor = 'var(--accent-red)';
+                    } else {
+                        item.style.borderColor = 'var(--accent-green)';
+                    }
+                });
+            });
+            
+            if (!hasItems) { alert('Please drag items to categories!'); return; }
+            showFeedback(quizNum, allCorrect);
+            if (!completedQuizzes.has(quizNum)) {
+                completedQuizzes.add(quizNum);
+                if (allCorrect) score += Math.round(100 / totalQuizzes);
+                updateProgress();
+            }
+        }
+
+        // Matching
+        function selectMatch(el, side, quizNum) {
+            if (el.classList.contains('matched')) return;
+            const key = `match-${quizNum}`;
+            if (!matchSelections[key]) matchSelections[key] = {};
+            
+            const container = el.closest('.match-column');
+            container.querySelectorAll('.match-item').forEach(item => {
+                if (!item.classList.contains('matched')) item.classList.remove('selected');
+            });
+            el.classList.add('selected');
+            matchSelections[key][side] = el;
+            
+            if (matchSelections[key].left && matchSelections[key].right) {
+                const leftMatch = matchSelections[key].left.dataset.match;
+                const rightMatch = matchSelections[key].right.dataset.match;
+                if (leftMatch === rightMatch) {
+                    matchSelections[key].left.classList.remove('selected');
+                    matchSelections[key].right.classList.remove('selected');
+                    matchSelections[key].left.classList.add('matched');
+                    matchSelections[key].right.classList.add('matched');
+                } else {
+                    matchSelections[key].left.classList.add('wrong');
+                    matchSelections[key].right.classList.add('wrong');
+                    setTimeout(() => {
+                        matchSelections[key].left.classList.remove('wrong', 'selected');
+                        matchSelections[key].right.classList.remove('wrong', 'selected');
+                    }, 400);
+                }
+                matchSelections[key].left = null;
+                matchSelections[key].right = null;
+            }
+        }
+
+        function checkMatch(quizNum) {
+            const container = document.querySelector(`[data-quiz="${quizNum}"]`);
+            const matched = container.querySelectorAll('.match-item.matched').length;
+            const total = container.querySelectorAll('.match-item').length / 2;
+            const allMatched = matched === total * 2;
+            
+            if (matched === 0) { alert('Match items by clicking one from each column!'); return; }
+            showFeedback(quizNum, allMatched);
+            if (!completedQuizzes.has(quizNum)) {
+                completedQuizzes.add(quizNum);
+                if (allMatched) score += Math.round(100 / totalQuizzes);
+                updateProgress();
+            }
+        }
+
+        // Feedback
+        function showFeedback(quizNum, isCorrect) {
+            const feedback = document.getElementById(`feedback-${quizNum}`);
+            feedback.classList.add('show');
+            feedback.classList.remove('correct', 'incorrect');
+            feedback.classList.add(isCorrect ? 'correct' : 'incorrect');
+            
+            const icon = feedback.querySelector('.feedback-icon');
+            const text = feedback.querySelector('.feedback-text');
+            
+            if (isCorrect) {
+                icon.innerHTML = '<path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>';
+                text.textContent = feedbackMessages[quizNum].correct;
+            } else {
+                icon.innerHTML = '<circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/>';
+                text.textContent = feedbackMessages[quizNum].incorrect;
+            }
+        }
+
+        // Progress
+        function updateProgress() {
+            const percent = Math.min(score, 100);
+            document.getElementById('progressBar').style.width = percent + '%';
+            document.getElementById('scoreDisplay').textContent = percent;
+            
+            const ring = document.getElementById('progressRing');
+            const circumference = 2 * Math.PI * 65;
+            ring.style.strokeDashoffset = circumference - (percent / 100) * circumference;
+            document.getElementById('finalPercent').textContent = percent + '%';
+            
+            const title = document.getElementById('progressTitle');
+            const desc = document.getElementById('progressDesc');
+            if (percent < 25) { title.textContent = "Keep Going!"; desc.textContent = "Complete more quizzes."; }
+            else if (percent < 50) { title.textContent = "Good Progress!"; desc.textContent = "Building a solid foundation."; }
+            else if (percent < 75) { title.textContent = "Well Done!"; desc.textContent = "You understand most concepts."; }
+            else if (percent < 100) { title.textContent = "Almost There!"; desc.textContent = "Just a few more!"; }
+            else { title.textContent = "🎉 Excellent!"; desc.textContent = "You've mastered this topic!"; }
+            
+            if (percent >= 25) document.getElementById('badge-1').classList.add('earned');
+            if (percent >= 50) document.getElementById('badge-2').classList.add('earned');
+            if (percent >= 75) document.getElementById('badge-3').classList.add('earned');
+            if (percent >= 100) document.getElementById('badge-4').classList.add('earned');
+        }
+
+        // Reset
+        function resetLesson() {
+            if (!confirm('Restart? All progress will be lost.')) return;
+            score = 0;
+            completedQuizzes.clear();
+            tfAnswers = {};
+            matchSelections = {};
+            
+            document.querySelectorAll('.mc-option').forEach(opt => {
+                opt.classList.remove('selected', 'correct', 'incorrect');
+                opt.style.pointerEvents = '';
+            });
+            document.querySelectorAll('.tf-btn').forEach(btn => {
+                btn.classList.remove('selected', 'correct', 'incorrect');
+                btn.style.pointerEvents = '';
+            });
+            document.querySelectorAll('.blank-input').forEach(input => {
+                input.value = '';
+                input.disabled = false;
+                input.classList.remove('correct', 'incorrect');
+            });
+            document.querySelectorAll('.word-option').forEach(w => {
+                w.classList.remove('selected', 'used');
+            });
+            document.querySelectorAll('.order-item').forEach(item => {
+                item.classList.remove('correct', 'incorrect');
+                item.draggable = true;
+                item.querySelector('.order-number').textContent = '?';
+            });
+            document.querySelectorAll('.match-item').forEach(item => {
+                item.classList.remove('selected', 'matched', 'wrong');
+            });
+            document.querySelectorAll('select').forEach(sel => {
+                sel.value = '';
+                sel.disabled = false;
+                sel.classList.remove('correct', 'incorrect');
+            });
+            document.querySelectorAll('.feedback').forEach(fb => fb.classList.remove('show'));
+            document.querySelectorAll('.drag-item').forEach(item => item.style.display = '');
+            document.querySelectorAll('.dropped-items').forEach(zone => zone.innerHTML = '');
+            document.querySelectorAll('.badge').forEach(b => b.classList.remove('earned'));
+            
+            updateProgress();
+            switchTab(0);
+        }
+
+        // Init
+        document.addEventListener('DOMContentLoaded', function() {
+            initDragDrop();
+            initOrderQuiz();
+            updateProgress();
+        });
+    </script>
+</body>
+</html>
