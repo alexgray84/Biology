@@ -1,0 +1,2041 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Y7 Physics — Waves</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --deep: #0b1a2e;
+  --navy: #112240;
+  --ocean: #1a3a5c;
+  --teal: #0ea5a0;
+  --teal-light: #14d4ce;
+  --teal-glow: rgba(14, 165, 160, 0.15);
+  --coral: #ff6b6b;
+  --coral-light: #ff8787;
+  --amber: #fbbf24;
+  --amber-light: #fcd34d;
+  --lavender: #a78bfa;
+  --lavender-light: #c4b5fd;
+  --slate: #94a3b8;
+  --light: #e2e8f0;
+  --white: #f8fafc;
+  --foundation: #22c55e;
+  --foundation-bg: rgba(34,197,94,0.08);
+  --core: #3b82f6;
+  --core-bg: rgba(59,130,246,0.08);
+  --challenge: #f59e0b;
+  --challenge-bg: rgba(245,158,11,0.08);
+  --radius: 12px;
+  --radius-lg: 20px;
+  --shadow: 0 4px 24px rgba(0,0,0,0.3);
+  --shadow-sm: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--deep);
+  color: var(--light);
+  line-height: 1.7;
+  overflow-x: hidden;
+}
+
+/* ===== ANIMATED WAVE BACKGROUND ===== */
+.wave-bg {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+.wave-bg svg {
+  position: absolute;
+  bottom: 0;
+  width: 200%;
+  animation: waveDrift 18s ease-in-out infinite;
+  opacity: 0.04;
+}
+.wave-bg svg:nth-child(2) { animation-delay: -6s; animation-duration: 22s; opacity: 0.03; }
+.wave-bg svg:nth-child(3) { animation-delay: -12s; animation-duration: 26s; opacity: 0.02; }
+@keyframes waveDrift { 0%,100%{transform:translateX(0)} 50%{transform:translateX(-25%)} }
+
+/* ===== NAVIGATION ===== */
+.nav-sidebar {
+  position: fixed;
+  left: 0; top: 0; bottom: 0;
+  width: 280px;
+  background: linear-gradient(180deg, var(--navy), var(--deep));
+  border-right: 1px solid rgba(14,165,160,0.15);
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  transform: translateX(0);
+  transition: transform 0.35s cubic-bezier(0.4,0,0.2,1);
+}
+.nav-sidebar.collapsed { transform: translateX(-280px); }
+.nav-header {
+  padding: 24px 20px;
+  border-bottom: 1px solid rgba(14,165,160,0.12);
+}
+.nav-header h2 {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.15rem;
+  color: var(--teal-light);
+  margin-bottom: 4px;
+}
+.nav-header span {
+  font-size: 0.75rem;
+  color: var(--slate);
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  font-weight: 600;
+}
+.nav-links {
+  flex: 1;
+  overflow-y: auto;
+  padding: 12px 0;
+}
+.nav-links::-webkit-scrollbar { width: 3px; }
+.nav-links::-webkit-scrollbar-thumb { background: var(--teal); border-radius: 3px; }
+.nav-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 20px;
+  color: var(--slate);
+  text-decoration: none;
+  font-size: 0.85rem;
+  font-weight: 500;
+  transition: all 0.2s;
+  border-left: 3px solid transparent;
+  cursor: pointer;
+}
+.nav-link:hover, .nav-link.active {
+  color: var(--teal-light);
+  background: var(--teal-glow);
+  border-left-color: var(--teal);
+}
+.nav-link .nav-icon {
+  width: 28px; height: 28px;
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.75rem;
+  flex-shrink: 0;
+  background: rgba(14,165,160,0.1);
+  color: var(--teal);
+  font-weight: 700;
+}
+.nav-link.active .nav-icon { background: var(--teal); color: var(--deep); }
+.nav-link .nav-type {
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  margin-left: auto;
+  font-weight: 600;
+}
+.nav-type.teacher { background: rgba(167,139,250,0.15); color: var(--lavender); }
+.nav-type.activity { background: rgba(14,165,160,0.15); color: var(--teal-light); }
+.nav-type.meta { background: rgba(251,191,36,0.15); color: var(--amber); }
+
+.nav-toggle {
+  position: fixed;
+  top: 16px; left: 16px;
+  z-index: 200;
+  width: 44px; height: 44px;
+  border-radius: 12px;
+  border: 1px solid rgba(14,165,160,0.3);
+  background: var(--navy);
+  color: var(--teal-light);
+  font-size: 1.2rem;
+  cursor: pointer;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+.nav-toggle:hover { background: var(--ocean); }
+
+/* ===== PROGRESS BAR ===== */
+.progress-bar-container {
+  padding: 16px 20px;
+  border-top: 1px solid rgba(14,165,160,0.12);
+}
+.progress-label {
+  font-size: 0.7rem;
+  color: var(--slate);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+.progress-track {
+  height: 6px;
+  background: rgba(14,165,160,0.1);
+  border-radius: 3px;
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--teal), var(--teal-light));
+  border-radius: 3px;
+  width: 0%;
+  transition: width 0.6s ease;
+}
+
+/* ===== MAIN CONTENT ===== */
+.main-content {
+  margin-left: 280px;
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+  transition: margin-left 0.35s cubic-bezier(0.4,0,0.2,1);
+}
+.main-content.expanded { margin-left: 0; }
+
+/* ===== HERO ===== */
+.hero {
+  padding: 80px 60px;
+  background: linear-gradient(135deg, var(--navy) 0%, var(--ocean) 50%, rgba(14,165,160,0.15) 100%);
+  border-bottom: 1px solid rgba(14,165,160,0.15);
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -50%; right: -20%;
+  width: 600px; height: 600px;
+  background: radial-gradient(circle, rgba(14,165,160,0.08) 0%, transparent 70%);
+  border-radius: 50%;
+}
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  background: rgba(14,165,160,0.12);
+  border: 1px solid rgba(14,165,160,0.25);
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--teal-light);
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  margin-bottom: 20px;
+}
+.hero h1 {
+  font-family: 'DM Serif Display', serif;
+  font-size: 3.5rem;
+  color: var(--white);
+  line-height: 1.1;
+  margin-bottom: 16px;
+}
+.hero h1 span { color: var(--teal-light); }
+.hero-sub {
+  font-size: 1.1rem;
+  color: var(--slate);
+  max-width: 640px;
+  margin-bottom: 32px;
+}
+.hero-outcomes {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 12px;
+  max-width: 900px;
+}
+.outcome-chip {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px 16px;
+  background: rgba(14,165,160,0.06);
+  border: 1px solid rgba(14,165,160,0.12);
+  border-radius: var(--radius);
+  font-size: 0.85rem;
+  color: var(--light);
+}
+.outcome-chip .oc-icon {
+  width: 22px; height: 22px;
+  border-radius: 6px;
+  background: var(--teal);
+  color: var(--deep);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.7rem;
+  font-weight: 700;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+/* ===== SECTIONS ===== */
+.section {
+  padding: 60px;
+  border-bottom: 1px solid rgba(14,165,160,0.08);
+  max-width: 1000px;
+  margin: 0 auto;
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.section.visible { opacity: 1; transform: translateY(0); }
+.section-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  padding: 5px 12px;
+  border-radius: 6px;
+}
+.section-label.teacher-input { background: rgba(167,139,250,0.12); color: var(--lavender); }
+.section-label.student-activity { background: rgba(14,165,160,0.12); color: var(--teal-light); }
+.section-label.metacognition { background: rgba(251,191,36,0.12); color: var(--amber); }
+.section-label.plenary { background: rgba(255,107,107,0.12); color: var(--coral-light); }
+
+.section h2 {
+  font-family: 'DM Serif Display', serif;
+  font-size: 2rem;
+  color: var(--white);
+  margin-bottom: 8px;
+}
+.section h3 {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.4rem;
+  color: var(--white);
+  margin-bottom: 8px;
+  margin-top: 24px;
+}
+.section p { color: var(--light); margin-bottom: 16px; font-size: 0.95rem; }
+
+/* ===== TEACHER INSTRUCTION CARDS ===== */
+.teacher-card {
+  background: linear-gradient(135deg, rgba(167,139,250,0.06), rgba(167,139,250,0.02));
+  border: 1px solid rgba(167,139,250,0.18);
+  border-radius: var(--radius-lg);
+  padding: 28px;
+  margin: 20px 0;
+}
+.teacher-card h4 {
+  color: var(--lavender-light);
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.teacher-card ul { padding-left: 20px; margin: 8px 0; }
+.teacher-card li { color: var(--light); font-size: 0.9rem; margin-bottom: 6px; }
+.teacher-script {
+  background: rgba(167,139,250,0.06);
+  border-left: 3px solid var(--lavender);
+  padding: 16px 20px;
+  border-radius: 0 var(--radius) var(--radius) 0;
+  margin: 16px 0;
+  font-style: italic;
+  color: var(--light);
+  font-size: 0.9rem;
+  line-height: 1.8;
+}
+
+/* ===== INFO CARDS ===== */
+.info-card {
+  background: linear-gradient(135deg, rgba(14,165,160,0.08), rgba(14,165,160,0.02));
+  border: 1px solid rgba(14,165,160,0.2);
+  border-radius: var(--radius-lg);
+  padding: 28px;
+  margin: 20px 0;
+  position: relative;
+}
+.info-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 4px; height: 100%;
+  background: var(--teal);
+  border-radius: var(--radius-lg) 0 0 var(--radius-lg);
+}
+.key-term {
+  display: inline-block;
+  background: rgba(14,165,160,0.15);
+  border: 1px solid rgba(14,165,160,0.3);
+  border-radius: 6px;
+  padding: 2px 10px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.85rem;
+  color: var(--teal-light);
+  font-weight: 500;
+}
+.definition-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin: 16px 0;
+}
+.def-item {
+  background: rgba(14,165,160,0.04);
+  border: 1px solid rgba(14,165,160,0.1);
+  border-radius: var(--radius);
+  padding: 16px;
+}
+.def-item strong {
+  color: var(--teal-light);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.85rem;
+  display: block;
+  margin-bottom: 4px;
+}
+.def-item span { font-size: 0.88rem; color: var(--light); }
+
+/* ===== SCAFFOLDED ACTIVITIES ===== */
+.scaffold-tabs {
+  display: flex;
+  gap: 6px;
+  margin: 24px 0 0;
+}
+.scaffold-tab {
+  padding: 8px 18px;
+  border-radius: var(--radius) var(--radius) 0 0;
+  border: 1px solid transparent;
+  border-bottom: none;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  cursor: pointer;
+  transition: all 0.25s;
+  background: rgba(255,255,255,0.03);
+  color: var(--slate);
+}
+.scaffold-tab.foundation { border-color: rgba(34,197,94,0.2); }
+.scaffold-tab.core { border-color: rgba(59,130,246,0.2); }
+.scaffold-tab.challenge { border-color: rgba(245,158,11,0.2); }
+.scaffold-tab.foundation.active { background: var(--foundation-bg); color: var(--foundation); border-color: var(--foundation); }
+.scaffold-tab.core.active { background: var(--core-bg); color: var(--core); border-color: var(--core); }
+.scaffold-tab.challenge.active { background: var(--challenge-bg); color: var(--challenge); border-color: var(--challenge); }
+
+.scaffold-panel {
+  display: none;
+  padding: 24px;
+  border-radius: 0 var(--radius) var(--radius) var(--radius);
+  margin-bottom: 24px;
+}
+.scaffold-panel.active { display: block; animation: fadeUp 0.3s ease; }
+.scaffold-panel.foundation-panel { background: var(--foundation-bg); border: 1px solid rgba(34,197,94,0.15); }
+.scaffold-panel.core-panel { background: var(--core-bg); border: 1px solid rgba(59,130,246,0.15); }
+.scaffold-panel.challenge-panel { background: var(--challenge-bg); border: 1px solid rgba(245,158,11,0.15); }
+
+.scaffold-panel h4 {
+  font-size: 1rem;
+  margin-bottom: 14px;
+}
+.foundation-panel h4 { color: var(--foundation); }
+.core-panel h4 { color: var(--core); }
+.challenge-panel h4 { color: var(--challenge); }
+.scaffold-panel p, .scaffold-panel li { font-size: 0.9rem; }
+.scaffold-panel ol, .scaffold-panel ul { padding-left: 20px; margin: 8px 0; }
+.scaffold-panel li { margin-bottom: 8px; }
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ===== INTERACTIVE ELEMENTS ===== */
+.quiz-question {
+  background: rgba(14,165,160,0.05);
+  border: 1px solid rgba(14,165,160,0.12);
+  border-radius: var(--radius);
+  padding: 20px;
+  margin: 12px 0;
+}
+.quiz-question p { font-weight: 600; color: var(--white); margin-bottom: 12px; font-size: 0.95rem; }
+.quiz-options { display: flex; flex-direction: column; gap: 8px; }
+.quiz-option {
+  padding: 10px 16px;
+  border-radius: var(--radius);
+  border: 1px solid rgba(14,165,160,0.15);
+  background: rgba(14,165,160,0.03);
+  cursor: pointer;
+  font-size: 0.88rem;
+  color: var(--light);
+  transition: all 0.2s;
+  position: relative;
+}
+.quiz-option:hover { border-color: var(--teal); background: rgba(14,165,160,0.08); }
+.quiz-option.correct {
+  border-color: var(--foundation) !important;
+  background: rgba(34,197,94,0.12) !important;
+  color: #86efac !important;
+}
+.quiz-option.incorrect {
+  border-color: var(--coral) !important;
+  background: rgba(255,107,107,0.1) !important;
+  color: var(--coral-light) !important;
+}
+.quiz-option.disabled { pointer-events: none; }
+.quiz-feedback {
+  margin-top: 10px;
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  display: none;
+  font-weight: 500;
+}
+.quiz-feedback.show { display: block; animation: fadeUp 0.3s ease; }
+.quiz-feedback.correct-fb { background: rgba(34,197,94,0.1); color: #86efac; border: 1px solid rgba(34,197,94,0.2); }
+.quiz-feedback.incorrect-fb { background: rgba(255,107,107,0.1); color: var(--coral-light); border: 1px solid rgba(255,107,107,0.2); }
+
+/* ===== WAVE DIAGRAM (SVG INTERACTIVE) ===== */
+.wave-diagram-container {
+  background: rgba(14,165,160,0.04);
+  border: 1px solid rgba(14,165,160,0.15);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  margin: 20px 0;
+  text-align: center;
+}
+.wave-diagram-container svg { max-width: 100%; }
+.wave-label-btn {
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: 1px solid rgba(14,165,160,0.3);
+  background: var(--navy);
+  color: var(--teal-light);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin: 4px;
+}
+.wave-label-btn:hover { background: var(--teal); color: var(--deep); }
+.wave-label-btn.placed { background: rgba(34,197,94,0.15); border-color: var(--foundation); color: #86efac; pointer-events: none; }
+
+/* ===== DRAG SORT ===== */
+.sort-activity {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin: 16px 0;
+}
+.sort-bank, .sort-target {
+  min-height: 120px;
+  border-radius: var(--radius);
+  padding: 16px;
+}
+.sort-bank {
+  background: rgba(14,165,160,0.04);
+  border: 1px solid rgba(14,165,160,0.12);
+}
+.sort-target {
+  background: rgba(167,139,250,0.04);
+  border: 2px dashed rgba(167,139,250,0.2);
+}
+.sort-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border-radius: 8px;
+  background: var(--navy);
+  border: 1px solid rgba(14,165,160,0.2);
+  color: var(--teal-light);
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: grab;
+  margin: 4px;
+  transition: all 0.2s;
+  user-select: none;
+}
+.sort-item:hover { border-color: var(--teal); transform: translateY(-1px); }
+.sort-item.is-wave { background: rgba(34,197,94,0.12); border-color: var(--foundation); }
+.sort-item.not-wave { background: rgba(255,107,107,0.1); border-color: var(--coral); }
+
+/* ===== METACOGNITION BOX ===== */
+.meta-box {
+  background: linear-gradient(135deg, rgba(251,191,36,0.06), rgba(251,191,36,0.02));
+  border: 1px solid rgba(251,191,36,0.18);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  margin: 24px 0;
+}
+.meta-box h4 {
+  color: var(--amber);
+  font-size: 0.95rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.meta-prompt {
+  background: rgba(251,191,36,0.05);
+  border-left: 3px solid var(--amber);
+  padding: 12px 16px;
+  border-radius: 0 8px 8px 0;
+  margin: 8px 0;
+  font-size: 0.9rem;
+  color: var(--light);
+  font-style: italic;
+}
+.confidence-scale {
+  display: flex;
+  gap: 8px;
+  margin: 12px 0;
+  flex-wrap: wrap;
+}
+.conf-btn {
+  padding: 8px 16px;
+  border-radius: 20px;
+  border: 1px solid rgba(251,191,36,0.2);
+  background: transparent;
+  color: var(--amber);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.conf-btn:hover { background: rgba(251,191,36,0.1); }
+.conf-btn.selected { background: var(--amber); color: var(--deep); font-weight: 600; }
+
+/* ===== TEXT INPUT AREAS ===== */
+.answer-area {
+  width: 100%;
+  min-height: 80px;
+  padding: 14px;
+  border-radius: var(--radius);
+  border: 1px solid rgba(14,165,160,0.2);
+  background: rgba(14,165,160,0.03);
+  color: var(--light);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.9rem;
+  resize: vertical;
+  outline: none;
+  transition: border-color 0.2s;
+  line-height: 1.6;
+}
+.answer-area:focus { border-color: var(--teal); }
+.answer-area::placeholder { color: var(--slate); }
+
+/* ===== CALCULATION INPUT ===== */
+.calc-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 10px 0;
+  flex-wrap: wrap;
+}
+.calc-input {
+  width: 100px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(14,165,160,0.2);
+  background: rgba(14,165,160,0.03);
+  color: var(--teal-light);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.9rem;
+  text-align: center;
+  outline: none;
+}
+.calc-input:focus { border-color: var(--teal); }
+.calc-input.correct-input { border-color: var(--foundation); background: rgba(34,197,94,0.08); }
+.calc-input.incorrect-input { border-color: var(--coral); background: rgba(255,107,107,0.06); }
+.check-btn {
+  padding: 8px 18px;
+  border-radius: 8px;
+  border: none;
+  background: var(--teal);
+  color: var(--deep);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.check-btn:hover { background: var(--teal-light); transform: translateY(-1px); }
+
+/* ===== REVEAL BUTTON ===== */
+.reveal-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: 1px solid rgba(167,139,250,0.25);
+  background: transparent;
+  color: var(--lavender);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin: 8px 0;
+}
+.reveal-btn:hover { background: rgba(167,139,250,0.08); }
+.reveal-content {
+  display: none;
+  padding: 16px;
+  background: rgba(167,139,250,0.04);
+  border: 1px solid rgba(167,139,250,0.12);
+  border-radius: var(--radius);
+  margin: 8px 0;
+  animation: fadeUp 0.3s ease;
+}
+.reveal-content.show { display: block; }
+
+/* ===== WAVE SVG ANIMATION ===== */
+.wave-anim-box {
+  background: rgba(14,165,160,0.04);
+  border: 1px solid rgba(14,165,160,0.12);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  margin: 16px 0;
+  text-align: center;
+  overflow: hidden;
+}
+.wave-controls {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 12px;
+}
+.wave-control-group { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.wave-control-group label { font-size: 0.75rem; color: var(--slate); text-transform: uppercase; letter-spacing: 0.8px; font-weight: 600; }
+.wave-slider {
+  -webkit-appearance: none;
+  width: 140px; height: 6px;
+  border-radius: 3px;
+  background: rgba(14,165,160,0.2);
+  outline: none;
+}
+.wave-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  background: var(--teal);
+  cursor: pointer;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 900px) {
+  .nav-sidebar { transform: translateX(-280px); }
+  .nav-sidebar.open { transform: translateX(0); }
+  .nav-toggle { display: flex; }
+  .main-content { margin-left: 0 !important; }
+  .hero { padding: 80px 24px 50px; }
+  .hero h1 { font-size: 2.4rem; }
+  .section { padding: 40px 24px; }
+  .definition-grid { grid-template-columns: 1fr; }
+  .sort-activity { grid-template-columns: 1fr; }
+}
+
+/* ===== PRINT STYLES ===== */
+@media print {
+  .nav-sidebar, .nav-toggle, .wave-bg { display: none !important; }
+  .main-content { margin-left: 0 !important; }
+  .section { opacity: 1 !important; transform: none !important; page-break-inside: avoid; }
+}
+
+/* ===== EQUATION BOX ===== */
+.equation-box {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 24px;
+  background: linear-gradient(135deg, rgba(14,165,160,0.1), rgba(14,165,160,0.04));
+  border: 1px solid rgba(14,165,160,0.25);
+  border-radius: var(--radius);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 1.1rem;
+  color: var(--teal-light);
+  font-weight: 500;
+  margin: 12px 0;
+}
+
+/* ===== COMPARISON TABLE ===== */
+.compare-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  border-radius: var(--radius);
+  overflow: hidden;
+  margin: 16px 0;
+}
+.compare-table th {
+  background: rgba(14,165,160,0.12);
+  color: var(--teal-light);
+  padding: 12px 16px;
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  font-weight: 600;
+  text-align: left;
+}
+.compare-table td {
+  padding: 12px 16px;
+  font-size: 0.88rem;
+  color: var(--light);
+  border-bottom: 1px solid rgba(14,165,160,0.06);
+  background: rgba(14,165,160,0.02);
+}
+.compare-table tr:last-child td { border-bottom: none; }
+
+/* ===== STEP INDICATOR ===== */
+.step-pills {
+  display: flex;
+  gap: 8px;
+  margin: 20px 0;
+  flex-wrap: wrap;
+}
+.step-pill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+.step-pill.done { background: rgba(34,197,94,0.12); color: #86efac; }
+.step-pill.current { background: var(--teal); color: var(--deep); }
+.step-pill.upcoming { background: rgba(14,165,160,0.08); color: var(--slate); }
+</style>
+</head>
+<body>
+
+<!-- Animated Background -->
+<div class="wave-bg">
+  <svg viewBox="0 0 1440 320"><path fill="currentColor" color="#0ea5a0" d="M0,192L48,176C96,160,192,128,288,138.7C384,149,480,203,576,224C672,245,768,235,864,208C960,181,1056,139,1152,133.3C1248,128,1344,160,1392,176L1440,192L1440,320L0,320Z"/></svg>
+  <svg viewBox="0 0 1440 320"><path fill="currentColor" color="#0ea5a0" d="M0,256L48,234.7C96,213,192,171,288,165.3C384,160,480,192,576,202.7C672,213,768,203,864,176C960,149,1056,107,1152,117.3C1248,128,1344,192,1392,224L1440,256L1440,320L0,320Z"/></svg>
+  <svg viewBox="0 0 1440 320"><path fill="currentColor" color="#0ea5a0" d="M0,96L48,122.7C96,149,192,203,288,208C384,213,480,171,576,149.3C672,128,768,128,864,149.3C960,171,1056,213,1152,218.7C1248,224,1344,192,1392,176L1440,160L1440,320L0,320Z"/></svg>
+</div>
+
+<!-- Navigation Toggle (Mobile) -->
+<button class="nav-toggle" onclick="toggleNav()" aria-label="Toggle navigation">☰</button>
+
+<!-- Sidebar Navigation -->
+<nav class="nav-sidebar" id="navSidebar">
+  <div class="nav-header">
+    <h2>🌊 Waves</h2>
+    <span>Year 7 Physics · KS3</span>
+  </div>
+  <div class="nav-links" id="navLinks">
+    <a class="nav-link active" data-target="hero-section" onclick="scrollToSection('hero-section')">
+      <span class="nav-icon">LO</span> Learning Outcomes <span class="nav-type teacher">Overview</span>
+    </a>
+    <a class="nav-link" data-target="sec-starter" onclick="scrollToSection('sec-starter')">
+      <span class="nav-icon">1</span> Starter – Prior Knowledge <span class="nav-type activity">Activity</span>
+    </a>
+    <a class="nav-link" data-target="sec-what-is-wave" onclick="scrollToSection('sec-what-is-wave')">
+      <span class="nav-icon">2</span> What Is a Wave? <span class="nav-type teacher">Input</span>
+    </a>
+    <a class="nav-link" data-target="sec-sort" onclick="scrollToSection('sec-sort')">
+      <span class="nav-icon">3</span> Wave or Not? <span class="nav-type activity">Activity</span>
+    </a>
+    <a class="nav-link" data-target="sec-transverse" onclick="scrollToSection('sec-transverse')">
+      <span class="nav-icon">4</span> Transverse Waves <span class="nav-type teacher">Input</span>
+    </a>
+    <a class="nav-link" data-target="sec-wave-props" onclick="scrollToSection('sec-wave-props')">
+      <span class="nav-icon">5</span> Wave Properties <span class="nav-type teacher">Input</span>
+    </a>
+    <a class="nav-link" data-target="sec-label-activity" onclick="scrollToSection('sec-label-activity')">
+      <span class="nav-icon">6</span> Label the Wave <span class="nav-type activity">Activity</span>
+    </a>
+    <a class="nav-link" data-target="sec-measure" onclick="scrollToSection('sec-measure')">
+      <span class="nav-icon">7</span> Measuring Waves <span class="nav-type activity">Activity</span>
+    </a>
+    <a class="nav-link" data-target="sec-meta1" onclick="scrollToSection('sec-meta1')">
+      <span class="nav-icon">⟳</span> Checkpoint 1 <span class="nav-type meta">Meta</span>
+    </a>
+    <a class="nav-link" data-target="sec-frequency" onclick="scrollToSection('sec-frequency')">
+      <span class="nav-icon">8</span> Frequency <span class="nav-type teacher">Input</span>
+    </a>
+    <a class="nav-link" data-target="sec-freq-calc" onclick="scrollToSection('sec-freq-calc')">
+      <span class="nav-icon">9</span> Frequency Calculations <span class="nav-type activity">Activity</span>
+    </a>
+    <a class="nav-link" data-target="sec-longitudinal" onclick="scrollToSection('sec-longitudinal')">
+      <span class="nav-icon">10</span> Longitudinal Waves <span class="nav-type teacher">Input</span>
+    </a>
+    <a class="nav-link" data-target="sec-long-activity" onclick="scrollToSection('sec-long-activity')">
+      <span class="nav-icon">11</span> Compare Wave Types <span class="nav-type activity">Activity</span>
+    </a>
+    <a class="nav-link" data-target="sec-sound-speed" onclick="scrollToSection('sec-sound-speed')">
+      <span class="nav-icon">12</span> Speed of Sound <span class="nav-type teacher">Input</span>
+    </a>
+    <a class="nav-link" data-target="sec-speed-calc" onclick="scrollToSection('sec-speed-calc')">
+      <span class="nav-icon">13</span> Speed Calculation <span class="nav-type activity">Activity</span>
+    </a>
+    <a class="nav-link" data-target="sec-ppq" onclick="scrollToSection('sec-ppq')">
+      <span class="nav-icon">14</span> Exam Practice <span class="nav-type activity">Activity</span>
+    </a>
+    <a class="nav-link" data-target="sec-plenary" onclick="scrollToSection('sec-plenary')">
+      <span class="nav-icon">15</span> Plenary & Reflection <span class="nav-type meta">Meta</span>
+    </a>
+  </div>
+  <div class="progress-bar-container">
+    <div class="progress-label">Lesson Progress</div>
+    <div class="progress-track">
+      <div class="progress-fill" id="progressFill"></div>
+    </div>
+  </div>
+</nav>
+
+<!-- Main Content -->
+<div class="main-content" id="mainContent">
+
+  <!-- HERO -->
+  <header class="hero" id="hero-section">
+    <div class="hero-badge">⚡ KS3 National Curriculum · Physics</div>
+    <h1>Understanding <span>Waves</span></h1>
+    <p class="hero-sub">Exploring how energy transfers through oscillations — from ripples in water to the sound of your voice. By the end of this lesson, you will understand the key properties of waves and how to describe them scientifically.</p>
+
+    <div class="hero-outcomes">
+      <div class="outcome-chip">
+        <span class="oc-icon">1</span>
+        <span>Describe waves as transfers of energy through oscillations and identify examples of waves in everyday life.</span>
+      </div>
+      <div class="outcome-chip">
+        <span class="oc-icon">2</span>
+        <span>Identify and describe the properties of transverse and longitudinal waves, including amplitude, wavelength and frequency.</span>
+      </div>
+      <div class="outcome-chip">
+        <span class="oc-icon">3</span>
+        <span>Measure and calculate wave properties including frequency and wave speed from given data.</span>
+      </div>
+      <div class="outcome-chip">
+        <span class="oc-icon">4</span>
+        <span>Compare transverse and longitudinal waves, relating particle motion to the direction of energy transfer.</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- ========== SECTION 1: STARTER ========== -->
+  <section class="section" id="sec-starter">
+    <span class="section-label student-activity">🔍 Starter Activity</span>
+    <h2>Activating Prior Knowledge</h2>
+    <p>Before we begin, let's explore what you already know about waves and sound. This helps your brain connect new learning to existing knowledge — a powerful way to learn.</p>
+
+    <div class="teacher-card">
+      <h4>🎓 Teacher Guidance</h4>
+      <div class="teacher-script">"We're going to start by finding out what you already know. There are no wrong answers here — I want to see what connections your brain can already make. You'll have 3 minutes in silence, then we'll share ideas. This is retrieval practice — we're warming up your memory."</div>
+      <ul>
+        <li><strong>GTT Strategy:</strong> Retrieval practice activation — low-stakes prior knowledge check</li>
+        <li><strong>Timing:</strong> 3 min silent write → 2 min pair share → 2 min class discussion</li>
+        <li>Use cold calling to hear from a range of students</li>
+      </ul>
+    </div>
+
+    <div class="scaffold-tabs" data-group="starter">
+      <button class="scaffold-tab foundation active" onclick="switchTab('starter','foundation')">🟢 Foundation</button>
+      <button class="scaffold-tab core" onclick="switchTab('starter','core')">🔵 Core</button>
+      <button class="scaffold-tab challenge" onclick="switchTab('starter','challenge')">🟡 Challenge</button>
+    </div>
+    <div class="scaffold-panel foundation-panel active" data-group="starter" data-level="foundation">
+      <h4>🟢 Foundation — Recall &amp; Connect</h4>
+      <ol>
+        <li>Name <strong>3 musical instruments</strong> that use a string to make sound.</li>
+        <li>Name <strong>3 different types</strong> of musical instrument (not strings).</li>
+        <li>What do all these instruments have in common when they make sound?</li>
+      </ol>
+      <textarea class="answer-area" placeholder="Write your answers here..."></textarea>
+    </div>
+    <div class="scaffold-panel core-panel" data-group="starter" data-level="core">
+      <h4>🔵 Core — Apply Knowledge</h4>
+      <ol>
+        <li>Name 3 animals that rely on sound waves in a special way. How does each animal use sound?</li>
+        <li>Think of 3 everyday situations where you experience waves (not just sound).</li>
+        <li>What do you think happens to the air when someone speaks?</li>
+      </ol>
+      <textarea class="answer-area" placeholder="Write your answers here..."></textarea>
+    </div>
+    <div class="scaffold-panel challenge-panel" data-group="starter" data-level="challenge">
+      <h4>🟡 Challenge — Think Deeper</h4>
+      <ol>
+        <li>Explain, using particle theory, how sound might travel from a speaker to your ear.</li>
+        <li>If sound is a wave, why can't you hear someone speaking in space?</li>
+        <li>A bat uses echolocation. Describe how this works in as much scientific detail as you can.</li>
+      </ol>
+      <textarea class="answer-area" placeholder="Write your answers here..."></textarea>
+    </div>
+  </section>
+
+  <!-- ========== SECTION 2: WHAT IS A WAVE ========== -->
+  <section class="section" id="sec-what-is-wave">
+    <span class="section-label teacher-input">🎓 Teacher-Led Input</span>
+    <h2>What Is a Wave?</h2>
+
+    <div class="teacher-card">
+      <h4>🎓 Teacher Guidance — Explicit Instruction</h4>
+      <div class="teacher-script">"I want everyone looking at me and listening carefully. I'm going to teach you the scientific definition of a wave. This is important because in everyday English, 'wave' means lots of things — waving hello, a Mexican wave at a football match. But in physics, it has a very precise meaning."</div>
+      <ul>
+        <li><strong>GTT Strategy:</strong> Explicit instruction with modelling — define, then exemplify, then check understanding</li>
+        <li>Use the "I do — We do — You do" model</li>
+        <li>Demonstrate with a slinky spring if available</li>
+        <li>Emphasise that waves transfer <strong>energy</strong>, not matter</li>
+      </ul>
+    </div>
+
+    <div class="info-card">
+      <p style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; color: var(--teal); font-weight: 700; margin-bottom: 10px;">Key Definition</p>
+      <p style="font-size: 1.3rem; color: var(--white); font-weight: 600; line-height: 1.5;">In physics, a <span class="key-term">wave</span> is an <span class="key-term">oscillation</span> that transfers <span class="key-term">energy</span> from one place to another.</p>
+      <p style="margin-top: 12px;">An <strong>oscillation</strong> is a repeated back-and-forth movement. Waves transfer energy without transferring matter — the particles vibrate around a fixed position but don't travel with the wave.</p>
+    </div>
+
+    <div class="teacher-card">
+      <h4>💡 Checking Understanding — Hinge Question</h4>
+      <div class="teacher-script">"Before we move on, I need to check everyone understands the key idea. A Mexican wave goes around a stadium — but do the people actually move around the stadium? No! They stand up and sit down — they oscillate. The wave carries energy around the stadium, but the people stay put. This is exactly how a physics wave works."</div>
+    </div>
+
+    <div class="quiz-question" id="q-wave-def">
+      <p>Quick Check: What does a wave transfer?</p>
+      <div class="quiz-options">
+        <div class="quiz-option" onclick="checkAnswer(this, false, 'q-wave-def')">Matter from one place to another</div>
+        <div class="quiz-option" onclick="checkAnswer(this, true, 'q-wave-def')">Energy from one place to another</div>
+        <div class="quiz-option" onclick="checkAnswer(this, false, 'q-wave-def')">Particles from one place to another</div>
+        <div class="quiz-option" onclick="checkAnswer(this, false, 'q-wave-def')">Sound from one place to another</div>
+      </div>
+      <div class="quiz-feedback correct-fb" id="q-wave-def-correct">✓ Correct! Waves transfer energy, not matter. The particles oscillate but stay in roughly the same position.</div>
+      <div class="quiz-feedback incorrect-fb" id="q-wave-def-incorrect">✗ Not quite. Remember — waves transfer energy. The particles vibrate but don't actually travel with the wave.</div>
+    </div>
+  </section>
+
+  <!-- ========== SECTION 3: WAVE OR NOT ========== -->
+  <section class="section" id="sec-sort">
+    <span class="section-label student-activity">✋ Student Activity</span>
+    <h2>Wave or Not a Wave?</h2>
+    <p>Using the definition you've just learned, decide which of these examples are waves. Remember: a wave must involve an oscillation that transfers energy.</p>
+
+    <div class="teacher-card">
+      <h4>🎓 Teacher Guidance</h4>
+      <ul>
+        <li><strong>GTT Strategy:</strong> Concept checking with deliberate practice</li>
+        <li>Students decide individually first, then discuss in pairs before class reveal</li>
+        <li>Ask students to <em>justify</em> each answer using the definition</li>
+      </ul>
+    </div>
+
+    <div id="sortActivity" style="margin: 20px 0;">
+      <p style="font-weight: 600; margin-bottom: 12px; color: var(--white);">Click each item to classify it as a wave ✓ or not a wave ✗:</p>
+      <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+        <button class="sort-item" onclick="classifyWave(this, true)">🌊 Ripples in water</button>
+        <button class="sort-item" onclick="classifyWave(this, false)">⚾ Throwing a ball</button>
+        <button class="sort-item" onclick="classifyWave(this, true)">🔦 Torch light</button>
+        <button class="sort-item" onclick="classifyWave(this, true)">🔥 Heat from fire</button>
+        <button class="sort-item" onclick="classifyWave(this, false)">🪨 Skimming a stone</button>
+        <button class="sort-item" onclick="classifyWave(this, true)">📻 Radio sound</button>
+        <button class="sort-item" onclick="classifyWave(this, false)">🚲 Pedalling a bicycle</button>
+        <button class="sort-item" onclick="classifyWave(this, false)">⏱️ A swinging pendulum</button>
+      </div>
+    </div>
+
+    <button class="reveal-btn" onclick="toggleReveal('sort-reveal')">👁 Reveal Answers &amp; Explanation</button>
+    <div class="reveal-content" id="sort-reveal">
+      <p><strong>Waves:</strong> Ripples in water ✓, Torch light ✓ (light is an electromagnetic wave), Heat from fire ✓ (infrared radiation is a wave), Radio sound ✓ (radio waves &amp; sound waves).</p>
+      <p><strong>Not waves:</strong> Throwing a ball ✗ (matter moves, no oscillation), Skimming a stone ✗ (the stone is matter moving), Pedalling a bicycle ✗ (motion, not oscillation transferring energy), A swinging pendulum ✗ (oscillates but doesn't transfer energy from place to place).</p>
+      <p style="color: var(--amber); font-weight: 600; margin-top: 8px;">🔑 The pendulum is the tricky one! It oscillates, but doesn't transfer energy from one place to another — it's not a wave.</p>
+    </div>
+  </section>
+
+  <!-- ========== SECTION 4: TRANSVERSE WAVES ========== -->
+  <section class="section" id="sec-transverse">
+    <span class="section-label teacher-input">🎓 Teacher-Led Input</span>
+    <h2>Transverse Waves</h2>
+
+    <div class="teacher-card">
+      <h4>🎓 Teacher Guidance — Dual Coding</h4>
+      <div class="teacher-script">"Now we know what a wave is, we need to learn there are two main types. We'll start with transverse waves. Watch me carefully with the slinky spring — I'm going to move one end up and down while keeping the other end still. Notice the direction my hand moves versus the direction the wave travels."</div>
+      <ul>
+        <li><strong>GTT Strategy:</strong> Dual coding — combine verbal explanation with visual demonstration</li>
+        <li><strong>Demo:</strong> Use a slinky, rope, or the interactive animation below</li>
+        <li>Emphasise the perpendicular relationship between vibration and wave travel</li>
+      </ul>
+    </div>
+
+    <div class="info-card">
+      <p style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; color: var(--teal); font-weight: 700; margin-bottom: 10px;">Key Definition</p>
+      <p style="font-size: 1.15rem; color: var(--white); font-weight: 600;">In a <span class="key-term">transverse wave</span>, the oscillation is <strong>perpendicular</strong> (at right angles) to the direction of energy transfer.</p>
+      <p style="margin-top: 12px;">The particles vibrate <strong>up and down</strong> while the wave travels <strong>horizontally</strong>. Think of a Mexican wave — people stand up and sit down, but the wave moves sideways.</p>
+      <p style="margin-top: 10px;"><strong>Examples:</strong> Water waves, light waves, microwaves, X-rays, gamma rays, infrared radiation — all electromagnetic waves are transverse.</p>
+    </div>
+
+    <!-- Interactive Wave Animation -->
+    <div class="wave-anim-box">
+      <p style="font-size: 0.8rem; color: var(--teal); font-weight: 600; margin-bottom: 8px;">INTERACTIVE: Transverse Wave Visualisation</p>
+      <canvas id="transverseCanvas" width="700" height="200" style="width:100%; max-width:700px; border-radius: 8px; background: rgba(11,26,46,0.6);"></canvas>
+      <div class="wave-controls">
+        <div class="wave-control-group">
+          <label>Amplitude</label>
+          <input type="range" class="wave-slider" id="ampSlider" min="10" max="70" value="40" oninput="updateTransverseWave()">
+        </div>
+        <div class="wave-control-group">
+          <label>Wavelength</label>
+          <input type="range" class="wave-slider" id="wlSlider" min="60" max="250" value="140" oninput="updateTransverseWave()">
+        </div>
+        <div class="wave-control-group">
+          <label>Frequency</label>
+          <input type="range" class="wave-slider" id="freqSlider" min="1" max="8" value="3" oninput="updateTransverseWave()">
+        </div>
+      </div>
+      <p style="font-size: 0.78rem; color: var(--slate); margin-top: 10px;">↕ Particles move <strong>up &amp; down</strong> · Wave travels <strong>→ horizontally</strong></p>
+    </div>
+
+    <div class="quiz-question" id="q-transverse">
+      <p>In a transverse wave, the vibration of particles is:</p>
+      <div class="quiz-options">
+        <div class="quiz-option" onclick="checkAnswer(this, false, 'q-transverse')">Parallel to the direction of wave travel</div>
+        <div class="quiz-option" onclick="checkAnswer(this, true, 'q-transverse')">Perpendicular to the direction of wave travel</div>
+        <div class="quiz-option" onclick="checkAnswer(this, false, 'q-transverse')">In the same direction as the energy transfer</div>
+        <div class="quiz-option" onclick="checkAnswer(this, false, 'q-transverse')">Random in all directions</div>
+      </div>
+      <div class="quiz-feedback correct-fb" id="q-transverse-correct">✓ Excellent! In transverse waves, particles vibrate at right angles (perpendicular) to the direction the wave travels.</div>
+      <div class="quiz-feedback incorrect-fb" id="q-transverse-incorrect">✗ Not quite. In transverse waves, the vibration is perpendicular — the particles move up/down while the wave moves sideways.</div>
+    </div>
+  </section>
+
+  <!-- ========== SECTION 5: WAVE PROPERTIES ========== -->
+  <section class="section" id="sec-wave-props">
+    <span class="section-label teacher-input">🎓 Teacher-Led Input</span>
+    <h2>Properties of a Transverse Wave</h2>
+
+    <div class="teacher-card">
+      <h4>🎓 Teacher Guidance — Explicit Vocabulary Instruction</h4>
+      <div class="teacher-script">"Now I'm going to teach you four key words that describe the features of a wave. These words have very precise scientific meanings. I'll define each one, show you where it is on a diagram, and then you'll practise using them. Copy these definitions into your books exactly as I show them."</div>
+      <ul>
+        <li><strong>GTT Strategy:</strong> Explicit vocabulary instruction with visual anchoring</li>
+        <li>Define → Show on diagram → Students repeat back → Apply</li>
+        <li>Use the interactive diagram below to show each property</li>
+      </ul>
+    </div>
+
+    <div class="definition-grid">
+      <div class="def-item">
+        <strong>Peak / Crest</strong>
+        <span>The highest point on a transverse wave above the rest position.</span>
+      </div>
+      <div class="def-item">
+        <strong>Trough</strong>
+        <span>The lowest point on a transverse wave below the rest position.</span>
+      </div>
+      <div class="def-item">
+        <strong>Wavelength (λ)</strong>
+        <span>The distance between one point on a wave and the same point on the next wave (e.g. peak to peak).</span>
+      </div>
+      <div class="def-item">
+        <strong>Amplitude</strong>
+        <span>The maximum displacement from the rest position to a peak or trough. Greater amplitude = greater energy.</span>
+      </div>
+    </div>
+
+    <!-- SVG Wave Diagram -->
+    <div class="wave-diagram-container">
+      <p style="font-size: 0.8rem; color: var(--teal); font-weight: 600; margin-bottom: 12px;">LABELLED WAVE DIAGRAM</p>
+      <svg viewBox="0 0 600 240" width="600" height="240" style="max-width: 100%;">
+        <!-- Grid -->
+        <line x1="40" y1="120" x2="560" y2="120" stroke="rgba(14,165,160,0.2)" stroke-width="1" stroke-dasharray="4,4"/>
+        <text x="20" y="124" fill="#94a3b8" font-size="10" font-family="DM Sans" text-anchor="middle">rest</text>
+        <!-- Wave path -->
+        <path d="M 40 120 Q 100 20, 160 120 Q 220 220, 280 120 Q 340 20, 400 120 Q 460 220, 520 120" fill="none" stroke="#14d4ce" stroke-width="3"/>
+        <!-- Peak label -->
+        <circle cx="160" cy="120" r="0" fill="none"/>
+        <line x1="100" y1="20" x2="100" y2="12" stroke="#a78bfa" stroke-width="1.5"/>
+        <text x="100" y="10" fill="#c4b5fd" font-size="11" font-family="DM Sans" font-weight="600" text-anchor="middle">Peak / Crest</text>
+        <circle cx="100" cy="20" r="4" fill="#a78bfa"/>
+        <!-- Trough label -->
+        <line x1="220" y1="220" x2="220" y2="232" stroke="#ff6b6b" stroke-width="1.5"/>
+        <text x="220" y="238" fill="#ff8787" font-size="11" font-family="DM Sans" font-weight="600" text-anchor="middle">Trough</text>
+        <circle cx="220" cy="220" r="4" fill="#ff6b6b"/>
+        <!-- Amplitude arrow -->
+        <line x1="340" y1="120" x2="340" y2="20" stroke="#fbbf24" stroke-width="2" marker-end="url(#arrowY)"/>
+        <line x1="340" y1="120" x2="340" y2="20" stroke="#fbbf24" stroke-width="2" marker-start="url(#arrowYr)"/>
+        <text x="358" y="74" fill="#fcd34d" font-size="11" font-family="DM Sans" font-weight="600">Amplitude</text>
+        <!-- Wavelength arrow -->
+        <line x1="100" y1="44" x2="340" y2="44" stroke="#22c55e" stroke-width="2"/>
+        <line x1="100" y1="38" x2="100" y2="50" stroke="#22c55e" stroke-width="2"/>
+        <line x1="340" y1="38" x2="340" y2="50" stroke="#22c55e" stroke-width="2"/>
+        <text x="220" y="40" fill="#86efac" font-size="11" font-family="DM Sans" font-weight="600" text-anchor="middle">Wavelength (λ)</text>
+        <!-- Arrow markers -->
+        <defs>
+          <marker id="arrowY" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto"><path d="M 0 0 L 6 3 L 0 6 z" fill="#fbbf24"/></marker>
+          <marker id="arrowYr" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto"><path d="M 6 0 L 0 3 L 6 6 z" fill="#fbbf24"/></marker>
+        </defs>
+      </svg>
+    </div>
+  </section>
+
+  <!-- ========== SECTION 6: LABEL ACTIVITY ========== -->
+  <section class="section" id="sec-label-activity">
+    <span class="section-label student-activity">✋ Student Activity</span>
+    <h2>Label the Wave</h2>
+    <p>Test your understanding of wave properties by completing the activity below.</p>
+
+    <div class="scaffold-tabs" data-group="label">
+      <button class="scaffold-tab foundation active" onclick="switchTab('label','foundation')">🟢 Foundation</button>
+      <button class="scaffold-tab core" onclick="switchTab('label','core')">🔵 Core</button>
+      <button class="scaffold-tab challenge" onclick="switchTab('label','challenge')">🟡 Challenge</button>
+    </div>
+    <div class="scaffold-panel foundation-panel active" data-group="label" data-level="foundation">
+      <h4>🟢 Foundation — Match the Definition</h4>
+      <div class="quiz-question" id="q-label1">
+        <p>The highest point on a transverse wave is called the:</p>
+        <div class="quiz-options">
+          <div class="quiz-option" onclick="checkAnswer(this, false, 'q-label1')">Trough</div>
+          <div class="quiz-option" onclick="checkAnswer(this, true, 'q-label1')">Peak / Crest</div>
+          <div class="quiz-option" onclick="checkAnswer(this, false, 'q-label1')">Amplitude</div>
+          <div class="quiz-option" onclick="checkAnswer(this, false, 'q-label1')">Wavelength</div>
+        </div>
+        <div class="quiz-feedback correct-fb" id="q-label1-correct">✓ Correct! The peak (or crest) is the highest point.</div>
+        <div class="quiz-feedback incorrect-fb" id="q-label1-incorrect">✗ The highest point is called the peak or crest.</div>
+      </div>
+      <div class="quiz-question" id="q-label2">
+        <p>The distance from the rest position to a peak is called the:</p>
+        <div class="quiz-options">
+          <div class="quiz-option" onclick="checkAnswer(this, false, 'q-label2')">Wavelength</div>
+          <div class="quiz-option" onclick="checkAnswer(this, false, 'q-label2')">Frequency</div>
+          <div class="quiz-option" onclick="checkAnswer(this, true, 'q-label2')">Amplitude</div>
+          <div class="quiz-option" onclick="checkAnswer(this, false, 'q-label2')">Trough</div>
+        </div>
+        <div class="quiz-feedback correct-fb" id="q-label2-correct">✓ That's right! Amplitude is measured from the rest position to the peak or trough.</div>
+        <div class="quiz-feedback incorrect-fb" id="q-label2-incorrect">✗ This is the amplitude — the maximum displacement from the rest position.</div>
+      </div>
+    </div>
+    <div class="scaffold-panel core-panel" data-group="label" data-level="core">
+      <h4>🔵 Core — Complete the Definitions</h4>
+      <p>Fill in the blanks using the correct wave keyword:</p>
+      <div class="quiz-question" id="q-label3">
+        <p>The distance between one point on a wave and the same point on the next wave is the _____ of the wave.</p>
+        <div class="quiz-options">
+          <div class="quiz-option" onclick="checkAnswer(this, false, 'q-label3')">Amplitude</div>
+          <div class="quiz-option" onclick="checkAnswer(this, true, 'q-label3')">Wavelength</div>
+          <div class="quiz-option" onclick="checkAnswer(this, false, 'q-label3')">Frequency</div>
+        </div>
+        <div class="quiz-feedback correct-fb" id="q-label3-correct">✓ Wavelength — measured peak to peak, or trough to trough.</div>
+        <div class="quiz-feedback incorrect-fb" id="q-label3-incorrect">✗ This describes wavelength — the distance between matching points.</div>
+      </div>
+      <div class="quiz-question" id="q-label4">
+        <p>The _____ is the number of waves produced by the source each second.</p>
+        <div class="quiz-options">
+          <div class="quiz-option" onclick="checkAnswer(this, false, 'q-label4')">Wavelength</div>
+          <div class="quiz-option" onclick="checkAnswer(this, true, 'q-label4')">Frequency</div>
+          <div class="quiz-option" onclick="checkAnswer(this, false, 'q-label4')">Amplitude</div>
+        </div>
+        <div class="quiz-feedback correct-fb" id="q-label4-correct">✓ Frequency — measured in hertz (Hz). 1 Hz = 1 wave per second.</div>
+        <div class="quiz-feedback incorrect-fb" id="q-label4-incorrect">✗ The number of waves per second is the frequency.</div>
+      </div>
+    </div>
+    <div class="scaffold-panel challenge-panel" data-group="label" data-level="challenge">
+      <h4>🟡 Challenge — Explain &amp; Apply</h4>
+      <p>Answer these questions in full sentences, using scientific vocabulary:</p>
+      <ol>
+        <li>A wave has its amplitude doubled. What happens to the energy the wave carries? Explain why.</li>
+        <li>Two waves have the same frequency but different wavelengths. Which wave is travelling faster? Explain your reasoning.</li>
+        <li>Draw and label a transverse wave with a wavelength of 4 cm and an amplitude of 2 cm. Describe what would happen to the wave if you increased the frequency.</li>
+      </ol>
+      <textarea class="answer-area" placeholder="Write your explanations here..." style="min-height: 120px;"></textarea>
+    </div>
+  </section>
+
+  <!-- ========== SECTION 7: MEASURING WAVES ========== -->
+  <section class="section" id="sec-measure">
+    <span class="section-label student-activity">✋ Student Activity</span>
+    <h2>Measuring Amplitude &amp; Wavelength</h2>
+
+    <div class="teacher-card">
+      <h4>🎓 Teacher Guidance — Worked Example</h4>
+      <div class="teacher-script">"I'm going to model how to read amplitude and wavelength from a wave diagram. Watch my thinking process carefully — I'll explain every step so you can copy my method. This is called a worked example."</div>
+      <ul>
+        <li><strong>GTT Strategy:</strong> Worked example with faded scaffolding</li>
+        <li>Model the first one completely, do the second together, then students work independently</li>
+      </ul>
+    </div>
+
+    <div class="info-card">
+      <p style="font-size: 0.85rem; color: var(--teal); font-weight: 600;">Worked Example:</p>
+      <p>A wave has peaks at a height of 12 cm above the rest position and troughs at 12 cm below. The distance from one peak to the next peak is 44 cm.</p>
+      <p><strong>Amplitude</strong> = distance from rest to peak = <span class="key-term">12 cm</span></p>
+      <p><strong>Wavelength</strong> = distance from peak to peak = <span class="key-term">44 cm</span></p>
+    </div>
+
+    <div class="scaffold-tabs" data-group="measure">
+      <button class="scaffold-tab foundation active" onclick="switchTab('measure','foundation')">🟢 Foundation</button>
+      <button class="scaffold-tab core" onclick="switchTab('measure','core')">🔵 Core</button>
+      <button class="scaffold-tab challenge" onclick="switchTab('measure','challenge')">🟡 Challenge</button>
+    </div>
+    <div class="scaffold-panel foundation-panel active" data-group="measure" data-level="foundation">
+      <h4>🟢 Foundation — Guided Practice</h4>
+      <p><strong>Wave A:</strong> The peak is 0.25 m above the rest position. The distance from one peak to the next is 3 m.</p>
+      <div class="calc-row">
+        <span>Amplitude =</span>
+        <input type="text" class="calc-input" id="f-amp-a" placeholder="?">
+        <span>m</span>
+        <span style="margin-left:20px">Wavelength =</span>
+        <input type="text" class="calc-input" id="f-wl-a" placeholder="?">
+        <span>m</span>
+        <button class="check-btn" onclick="checkCalc('f-amp-a', '0.25'); checkCalc('f-wl-a', '3');">Check</button>
+      </div>
+    </div>
+    <div class="scaffold-panel core-panel" data-group="measure" data-level="core">
+      <h4>🔵 Core — Independent Practice</h4>
+      <p>Find the amplitude and wavelength for each wave:</p>
+      <p><strong>Wave B:</strong> Peak height = 4 m, wavelength = 0.25 m</p>
+      <div class="calc-row">
+        <span>Amplitude =</span>
+        <input type="text" class="calc-input" id="c-amp-b" placeholder="?">
+        <span>m</span>
+        <span style="margin-left:20px">Wavelength =</span>
+        <input type="text" class="calc-input" id="c-wl-b" placeholder="?">
+        <span>m</span>
+        <button class="check-btn" onclick="checkCalc('c-amp-b', '4'); checkCalc('c-wl-b', '0.25');">Check</button>
+      </div>
+      <p style="margin-top: 16px;"><strong>Wave C:</strong> Peak height = 12 m, wavelength = 8 m</p>
+      <div class="calc-row">
+        <span>Amplitude =</span>
+        <input type="text" class="calc-input" id="c-amp-c" placeholder="?">
+        <span>m</span>
+        <span style="margin-left:20px">Wavelength =</span>
+        <input type="text" class="calc-input" id="c-wl-c" placeholder="?">
+        <span>m</span>
+        <button class="check-btn" onclick="checkCalc('c-amp-c', '12'); checkCalc('c-wl-c', '8');">Check</button>
+      </div>
+    </div>
+    <div class="scaffold-panel challenge-panel" data-group="measure" data-level="challenge">
+      <h4>🟡 Challenge — Reasoning</h4>
+      <p>Wave D has an amplitude of 5 cm and a wavelength of 20 cm. Wave E has an amplitude of 10 cm and a wavelength of 20 cm.</p>
+      <ol>
+        <li>Which wave carries more energy? How do you know?</li>
+        <li>If both waves have the same frequency, which property would you change to increase the energy of Wave D without changing its wavelength?</li>
+      </ol>
+      <textarea class="answer-area" placeholder="Explain your reasoning..."></textarea>
+    </div>
+  </section>
+
+  <!-- ========== METACOGNITION CHECKPOINT 1 ========== -->
+  <section class="section" id="sec-meta1">
+    <span class="section-label metacognition">🧠 Metacognition Checkpoint</span>
+    <h2>Checkpoint 1 — How Is Your Learning Going?</h2>
+
+    <div class="teacher-card">
+      <h4>🎓 Teacher Guidance — Metacognitive Pause</h4>
+      <div class="teacher-script">"We're going to pause and think about our learning. This isn't a test — it's about being honest with yourself about what you understand and what you need to work on. Good learners know what they know and what they don't know yet."</div>
+      <ul>
+        <li><strong>GTT Strategy:</strong> Metacognitive regulation — monitoring comprehension</li>
+        <li>Give students 2 minutes in silence to reflect, then use traffic light cards or thumbs</li>
+        <li>Address any common gaps before moving on</li>
+      </ul>
+    </div>
+
+    <div class="meta-box">
+      <h4>🧠 Self-Assessment: How confident are you?</h4>
+
+      <p style="font-size: 0.9rem; margin-bottom: 8px;"><strong>I can define what a wave is:</strong></p>
+      <div class="confidence-scale" data-scale="meta1-1">
+        <button class="conf-btn" onclick="selectConf(this)">😟 Not yet</button>
+        <button class="conf-btn" onclick="selectConf(this)">🤔 Getting there</button>
+        <button class="conf-btn" onclick="selectConf(this)">😊 Confident</button>
+        <button class="conf-btn" onclick="selectConf(this)">🌟 Could teach it</button>
+      </div>
+
+      <p style="font-size: 0.9rem; margin-bottom: 8px;"><strong>I can describe a transverse wave:</strong></p>
+      <div class="confidence-scale" data-scale="meta1-2">
+        <button class="conf-btn" onclick="selectConf(this)">😟 Not yet</button>
+        <button class="conf-btn" onclick="selectConf(this)">🤔 Getting there</button>
+        <button class="conf-btn" onclick="selectConf(this)">😊 Confident</button>
+        <button class="conf-btn" onclick="selectConf(this)">🌟 Could teach it</button>
+      </div>
+
+      <p style="font-size: 0.9rem; margin-bottom: 8px;"><strong>I can identify amplitude and wavelength on a diagram:</strong></p>
+      <div class="confidence-scale" data-scale="meta1-3">
+        <button class="conf-btn" onclick="selectConf(this)">😟 Not yet</button>
+        <button class="conf-btn" onclick="selectConf(this)">🤔 Getting there</button>
+        <button class="conf-btn" onclick="selectConf(this)">😊 Confident</button>
+        <button class="conf-btn" onclick="selectConf(this)">🌟 Could teach it</button>
+      </div>
+
+      <div class="meta-prompt">💭 "What is one thing that has clicked for you so far? What is one thing you're still unsure about?"</div>
+      <textarea class="answer-area" placeholder="Write your reflection here..." style="min-height: 60px;"></textarea>
+    </div>
+  </section>
+
+  <!-- ========== SECTION 8: FREQUENCY ========== -->
+  <section class="section" id="sec-frequency">
+    <span class="section-label teacher-input">🎓 Teacher-Led Input</span>
+    <h2>Frequency</h2>
+
+    <div class="teacher-card">
+      <h4>🎓 Teacher Guidance</h4>
+      <div class="teacher-script">"Frequency tells us how many waves are produced every second. The unit is hertz — named after Heinrich Hertz. 1 Hz means 1 wave per second. If I click my fingers 3 times in one second, that's a frequency of 3 Hz."</div>
+      <ul>
+        <li><strong>GTT Strategy:</strong> Concrete-Representational-Abstract (CRA) approach</li>
+        <li>Demonstrate physically (clapping), then show on diagram, then introduce the formula</li>
+      </ul>
+    </div>
+
+    <div class="info-card">
+      <p style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; color: var(--teal); font-weight: 700; margin-bottom: 10px;">Key Definition</p>
+      <p style="font-size: 1.1rem; color: var(--white); font-weight: 600;"><span class="key-term">Frequency</span> is the number of waves passing a point each second. It is measured in <span class="key-term">hertz (Hz)</span>.</p>
+      <div class="equation-box" style="margin-top: 16px;">
+        frequency = number of waves ÷ time (seconds)
+      </div>
+      <p style="margin-top: 12px;">If 4 waves pass a point in 1 second → frequency = 4 Hz<br>
+      If 12 waves pass a point in 4 seconds → frequency = 12 ÷ 4 = <strong>3 Hz</strong></p>
+    </div>
+
+    <div class="quiz-question" id="q-freq1">
+      <p>Quick Check: 20 waves pass a point in 5 seconds. What is the frequency?</p>
+      <div class="quiz-options">
+        <div class="quiz-option" onclick="checkAnswer(this, false, 'q-freq1')">100 Hz</div>
+        <div class="quiz-option" onclick="checkAnswer(this, true, 'q-freq1')">4 Hz</div>
+        <div class="quiz-option" onclick="checkAnswer(this, false, 'q-freq1')">25 Hz</div>
+        <div class="quiz-option" onclick="checkAnswer(this, false, 'q-freq1')">5 Hz</div>
+      </div>
+      <div class="quiz-feedback correct-fb" id="q-freq1-correct">✓ 20 ÷ 5 = 4 Hz. Well done!</div>
+      <div class="quiz-feedback incorrect-fb" id="q-freq1-incorrect">✗ Remember: frequency = number of waves ÷ time. So 20 ÷ 5 = 4 Hz.</div>
+    </div>
+  </section>
+
+  <!-- ========== SECTION 9: FREQUENCY CALCULATIONS ========== -->
+  <section class="section" id="sec-freq-calc">
+    <span class="section-label student-activity">✋ Student Activity</span>
+    <h2>Frequency Calculations</h2>
+
+    <div class="scaffold-tabs" data-group="freq">
+      <button class="scaffold-tab foundation active" onclick="switchTab('freq','foundation')">🟢 Foundation</button>
+      <button class="scaffold-tab core" onclick="switchTab('freq','core')">🔵 Core</button>
+      <button class="scaffold-tab challenge" onclick="switchTab('freq','challenge')">🟡 Challenge</button>
+    </div>
+    <div class="scaffold-panel foundation-panel active" data-group="freq" data-level="foundation">
+      <h4>🟢 Foundation — Guided Calculations</h4>
+      <p>Use the formula: <strong>frequency = number of waves ÷ time</strong></p>
+      <p><strong>Q1:</strong> 6 waves pass in 2 seconds. Frequency = ?</p>
+      <div class="calc-row">
+        <input type="text" class="calc-input" id="freq-f1" placeholder="?">
+        <span>Hz</span>
+        <button class="check-btn" onclick="checkCalc('freq-f1', '3')">Check</button>
+      </div>
+      <p><strong>Q2:</strong> 10 waves pass in 5 seconds. Frequency = ?</p>
+      <div class="calc-row">
+        <input type="text" class="calc-input" id="freq-f2" placeholder="?">
+        <span>Hz</span>
+        <button class="check-btn" onclick="checkCalc('freq-f2', '2')">Check</button>
+      </div>
+    </div>
+    <div class="scaffold-panel core-panel" data-group="freq" data-level="core">
+      <h4>🔵 Core — Independent Calculations</h4>
+      <p><strong>Q1:</strong> 24 waves pass a point in 8 seconds.</p>
+      <div class="calc-row">
+        <span>Frequency =</span>
+        <input type="text" class="calc-input" id="freq-c1" placeholder="?">
+        <span>Hz</span>
+        <button class="check-btn" onclick="checkCalc('freq-c1', '3')">Check</button>
+      </div>
+      <p><strong>Q2:</strong> A wave has a frequency of 5 Hz. How many waves pass in 10 seconds?</p>
+      <div class="calc-row">
+        <span>Number of waves =</span>
+        <input type="text" class="calc-input" id="freq-c2" placeholder="?">
+        <button class="check-btn" onclick="checkCalc('freq-c2', '50')">Check</button>
+      </div>
+      <p><strong>Q3:</strong> 12 waves pass an observer in 4 seconds. What is the frequency?</p>
+      <div class="calc-row">
+        <span>Frequency =</span>
+        <input type="text" class="calc-input" id="freq-c3" placeholder="?">
+        <span>Hz</span>
+        <button class="check-btn" onclick="checkCalc('freq-c3', '3')">Check</button>
+      </div>
+    </div>
+    <div class="scaffold-panel challenge-panel" data-group="freq" data-level="challenge">
+      <h4>🟡 Challenge — Rearranging &amp; Applying</h4>
+      <p><strong>Q1:</strong> A wave has a frequency of 8 Hz. How long does it take for 40 waves to pass?</p>
+      <div class="calc-row">
+        <span>Time =</span>
+        <input type="text" class="calc-input" id="freq-ch1" placeholder="?">
+        <span>seconds</span>
+        <button class="check-btn" onclick="checkCalc('freq-ch1', '5')">Check</button>
+      </div>
+      <p><strong>Q2:</strong> A wave source produces waves at 50 Hz. In 0.5 seconds, how many complete waves are produced?</p>
+      <div class="calc-row">
+        <span>Waves =</span>
+        <input type="text" class="calc-input" id="freq-ch2" placeholder="?">
+        <button class="check-btn" onclick="checkCalc('freq-ch2', '25')">Check</button>
+      </div>
+      <p><strong>Q3:</strong> Explain what would happen to the pitch of a sound if the frequency of the sound wave increased.</p>
+      <textarea class="answer-area" placeholder="Explain your answer..." style="min-height: 60px;"></textarea>
+    </div>
+  </section>
+
+  <!-- ========== SECTION 10: LONGITUDINAL WAVES ========== -->
+  <section class="section" id="sec-longitudinal">
+    <span class="section-label teacher-input">🎓 Teacher-Led Input</span>
+    <h2>Longitudinal Waves</h2>
+
+    <div class="teacher-card">
+      <h4>🎓 Teacher Guidance — Contrasting Examples</h4>
+      <div class="teacher-script">"We've looked at transverse waves where the vibration is perpendicular. Now we're going to learn about the second type. In a longitudinal wave, the vibration is parallel — in the same direction as the wave. Sound is a longitudinal wave. When I speak, the air particles are pushed together and pulled apart in the same direction that the sound travels."</div>
+      <ul>
+        <li><strong>GTT Strategy:</strong> Contrasting examples — show non-example alongside example to sharpen understanding</li>
+        <li>Use a slinky: push and pull along its length (vs up/down for transverse)</li>
+        <li>Introduce compressions and rarefactions visually</li>
+      </ul>
+    </div>
+
+    <div class="info-card">
+      <p style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; color: var(--teal); font-weight: 700; margin-bottom: 10px;">Key Definition</p>
+      <p style="font-size: 1.1rem; color: var(--white); font-weight: 600;">In a <span class="key-term">longitudinal wave</span>, the oscillation is <strong>parallel</strong> (in the same direction) to the direction of energy transfer.</p>
+      <p style="margin-top: 12px;">The particles vibrate <strong>back and forth</strong> in the same direction the wave travels. This creates areas of <span class="key-term">compression</span> (particles pushed together) and <span class="key-term">rarefaction</span> (particles spread apart).</p>
+      <p><strong>Examples:</strong> Sound waves, P-waves (earthquake primary waves), waves in a spring pushed along its length.</p>
+    </div>
+
+    <!-- Longitudinal wave visualisation -->
+    <div class="wave-anim-box">
+      <p style="font-size: 0.8rem; color: var(--teal); font-weight: 600; margin-bottom: 8px;">LONGITUDINAL WAVE DIAGRAM</p>
+      <svg viewBox="0 0 600 140" width="600" height="140" style="max-width: 100%;">
+        <!-- Particles line 1 - compression -->
+        <g>
+          <!-- Compression zone -->
+          <rect x="120" y="30" width="100" height="80" rx="8" fill="rgba(14,165,160,0.06)" stroke="rgba(14,165,160,0.15)" stroke-dasharray="4,4"/>
+          <text x="170" y="25" fill="#14d4ce" font-size="10" font-family="DM Sans" font-weight="600" text-anchor="middle">Compression</text>
+          <!-- Rarefaction zone -->
+          <rect x="320" y="30" width="120" height="80" rx="8" fill="rgba(255,107,107,0.04)" stroke="rgba(255,107,107,0.12)" stroke-dasharray="4,4"/>
+          <text x="380" y="25" fill="#ff8787" font-size="10" font-family="DM Sans" font-weight="600" text-anchor="middle">Rarefaction</text>
+        </g>
+        <!-- Particles -->
+        <circle cx="40" cy="70" r="6" fill="#14d4ce" opacity="0.7"/>
+        <circle cx="70" cy="70" r="6" fill="#14d4ce" opacity="0.7"/>
+        <circle cx="100" cy="70" r="6" fill="#14d4ce" opacity="0.7"/>
+        <!-- Compressed -->
+        <circle cx="125" cy="70" r="6" fill="#14d4ce" opacity="0.9"/>
+        <circle cx="143" cy="70" r="6" fill="#14d4ce" opacity="0.9"/>
+        <circle cx="160" cy="70" r="6" fill="#14d4ce" opacity="0.9"/>
+        <circle cx="177" cy="70" r="6" fill="#14d4ce" opacity="0.9"/>
+        <circle cx="194" cy="70" r="6" fill="#14d4ce" opacity="0.9"/>
+        <circle cx="211" cy="70" r="6" fill="#14d4ce" opacity="0.9"/>
+        <!-- Normal -->
+        <circle cx="245" cy="70" r="6" fill="#14d4ce" opacity="0.7"/>
+        <circle cx="275" cy="70" r="6" fill="#14d4ce" opacity="0.7"/>
+        <circle cx="305" cy="70" r="6" fill="#14d4ce" opacity="0.7"/>
+        <!-- Rarefied -->
+        <circle cx="340" cy="70" r="6" fill="#14d4ce" opacity="0.4"/>
+        <circle cx="380" cy="70" r="6" fill="#14d4ce" opacity="0.4"/>
+        <circle cx="420" cy="70" r="6" fill="#14d4ce" opacity="0.4"/>
+        <!-- Normal -->
+        <circle cx="460" cy="70" r="6" fill="#14d4ce" opacity="0.7"/>
+        <circle cx="490" cy="70" r="6" fill="#14d4ce" opacity="0.7"/>
+        <circle cx="520" cy="70" r="6" fill="#14d4ce" opacity="0.7"/>
+        <circle cx="550" cy="70" r="6" fill="#14d4ce" opacity="0.7"/>
+        <!-- Direction arrow -->
+        <line x1="200" y1="125" x2="500" y2="125" stroke="#fbbf24" stroke-width="2" marker-end="url(#arrowR)"/>
+        <text x="350" y="138" fill="#fcd34d" font-size="10" font-family="DM Sans" font-weight="600" text-anchor="middle">Direction of wave travel →</text>
+        <!-- Wavelength -->
+        <line x1="135" y1="48" x2="335" y2="48" stroke="#22c55e" stroke-width="1.5"/>
+        <line x1="135" y1="44" x2="135" y2="52" stroke="#22c55e" stroke-width="1.5"/>
+        <line x1="335" y1="44" x2="335" y2="52" stroke="#22c55e" stroke-width="1.5"/>
+        <text x="235" y="44" fill="#86efac" font-size="9" font-family="DM Sans" font-weight="600" text-anchor="middle">Wavelength (λ)</text>
+        <defs>
+          <marker id="arrowR" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><path d="M 0 0 L 8 3 L 0 6 z" fill="#fbbf24"/></marker>
+        </defs>
+      </svg>
+      <p style="font-size: 0.78rem; color: var(--slate); margin-top: 8px;">↔ Particles vibrate <strong>back &amp; forth</strong> · Wave travels <strong>→ in the same direction</strong></p>
+    </div>
+  </section>
+
+  <!-- ========== SECTION 11: COMPARE WAVE TYPES ========== -->
+  <section class="section" id="sec-long-activity">
+    <span class="section-label student-activity">✋ Student Activity</span>
+    <h2>Compare Wave Types</h2>
+
+    <div class="scaffold-tabs" data-group="compare">
+      <button class="scaffold-tab foundation active" onclick="switchTab('compare','foundation')">🟢 Foundation</button>
+      <button class="scaffold-tab core" onclick="switchTab('compare','core')">🔵 Core</button>
+      <button class="scaffold-tab challenge" onclick="switchTab('compare','challenge')">🟡 Challenge</button>
+    </div>
+    <div class="scaffold-panel foundation-panel active" data-group="compare" data-level="foundation">
+      <h4>🟢 Foundation — Key Facts</h4>
+      <div class="quiz-question" id="q-long1">
+        <p>In a longitudinal wave, particles vibrate:</p>
+        <div class="quiz-options">
+          <div class="quiz-option" onclick="checkAnswer(this, false, 'q-long1')">Up and down (perpendicular to wave direction)</div>
+          <div class="quiz-option" onclick="checkAnswer(this, true, 'q-long1')">Back and forth (parallel to wave direction)</div>
+          <div class="quiz-option" onclick="checkAnswer(this, false, 'q-long1')">In circles</div>
+        </div>
+        <div class="quiz-feedback correct-fb" id="q-long1-correct">✓ Correct! Longitudinal waves have parallel vibration.</div>
+        <div class="quiz-feedback incorrect-fb" id="q-long1-incorrect">✗ In longitudinal waves, particles vibrate back and forth — parallel to wave direction.</div>
+      </div>
+      <div class="quiz-question" id="q-long2">
+        <p>Sound is an example of which type of wave?</p>
+        <div class="quiz-options">
+          <div class="quiz-option" onclick="checkAnswer(this, false, 'q-long2')">Transverse</div>
+          <div class="quiz-option" onclick="checkAnswer(this, true, 'q-long2')">Longitudinal</div>
+        </div>
+        <div class="quiz-feedback correct-fb" id="q-long2-correct">✓ Sound is a longitudinal wave — air particles vibrate back and forth.</div>
+        <div class="quiz-feedback incorrect-fb" id="q-long2-incorrect">✗ Sound is longitudinal — the air particles vibrate in the same direction the sound travels.</div>
+      </div>
+    </div>
+    <div class="scaffold-panel core-panel" data-group="compare" data-level="core">
+      <h4>🔵 Core — Complete the Comparison Table</h4>
+      <p>Copy and complete this table in your book:</p>
+      <table class="compare-table">
+        <thead>
+          <tr><th>Feature</th><th>Transverse Wave</th><th>Longitudinal Wave</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Particle vibration</td><td>Perpendicular to wave direction</td><td>Parallel to wave direction</td></tr>
+          <tr><td>Example</td><td>Light, water waves</td><td>Sound, P-waves</td></tr>
+          <tr><td>Key features</td><td>Peaks and troughs</td><td>Compressions and rarefactions</td></tr>
+          <tr><td>Can travel through a vacuum?</td><td>Yes (electromagnetic waves)</td><td>No (needs a medium)</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="scaffold-panel challenge-panel" data-group="compare" data-level="challenge">
+      <h4>🟡 Challenge — Extended Reasoning</h4>
+      <ol>
+        <li>Explain why sound cannot travel through the vacuum of space but light can. Use the terms "longitudinal", "transverse", "medium" and "particles" in your answer.</li>
+        <li>During an earthquake, P-waves arrive before S-waves. P-waves are longitudinal and S-waves are transverse. Suggest why P-waves travel faster through the Earth.</li>
+      </ol>
+      <textarea class="answer-area" placeholder="Write your extended answers here..." style="min-height: 120px;"></textarea>
+    </div>
+  </section>
+
+  <!-- ========== SECTION 12: SPEED OF SOUND ========== -->
+  <section class="section" id="sec-sound-speed">
+    <span class="section-label teacher-input">🎓 Teacher-Led Input</span>
+    <h2>How Fast Does Sound Travel?</h2>
+
+    <div class="teacher-card">
+      <h4>🎓 Teacher Guidance</h4>
+      <div class="teacher-script">"Sound travels at about 340 m/s in air — that's roughly 1 kilometre every 3 seconds. This is why you see lightning before you hear thunder. We can calculate the speed of sound using a simple equation."</div>
+      <ul>
+        <li><strong>GTT Strategy:</strong> Connecting to real-world context, then explicit equation teaching</li>
+        <li>Use the thunder/lightning example to make it concrete</li>
+        <li>Model the echo calculation step-by-step</li>
+      </ul>
+    </div>
+
+    <div class="info-card">
+      <p style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; color: var(--teal); font-weight: 700; margin-bottom: 10px;">Key Equation</p>
+      <div class="equation-box">speed = distance ÷ time</div>
+      <p style="margin-top: 12px;">Speed is measured in <strong>metres per second (m/s)</strong>. Distance in <strong>metres (m)</strong>. Time in <strong>seconds (s)</strong>.</p>
+      <p style="margin-top: 10px; padding: 12px; background: rgba(251,191,36,0.06); border-radius: 8px; border-left: 3px solid var(--amber);">
+        <strong>⚠️ Echo warning:</strong> When measuring speed using an echo, the sound travels to the wall <em>and back</em>. So the total distance = 2 × distance to the wall.
+      </p>
+    </div>
+
+    <div class="info-card">
+      <p style="font-size: 0.85rem; color: var(--teal); font-weight: 600;">Worked Example — Echo Calculation:</p>
+      <p>A person stands <strong>170 m</strong> from a cliff. They clap and hear the echo after <strong>1 second</strong>.</p>
+      <p>Total distance = 170 m × 2 = <strong>340 m</strong> (to the cliff and back)</p>
+      <p>Speed = 340 m ÷ 1 s = <span class="key-term">340 m/s</span></p>
+    </div>
+  </section>
+
+  <!-- ========== SECTION 13: SPEED CALCULATIONS ========== -->
+  <section class="section" id="sec-speed-calc">
+    <span class="section-label student-activity">✋ Student Activity</span>
+    <h2>Speed Calculations</h2>
+
+    <div class="scaffold-tabs" data-group="speed">
+      <button class="scaffold-tab foundation active" onclick="switchTab('speed','foundation')">🟢 Foundation</button>
+      <button class="scaffold-tab core" onclick="switchTab('speed','core')">🔵 Core</button>
+      <button class="scaffold-tab challenge" onclick="switchTab('speed','challenge')">🟡 Challenge</button>
+    </div>
+    <div class="scaffold-panel foundation-panel active" data-group="speed" data-level="foundation">
+      <h4>🟢 Foundation — Guided</h4>
+      <p><strong>Q1:</strong> A sound wave travels 680 m in 2 seconds. What is its speed?</p>
+      <p style="font-size: 0.85rem; color: var(--slate);">Hint: speed = distance ÷ time = 680 ÷ 2 = ?</p>
+      <div class="calc-row">
+        <span>Speed =</span>
+        <input type="text" class="calc-input" id="speed-f1" placeholder="?">
+        <span>m/s</span>
+        <button class="check-btn" onclick="checkCalc('speed-f1', '340')">Check</button>
+      </div>
+    </div>
+    <div class="scaffold-panel core-panel" data-group="speed" data-level="core">
+      <h4>🔵 Core — Echo Problem</h4>
+      <p><strong>Q1:</strong> A person stands 200 m from a wall. They shout and hear the echo after 1.2 seconds. Calculate the speed of sound.</p>
+      <p style="font-size: 0.85rem; color: var(--slate);">Remember: total distance = 2 × 200 = 400 m</p>
+      <div class="calc-row">
+        <span>Speed =</span>
+        <input type="text" class="calc-input" id="speed-c1" placeholder="?" style="width: 120px;">
+        <span>m/s (to 1 d.p.)</span>
+        <button class="check-btn" onclick="checkCalcApprox('speed-c1', 333.3, 1)">Check</button>
+      </div>
+    </div>
+    <div class="scaffold-panel challenge-panel" data-group="speed" data-level="challenge">
+      <h4>🟡 Challenge — Multi-Step</h4>
+      <p><strong>Q1:</strong> Sound travels at 340 m/s in air and 1500 m/s in water. A whale makes a sound 3000 m from a diver. How long does it take for the sound to reach the diver?</p>
+      <div class="calc-row">
+        <span>Time =</span>
+        <input type="text" class="calc-input" id="speed-ch1" placeholder="?">
+        <span>seconds</span>
+        <button class="check-btn" onclick="checkCalc('speed-ch1', '2')">Check</button>
+      </div>
+      <p><strong>Q2:</strong> Explain why sound travels faster in water than in air. Use ideas about particles in your answer.</p>
+      <textarea class="answer-area" placeholder="Write your explanation..."></textarea>
+    </div>
+  </section>
+
+  <!-- ========== SECTION 14: EXAM PRACTICE ========== -->
+  <section class="section" id="sec-ppq">
+    <span class="section-label student-activity">📝 Exam-Style Practice</span>
+    <h2>Past Paper Question</h2>
+
+    <div class="teacher-card">
+      <h4>🎓 Teacher Guidance</h4>
+      <ul>
+        <li><strong>GTT Strategy:</strong> Deliberate practice with exam-style questions</li>
+        <li>Students should attempt independently first, then discuss methods</li>
+        <li>Emphasise showing working and units</li>
+      </ul>
+    </div>
+
+    <div class="info-card">
+      <p style="font-weight: 600; color: var(--white); margin-bottom: 12px;">The diagram shows a water wave drawn to scale.</p>
+      <svg viewBox="0 0 500 160" width="500" height="160" style="max-width: 100%; margin: 8px 0;">
+        <line x1="30" y1="80" x2="470" y2="80" stroke="rgba(14,165,160,0.15)" stroke-width="1" stroke-dasharray="3,3"/>
+        <!-- Scale markers -->
+        <line x1="30" y1="75" x2="30" y2="85" stroke="var(--slate)" stroke-width="1"/>
+        <text x="30" y="100" fill="#94a3b8" font-size="9" text-anchor="middle" font-family="DM Sans">0</text>
+        <line x1="130" y1="75" x2="130" y2="85" stroke="var(--slate)" stroke-width="1"/>
+        <text x="130" y="100" fill="#94a3b8" font-size="9" text-anchor="middle" font-family="DM Sans">4 cm</text>
+        <line x1="230" y1="75" x2="230" y2="85" stroke="var(--slate)" stroke-width="1"/>
+        <text x="230" y="100" fill="#94a3b8" font-size="9" text-anchor="middle" font-family="DM Sans">8 cm</text>
+        <line x1="330" y1="75" x2="330" y2="85" stroke="var(--slate)" stroke-width="1"/>
+        <text x="330" y="100" fill="#94a3b8" font-size="9" text-anchor="middle" font-family="DM Sans">12 cm</text>
+        <line x1="430" y1="75" x2="430" y2="85" stroke="var(--slate)" stroke-width="1"/>
+        <text x="430" y="100" fill="#94a3b8" font-size="9" text-anchor="middle" font-family="DM Sans">16 cm</text>
+        <!-- Wave: wavelength = 8cm (200px), amplitude = 2cm (50px) -->
+        <path d="M 30 80 Q 80 30, 130 80 Q 180 130, 230 80 Q 280 30, 330 80 Q 380 130, 430 80" fill="none" stroke="#14d4ce" stroke-width="2.5"/>
+        <!-- Vertical scale -->
+        <text x="18" y="35" fill="#94a3b8" font-size="9" text-anchor="middle" font-family="DM Sans">+2</text>
+        <text x="18" y="135" fill="#94a3b8" font-size="9" text-anchor="middle" font-family="DM Sans">-2</text>
+      </svg>
+
+      <div class="scaffold-tabs" data-group="ppq">
+        <button class="scaffold-tab foundation active" onclick="switchTab('ppq','foundation')">🟢 Foundation</button>
+        <button class="scaffold-tab core" onclick="switchTab('ppq','core')">🔵 Core</button>
+        <button class="scaffold-tab challenge" onclick="switchTab('ppq','challenge')">🟡 Challenge</button>
+      </div>
+      <div class="scaffold-panel foundation-panel active" data-group="ppq" data-level="foundation">
+        <h4>🟢 Foundation</h4>
+        <p>(a) What is the wavelength of this water wave?</p>
+        <div class="calc-row">
+          <input type="text" class="calc-input" id="ppq-a" placeholder="?">
+          <span>cm</span>
+          <button class="check-btn" onclick="checkCalc('ppq-a', '8')">Check</button>
+        </div>
+        <p>(b) What is the amplitude?</p>
+        <div class="calc-row">
+          <input type="text" class="calc-input" id="ppq-b" placeholder="?">
+          <span>cm</span>
+          <button class="check-btn" onclick="checkCalc('ppq-b', '2')">Check</button>
+        </div>
+      </div>
+      <div class="scaffold-panel core-panel" data-group="ppq" data-level="core">
+        <h4>🔵 Core</h4>
+        <p>(a) Wavelength = <strong>8 cm</strong> · (b) Amplitude = <strong>2 cm</strong></p>
+        <p>(c) Twelve waves pass an observer in four seconds. Calculate the frequency. Show your working.</p>
+        <div class="calc-row">
+          <span>Frequency =</span>
+          <input type="text" class="calc-input" id="ppq-c" placeholder="?">
+          <span>Hz</span>
+          <button class="check-btn" onclick="checkCalc('ppq-c', '3')">Check</button>
+        </div>
+        <textarea class="answer-area" placeholder="Show your working here: frequency = number of waves ÷ time = ..." style="min-height: 50px; margin-top: 8px;"></textarea>
+      </div>
+      <div class="scaffold-panel challenge-panel" data-group="ppq" data-level="challenge">
+        <h4>🟡 Challenge</h4>
+        <p>Using your answers: wavelength = 8 cm, frequency = 3 Hz.</p>
+        <p>(d) Calculate the wave speed using: <strong>wave speed = frequency × wavelength</strong></p>
+        <div class="calc-row">
+          <span>Wave speed =</span>
+          <input type="text" class="calc-input" id="ppq-d" placeholder="?">
+          <span>cm/s</span>
+          <button class="check-btn" onclick="checkCalc('ppq-d', '24')">Check</button>
+        </div>
+        <p>(e) Explain what would happen to the frequency if the wavelength doubled but the wave speed stayed the same.</p>
+        <textarea class="answer-area" placeholder="Write your explanation..."></textarea>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== SECTION 15: PLENARY ========== -->
+  <section class="section" id="sec-plenary">
+    <span class="section-label plenary">🎯 Plenary &amp; Reflection</span>
+    <h2>Lesson Summary &amp; Reflection</h2>
+
+    <div class="teacher-card">
+      <h4>🎓 Teacher Guidance — Exit Ticket</h4>
+      <div class="teacher-script">"We're going to finish with a reflection. First, I want you to answer 3 quick retrieval questions — no notes, no looking back. Then reflect on your learning today. This helps your brain decide what to remember."</div>
+      <ul>
+        <li><strong>GTT Strategy:</strong> Retrieval practice exit ticket + metacognitive reflection</li>
+        <li>Cold call the retrieval questions, then give 2 min for written reflection</li>
+      </ul>
+    </div>
+
+    <h3>Exit Ticket — Retrieval Practice</h3>
+    <div class="quiz-question" id="q-exit1">
+      <p>1. What is a wave?</p>
+      <div class="quiz-options">
+        <div class="quiz-option" onclick="checkAnswer(this, true, 'q-exit1')">An oscillation that transfers energy</div>
+        <div class="quiz-option" onclick="checkAnswer(this, false, 'q-exit1')">A movement of particles from A to B</div>
+        <div class="quiz-option" onclick="checkAnswer(this, false, 'q-exit1')">A type of sound</div>
+      </div>
+      <div class="quiz-feedback correct-fb" id="q-exit1-correct">✓ Perfect recall!</div>
+      <div class="quiz-feedback incorrect-fb" id="q-exit1-incorrect">✗ A wave is an oscillation that transfers energy — not matter.</div>
+    </div>
+    <div class="quiz-question" id="q-exit2">
+      <p>2. In a transverse wave, the vibration is _____ to the wave direction.</p>
+      <div class="quiz-options">
+        <div class="quiz-option" onclick="checkAnswer(this, false, 'q-exit2')">Parallel</div>
+        <div class="quiz-option" onclick="checkAnswer(this, true, 'q-exit2')">Perpendicular</div>
+      </div>
+      <div class="quiz-feedback correct-fb" id="q-exit2-correct">✓ Got it!</div>
+      <div class="quiz-feedback incorrect-fb" id="q-exit2-incorrect">✗ Transverse = perpendicular. Longitudinal = parallel.</div>
+    </div>
+    <div class="quiz-question" id="q-exit3">
+      <p>3. 15 waves pass a point in 3 seconds. What is the frequency?</p>
+      <div class="quiz-options">
+        <div class="quiz-option" onclick="checkAnswer(this, true, 'q-exit3')">5 Hz</div>
+        <div class="quiz-option" onclick="checkAnswer(this, false, 'q-exit3')">45 Hz</div>
+        <div class="quiz-option" onclick="checkAnswer(this, false, 'q-exit3')">3 Hz</div>
+      </div>
+      <div class="quiz-feedback correct-fb" id="q-exit3-correct">✓ 15 ÷ 3 = 5 Hz. Brilliant!</div>
+      <div class="quiz-feedback incorrect-fb" id="q-exit3-incorrect">✗ frequency = 15 ÷ 3 = 5 Hz</div>
+    </div>
+
+    <div class="meta-box" style="margin-top: 32px;">
+      <h4>🧠 Final Reflection — Metacognitive Review</h4>
+
+      <p style="font-size: 0.9rem; margin-bottom: 8px;"><strong>Overall confidence — I understand waves:</strong></p>
+      <div class="confidence-scale" data-scale="final">
+        <button class="conf-btn" onclick="selectConf(this)">😟 Not yet</button>
+        <button class="conf-btn" onclick="selectConf(this)">🤔 Getting there</button>
+        <button class="conf-btn" onclick="selectConf(this)">😊 Confident</button>
+        <button class="conf-btn" onclick="selectConf(this)">🌟 Could teach it</button>
+      </div>
+
+      <div class="meta-prompt">💭 <strong>Think-Pair-Share:</strong> What was the most important thing you learned today? What strategy helped you learn it?</div>
+
+      <div class="meta-prompt">📝 <strong>Write one thing you found easy, one thing you found hard, and one question you still have.</strong></div>
+      <textarea class="answer-area" placeholder="Easy: ...&#10;Hard: ...&#10;My question: ..." style="min-height: 100px;"></textarea>
+
+      <div class="meta-prompt" style="margin-top: 16px;">🎯 <strong>Goal setting:</strong> What is one specific thing you will revise before next lesson?</div>
+      <textarea class="answer-area" placeholder="Next lesson I will revise..." style="min-height: 50px;"></textarea>
+    </div>
+  </section>
+
+</div><!-- end main-content -->
+
+<script>
+// ===== NAVIGATION =====
+function toggleNav() {
+  const nav = document.getElementById('navSidebar');
+  const main = document.getElementById('mainContent');
+  nav.classList.toggle('collapsed');
+  nav.classList.toggle('open');
+  main.classList.toggle('expanded');
+}
+
+function scrollToSection(id) {
+  const el = document.getElementById(id);
+  if (el) {
+    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    // Mobile: close nav
+    if (window.innerWidth <= 900) {
+      const nav = document.getElementById('navSidebar');
+      nav.classList.add('collapsed');
+      nav.classList.remove('open');
+    }
+  }
+}
+
+// ===== SCROLL OBSERVER =====
+const sections = document.querySelectorAll('.section, .hero');
+const navLinks = document.querySelectorAll('.nav-link');
+
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+      // Update nav
+      const id = entry.target.id;
+      navLinks.forEach(link => {
+        link.classList.toggle('active', link.dataset.target === id);
+      });
+      // Update progress
+      updateProgress();
+    }
+  });
+}, { threshold: 0.15, rootMargin: '0px 0px -10% 0px' });
+
+sections.forEach(s => observer.observe(s));
+
+function updateProgress() {
+  const allSections = document.querySelectorAll('.section');
+  const visible = document.querySelectorAll('.section.visible').length;
+  const pct = Math.round((visible / allSections.length) * 100);
+  document.getElementById('progressFill').style.width = pct + '%';
+}
+
+// ===== SCAFFOLD TABS =====
+function switchTab(group, level) {
+  // Tabs
+  document.querySelectorAll(`.scaffold-tabs[data-group="${group}"] .scaffold-tab`).forEach(t => t.classList.remove('active'));
+  document.querySelector(`.scaffold-tabs[data-group="${group}"] .scaffold-tab.${level}`).classList.add('active');
+  // Panels
+  document.querySelectorAll(`.scaffold-panel[data-group="${group}"]`).forEach(p => p.classList.remove('active'));
+  document.querySelector(`.scaffold-panel[data-group="${group}"][data-level="${level}"]`).classList.add('active');
+}
+
+// ===== QUIZ =====
+function checkAnswer(el, correct, qId) {
+  const parent = el.closest('.quiz-question');
+  parent.querySelectorAll('.quiz-option').forEach(o => {
+    o.classList.add('disabled');
+    o.classList.remove('correct', 'incorrect');
+  });
+  el.classList.add(correct ? 'correct' : 'incorrect');
+  // Show correct answer too
+  if (!correct) {
+    parent.querySelectorAll('.quiz-option').forEach((o, i) => {
+      // We need to find the correct one — hack: re-check
+    });
+  }
+  document.getElementById(qId + (correct ? '-correct' : '-incorrect')).classList.add('show');
+}
+
+// ===== SORT WAVE ACTIVITY =====
+function classifyWave(el, isWave) {
+  if (el.classList.contains('is-wave') || el.classList.contains('not-wave')) return;
+  el.classList.add(isWave ? 'is-wave' : 'not-wave');
+  el.textContent += isWave ? ' ✓' : ' ✗';
+}
+
+// ===== REVEAL =====
+function toggleReveal(id) {
+  const el = document.getElementById(id);
+  el.classList.toggle('show');
+}
+
+// ===== CALCULATION CHECK =====
+function checkCalc(inputId, expected) {
+  const input = document.getElementById(inputId);
+  const val = input.value.trim();
+  if (val === expected || val === expected.toString()) {
+    input.classList.remove('incorrect-input');
+    input.classList.add('correct-input');
+  } else {
+    input.classList.remove('correct-input');
+    input.classList.add('incorrect-input');
+  }
+}
+function checkCalcApprox(inputId, expected, dp) {
+  const input = document.getElementById(inputId);
+  const val = parseFloat(input.value);
+  if (!isNaN(val) && Math.abs(val - expected) < Math.pow(10, -dp) * 5 + 0.5) {
+    input.classList.remove('incorrect-input');
+    input.classList.add('correct-input');
+  } else {
+    input.classList.remove('correct-input');
+    input.classList.add('incorrect-input');
+  }
+}
+
+// ===== CONFIDENCE BUTTONS =====
+function selectConf(el) {
+  el.parentElement.querySelectorAll('.conf-btn').forEach(b => b.classList.remove('selected'));
+  el.classList.add('selected');
+}
+
+// ===== TRANSVERSE WAVE ANIMATION =====
+const canvas = document.getElementById('transverseCanvas');
+const ctx = canvas.getContext('2d');
+let wavePhase = 0;
+let ampVal = 40, wlVal = 140, freqVal = 3;
+
+function updateTransverseWave() {
+  ampVal = parseInt(document.getElementById('ampSlider').value);
+  wlVal = parseInt(document.getElementById('wlSlider').value);
+  freqVal = parseInt(document.getElementById('freqSlider').value);
+}
+
+function drawWave() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  const midY = canvas.height / 2;
+
+  // Rest line
+  ctx.strokeStyle = 'rgba(14,165,160,0.15)';
+  ctx.setLineDash([4, 4]);
+  ctx.beginPath();
+  ctx.moveTo(0, midY);
+  ctx.lineTo(canvas.width, midY);
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  // Direction arrows
+  ctx.fillStyle = 'rgba(251,191,36,0.5)';
+  ctx.font = '11px DM Sans';
+  ctx.fillText('→ Direction of wave travel', canvas.width - 180, canvas.height - 10);
+  ctx.fillText('↕ Particle vibration', 10, 16);
+
+  // Wave
+  ctx.strokeStyle = '#14d4ce';
+  ctx.lineWidth = 2.5;
+  ctx.beginPath();
+  for (let x = 0; x < canvas.width; x++) {
+    const y = midY + ampVal * Math.sin((2 * Math.PI * x) / wlVal + wavePhase);
+    if (x === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+  }
+  ctx.stroke();
+
+  // Particles
+  const particleSpacing = 35;
+  for (let x = 20; x < canvas.width; x += particleSpacing) {
+    const y = midY + ampVal * Math.sin((2 * Math.PI * x) / wlVal + wavePhase);
+    ctx.beginPath();
+    ctx.arc(x, y, 4, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(14,212,206,0.8)';
+    ctx.fill();
+
+    // Vertical motion indicator
+    ctx.strokeStyle = 'rgba(14,165,160,0.2)';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(x, midY - ampVal - 5);
+    ctx.lineTo(x, midY + ampVal + 5);
+    ctx.stroke();
+  }
+
+  wavePhase += 0.02 * freqVal;
+  requestAnimationFrame(drawWave);
+}
+drawWave();
+
+// ===== MOBILE NAV INIT =====
+if (window.innerWidth <= 900) {
+  document.getElementById('navSidebar').classList.add('collapsed');
+  document.querySelector('.nav-toggle').style.display = 'flex';
+}
+window.addEventListener('resize', () => {
+  const toggle = document.querySelector('.nav-toggle');
+  if (window.innerWidth <= 900) {
+    toggle.style.display = 'flex';
+  } else {
+    toggle.style.display = 'none';
+    document.getElementById('navSidebar').classList.remove('collapsed', 'open');
+  }
+});
+</script>
+
+</body>
+</html>
