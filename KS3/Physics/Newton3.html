@@ -1,0 +1,1016 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Newton's Third Law - Year 9 Physics</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); min-height: 100vh; color: #e8e8e8; }
+        .header { background: linear-gradient(90deg, #0f3460, #533483); padding: 1.5rem 2rem; text-align: center; box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
+        .header h1 { font-size: 2.2rem; color: #fff; margin-bottom: 0.5rem; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
+        .header .subtitle { color: #e94560; font-size: 1.1rem; font-weight: 500; }
+        .learning-objectives { background: rgba(255,255,255,0.1); border-radius: 10px; padding: 1rem 2rem; margin: 1rem auto; max-width: 900px; text-align: left; }
+        .learning-objectives h3 { color: #e94560; margin-bottom: 0.5rem; font-size: 1rem; }
+        .learning-objectives ul { list-style: none; display: flex; flex-wrap: wrap; gap: 0.8rem; justify-content: center; }
+        .learning-objectives li { background: rgba(233, 69, 96, 0.2); padding: 0.5rem 1rem; border-radius: 20px; font-size: 0.85rem; border: 1px solid rgba(233, 69, 96, 0.3); }
+        .nav-tabs { display: flex; justify-content: center; background: rgba(15, 52, 96, 0.8); padding: 0.5rem; gap: 0.5rem; flex-wrap: wrap; position: sticky; top: 0; z-index: 100; backdrop-filter: blur(10px); }
+        .nav-tab { padding: 0.8rem 1.5rem; background: transparent; border: 2px solid transparent; color: #a0a0a0; cursor: pointer; font-size: 0.95rem; font-weight: 600; border-radius: 8px; transition: all 0.3s ease; }
+        .nav-tab:hover { color: #fff; background: rgba(233, 69, 96, 0.2); }
+        .nav-tab.active { background: linear-gradient(135deg, #e94560, #533483); color: #fff; border-color: #e94560; }
+        .nav-tab .tab-number { display: inline-block; width: 24px; height: 24px; background: rgba(255,255,255,0.2); border-radius: 50%; line-height: 24px; margin-right: 0.5rem; font-size: 0.8rem; }
+        .main-content { max-width: 1200px; margin: 2rem auto; padding: 0 1.5rem; }
+        .tab-content { display: none; animation: fadeIn 0.4s ease; }
+        .tab-content.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .section-card { background: rgba(255,255,255,0.05); border-radius: 16px; padding: 2rem; margin-bottom: 2rem; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 8px 32px rgba(0,0,0,0.2); }
+        .section-title { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+        .section-title h2 { color: #fff; font-size: 1.5rem; }
+        .gtt-badge { background: linear-gradient(135deg, #00d9ff, #00ff88); color: #1a1a2e; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; }
+        .evidence-badge { background: linear-gradient(135deg, #ff6b6b, #ffa500); color: #1a1a2e; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; }
+        .teacher-badge { background: linear-gradient(135deg, #9c27b0, #673ab7); color: #fff; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; }
+        .diff-container { margin-top: 1.5rem; }
+        .diff-tabs { display: flex; gap: 0.5rem; margin-bottom: 1rem; }
+        .diff-tab { flex: 1; padding: 1rem; border: none; cursor: pointer; font-weight: 600; font-size: 0.9rem; border-radius: 10px 10px 0 0; transition: all 0.3s ease; position: relative; }
+        .diff-tab.foundation { background: rgba(76, 175, 80, 0.3); color: #81c784; border: 2px solid transparent; }
+        .diff-tab.foundation.active, .diff-tab.foundation:hover { background: rgba(76, 175, 80, 0.6); color: #fff; border-color: #4caf50; }
+        .diff-tab.core { background: rgba(33, 150, 243, 0.3); color: #64b5f6; border: 2px solid transparent; }
+        .diff-tab.core.active, .diff-tab.core:hover { background: rgba(33, 150, 243, 0.6); color: #fff; border-color: #2196f3; }
+        .diff-tab.challenge { background: rgba(156, 39, 176, 0.3); color: #ba68c8; border: 2px solid transparent; }
+        .diff-tab.challenge.active, .diff-tab.challenge:hover { background: rgba(156, 39, 176, 0.6); color: #fff; border-color: #9c27b0; }
+        .diff-tab .scaffolding-indicator { font-size: 0.7rem; display: block; margin-top: 0.3rem; opacity: 0.8; }
+        .diff-content { display: none; padding: 1.5rem; border-radius: 0 0 10px 10px; animation: slideIn 0.3s ease; }
+        .diff-content.foundation { background: rgba(76, 175, 80, 0.15); border: 1px solid rgba(76, 175, 80, 0.3); }
+        .diff-content.core { background: rgba(33, 150, 243, 0.15); border: 1px solid rgba(33, 150, 243, 0.3); }
+        .diff-content.challenge { background: rgba(156, 39, 176, 0.15); border: 1px solid rgba(156, 39, 176, 0.3); }
+        .diff-content.active { display: block; }
+        @keyframes slideIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
+        .scaffold-box { background: rgba(255,255,255,0.1); border-left: 4px solid #ffc107; padding: 1rem; margin: 1rem 0; border-radius: 0 8px 8px 0; }
+        .scaffold-box h4 { color: #ffc107; margin-bottom: 0.5rem; font-size: 0.9rem; display: flex; align-items: center; gap: 0.5rem; }
+        .word-bank { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.5rem; }
+        .word-bank span { background: rgba(255, 193, 7, 0.3); padding: 0.4rem 0.8rem; border-radius: 15px; font-size: 0.85rem; cursor: pointer; transition: all 0.2s ease; }
+        .word-bank span:hover { background: rgba(255, 193, 7, 0.5); transform: scale(1.05); }
+        .sentence-starter { background: rgba(100, 181, 246, 0.2); border-left: 4px solid #64b5f6; padding: 1rem; margin: 1rem 0; border-radius: 0 8px 8px 0; font-style: italic; }
+        .interactive-area { background: rgba(0,0,0,0.2); border-radius: 12px; padding: 1.5rem; margin: 1rem 0; }
+        .force-visual { display: flex; justify-content: center; align-items: center; padding: 2rem; background: rgba(255,255,255,0.95); border-radius: 12px; margin: 1rem 0; }
+        .diagram-placeholder { background: linear-gradient(135deg, #f5f5f5, #e0e0e0); padding: 2rem; border-radius: 8px; color: #333; font-weight: 500; }
+        .input-group { margin: 1rem 0; }
+        .input-group label { display: block; margin-bottom: 0.5rem; font-weight: 500; color: #a0d2db; }
+        .input-group textarea { width: 100%; padding: 1rem; border: 2px solid rgba(255,255,255,0.2); border-radius: 8px; background: rgba(255,255,255,0.05); color: #fff; font-size: 1rem; resize: vertical; min-height: 80px; font-family: inherit; }
+        .input-group textarea:focus { outline: none; border-color: #e94560; }
+        .btn { padding: 0.8rem 1.5rem; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 0.9rem; transition: all 0.3s ease; margin: 0.5rem 0.5rem 0.5rem 0; }
+        .btn-primary { background: linear-gradient(135deg, #e94560, #533483); color: #fff; }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 4px 15px rgba(233, 69, 96, 0.4); }
+        .btn-secondary { background: rgba(255,255,255,0.1); color: #fff; border: 1px solid rgba(255,255,255,0.2); }
+        .btn-secondary:hover { background: rgba(255,255,255,0.2); }
+        .info-box { background: rgba(33, 150, 243, 0.15); border: 1px solid rgba(33, 150, 243, 0.3); border-radius: 10px; padding: 1rem; margin: 1rem 0; }
+        .info-box.success { background: rgba(76, 175, 80, 0.15); border-color: rgba(76, 175, 80, 0.3); }
+        .info-box.warning { background: rgba(255, 152, 0, 0.15); border-color: rgba(255, 152, 0, 0.3); }
+        .info-box.teacher { background: rgba(156, 39, 176, 0.15); border-color: rgba(156, 39, 176, 0.3); }
+        .info-box.danger { background: rgba(244, 67, 54, 0.15); border-color: rgba(244, 67, 54, 0.3); }
+        .info-box h4 { margin-bottom: 0.5rem; color: #64b5f6; }
+        .info-box.success h4 { color: #81c784; }
+        .info-box.warning h4 { color: #ffb74d; }
+        .info-box.teacher h4 { color: #ce93d8; }
+        .info-box.danger h4 { color: #ef5350; }
+        .data-table { width: 100%; border-collapse: collapse; margin: 1rem 0; background: rgba(255,255,255,0.05); border-radius: 8px; overflow: hidden; }
+        .data-table th, .data-table td { padding: 1rem; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .data-table th { background: rgba(233, 69, 96, 0.3); font-weight: 600; }
+        .data-table input { width: 100%; padding: 0.5rem; border: 1px solid rgba(255,255,255,0.2); border-radius: 4px; background: rgba(255,255,255,0.1); color: #fff; font-family: inherit; }
+        .quiz-question { background: rgba(0,0,0,0.2); border-radius: 12px; padding: 1.5rem; margin: 1rem 0; }
+        .quiz-question h4 { margin-bottom: 1rem; color: #fff; }
+        .quiz-options { display: grid; gap: 0.5rem; }
+        .quiz-option { display: flex; align-items: center; gap: 0.8rem; padding: 0.8rem 1rem; background: rgba(255,255,255,0.05); border: 2px solid transparent; border-radius: 8px; cursor: pointer; transition: all 0.2s ease; }
+        .quiz-option:hover { background: rgba(255,255,255,0.1); border-color: rgba(233, 69, 96, 0.5); }
+        .quiz-option.selected { background: rgba(233, 69, 96, 0.2); border-color: #e94560; }
+        .tps-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; margin: 1rem 0; }
+        .tps-card { background: rgba(255,255,255,0.05); border-radius: 12px; padding: 1.5rem; text-align: center; border: 2px solid transparent; transition: all 0.3s ease; }
+        .tps-card.think { border-color: rgba(233, 69, 96, 0.5); }
+        .tps-card.pair { border-color: rgba(33, 150, 243, 0.5); }
+        .tps-card.share { border-color: rgba(76, 175, 80, 0.5); }
+        .tps-card h4 { margin-bottom: 1rem; font-size: 1.1rem; }
+        .tps-card.think h4 { color: #e94560; }
+        .tps-card.pair h4 { color: #64b5f6; }
+        .tps-card.share h4 { color: #81c784; }
+        .tps-icon { font-size: 2rem; margin-bottom: 0.5rem; }
+        .reveal-section { margin-top: 1rem; }
+        .reveal-content { display: none; margin-top: 1rem; padding: 1rem; background: rgba(76, 175, 80, 0.2); border-radius: 8px; border-left: 4px solid #4caf50; }
+        .reveal-content.visible { display: block; animation: fadeIn 0.3s ease; }
+        .teacher-section { background: rgba(156, 39, 176, 0.1); border: 2px solid rgba(156, 39, 176, 0.3); border-radius: 12px; padding: 1.5rem; margin: 1.5rem 0; }
+        .teacher-section h3 { color: #ce93d8; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem; }
+        .model-example { background: rgba(255,255,255,0.1); border-radius: 8px; padding: 1.5rem; margin: 1rem 0; border-left: 4px solid #ce93d8; }
+        .force-arrow { display: inline-block; padding: 0.3rem 0.8rem; border-radius: 4px; margin: 0.2rem; font-weight: bold; }
+        .force-arrow.right { background: #4caf50; color: white; }
+        .force-arrow.left { background: #f44336; color: white; }
+        .force-arrow.up { background: #2196f3; color: white; }
+        .force-arrow.down { background: #ff9800; color: white; }
+
+        /* Anagram game styles */
+        .anagram-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; margin: 1rem 0; }
+        .anagram-card { background: rgba(255,255,255,0.08); border: 2px solid rgba(255,255,255,0.15); border-radius: 12px; padding: 1.2rem; display: flex; align-items: center; gap: 1rem; transition: all 0.3s ease; }
+        .anagram-card.solved { border-color: #4caf50; background: rgba(76, 175, 80, 0.15); }
+        .anagram-scrambled { font-family: 'Courier New', monospace; font-size: 1.1rem; font-weight: bold; color: #e94560; letter-spacing: 2px; min-width: 120px; text-align: center; }
+        .anagram-card input { flex: 1; padding: 0.6rem; border: 2px solid rgba(255,255,255,0.2); border-radius: 6px; background: rgba(255,255,255,0.05); color: #fff; font-size: 0.95rem; font-family: inherit; text-transform: uppercase; }
+        .anagram-card input:focus { outline: none; border-color: #e94560; }
+        .anagram-card input.correct { border-color: #4caf50; background: rgba(76, 175, 80, 0.2); }
+        .anagram-card input.incorrect { border-color: #f44336; background: rgba(244, 67, 54, 0.1); }
+
+        /* Force pair diagram styles */
+        .force-pair-diagram { background: rgba(255,255,255,0.95); border-radius: 12px; padding: 2rem; margin: 1rem 0; text-align: center; }
+        .force-pair-row { display: flex; align-items: center; justify-content: center; gap: 1rem; margin: 1rem 0; flex-wrap: wrap; }
+        .force-object { background: #fff; border: 3px solid #333; border-radius: 8px; padding: 0.8rem 1.5rem; color: #333; font-weight: bold; font-size: 0.95rem; min-width: 100px; text-align: center; }
+        .force-arrow-visual { display: flex; align-items: center; gap: 0.3rem; }
+        .arrow-line { height: 4px; width: 60px; border-radius: 2px; }
+        .arrow-line.action { background: #e94560; }
+        .arrow-line.reaction { background: #2196f3; }
+        .arrow-head { width: 0; height: 0; border-top: 10px solid transparent; border-bottom: 10px solid transparent; }
+        .arrow-head.right { border-left: 14px solid #e94560; }
+        .arrow-head.left { border-right: 14px solid #2196f3; }
+        .force-label { font-size: 0.8rem; font-weight: 600; padding: 0.3rem 0.6rem; border-radius: 4px; color: #fff; }
+        .force-label.action { background: #e94560; }
+        .force-label.reaction { background: #2196f3; }
+
+        /* Misconception callout */
+        .misconception-box { background: rgba(244, 67, 54, 0.12); border: 2px solid rgba(244, 67, 54, 0.4); border-radius: 12px; padding: 1.2rem; margin: 1rem 0; }
+        .misconception-box h4 { color: #ef5350; margin-bottom: 0.5rem; }
+        .misconception-box .wrong { color: #ef5350; text-decoration: line-through; opacity: 0.7; }
+        .misconception-box .correct { color: #81c784; font-weight: 600; }
+
+        /* UAE link */
+        .uae-box { background: linear-gradient(135deg, rgba(0, 150, 57, 0.15), rgba(206, 17, 38, 0.15)); border: 1px solid rgba(255,255,255,0.2); border-radius: 12px; padding: 1.2rem; margin: 1rem 0; }
+        .uae-box h4 { color: #ffc107; margin-bottom: 0.5rem; }
+
+        .progress-bar { position: fixed; bottom: 0; left: 0; right: 0; height: 4px; background: rgba(255,255,255,0.1); z-index: 200; }
+        .progress-fill { height: 100%; background: linear-gradient(90deg, #e94560, #533483); transition: width 0.3s ease; }
+
+        @media (max-width: 768px) {
+            .nav-tabs { justify-content: flex-start; overflow-x: auto; padding: 0.5rem; }
+            .nav-tab { white-space: nowrap; padding: 0.6rem 1rem; font-size: 0.85rem; }
+            .diff-tabs { flex-direction: column; }
+            .section-card { padding: 1rem; }
+            .header h1 { font-size: 1.6rem; }
+            .anagram-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <h1>Forces</h1>
+        <p class="subtitle">Year 9 Physics | Evidence-Informed Learning</p>
+        <div class="learning-objectives">
+            <h3>Learning Objectives – Lesson 4: Newton's Third Law</h3>
+            <ul>
+                <li>Recall and identify different types of forces</li>
+                <li>State Newton's 3rd Law and identify action-reaction force pairs</li>
+                <li>Distinguish between balanced forces and Newton's 3rd Law pairs</li>
+            </ul>
+        </div>
+    </header>
+
+    <nav class="nav-tabs" id="mainNav">
+        <button class="nav-tab active" data-tab="tab1"><span class="tab-number">1</span>Do Now</button>
+        <button class="nav-tab" data-tab="tab2"><span class="tab-number">2</span>Recap</button>
+        <button class="nav-tab" data-tab="tab3"><span class="tab-number">3</span>The 3rd Law</button>
+        <button class="nav-tab" data-tab="tab4"><span class="tab-number">4</span>Balanced vs Pairs</button>
+        <button class="nav-tab" data-tab="tab5"><span class="tab-number">5</span>Scenarios</button>
+        <button class="nav-tab" data-tab="tab6"><span class="tab-number">6</span>Leaning Wall</button>
+        <button class="nav-tab" data-tab="tab7"><span class="tab-number">7</span>Progress Check</button>
+    </nav>
+
+    <main class="main-content">
+
+        <!-- ========== TAB 1: DO NOW – ANAGRAM RETRIEVAL ========== -->
+        <section class="tab-content active" id="tab1">
+            <div class="section-card">
+                <div class="section-title">
+                    <h2>Do Now: Anagram Challenge</h2>
+                    <span class="gtt-badge">GTT: Activating Hard Thinking</span>
+                    <span class="evidence-badge">Retrieval Practice</span>
+                </div>
+                <div class="info-box">
+                    <h4>Why This Matters</h4>
+                    <p>Retrieving the names of forces from memory strengthens your recall. Unscramble each anagram to reveal a type of force — you've met all of these before!</p>
+                </div>
+
+                <div class="anagram-grid" id="anagramGrid">
+                    <div class="anagram-card" data-answer="WEIGHT">
+                        <div class="anagram-scrambled">GIEHTW</div>
+                        <input type="text" placeholder="Type the force..." maxlength="20">
+                    </div>
+                    <div class="anagram-card" data-answer="LIFT">
+                        <div class="anagram-scrambled">FILT</div>
+                        <input type="text" placeholder="Type the force..." maxlength="20">
+                    </div>
+                    <div class="anagram-card" data-answer="DRAG">
+                        <div class="anagram-scrambled">GARD</div>
+                        <input type="text" placeholder="Type the force..." maxlength="20">
+                    </div>
+                    <div class="anagram-card" data-answer="THRUST">
+                        <div class="anagram-scrambled">STTURH</div>
+                        <input type="text" placeholder="Type the force..." maxlength="20">
+                    </div>
+                    <div class="anagram-card" data-answer="FRICTION">
+                        <div class="anagram-scrambled">TNICRIOF</div>
+                        <input type="text" placeholder="Type the force..." maxlength="20">
+                    </div>
+                    <div class="anagram-card" data-answer="UPTHRUST">
+                        <div class="anagram-scrambled">STURUPTH</div>
+                        <input type="text" placeholder="Type the force..." maxlength="20">
+                    </div>
+                    <div class="anagram-card" data-answer="AIR RESISTANCE">
+                        <div class="anagram-scrambled">RIA ANETCSISRE</div>
+                        <input type="text" placeholder="Type the force..." maxlength="20">
+                    </div>
+                    <div class="anagram-card" data-answer="PUSH">
+                        <div class="anagram-scrambled">SUPH</div>
+                        <input type="text" placeholder="Type the force..." maxlength="20">
+                    </div>
+                </div>
+                <button class="btn btn-primary" onclick="checkAnagrams()">Check Answers</button>
+                <button class="btn btn-secondary" onclick="revealAnagrams()">Reveal All</button>
+                <div id="anagramScore" style="margin-top: 1rem; font-size: 1.1rem; font-weight: 600; display: none;"></div>
+            </div>
+        </section>
+
+        <!-- ========== TAB 2: RECAP – NEWTON'S 1ST & 2ND LAWS ========== -->
+        <section class="tab-content" id="tab2">
+            <div class="section-card">
+                <div class="section-title">
+                    <h2>Recap: Newton's First &amp; Second Laws</h2>
+                    <span class="gtt-badge">GTT: Structuring</span>
+                    <span class="evidence-badge">Spaced Retrieval</span>
+                </div>
+
+                <div class="tps-container">
+                    <div class="tps-card think"><div class="tps-icon">🤔</div><h4>Think (1 min)</h4><p>Can you recall Newton's First and Second Laws without looking at your notes?</p></div>
+                    <div class="tps-card pair"><div class="tps-icon">👥</div><h4>Pair (2 mins)</h4><p>Compare with a partner. Fill in any gaps in each other's recall.</p></div>
+                    <div class="tps-card share"><div class="tps-icon">🗣️</div><h4>Share</h4><p>Be ready to be cold-called to share one of the laws.</p></div>
+                </div>
+
+                <div class="diff-container" data-diff-group="recap">
+                    <div class="diff-tabs">
+                        <button class="diff-tab foundation active" data-level="foundation">Foundation<span class="scaffolding-indicator">Fill in Blanks</span></button>
+                        <button class="diff-tab core" data-level="core">Core<span class="scaffolding-indicator">Recall & Apply</span></button>
+                        <button class="diff-tab challenge" data-level="challenge">Challenge<span class="scaffolding-indicator">Link & Explain</span></button>
+                    </div>
+                    <div class="diff-content foundation active">
+                        <h4>Complete Newton's Laws using the word bank:</h4>
+                        <div class="scaffold-box"><h4>Word Bank</h4><div class="word-bank"><span>constant velocity</span><span>rest</span><span>external force</span><span>acceleration</span><span>mass</span><span>F = m × a</span></div></div>
+                        <div class="quiz-question">
+                            <h4>Newton's First Law:</h4>
+                            <p>An object at <input type="text" style="width: 120px;" placeholder="______"> or moving at a <input type="text" style="width: 160px;" placeholder="______"> will remain like this unless an <input type="text" style="width: 150px;" placeholder="______"> acts upon it.</p>
+                        </div>
+                        <div class="quiz-question">
+                            <h4>Newton's Second Law:</h4>
+                            <p>The <input type="text" style="width: 140px;" placeholder="______"> of an object depends on the size of the force applied and the object's <input type="text" style="width: 100px;" placeholder="______">.</p>
+                            <p style="margin-top: 0.5rem;">The equation is: <input type="text" style="width: 120px;" placeholder="______"></p>
+                        </div>
+                    </div>
+                    <div class="diff-content core">
+                        <h4>Write out both laws from memory, then answer:</h4>
+                        <div class="input-group"><label>Newton's First Law:</label><textarea rows="2"></textarea></div>
+                        <div class="input-group"><label>Newton's Second Law:</label><textarea rows="2"></textarea></div>
+                        <div class="quiz-question">
+                            <h4>Apply: A 1500 kg car accelerates at 2 m/s². Calculate the resultant force.</h4>
+                            <div class="input-group"><textarea rows="2" placeholder="F = m × a = ..."></textarea></div>
+                        </div>
+                    </div>
+                    <div class="diff-content challenge">
+                        <h4>Recall and extend:</h4>
+                        <div class="input-group"><label>1. Write both laws from memory:</label><textarea rows="3"></textarea></div>
+                        <div class="quiz-question">
+                            <h4>2. A 60 kg skydiver falls with weight 600 N and air resistance 400 N. Calculate the resultant force and acceleration.</h4>
+                            <textarea rows="3" placeholder="Resultant = ... &#10;a = F/m = ..."></textarea>
+                        </div>
+                        <div class="quiz-question">
+                            <h4>3. How do the First and Second Laws link together? Explain what happens when resultant force is zero vs non-zero.</h4>
+                            <textarea rows="3"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="reveal-section">
+                    <button class="btn btn-secondary" onclick="toggleReveal(this)">Reveal Model Answers</button>
+                    <div class="reveal-content">
+                        <p><strong>First Law:</strong> An object at rest or moving at a constant velocity will remain like this unless an external force acts upon it.</p>
+                        <p><strong>Second Law:</strong> The acceleration of an object depends on the size of the force applied and the object's mass. F = m × a</p>
+                        <p><strong>Core apply:</strong> F = 1500 × 2 = 3000 N</p>
+                        <p><strong>Challenge:</strong> Resultant = 600 − 400 = 200 N downwards. a = 200 / 60 = 3.33 m/s²</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========== TAB 3: NEWTON'S 3RD LAW – INTRODUCTION ========== -->
+        <section class="tab-content" id="tab3">
+            <div class="section-card">
+                <div class="section-title">
+                    <h2>Newton's Third Law</h2>
+                    <span class="teacher-badge">Teacher-Led</span>
+                    <span class="gtt-badge">GTT: Understanding Content</span>
+                    <span class="evidence-badge">Dual Coding</span>
+                </div>
+
+                <div class="teacher-section">
+                    <h3>📚 Newton's Third Law of Motion</h3>
+                    <div class="model-example" style="text-align: center; font-size: 1.15rem;">
+                        <p style="font-size: 1.3rem; margin-bottom: 1rem;"><strong>"For every action, there is an equal and opposite reaction."</strong></p>
+                        <p>The pair of forces acting upon objects are called <strong>action-reaction forces</strong>.</p>
+                        <p style="margin-top: 0.5rem;">The two forces are always the <strong>same size</strong> and act in <strong>opposite directions</strong>.</p>
+                    </div>
+                </div>
+
+                <div class="info-box success">
+                    <h4>Three Key Rules</h4>
+                    <p>1. Action and reaction forces are <strong>equal in size</strong></p>
+                    <p>2. They act in <strong>opposite directions</strong></p>
+                    <p>3. They act on <strong>different objects</strong></p>
+                </div>
+
+                <!-- Dog and Rope visual -->
+                <div class="force-pair-diagram">
+                    <h4 style="color: #333; margin-bottom: 1rem;">The Dog and Rope Model</h4>
+                    <div class="force-pair-row">
+                        <span class="force-label action">ACTION</span>
+                        <div class="force-object">🐕 Dog</div>
+                        <div class="force-arrow-visual">
+                            <div class="arrow-head left"></div>
+                            <div class="arrow-line reaction"></div>
+                        </div>
+                        <div style="padding: 0.5rem 1rem; background: #f5f5f5; border-radius: 6px; color: #333; font-weight: bold;">🪢 Rope</div>
+                        <div class="force-arrow-visual">
+                            <div class="arrow-line action"></div>
+                            <div class="arrow-head right"></div>
+                        </div>
+                        <div class="force-object">🧑 Person</div>
+                        <span class="force-label reaction">REACTION</span>
+                    </div>
+                    <p style="color: #555; margin-top: 1rem; font-size: 0.9rem;">Dog pulls rope LEFT → Rope pulls dog RIGHT <strong>(different objects!)</strong></p>
+                    <p style="color: #555; font-size: 0.9rem;">Person pulls rope RIGHT → Rope pulls person LEFT <strong>(different objects!)</strong></p>
+                </div>
+
+                <div class="uae-box">
+                    <h4>🇦🇪 UAE Connection: The Hope Mars Mission</h4>
+                    <p>The UAE's Hope Probe launched in 2020 using Newton's Third Law. The rocket engines expelled hot gases <strong>downwards</strong> (action) and the gases pushed the rocket <strong>upwards</strong> (reaction). These forces acted on <strong>different objects</strong> — the gases and the rocket.</p>
+                </div>
+
+                <div class="diff-container" data-diff-group="3rdlaw">
+                    <div class="diff-tabs">
+                        <button class="diff-tab foundation active" data-level="foundation">Foundation<span class="scaffolding-indicator">Key Words</span></button>
+                        <button class="diff-tab core" data-level="core">Core<span class="scaffolding-indicator">Explain</span></button>
+                        <button class="diff-tab challenge" data-level="challenge">Challenge<span class="scaffolding-indicator">Apply to Rockets</span></button>
+                    </div>
+                    <div class="diff-content foundation active">
+                        <h4>Use the keywords below to explain Newton's Third Law:</h4>
+                        <div class="scaffold-box"><h4>Keywords</h4><div class="word-bank"><span>action</span><span>reaction</span><span>equal</span><span>opposite</span><span>different objects</span><span>force pair</span></div></div>
+                        <div class="sentence-starter"><p><strong>Sentence starter:</strong> "Newton's Third Law states that for every _______ there is an _______ and _______ _______. These forces act on _______ _______."</p></div>
+                        <div class="input-group"><label>Write your answer:</label><textarea rows="3"></textarea></div>
+                    </div>
+                    <div class="diff-content core">
+                        <h4>Explain Newton's Third Law in your own words:</h4>
+                        <div class="input-group"><label>Your explanation (must include: "equal", "opposite", "different objects"):</label><textarea rows="3" placeholder="Newton's Third Law states that..."></textarea></div>
+                        <div class="quiz-question">
+                            <h4>Give one real-world example of an action-reaction pair:</h4>
+                            <textarea rows="2" placeholder="When a swimmer pushes water backwards..."></textarea>
+                        </div>
+                    </div>
+                    <div class="diff-content challenge">
+                        <h4>Explain how Newton's Third Law enables rocket propulsion:</h4>
+                        <div class="input-group"><label>Explain (3 marks — state the law, identify both forces, name both objects):</label><textarea rows="4" placeholder="The rocket engines expel gases..."></textarea></div>
+                        <div class="quiz-question">
+                            <h4>Why does the rocket accelerate upwards even though the action and reaction forces are equal?</h4>
+                            <textarea rows="3" placeholder="Hint: think about what other forces act on the rocket vs the gases..."></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========== TAB 4: BALANCED vs ACTION-REACTION ========== -->
+        <section class="tab-content" id="tab4">
+            <div class="section-card">
+                <div class="section-title">
+                    <h2>Balanced Forces vs Action-Reaction Pairs</h2>
+                    <span class="teacher-badge">Teacher-Led</span>
+                    <span class="gtt-badge">GTT: Structuring</span>
+                    <span class="evidence-badge">Concrete Examples</span>
+                </div>
+
+                <div class="teacher-section">
+                    <h3>📚 This Is the Key Distinction</h3>
+                    <div class="model-example">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+                            <div style="text-align: center; padding: 1rem; background: rgba(33, 150, 243, 0.2); border-radius: 8px; border: 2px solid rgba(33, 150, 243, 0.4);">
+                                <p style="font-size: 1.2rem; font-weight: bold; margin-bottom: 0.5rem;">Balanced Forces</p>
+                                <p>Act on the <strong>SAME</strong> object</p>
+                                <p style="margin-top: 0.5rem;">Equal and opposite</p>
+                                <p>Object doesn't accelerate</p>
+                                <p style="margin-top: 0.5rem; font-size: 0.9rem; color: #64b5f6;">Example: Weight ↓ and Reaction ↑ on a book</p>
+                            </div>
+                            <div style="text-align: center; padding: 1rem; background: rgba(233, 69, 96, 0.2); border-radius: 8px; border: 2px solid rgba(233, 69, 96, 0.4);">
+                                <p style="font-size: 1.2rem; font-weight: bold; margin-bottom: 0.5rem;">Action-Reaction Pairs</p>
+                                <p>Act on <strong>DIFFERENT</strong> objects</p>
+                                <p style="margin-top: 0.5rem;">Equal and opposite</p>
+                                <p>Always exist — even when moving</p>
+                                <p style="margin-top: 0.5rem; font-size: 0.9rem; color: #e94560;">Example: Hand pushes wall / Wall pushes hand</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="misconception-box">
+                    <h4>⚠️ Common Misconception</h4>
+                    <p><span class="wrong">"A book on a table: weight down and reaction up is Newton's Third Law."</span></p>
+                    <p><span class="correct">✓ This is BALANCED FORCES — both act on the same object (the book).</span></p>
+                    <p style="margin-top: 0.5rem;"><span class="correct">✓ The 3rd Law pair for the book's weight is: Earth pulls book down / Book pulls Earth up (different objects!).</span></p>
+                </div>
+
+                <div class="diff-container" data-diff-group="balanced">
+                    <div class="diff-tabs">
+                        <button class="diff-tab foundation active" data-level="foundation">Foundation<span class="scaffolding-indicator">Sorting Task</span></button>
+                        <button class="diff-tab core" data-level="core">Core<span class="scaffolding-indicator">Identify & Explain</span></button>
+                        <button class="diff-tab challenge" data-level="challenge">Challenge<span class="scaffolding-indicator">Analyse Misconceptions</span></button>
+                    </div>
+                    <div class="diff-content foundation active">
+                        <h4>Sort each example: Balanced Forces or Action-Reaction Pair?</h4>
+                        <div class="scaffold-box"><h4>Remember</h4><p>Ask yourself: <strong>"Do both forces act on the SAME object or DIFFERENT objects?"</strong></p><p>Same object = Balanced | Different objects = Action-Reaction</p></div>
+                        <table class="data-table">
+                            <tr><th>Example</th><th>Balanced or Action-Reaction?</th></tr>
+                            <tr><td>A book resting on a table (weight down, reaction up — both on the book)</td><td><select style="padding: 0.5rem; background: rgba(255,255,255,0.1); border-radius: 4px; color: white;"><option>Choose...</option><option>Balanced Forces</option><option>Action-Reaction Pair</option></select></td></tr>
+                            <tr><td>Earth pulls apple down / Apple pulls Earth up</td><td><select style="padding: 0.5rem; background: rgba(255,255,255,0.1); border-radius: 4px; color: white;"><option>Choose...</option><option>Balanced Forces</option><option>Action-Reaction Pair</option></select></td></tr>
+                            <tr><td>A person leaning on a wall: hand pushes wall / wall pushes hand</td><td><select style="padding: 0.5rem; background: rgba(255,255,255,0.1); border-radius: 4px; color: white;"><option>Choose...</option><option>Balanced Forces</option><option>Action-Reaction Pair</option></select></td></tr>
+                            <tr><td>A plane flying at constant speed (thrust = drag, both on the plane)</td><td><select style="padding: 0.5rem; background: rgba(255,255,255,0.1); border-radius: 4px; color: white;"><option>Choose...</option><option>Balanced Forces</option><option>Action-Reaction Pair</option></select></td></tr>
+                            <tr><td>Swimmer pushes water backwards / Water pushes swimmer forwards</td><td><select style="padding: 0.5rem; background: rgba(255,255,255,0.1); border-radius: 4px; color: white;"><option>Choose...</option><option>Balanced Forces</option><option>Action-Reaction Pair</option></select></td></tr>
+                        </table>
+                    </div>
+                    <div class="diff-content core">
+                        <h4>For each example, state whether it is balanced forces or an action-reaction pair. Explain your reasoning.</h4>
+                        <div class="quiz-question">
+                            <h4>a) A book resting on a table — weight acting down, reaction force acting up:</h4>
+                            <textarea rows="2" placeholder="This is... because both forces act on..."></textarea>
+                        </div>
+                        <div class="quiz-question">
+                            <h4>b) You push a shopping trolley forward / The trolley pushes back on your hands:</h4>
+                            <textarea rows="2"></textarea>
+                        </div>
+                        <div class="quiz-question">
+                            <h4>c) A fish swimming at constant speed — forward force and drag are equal:</h4>
+                            <textarea rows="2"></textarea>
+                        </div>
+                        <div class="quiz-question">
+                            <h4>d) The Moon orbiting Earth — Earth pulls Moon / Moon pulls Earth:</h4>
+                            <textarea rows="2"></textarea>
+                        </div>
+                    </div>
+                    <div class="diff-content challenge">
+                        <h4>Evaluate these student statements:</h4>
+                        <div class="quiz-question">
+                            <h4>Student A says: "A book on a table doesn't move because the action and reaction forces cancel out."</h4>
+                            <div class="input-group"><label>Evaluate this statement. Is the student correct? Explain fully. (4 marks)</label><textarea rows="4" placeholder="The student is incorrect because..."></textarea></div>
+                        </div>
+                        <div class="quiz-question">
+                            <h4>Student B says: "If action and reaction forces are equal and opposite, nothing should ever move."</h4>
+                            <div class="input-group"><label>Evaluate this statement. Explain why objects CAN move despite Newton's Third Law. (4 marks)</label><textarea rows="4" placeholder="The student is wrong because action-reaction forces act on..."></textarea></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="reveal-section">
+                    <button class="btn btn-secondary" onclick="toggleReveal(this)">Reveal Model Answers</button>
+                    <div class="reveal-content">
+                        <p><strong>Foundation sorting:</strong> Balanced | Action-Reaction | Action-Reaction | Balanced | Action-Reaction</p>
+                        <p><strong>Challenge — Student A:</strong> Incorrect. The book doesn't move because the forces are <em>balanced</em> (both act on the book). Weight down and reaction up are NOT a Newton's 3rd Law pair — they act on the same object.</p>
+                        <p><strong>Challenge — Student B:</strong> Incorrect. Action-reaction forces act on <em>different</em> objects, so they cannot cancel each other out. Movement depends on the resultant force on <em>one</em> object. E.g. a rocket: the thrust acts on the rocket while the equal force acts on the exhaust gases.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========== TAB 5: ACTION-REACTION SCENARIOS ========== -->
+        <section class="tab-content" id="tab5">
+            <div class="section-card">
+                <div class="section-title">
+                    <h2>Action-Reaction Scenarios</h2>
+                    <span class="gtt-badge">GTT: Maximising Opportunity</span>
+                    <span class="evidence-badge">Deliberate Practice</span>
+                </div>
+
+                <div class="info-box warning">
+                    <h4>Remember the Rule</h4>
+                    <p>For each scenario, state the <strong>reaction force</strong>. Your answer must name <strong>both objects</strong> and show the forces are <strong>equal, opposite, and on different objects</strong>.</p>
+                </div>
+
+                <div class="diff-container" data-diff-group="scenarios">
+                    <div class="diff-tabs">
+                        <button class="diff-tab foundation active" data-level="foundation">Foundation<span class="scaffolding-indicator">Sentence Frames</span></button>
+                        <button class="diff-tab core" data-level="core">Core<span class="scaffolding-indicator">Full Explanations</span></button>
+                        <button class="diff-tab challenge" data-level="challenge">Challenge<span class="scaffolding-indicator">Extended Contexts</span></button>
+                    </div>
+                    <div class="diff-content foundation active">
+                        <h4>State the reaction force for each action:</h4>
+                        <div class="scaffold-box"><h4>Sentence Frame</h4><p>"If [Object A] exerts a force on [Object B], then [Object B] exerts an equal and opposite force on [Object A]."</p></div>
+
+                        <div class="quiz-question">
+                            <h4>1. 📚 A student picks up a book (exerts an upward force on the book).</h4>
+                            <p>Reaction: The <input type="text" style="width: 100px;" placeholder="______"> exerts an equal force <input type="text" style="width: 120px;" placeholder="(direction)"> on the <input type="text" style="width: 100px;" placeholder="______">.</p>
+                        </div>
+                        <div class="quiz-question">
+                            <h4>2. 🌍 The Earth exerts a gravitational force on the Moon.</h4>
+                            <p>Reaction: The <input type="text" style="width: 100px;" placeholder="______"> exerts an equal gravitational force on the <input type="text" style="width: 100px;" placeholder="______">.</p>
+                        </div>
+                        <div class="quiz-question">
+                            <h4>3. 🐒 A monkey hangs from a branch (exerts a downward force on the branch).</h4>
+                            <p>Reaction: The <input type="text" style="width: 100px;" placeholder="______"> exerts an equal force <input type="text" style="width: 120px;" placeholder="(direction)"> on the <input type="text" style="width: 100px;" placeholder="______">.</p>
+                        </div>
+                        <div class="quiz-question">
+                            <h4>4. 🐎 A horse pushes the ground backwards as it gallops.</h4>
+                            <p>Reaction: The <input type="text" style="width: 100px;" placeholder="______"> pushes the <input type="text" style="width: 100px;" placeholder="______"> <input type="text" style="width: 120px;" placeholder="(direction)">.</p>
+                        </div>
+                    </div>
+                    <div class="diff-content core">
+                        <h4>For each scenario, write the full action-reaction pair. Name both objects and both force directions.</h4>
+                        <div class="quiz-question">
+                            <h4>1. A student picks up a book:</h4>
+                            <textarea rows="2" placeholder="Action: Student exerts upward force on book. Reaction: ..."></textarea>
+                        </div>
+                        <div class="quiz-question">
+                            <h4>2. The Earth exerts a gravitational force on the Moon:</h4>
+                            <textarea rows="2"></textarea>
+                        </div>
+                        <div class="quiz-question">
+                            <h4>3. A monkey hangs from a branch:</h4>
+                            <textarea rows="2"></textarea>
+                        </div>
+                        <div class="quiz-question">
+                            <h4>4. A horse gallops along the ground:</h4>
+                            <textarea rows="2"></textarea>
+                        </div>
+                        <div class="quiz-question">
+                            <h4>5. A swimmer pushes water backwards with their hands:</h4>
+                            <textarea rows="2"></textarea>
+                        </div>
+                    </div>
+                    <div class="diff-content challenge">
+                        <h4>Extended contexts — explain the action-reaction pairs AND link to motion:</h4>
+                        <div class="quiz-question">
+                            <h4>1. A rocket launches from Earth. Explain, using Newton's Third Law, how this occurs. (3 marks)</h4>
+                            <textarea rows="3" placeholder="The rocket engine pushes gases..."></textarea>
+                        </div>
+                        <div class="quiz-question">
+                            <h4>2. A runner sprints along a track. Explain, using Newton's Third Law, how the runner moves forward. (3 marks)</h4>
+                            <textarea rows="3"></textarea>
+                        </div>
+                        <div class="quiz-question">
+                            <h4>3. The Moon orbits the Earth. Explain the 3rd Law pair and why the Moon moves more than the Earth. (4 marks)</h4>
+                            <textarea rows="4" placeholder="The Earth pulls the Moon with a gravitational force. The Moon pulls the Earth with an equal force. However..."></textarea>
+                        </div>
+                        <div class="quiz-question">
+                            <h4>4. Why do astronauts push gently when moving inside a spacecraft? (2 marks)</h4>
+                            <textarea rows="2"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="reveal-section">
+                    <button class="btn btn-secondary" onclick="toggleReveal(this)">Reveal Model Answers</button>
+                    <div class="reveal-content">
+                        <p><strong>1. Student & book:</strong> Action: Student exerts upward force on book. Reaction: Book exerts equal downward force on student's hand.</p>
+                        <p><strong>2. Earth & Moon:</strong> Action: Earth pulls Moon towards it. Reaction: Moon pulls Earth towards it with an equal gravitational force.</p>
+                        <p><strong>3. Monkey & branch:</strong> Action: Monkey pulls branch down. Reaction: Branch pulls monkey up.</p>
+                        <p><strong>4. Horse & ground:</strong> Action: Horse pushes ground backwards. Reaction: Ground pushes horse forwards.</p>
+                        <p><strong>5. Swimmer:</strong> Action: Swimmer pushes water backwards. Reaction: Water pushes swimmer forwards.</p>
+                        <p><strong>Challenge 3 (Moon):</strong> The forces are equal (3rd Law), but the Earth has much greater mass, so by F = ma its acceleration is tiny. The Moon, with less mass, accelerates more noticeably — which is why it orbits the Earth.</p>
+                        <p><strong>Challenge 4 (Astronauts):</strong> Minimal friction in a spacecraft means even a small reaction force causes noticeable acceleration (F = ma with small mass relative to force).</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========== TAB 6: LEANING WALL TASK ========== -->
+        <section class="tab-content" id="tab6">
+            <div class="section-card">
+                <div class="section-title">
+                    <h2>The Leaning Wall Task</h2>
+                    <span class="teacher-badge">Live Modelling</span>
+                    <span class="gtt-badge">GTT: Explaining & Modelling</span>
+                    <span class="evidence-badge">Elaboration</span>
+                </div>
+
+                <div class="teacher-section">
+                    <h3>📚 Teacher Demonstration</h3>
+                    <p>Look at the picture: a person is leaning on a wall. Think about these questions:</p>
+                    <div class="model-example">
+                        <p style="font-size: 1.05rem; text-align: center;">"If the person is pushing the wall, <strong>why doesn't the wall move?</strong>"</p>
+                        <p style="font-size: 1.05rem; text-align: center; margin-top: 0.5rem;">"<strong>Why doesn't the person fall through the wall?</strong>"</p>
+                    </div>
+                </div>
+
+                <!-- SVG Force Diagram -->
+                <div class="force-pair-diagram">
+                    <h4 style="color: #333; margin-bottom: 1rem;">Force Pairs on a Person Leaning Against a Wall</h4>
+                    <svg viewBox="0 0 500 350" width="100%" style="max-width: 500px;">
+                        <!-- Wall -->
+                        <rect x="20" y="30" width="20" height="280" fill="#9e9e9e" stroke="#666" stroke-width="2"/>
+                        <line x1="20" y1="30" x2="40" y2="30" stroke="#666" stroke-width="2"/>
+                        <!-- Floor -->
+                        <rect x="20" y="310" width="460" height="10" fill="#8d6e63" stroke="#666" stroke-width="2"/>
+                        <!-- Stick figure -->
+                        <circle cx="180" cy="80" r="25" fill="none" stroke="#333" stroke-width="3"/>
+                        <line x1="180" y1="105" x2="180" y2="210" stroke="#333" stroke-width="3"/>
+                        <line x1="180" y1="130" x2="40" y2="160" stroke="#333" stroke-width="3"/>
+                        <line x1="180" y1="130" x2="240" y2="180" stroke="#333" stroke-width="3"/>
+                        <line x1="180" y1="210" x2="130" y2="310" stroke="#333" stroke-width="3"/>
+                        <line x1="180" y1="210" x2="230" y2="310" stroke="#333" stroke-width="3"/>
+
+                        <!-- HORIZONTAL PAIR: Hand on Wall / Wall on Hand -->
+                        <line x1="40" y1="160" x2="80" y2="160" stroke="#e94560" stroke-width="3" marker-end="url(#arrowRedLeft)"/>
+                        <text x="50" y="145" fill="#e94560" font-size="10" font-weight="bold">Hand pushes wall</text>
+                        <line x1="40" y1="175" x2="90" y2="175" stroke="#2196f3" stroke-width="3" marker-end="url(#arrowBlueRight)"/>
+                        <text x="95" y="180" fill="#2196f3" font-size="10" font-weight="bold">Wall pushes hand</text>
+
+                        <!-- VERTICAL PAIR: Feet on Floor / Floor on Feet -->
+                        <line x1="130" y1="310" x2="130" y2="330" stroke="#e94560" stroke-width="3" marker-end="url(#arrowRedDown)"/>
+                        <text x="70" y="345" fill="#e94560" font-size="10" font-weight="bold">Feet push floor</text>
+                        <line x1="230" y1="310" x2="230" y2="280" stroke="#2196f3" stroke-width="3" marker-end="url(#arrowBlueUp)"/>
+                        <text x="240" y="290" fill="#2196f3" font-size="10" font-weight="bold">Floor pushes feet</text>
+
+                        <!-- WEIGHT & GRAVITY PAIR (Extension) -->
+                        <line x1="180" y1="210" x2="180" y2="260" stroke="#ff9800" stroke-width="3" marker-end="url(#arrowOrangeDown)"/>
+                        <text x="190" y="245" fill="#ff9800" font-size="10" font-weight="bold">Weight (Earth pulls person)</text>
+
+                        <!-- Legend -->
+                        <rect x="300" y="40" width="180" height="120" rx="8" fill="rgba(255,255,255,0.9)" stroke="#ccc"/>
+                        <text x="315" y="62" fill="#333" font-size="11" font-weight="bold">Key:</text>
+                        <line x1="315" y1="78" x2="345" y2="78" stroke="#e94560" stroke-width="3"/>
+                        <text x="350" y="82" fill="#333" font-size="10">Action force</text>
+                        <line x1="315" y1="98" x2="345" y2="98" stroke="#2196f3" stroke-width="3"/>
+                        <text x="350" y="102" fill="#333" font-size="10">Reaction force</text>
+                        <line x1="315" y1="118" x2="345" y2="118" stroke="#ff9800" stroke-width="3"/>
+                        <text x="350" y="122" fill="#333" font-size="10">Weight</text>
+                        <text x="315" y="148" fill="#666" font-size="9">Arrows = equal size</text>
+
+                        <!-- Arrow markers -->
+                        <defs>
+                            <marker id="arrowRedLeft" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto-start-reverse"><polygon points="8 0, 0 3, 8 6" fill="#e94560"/></marker>
+                            <marker id="arrowBlueRight" markerWidth="8" markerHeight="6" refX="0" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#2196f3"/></marker>
+                            <marker id="arrowRedDown" markerWidth="6" markerHeight="8" refX="3" refY="8" orient="auto"><polygon points="0 0, 3 8, 6 0" fill="#e94560"/></marker>
+                            <marker id="arrowBlueUp" markerWidth="6" markerHeight="8" refX="3" refY="0" orient="auto"><polygon points="0 8, 3 0, 6 8" fill="#2196f3"/></marker>
+                            <marker id="arrowOrangeDown" markerWidth="6" markerHeight="8" refX="3" refY="8" orient="auto"><polygon points="0 0, 3 8, 6 0" fill="#ff9800"/></marker>
+                        </defs>
+                    </svg>
+                </div>
+
+                <div class="diff-container" data-diff-group="wall">
+                    <div class="diff-tabs">
+                        <button class="diff-tab foundation active" data-level="foundation">Foundation<span class="scaffolding-indicator">Label Diagram</span></button>
+                        <button class="diff-tab core" data-level="core">Core<span class="scaffolding-indicator">Draw & Label</span></button>
+                        <button class="diff-tab challenge" data-level="challenge">Challenge<span class="scaffolding-indicator">Add 3rd Pair</span></button>
+                    </div>
+                    <div class="diff-content foundation active">
+                        <h4>Label the force pairs — use the diagram above to help you:</h4>
+                        <div class="quiz-question">
+                            <h4>Horizontal pair:</h4>
+                            <p>Action: Person's hand pushes the <input type="text" style="width: 100px;" placeholder="______"> to the <input type="text" style="width: 100px;" placeholder="(direction)"></p>
+                            <p>Reaction: The <input type="text" style="width: 100px;" placeholder="______"> pushes the person's hand to the <input type="text" style="width: 100px;" placeholder="(direction)"></p>
+                        </div>
+                        <div class="quiz-question">
+                            <h4>Vertical pair:</h4>
+                            <p>Action: Person's feet push the <input type="text" style="width: 100px;" placeholder="______"> <input type="text" style="width: 100px;" placeholder="(direction)"></p>
+                            <p>Reaction: The <input type="text" style="width: 100px;" placeholder="______"> pushes the person's feet <input type="text" style="width: 100px;" placeholder="(direction)"></p>
+                        </div>
+                        <div class="info-box">
+                            <h4>Now draw this in your book!</h4>
+                            <p>Draw a stickman leaning on a wall. Add arrows for both pairs. Use red for action and blue for reaction.</p>
+                        </div>
+                    </div>
+                    <div class="diff-content core">
+                        <h4>In your book, draw a person leaning on a wall. Show and label:</h4>
+                        <div class="info-box">
+                            <p>✅ The horizontal action-reaction pair (hand ↔ wall)</p>
+                            <p>✅ The vertical action-reaction pair (feet ↔ floor)</p>
+                            <p>✅ Arrows must be equal length and opposite direction</p>
+                            <p>✅ Label which object each force acts on</p>
+                        </div>
+                        <div class="input-group"><label>Describe the two force pairs in full sentences:</label><textarea rows="4" placeholder="Horizontal pair: The person's hand pushes the wall to the left. The wall pushes the person's hand to the right. These are equal and opposite forces acting on different objects.&#10;&#10;Vertical pair: ..."></textarea></div>
+                    </div>
+                    <div class="diff-content challenge">
+                        <h4>Draw the diagram with ALL THREE pairs, including the gravity pair:</h4>
+                        <div class="info-box warning">
+                            <p>✅ Horizontal pair: Hand ↔ Wall</p>
+                            <p>✅ Vertical pair: Feet ↔ Floor</p>
+                            <p>✅ <strong>Gravity pair: Earth pulls person down ↔ Person pulls Earth up</strong></p>
+                        </div>
+                        <div class="input-group"><label>Describe ALL THREE pairs in detail. Explain why the third pair is particularly hard for people to believe:</label><textarea rows="5" placeholder="The third pair is the gravitational pair. Earth pulls the person downwards with a force equal to their weight. The person pulls the Earth upwards with an equal force. This is hard to believe because..."></textarea></div>
+                    </div>
+                </div>
+
+                <div class="info-box teacher" style="margin-top: 1.5rem;">
+                    <h4>📝 Peer Assessment Criteria (Green Pen)</h4>
+                    <p>Check your partner's diagram:</p>
+                    <p>☐ Are the arrows the <strong>same size</strong> (equal forces)?</p>
+                    <p>☐ Are they in <strong>opposite directions</strong>?</p>
+                    <p>☐ Are the forces acting on <strong>different objects</strong>?</p>
+                    <p>☐ Are all arrows <strong>labelled</strong> clearly?</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========== TAB 7: PROGRESS CHECK ========== -->
+        <section class="tab-content" id="tab7">
+            <div class="section-card">
+                <div class="section-title">
+                    <h2>Progress Check</h2>
+                    <span class="gtt-badge">GTT: Consolidation</span>
+                    <span class="evidence-badge">Assessment</span>
+                </div>
+
+                <div class="info-box success">
+                    <h4>Learning Objectives Check</h4>
+                    <div style="display: flex; flex-direction: column; gap: 0.5rem; margin-top: 0.5rem;">
+                        <label class="quiz-option"><input type="checkbox"> I can recall and identify different types of forces</label>
+                        <label class="quiz-option"><input type="checkbox"> I can state Newton's 3rd Law and identify action-reaction force pairs</label>
+                        <label class="quiz-option"><input type="checkbox"> I can distinguish between balanced forces and Newton's 3rd Law pairs</label>
+                    </div>
+                </div>
+
+                <div class="diff-container" data-diff-group="progress">
+                    <div class="diff-tabs">
+                        <button class="diff-tab foundation active" data-level="foundation">Foundation<span class="scaffolding-indicator">AO1: Recall</span></button>
+                        <button class="diff-tab core" data-level="core">Core<span class="scaffolding-indicator">AO2: Explain</span></button>
+                        <button class="diff-tab challenge" data-level="challenge">Challenge<span class="scaffolding-indicator">AO3: Evaluate</span></button>
+                    </div>
+                    <div class="diff-content foundation active">
+                        <h4>Section A — Multiple Choice (AO1)</h4>
+
+                        <div class="quiz-question">
+                            <h4>1. Newton's Third Law states:</h4>
+                            <div class="quiz-options">
+                                <label class="quiz-option"><input type="radio" name="pq1"> F = m × a</label>
+                                <label class="quiz-option"><input type="radio" name="pq1"> Forces cause acceleration</label>
+                                <label class="quiz-option"><input type="radio" name="pq1"> Every action has an equal and opposite reaction</label>
+                                <label class="quiz-option"><input type="radio" name="pq1"> Objects remain at rest unless acted on</label>
+                            </div>
+                        </div>
+
+                        <div class="quiz-question">
+                            <h4>2. If you push a wall, the wall:</h4>
+                            <div class="quiz-options">
+                                <label class="quiz-option"><input type="radio" name="pq2"> Does nothing</label>
+                                <label class="quiz-option"><input type="radio" name="pq2"> Pushes back with a larger force</label>
+                                <label class="quiz-option"><input type="radio" name="pq2"> Pushes back with an equal force</label>
+                                <label class="quiz-option"><input type="radio" name="pq2"> Moves forward</label>
+                            </div>
+                        </div>
+
+                        <div class="quiz-question">
+                            <h4>3. Action-reaction forces act on:</h4>
+                            <div class="quiz-options">
+                                <label class="quiz-option"><input type="radio" name="pq3"> The same object</label>
+                                <label class="quiz-option"><input type="radio" name="pq3"> Different objects</label>
+                                <label class="quiz-option"><input type="radio" name="pq3"> Only moving objects</label>
+                            </div>
+                        </div>
+
+                        <h4 style="margin-top: 1.5rem;">Section B — Fill in the Blanks</h4>
+                        <div class="quiz-question">
+                            <p>Every action has an <input type="text" style="width: 100px;" placeholder="______"> and <input type="text" style="width: 100px;" placeholder="______"> reaction.</p>
+                            <p style="margin-top: 0.5rem;">Action-reaction forces act on <input type="text" style="width: 120px;" placeholder="______"> objects.</p>
+                        </div>
+
+                        <h4 style="margin-top: 1.5rem;">Section C — Summarise</h4>
+                        <div class="quiz-question">
+                            <h4>Summarise Newton's Third Law in ONE sentence. You must include the phrase "different objects".</h4>
+                            <textarea rows="2"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="diff-content core">
+                        <h4>Section A — Short Answer (AO2)</h4>
+
+                        <div class="quiz-question">
+                            <h4>1. Explain Newton's Third Law in a sentence. (1 mark)</h4>
+                            <textarea rows="2"></textarea>
+                        </div>
+                        <div class="quiz-question">
+                            <h4>2. What does it mean if forces are in equilibrium? (1 mark)</h4>
+                            <textarea rows="2"></textarea>
+                        </div>
+                        <div class="quiz-question">
+                            <h4>3. How are action-reaction pairs different to balanced forces? (2 marks)</h4>
+                            <textarea rows="3"></textarea>
+                        </div>
+                        <div class="quiz-question">
+                            <h4>4. A person stands still on the ground. Explain how Newton's Third Law applies. (3 marks)</h4>
+                            <textarea rows="3" placeholder="State the law. Identify the force pair. Name the objects."></textarea>
+                        </div>
+                        <div class="quiz-question">
+                            <h4>5. Explain why a rocket moves upwards when gases are expelled downwards. (3 marks)</h4>
+                            <textarea rows="3"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="diff-content challenge">
+                        <h4>Extended Response (AO3)</h4>
+
+                        <div class="quiz-question">
+                            <h4>1. (6 marks) A student says: "If action and reaction forces are equal and opposite, objects should never move." Evaluate this statement.</h4>
+                            <div class="scaffold-box"><h4>Mark Scheme Structure</h4>
+                                <p>• Acknowledge the misunderstanding (1)</p>
+                                <p>• Explain forces act on different objects (1)</p>
+                                <p>• Explain movement depends on resultant force on ONE object (1)</p>
+                                <p>• Use a named example (1)</p>
+                                <p>• Apply example in detail (1)</p>
+                                <p>• Clear conclusion (1)</p>
+                            </div>
+                            <textarea rows="6" placeholder="The student has made a common error. While it is true that action-reaction forces are equal and opposite..."></textarea>
+                        </div>
+
+                        <div class="quiz-question">
+                            <h4>2. (6 marks) A car accelerates forward. Explain, using Newton's Third Law and ideas about resultant force, how this motion occurs.</h4>
+                            <textarea rows="5" placeholder="Include: friction between tyres and road, the action-reaction pair, resultant force on the car, link to acceleration"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="reveal-section">
+                    <button class="btn btn-secondary" onclick="toggleReveal(this)">Reveal Model Answers</button>
+                    <div class="reveal-content">
+                        <h4>Foundation:</h4>
+                        <p>1. C — Every action has an equal and opposite reaction</p>
+                        <p>2. C — Pushes back with an equal force</p>
+                        <p>3. B — Different objects</p>
+                        <p>Fill in: equal, opposite, different</p>
+
+                        <h4 style="margin-top: 1rem;">Core:</h4>
+                        <p>1. Every action has an equal and opposite reaction.</p>
+                        <p>2. Forces are balanced and in opposite directions — no resultant force.</p>
+                        <p>3. Action-reaction pairs act on different objects; balanced forces act on the same object.</p>
+                        <p>4. Person pushes floor down (action). Floor pushes person up (reaction). Equal forces, opposite directions, different objects.</p>
+                        <p>5. Rocket pushes gases downward (1). Gases push rocket upward (1). Equal and opposite forces on different objects (1).</p>
+
+                        <h4 style="margin-top: 1rem;">Challenge:</h4>
+                        <p>1. The student is wrong. Action-reaction forces DO NOT cancel out because they act on DIFFERENT objects. For something to move, we look at the resultant force on ONE object. E.g., when a rocket launches, the exhaust gas pushes the rocket up while the rocket pushes gas down — these act on different things. The rocket accelerates because the thrust on the rocket is greater than its weight.</p>
+                        <p>2. The tyres push the road backwards (action). The road pushes the tyres forwards (reaction) — this is friction. These act on different objects (tyres and road). The forward friction force on the car is greater than air resistance, giving a resultant forward force. By F = ma, this causes the car to accelerate.</p>
+                    </div>
+                </div>
+
+                <!-- Self Assessment -->
+                <div class="interactive-area" style="margin-top: 2rem;">
+                    <h4>Self-Assessment</h4>
+                    <table class="data-table">
+                        <tr><th>Skill</th><th>Confidence (1-5)</th></tr>
+                        <tr><td>State Newton's Third Law</td><td><select style="padding: 0.5rem; background: rgba(255,255,255,0.1); border-radius: 4px; color: white;"><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></td></tr>
+                        <tr><td>Identify action-reaction force pairs</td><td><select style="padding: 0.5rem; background: rgba(255,255,255,0.1); border-radius: 4px; color: white;"><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></td></tr>
+                        <tr><td>Distinguish balanced forces from 3rd Law pairs</td><td><select style="padding: 0.5rem; background: rgba(255,255,255,0.1); border-radius: 4px; color: white;"><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></td></tr>
+                        <tr><td>Draw and label force pair diagrams</td><td><select style="padding: 0.5rem; background: rgba(255,255,255,0.1); border-radius: 4px; color: white;"><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></td></tr>
+                    </table>
+                </div>
+
+                <!-- Homework -->
+                <div class="info-box warning" style="margin-top: 2rem;">
+                    <h4>📝 Homework</h4>
+                    <p><strong>Observational Task:</strong> Find three examples of Newton's Third Law in your home (e.g., sitting on a chair, a picture hanging on a nail, walking on a rug). For each, name the action force, the reaction force, and the two objects involved.</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <div class="progress-bar">
+        <div class="progress-fill" id="progressFill" style="width: 14.28%;"></div>
+    </div>
+
+    <script>
+        // Tab Navigation
+        const progressFill = document.getElementById('progressFill');
+        const navTabs = document.querySelectorAll('.nav-tab');
+        const tabContents = document.querySelectorAll('.tab-content');
+
+        navTabs.forEach((tab, index) => {
+            tab.addEventListener('click', () => {
+                navTabs.forEach(t => t.classList.remove('active'));
+                tabContents.forEach(c => c.classList.remove('active'));
+                tab.classList.add('active');
+                document.getElementById(tab.dataset.tab).classList.add('active');
+                progressFill.style.width = ((index + 1) / navTabs.length * 100) + '%';
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        });
+
+        // Differentiation Tabs
+        document.querySelectorAll('.diff-container').forEach(container => {
+            const tabs = container.querySelectorAll('.diff-tab');
+            const contents = container.querySelectorAll('.diff-content');
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const level = tab.dataset.level;
+                    tabs.forEach(t => t.classList.remove('active'));
+                    contents.forEach(c => c.classList.remove('active'));
+                    tab.classList.add('active');
+                    container.querySelector(`.diff-content.${level}`).classList.add('active');
+                });
+            });
+        });
+
+        // Reveal Answer Function
+        function toggleReveal(button) {
+            const revealContent = button.nextElementSibling;
+            revealContent.classList.toggle('visible');
+            button.textContent = revealContent.classList.contains('visible') ? 'Hide Answers' : 'Reveal Model Answers';
+        }
+
+        // Anagram Checker
+        function checkAnagrams() {
+            const cards = document.querySelectorAll('.anagram-card');
+            let correct = 0;
+            cards.forEach(card => {
+                const answer = card.dataset.answer.toUpperCase().trim();
+                const input = card.querySelector('input');
+                const userAnswer = input.value.toUpperCase().trim();
+                if (userAnswer === answer) {
+                    input.classList.remove('incorrect');
+                    input.classList.add('correct');
+                    card.classList.add('solved');
+                    correct++;
+                } else if (userAnswer !== '') {
+                    input.classList.remove('correct');
+                    input.classList.add('incorrect');
+                    card.classList.remove('solved');
+                }
+            });
+            const scoreEl = document.getElementById('anagramScore');
+            scoreEl.style.display = 'block';
+            scoreEl.textContent = `Score: ${correct} / ${cards.length}`;
+            scoreEl.style.color = correct === cards.length ? '#81c784' : '#ffb74d';
+        }
+
+        function revealAnagrams() {
+            document.querySelectorAll('.anagram-card').forEach(card => {
+                const input = card.querySelector('input');
+                input.value = card.dataset.answer;
+                input.classList.add('correct');
+                card.classList.add('solved');
+            });
+            const scoreEl = document.getElementById('anagramScore');
+            scoreEl.style.display = 'block';
+            scoreEl.textContent = 'All answers revealed!';
+            scoreEl.style.color = '#64b5f6';
+        }
+
+        // Quiz option selection
+        document.querySelectorAll('.quiz-option').forEach(option => {
+            option.addEventListener('click', function() {
+                if (this.querySelector('input[type="checkbox"]')) return;
+                const radio = this.querySelector('input[type="radio"]');
+                if (radio) {
+                    const parent = this.closest('.quiz-options');
+                    if (parent) {
+                        parent.querySelectorAll('.quiz-option').forEach(opt => opt.classList.remove('selected'));
+                    }
+                    this.classList.add('selected');
+                }
+            });
+        });
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') {
+                const currentIndex = Array.from(navTabs).findIndex(tab => tab.classList.contains('active'));
+                if (currentIndex < navTabs.length - 1) navTabs[currentIndex + 1].click();
+            }
+            if (e.key === 'ArrowLeft') {
+                const currentIndex = Array.from(navTabs).findIndex(tab => tab.classList.contains('active'));
+                if (currentIndex > 0) navTabs[currentIndex - 1].click();
+            }
+        });
+
+        // Save/Load progress
+        function saveProgress() {
+            const inputs = document.querySelectorAll('textarea, input[type="text"]');
+            const data = {};
+            inputs.forEach((input, index) => {
+                if (input.value) data['L4input_' + index] = input.value;
+            });
+            localStorage.setItem('lesson4Progress', JSON.stringify(data));
+        }
+
+        function loadProgress() {
+            const saved = localStorage.getItem('lesson4Progress');
+            if (saved) {
+                const data = JSON.parse(saved);
+                const inputs = document.querySelectorAll('textarea, input[type="text"]');
+                inputs.forEach((input, index) => {
+                    if (data['L4input_' + index]) input.value = data['L4input_' + index];
+                });
+            }
+        }
+
+        setInterval(saveProgress, 30000);
+        window.addEventListener('load', loadProgress);
+        window.addEventListener('beforeunload', saveProgress);
+
+        console.log('Lesson 4: Newton\'s Third Law loaded successfully!');
+        console.log('Use arrow keys (← →) to navigate between tabs');
+    </script>
+</body>
+</html>
