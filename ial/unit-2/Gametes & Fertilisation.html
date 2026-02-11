@@ -1,0 +1,1661 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gametes &amp; Fertilisation — A-Level Biology</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300..700;1,9..40,300..700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f5f0e8;
+  --bg-warm: #efe8db;
+  --ink: #1a1714;
+  --ink-soft: #4a443b;
+  --ink-muted: #8a8278;
+  --accent: #c44b2b;
+  --accent-light: #e8704f;
+  --accent-bg: #fdf0ec;
+  --teal: #1a7a6d;
+  --teal-light: #e6f5f2;
+  --teal-dark: #0f574d;
+  --blue: #2a5d8f;
+  --blue-light: #e8f0f8;
+  --purple: #6b4c8a;
+  --purple-light: #f0eaf5;
+  --gold: #b8860b;
+  --gold-light: #fdf6e3;
+  --success: #2d8a4e;
+  --success-bg: #e8f5ed;
+  --error: #c44b2b;
+  --error-bg: #fdf0ec;
+  --card: #fffdf8;
+  --card-border: #e0d8cc;
+  --radius: 6px;
+  --radius-lg: 12px;
+  --shadow-sm: 0 1px 3px rgba(26,23,20,0.06);
+  --shadow-md: 0 4px 12px rgba(26,23,20,0.08);
+  --shadow-lg: 0 8px 30px rgba(26,23,20,0.12);
+  --font-display: 'Instrument Serif', Georgia, serif;
+  --font-body: 'DM Sans', -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; font-size: 16px; }
+
+body {
+  font-family: var(--font-body);
+  color: var(--ink);
+  background: var(--bg);
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ─── PROGRESS BAR ─── */
+.progress-bar {
+  position: fixed; top: 0; left: 0; z-index: 1000;
+  height: 4px; background: var(--accent);
+  width: 0%; transition: width 0.3s ease;
+}
+
+/* ─── NAV ─── */
+.lesson-nav {
+  position: fixed; top: 4px; left: 0; right: 0; z-index: 999;
+  background: rgba(245,240,232,0.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--card-border);
+  padding: 0.6rem 1.5rem;
+  display: flex; align-items: center; gap: 1rem;
+  font-size: 0.82rem;
+}
+.lesson-nav .nav-title {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  color: var(--accent);
+  white-space: nowrap;
+}
+.nav-sections {
+  display: flex; gap: 0.25rem; overflow-x: auto;
+  scrollbar-width: none; flex: 1;
+}
+.nav-sections::-webkit-scrollbar { display: none; }
+.nav-pill {
+  padding: 0.3rem 0.7rem;
+  border-radius: 20px;
+  background: transparent;
+  border: 1px solid transparent;
+  cursor: pointer;
+  white-space: nowrap;
+  font-size: 0.78rem;
+  color: var(--ink-soft);
+  transition: all 0.2s;
+  font-family: var(--font-body);
+}
+.nav-pill:hover { background: var(--card); border-color: var(--card-border); }
+.nav-pill.active { background: var(--accent); color: white; border-color: var(--accent); }
+
+/* ─── LAYOUT ─── */
+.container { max-width: 860px; margin: 0 auto; padding: 5rem 1.5rem 4rem; }
+
+/* ─── HERO ─── */
+.hero {
+  text-align: center;
+  padding: 3rem 0 2rem;
+  animation: fadeUp 0.8s ease;
+}
+.hero .spec-ref {
+  display: inline-flex; gap: 0.4rem;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--ink-muted);
+  letter-spacing: 0.05em;
+  margin-bottom: 1rem;
+}
+.hero .spec-ref span {
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+}
+.hero h1 {
+  font-family: var(--font-display);
+  font-size: clamp(2.2rem, 5vw, 3.2rem);
+  line-height: 1.15;
+  color: var(--ink);
+  margin-bottom: 0.8rem;
+}
+.hero h1 em { color: var(--accent); font-style: italic; }
+.hero .subtitle {
+  font-size: 1.05rem;
+  color: var(--ink-soft);
+  max-width: 600px;
+  margin: 0 auto 1.5rem;
+}
+.big-question {
+  background: linear-gradient(135deg, var(--accent-bg), var(--gold-light));
+  border: 1px solid #e8d4c0;
+  border-radius: var(--radius-lg);
+  padding: 1.2rem 1.5rem;
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-style: italic;
+  color: var(--accent);
+  max-width: 650px;
+  margin: 0 auto;
+}
+
+/* ─── LEARNING OBJECTIVES ─── */
+.objectives-bar {
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-lg);
+  padding: 1.2rem 1.5rem;
+  margin: 2rem 0;
+  box-shadow: var(--shadow-sm);
+}
+.objectives-bar summary {
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--teal-dark);
+  list-style: none;
+  display: flex; align-items: center; gap: 0.5rem;
+}
+.objectives-bar summary::before { content: '🎯'; }
+.objectives-bar summary::after {
+  content: '▾';
+  margin-left: auto;
+  transition: transform 0.2s;
+}
+.objectives-bar[open] summary::after { transform: rotate(180deg); }
+.objectives-list {
+  margin-top: 1rem;
+  display: grid; gap: 0.6rem;
+}
+.obj-item {
+  display: flex; align-items: flex-start; gap: 0.6rem;
+  font-size: 0.92rem;
+  color: var(--ink-soft);
+  padding: 0.5rem 0.7rem;
+  border-radius: var(--radius);
+  background: var(--teal-light);
+  border-left: 3px solid var(--teal);
+}
+.obj-item .obj-tag {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  background: var(--teal);
+  color: white;
+  padding: 0.15rem 0.4rem;
+  border-radius: 3px;
+  white-space: nowrap;
+  margin-top: 2px;
+}
+
+/* ─── SECTIONS ─── */
+.section {
+  margin: 3rem 0;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.section.visible { opacity: 1; transform: translateY(0); }
+
+.section-label {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-muted);
+  margin-bottom: 0.5rem;
+}
+.section-label .dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+}
+.section-label .dot.red { background: var(--accent); }
+.section-label .dot.teal { background: var(--teal); }
+.section-label .dot.blue { background: var(--blue); }
+.section-label .dot.purple { background: var(--purple); }
+
+h2 {
+  font-family: var(--font-display);
+  font-size: 1.9rem;
+  line-height: 1.2;
+  margin-bottom: 0.6rem;
+}
+h3 {
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  line-height: 1.3;
+  margin-bottom: 0.5rem;
+  margin-top: 1.8rem;
+}
+h3:first-child { margin-top: 0; }
+
+p { margin-bottom: 1rem; color: var(--ink-soft); font-size: 0.95rem; }
+p strong { color: var(--ink); }
+
+/* ─── CONTENT CARDS ─── */
+.card {
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  margin: 1.2rem 0;
+  box-shadow: var(--shadow-sm);
+}
+
+.key-term {
+  display: inline;
+  background: var(--gold-light);
+  border-bottom: 2px solid var(--gold);
+  padding: 0.1rem 0.3rem;
+  border-radius: 2px;
+  cursor: help;
+  position: relative;
+}
+.key-term .term-def {
+  display: none;
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--ink);
+  color: white;
+  padding: 0.6rem 0.8rem;
+  border-radius: var(--radius);
+  font-size: 0.82rem;
+  line-height: 1.4;
+  width: 260px;
+  z-index: 50;
+  box-shadow: var(--shadow-lg);
+  font-weight: 400;
+}
+.key-term:hover .term-def { display: block; }
+
+/* ─── EXAM HINT ─── */
+.exam-hint {
+  background: var(--accent-bg);
+  border-left: 4px solid var(--accent);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  padding: 1rem 1.2rem;
+  margin: 1.2rem 0;
+  font-size: 0.88rem;
+}
+.exam-hint .hint-label {
+  font-weight: 700;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--accent);
+  margin-bottom: 0.3rem;
+}
+
+/* ─── LEARNING TIP ─── */
+.learning-tip {
+  background: var(--teal-light);
+  border-left: 4px solid var(--teal);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  padding: 1rem 1.2rem;
+  margin: 1.2rem 0;
+  font-size: 0.88rem;
+}
+.learning-tip .tip-label {
+  font-weight: 700;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--teal-dark);
+  margin-bottom: 0.3rem;
+}
+
+/* ─── SCAFFOLD BOX ─── */
+.scaffold {
+  background: var(--purple-light);
+  border-left: 4px solid var(--purple);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  padding: 1rem 1.2rem;
+  margin: 1.2rem 0;
+  font-size: 0.88rem;
+}
+.scaffold .scaffold-label {
+  font-weight: 700;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--purple);
+  margin-bottom: 0.3rem;
+}
+
+/* ─── INTERACTIVE DIAGRAMS ─── */
+.diagram-container {
+  background: white;
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  margin: 1.5rem 0;
+  position: relative;
+  overflow: hidden;
+}
+.diagram-title {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--ink-muted);
+  margin-bottom: 1rem;
+}
+
+/* SVG diagrams */
+.bio-svg { width: 100%; height: auto; }
+.bio-svg text {
+  font-family: var(--font-body);
+  font-size: 11px;
+  fill: var(--ink-soft);
+}
+.bio-svg .label-bold {
+  font-weight: 600;
+  fill: var(--ink);
+  font-size: 12px;
+}
+.bio-svg .highlight-part { cursor: pointer; transition: opacity 0.3s; }
+.bio-svg .highlight-part:hover { opacity: 0.8; }
+
+.hotspot {
+  position: absolute;
+  width: 26px; height: 26px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: white;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.7rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 0 0 3px rgba(196,75,43,0.2);
+  transition: transform 0.2s, box-shadow 0.2s;
+  z-index: 5;
+}
+.hotspot:hover {
+  transform: scale(1.15);
+  box-shadow: 0 0 0 5px rgba(196,75,43,0.3);
+}
+.hotspot.teal-hs { background: var(--teal); box-shadow: 0 0 0 3px rgba(26,122,109,0.2); }
+.hotspot.teal-hs:hover { box-shadow: 0 0 0 5px rgba(26,122,109,0.3); }
+
+.info-panel {
+  background: var(--ink);
+  color: white;
+  padding: 0.8rem 1rem;
+  border-radius: var(--radius);
+  font-size: 0.85rem;
+  line-height: 1.5;
+  margin-top: 0.8rem;
+  display: none;
+  animation: fadeUp 0.3s ease;
+}
+.info-panel.show { display: block; }
+.info-panel .panel-title {
+  font-weight: 700;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--accent-light);
+  margin-bottom: 0.2rem;
+}
+
+/* ─── QUIZ / RETRIEVAL WIDGETS ─── */
+.quiz-widget {
+  background: var(--card);
+  border: 2px solid var(--card-border);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  margin: 1.5rem 0;
+  box-shadow: var(--shadow-sm);
+}
+.quiz-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 1rem;
+}
+.quiz-type {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: white;
+  background: var(--teal);
+  padding: 0.25rem 0.6rem;
+  border-radius: 20px;
+}
+.quiz-type.ao1 { background: var(--teal); }
+.quiz-type.ao2 { background: var(--blue); }
+.quiz-type.ao3 { background: var(--purple); }
+
+.quiz-score {
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  color: var(--ink-muted);
+}
+.quiz-question {
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--ink);
+  margin-bottom: 1rem;
+  line-height: 1.5;
+}
+.quiz-options { display: grid; gap: 0.5rem; }
+.quiz-option {
+  padding: 0.7rem 1rem;
+  border: 2px solid var(--card-border);
+  border-radius: var(--radius);
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: all 0.2s;
+  background: white;
+  display: flex; align-items: center; gap: 0.6rem;
+}
+.quiz-option:hover { border-color: var(--teal); background: var(--teal-light); }
+.quiz-option.selected { border-color: var(--blue); background: var(--blue-light); }
+.quiz-option.correct { border-color: var(--success); background: var(--success-bg); }
+.quiz-option.incorrect { border-color: var(--error); background: var(--error-bg); opacity: 0.7; }
+.quiz-option .opt-letter {
+  width: 24px; height: 24px;
+  border-radius: 50%;
+  background: var(--bg);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+.quiz-option.correct .opt-letter { background: var(--success); color: white; }
+.quiz-option.incorrect .opt-letter { background: var(--error); color: white; }
+
+.quiz-feedback {
+  margin-top: 1rem;
+  padding: 0.8rem 1rem;
+  border-radius: var(--radius);
+  font-size: 0.88rem;
+  line-height: 1.5;
+  display: none;
+}
+.quiz-feedback.show { display: block; }
+.quiz-feedback.correct-fb { background: var(--success-bg); border-left: 3px solid var(--success); }
+.quiz-feedback.incorrect-fb { background: var(--error-bg); border-left: 3px solid var(--error); }
+
+.quiz-btn {
+  margin-top: 1rem;
+  padding: 0.6rem 1.2rem;
+  background: var(--teal);
+  color: white;
+  border: none;
+  border-radius: var(--radius);
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.quiz-btn:hover { background: var(--teal-dark); }
+.quiz-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* ─── FILL IN THE BLANK ─── */
+.fill-blank-widget { margin: 1.5rem 0; }
+.fill-item {
+  display: flex; align-items: center; gap: 0.5rem;
+  margin-bottom: 0.7rem;
+  font-size: 0.92rem;
+  flex-wrap: wrap;
+}
+.fill-item .blank-input {
+  border: none;
+  border-bottom: 2px dashed var(--card-border);
+  background: transparent;
+  font-family: var(--font-body);
+  font-size: 0.92rem;
+  padding: 0.2rem 0.5rem;
+  width: 180px;
+  outline: none;
+  transition: border-color 0.2s;
+  color: var(--ink);
+}
+.fill-item .blank-input:focus { border-color: var(--teal); }
+.fill-item .blank-input.correct-input { border-color: var(--success); border-style: solid; color: var(--success); }
+.fill-item .blank-input.incorrect-input { border-color: var(--error); border-style: solid; color: var(--error); }
+.fill-item .check-icon { font-size: 1rem; }
+
+/* ─── SEQUENCING / DRAG ─── */
+.sequence-widget {
+  background: var(--card);
+  border: 2px solid var(--card-border);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  margin: 1.5rem 0;
+}
+.seq-items { display: grid; gap: 0.4rem; }
+.seq-item {
+  display: flex; align-items: center; gap: 0.7rem;
+  padding: 0.65rem 0.9rem;
+  background: white;
+  border: 1.5px solid var(--card-border);
+  border-radius: var(--radius);
+  cursor: grab;
+  user-select: none;
+  transition: all 0.2s;
+  font-size: 0.9rem;
+}
+.seq-item:active { cursor: grabbing; }
+.seq-item:hover { border-color: var(--blue); background: var(--blue-light); }
+.seq-item.dragging { opacity: 0.4; }
+.seq-item .seq-num {
+  width: 26px; height: 26px;
+  border-radius: 50%;
+  background: var(--bg);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 700;
+  flex-shrink: 0;
+  color: var(--ink-muted);
+}
+.seq-item.correct-seq { border-color: var(--success); background: var(--success-bg); }
+.seq-item.correct-seq .seq-num { background: var(--success); color: white; }
+.seq-item.incorrect-seq { border-color: var(--error); background: var(--error-bg); }
+.seq-item.incorrect-seq .seq-num { background: var(--error); color: white; }
+.seq-item .grip { color: var(--ink-muted); font-size: 1.1rem; flex-shrink: 0; }
+
+/* ─── SCENARIO / APPLICATION ─── */
+.scenario-card {
+  background: var(--blue-light);
+  border: 1px solid #c8daea;
+  border-radius: var(--radius-lg);
+  padding: 1.2rem 1.5rem;
+  margin: 1.2rem 0;
+}
+.scenario-card .scenario-label {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--blue);
+  margin-bottom: 0.5rem;
+}
+.scenario-card .scenario-q {
+  font-weight: 600;
+  font-size: 0.95rem;
+  margin-bottom: 0.7rem;
+}
+.reveal-btn {
+  padding: 0.45rem 1rem;
+  background: var(--blue);
+  color: white;
+  border: none;
+  border-radius: var(--radius);
+  font-family: var(--font-body);
+  font-size: 0.82rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.reveal-btn:hover { background: #1e4a73; }
+.reveal-content {
+  margin-top: 0.8rem;
+  padding: 0.8rem 1rem;
+  background: white;
+  border-radius: var(--radius);
+  font-size: 0.88rem;
+  line-height: 1.6;
+  display: none;
+  border: 1px solid #c8daea;
+}
+.reveal-content.show { display: block; animation: fadeUp 0.3s ease; }
+
+/* ─── COMPARISON TABLE ─── */
+.compare-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+  margin: 1rem 0;
+}
+.compare-table th {
+  background: var(--ink);
+  color: white;
+  padding: 0.7rem 1rem;
+  text-align: left;
+  font-weight: 600;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.compare-table th:first-child { border-radius: var(--radius) 0 0 0; }
+.compare-table th:last-child { border-radius: 0 var(--radius) 0 0; }
+.compare-table td {
+  padding: 0.6rem 1rem;
+  border-bottom: 1px solid var(--card-border);
+  vertical-align: top;
+}
+.compare-table tr:nth-child(even) td { background: var(--bg-warm); }
+.compare-table .feature-col { font-weight: 600; color: var(--ink); white-space: nowrap; }
+
+/* ─── VOCAB GRID ─── */
+.vocab-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 0.6rem;
+  margin: 1rem 0;
+}
+.vocab-card {
+  background: white;
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius);
+  padding: 0.8rem 1rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.vocab-card:hover { border-color: var(--gold); box-shadow: var(--shadow-sm); }
+.vocab-card .v-term {
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: var(--accent);
+  margin-bottom: 0.2rem;
+}
+.vocab-card .v-def {
+  font-size: 0.82rem;
+  color: var(--ink-soft);
+  line-height: 1.45;
+}
+
+/* ─── EXIT TICKET ─── */
+.exit-ticket {
+  background: linear-gradient(135deg, var(--ink) 0%, #2a2520 100%);
+  color: white;
+  border-radius: var(--radius-lg);
+  padding: 2rem;
+  margin: 2rem 0;
+}
+.exit-ticket h3 {
+  font-family: var(--font-display);
+  color: var(--accent-light);
+  margin-top: 0;
+}
+.exit-ticket p { color: rgba(255,255,255,0.75); }
+.exit-ticket textarea {
+  width: 100%;
+  min-height: 80px;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: var(--radius);
+  padding: 0.8rem;
+  color: white;
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  resize: vertical;
+  outline: none;
+  margin: 0.5rem 0;
+}
+.exit-ticket textarea::placeholder { color: rgba(255,255,255,0.35); }
+.exit-ticket textarea:focus { border-color: var(--accent-light); }
+
+/* ─── PROGRESS TRACKER ─── */
+.topic-tracker {
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-lg);
+  padding: 1.2rem 1.5rem;
+  margin: 2rem 0;
+  box-shadow: var(--shadow-sm);
+}
+.tracker-row {
+  display: flex; align-items: center; gap: 0.7rem;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--card-border);
+  font-size: 0.88rem;
+}
+.tracker-row:last-child { border-bottom: none; }
+.tracker-check {
+  width: 22px; height: 22px;
+  border: 2px solid var(--card-border);
+  border-radius: 4px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  flex-shrink: 0;
+  font-size: 0.75rem;
+}
+.tracker-check.checked {
+  background: var(--success);
+  border-color: var(--success);
+  color: white;
+}
+
+/* ─── ANIMATIONS ─── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(196,75,43,0.3); }
+  50% { box-shadow: 0 0 0 8px rgba(196,75,43,0); }
+}
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 640px) {
+  .container { padding: 4.5rem 1rem 3rem; }
+  .hero h1 { font-size: 1.8rem; }
+  h2 { font-size: 1.5rem; }
+  .vocab-grid { grid-template-columns: 1fr; }
+  .compare-table { font-size: 0.8rem; }
+  .compare-table td, .compare-table th { padding: 0.4rem 0.6rem; }
+  .nav-sections { display: none; }
+}
+
+/* ─── TABS ─── */
+.tabs-container { margin: 1.5rem 0; }
+.tab-buttons { display: flex; gap: 0; border-bottom: 2px solid var(--card-border); }
+.tab-btn {
+  padding: 0.6rem 1.2rem;
+  border: none;
+  background: none;
+  font-family: var(--font-body);
+  font-size: 0.88rem;
+  font-weight: 500;
+  color: var(--ink-muted);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+  transition: all 0.2s;
+}
+.tab-btn:hover { color: var(--ink); }
+.tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+.tab-panel { display: none; padding: 1.2rem 0; }
+.tab-panel.active { display: block; animation: fadeUp 0.3s ease; }
+
+/* ─── DUAL CODING CANVAS ─── */
+.dual-code-area {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin: 1rem 0;
+}
+@media (max-width: 640px) { .dual-code-area { grid-template-columns: 1fr; } }
+.dual-code-side {
+  background: white;
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius);
+  padding: 1rem;
+}
+.dual-code-side .dc-label {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--ink-muted);
+  margin-bottom: 0.5rem;
+}
+.drawing-pad {
+  width: 100%;
+  height: 220px;
+  border: 2px dashed var(--card-border);
+  border-radius: var(--radius);
+  cursor: crosshair;
+  touch-action: none;
+  background: #fefefe;
+}
+
+.clear-canvas-btn {
+  margin-top: 0.5rem;
+  padding: 0.3rem 0.7rem;
+  background: var(--bg);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius);
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  cursor: pointer;
+  color: var(--ink-muted);
+}
+.clear-canvas-btn:hover { background: var(--card-border); }
+
+/* ─── SELF-CHECK ACCORDION ─── */
+.self-check details {
+  margin-bottom: 0.6rem;
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.self-check summary {
+  padding: 0.7rem 1rem;
+  cursor: pointer;
+  font-size: 0.92rem;
+  font-weight: 500;
+  background: var(--card);
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.self-check summary::before { content: '❓'; font-size: 0.85rem; }
+.self-check details[open] summary { border-bottom: 1px solid var(--card-border); }
+.self-check .answer {
+  padding: 0.8rem 1rem;
+  font-size: 0.88rem;
+  line-height: 1.6;
+  color: var(--ink-soft);
+  background: white;
+}
+
+/* ─── FOOTER ─── */
+.lesson-footer {
+  text-align: center;
+  padding: 2rem 0;
+  border-top: 1px solid var(--card-border);
+  margin-top: 3rem;
+  font-size: 0.82rem;
+  color: var(--ink-muted);
+}
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="progressBar"></div>
+
+<nav class="lesson-nav">
+  <span class="nav-title">3B.4–5</span>
+  <div class="nav-sections">
+    <button class="nav-pill active" onclick="scrollToSection('hero')">Overview</button>
+    <button class="nav-pill" onclick="scrollToSection('area1')">Mammalian Gametes</button>
+    <button class="nav-pill" onclick="scrollToSection('area2')">Mammalian Fertilisation</button>
+    <button class="nav-pill" onclick="scrollToSection('area3')">Plant Gametes</button>
+    <button class="nav-pill" onclick="scrollToSection('area4')">Plant Fertilisation</button>
+    <button class="nav-pill" onclick="scrollToSection('bridge')">Compare &amp; Synthesise</button>
+    <button class="nav-pill" onclick="scrollToSection('exit')">Exit Ticket</button>
+  </div>
+</nav>
+
+<div class="container">
+
+<!-- ═══════════════════════════════════════ HERO ═══════════════════════════════════════ -->
+<header class="hero" id="hero">
+  <div class="spec-ref"><span>3.10</span><span>3.11</span><span>3.12</span><span>3.13</span></div>
+  <h1>Gametes &amp; <em>Fertilisation</em></h1>
+  <p class="subtitle">Structure, specialisation, and the fusion of nuclei in mammals and flowering plants.</p>
+  <div class="big-question">How do the specialised structures of mammalian and plant gametes facilitate the successful fusion of nuclei while maintaining genetic diversity?</div>
+</header>
+
+<!-- OBJECTIVES -->
+<details class="objectives-bar" open>
+  <summary>Learning Objectives</summary>
+  <div class="objectives-list">
+    <div class="obj-item"><span class="obj-tag">AO1</span> Explain the role of meiosis in producing non-identical gametes</div>
+    <div class="obj-item"><span class="obj-tag">AO2</span> Compare the anatomical adaptations of mammalian sperm and eggs</div>
+    <div class="obj-item"><span class="obj-tag">AO1</span> Describe the acrosome reaction, cortical reaction, and fusion of nuclei</div>
+    <div class="obj-item"><span class="obj-tag">AO2</span> Describe the unique double fertilisation process in flowering plants</div>
+    <div class="obj-item"><span class="obj-tag">AO3</span> Analyse the mechanisms used by organisms to prevent polyspermy</div>
+  </div>
+</details>
+
+<!-- ═══════════ AREA 1: MAMMALIAN GAMETES ═══════════ -->
+<section class="section" id="area1">
+  <div class="section-label"><span class="dot red"></span> Area 1</div>
+  <h2>Mammalian Gametes</h2>
+  <p>The gametes that make sexual reproduction possible are formed in a process called <span class="key-term">gametogenesis<span class="term-def">The formation of gametes by meiosis in the sex organs.</span></span>. Meiosis is just one stage — it causes the reduction of genetic material, producing haploid cells. Mitosis provides the precursor cells. In human males, gametogenesis involving meiotic and mitotic divisions happens constantly from puberty onwards. In females, mitotic divisions occur before birth to form diploid primary <span class="key-term">oocytes<span class="term-def">A cell in an ovary which may form an ovum if it undergoes meiotic division.</span></span>, which remain inactive until after puberty.</p>
+
+  <h3>Spermatozoa: Many, Mini, Motile</h3>
+  <p>The male gametes of most mammalian species are around <strong>50 μm long</strong>. A "queue" of 200 sperm placed end to end would stretch just 1 cm. They have several critical tasks: carry genetic information, remain motile in fluid, and penetrate the protective barrier around the ovum using enzymes contained in the <span class="key-term">acrosome<span class="term-def">The region at the head of the sperm that contains enzymes to break down the protective layers around the ovum.</span></span>.</p>
+
+  <!-- INTERACTIVE SPERM DIAGRAM -->
+  <div class="diagram-container">
+    <div class="diagram-title">Interactive diagram — Click each label to learn more</div>
+    <svg viewBox="0 0 700 200" class="bio-svg" id="spermSvg">
+      <!-- Sperm shape -->
+      <ellipse cx="120" cy="100" rx="45" ry="30" fill="#e8704f" opacity="0.15" stroke="#c44b2b" stroke-width="1.5"/>
+      <ellipse cx="110" cy="100" rx="25" ry="20" fill="#c44b2b" opacity="0.2" stroke="#c44b2b" stroke-width="1"/>
+      <!-- acrosome cap -->
+      <path d="M85 90 Q75 100 85 110" fill="none" stroke="#c44b2b" stroke-width="2.5"/>
+      <!-- mid piece -->
+      <rect x="165" y="92" width="80" height="16" rx="8" fill="#1a7a6d" opacity="0.15" stroke="#1a7a6d" stroke-width="1.5"/>
+      <!-- spiral lines for mitochondria -->
+      <path d="M170 95 C180 88 190 108 200 95 C210 82 220 112 230 95" fill="none" stroke="#1a7a6d" stroke-width="1" opacity="0.5"/>
+      <!-- tail -->
+      <path d="M245 100 C280 85 320 115 360 90 C400 65 440 130 500 100 C540 80 580 110 640 100" fill="none" stroke="#4a443b" stroke-width="2" stroke-linecap="round"/>
+      <!-- labels with clickable areas -->
+      <g class="highlight-part" onclick="showSpermInfo('acrosome')">
+        <line x1="90" y1="75" x2="90" y2="60" stroke="#c44b2b" stroke-width="1"/>
+        <text x="90" y="52" text-anchor="middle" class="label-bold" fill="#c44b2b">Acrosome</text>
+      </g>
+      <g class="highlight-part" onclick="showSpermInfo('nucleus')">
+        <line x1="120" y1="130" x2="120" y2="150" stroke="#4a443b" stroke-width="1"/>
+        <text x="120" y="164" text-anchor="middle" class="label-bold">Nucleus</text>
+      </g>
+      <g class="highlight-part" onclick="showSpermInfo('midpiece')">
+        <line x1="205" y1="75" x2="205" y2="60" stroke="#1a7a6d" stroke-width="1"/>
+        <text x="205" y="52" text-anchor="middle" class="label-bold" fill="#1a7a6d">Mid-piece</text>
+      </g>
+      <g class="highlight-part" onclick="showSpermInfo('tail')">
+        <line x1="420" y1="120" x2="420" y2="145" stroke="#4a443b" stroke-width="1"/>
+        <text x="420" y="160" text-anchor="middle" class="label-bold">Tail (flagellum)</text>
+      </g>
+      <!-- scale bar -->
+      <line x1="560" y1="180" x2="640" y2="180" stroke="#8a8278" stroke-width="1.5"/>
+      <line x1="560" y1="176" x2="560" y2="184" stroke="#8a8278" stroke-width="1"/>
+      <line x1="640" y1="176" x2="640" y2="184" stroke="#8a8278" stroke-width="1"/>
+      <text x="600" y="175" text-anchor="middle" font-size="10" fill="#8a8278">50 μm</text>
+    </svg>
+    <div class="info-panel" id="spermInfoPanel"></div>
+  </div>
+
+  <h3>Ova: Few, Fat, Fixed</h3>
+  <p>Spermatozoa of most animals are very similar in size. Ova vary tremendously — the human ovum is about <strong>0.1 mm</strong> across, while an ostrich egg is around 6 mm in diameter. Eggs do not move on their own, so they don't need contractile proteins. They usually contain food for the developing embryo and have a protective layer of jelly known as the <span class="key-term">zona pellucida<span class="term-def">A layer of protective jelly around the unfertilised ovum.</span></span>.</p>
+
+  <div class="learning-tip">
+    <div class="tip-label">Learning Tip</div>
+    Do not confuse the egg with the ovum — remember it as: the ovum is a cell inside the egg (in birds).
+  </div>
+
+  <div class="exam-hint">
+    <div class="hint-label">Exam Hint</div>
+    Remember that many areas of biology are linked. A question could test these links; for example, the acrosome is a specialised lysosome.
+  </div>
+
+  <!-- RETRIEVAL QUIZ 1 -->
+  <div class="quiz-widget" id="quiz1">
+    <div class="quiz-header">
+      <span class="quiz-type ao1">AO1 Retrieval</span>
+      <span class="quiz-score" id="quiz1Score"></span>
+    </div>
+    <div class="quiz-question">Which structure in the sperm provides the ATP needed for the lashing of the tail?</div>
+    <div class="quiz-options" id="quiz1Options">
+      <div class="quiz-option" onclick="selectOption('quiz1', 0, this)"><span class="opt-letter">A</span> Acrosome</div>
+      <div class="quiz-option" onclick="selectOption('quiz1', 1, this)"><span class="opt-letter">B</span> Nucleus</div>
+      <div class="quiz-option" onclick="selectOption('quiz1', 2, this)"><span class="opt-letter">C</span> Mitochondria in the mid-piece</div>
+      <div class="quiz-option" onclick="selectOption('quiz1', 3, this)"><span class="opt-letter">D</span> Cell surface membrane</div>
+    </div>
+    <div class="quiz-feedback" id="quiz1Feedback"></div>
+    <button class="quiz-btn" onclick="checkQuiz('quiz1', 2, 'Correct! The mitochondria are tightly packed into the mid-piece and provide ATP via aerobic respiration for the whip-like movements of the flagellum.', 'Not quite. The mitochondria in the mid-piece are responsible for ATP production. They fuel the tail&rsquo;s movement, enabling the sperm to swim through the female reproductive tract.')">Check Answer</button>
+  </div>
+
+  <!-- DUAL CODING ACTIVITY -->
+  <div class="card">
+    <div class="section-label"><span class="dot teal"></span> Dual Coding Activity</div>
+    <h3 style="margin-top:0.5rem">Draw &amp; Label</h3>
+    <p>Use the drawing pad below to sketch a sperm cell from memory. On the right, list the key structures and their functions. This evidence-based technique combines visual and verbal channels to boost retention.</p>
+    <div class="dual-code-area">
+      <div class="dual-code-side">
+        <div class="dc-label">Your Drawing</div>
+        <canvas class="drawing-pad" id="drawPad1"></canvas>
+        <button class="clear-canvas-btn" onclick="clearCanvas('drawPad1')">Clear drawing</button>
+      </div>
+      <div class="dual-code-side">
+        <div class="dc-label">Key Structures &amp; Functions</div>
+        <textarea style="width:100%; height:220px; border:1px solid var(--card-border); border-radius:var(--radius); padding:0.7rem; font-family:var(--font-body); font-size:0.88rem; resize:none; outline:none;" placeholder="1. Acrosome — contains enzymes to…&#10;2. Nucleus — carries…&#10;3. Mid-piece — packed with…&#10;4. Tail — propels…"></textarea>
+      </div>
+    </div>
+  </div>
+
+  <!-- FILL IN THE BLANKS -->
+  <div class="quiz-widget">
+    <div class="quiz-header">
+      <span class="quiz-type ao1">AO1 Fill the Blanks</span>
+    </div>
+    <div class="quiz-question">Complete these sentences about mammalian gametes:</div>
+    <div class="fill-blank-widget" id="fillBlanks1">
+      <div class="fill-item">
+        1. The sperm head contains the <input class="blank-input" data-answer="acrosome" placeholder="________"> which holds enzymes.
+      </div>
+      <div class="fill-item">
+        2. The ovum is surrounded by the <input class="blank-input" data-answer="zona pellucida" placeholder="________">.
+      </div>
+      <div class="fill-item">
+        3. The acrosome reaction helps sperm <input class="blank-input" data-answer="penetrate" placeholder="________"> the egg's protective layers.
+      </div>
+      <div class="fill-item">
+        4. Polyspermy means <input class="blank-input" data-answer="fertilisation by more than one sperm" placeholder="________">.
+      </div>
+    </div>
+    <button class="quiz-btn" onclick="checkFillBlanks('fillBlanks1')">Check Answers</button>
+    <div class="scaffold">
+      <div class="scaffold-label">Scaffold — Word Bank</div>
+      acrosome &nbsp;|&nbsp; zona pellucida &nbsp;|&nbsp; penetrate &nbsp;|&nbsp; fertilisation by more than one sperm
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ AREA 2: MAMMALIAN FERTILISATION ═══════════ -->
+<section class="section" id="area2">
+  <div class="section-label"><span class="dot red"></span> Area 2</div>
+  <h2>Mammalian Fertilisation</h2>
+  <p>For sexual reproduction to be successful, the gametes must meet and fuse. The ovum is fully viable and able to receive the male gamete for only a few hours. The sperm will survive a day or two in the female reproductive tract. There is little evidence that sperm are attracted to the egg — their meeting seems entirely a matter of chance.</p>
+
+  <h3>The Acrosome Reaction</h3>
+  <p>As sperm move through the female reproductive tract, the <span class="key-term">acrosome<span class="term-def">The region at the head of the sperm containing digestive enzymes.</span></span> region matures so it can release enzymes and penetrate the ovum. Many sperm cluster around the ovum, and as the heads touch the surface, the <strong>acrosome reaction</strong> is triggered. Enzymes are released that digest the follicle cells and the zona pellucida. One sperm alone does not produce enough enzyme — this is one reason for the very large number of sperm released in ejaculation.</p>
+
+  <h3>Preventing Polyspermy</h3>
+  <p>Eventually, one sperm wriggles through and touches the oocyte membrane. This triggers the second meiotic division, providing a haploid ovum nucleus. It is essential that no other sperm enter now, as <span class="key-term">polyspermy<span class="term-def">The fertilisation of an egg by more than one sperm, producing a nucleus with too many chromosomes.</span></span> would produce a nucleus with too many chromosomes.</p>
+  <p>First, ion channels change the electrical charge of the ovum membrane (from negative to positive inside), providing a <strong>fast, temporary block</strong>. Then the <span class="key-term">cortical reaction<span class="term-def">The release of cortical granules from the ovum cytoplasm that harden the zona pellucida into a fertilisation membrane.</span></span> takes place: cortical granules release enzymes into the zona pellucida, destroying sperm-binding sites and forming a tough <strong>fertilisation membrane</strong> — the permanent block.</p>
+
+  <!-- SEQUENCING ACTIVITY -->
+  <div class="sequence-widget">
+    <div class="quiz-header">
+      <span class="quiz-type ao2">AO2 Sequencing</span>
+    </div>
+    <div class="quiz-question">Drag or click the arrows to reorder these stages of mammalian fertilisation into the correct sequence:</div>
+    <div class="seq-items" id="seqFertilisation">
+      <div class="seq-item" data-order="3"><span class="seq-num">?</span><span class="grip">⋮⋮</span> Cortical reaction releases enzymes, forming fertilisation membrane</div>
+      <div class="seq-item" data-order="0"><span class="seq-num">?</span><span class="grip">⋮⋮</span> Sperm contacts the zona pellucida</div>
+      <div class="seq-item" data-order="5"><span class="seq-num">?</span><span class="grip">⋮⋮</span> Male and female haploid nuclei fuse — diploid zygote formed</div>
+      <div class="seq-item" data-order="1"><span class="seq-num">?</span><span class="grip">⋮⋮</span> Acrosome reaction: enzymes digest follicle cells and zona pellucida</div>
+      <div class="seq-item" data-order="4"><span class="seq-num">?</span><span class="grip">⋮⋮</span> Sperm nucleus enters oocyte; second meiotic division completes</div>
+      <div class="seq-item" data-order="2"><span class="seq-num">?</span><span class="grip">⋮⋮</span> Sperm membrane fuses with oocyte membrane</div>
+    </div>
+    <button class="quiz-btn" onclick="checkSequence('seqFertilisation')">Check Sequence</button>
+  </div>
+
+  <!-- WHAT WOULD HAPPEN IF? -->
+  <h3>Applying Your Understanding</h3>
+  <div class="scenario-card">
+    <div class="scenario-label">AO2 — What would happen if…?</div>
+    <div class="scenario-q">If the acrosome did not release enzymes, what would be the consequence for fertilisation?</div>
+    <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('show'); this.textContent = this.nextElementSibling.classList.contains('show') ? 'Hide answer' : 'Reveal answer'">Reveal answer</button>
+    <div class="reveal-content"><strong>Outcome:</strong> Fertilisation would fail. <strong>Reason:</strong> The enzymes in the acrosome (digestive/hydrolytic enzymes) are needed to break down the follicle cells and the glycoprotein jelly of the zona pellucida. Without these enzymes, no sperm could penetrate the protective layers to reach the oocyte membrane. The ovum would remain unfertilised.</div>
+  </div>
+  <div class="scenario-card">
+    <div class="scenario-label">AO2 — What would happen if…?</div>
+    <div class="scenario-q">If the cortical reaction failed to occur, what would happen?</div>
+    <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('show'); this.textContent = this.nextElementSibling.classList.contains('show') ? 'Hide answer' : 'Reveal answer'">Reveal answer</button>
+    <div class="reveal-content"><strong>Outcome:</strong> Polyspermy would occur. <strong>Reason:</strong> Without the cortical reaction, no fertilisation membrane would form and the sperm-binding sites on the zona pellucida would remain intact. Multiple sperm could enter the oocyte, resulting in a cell with too many sets of chromosomes (polyploidy). The resulting zygote would not develop normally.</div>
+  </div>
+  <div class="scenario-card">
+    <div class="scenario-label">AO2 — What would happen if…?</div>
+    <div class="scenario-q">If sperm were non-motile (unable to swim), how would fertilisation be affected?</div>
+    <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('show'); this.textContent = this.nextElementSibling.classList.contains('show') ? 'Hide answer' : 'Reveal answer'">Reveal answer</button>
+    <div class="reveal-content"><strong>Outcome:</strong> Fertilisation would be very unlikely. <strong>Reason:</strong> Sperm need their flagellum (powered by mitochondria in the mid-piece) to swim through the female reproductive tract to reach the ovum in the oviduct. Non-motile sperm could not travel this distance. This is why low sperm motility is a common cause of infertility in humans.</div>
+  </div>
+
+  <!-- MCQ QUIZ -->
+  <div class="quiz-widget" id="quiz2">
+    <div class="quiz-header">
+      <span class="quiz-type ao2">AO2 Application</span>
+      <span class="quiz-score" id="quiz2Score"></span>
+    </div>
+    <div class="quiz-question">Why does the electrical charge of the ovum membrane change from negative to positive immediately after a sperm enters?</div>
+    <div class="quiz-options" id="quiz2Options">
+      <div class="quiz-option" onclick="selectOption('quiz2', 0, this)"><span class="opt-letter">A</span> To attract more sperm to ensure fertilisation</div>
+      <div class="quiz-option" onclick="selectOption('quiz2', 1, this)"><span class="opt-letter">B</span> To provide a rapid, temporary block to polyspermy</div>
+      <div class="quiz-option" onclick="selectOption('quiz2', 2, this)"><span class="opt-letter">C</span> To trigger the acrosome reaction in nearby sperm</div>
+      <div class="quiz-option" onclick="selectOption('quiz2', 3, this)"><span class="opt-letter">D</span> To help the sperm nucleus move towards the ovum nucleus</div>
+    </div>
+    <div class="quiz-feedback" id="quiz2Feedback"></div>
+    <button class="quiz-btn" onclick="checkQuiz('quiz2', 1, 'Correct! The rapid change in electrical charge acts as a fast, temporary block to prevent additional sperm from fusing with the membrane before the slower cortical reaction establishes the permanent fertilisation membrane.', 'Not quite. The electrical change is a fast block to polyspermy — it repels other sperm while the slower cortical reaction builds the permanent fertilisation membrane.')">Check Answer</button>
+  </div>
+
+  <!-- DATA HANDLING -->
+  <div class="card">
+    <div class="quiz-header">
+      <span class="quiz-type ao3">AO3 Data Handling</span>
+    </div>
+    <h3 style="margin-top:0">Enzyme Inhibitor Experiment</h3>
+    <p>Scientists tested the effect of an enzyme inhibitor (which blocks acrosomal enzymes) on fertilisation success. Study the data below:</p>
+    <table class="compare-table" style="margin-bottom:1rem">
+      <tr><th>Inhibitor concentration (μmol dm⁻³)</th><th>% eggs fertilised</th></tr>
+      <tr><td>0 (control)</td><td>87</td></tr>
+      <tr><td>5</td><td>64</td></tr>
+      <tr><td>10</td><td>38</td></tr>
+      <tr><td>20</td><td>12</td></tr>
+      <tr><td>50</td><td>2</td></tr>
+    </table>
+    <div class="self-check">
+      <details>
+        <summary>Describe the trend shown in the data (2 marks)</summary>
+        <div class="answer">As the concentration of enzyme inhibitor increases, the percentage of eggs fertilised decreases. The relationship appears to be inversely proportional — a tenfold increase in inhibitor (5 → 50) causes a near-complete reduction in fertilisation (64% → 2%).</div>
+      </details>
+      <details>
+        <summary>Explain the results using your knowledge of the acrosome reaction (3 marks)</summary>
+        <div class="answer">The acrosome contains hydrolytic enzymes that digest the follicle cells and the glycoprotein matrix of the zona pellucida. The enzyme inhibitor blocks these acrosomal enzymes, preventing them from breaking down the protective layers. Without enzymatic digestion, fewer sperm can penetrate to reach the oocyte membrane, so fewer eggs are fertilised. At high inhibitor concentrations, virtually no acrosomal enzymes function, and fertilisation drops to near zero.</div>
+      </details>
+      <details>
+        <summary>Evaluate the reliability of this experiment. What controls should be included? (3 marks)</summary>
+        <div class="answer">To evaluate reliability: the experiment should be repeated multiple times and mean values calculated; the same number and quality of eggs and sperm should be used for each concentration; temperature and pH should be controlled as they affect enzyme activity; a control with no inhibitor (0 concentration) is included, which is good practice. To improve: use a range of replicates (e.g., n ≥ 5), test at more intermediate concentrations, and consider whether the inhibitor itself could have toxic effects unrelated to enzyme activity (use an inactive analogue as an additional control).</div>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ AREA 3: PLANT GAMETES ═══════════ -->
+<section class="section" id="area3">
+  <div class="section-label"><span class="dot teal"></span> Area 3</div>
+  <h2>Plant Gametes</h2>
+  <p>The formation of gametes in flowering plants is more complex because plants have two phases to their life cycles. The <span class="key-term">sporophyte generation<span class="term-def">The diploid generation in plants that produces spores by meiosis.</span></span> is diploid and produces spores by meiosis. The resulting <span class="key-term">gametophyte generation<span class="term-def">The haploid generation in plants that gives rise to the gametes by mitosis.</span></span> is haploid and produces gametes by mitosis. In flowering plants, the two phases have been combined into one plant — the main body is the diploid sporophyte.</p>
+
+  <h3>Pollen — The Microgametes</h3>
+  <p>The anthers of flowering plants are equivalent to the testes of animals. Meiosis occurs here, producing vast numbers of pollen grains that carry the male gametes. These are known as <span class="key-term">microgametes<span class="term-def">The male gametes produced in plants, carried within the pollen grains.</span></span>. Each pollen grain contains two haploid nuclei: the <strong>tube nucleus</strong> (controls pollen tube growth) and the <strong>generative nucleus</strong> (fuses with the female nucleus).</p>
+
+  <!-- INTERACTIVE POLLEN DIAGRAM -->
+  <div class="diagram-container">
+    <div class="diagram-title">Interactive diagram — Pollen grain structure</div>
+    <svg viewBox="0 0 400 280" class="bio-svg">
+      <!-- Pollen grain outer -->
+      <circle cx="200" cy="140" r="90" fill="#b8860b" opacity="0.08" stroke="#b8860b" stroke-width="2"/>
+      <!-- thick resistant wall -->
+      <circle cx="200" cy="140" r="90" fill="none" stroke="#b8860b" stroke-width="6" opacity="0.3" stroke-dasharray="8,3"/>
+      <!-- inner wall -->
+      <circle cx="200" cy="140" r="78" fill="none" stroke="#b8860b" stroke-width="1" opacity="0.4"/>
+      <!-- cytoplasm fill -->
+      <circle cx="200" cy="140" r="77" fill="#fdf6e3" opacity="0.6"/>
+      <!-- tube nucleus -->
+      <ellipse cx="180" cy="120" rx="22" ry="16" fill="#1a7a6d" opacity="0.3" stroke="#1a7a6d" stroke-width="1.5"/>
+      <text x="180" y="124" text-anchor="middle" font-size="9" fill="#0f574d" font-weight="600">n</text>
+      <!-- generative nucleus -->
+      <ellipse cx="220" cy="160" rx="22" ry="16" fill="#c44b2b" opacity="0.3" stroke="#c44b2b" stroke-width="1.5"/>
+      <text x="220" y="164" text-anchor="middle" font-size="9" fill="#c44b2b" font-weight="600">n</text>
+      <!-- Labels -->
+      <line x1="130" y1="55" x2="160" y2="80" stroke="#b8860b" stroke-width="1"/>
+      <text x="90" y="50" class="label-bold" fill="#b8860b" font-size="11">Thick resistant wall</text>
+      <line x1="145" y1="120" x2="160" y2="120" stroke="#1a7a6d" stroke-width="1"/>
+      <text x="20" y="118" class="label-bold" fill="#1a7a6d" font-size="11">Tube nucleus</text>
+      <text x="20" y="132" font-size="9" fill="#8a8278">(controls pollen tube)</text>
+      <line x1="255" y1="160" x2="280" y2="160" stroke="#c44b2b" stroke-width="1"/>
+      <text x="285" y="158" class="label-bold" fill="#c44b2b" font-size="11">Generative nucleus</text>
+      <text x="285" y="172" font-size="9" fill="#8a8278">(fuses with female nucleus)</text>
+      <line x1="270" y1="90" x2="280" y2="100" stroke="#b8860b" stroke-width="1"/>
+      <text x="285" y="94" font-size="10" fill="#8a8278">Cytoplasm</text>
+      <line x1="200" y1="230" x2="200" y2="240" stroke="#b8860b" stroke-width="1"/>
+      <text x="200" y="258" text-anchor="middle" font-size="10" fill="#8a8278">Cell surface membrane</text>
+    </svg>
+  </div>
+
+  <h3>Ovules — The Megagametes</h3>
+  <p>The ovary of the plant is equivalent to the animal ovary. Meiosis results in a relatively small number of ova contained within ovules inside the ovary. The ovule is attached to the ovary wall by a pad of special tissue called the <strong>placenta</strong>. Inside the ovule, the embryo sac forms the gametophyte generation. The mature embryo sac (the <span class="key-term">megagamete<span class="term-def">The female gamete — the egg cell in plants.</span></span>) contains: three antipodal cells, two polar nuclei, the female gamete (egg cell), and two synergids.</p>
+
+  <div class="exam-hint">
+    <div class="hint-label">Exam Hint</div>
+    Make sure you use the correct biological terminology — there are words that have similar sounds but very different meanings, such as <em>ovule</em> and <em>ovary</em>.
+  </div>
+
+  <!-- RETRIEVAL QUIZ 3 -->
+  <div class="quiz-widget" id="quiz3">
+    <div class="quiz-header">
+      <span class="quiz-type ao1">AO1 Retrieval</span>
+    </div>
+    <div class="quiz-question">In a pollen grain, which nucleus controls the growth of the pollen tube?</div>
+    <div class="quiz-options" id="quiz3Options">
+      <div class="quiz-option" onclick="selectOption('quiz3', 0, this)"><span class="opt-letter">A</span> Generative nucleus</div>
+      <div class="quiz-option" onclick="selectOption('quiz3', 1, this)"><span class="opt-letter">B</span> Tube nucleus</div>
+      <div class="quiz-option" onclick="selectOption('quiz3', 2, this)"><span class="opt-letter">C</span> Polar nucleus</div>
+      <div class="quiz-option" onclick="selectOption('quiz3', 3, this)"><span class="opt-letter">D</span> Antipodal cell nucleus</div>
+    </div>
+    <div class="quiz-feedback" id="quiz3Feedback"></div>
+    <button class="quiz-btn" onclick="checkQuiz('quiz3', 1, 'Correct! The tube nucleus controls the growth of the pollen tube down through the style towards the ovule. It degenerates after the tube reaches the ovule.', 'Not quite. The tube nucleus is responsible for pollen tube growth. The generative nucleus is the one that divides to form the two male gametes.')">Check Answer</button>
+  </div>
+
+  <!-- VOCAB GRID -->
+  <h3>Key Vocabulary — Plant Gametes</h3>
+  <div class="vocab-grid">
+    <div class="vocab-card"><div class="v-term">Sporophyte generation</div><div class="v-def">The diploid main body of the plant that produces spores by meiosis.</div></div>
+    <div class="vocab-card"><div class="v-term">Gametophyte generation</div><div class="v-def">The haploid generation that gives rise to gametes by mitosis.</div></div>
+    <div class="vocab-card"><div class="v-term">Microgametes</div><div class="v-def">The male gametes in plants, carried in the pollen grains.</div></div>
+    <div class="vocab-card"><div class="v-term">Tube nucleus</div><div class="v-def">Controls production of the pollen tube in fertilisation.</div></div>
+    <div class="vocab-card"><div class="v-term">Generative nucleus</div><div class="v-def">The male nucleus that will fuse with the female nucleus.</div></div>
+    <div class="vocab-card"><div class="v-term">Pollen tube</div><div class="v-def">Grows from the pollen grain, down the style, carrying male nuclei to the ovule.</div></div>
+    <div class="vocab-card"><div class="v-term">Placenta (plant)</div><div class="v-def">Special tissue attaching the ovule to the ovary wall.</div></div>
+    <div class="vocab-card"><div class="v-term">Megagamete</div><div class="v-def">The female gamete — the egg cell in plants.</div></div>
+  </div>
+</section>
+
+<!-- ═══════════ AREA 4: PLANT FERTILISATION ═══════════ -->
+<section class="section" id="area4">
+  <div class="section-label"><span class="dot teal"></span> Area 4</div>
+  <h2>Fertilisation in Plants</h2>
+
+  <p>The male gamete is contained within the pollen grain. The female gamete is embedded deep in the tissue of the ovary. The pollen grain lands on the surface of the stigma during <span class="key-term">pollination<span class="term-def">The transfer of pollen from the anther to the stigma, often from one flower to another.</span></span>. The molecules on the pollen surface and the stigma interact — if they "recognise" each other as the same species, the pollen grain begins to grow or <strong>germinate</strong>. This recognition mechanism also helps prevent self-fertilisation.</p>
+
+  <h3>Pollen Tube Growth</h3>
+  <p>A pollen tube begins to grow out from the tube cell, down through the style. The tip produces <strong>hydrolytic enzymes</strong> to digest the tissue of the style, using the digested tissue as a nutrient source. As it grows, the <strong>tube nucleus</strong> and <strong>generative nucleus</strong> travel down it. The generative nucleus divides by mitosis to form <strong>two male nuclei</strong>. Eventually the tip of the tube passes through the <strong>micropyle</strong> of the ovule.</p>
+
+  <h3>Double Fertilisation</h3>
+  <p>This is the unique feature of flowering plants. Once the pollen tube enters the ovule via the micropyle, the two male nuclei are released. <span class="key-term">Double fertilisation<span class="term-def">The process in plants where one male nucleus fuses with the egg cell (→ diploid zygote) and the other fuses with the two polar nuclei (→ triploid endosperm nucleus).</span></span> occurs:</p>
+
+  <div class="card" style="border-left: 4px solid var(--teal);">
+    <p style="margin-bottom:0.7rem"><strong>Fusion 1:</strong> One male nucleus fuses with the <strong>egg cell</strong> → produces the <strong>diploid zygote (2n)</strong> → develops into the embryo.</p>
+    <p style="margin-bottom:0"><strong>Fusion 2:</strong> The other male nucleus fuses with the <strong>two polar nuclei</strong> → produces the <strong>triploid endosperm nucleus (3n)</strong> → the endosperm provides food when the seed germinates.</p>
+  </div>
+
+  <!-- SEQUENCING: PLANT FERTILISATION -->
+  <div class="sequence-widget">
+    <div class="quiz-header">
+      <span class="quiz-type ao2">AO2 Sequencing</span>
+    </div>
+    <div class="quiz-question">Put the stages of plant fertilisation in the correct order:</div>
+    <div class="seq-items" id="seqPlant">
+      <div class="seq-item" data-order="4"><span class="seq-num">?</span><span class="grip">⋮⋮</span> Pollen tube enters ovule via the micropyle</div>
+      <div class="seq-item" data-order="1"><span class="seq-num">?</span><span class="grip">⋮⋮</span> Pollen grain germinates on the stigma</div>
+      <div class="seq-item" data-order="5"><span class="seq-num">?</span><span class="grip">⋮⋮</span> Double fertilisation: zygote (2n) and endosperm (3n) formed</div>
+      <div class="seq-item" data-order="2"><span class="seq-num">?</span><span class="grip">⋮⋮</span> Pollen tube grows down through the style using enzymes</div>
+      <div class="seq-item" data-order="0"><span class="seq-num">?</span><span class="grip">⋮⋮</span> Pollen lands on a compatible stigma (pollination)</div>
+      <div class="seq-item" data-order="3"><span class="seq-num">?</span><span class="grip">⋮⋮</span> Generative nucleus divides by mitosis → two male nuclei</div>
+    </div>
+    <button class="quiz-btn" onclick="checkSequence('seqPlant')">Check Sequence</button>
+  </div>
+
+  <div class="scenario-card">
+    <div class="scenario-label">AO2 — Think-Pair-Share</div>
+    <div class="scenario-q">How does a pollen grain "know" it has landed on the right flower? What would happen if this recognition mechanism failed?</div>
+    <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('show'); this.textContent = this.nextElementSibling.classList.contains('show') ? 'Hide answer' : 'Reveal answer'">Reveal answer</button>
+    <div class="reveal-content">The molecules on the surface of the pollen grain interact with molecules on the stigma surface. If they are from the same species, the pollen grain is "recognised" and begins to germinate. If recognition fails (e.g., wrong species or self-incompatible), the pollen grain will not germinate and no pollen tube will form. This mechanism helps prevent interspecies hybridisation and, in self-incompatible species, promotes cross-pollination and therefore genetic diversity.</div>
+  </div>
+
+  <!-- QUIZ 4 -->
+  <div class="quiz-widget" id="quiz4">
+    <div class="quiz-header">
+      <span class="quiz-type ao2">AO2 Application</span>
+    </div>
+    <div class="quiz-question">In double fertilisation, what is the ploidy of the endosperm nucleus and why is this significant?</div>
+    <div class="quiz-options" id="quiz4Options">
+      <div class="quiz-option" onclick="selectOption('quiz4', 0, this)"><span class="opt-letter">A</span> Diploid (2n) — it becomes the embryo</div>
+      <div class="quiz-option" onclick="selectOption('quiz4', 1, this)"><span class="opt-letter">B</span> Haploid (n) — it provides pollen for the next generation</div>
+      <div class="quiz-option" onclick="selectOption('quiz4', 2, this)"><span class="opt-letter">C</span> Triploid (3n) — it provides food for the germinating seed</div>
+      <div class="quiz-option" onclick="selectOption('quiz4', 3, this)"><span class="opt-letter">D</span> Tetraploid (4n) — it forms the seed coat</div>
+    </div>
+    <div class="quiz-feedback" id="quiz4Feedback"></div>
+    <button class="quiz-btn" onclick="checkQuiz('quiz4', 2, 'Correct! The endosperm is triploid (3n) because one male nucleus (n) fuses with two polar nuclei (n + n). It acts as a food store, supplying the embryo with nutrients when the seed germinates.', 'Not quite. The endosperm is triploid (3n) — formed from the fusion of one male nucleus (n) with the two polar nuclei (n + n). Its role is to provide food for the developing embryo during germination.')">Check Answer</button>
+  </div>
+
+  <div class="learning-tip">
+    <div class="tip-label">Did you know? — The Pollen Record</div>
+    The surface patterns of pollen grains are unique and specific to the species. They are extremely tough and resistant to decay, remaining in soil for thousands of years. Palaeobotanists can tell what plants were growing thousands of years ago — including in the UAE — by analysing the pollen found in archaeological digs.
+  </div>
+</section>
+
+<!-- ═══════════ BRIDGE: COMPARISON ═══════════ -->
+<section class="section" id="bridge">
+  <div class="section-label"><span class="dot purple"></span> Synthesis</div>
+  <h2>Compare &amp; Synthesise</h2>
+  <p>One of the highest-value exam skills is making <strong>comparative statements</strong> — not just describing each process separately, but writing sentences that explicitly link similarities and differences.</p>
+
+  <div class="card">
+    <h3 style="margin-top:0">Mammals vs. Flowering Plants</h3>
+    <table class="compare-table">
+      <tr>
+        <th style="width:25%">Feature</th>
+        <th style="width:37.5%">Mammals</th>
+        <th style="width:37.5%">Flowering Plants</th>
+      </tr>
+      <tr>
+        <td class="feature-col">Male gamete delivery</td>
+        <td>Sperm swim using a flagellum (motile)</td>
+        <td>Pollen tube grows through the style (non-motile gamete)</td>
+      </tr>
+      <tr>
+        <td class="feature-col">Role of enzymes</td>
+        <td>Acrosomal enzymes digest zona pellucida</td>
+        <td>Pollen tube tip secretes hydrolytic enzymes to digest style tissue</td>
+      </tr>
+      <tr>
+        <td class="feature-col">Number of fusions</td>
+        <td>One: sperm nucleus + ovum nucleus → diploid zygote</td>
+        <td>Two (double fertilisation): zygote (2n) + endosperm (3n)</td>
+      </tr>
+      <tr>
+        <td class="feature-col">Polyspermy prevention</td>
+        <td>Electrical change + cortical reaction → fertilisation membrane</td>
+        <td>Pollen-stigma recognition prevents incompatible gamete fusion</td>
+      </tr>
+      <tr>
+        <td class="feature-col">Where nuclei fuse</td>
+        <td>In the oviduct (fallopian tube)</td>
+        <td>Inside the embryo sac within the ovule</td>
+      </tr>
+      <tr>
+        <td class="feature-col">Nutrient supply</td>
+        <td>Initially from ovum cytoplasm; then placenta (uterus)</td>
+        <td>Triploid endosperm provides food for germination</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- MISCONCEPTION CHECK -->
+  <div class="quiz-widget">
+    <div class="quiz-header">
+      <span class="quiz-type ao3">AO3 Misconception Check</span>
+    </div>
+    <div class="quiz-question">True or False? Correct any false statements in your head before revealing the answer.</div>
+    <div class="self-check">
+      <details>
+        <summary>"Pollination is the same as fertilisation."</summary>
+        <div class="answer"><strong>FALSE.</strong> Pollination is the transfer of pollen from anther to stigma. Fertilisation is the fusion of the male and female nuclei inside the ovule. Pollination must happen first, but it does not guarantee fertilisation — the pollen tube must still grow successfully and double fertilisation must occur.</div>
+      </details>
+      <details>
+        <summary>"The ovum is the same as an oocyte."</summary>
+        <div class="answer"><strong>FALSE (with nuance).</strong> An oocyte is a cell in the ovary that <em>may</em> form an ovum if it undergoes meiotic division. The ovum is the mature, haploid female gamete. The oocyte only completes its second meiotic division when a sperm touches the oocyte membrane — so at the point of fertilisation it technically transitions from oocyte to ovum.</div>
+      </details>
+      <details>
+        <summary>"Endosperm is the embryo."</summary>
+        <div class="answer"><strong>FALSE.</strong> The endosperm (3n, triploid) is the food store for the embryo. The embryo (2n, diploid) develops from the zygote — the product of the first fusion between one male nucleus and the egg cell. These are two separate structures with different functions.</div>
+      </details>
+      <details>
+        <summary>"Polyspermy is helpful because it increases variation."</summary>
+        <div class="answer"><strong>FALSE.</strong> Polyspermy is harmful. If more than one sperm fertilises the ovum, the resulting cell would contain too many sets of chromosomes (polyploidy). This leads to abnormal cell division and the embryo would not develop normally. Genetic variation is achieved through meiosis and the random fusion of one sperm with one ovum.</div>
+      </details>
+    </div>
+  </div>
+
+  <!-- AO3 EVALUATE -->
+  <div class="card">
+    <div class="quiz-header">
+      <span class="quiz-type ao3">AO3 Evaluate a Claim</span>
+    </div>
+    <h3 style="margin-top:0">Claim: "Fertilisation is mostly chance in humans."</h3>
+    <p>Think of <strong>two supporting points</strong> and <strong>two counterpoints</strong> before revealing the model answer.</p>
+    <div class="self-check">
+      <details>
+        <summary>Reveal model answer</summary>
+        <div class="answer">
+          <p><strong>Supporting points:</strong></p>
+          <p>1. There is little evidence that sperm are chemically attracted to the ovum — their meeting appears largely random. 2. The ovum is viable for only a few hours, and sperm survive only 1–2 days, so timing must coincide by chance.</p>
+          <p style="margin-top:0.6rem"><strong>Counterpoints:</strong></p>
+          <p>1. The huge number of sperm released (~200–300 million per ejaculation) significantly increases the probability of at least one reaching the ovum. 2. Biological mechanisms improve success: sperm capacitation in the reproductive tract, the acrosome reaction being triggered specifically at the zona pellucida, and internal fertilisation placing gametes close together — these are not "chance" but evolved adaptations.</p>
+        </div>
+      </details>
+    </div>
+  </div>
+
+  <!-- EXAM-STYLE EXTENDED RESPONSE -->
+  <div class="card" style="border-left:4px solid var(--purple)">
+    <div class="quiz-header">
+      <span class="quiz-type ao3">Extended Response — 12 marks</span>
+    </div>
+    <h3 style="margin-top:0">Practice Question</h3>
+    <p><strong>"Explain fertilisation in flowering plants from pollination to formation of the zygote and endosperm."</strong></p>
+    <div class="scaffold">
+      <div class="scaffold-label">Scaffold — Planning Checklist</div>
+      <p style="margin-bottom:0.3rem">Use this checklist to plan your answer. Tick off each point as you include it:</p>
+    </div>
+    <div class="topic-tracker" style="margin-top:0.5rem">
+      <div class="tracker-row"><div class="tracker-check" onclick="toggleCheck(this)"></div> Define pollination (transfer of pollen from anther to stigma)</div>
+      <div class="tracker-row"><div class="tracker-check" onclick="toggleCheck(this)"></div> Pollen-stigma recognition → same species → germination</div>
+      <div class="tracker-row"><div class="tracker-check" onclick="toggleCheck(this)"></div> Pollen tube grows from tube cell, down through style</div>
+      <div class="tracker-row"><div class="tracker-check" onclick="toggleCheck(this)"></div> Hydrolytic enzymes digest style tissue (nutrient source)</div>
+      <div class="tracker-row"><div class="tracker-check" onclick="toggleCheck(this)"></div> Generative nucleus divides by mitosis → two male nuclei</div>
+      <div class="tracker-row"><div class="tracker-check" onclick="toggleCheck(this)"></div> Tube enters ovule through micropyle</div>
+      <div class="tracker-row"><div class="tracker-check" onclick="toggleCheck(this)"></div> Tube nucleus degenerates</div>
+      <div class="tracker-row"><div class="tracker-check" onclick="toggleCheck(this)"></div> Fusion 1: male nucleus + egg cell → diploid zygote (2n)</div>
+      <div class="tracker-row"><div class="tracker-check" onclick="toggleCheck(this)"></div> Fusion 2: male nucleus + 2 polar nuclei → triploid endosperm (3n)</div>
+      <div class="tracker-row"><div class="tracker-check" onclick="toggleCheck(this)"></div> Endosperm provides food for germinating embryo</div>
+    </div>
+    <textarea style="width:100%; min-height:180px; border:1px solid var(--card-border); border-radius:var(--radius); padding:0.8rem; font-family:var(--font-body); font-size:0.9rem; resize:vertical; outline:none; margin-top:0.8rem;" placeholder="Write your extended response here…"></textarea>
+  </div>
+</section>
+
+<!-- ═══════════ EXIT TICKET ═══════════ -->
+<section class="section" id="exit">
+  <div class="exit-ticket">
+    <h3>Exit Ticket</h3>
+    <p style="margin-bottom:1rem">Before you leave, answer these three quick questions to check your understanding:</p>
+
+    <p style="color:rgba(255,255,255,0.9); font-weight:500; margin-bottom:0.3rem;">1. List three ways a sperm cell is adapted for its function.</p>
+    <textarea placeholder="e.g. Acrosome contains enzymes to…"></textarea>
+
+    <p style="color:rgba(255,255,255,0.9); font-weight:500; margin-bottom:0.3rem;">2. What is the key difference between the acrosome reaction and the cortical reaction?</p>
+    <textarea placeholder="The acrosome reaction is… whereas the cortical reaction…"></textarea>
+
+    <p style="color:rgba(255,255,255,0.9); font-weight:500; margin-bottom:0.3rem;">3. Explain why double fertilisation is called "double" — what are the two products?</p>
+    <textarea placeholder="It is called double fertilisation because…"></textarea>
+  </div>
+
+  <!-- PROGRESS SELF-CHECK -->
+  <div class="topic-tracker" style="margin-top:1.5rem">
+    <h3 style="margin-bottom:0.8rem">Self-Assessment — How confident are you?</h3>
+    <div class="tracker-row"><div class="tracker-check" onclick="toggleCheck(this)"></div> I can describe the structure of a sperm and relate each part to its function</div>
+    <div class="tracker-row"><div class="tracker-check" onclick="toggleCheck(this)"></div> I can explain the acrosome reaction and cortical reaction in sequence</div>
+    <div class="tracker-row"><div class="tracker-check" onclick="toggleCheck(this)"></div> I can explain why polyspermy is prevented and why it matters</div>
+    <div class="tracker-row"><div class="tracker-check" onclick="toggleCheck(this)"></div> I can label a pollen grain and identify the tube and generative nuclei</div>
+    <div class="tracker-row"><div class="tracker-check" onclick="toggleCheck(this)"></div> I can describe the process of double fertilisation from pollination to endosperm</div>
+    <div class="tracker-row"><div class="tracker-check" onclick="toggleCheck(this)"></div> I can write comparative statements about mammalian vs. plant fertilisation</div>
+    <div class="tracker-row"><div class="tracker-check" onclick="toggleCheck(this)"></div> I can analyse data involving enzyme inhibitors and fertilisation rates</div>
+  </div>
+
+  <!-- HOMEWORK SUGGESTIONS -->
+  <div class="card" style="margin-top:1.5rem">
+    <h3 style="margin-top:0">Homework &amp; Extension</h3>
+    <div class="self-check">
+      <details>
+        <summary>Week 1: Sperm "Spec Sheet"</summary>
+        <div class="answer">Create a detailed specification sheet for a sperm cell, as though you were writing a product brief. For every structure (acrosome, nucleus, mid-piece, flagellum, cell membrane), explain how it contributes to the sperm's "mission" of fertilisation. Include dimensions and functional details.</div>
+      </details>
+      <details>
+        <summary>Week 2: Why External Fertilisation Fails on Land</summary>
+        <div class="answer">Research and write a paragraph explaining why external fertilisation is not a viable strategy for land-dwelling organisms. Consider factors like desiccation of gametes, environmental exposure, and the probability of gamete meeting.</div>
+      </details>
+      <details>
+        <summary>Week 3: The Pollen Record (UAE Connection)</summary>
+        <div class="answer">Write a short report (300–400 words) on how pollen analysis (palynology) helps archaeologists and climate scientists understand the history of the UAE's flora. How does the extreme durability of pollen exines make this possible?</div>
+      </details>
+    </div>
+  </div>
+</section>
+
+<footer class="lesson-footer">
+  <p>A-Level Biology — Gametes &amp; Fertilisation — Spec refs 3.10–3.13</p>
+</footer>
+
+</div><!-- /container -->
+
+<script>
+// ─── PROGRESS BAR ───
+window.addEventListener('scroll', () => {
+  const h = document.documentElement.scrollHeight - window.innerHeight;
+  const pct = (window.scrollY / h) * 100;
+  document.getElementById('progressBar').style.width = pct + '%';
+});
+
+// ─── SECTION REVEAL ON SCROLL ───
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.08 });
+document.querySelectorAll('.section').forEach(s => observer.observe(s));
+
+// ─── NAV SCROLL ───
+function scrollToSection(id) {
+  document.getElementById(id).scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// ─── NAV ACTIVE STATE ───
+const sections = ['hero','area1','area2','area3','area4','bridge','exit'];
+const pills = document.querySelectorAll('.nav-pill');
+window.addEventListener('scroll', () => {
+  let current = sections[0];
+  sections.forEach(id => {
+    const el = document.getElementById(id);
+    if (el && el.getBoundingClientRect().top <= 120) current = id;
+  });
+  pills.forEach((p, i) => p.classList.toggle('active', sections[i] === current));
+});
+
+// ─── SPERM DIAGRAM INFO ───
+const spermInfo = {
+  acrosome: { title: 'Acrosome', text: 'A membrane-bound storage site for enzymes (a specialised lysosome). These digestive enzymes break down the layers surrounding the ovum — the follicle cells and the zona pellucida — allowing the sperm\'s head to penetrate.' },
+  nucleus: { title: 'Nucleus', text: 'Contains the highly condensed haploid chromosomes — the condensed state of the genetic material reduces the amount of energy needed to transport it. Carries the paternal genetic contribution to the zygote.' },
+  midpiece: { title: 'Mid-piece (Mitochondria)', text: 'Mitochondria are tightly packed into the middle section. They provide the ATP required for the whip-like lashing of the tail through aerobic respiration. This is the "engine room" of the sperm.' },
+  tail: { title: 'Tail (Flagellum)', text: 'Microtubules produce whip-like movements that keep the sperm in suspension and propel it through fluid. The tail is essential for motility — without it, the sperm could not reach the ovum in the oviduct.' }
+};
+function showSpermInfo(part) {
+  const panel = document.getElementById('spermInfoPanel');
+  const info = spermInfo[part];
+  panel.innerHTML = '<div class="panel-title">' + info.title + '</div>' + info.text;
+  panel.classList.add('show');
+}
+
+// ─── MCQ QUIZZES ───
+const quizState = {};
+function selectOption(qid, idx, el) {
+  if (quizState[qid]?.locked) return;
+  if (!quizState[qid]) quizState[qid] = {};
+  quizState[qid].selected = idx;
+  el.parentElement.querySelectorAll('.quiz-option').forEach(o => o.classList.remove('selected'));
+  el.classList.add('selected');
+}
+function checkQuiz(qid, correctIdx, correctMsg, incorrectMsg) {
+  if (!quizState[qid] || quizState[qid].selected === undefined) return;
+  quizState[qid].locked = true;
+  const opts = document.querySelectorAll('#' + qid + 'Options .quiz-option');
+  const fb = document.getElementById(qid + 'Feedback');
+  const selected = quizState[qid].selected;
+  opts.forEach((o, i) => {
+    if (i === correctIdx) o.classList.add('correct');
+    else if (i === selected && i !== correctIdx) o.classList.add('incorrect');
+  });
+  if (selected === correctIdx) {
+    fb.className = 'quiz-feedback show correct-fb';
+    fb.innerHTML = '✓ ' + correctMsg;
+  } else {
+    fb.className = 'quiz-feedback show incorrect-fb';
+    fb.innerHTML = '✗ ' + incorrectMsg;
+  }
+}
+
+// ─── FILL IN THE BLANKS ───
+function checkFillBlanks(id) {
+  const inputs = document.querySelectorAll('#' + id + ' .blank-input');
+  inputs.forEach(inp => {
+    const answer = inp.dataset.answer.toLowerCase().trim();
+    const val = inp.value.toLowerCase().trim();
+    if (val === answer || (answer.length > 10 && val.length > 5 && answer.includes(val))) {
+      inp.classList.remove('incorrect-input');
+      inp.classList.add('correct-input');
+    } else if (val.length > 0) {
+      inp.classList.remove('correct-input');
+      inp.classList.add('incorrect-input');
+    }
+  });
+}
+
+// ─── SEQUENCING ───
+function checkSequence(id) {
+  const container = document.getElementById(id);
+  const items = container.querySelectorAll('.seq-item');
+  items.forEach((item, i) => {
+    const num = item.querySelector('.seq-num');
+    num.textContent = i + 1;
+    const expected = parseInt(item.dataset.order);
+    if (expected === i) {
+      item.classList.add('correct-seq');
+      item.classList.remove('incorrect-seq');
+    } else {
+      item.classList.add('incorrect-seq');
+      item.classList.remove('correct-seq');
+    }
+  });
+}
+
+// Make sequence items draggable
+document.querySelectorAll('.seq-items').forEach(container => {
+  let dragItem = null;
+  container.querySelectorAll('.seq-item').forEach(item => {
+    item.draggable = true;
+    item.addEventListener('dragstart', e => {
+      dragItem = item;
+      item.classList.add('dragging');
+      e.dataTransfer.effectAllowed = 'move';
+    });
+    item.addEventListener('dragend', () => {
+      item.classList.remove('dragging');
+      dragItem = null;
+    });
+    item.addEventListener('dragover', e => {
+      e.preventDefault();
+      if (dragItem && dragItem !== item) {
+        const rect = item.getBoundingClientRect();
+        const mid = rect.top + rect.height / 2;
+        if (e.clientY < mid) container.insertBefore(dragItem, item);
+        else container.insertBefore(dragItem, item.nextSibling);
+      }
+    });
+    // Touch support
+    item.addEventListener('touchstart', e => {
+      dragItem = item;
+      item.classList.add('dragging');
+    }, { passive: true });
+    item.addEventListener('touchmove', e => {
+      if (!dragItem) return;
+      e.preventDefault();
+      const touch = e.touches[0];
+      const target = document.elementFromPoint(touch.clientX, touch.clientY);
+      if (target) {
+        const seqItem = target.closest('.seq-item');
+        if (seqItem && seqItem !== dragItem && seqItem.parentElement === container) {
+          const rect = seqItem.getBoundingClientRect();
+          const mid = rect.top + rect.height / 2;
+          if (touch.clientY < mid) container.insertBefore(dragItem, seqItem);
+          else container.insertBefore(dragItem, seqItem.nextSibling);
+        }
+      }
+    }, { passive: false });
+    item.addEventListener('touchend', () => {
+      if (dragItem) dragItem.classList.remove('dragging');
+      dragItem = null;
+    });
+  });
+});
+
+// ─── DRAWING PAD ───
+function initCanvas(canvasId) {
+  const canvas = document.getElementById(canvasId);
+  const ctx = canvas.getContext('2d');
+  const rect = canvas.getBoundingClientRect();
+  canvas.width = rect.width * 2;
+  canvas.height = rect.height * 2;
+  ctx.scale(2, 2);
+  ctx.strokeStyle = '#1a1714';
+  ctx.lineWidth = 2;
+  ctx.lineCap = 'round';
+  let drawing = false;
+  function getPos(e) {
+    const r = canvas.getBoundingClientRect();
+    const x = (e.touches ? e.touches[0].clientX : e.clientX) - r.left;
+    const y = (e.touches ? e.touches[0].clientY : e.clientY) - r.top;
+    return { x, y };
+  }
+  canvas.addEventListener('mousedown', e => { drawing = true; ctx.beginPath(); const p = getPos(e); ctx.moveTo(p.x, p.y); });
+  canvas.addEventListener('mousemove', e => { if (!drawing) return; const p = getPos(e); ctx.lineTo(p.x, p.y); ctx.stroke(); });
+  canvas.addEventListener('mouseup', () => drawing = false);
+  canvas.addEventListener('mouseleave', () => drawing = false);
+  canvas.addEventListener('touchstart', e => { e.preventDefault(); drawing = true; ctx.beginPath(); const p = getPos(e); ctx.moveTo(p.x, p.y); }, { passive: false });
+  canvas.addEventListener('touchmove', e => { e.preventDefault(); if (!drawing) return; const p = getPos(e); ctx.lineTo(p.x, p.y); ctx.stroke(); }, { passive: false });
+  canvas.addEventListener('touchend', () => drawing = false);
+}
+function clearCanvas(canvasId) {
+  const canvas = document.getElementById(canvasId);
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+}
+
+// Lazy init canvas on scroll into view
+const canvasObserver = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      initCanvas(e.target.id);
+      canvasObserver.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.1 });
+document.querySelectorAll('.drawing-pad').forEach(c => canvasObserver.observe(c));
+
+// Reinit on resize
+let resizeTimer;
+window.addEventListener('resize', () => {
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(() => {
+    document.querySelectorAll('.drawing-pad').forEach(c => initCanvas(c.id));
+  }, 300);
+});
+
+// ─── SELF-CHECK TRACKER ───
+function toggleCheck(el) {
+  el.classList.toggle('checked');
+  el.textContent = el.classList.contains('checked') ? '✓' : '';
+}
+</script>
+</body>
+</html>
