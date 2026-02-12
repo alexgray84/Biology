@@ -1,0 +1,2230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IGCSE Biology: Food Production - Interactive Lesson</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1e40af;
+            --primary-light: #dbeafe;
+            --success: #10b981;
+            --success-light: #d1fae5;
+            --warning: #f59e0b;
+            --warning-light: #fef3c7;
+            --danger: #ef4444;
+            --danger-light: #fee2e2;
+            --bg: #f1f5f9;
+            --card: #ffffff;
+            --text: #1e293b;
+            --text-light: #64748b;
+            --text-lighter: #94a3b8;
+            --border: #e2e8f0;
+            --border-light: #f1f5f9;
+            --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+            --shadow: 0 4px 6px -1px rgba(0,0,0,0.07), 0 2px 4px -2px rgba(0,0,0,0.05);
+            --shadow-md: 0 10px 15px -3px rgba(0,0,0,0.08), 0 4px 6px -4px rgba(0,0,0,0.05);
+            --shadow-lg: 0 20px 25px -5px rgba(0,0,0,0.1), 0 8px 10px -6px rgba(0,0,0,0.06);
+            --radius: 12px;
+            --radius-lg: 16px;
+            --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        html {
+            scroll-behavior: smooth;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.65;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ==================== LAYOUT ==================== */
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 20px 24px 80px;
+        }
+
+        /* ==================== HEADER ==================== */
+        header {
+            background: linear-gradient(135deg, #1e40af 0%, #3b82f6 50%, #2563eb 100%);
+            color: white;
+            padding: 48px 36px 36px;
+            margin-bottom: 0;
+            border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+            position: relative;
+            overflow: hidden;
+        }
+        header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+        header::after {
+            content: '';
+            position: absolute;
+            bottom: -30%;
+            left: -10%;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(255,255,255,0.05) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+        .header-content {
+            position: relative;
+            z-index: 1;
+        }
+        .header-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(10px);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: 500;
+            margin-bottom: 16px;
+            letter-spacing: 0.02em;
+        }
+        header h1 {
+            font-size: 2.2em;
+            font-weight: 700;
+            margin-bottom: 8px;
+            letter-spacing: -0.02em;
+        }
+        header p {
+            opacity: 0.85;
+            font-size: 1.05em;
+            font-weight: 400;
+        }
+
+        /* ==================== HORIZONTAL TAB NAV ==================== */
+        .tab-nav-wrapper {
+            background: var(--card);
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-radius: 0 0 0 0;
+            box-shadow: var(--shadow-sm);
+        }
+        .tab-nav-wrapper.scrolled {
+            box-shadow: var(--shadow-md);
+        }
+        .tab-nav {
+            display: flex;
+            align-items: stretch;
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 0 8px;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+        }
+        .tab-nav::-webkit-scrollbar {
+            display: none;
+        }
+        .tab-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 16px 20px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 0.9em;
+            font-weight: 500;
+            color: var(--text-light);
+            white-space: nowrap;
+            position: relative;
+            transition: color var(--transition);
+            font-family: inherit;
+        }
+        .tab-btn::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 16px;
+            right: 16px;
+            height: 3px;
+            background: var(--primary);
+            border-radius: 3px 3px 0 0;
+            transform: scaleX(0);
+            transition: transform var(--transition);
+        }
+        .tab-btn:hover {
+            color: var(--text);
+        }
+        .tab-btn.active {
+            color: var(--primary);
+            font-weight: 600;
+        }
+        .tab-btn.active::after {
+            transform: scaleX(1);
+        }
+        .tab-icon {
+            font-size: 1.15em;
+            line-height: 1;
+        }
+        .tab-label {
+            line-height: 1;
+        }
+        .tab-count {
+            background: var(--bg);
+            color: var(--text-light);
+            font-size: 0.75em;
+            font-weight: 600;
+            padding: 2px 7px;
+            border-radius: 10px;
+            line-height: 1.3;
+        }
+        .tab-btn.active .tab-count {
+            background: var(--primary-light);
+            color: var(--primary);
+        }
+
+        /* ==================== PROGRESS TRACKER ==================== */
+        .progress-tracker {
+            background: var(--card);
+            padding: 24px 28px;
+            margin-top: 24px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+        }
+        .progress-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+        .progress-header h3 {
+            font-size: 1em;
+            font-weight: 600;
+            color: var(--text);
+        }
+        .progress-percent {
+            font-size: 0.85em;
+            font-weight: 600;
+            color: var(--primary);
+        }
+        .progress-bar {
+            height: 10px;
+            background: var(--border-light);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), #6366f1);
+            transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 10px;
+            position: relative;
+        }
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.3) 50%, transparent 100%);
+            animation: shimmer 2s infinite;
+        }
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+        }
+        .stat-card {
+            background: var(--bg);
+            padding: 14px;
+            border-radius: 10px;
+            text-align: center;
+            transition: transform var(--transition), box-shadow var(--transition);
+        }
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-sm);
+        }
+        .stat-value {
+            font-size: 1.6em;
+            font-weight: 700;
+            color: var(--primary);
+            line-height: 1.2;
+        }
+        .stat-label {
+            color: var(--text-light);
+            font-size: 0.78em;
+            margin-top: 4px;
+            font-weight: 500;
+        }
+
+        /* ==================== TAB CONTENT ==================== */
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.35s ease;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ==================== SECTION NAV (sub-tabs within Learning) ==================== */
+        .section-nav {
+            display: flex;
+            gap: 8px;
+            padding: 20px 0 8px;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+        }
+        .section-nav::-webkit-scrollbar {
+            display: none;
+        }
+        .section-chip {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 10px 18px;
+            background: var(--card);
+            border: 2px solid var(--border);
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 0.85em;
+            font-weight: 500;
+            color: var(--text-light);
+            white-space: nowrap;
+            transition: all var(--transition);
+            font-family: inherit;
+        }
+        .section-chip:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            background: var(--primary-light);
+        }
+        .section-chip.active {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
+            box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3);
+        }
+        .section-chip .chip-num {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: rgba(0,0,0,0.08);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8em;
+            font-weight: 700;
+        }
+        .section-chip.active .chip-num {
+            background: rgba(255,255,255,0.25);
+        }
+        .section-chip.completed {
+            border-color: var(--success);
+            color: var(--success);
+            background: var(--success-light);
+        }
+        .section-chip.completed .chip-num {
+            background: var(--success);
+            color: white;
+        }
+
+        /* ==================== SECTIONS ==================== */
+        .section {
+            background: var(--card);
+            padding: 32px;
+            border-radius: var(--radius);
+            margin-top: 20px;
+            box-shadow: var(--shadow);
+            display: none;
+            animation: fadeIn 0.35s ease;
+        }
+        .section.active {
+            display: block;
+        }
+        .section h2 {
+            color: var(--text);
+            margin-bottom: 8px;
+            font-size: 1.5em;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+        }
+        .section-subtitle {
+            color: var(--text-light);
+            font-size: 0.95em;
+            margin-bottom: 28px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border);
+        }
+        .section h3 {
+            color: var(--text);
+            margin: 28px 0 14px 0;
+            font-size: 1.2em;
+            font-weight: 600;
+        }
+
+        /* ==================== CONTENT BLOCKS ==================== */
+        .content-block {
+            margin: 24px 0;
+            padding: 24px;
+            background: var(--bg);
+            border-radius: var(--radius);
+            border-left: 4px solid var(--primary);
+        }
+        .content-block h3 {
+            margin-top: 0;
+        }
+
+        /* ==================== RETRIEVAL PROMPT ==================== */
+        .retrieval-prompt {
+            background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+            border-left: 4px solid var(--warning);
+            padding: 24px;
+            margin: 24px 0;
+            border-radius: var(--radius);
+        }
+        .retrieval-prompt h4 {
+            color: #92400e;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1em;
+        }
+        .retrieval-prompt h4::before {
+            content: "🧠";
+            font-size: 1.3em;
+        }
+        .retrieval-prompt p {
+            color: #78350f;
+            font-size: 0.95em;
+        }
+
+        /* ==================== QUESTION CARD ==================== */
+        .question-card {
+            background: var(--card);
+            padding: 28px;
+            border-radius: var(--radius);
+            margin: 24px 0;
+            border: 2px solid var(--border);
+            transition: border-color var(--transition), box-shadow var(--transition);
+        }
+        .question-card:hover {
+            border-color: #cbd5e1;
+        }
+        .question-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 0.75em;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--primary);
+            background: var(--primary-light);
+            padding: 4px 10px;
+            border-radius: 6px;
+            margin-bottom: 14px;
+        }
+        .question-text {
+            font-size: 1.05em;
+            margin-bottom: 20px;
+            font-weight: 600;
+            line-height: 1.5;
+            color: var(--text);
+        }
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .option {
+            padding: 14px 18px;
+            background: var(--bg);
+            border: 2px solid transparent;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            font-size: 0.95em;
+        }
+        .option:hover {
+            background: var(--primary-light);
+            border-color: rgba(37, 99, 235, 0.2);
+            transform: translateX(4px);
+        }
+        .option.selected {
+            border-color: var(--primary);
+            background: var(--primary-light);
+        }
+        .option.correct {
+            border-color: var(--success);
+            background: var(--success-light);
+        }
+        .option.correct .option-letter {
+            background: var(--success);
+        }
+        .option.incorrect {
+            border-color: var(--danger);
+            background: var(--danger-light);
+        }
+        .option.incorrect .option-letter {
+            background: var(--danger);
+        }
+        .option-letter {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            background: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            flex-shrink: 0;
+            font-size: 0.85em;
+            transition: background var(--transition);
+        }
+        .feedback {
+            margin-top: 16px;
+            padding: 16px 20px;
+            border-radius: 10px;
+            display: none;
+            font-size: 0.95em;
+            line-height: 1.6;
+        }
+        .feedback.show {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+        .feedback.correct {
+            background: var(--success-light);
+            border-left: 4px solid var(--success);
+            color: #065f46;
+        }
+        .feedback.incorrect {
+            background: var(--danger-light);
+            border-left: 4px solid var(--danger);
+            color: #991b1b;
+        }
+
+        /* ==================== BUTTONS ==================== */
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 10px;
+            font-size: 0.9em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all var(--transition);
+            margin: 8px 4px 8px 0;
+            font-family: inherit;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+        }
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+        .btn-success:hover {
+            background: #059669;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        }
+        .btn-outline {
+            background: transparent;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+        .btn-outline:hover {
+            background: var(--primary-light);
+        }
+        .btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            transform: none !important;
+            box-shadow: none !important;
+        }
+        .btn-lg {
+            padding: 16px 32px;
+            font-size: 1em;
+            border-radius: var(--radius);
+            width: 100%;
+            justify-content: center;
+        }
+
+        /* ==================== TABLES ==================== */
+        .comparison-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin: 20px 0;
+            border-radius: var(--radius);
+            overflow: hidden;
+            border: 1px solid var(--border);
+        }
+        .comparison-table th,
+        .comparison-table td {
+            padding: 14px 18px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+        .comparison-table th {
+            background: var(--primary);
+            color: white;
+            font-weight: 600;
+            font-size: 0.9em;
+            letter-spacing: 0.01em;
+        }
+        .comparison-table tr:last-child td {
+            border-bottom: none;
+        }
+        .comparison-table tr:nth-child(even) {
+            background: var(--bg);
+        }
+        .comparison-table tr:hover td {
+            background: var(--primary-light);
+        }
+
+        /* ==================== DIAGRAMS ==================== */
+        .diagram {
+            background: white;
+            padding: 24px;
+            border-radius: var(--radius);
+            margin: 20px 0;
+            border: 1px solid var(--border);
+        }
+        .diagram-title {
+            text-align: center;
+            font-weight: 700;
+            margin-bottom: 16px;
+            color: var(--primary);
+            font-size: 1em;
+        }
+
+        /* ==================== HIGHLIGHTS & CALLOUTS ==================== */
+        .key-term {
+            background: var(--warning-light);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: 600;
+            color: #92400e;
+        }
+        .highlight-box {
+            background: var(--warning-light);
+            padding: 20px 24px;
+            border-radius: var(--radius);
+            margin: 20px 0;
+            border-left: 4px solid var(--warning);
+        }
+        .highlight-box strong:first-child {
+            color: #92400e;
+        }
+        .interleaving-note {
+            background: #f5f3ff;
+            border-left: 4px solid #7c3aed;
+            padding: 18px 24px;
+            margin: 24px 0;
+            border-radius: var(--radius);
+        }
+        .interleaving-note strong {
+            color: #5b21b6;
+        }
+
+        /* ==================== SPACED PRACTICE ==================== */
+        .spaced-practice {
+            background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+            padding: 24px;
+            border-radius: var(--radius);
+            margin: 24px 0;
+            border: 1px solid rgba(37, 99, 235, 0.15);
+        }
+        .spaced-practice h4 {
+            color: #1e40af;
+            margin-bottom: 12px;
+            font-size: 1em;
+        }
+        .spaced-practice p {
+            color: #1e3a5f;
+            font-size: 0.95em;
+        }
+
+        /* ==================== INPUTS ==================== */
+        .input-answer {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            font-size: 0.95em;
+            margin: 10px 0;
+            font-family: inherit;
+            line-height: 1.6;
+            transition: border-color var(--transition), box-shadow var(--transition);
+            background: white;
+        }
+        .input-answer:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+        .input-answer::placeholder {
+            color: var(--text-lighter);
+        }
+        textarea.input-answer {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        /* ==================== MINI QUIZ ==================== */
+        .mini-quiz {
+            background: var(--card);
+            padding: 28px;
+            border-radius: var(--radius);
+            border: 2px solid var(--primary);
+            margin: 24px 0;
+        }
+        .mini-quiz h3 {
+            margin-top: 0;
+            color: var(--primary);
+        }
+
+        /* ==================== SUMMARY BOX ==================== */
+        .summary-box {
+            background: var(--card);
+            padding: 24px 28px;
+            border-radius: var(--radius);
+            margin: 20px 0;
+            border: 1px solid var(--border);
+            border-left: 5px solid var(--success);
+            transition: transform var(--transition), box-shadow var(--transition);
+        }
+        .summary-box:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+        .summary-box h3 {
+            color: #065f46;
+            margin: 0 0 14px 0;
+            font-size: 1.1em;
+        }
+
+        /* ==================== SECTION FOOTER NAV ==================== */
+        .section-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 32px;
+            padding-top: 24px;
+            border-top: 1px solid var(--border);
+            gap: 12px;
+        }
+        .section-footer .btn {
+            margin: 0;
+        }
+
+        /* ==================== LISTS ==================== */
+        ul, ol {
+            margin-left: 20px;
+            margin-top: 10px;
+        }
+        li {
+            margin: 8px 0;
+        }
+
+        /* ==================== MODAL ==================== */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(4px);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .modal.show {
+            display: flex;
+            animation: fadeIn 0.3s ease;
+        }
+        .modal-content {
+            background: var(--card);
+            padding: 40px;
+            border-radius: var(--radius-lg);
+            max-width: 480px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-lg);
+            animation: modalIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        @keyframes modalIn {
+            from { opacity: 0; transform: scale(0.9) translateY(20px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        .achievement {
+            text-align: center;
+            padding: 20px 0;
+        }
+        .achievement-icon {
+            font-size: 4em;
+            margin-bottom: 16px;
+            display: block;
+        }
+        .achievement h2 {
+            font-size: 1.5em;
+            margin-bottom: 12px;
+            color: var(--text);
+        }
+        .achievement p {
+            color: var(--text-light);
+            margin-bottom: 24px;
+            line-height: 1.6;
+        }
+
+        /* ==================== EMPTY STATE ==================== */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-light);
+        }
+        .empty-state-icon {
+            font-size: 3em;
+            margin-bottom: 16px;
+            opacity: 0.5;
+        }
+
+        /* ==================== RESPONSIVE ==================== */
+        @media (max-width: 768px) {
+            .container {
+                padding: 12px 14px 60px;
+            }
+            header {
+                padding: 32px 24px 28px;
+                border-radius: var(--radius) var(--radius) 0 0;
+            }
+            header h1 {
+                font-size: 1.6em;
+            }
+            header p {
+                font-size: 0.95em;
+            }
+            .tab-btn {
+                padding: 14px 14px;
+                font-size: 0.85em;
+            }
+            .tab-label {
+                display: none;
+            }
+            .tab-icon {
+                font-size: 1.3em;
+            }
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .stat-value {
+                font-size: 1.3em;
+            }
+            .section {
+                padding: 24px 20px;
+            }
+            .section h2 {
+                font-size: 1.3em;
+            }
+            .content-block {
+                padding: 18px;
+            }
+            .question-card {
+                padding: 20px;
+            }
+            .comparison-table th,
+            .comparison-table td {
+                padding: 10px 12px;
+                font-size: 0.88em;
+            }
+            .section-footer {
+                flex-direction: column;
+            }
+            .section-footer .btn {
+                width: 100%;
+                justify-content: center;
+            }
+            .section-nav {
+                padding: 16px 0 4px;
+            }
+        }
+        @media (max-width: 480px) {
+            .tab-count {
+                display: none;
+            }
+            .section-chip {
+                padding: 8px 14px;
+                font-size: 0.8em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- HEADER -->
+        <header>
+            <div class="header-content">
+                <div class="header-badge">IGCSE Biology &bull; Topic 5</div>
+                <h1>Food Production</h1>
+                <p>Use of Biological Resources &mdash; Interactive Lesson</p>
+            </div>
+        </header>
+
+        <!-- HORIZONTAL TAB NAVIGATION -->
+        <div class="tab-nav-wrapper" id="tabNavWrapper">
+            <nav class="tab-nav">
+                <button class="tab-btn active" data-tab="learn" onclick="switchTab('learn', this)">
+                    <span class="tab-icon">📖</span>
+                    <span class="tab-label">Learn</span>
+                    <span class="tab-count" id="learnCount">4 topics</span>
+                </button>
+                <button class="tab-btn" data-tab="practice" onclick="switchTab('practice', this)">
+                    <span class="tab-icon">✏️</span>
+                    <span class="tab-label">Practice</span>
+                    <span class="tab-count">6 Qs</span>
+                </button>
+                <button class="tab-btn" data-tab="assessment" onclick="switchTab('assessment', this)">
+                    <span class="tab-icon">📝</span>
+                    <span class="tab-label">Assessment</span>
+                    <span class="tab-count" id="assessCount">5 Qs</span>
+                </button>
+                <button class="tab-btn" data-tab="summary" onclick="switchTab('summary', this)">
+                    <span class="tab-icon">📋</span>
+                    <span class="tab-label">Summary</span>
+                </button>
+            </nav>
+        </div>
+
+        <!-- PROGRESS TRACKER -->
+        <div class="progress-tracker">
+            <div class="progress-header">
+                <h3>Your Progress</h3>
+                <span class="progress-percent" id="progressPercent">0%</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+            </div>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value" id="questionsCompleted">0</div>
+                    <div class="stat-label">Questions Done</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="correctAnswers">0</div>
+                    <div class="stat-label">Correct</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="accuracyRate">0%</div>
+                    <div class="stat-label">Accuracy</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="sectionsCompleted">0/4</div>
+                    <div class="stat-label">Sections</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== LEARN TAB ==================== -->
+        <div id="learnTab" class="tab-content active">
+            <!-- Section chips for sub-navigation -->
+            <div class="section-nav" id="sectionNav">
+                <button class="section-chip active" data-section="1" onclick="switchSection(1, this)">
+                    <span class="chip-num">1</span>Glasshouses
+                </button>
+                <button class="section-chip" data-section="2" onclick="switchSection(2, this)">
+                    <span class="chip-num">2</span>CO₂ &amp; Temperature
+                </button>
+                <button class="section-chip" data-section="3" onclick="switchSection(3, this)">
+                    <span class="chip-num">3</span>Fertilizers
+                </button>
+                <button class="section-chip" data-section="4" onclick="switchSection(4, this)">
+                    <span class="chip-num">4</span>Pest Control
+                </button>
+            </div>
+
+            <!-- Section 1: Glasshouses and Polythene Tunnels -->
+            <div class="section active" id="section1">
+                <h2>Glasshouses &amp; Polythene Tunnels</h2>
+                <p class="section-subtitle">How controlled environments increase crop yield</p>
+
+                <div class="retrieval-prompt">
+                    <h4>Retrieval Practice: Before We Begin</h4>
+                    <p>Think back to what you already know: What conditions do plants need to grow effectively? Write down 3&ndash;4 factors before continuing.</p>
+                    <textarea class="input-answer" id="preretrievalPlantNeeds" placeholder="Type your answer here..."></textarea>
+                </div>
+
+                <div class="content-block">
+                    <h3>What are Glasshouses and Polythene Tunnels?</h3>
+                    <p><span class="key-term">Glasshouses</span> (greenhouses) and <span class="key-term">polythene tunnels</span> are protective structures that allow farmers to control growing conditions for crop plants.</p>
+                    <div class="diagram">
+                        <div class="diagram-title">How They Work</div>
+                        <p><strong>Key Features:</strong></p>
+                        <ul>
+                            <li><strong>Transparent materials</strong> &mdash; Glass or clear plastic allows light to enter</li>
+                            <li><strong>Enclosed space</strong> &mdash; Traps heat and maintains temperature</li>
+                            <li><strong>Protection</strong> &mdash; Shields crops from harsh weather, pests, and diseases</li>
+                            <li><strong>Controlled environment</strong> &mdash; Enables optimization of growing conditions</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="content-block">
+                    <h3>How Do They Increase Crop Yield?</h3>
+                    <p><span class="key-term">Crop yield</span> refers to the amount of crop harvested per unit area. Glasshouses increase yield by:</p>
+                    <table class="comparison-table">
+                        <thead>
+                            <tr>
+                                <th>Factor</th>
+                                <th>How It's Controlled</th>
+                                <th>Effect on Yield</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Temperature</strong></td>
+                                <td>Heating systems, ventilation, thermal mass</td>
+                                <td>Optimum temperature increases enzyme activity and photosynthesis rate</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Light</strong></td>
+                                <td>Transparent materials, artificial lighting</td>
+                                <td>Extended growing season, increased photosynthesis</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Carbon dioxide</strong></td>
+                                <td>CO₂ enrichment systems, burners</td>
+                                <td>Enhanced photosynthesis rate (CO₂ is a raw material)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Water</strong></td>
+                                <td>Irrigation systems, drip feeds</td>
+                                <td>Prevents water stress, maintains turgor</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Protection</strong></td>
+                                <td>Physical barrier</td>
+                                <td>Reduces crop loss from weather, pests, and disease</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="highlight-box">
+                    <strong>Exam Focus:</strong> Be able to describe specific ways that glasshouses increase yield, not just list features. Link each feature to its effect on plant growth processes.
+                </div>
+
+                <div class="question-card" data-section="1">
+                    <div class="question-badge">Multiple Choice</div>
+                    <div class="question-text">Which of the following BEST explains why glasshouses can increase crop yield?</div>
+                    <div class="options">
+                        <div class="option" data-answer="incorrect">
+                            <span class="option-letter">A</span>
+                            <span>They make plants grow bigger by providing more space</span>
+                        </div>
+                        <div class="option" data-answer="incorrect">
+                            <span class="option-letter">B</span>
+                            <span>They prevent all pests from reaching the crops</span>
+                        </div>
+                        <div class="option" data-answer="correct">
+                            <span class="option-letter">C</span>
+                            <span>They allow control of environmental conditions to optimize photosynthesis and growth</span>
+                        </div>
+                        <div class="option" data-answer="incorrect">
+                            <span class="option-letter">D</span>
+                            <span>They increase the amount of soil nutrients available</span>
+                        </div>
+                    </div>
+                    <div class="feedback"></div>
+                </div>
+
+                <div class="spaced-practice">
+                    <h4>🔄 Spaced Recall Practice</h4>
+                    <p>Without looking back, list THREE ways that glasshouses can be used to increase crop yield:</p>
+                    <textarea class="input-answer" id="recallGlasshouses" placeholder="1. ...&#10;2. ...&#10;3. ..."></textarea>
+                    <button class="btn btn-primary" onclick="checkRecall('recallGlasshouses', ['temperature', 'light', 'carbon dioxide', 'CO2', 'water', 'protection', 'pest', 'disease'])">Check My Answer</button>
+                    <div id="recallGlasshousesFeedback" class="feedback"></div>
+                </div>
+
+                <div class="section-footer">
+                    <span></span>
+                    <button class="btn btn-primary" onclick="goToSection(2)">Next: CO₂ &amp; Temperature &rarr;</button>
+                </div>
+            </div>
+
+            <!-- Section 2: Effects of CO2 and Temperature -->
+            <div class="section" id="section2">
+                <h2>Effects of Increased CO₂ &amp; Temperature</h2>
+                <p class="section-subtitle">Understanding limiting factors in photosynthesis</p>
+
+                <div class="interleaving-note">
+                    <strong>🔗 Connecting to Prior Knowledge:</strong> This section builds on your understanding of photosynthesis from earlier topics. Try to make connections as you learn!
+                </div>
+
+                <div class="content-block">
+                    <h3>The Effect of Increased Carbon Dioxide</h3>
+                    <p>Carbon dioxide is a <span class="key-term">raw material</span> for photosynthesis. The equation reminds us:</p>
+                    <div class="highlight-box">
+                        <strong>Photosynthesis equation:</strong><br>
+                        6CO₂ + 6H₂O &rarr; C₆H₁₂O₆ + 6O₂<br>
+                        <small>(carbon dioxide + water &rarr; glucose + oxygen)</small>
+                    </div>
+                    <p><strong>Effects of increased CO₂ concentration:</strong></p>
+                    <ul>
+                        <li>&#10003; <strong>Increases rate of photosynthesis</strong> &mdash; More raw material available for the reaction</li>
+                        <li>&#10003; <strong>Increases glucose production</strong> &mdash; More product formed per unit time</li>
+                        <li>&#10003; <strong>Increases crop yield</strong> &mdash; More glucose &rarr; more growth &rarr; more biomass</li>
+                        <li>&#9888; <strong>Only works up to a point</strong> &mdash; Other factors become limiting (limiting factor concept)</li>
+                    </ul>
+                    <div class="diagram">
+                        <div class="diagram-title">Typical CO₂ Levels</div>
+                        <ul>
+                            <li>Atmospheric CO₂: ~0.04% (400 ppm)</li>
+                            <li>Optimum in glasshouse: 0.1% &ndash; 0.15% (1000&ndash;1500 ppm)</li>
+                            <li>Method: Paraffin burners or CO₂ cylinders</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="content-block">
+                    <h3>The Effect of Increased Temperature</h3>
+                    <p>Temperature affects enzyme-controlled reactions, including those in photosynthesis and respiration.</p>
+                    <div class="diagram">
+                        <div class="diagram-title">Temperature and Enzyme Activity</div>
+                        <p><strong>Key Points:</strong></p>
+                        <ul>
+                            <li><strong>Below optimum (0&ndash;25&deg;C):</strong> Increasing temperature increases enzyme activity &rarr; faster photosynthesis</li>
+                            <li><strong>Optimum temperature (~25&ndash;30&deg;C for most crops):</strong> Maximum enzyme activity &rarr; maximum rate of photosynthesis</li>
+                            <li><strong>Above optimum (&gt;35&deg;C):</strong> Enzymes denature &rarr; reduced photosynthesis</li>
+                        </ul>
+                    </div>
+                    <p><strong>Effects of controlled temperature increase:</strong></p>
+                    <ul>
+                        <li>&#10003; Enzymes work faster &rarr; increased metabolic rate</li>
+                        <li>&#10003; Faster photosynthesis (if temperature is optimized)</li>
+                        <li>&#10003; Extended growing season (can grow year-round)</li>
+                        <li>&#10003; Faster growth rate &rarr; quicker harvest &rarr; more crops per year</li>
+                        <li>&#9888; Higher respiration rate (uses glucose) &mdash; net gain must be positive</li>
+                        <li>&#9888; Risk of overheating &rarr; need ventilation control</li>
+                    </ul>
+                </div>
+
+                <div class="highlight-box">
+                    <strong>Common Misconception:</strong> Higher temperature is NOT always better! The key is maintaining the OPTIMUM temperature for the specific crop. Too hot = enzyme denaturation = crop damage.
+                </div>
+
+                <div class="question-card" data-section="2">
+                    <div class="question-badge">Multiple Choice</div>
+                    <div class="question-text">A farmer increases the CO₂ concentration in their glasshouse from 0.04% to 0.1%. What is the MOST LIKELY immediate effect?</div>
+                    <div class="options">
+                        <div class="option" data-answer="incorrect">
+                            <span class="option-letter">A</span>
+                            <span>The temperature inside the glasshouse will increase</span>
+                        </div>
+                        <div class="option" data-answer="correct">
+                            <span class="option-letter">B</span>
+                            <span>The rate of photosynthesis will increase</span>
+                        </div>
+                        <div class="option" data-answer="incorrect">
+                            <span class="option-letter">C</span>
+                            <span>The plants will need less water</span>
+                        </div>
+                        <div class="option" data-answer="incorrect">
+                            <span class="option-letter">D</span>
+                            <span>The plants will produce less oxygen</span>
+                        </div>
+                    </div>
+                    <div class="feedback"></div>
+                </div>
+
+                <div class="question-card" data-section="2">
+                    <div class="question-badge">Multiple Choice</div>
+                    <div class="question-text">Why must temperature in a glasshouse be carefully controlled rather than simply maximized?</div>
+                    <div class="options">
+                        <div class="option" data-answer="incorrect">
+                            <span class="option-letter">A</span>
+                            <span>High temperatures cost more money in heating bills</span>
+                        </div>
+                        <div class="option" data-answer="correct">
+                            <span class="option-letter">B</span>
+                            <span>Temperatures above optimum denature enzymes and reduce photosynthesis</span>
+                        </div>
+                        <div class="option" data-answer="incorrect">
+                            <span class="option-letter">C</span>
+                            <span>Plants cannot tolerate any temperature above 25&deg;C</span>
+                        </div>
+                        <div class="option" data-answer="incorrect">
+                            <span class="option-letter">D</span>
+                            <span>High temperatures prevent CO₂ from entering the leaves</span>
+                        </div>
+                    </div>
+                    <div class="feedback"></div>
+                </div>
+
+                <div class="section-footer">
+                    <button class="btn btn-outline" onclick="goToSection(1)">&larr; Previous</button>
+                    <button class="btn btn-primary" onclick="goToSection(3)">Next: Fertilizers &rarr;</button>
+                </div>
+            </div>
+
+            <!-- Section 3: Use of Fertilizers -->
+            <div class="section" id="section3">
+                <h2>Use of Fertilizers</h2>
+                <p class="section-subtitle">Mineral ions, soil nutrition, and environmental impact</p>
+
+                <div class="retrieval-prompt">
+                    <h4>Retrieval Practice: Recall from Earlier Topics</h4>
+                    <p>What are the three main mineral ions that plants need? What does each one do? Try to recall before reading on.</p>
+                    <textarea class="input-answer" placeholder="Write what you remember..."></textarea>
+                </div>
+
+                <div class="content-block">
+                    <h3>What Are Fertilizers?</h3>
+                    <p><span class="key-term">Fertilizers</span> are substances added to soil to provide essential mineral ions that plants need for growth.</p>
+                    <div class="diagram">
+                        <div class="diagram-title">Essential Mineral Ions</div>
+                        <table class="comparison-table">
+                            <thead>
+                                <tr>
+                                    <th>Mineral Ion</th>
+                                    <th>Use in Plants</th>
+                                    <th>Deficiency Symptoms</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Nitrates (NO₃⁻)</strong></td>
+                                    <td>Make amino acids &rarr; proteins (for growth)</td>
+                                    <td>Stunted growth, yellow older leaves</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Phosphates (PO₄³⁻)</strong></td>
+                                    <td>Make DNA and cell membranes, respiration</td>
+                                    <td>Poor root growth, purple leaves</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Potassium (K⁺)</strong></td>
+                                    <td>Enzyme activation, photosynthesis</td>
+                                    <td>Yellow leaves with dead spots</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Magnesium (Mg²⁺)</strong></td>
+                                    <td>Make chlorophyll for photosynthesis</td>
+                                    <td>Yellow leaves (chlorosis)</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="content-block">
+                    <h3>How Fertilizers Increase Crop Yield</h3>
+                    <p><strong>The mechanism:</strong></p>
+                    <ol>
+                        <li>Fertilizers replace mineral ions removed from soil by previous crops</li>
+                        <li>Increased mineral availability &rarr; increased protein synthesis</li>
+                        <li>More proteins &rarr; more enzymes &rarr; faster metabolism</li>
+                        <li>More proteins &rarr; more growth (cell division and expansion)</li>
+                        <li>Healthier plants &rarr; increased biomass &rarr; higher yield</li>
+                    </ol>
+                    <div class="highlight-box">
+                        <strong>NPK Fertilizers:</strong> The most common type containing Nitrogen (N), Phosphorus (P), and Potassium (K). The ratio varies depending on crop needs. For example, 15-15-15 means 15% of each element.
+                    </div>
+                </div>
+
+                <div class="content-block">
+                    <h3>Types of Fertilizers</h3>
+                    <table class="comparison-table">
+                        <thead>
+                            <tr>
+                                <th>Type</th>
+                                <th>Advantages</th>
+                                <th>Disadvantages</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Organic</strong><br><small>(manure, compost, bone meal)</small></td>
+                                <td>
+                                    &bull; Improves soil structure<br>
+                                    &bull; Releases nutrients slowly<br>
+                                    &bull; Increases soil organisms<br>
+                                    &bull; Reduces waste
+                                </td>
+                                <td>
+                                    &bull; Bulky to transport<br>
+                                    &bull; Slow-acting<br>
+                                    &bull; Nutrient content variable<br>
+                                    &bull; May contain weed seeds/pathogens
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><strong>Inorganic / Artificial</strong><br><small>(ammonium nitrate, NPK)</small></td>
+                                <td>
+                                    &bull; Fast-acting<br>
+                                    &bull; Precise nutrient content<br>
+                                    &bull; Easy to apply and transport<br>
+                                    &bull; Immediate results
+                                </td>
+                                <td>
+                                    &bull; Can leach into waterways &rarr; eutrophication<br>
+                                    &bull; Doesn't improve soil structure<br>
+                                    &bull; More expensive<br>
+                                    &bull; Requires fossil fuels to produce
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="highlight-box">
+                    <strong>Environmental Issue &mdash; Eutrophication:</strong>
+                    <ol>
+                        <li>Excess fertilizer washes into water bodies (leaching)</li>
+                        <li>Algae grow rapidly (algal bloom) blocking light</li>
+                        <li>Plants below die due to lack of light for photosynthesis</li>
+                        <li>Bacteria decompose dead plants, using oxygen</li>
+                        <li>Oxygen depletion &rarr; fish and other organisms die</li>
+                    </ol>
+                </div>
+
+                <div class="question-card" data-section="3">
+                    <div class="question-badge">Multiple Choice</div>
+                    <div class="question-text">A farmer notices that their crop plants have stunted growth and yellowing older leaves. Which mineral deficiency is MOST LIKELY responsible?</div>
+                    <div class="options">
+                        <div class="option" data-answer="correct">
+                            <span class="option-letter">A</span>
+                            <span>Nitrate deficiency</span>
+                        </div>
+                        <div class="option" data-answer="incorrect">
+                            <span class="option-letter">B</span>
+                            <span>Phosphate deficiency</span>
+                        </div>
+                        <div class="option" data-answer="incorrect">
+                            <span class="option-letter">C</span>
+                            <span>Potassium deficiency</span>
+                        </div>
+                        <div class="option" data-answer="incorrect">
+                            <span class="option-letter">D</span>
+                            <span>Magnesium deficiency</span>
+                        </div>
+                    </div>
+                    <div class="feedback"></div>
+                </div>
+
+                <div class="spaced-practice">
+                    <h4>🔄 Application Question</h4>
+                    <p>Explain why using too much inorganic fertilizer can lead to problems in nearby rivers and lakes.</p>
+                    <textarea class="input-answer" id="eutrophicationExplain" placeholder="Write your explanation here..."></textarea>
+                    <button class="btn btn-primary" onclick="checkRecall('eutrophicationExplain', ['leach', 'runoff', 'algae', 'bloom', 'oxygen', 'bacteria', 'decompose', 'eutrophication'])">Check My Answer</button>
+                    <div id="eutrophicationExplainFeedback" class="feedback"></div>
+                </div>
+
+                <div class="section-footer">
+                    <button class="btn btn-outline" onclick="goToSection(2)">&larr; Previous</button>
+                    <button class="btn btn-primary" onclick="goToSection(4)">Next: Pest Control &rarr;</button>
+                </div>
+            </div>
+
+            <!-- Section 4: Pest Control -->
+            <div class="section" id="section4">
+                <h2>Pest Control</h2>
+                <p class="section-subtitle">Chemical and biological methods of protecting crops</p>
+
+                <div class="content-block">
+                    <h3>Why Control Pests?</h3>
+                    <p><span class="key-term">Pests</span> are organisms that damage crops, reducing yield and quality.</p>
+                    <div class="diagram">
+                        <div class="diagram-title">Types of Crop Pests</div>
+                        <ul>
+                            <li><strong>Insects</strong> &mdash; Eat leaves, stems, roots, or fruits (e.g., aphids, caterpillars, beetles)</li>
+                            <li><strong>Fungi</strong> &mdash; Cause diseases and rot (e.g., potato blight, wheat rust)</li>
+                            <li><strong>Weeds</strong> &mdash; Compete for light, water, minerals, and space</li>
+                            <li><strong>Mammals</strong> &mdash; Eat crops or damage plants (e.g., rabbits, deer, rodents)</li>
+                        </ul>
+                    </div>
+                    <p><strong>Economic reasons for pest control:</strong></p>
+                    <ul>
+                        <li>Prevent crop damage &rarr; maintain yield</li>
+                        <li>Maintain crop quality &rarr; higher market value</li>
+                        <li>Reduce economic losses for farmers</li>
+                        <li>Ensure food security and supply</li>
+                    </ul>
+                </div>
+
+                <div class="content-block">
+                    <h3>Method 1: Chemical Control (Pesticides)</h3>
+                    <p><span class="key-term">Pesticides</span> are chemicals that kill pests. Different types include insecticides, herbicides, fungicides, and molluscicides.</p>
+                    <table class="comparison-table">
+                        <thead>
+                            <tr>
+                                <th>Advantages of Pesticides</th>
+                                <th>Disadvantages of Pesticides</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    &#10003; Act very quickly<br>
+                                    &#10003; Very effective at killing pests<br>
+                                    &#10003; Can treat large areas easily<br>
+                                    &#10003; Relatively cheap to produce<br>
+                                    &#10003; Prevent significant crop losses
+                                </td>
+                                <td>
+                                    &#10007; Kill non-target species (including beneficial insects)<br>
+                                    &#10007; May harm organisms throughout food chain<br>
+                                    &#10007; Some pesticides are persistent (don't break down)<br>
+                                    &#10007; Can bioaccumulate in food chains<br>
+                                    &#10007; Pests can develop resistance<br>
+                                    &#10007; Pesticide residues may remain on food<br>
+                                    &#10007; Can pollute water sources
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="highlight-box">
+                        <strong>Key Concept &mdash; Bioaccumulation:</strong> Pesticides can accumulate at increasing concentrations along a food chain. For example: pesticide in water &rarr; eaten by plankton &rarr; eaten by small fish &rarr; eaten by large fish &rarr; eaten by birds. Birds at the top of the chain have highest concentrations.
+                    </div>
+                </div>
+
+                <div class="content-block">
+                    <h3>Method 2: Biological Control</h3>
+                    <p><span class="key-term">Biological control</span> uses natural predators, parasites, or diseases to control pest populations instead of chemicals.</p>
+                    <div class="diagram">
+                        <div class="diagram-title">Examples of Biological Control</div>
+                        <ul>
+                            <li><strong>Ladybirds</strong> &rarr; eat aphids on crops</li>
+                            <li><strong>Parasitic wasps</strong> &rarr; lay eggs in pest caterpillars</li>
+                            <li><strong>Bacteria (Bt)</strong> &rarr; produce toxins that kill specific insects</li>
+                            <li><strong>Nematodes</strong> &rarr; parasitize slugs and vine weevils</li>
+                            <li><strong>Myxomatosis virus</strong> &rarr; controls rabbit populations</li>
+                        </ul>
+                    </div>
+                    <table class="comparison-table">
+                        <thead>
+                            <tr>
+                                <th>Advantages of Biological Control</th>
+                                <th>Disadvantages of Biological Control</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    &#10003; Highly specific to target pest<br>
+                                    &#10003; No chemical pollution<br>
+                                    &#10003; Doesn't harm other organisms<br>
+                                    &#10003; No bioaccumulation<br>
+                                    &#10003; Pests don't develop resistance<br>
+                                    &#10003; Long-lasting (predators reproduce)<br>
+                                    &#10003; No pesticide residues on food
+                                </td>
+                                <td>
+                                    &#10007; Slow to take effect (needs time to establish)<br>
+                                    &#10007; Doesn't eliminate pests completely<br>
+                                    &#10007; Control agent may become a pest itself<br>
+                                    &#10007; May disrupt local ecosystems<br>
+                                    &#10007; More expensive initially<br>
+                                    &#10007; Requires expertise to implement<br>
+                                    &#10007; Difficult to control once introduced
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="interleaving-note">
+                    <strong>🔗 Connecting Concepts:</strong> Notice how this links to ecology and food chains (Topic 4). Pesticide bioaccumulation affects energy transfer and pyramid of biomass. Biological control involves predator-prey relationships.
+                </div>
+
+                <div class="question-card" data-section="4">
+                    <div class="question-badge">Multiple Choice</div>
+                    <div class="question-text">Which of the following is an advantage of biological control over using pesticides?</div>
+                    <div class="options">
+                        <div class="option" data-answer="incorrect">
+                            <span class="option-letter">A</span>
+                            <span>It works much faster to reduce pest numbers</span>
+                        </div>
+                        <div class="option" data-answer="incorrect">
+                            <span class="option-letter">B</span>
+                            <span>It completely eliminates the pest population</span>
+                        </div>
+                        <div class="option" data-answer="correct">
+                            <span class="option-letter">C</span>
+                            <span>It is specific to the target pest and doesn't harm other organisms</span>
+                        </div>
+                        <div class="option" data-answer="incorrect">
+                            <span class="option-letter">D</span>
+                            <span>It is always cheaper than using chemicals</span>
+                        </div>
+                    </div>
+                    <div class="feedback"></div>
+                </div>
+
+                <div class="question-card" data-section="4">
+                    <div class="question-badge">Multiple Choice</div>
+                    <div class="question-text">A farmer wants rapid control of an aphid infestation that is currently destroying their crop. Which method would be MOST appropriate?</div>
+                    <div class="options">
+                        <div class="option" data-answer="incorrect">
+                            <span class="option-letter">A</span>
+                            <span>Introduce ladybirds to eat the aphids</span>
+                        </div>
+                        <div class="option" data-answer="correct">
+                            <span class="option-letter">B</span>
+                            <span>Apply an insecticide pesticide</span>
+                        </div>
+                        <div class="option" data-answer="incorrect">
+                            <span class="option-letter">C</span>
+                            <span>Wait for natural predators to control the population</span>
+                        </div>
+                        <div class="option" data-answer="incorrect">
+                            <span class="option-letter">D</span>
+                            <span>Use organic fertilizers to make plants stronger</span>
+                        </div>
+                    </div>
+                    <div class="feedback"></div>
+                </div>
+
+                <div class="spaced-practice">
+                    <h4>🔄 Comparison Task</h4>
+                    <p>Create a comparison between pesticides and biological control. Include at least 2 advantages and 2 disadvantages of each method.</p>
+                    <textarea class="input-answer" placeholder="Write your comparison here..."></textarea>
+                </div>
+
+                <div class="section-footer">
+                    <button class="btn btn-outline" onclick="goToSection(3)">&larr; Previous</button>
+                    <button class="btn btn-success" onclick="switchTab('practice', document.querySelector('[data-tab=practice]'))">Continue to Practice &rarr;</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== PRACTICE TAB ==================== -->
+        <div id="practiceTab" class="tab-content">
+            <div class="section active" style="margin-top: 24px;">
+                <h2>Practice Questions</h2>
+                <p class="section-subtitle">Apply your knowledge across all four sections</p>
+
+                <div class="question-card" data-section="practice">
+                    <div class="question-badge">Extended Response</div>
+                    <div class="question-text">A commercial tomato grower wants to maximize yield in their glasshouse. Suggest THREE changes they could make and explain how each would increase yield.</div>
+                    <textarea class="input-answer" id="tomatoGrower" placeholder="Write your answer here..." style="min-height: 150px;"></textarea>
+                    <button class="btn btn-primary" onclick="checkLongAnswer('tomatoGrower')">Get Feedback</button>
+                    <div id="tomatoGrowerFeedback" class="feedback"></div>
+                </div>
+
+                <div class="question-card" data-section="practice">
+                    <div class="question-badge">Extended Response</div>
+                    <div class="question-text">Explain why a farmer might choose to use both pesticides AND biological control methods rather than relying on just one approach.</div>
+                    <textarea class="input-answer" id="integratedPest" placeholder="Write your answer here..." style="min-height: 120px;"></textarea>
+                    <button class="btn btn-primary" onclick="checkLongAnswer('integratedPest')">Get Feedback</button>
+                    <div id="integratedPestFeedback" class="feedback"></div>
+                </div>
+
+                <div class="question-card" data-section="practice">
+                    <div class="question-badge">Evaluate</div>
+                    <div class="question-text">A student claims: "Increasing temperature in a glasshouse will always increase crop yield." Evaluate this statement.</div>
+                    <textarea class="input-answer" id="evaluateTemp" placeholder="Write your answer here..." style="min-height: 150px;"></textarea>
+                    <button class="btn btn-primary" onclick="checkLongAnswer('evaluateTemp')">Get Feedback</button>
+                    <div id="evaluateTempFeedback" class="feedback"></div>
+                </div>
+
+                <div class="mini-quiz">
+                    <h3>Quick Fire Quiz</h3>
+                    <p style="color: var(--text-light); margin-bottom: 20px;">Short recall questions &mdash; test yourself without looking back.</p>
+
+                    <div style="margin: 20px 0;">
+                        <strong>1. What are the three main mineral ions in NPK fertilizer?</strong>
+                        <input type="text" class="input-answer" id="npkQuestion" placeholder="Your answer">
+                    </div>
+                    <div style="margin: 20px 0;">
+                        <strong>2. Give one example of biological control.</strong>
+                        <input type="text" class="input-answer" id="biocontrolExample" placeholder="Your answer">
+                    </div>
+                    <div style="margin: 20px 0;">
+                        <strong>3. What is the normal atmospheric CO₂ concentration?</strong>
+                        <input type="text" class="input-answer" id="co2Concentration" placeholder="Your answer">
+                    </div>
+                    <button class="btn btn-success" onclick="checkQuickFire()">Check All Answers</button>
+                    <div id="quickFireFeedback" class="feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== ASSESSMENT TAB ==================== -->
+        <div id="assessmentTab" class="tab-content">
+            <div class="section active" style="margin-top: 24px;">
+                <h2>End of Topic Assessment</h2>
+                <p class="section-subtitle">Test your understanding of the entire topic. Answer all questions, then submit.</p>
+
+                <div class="question-card" data-section="assessment">
+                    <div class="question-badge">Question 1 of 5</div>
+                    <div class="question-text">Which of these is NOT a way that glasshouses increase crop yield?</div>
+                    <div class="options">
+                        <div class="option" data-answer="incorrect">
+                            <span class="option-letter">A</span>
+                            <span>Controlling temperature to optimize enzyme activity</span>
+                        </div>
+                        <div class="option" data-answer="incorrect">
+                            <span class="option-letter">B</span>
+                            <span>Increasing CO₂ concentration to enhance photosynthesis</span>
+                        </div>
+                        <div class="option" data-answer="correct">
+                            <span class="option-letter">C</span>
+                            <span>Providing additional minerals through the glass structure</span>
+                        </div>
+                        <div class="option" data-answer="incorrect">
+                            <span class="option-letter">D</span>
+                            <span>Protecting crops from adverse weather conditions</span>
+                        </div>
+                    </div>
+                    <div class="feedback"></div>
+                </div>
+
+                <div class="question-card" data-section="assessment">
+                    <div class="question-badge">Question 2 of 5</div>
+                    <div class="question-text">A farmer notices their crop has yellow leaves. What should they add to the soil?</div>
+                    <div class="options">
+                        <div class="option" data-answer="incorrect">
+                            <span class="option-letter">A</span>
+                            <span>Phosphate only</span>
+                        </div>
+                        <div class="option" data-answer="correct">
+                            <span class="option-letter">B</span>
+                            <span>Nitrate or magnesium depending on which leaves are affected</span>
+                        </div>
+                        <div class="option" data-answer="incorrect">
+                            <span class="option-letter">C</span>
+                            <span>Potassium only</span>
+                        </div>
+                        <div class="option" data-answer="incorrect">
+                            <span class="option-letter">D</span>
+                            <span>Water only</span>
+                        </div>
+                    </div>
+                    <div class="feedback"></div>
+                </div>
+
+                <div class="question-card" data-section="assessment">
+                    <div class="question-badge">Question 3 of 5</div>
+                    <div class="question-text">What is bioaccumulation?</div>
+                    <div class="options">
+                        <div class="option" data-answer="incorrect">
+                            <span class="option-letter">A</span>
+                            <span>The process of biological control increasing in effectiveness</span>
+                        </div>
+                        <div class="option" data-answer="correct">
+                            <span class="option-letter">B</span>
+                            <span>The buildup of substances at increasing concentrations along a food chain</span>
+                        </div>
+                        <div class="option" data-answer="incorrect">
+                            <span class="option-letter">C</span>
+                            <span>The accumulation of fertilizers in the soil</span>
+                        </div>
+                        <div class="option" data-answer="incorrect">
+                            <span class="option-letter">D</span>
+                            <span>The growth of algae in water bodies</span>
+                        </div>
+                    </div>
+                    <div class="feedback"></div>
+                </div>
+
+                <div class="question-card" data-section="assessment">
+                    <div class="question-badge">Question 4 of 5</div>
+                    <div class="question-text">Why is biological control considered more environmentally friendly than pesticides?</div>
+                    <div class="options">
+                        <div class="option" data-answer="incorrect">
+                            <span class="option-letter">A</span>
+                            <span>It is cheaper to implement</span>
+                        </div>
+                        <div class="option" data-answer="incorrect">
+                            <span class="option-letter">B</span>
+                            <span>It works faster than chemical control</span>
+                        </div>
+                        <div class="option" data-answer="correct">
+                            <span class="option-letter">C</span>
+                            <span>It doesn't cause pollution or harm non-target species</span>
+                        </div>
+                        <div class="option" data-answer="incorrect">
+                            <span class="option-letter">D</span>
+                            <span>It completely eliminates pest populations</span>
+                        </div>
+                    </div>
+                    <div class="feedback"></div>
+                </div>
+
+                <div class="question-card" data-section="assessment">
+                    <div class="question-badge">Question 5 &mdash; Extended</div>
+                    <div class="question-text">A commercial lettuce grower uses a glasshouse with CO₂ enrichment and temperature control. Explain how these two factors work together to increase crop yield. Include reference to photosynthesis in your answer.</div>
+                    <textarea class="input-answer" id="extendedAnswer" placeholder="Write your extended answer here..." style="min-height: 200px;"></textarea>
+                    <button class="btn btn-primary" onclick="checkExtendedAnswer()">Get Feedback</button>
+                    <div id="extendedAnswerFeedback" class="feedback"></div>
+                </div>
+
+                <button class="btn btn-success btn-lg" onclick="showResults()" style="margin-top: 24px;">Submit Assessment</button>
+            </div>
+        </div>
+
+        <!-- ==================== SUMMARY TAB ==================== -->
+        <div id="summaryTab" class="tab-content">
+            <div class="section active" style="margin-top: 24px;">
+                <h2>Topic Summary</h2>
+                <p class="section-subtitle">Key points for revision and exam preparation</p>
+
+                <div class="summary-box">
+                    <h3>🌱 Glasshouses and Polythene Tunnels</h3>
+                    <ul>
+                        <li>Increase yield by controlling temperature, light, CO₂, water, and protection from pests/weather</li>
+                        <li>Allow year-round growing and optimization of growing conditions</li>
+                        <li>Enable control of limiting factors for photosynthesis</li>
+                    </ul>
+                </div>
+
+                <div class="summary-box">
+                    <h3>🔬 Effects of CO₂ and Temperature</h3>
+                    <ul>
+                        <li><strong>Increased CO₂:</strong> Raw material for photosynthesis &rarr; increases rate of photosynthesis &rarr; more glucose &rarr; higher yield</li>
+                        <li><strong>Optimum temperature:</strong> Increases enzyme activity &rarr; faster photosynthesis &rarr; faster growth</li>
+                        <li><strong>Warning:</strong> Too high temperature denatures enzymes and reduces photosynthesis</li>
+                        <li>Both factors work as limiting factors &mdash; must be optimized together</li>
+                    </ul>
+                </div>
+
+                <div class="summary-box">
+                    <h3>🌾 Fertilizers</h3>
+                    <ul>
+                        <li>Provide essential mineral ions: Nitrates, Phosphates, Potassium, Magnesium</li>
+                        <li>Increase yield by enabling protein synthesis &rarr; more enzymes &rarr; faster metabolism and growth</li>
+                        <li><strong>Organic fertilizers:</strong> Slow-release, improve soil structure, but variable content</li>
+                        <li><strong>Inorganic fertilizers:</strong> Fast-acting, precise content, but can cause eutrophication</li>
+                        <li><strong>Eutrophication:</strong> Excess fertilizer &rarr; algal bloom &rarr; oxygen depletion &rarr; death of aquatic organisms</li>
+                    </ul>
+                </div>
+
+                <div class="summary-box">
+                    <h3>🐛 Pest Control</h3>
+                    <ul>
+                        <li><strong>Why control pests:</strong> Prevent damage, maintain yield and quality, economic security</li>
+                        <li><strong>Pesticides:</strong> Fast, effective, but harm non-target species, bioaccumulate, pests develop resistance</li>
+                        <li><strong>Biological control:</strong> Specific, no pollution, long-lasting, but slow and may have unintended consequences</li>
+                        <li><strong>Best approach:</strong> Often integrated pest management using both methods strategically</li>
+                    </ul>
+                </div>
+
+                <div class="highlight-box" style="margin-top: 28px;">
+                    <h3 style="margin-top: 0;">🎯 Key Exam Skills</h3>
+                    <ul>
+                        <li>Explain mechanisms &mdash; don't just list facts</li>
+                        <li>Compare and contrast different methods (pesticides vs biological control)</li>
+                        <li>Apply knowledge to novel scenarios (e.g., new pest control situations)</li>
+                        <li>Evaluate approaches considering advantages AND disadvantages</li>
+                        <li>Link to other topics (photosynthesis, food chains, ecology)</li>
+                    </ul>
+                </div>
+
+                <button class="btn btn-primary btn-lg" onclick="downloadSummary()" style="margin-top: 24px;">Download Summary Notes</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Achievement Modal -->
+    <div id="achievementModal" class="modal">
+        <div class="modal-content">
+            <div class="achievement">
+                <span class="achievement-icon">🎉</span>
+                <h2>Congratulations!</h2>
+                <p id="achievementText"></p>
+                <button class="btn btn-primary" onclick="closeModal()">Continue Learning</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ==================== PROGRESS TRACKING ====================
+        let progress = {
+            questionsCompleted: 0,
+            correctAnswers: 0,
+            totalQuestions: 0,
+            sectionsCompleted: new Set(),
+            questionAttempts: {},
+            startTime: Date.now()
+        };
+
+        function loadProgress() {
+            const saved = localStorage.getItem('foodProductionProgress');
+            if (saved) {
+                const savedData = JSON.parse(saved);
+                progress = { ...progress, ...savedData };
+                progress.sectionsCompleted = new Set(savedData.sectionsCompleted || []);
+                updateProgressDisplay();
+                updateSectionChips();
+            }
+        }
+
+        function saveProgress() {
+            const toSave = {
+                ...progress,
+                sectionsCompleted: Array.from(progress.sectionsCompleted)
+            };
+            localStorage.setItem('foodProductionProgress', JSON.stringify(toSave));
+        }
+
+        function updateProgressDisplay() {
+            const totalSections = 4;
+            const sectionProgress = (progress.sectionsCompleted.size / totalSections) * 100;
+
+            document.getElementById('progressFill').style.width = sectionProgress + '%';
+            document.getElementById('progressPercent').textContent = Math.round(sectionProgress) + '%';
+            document.getElementById('questionsCompleted').textContent = progress.questionsCompleted;
+            document.getElementById('correctAnswers').textContent = progress.correctAnswers;
+            document.getElementById('sectionsCompleted').textContent = `${progress.sectionsCompleted.size}/${totalSections}`;
+
+            const accuracy = progress.questionsCompleted > 0
+                ? Math.round((progress.correctAnswers / progress.questionsCompleted) * 100)
+                : 0;
+            document.getElementById('accuracyRate').textContent = accuracy + '%';
+        }
+
+        function updateSectionChips() {
+            document.querySelectorAll('.section-chip').forEach(chip => {
+                const section = chip.dataset.section;
+                if (progress.sectionsCompleted.has(section)) {
+                    chip.classList.add('completed');
+                }
+            });
+        }
+
+        // ==================== TAB SWITCHING ====================
+        function switchTab(tabName, btnEl) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            // Deactivate all tab buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            // Show selected tab
+            document.getElementById(tabName + 'Tab').classList.add('active');
+            // Activate button
+            if (btnEl) btnEl.classList.add('active');
+
+            // Scroll to top of content area smoothly
+            window.scrollTo({ top: document.querySelector('.tab-nav-wrapper').offsetTop, behavior: 'smooth' });
+        }
+
+        // ==================== SECTION SWITCHING (sub-nav within Learn) ====================
+        function switchSection(sectionNum, chipEl) {
+            // Hide all sections in Learn tab
+            document.querySelectorAll('#learnTab .section').forEach(s => s.classList.remove('active'));
+            // Deactivate all chips
+            document.querySelectorAll('.section-chip').forEach(c => {
+                c.classList.remove('active');
+                // Preserve completed state
+                if (progress.sectionsCompleted.has(c.dataset.section)) {
+                    c.classList.add('completed');
+                }
+            });
+            // Show selected section
+            document.getElementById('section' + sectionNum).classList.add('active');
+            // Activate chip
+            if (chipEl) {
+                chipEl.classList.remove('completed');
+                chipEl.classList.add('active');
+            }
+
+            // Scroll to section nav
+            document.getElementById('sectionNav').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        function goToSection(num) {
+            const chip = document.querySelector(`.section-chip[data-section="${num}"]`);
+            switchSection(num, chip);
+        }
+
+        // ==================== STICKY NAV SHADOW ====================
+        window.addEventListener('scroll', function () {
+            const wrapper = document.getElementById('tabNavWrapper');
+            if (window.scrollY > 200) {
+                wrapper.classList.add('scrolled');
+            } else {
+                wrapper.classList.remove('scrolled');
+            }
+        });
+
+        // ==================== OPTION CLICK HANDLER ====================
+        document.addEventListener('click', function (e) {
+            if (e.target.closest('.option')) {
+                const option = e.target.closest('.option');
+                const card = option.closest('.question-card');
+                const options = card.querySelectorAll('.option');
+                const feedback = card.querySelector('.feedback');
+                const section = card.dataset.section;
+
+                // Don't allow changes after answer
+                if (card.querySelector('.option.correct') || card.querySelector('.option.incorrect')) {
+                    return;
+                }
+
+                // Clear previous selections
+                options.forEach(opt => opt.classList.remove('selected'));
+                option.classList.add('selected');
+
+                const isCorrect = option.dataset.answer === 'correct';
+
+                // Track attempt
+                const questionId = card.querySelector('.question-text').textContent;
+                if (!progress.questionAttempts[questionId]) {
+                    progress.questionAttempts[questionId] = [];
+                }
+                progress.questionAttempts[questionId].push(isCorrect);
+
+                // Only count first attempt
+                if (progress.questionAttempts[questionId].length === 1) {
+                    progress.questionsCompleted++;
+                    if (isCorrect) progress.correctAnswers++;
+                }
+
+                // Show feedback
+                setTimeout(() => {
+                    if (isCorrect) {
+                        option.classList.add('correct');
+                        feedback.className = 'feedback correct show';
+                        feedback.innerHTML = '<strong>&#10003; Correct!</strong> ' + getCorrectFeedback();
+
+                        if (section && section !== 'practice' && section !== 'assessment') {
+                            progress.sectionsCompleted.add(section);
+                            updateSectionChips();
+                            checkSectionCompletion(section);
+                        }
+                    } else {
+                        option.classList.add('incorrect');
+                        options.forEach(opt => {
+                            if (opt.dataset.answer === 'correct') opt.classList.add('correct');
+                        });
+                        feedback.className = 'feedback incorrect show';
+                        feedback.innerHTML = '<strong>&#10007; Not quite.</strong> The correct answer is highlighted. Review the section above to understand why.';
+                    }
+                    updateProgressDisplay();
+                    saveProgress();
+                }, 250);
+            }
+        });
+
+        function getCorrectFeedback() {
+            const feedbacks = [
+                "Great understanding of the concept!",
+                "Excellent reasoning!",
+                "Well done — you've grasped this well!",
+                "That shows good application of knowledge.",
+                "Exactly right — nice work!"
+            ];
+            return feedbacks[Math.floor(Math.random() * feedbacks.length)];
+        }
+
+        function checkSectionCompletion(section) {
+            if (progress.sectionsCompleted.size % 2 === 0) {
+                showAchievement(`You've completed ${progress.sectionsCompleted.size} out of 4 sections! Keep going!`);
+            }
+        }
+
+        // ==================== ACHIEVEMENT MODAL ====================
+        function showAchievement(text) {
+            document.getElementById('achievementText').textContent = text;
+            document.getElementById('achievementModal').classList.add('show');
+        }
+
+        function closeModal() {
+            document.getElementById('achievementModal').classList.remove('show');
+        }
+
+        // Close modal on backdrop click
+        document.getElementById('achievementModal').addEventListener('click', function (e) {
+            if (e.target === this) closeModal();
+        });
+
+        // ==================== RECALL / LONG ANSWER CHECKING ====================
+        function checkRecall(textareaId, keywords) {
+            const answer = document.getElementById(textareaId).value.toLowerCase();
+            const feedbackEl = document.getElementById(textareaId + 'Feedback');
+
+            if (answer.length < 10) {
+                feedbackEl.className = 'feedback incorrect show';
+                feedbackEl.innerHTML = '<strong>Try to write more!</strong> Give a fuller explanation.';
+                return;
+            }
+
+            const foundKeywords = keywords.filter(keyword => answer.includes(keyword.toLowerCase()));
+            const score = foundKeywords.length / keywords.length;
+
+            if (score >= 0.6) {
+                feedbackEl.className = 'feedback correct show';
+                feedbackEl.innerHTML = `<strong>&#10003; Good answer!</strong> You've included key concepts: ${foundKeywords.join(', ')}. ${score < 1 ? 'You could also mention: ' + keywords.filter(k => !foundKeywords.includes(k)).slice(0, 2).join(', ') : ''}`;
+                progress.correctAnswers++;
+            } else {
+                feedbackEl.className = 'feedback incorrect show';
+                feedbackEl.innerHTML = `<strong>Needs more detail.</strong> Try to include these concepts: ${keywords.slice(0, 3).join(', ')}.`;
+            }
+
+            progress.questionsCompleted++;
+            updateProgressDisplay();
+            saveProgress();
+        }
+
+        function checkLongAnswer(textareaId) {
+            const answer = document.getElementById(textareaId).value.toLowerCase();
+            const feedbackEl = document.getElementById(textareaId + 'Feedback');
+
+            if (answer.length < 50) {
+                feedbackEl.className = 'feedback incorrect show';
+                feedbackEl.innerHTML = '<strong>Too brief!</strong> This question requires a detailed, extended answer. Try to write at least 3-4 sentences.';
+                return;
+            }
+
+            let keyPoints = [];
+            let feedback = '';
+
+            if (textareaId === 'tomatoGrower') {
+                keyPoints = ['temperature', 'co2', 'carbon dioxide', 'fertilizer', 'light', 'water'];
+                feedback = 'Good answers should mention: (1) increasing CO₂ → more photosynthesis, (2) controlling temperature → optimum enzyme activity, (3) fertilizers → more minerals → more growth';
+            } else if (textareaId === 'integratedPest') {
+                keyPoints = ['rapid', 'quick', 'slow', 'specific', 'long-term', 'resistance'];
+                feedback = 'Consider: Pesticides give rapid control when needed, biological control provides long-term sustainable management. Using both = immediate protection + sustainable future control.';
+            } else if (textareaId === 'evaluateTemp') {
+                keyPoints = ['optimum', 'denature', 'enzyme', 'too high', 'limit'];
+                feedback = 'Strong answers evaluate both sides: temperature increases yield UP TO optimum point, but above optimum enzymes denature and yield decreases.';
+            }
+
+            const foundKeyPoints = keyPoints.filter(point => answer.includes(point));
+            const quality = foundKeyPoints.length / keyPoints.length;
+
+            if (quality >= 0.5) {
+                feedbackEl.className = 'feedback correct show';
+                feedbackEl.innerHTML = `<strong>&#10003; Good effort!</strong> ${feedback} Your answer included: ${foundKeyPoints.join(', ')}.`;
+                progress.correctAnswers++;
+            } else {
+                feedbackEl.className = 'feedback show';
+                feedbackEl.style.background = '#fffbeb';
+                feedbackEl.style.borderLeft = '4px solid #f59e0b';
+                feedbackEl.style.color = '#78350f';
+                feedbackEl.innerHTML = `<strong>Consider these points:</strong> ${feedback}`;
+            }
+
+            progress.questionsCompleted++;
+            updateProgressDisplay();
+            saveProgress();
+        }
+
+        // ==================== QUICK FIRE QUIZ ====================
+        function checkQuickFire() {
+            const npk = document.getElementById('npkQuestion').value.toLowerCase();
+            const biocontrol = document.getElementById('biocontrolExample').value.toLowerCase();
+            const co2 = document.getElementById('co2Concentration').value.toLowerCase();
+
+            let score = 0;
+            let feedback = '<strong>Results:</strong><br>';
+
+            if (npk.includes('nitrogen') || npk.includes('nitrate') || npk.includes('phosph') || npk.includes('potassium')) {
+                feedback += '&#10003; NPK: Correct (Nitrogen, Phosphorus, Potassium)<br>';
+                score++;
+            } else {
+                feedback += '&#10007; NPK: Should be Nitrogen, Phosphorus, Potassium<br>';
+            }
+
+            if (biocontrol.includes('ladybird') || biocontrol.includes('wasp') || biocontrol.includes('nematode') || biocontrol.includes('bacteria')) {
+                feedback += '&#10003; Biological control: Good example!<br>';
+                score++;
+            } else {
+                feedback += '&#10007; Biological control: Try ladybirds eating aphids, or parasitic wasps<br>';
+            }
+
+            if (co2.includes('0.04') || co2.includes('400') || co2.includes('0.04%')) {
+                feedback += '&#10003; CO₂ concentration: Correct (0.04% or 400ppm)<br>';
+                score++;
+            } else {
+                feedback += '&#10007; CO₂ concentration: Should be 0.04% (or 400ppm)<br>';
+            }
+
+            const feedbackEl = document.getElementById('quickFireFeedback');
+            feedbackEl.className = score >= 2 ? 'feedback correct show' : 'feedback incorrect show';
+            feedbackEl.innerHTML = feedback + `<br><strong>Score: ${score}/3</strong>`;
+
+            progress.questionsCompleted += 3;
+            progress.correctAnswers += score;
+            updateProgressDisplay();
+            saveProgress();
+        }
+
+        // ==================== EXTENDED ANSWER ====================
+        function checkExtendedAnswer() {
+            const answer = document.getElementById('extendedAnswer').value.toLowerCase();
+            const feedback = document.getElementById('extendedAnswerFeedback');
+
+            if (answer.length < 100) {
+                feedback.className = 'feedback incorrect show';
+                feedback.innerHTML = '<strong>Too brief for an extended answer!</strong> Aim for at least 100 words discussing: how CO₂ is used in photosynthesis, how temperature affects enzyme activity, how these combine to increase yield.';
+                return;
+            }
+
+            const keyPoints = {
+                'co2': ['co2', 'carbon dioxide', 'raw material', 'photosynthesis'],
+                'temperature': ['temperature', 'enzyme', 'optimum', 'activity'],
+                'photosynthesis': ['photosynthesis', 'glucose', 'rate'],
+                'yield': ['yield', 'growth', 'biomass']
+            };
+
+            let foundCategories = 0;
+            let details = '';
+
+            for (let category in keyPoints) {
+                if (keyPoints[category].some(word => answer.includes(word))) {
+                    foundCategories++;
+                    details += `&#10003; Mentioned ${category}<br>`;
+                }
+            }
+
+            if (foundCategories >= 3) {
+                feedback.className = 'feedback correct show';
+                feedback.innerHTML = `<strong>&#10003; Excellent answer!</strong><br>${details}You've connected the key concepts well. A model answer would explain: CO₂ is a raw material for photosynthesis (6CO₂ + 6H₂O → C₆H₁₂O₆ + 6O₂), so increasing it increases the rate. Temperature increases enzyme activity up to the optimum, so photosynthesis happens faster. Together they maximize glucose production, leading to faster growth and higher yield.`;
+                progress.correctAnswers++;
+            } else {
+                feedback.className = 'feedback show';
+                feedback.style.background = '#fffbeb';
+                feedback.style.borderLeft = '4px solid #f59e0b';
+                feedback.style.color = '#78350f';
+                feedback.innerHTML = `<strong>Good start, but needs more detail:</strong><br>${details}Try to explain: (1) How CO₂ is used in photosynthesis, (2) How temperature affects enzymes, (3) How both together increase yield.`;
+            }
+
+            progress.questionsCompleted++;
+            updateProgressDisplay();
+            saveProgress();
+        }
+
+        // ==================== SHOW RESULTS ====================
+        function showResults() {
+            const assessmentCards = document.querySelectorAll('[data-section="assessment"]');
+            let mcAnswered = 0;
+            assessmentCards.forEach(card => {
+                if (card.querySelector('.option.correct') || card.querySelector('.option.incorrect')) {
+                    mcAnswered++;
+                }
+            });
+
+            if (mcAnswered < 4) {
+                showAchievement('Please complete all multiple choice questions before submitting the assessment.');
+                return;
+            }
+
+            const accuracy = Math.round((progress.correctAnswers / progress.questionsCompleted) * 100);
+            let message = '';
+
+            if (accuracy >= 80) {
+                message = `Outstanding work! You scored ${accuracy}% overall. You have an excellent understanding of food production methods. You're ready for exam questions on this topic!`;
+            } else if (accuracy >= 60) {
+                message = `Good effort! You scored ${accuracy}% overall. You have a solid understanding but review the areas where you made mistakes. Focus on the detailed explanations in each section.`;
+            } else {
+                message = `You scored ${accuracy}% overall. This topic needs more work. Review the learning materials carefully and try the practice questions again. Focus on understanding the mechanisms, not just memorizing facts.`;
+            }
+
+            showAchievement(message);
+
+            progress.sectionsCompleted.add('1');
+            progress.sectionsCompleted.add('2');
+            progress.sectionsCompleted.add('3');
+            progress.sectionsCompleted.add('4');
+            updateProgressDisplay();
+            updateSectionChips();
+            saveProgress();
+        }
+
+        // ==================== DOWNLOAD SUMMARY ====================
+        function downloadSummary() {
+            const summaryText = `IGCSE Biology: Food Production - Summary Notes
+================================================
+
+1. GLASSHOUSES AND POLYTHENE TUNNELS
+- Increase yield by controlling temperature, light, CO2, water, and protection
+- Allow year-round growing and optimization of growing conditions
+- Enable control of limiting factors for photosynthesis
+
+2. EFFECTS OF CO2 AND TEMPERATURE
+- Increased CO2: Raw material for photosynthesis → increases rate → more glucose → higher yield
+- Optimum temperature: Increases enzyme activity → faster photosynthesis → faster growth
+- Warning: Too high temperature denatures enzymes and reduces photosynthesis
+- Both factors are limiting factors — must be optimized together
+
+3. FERTILIZERS
+- Provide essential mineral ions: Nitrates, Phosphates, Potassium, Magnesium
+- Increase yield by enabling protein synthesis → more enzymes → faster metabolism
+- Organic fertilizers: Slow-release, improve soil structure, but variable content
+- Inorganic fertilizers: Fast-acting, precise content, but can cause eutrophication
+- Eutrophication: Excess fertilizer → algal bloom → oxygen depletion → death of aquatic organisms
+
+4. PEST CONTROL
+- Why control pests: Prevent damage, maintain yield and quality, economic security
+- Pesticides: Fast, effective, but harm non-target species, bioaccumulate, resistance develops
+- Biological control: Specific, no pollution, long-lasting, but slow and may have unintended consequences
+- Best approach: Integrated pest management using both methods strategically
+
+KEY EXAM SKILLS
+- Explain mechanisms — don't just list facts
+- Compare and contrast different methods
+- Apply knowledge to novel scenarios
+- Evaluate approaches with advantages AND disadvantages
+- Link to other topics (photosynthesis, food chains, ecology)`;
+
+            const blob = new Blob([summaryText], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'IGCSE_Biology_Food_Production_Summary.txt';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        // ==================== INITIALIZE ====================
+        loadProgress();
+        setInterval(saveProgress, 30000);
+    </script>
+</body>
+</html>
