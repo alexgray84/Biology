@@ -1,0 +1,1441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cell Division Review | IAL Biology</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Source+Sans+Pro:wght@300;400;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+    --primary: #1a365d;
+    --primary-light: #2c5282;
+    --secondary: #553c9a;
+    --accent: #d69e2e;
+    --accent-light: #f6e05e;
+    --success: #276749;
+    --success-light: #48bb78;
+    --danger: #c53030;
+    --warning: #dd6b20;
+    --bg-dark: #0d1b2a;
+    --bg-medium: #1b263b;
+    --bg-light: #415a77;
+    --text-light: #e0e7ff;
+    --text-muted: #a0aec0;
+    --card-bg: rgba(27, 38, 59, 0.95);
+    --glass: rgba(255, 255, 255, 0.05);
+    --border: rgba(255, 255, 255, 0.1);
+    --tier1: #48bb78;
+    --tier2: #4299e1;
+    --tier3: #b794f4;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+    font-family: 'Source Sans Pro', sans-serif;
+    background: var(--bg-dark);
+    color: var(--text-light);
+    line-height: 1.7;
+    min-height: 100vh;
+}
+.dna-background {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    z-index: -1; overflow: hidden;
+    background:
+        radial-gradient(ellipse at 20% 20%, rgba(85,60,154,0.15) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 80%, rgba(26,54,93,0.2) 0%, transparent 50%),
+        var(--bg-dark);
+}
+.helix { position: absolute; width: 4px; height: 100%; opacity: 0.1; }
+.helix::before, .helix::after {
+    content: ''; position: absolute; width: 100%; height: 20px;
+    background: var(--accent); border-radius: 50%;
+    animation: helixMove 3s ease-in-out infinite;
+}
+.helix::after { animation-delay: 1.5s; }
+@keyframes helixMove {
+    0%, 100% { transform: translateY(0) scale(1); opacity: 0.3; }
+    50% { transform: translateY(100vh) scale(0.5); opacity: 0.8; }
+}
+
+/* Hero */
+.hero {
+    position: relative; padding: 80px 20px 60px; text-align: center;
+    background: linear-gradient(135deg, var(--bg-medium) 0%, var(--bg-dark) 100%);
+    border-bottom: 1px solid var(--border); overflow: hidden;
+}
+.hero::before {
+    content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+    background:
+        radial-gradient(circle at 30% 70%, rgba(214,158,46,0.08) 0%, transparent 40%),
+        radial-gradient(circle at 70% 30%, rgba(85,60,154,0.1) 0%, transparent 40%);
+    animation: heroGlow 20s ease-in-out infinite;
+}
+@keyframes heroGlow { 0%, 100% { transform: rotate(0deg); } 50% { transform: rotate(180deg); } }
+.hero-content { position: relative; z-index: 1; max-width: 900px; margin: 0 auto; }
+.spec-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 8px 20px; background: var(--glass); border: 1px solid var(--border);
+    border-radius: 30px; font-size: 0.85rem; font-weight: 600;
+    letter-spacing: 0.5px; color: var(--accent); margin-bottom: 24px;
+    backdrop-filter: blur(10px);
+}
+h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.2rem, 5vw, 3.5rem); font-weight: 700; line-height: 1.1;
+    margin-bottom: 16px;
+    background: linear-gradient(135deg, var(--text-light) 0%, var(--accent-light) 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.subtitle { font-size: 1.2rem; color: var(--text-muted); max-width: 600px; margin: 0 auto; }
+
+/* Nav */
+.nav-progress {
+    display: flex; justify-content: center; gap: 8px; flex-wrap: wrap;
+    padding: 14px 20px; background: rgba(27,38,59,0.95);
+    position: sticky; top: 0; z-index: 100;
+    border-bottom: 1px solid var(--border); backdrop-filter: blur(20px);
+}
+.nav-item {
+    padding: 8px 14px; background: var(--glass); border: 1px solid var(--border);
+    border-radius: 20px; font-size: 0.78rem; font-weight: 600;
+    color: var(--text-muted); cursor: pointer; transition: all 0.3s ease;
+    font-family: 'Source Sans Pro', sans-serif; white-space: nowrap;
+}
+.nav-item:hover, .nav-item.active { background: var(--accent); color: var(--bg-dark); border-color: var(--accent); }
+
+/* Container */
+.container { max-width: 1100px; margin: 0 auto; padding: 40px 20px; }
+
+/* Sections */
+.section { margin-bottom: 70px; opacity: 0; transform: translateY(30px); transition: all 0.6s ease; }
+.section.visible { opacity: 1; transform: translateY(0); }
+.section-header { display: flex; align-items: center; gap: 20px; margin-bottom: 28px; }
+.section-number {
+    width: 56px; height: 56px;
+    background: linear-gradient(135deg, var(--accent) 0%, var(--warning) 100%);
+    border-radius: 14px; display: flex; align-items: center; justify-content: center;
+    font-family: 'Playfair Display', serif; font-size: 1.4rem; font-weight: 700; color: var(--bg-dark);
+}
+h2 { font-family: 'Playfair Display', serif; font-size: 1.9rem; color: var(--text-light); }
+h3 { font-family: 'Playfair Display', serif; font-size: 1.4rem; color: var(--accent-light); margin: 28px 0 14px; }
+h4 { font-family: 'Source Sans Pro', sans-serif; font-size: 1.1rem; font-weight: 600; margin-bottom: 10px; color: var(--text-light); }
+p { margin-bottom: 16px; font-size: 1.05rem; }
+
+/* Cards */
+.content-card {
+    background: var(--card-bg); border-radius: 18px; padding: 32px;
+    margin-bottom: 28px; border: 1px solid var(--border); backdrop-filter: blur(10px);
+}
+.key-term {
+    background: linear-gradient(90deg, rgba(214,158,46,0.3), rgba(214,158,46,0.1));
+    padding: 2px 8px; border-radius: 4px; font-weight: 600;
+    color: var(--accent-light); border-bottom: 2px solid var(--accent);
+}
+
+/* Tier Badges */
+.tier-badge {
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 10px 22px; border-radius: 10px; font-size: 0.85rem;
+    font-weight: 700; letter-spacing: 0.5px; margin-bottom: 20px;
+    font-family: 'JetBrains Mono', monospace; text-transform: uppercase;
+}
+.tier-badge.t1 { background: rgba(72,187,120,0.15); color: var(--tier1); border: 1px solid rgba(72,187,120,0.3); }
+.tier-badge.t2 { background: rgba(66,153,225,0.15); color: var(--tier2); border: 1px solid rgba(66,153,225,0.3); }
+.tier-badge.t3 { background: rgba(183,148,244,0.15); color: var(--tier3); border: 1px solid rgba(183,148,244,0.3); }
+
+.tier-section { border-left: 4px solid; padding-left: 0; border-radius: 0; }
+.tier-section.t1 { border-left-color: var(--tier1); }
+.tier-section.t2 { border-left-color: var(--tier2); }
+.tier-section.t3 { border-left-color: var(--tier3); }
+
+/* Quiz */
+.quiz-container { margin: 20px 0; }
+.quiz-question { font-weight: 600; margin-bottom: 14px; font-size: 1.05rem; }
+.quiz-options { display: grid; gap: 10px; }
+.quiz-option {
+    padding: 14px 18px; background: var(--glass); border: 1px solid var(--border);
+    border-radius: 12px; cursor: pointer; transition: all 0.3s ease;
+    font-size: 1rem; color: var(--text-light); font-family: 'Source Sans Pro', sans-serif;
+    text-align: left; display: block; width: 100%;
+}
+.quiz-option:hover:not(.disabled) { border-color: var(--accent); background: rgba(214,158,46,0.1); }
+.quiz-option.correct { border-color: var(--success-light); background: rgba(72,187,120,0.2); color: var(--success-light); }
+.quiz-option.incorrect { border-color: var(--danger); background: rgba(197,48,48,0.2); color: #fc8181; }
+.quiz-option.disabled { cursor: default; opacity: 0.7; }
+.quiz-option.show-correct { border-color: var(--success-light); background: rgba(72,187,120,0.15); }
+.quiz-feedback { margin-top: 12px; padding: 12px 16px; border-radius: 10px; font-size: 0.95rem; display: none; }
+.quiz-feedback.correct-fb { background: rgba(72,187,120,0.15); border: 1px solid rgba(72,187,120,0.3); color: var(--success-light); display: block; }
+.quiz-feedback.incorrect-fb { background: rgba(197,48,48,0.15); border: 1px solid rgba(197,48,48,0.3); color: #fc8181; display: block; }
+
+/* Flashcards */
+.flashcard-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; margin: 20px 0; }
+.flashcard {
+    background: var(--glass); border: 1px solid var(--border); border-radius: 14px;
+    padding: 22px; cursor: pointer; transition: all 0.3s ease; min-height: 140px;
+    display: flex; flex-direction: column; justify-content: center;
+}
+.flashcard:hover { border-color: var(--accent); transform: translateY(-2px); }
+.flashcard-term { font-weight: 700; font-size: 1.1rem; color: var(--accent-light); margin-bottom: 8px; }
+.flashcard-answer { display: none; color: var(--text-light); font-size: 0.95rem; padding-top: 10px; border-top: 1px solid var(--border); margin-top: 8px; }
+.flashcard-answer.show { display: block; }
+.tap-hint { font-size: 0.75rem; color: var(--text-muted); margin-top: 8px; font-style: italic; }
+
+/* Fill-in-blank */
+.blank-input {
+    background: var(--glass); border: 1px solid var(--border); border-bottom: 2px solid var(--accent);
+    padding: 6px 12px; border-radius: 6px; color: var(--text-light); font-family: 'JetBrains Mono', monospace;
+    font-size: 0.9rem; width: 160px; text-align: center; transition: all 0.3s;
+}
+.blank-input:focus { outline: none; border-color: var(--accent); background: rgba(214,158,46,0.1); }
+.blank-input.correct-input { border-color: var(--success-light); background: rgba(72,187,120,0.15); }
+.blank-input.incorrect-input { border-color: var(--danger); background: rgba(197,48,48,0.15); }
+.word-bank {
+    display: flex; flex-wrap: wrap; gap: 10px; padding: 18px; margin: 16px 0;
+    background: var(--glass); border: 1px solid var(--border); border-radius: 12px;
+}
+.word-bank-item {
+    padding: 6px 16px; background: rgba(214,158,46,0.15); border: 1px solid rgba(214,158,46,0.3);
+    border-radius: 20px; font-size: 0.9rem; color: var(--accent-light);
+    font-family: 'JetBrains Mono', monospace; cursor: default;
+}
+
+/* Matching */
+.match-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 20px 0; }
+.match-col-header { font-weight: 700; text-align: center; padding: 10px; color: var(--accent); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; }
+.match-item {
+    padding: 14px; background: var(--glass); border: 2px solid var(--border);
+    border-radius: 10px; cursor: pointer; transition: all 0.3s ease;
+    font-size: 0.95rem; text-align: center;
+}
+.match-item:hover:not(.matched) { border-color: var(--accent); }
+.match-item.selected { border-color: var(--accent); background: rgba(214,158,46,0.15); box-shadow: 0 0 12px rgba(214,158,46,0.2); }
+.match-item.matched { border-color: var(--success-light); background: rgba(72,187,120,0.15); cursor: default; opacity: 0.8; }
+.match-item.wrong-match { border-color: var(--danger); background: rgba(197,48,48,0.15); }
+
+/* Sequence */
+.sequence-container { margin: 20px 0; }
+.sequence-item {
+    padding: 14px 20px; background: var(--glass); border: 1px solid var(--border);
+    border-radius: 10px; margin-bottom: 8px; cursor: pointer; transition: all 0.3s ease;
+    display: flex; align-items: center; gap: 14px; font-size: 0.95rem;
+}
+.sequence-item:hover:not(.seq-placed) { border-color: var(--accent); }
+.sequence-item.seq-selected { border-color: var(--tier2); background: rgba(66,153,225,0.15); }
+.sequence-item.seq-placed { border-color: var(--success-light); background: rgba(72,187,120,0.1); }
+.seq-num {
+    width: 30px; height: 30px; border-radius: 50%; background: var(--glass);
+    border: 1px solid var(--border); display: flex; align-items: center;
+    justify-content: center; font-weight: 700; font-size: 0.85rem; flex-shrink: 0;
+    font-family: 'JetBrains Mono', monospace;
+}
+.seq-num.filled { background: var(--tier2); color: white; border-color: var(--tier2); }
+
+/* Reveal Button / Model Answer */
+.reveal-btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 12px 24px; background: var(--glass); border: 1px solid var(--border);
+    border-radius: 12px; color: var(--accent); cursor: pointer;
+    font-family: 'Source Sans Pro', sans-serif; font-size: 0.95rem; font-weight: 600;
+    transition: all 0.3s ease; margin: 12px 0;
+}
+.reveal-btn:hover { background: rgba(214,158,46,0.15); border-color: var(--accent); }
+.model-answer {
+    display: none; padding: 20px; background: rgba(214,158,46,0.08);
+    border: 1px solid rgba(214,158,46,0.2); border-radius: 12px; margin-top: 12px;
+    font-size: 0.95rem; line-height: 1.8;
+}
+.model-answer.show { display: block; }
+.model-answer strong { color: var(--accent-light); }
+
+/* SVG Diagram */
+.diagram-container { margin: 24px 0; text-align: center; }
+.diagram-container svg { max-width: 100%; height: auto; }
+.diagram-info-panel {
+    padding: 18px; background: var(--glass); border: 1px solid var(--border);
+    border-radius: 12px; margin-top: 16px; min-height: 80px;
+    text-align: left; transition: all 0.3s;
+}
+
+/* Comparison Table */
+.comp-table { width: 100%; border-collapse: separate; border-spacing: 0; margin: 20px 0; border-radius: 12px; overflow: hidden; }
+.comp-table th {
+    padding: 14px 18px; font-weight: 700; text-align: left; font-size: 0.9rem;
+    text-transform: uppercase; letter-spacing: 0.5px;
+}
+.comp-table th:first-child { background: var(--bg-medium); color: var(--text-muted); }
+.comp-table th:nth-child(2) { background: rgba(72,187,120,0.2); color: var(--success-light); }
+.comp-table th:nth-child(3) { background: rgba(183,148,244,0.2); color: var(--tier3); }
+.comp-table td {
+    padding: 12px 18px; border-bottom: 1px solid var(--border); font-size: 0.95rem;
+}
+.comp-table td:first-child { font-weight: 600; color: var(--accent-light); background: rgba(255,255,255,0.02); }
+.comp-table tr:last-child td { border-bottom: none; }
+.comp-table .reveal-cell { cursor: pointer; color: var(--text-muted); font-style: italic; transition: all 0.3s; }
+.comp-table .reveal-cell:hover { color: var(--accent); }
+.comp-table .reveal-cell.revealed { color: var(--text-light); font-style: normal; }
+
+/* Scaffolded Questions */
+.scaffold-box {
+    background: var(--glass); border: 1px solid var(--border); border-radius: 12px;
+    padding: 22px; margin: 16px 0;
+}
+.sentence-starter {
+    padding: 10px 16px; background: rgba(66,153,225,0.1); border-left: 3px solid var(--tier2);
+    border-radius: 0 8px 8px 0; margin: 10px 0; font-style: italic; color: var(--tier2);
+    font-size: 0.95rem;
+}
+.planning-checklist { list-style: none; margin: 12px 0; }
+.planning-checklist li {
+    padding: 8px 0 8px 32px; position: relative; color: var(--text-muted); font-size: 0.95rem;
+}
+.planning-checklist li::before {
+    content: ''; position: absolute; left: 4px; top: 12px;
+    width: 16px; height: 16px; border: 2px solid var(--border); border-radius: 4px;
+}
+
+/* Objectives */
+.objectives-card {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+    border-radius: 20px; padding: 36px; margin-bottom: 50px;
+    border: 1px solid rgba(255,255,255,0.1); position: relative; overflow: hidden;
+}
+.objectives-card h2 { font-size: 1.6rem; margin-bottom: 20px; color: white; }
+.obj-list { list-style: none; }
+.obj-list li {
+    display: flex; align-items: flex-start; gap: 14px; padding: 12px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.1); font-size: 0.98rem;
+}
+.obj-list li:last-child { border-bottom: none; }
+.obj-check {
+    width: 22px; height: 22px; border: 2px solid rgba(255,255,255,0.3); border-radius: 6px;
+    flex-shrink: 0; cursor: pointer; display: flex; align-items: center; justify-content: center;
+    transition: all 0.3s; margin-top: 2px; background: transparent;
+    color: transparent; font-size: 0.75rem;
+}
+.obj-check.checked { background: var(--success-light); border-color: var(--success-light); color: white; }
+
+/* Think Deeper */
+.think-deeper {
+    background: rgba(183,148,244,0.08); border: 1px solid rgba(183,148,244,0.25);
+    border-radius: 12px; padding: 22px; margin: 20px 0;
+}
+.think-deeper h4 { color: var(--tier3); margin-bottom: 8px; }
+
+/* Data Table */
+.data-table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+.data-table th, .data-table td {
+    padding: 10px 16px; border: 1px solid var(--border); text-align: center; font-size: 0.95rem;
+}
+.data-table th { background: var(--bg-medium); font-weight: 700; color: var(--accent); }
+.data-table td { background: var(--glass); }
+
+/* Confidence */
+.confidence-grid { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; margin: 24px 0; }
+.confidence-btn {
+    padding: 16px 28px; background: var(--glass); border: 2px solid var(--border);
+    border-radius: 14px; cursor: pointer; transition: all 0.3s; text-align: center;
+    font-family: 'Source Sans Pro', sans-serif; color: var(--text-light); font-size: 0.95rem;
+}
+.confidence-btn:hover { transform: translateY(-3px); }
+.confidence-btn.selected { border-color: var(--accent); background: rgba(214,158,46,0.15); }
+.confidence-emoji { font-size: 2rem; display: block; margin-bottom: 8px; }
+
+/* Vocab Grid */
+.vocab-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 14px; margin: 20px 0; }
+.vocab-item {
+    padding: 16px; background: var(--glass); border: 1px solid var(--border); border-radius: 10px;
+}
+.vocab-term { font-weight: 700; color: var(--accent-light); font-size: 1rem; margin-bottom: 4px; }
+.vocab-def { color: var(--text-muted); font-size: 0.9rem; }
+
+/* Score bar */
+.score-bar {
+    padding: 12px 20px; background: var(--glass); border: 1px solid var(--border);
+    border-radius: 10px; display: flex; align-items: center; gap: 12px;
+    margin: 16px 0; font-weight: 600;
+}
+.score-fill { height: 8px; background: var(--success-light); border-radius: 4px; transition: width 0.5s ease; }
+.score-track { flex: 1; height: 8px; background: var(--border); border-radius: 4px; overflow: hidden; }
+
+/* Mark scheme */
+.mark-scheme { margin: 8px 0; }
+.mark-point { padding: 6px 0 6px 24px; position: relative; font-size: 0.95rem; color: var(--text-light); }
+.mark-point::before { content: '✓'; position: absolute; left: 0; color: var(--success-light); font-weight: 700; }
+
+/* Synoptic */
+.synoptic-link {
+    display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px;
+    background: rgba(183,148,244,0.15); border: 1px solid rgba(183,148,244,0.3);
+    border-radius: 6px; font-size: 0.82rem; color: var(--tier3); font-weight: 600;
+    margin: 4px 2px;
+}
+
+/* Footer */
+footer {
+    text-align: center; padding: 40px 20px; border-top: 1px solid var(--border);
+    color: var(--text-muted); font-size: 0.85rem;
+}
+
+/* Check Btn */
+.check-btn {
+    padding: 10px 24px; background: var(--accent); color: var(--bg-dark); border: none;
+    border-radius: 10px; font-weight: 700; cursor: pointer; font-size: 0.95rem;
+    font-family: 'Source Sans Pro', sans-serif; transition: all 0.3s; margin: 12px 0;
+}
+.check-btn:hover { background: var(--accent-light); transform: translateY(-1px); }
+
+/* Responsive */
+@media (max-width: 768px) {
+    .nav-progress { gap: 6px; padding: 10px 12px; }
+    .nav-item { padding: 6px 10px; font-size: 0.7rem; }
+    .container { padding: 30px 14px; }
+    .content-card { padding: 22px; }
+    .flashcard-grid { grid-template-columns: 1fr; }
+    .match-grid { grid-template-columns: 1fr; }
+    .section-header { flex-direction: column; align-items: flex-start; gap: 12px; }
+    .comp-table { font-size: 0.85rem; }
+    .comp-table th, .comp-table td { padding: 8px 10px; }
+    .vocab-grid { grid-template-columns: 1fr; }
+    h2 { font-size: 1.5rem; }
+    .objectives-card { padding: 24px; }
+}
+@media (max-width: 480px) {
+    .hero { padding: 60px 16px 40px; }
+    h1 { font-size: 1.8rem; }
+    .confidence-grid { flex-direction: column; align-items: center; }
+}
+
+/* Textarea */
+.response-area {
+    width: 100%; min-height: 120px; padding: 14px; background: var(--glass);
+    border: 1px solid var(--border); border-radius: 10px; color: var(--text-light);
+    font-family: 'Source Sans Pro', sans-serif; font-size: 0.95rem; resize: vertical;
+    line-height: 1.7;
+}
+.response-area:focus { outline: none; border-color: var(--accent); }
+</style>
+</head>
+<body>
+<div class="dna-background">
+    <div class="helix" style="left:10%"></div>
+    <div class="helix" style="left:30%"></div>
+    <div class="helix" style="left:50%"></div>
+    <div class="helix" style="left:70%"></div>
+    <div class="helix" style="left:90%"></div>
+</div>
+
+<!-- HERO -->
+<header class="hero">
+    <div class="hero-content">
+        <div class="spec-badge">IAL Biology &bull; Topic 2 Review</div>
+        <h1>Cell Division, Meiosis &amp; Reproduction</h1>
+        <p class="subtitle">Chapter Review &mdash; Cell Cycle, Mitosis, Meiosis, Gametes &amp; Fertilisation</p>
+    </div>
+</header>
+
+<!-- NAV -->
+<nav class="nav-progress" id="mainNav">
+    <span class="nav-item active" onclick="scrollToSection('diagnostic')">Diagnostic</span>
+    <span class="nav-item" onclick="scrollToSection('objectives')">Objectives</span>
+    <span class="nav-item" onclick="scrollToSection('tier1')">Tier 1: C Grade</span>
+    <span class="nav-item" onclick="scrollToSection('tier2')">Tier 2: C-B Grade</span>
+    <span class="nav-item" onclick="scrollToSection('tier3')">Tier 3: B-A Grade</span>
+    <span class="nav-item" onclick="scrollToSection('exam')">Exam Practice</span>
+    <span class="nav-item" onclick="scrollToSection('final')">Final Assessment</span>
+    <span class="nav-item" onclick="scrollToSection('vocab')">Vocabulary</span>
+</nav>
+
+<div class="container">
+
+<!-- ========== DIAGNOSTIC ========== -->
+<div class="section visible" id="diagnostic">
+    <div class="section-header">
+        <div class="section-number">D</div>
+        <h2>Diagnostic Quiz</h2>
+    </div>
+    <p>Test what you already remember before we begin. Choose the best answer for each question.</p>
+    <div id="diagnosticScore" class="score-bar" style="display:none;">
+        <span id="diagScoreText">0 / 5</span>
+        <div class="score-track"><div class="score-fill" id="diagScoreFill" style="width:0%"></div></div>
+    </div>
+
+    <!-- DQ1 -->
+    <div class="content-card quiz-container" data-quiz="diag" data-qnum="1">
+        <div class="quiz-question">1. What is the correct order of the cell cycle?</div>
+        <div class="quiz-options">
+            <button class="quiz-option" onclick="checkQuiz(this, false, 'diag')">Mitosis &rarr; Interphase &rarr; Cytokinesis</button>
+            <button class="quiz-option" onclick="checkQuiz(this, true, 'diag')">Interphase &rarr; Mitosis &rarr; Cytokinesis</button>
+            <button class="quiz-option" onclick="checkQuiz(this, false, 'diag')">Cytokinesis &rarr; Mitosis &rarr; Interphase</button>
+            <button class="quiz-option" onclick="checkQuiz(this, false, 'diag')">Interphase &rarr; Cytokinesis &rarr; Mitosis</button>
+        </div>
+        <div class="quiz-feedback">The cell cycle proceeds: Interphase (G1, S, G2) &rarr; Mitosis &rarr; Cytokinesis.</div>
+    </div>
+    <!-- DQ2 -->
+    <div class="content-card quiz-container" data-quiz="diag" data-qnum="2">
+        <div class="quiz-question">2. How many daughter cells does meiosis produce?</div>
+        <div class="quiz-options">
+            <button class="quiz-option" onclick="checkQuiz(this, false, 'diag')">2 diploid cells</button>
+            <button class="quiz-option" onclick="checkQuiz(this, false, 'diag')">2 haploid cells</button>
+            <button class="quiz-option" onclick="checkQuiz(this, true, 'diag')">4 haploid cells</button>
+            <button class="quiz-option" onclick="checkQuiz(this, false, 'diag')">4 diploid cells</button>
+        </div>
+        <div class="quiz-feedback">Meiosis produces 4 genetically different haploid daughter cells.</div>
+    </div>
+    <!-- DQ3 -->
+    <div class="content-card quiz-container" data-quiz="diag" data-qnum="3">
+        <div class="quiz-question">3. During which phase of interphase is DNA replicated?</div>
+        <div class="quiz-options">
+            <button class="quiz-option" onclick="checkQuiz(this, false, 'diag')">G1 phase</button>
+            <button class="quiz-option" onclick="checkQuiz(this, true, 'diag')">S phase</button>
+            <button class="quiz-option" onclick="checkQuiz(this, false, 'diag')">G2 phase</button>
+            <button class="quiz-option" onclick="checkQuiz(this, false, 'diag')">M phase</button>
+        </div>
+        <div class="quiz-feedback">DNA replication occurs during the S (synthesis) phase of interphase.</div>
+    </div>
+    <!-- DQ4 -->
+    <div class="content-card quiz-container" data-quiz="diag" data-qnum="4">
+        <div class="quiz-question">4. What is a gamete?</div>
+        <div class="quiz-options">
+            <button class="quiz-option" onclick="checkQuiz(this, false, 'diag')">A body cell with a full set of chromosomes</button>
+            <button class="quiz-option" onclick="checkQuiz(this, true, 'diag')">A sex cell with half the number of chromosomes</button>
+            <button class="quiz-option" onclick="checkQuiz(this, false, 'diag')">A cell produced by mitosis</button>
+            <button class="quiz-option" onclick="checkQuiz(this, false, 'diag')">A stem cell that can differentiate</button>
+        </div>
+        <div class="quiz-feedback">A gamete is a haploid sex cell (sperm or egg in animals; pollen or egg cell in plants).</div>
+    </div>
+    <!-- DQ5 -->
+    <div class="content-card quiz-container" data-quiz="diag" data-qnum="5">
+        <div class="quiz-question">5. In flowering plants, what does double fertilisation produce?</div>
+        <div class="quiz-options">
+            <button class="quiz-option" onclick="checkQuiz(this, false, 'diag')">Two embryos</button>
+            <button class="quiz-option" onclick="checkQuiz(this, false, 'diag')">A zygote and a polar body</button>
+            <button class="quiz-option" onclick="checkQuiz(this, true, 'diag')">A zygote and an endosperm nucleus</button>
+            <button class="quiz-option" onclick="checkQuiz(this, false, 'diag')">Two identical seeds</button>
+        </div>
+        <div class="quiz-feedback">In double fertilisation, one male nucleus fuses with the egg to form a zygote, and the other fuses with two polar nuclei to form the triploid endosperm nucleus.</div>
+    </div>
+</div>
+
+<!-- ========== OBJECTIVES ========== -->
+<div class="section" id="objectives">
+    <div class="section-header">
+        <div class="section-number">O</div>
+        <h2>Learning Objectives</h2>
+    </div>
+    <div class="objectives-card">
+        <h2>Specification Checklist</h2>
+        <p style="color:rgba(255,255,255,0.7); margin-bottom:16px;">Click each objective as you feel confident with it.</p>
+        <ul class="obj-list">
+            <li><span class="obj-check" onclick="this.classList.toggle('checked')">&#10003;</span>Describe the cell cycle as a regulated process of interphase, mitosis and cytokinesis, producing two identical daughter cells</li>
+            <li><span class="obj-check" onclick="this.classList.toggle('checked')">&#10003;</span>Explain the replication and separation of genetic material in the main stages of mitosis</li>
+            <li><span class="obj-check" onclick="this.classList.toggle('checked')">&#10003;</span>Explain the importance of mitosis in growth, repair of damaged tissues and asexual reproduction</li>
+            <li><span class="obj-check" onclick="this.classList.toggle('checked')">&#10003;</span>Describe the role of meiosis in the production of haploid gametes, including its stages</li>
+            <li><span class="obj-check" onclick="this.classList.toggle('checked')">&#10003;</span>Explain the replication and separation of genetic material in the main stages of meiosis</li>
+            <li><span class="obj-check" onclick="this.classList.toggle('checked')">&#10003;</span>Explain how meiosis results in genetic variation through independent assortment and crossing over</li>
+            <li><span class="obj-check" onclick="this.classList.toggle('checked')">&#10003;</span>Describe the development of female and male gametes in mammals and plants (pollen grain and embryo sac)</li>
+            <li><span class="obj-check" onclick="this.classList.toggle('checked')">&#10003;</span>Describe the adaptations of gametes for their functions</li>
+            <li><span class="obj-check" onclick="this.classList.toggle('checked')">&#10003;</span>Describe fertilisation in mammals and double fertilisation in plants, including the roles of the tube nucleus and generative nucleus</li>
+            <li><span class="obj-check" onclick="this.classList.toggle('checked')">&#10003;</span>Explain how random fertilisation during sexual reproduction brings about genetic variation</li>
+        </ul>
+    </div>
+</div>
+
+<!-- ========== TIER 1 ========== -->
+<div class="section tier-section t1" id="tier1">
+    <div class="section-header">
+        <div class="section-number" style="background:linear-gradient(135deg, var(--tier1), #276749);">1</div>
+        <div>
+            <div class="tier-badge t1">Tier 1 | Target: C Grade | AO1: Knowledge &amp; Recall</div>
+            <h2>Foundation Recall</h2>
+        </div>
+    </div>
+
+    <!-- FLASHCARDS -->
+    <h3>Flashcard Retrieval Practice</h3>
+    <p>Tap each card to reveal the definition. Try to recall the answer before flipping.</p>
+    <div class="flashcard-grid">
+        <div class="flashcard" onclick="toggleFlashcard(this)">
+            <div class="flashcard-term">Cell Cycle</div>
+            <div class="flashcard-answer">The regulated sequence of events in which a cell grows, replicates its DNA and divides. It consists of interphase, mitosis and cytokinesis.</div>
+            <div class="tap-hint">Tap to reveal</div>
+        </div>
+        <div class="flashcard" onclick="toggleFlashcard(this)">
+            <div class="flashcard-term">Interphase</div>
+            <div class="flashcard-answer">The longest phase of the cell cycle, subdivided into G1 (cell growth), S phase (DNA replication) and G2 (preparation for division). The cell is metabolically active.</div>
+            <div class="tap-hint">Tap to reveal</div>
+        </div>
+        <div class="flashcard" onclick="toggleFlashcard(this)">
+            <div class="flashcard-term">Mitosis</div>
+            <div class="flashcard-answer">Nuclear division producing two genetically identical daughter nuclei, each with the same number of chromosomes as the parent cell (diploid). Stages: prophase, metaphase, anaphase, telophase.</div>
+            <div class="tap-hint">Tap to reveal</div>
+        </div>
+        <div class="flashcard" onclick="toggleFlashcard(this)">
+            <div class="flashcard-term">Cytokinesis</div>
+            <div class="flashcard-answer">The division of the cytoplasm following nuclear division, producing two separate daughter cells. In animal cells the membrane pinches inward; in plant cells a cell plate forms.</div>
+            <div class="tap-hint">Tap to reveal</div>
+        </div>
+        <div class="flashcard" onclick="toggleFlashcard(this)">
+            <div class="flashcard-term">Meiosis</div>
+            <div class="flashcard-answer">A type of nuclear division that produces four genetically different haploid daughter cells from a single diploid cell. It involves two successive divisions: meiosis I and meiosis II.</div>
+            <div class="tap-hint">Tap to reveal</div>
+        </div>
+        <div class="flashcard" onclick="toggleFlashcard(this)">
+            <div class="flashcard-term">Haploid (n)</div>
+            <div class="flashcard-answer">A cell or nucleus containing one complete set of chromosomes &mdash; half the diploid number. Gametes are haploid. In humans, n = 23.</div>
+            <div class="tap-hint">Tap to reveal</div>
+        </div>
+        <div class="flashcard" onclick="toggleFlashcard(this)">
+            <div class="flashcard-term">Diploid (2n)</div>
+            <div class="flashcard-answer">A cell or nucleus containing two complete sets of chromosomes, one from each parent. Body (somatic) cells are diploid. In humans, 2n = 46.</div>
+            <div class="tap-hint">Tap to reveal</div>
+        </div>
+        <div class="flashcard" onclick="toggleFlashcard(this)">
+            <div class="flashcard-term">Gamete</div>
+            <div class="flashcard-answer">A haploid reproductive cell (sex cell) that fuses with another gamete during fertilisation to form a diploid zygote. Examples: sperm, egg, pollen grain.</div>
+            <div class="tap-hint">Tap to reveal</div>
+        </div>
+        <div class="flashcard" onclick="toggleFlashcard(this)">
+            <div class="flashcard-term">Homologous Chromosomes</div>
+            <div class="flashcard-answer">A pair of chromosomes of the same size, with the same centromere position and the same genes at the same loci, but possibly different alleles. One is inherited from each parent.</div>
+            <div class="tap-hint">Tap to reveal</div>
+        </div>
+        <div class="flashcard" onclick="toggleFlashcard(this)">
+            <div class="flashcard-term">Crossing Over</div>
+            <div class="flashcard-answer">The exchange of genetic material between non-sister chromatids of homologous chromosomes during prophase I of meiosis. Produces recombinant chromosomes, increasing genetic variation.</div>
+            <div class="tap-hint">Tap to reveal</div>
+        </div>
+        <div class="flashcard" onclick="toggleFlashcard(this)">
+            <div class="flashcard-term">Independent Assortment</div>
+            <div class="flashcard-answer">The random orientation of homologous pairs at the metaphase plate during meiosis I. This means each gamete receives a random combination of maternal and paternal chromosomes.</div>
+            <div class="tap-hint">Tap to reveal</div>
+        </div>
+        <div class="flashcard" onclick="toggleFlashcard(this)">
+            <div class="flashcard-term">Fertilisation</div>
+            <div class="flashcard-answer">The fusion of two haploid gamete nuclei to form a diploid zygote. This restores the diploid chromosome number and introduces genetic variation.</div>
+            <div class="tap-hint">Tap to reveal</div>
+        </div>
+        <div class="flashcard" onclick="toggleFlashcard(this)">
+            <div class="flashcard-term">Pollen Grain</div>
+            <div class="flashcard-answer">The male gametophyte in flowering plants. Contains a tube nucleus (controls pollen tube growth) and a generative nucleus (divides to form two male gamete nuclei).</div>
+            <div class="tap-hint">Tap to reveal</div>
+        </div>
+        <div class="flashcard" onclick="toggleFlashcard(this)">
+            <div class="flashcard-term">Embryo Sac</div>
+            <div class="flashcard-answer">The mature female gametophyte in flowering plants. Contains the egg cell, two synergid cells, three antipodal cells and a large central cell with two polar nuclei.</div>
+            <div class="tap-hint">Tap to reveal</div>
+        </div>
+        <div class="flashcard" onclick="toggleFlashcard(this)">
+            <div class="flashcard-term">Zygote</div>
+            <div class="flashcard-answer">A diploid cell formed by the fusion of two haploid gametes during fertilisation. It is the first cell of a new organism.</div>
+            <div class="tap-hint">Tap to reveal</div>
+        </div>
+    </div>
+
+    <!-- FILL IN THE BLANKS -->
+    <h3>Fill in the Blanks</h3>
+    <div class="content-card">
+        <p>Use the word bank to complete the passage below.</p>
+        <div class="word-bank">
+            <span class="word-bank-item">interphase</span>
+            <span class="word-bank-item">mitosis</span>
+            <span class="word-bank-item">cytokinesis</span>
+            <span class="word-bank-item">S phase</span>
+            <span class="word-bank-item">haploid</span>
+            <span class="word-bank-item">meiosis</span>
+            <span class="word-bank-item">four</span>
+            <span class="word-bank-item">crossing over</span>
+            <span class="word-bank-item">independent assortment</span>
+            <span class="word-bank-item">diploid</span>
+            <span class="word-bank-item">homologous</span>
+            <span class="word-bank-item">gametes</span>
+        </div>
+        <div style="line-height:2.8; font-size:1.05rem; margin-top:16px;">
+            <p>The cell cycle consists of three main stages. The first and longest stage is
+            <input class="blank-input" data-answer="interphase" placeholder="1">, during which DNA is replicated in the
+            <input class="blank-input" data-answer="s phase" placeholder="2">. The nucleus then divides by
+            <input class="blank-input" data-answer="mitosis" placeholder="3">, and the cytoplasm splits during
+            <input class="blank-input" data-answer="cytokinesis" placeholder="4">. This produces two genetically identical
+            <input class="blank-input" data-answer="diploid" placeholder="5"> daughter cells.</p>
+            <p>To produce sex cells called
+            <input class="blank-input" data-answer="gametes" placeholder="6">, cells divide by
+            <input class="blank-input" data-answer="meiosis" placeholder="7">. This produces
+            <input class="blank-input" data-answer="four" placeholder="8"> genetically different
+            <input class="blank-input" data-answer="haploid" placeholder="9"> cells. In prophase I,
+            <input class="blank-input" data-answer="homologous" placeholder="10"> chromosomes pair up and exchange genetic material in a process called
+            <input class="blank-input" data-answer="crossing over" placeholder="11">. The random alignment of chromosome pairs during metaphase I is known as
+            <input class="blank-input" data-answer="independent assortment" placeholder="12">.</p>
+        </div>
+        <button class="check-btn" onclick="checkBlanks(this)">Check Answers</button>
+    </div>
+
+    <!-- KEY TERM MATCHING -->
+    <h3>Key Term Matching</h3>
+    <p>Click a term on the left, then click its matching definition on the right.</p>
+    <div class="content-card">
+        <div class="match-grid" id="matchGrid1">
+            <div>
+                <div class="match-col-header">Terms</div>
+                <div class="match-item" data-match="A" data-side="left" onclick="handleMatch(this,'matchGrid1')">Prophase</div>
+                <div class="match-item" data-match="B" data-side="left" onclick="handleMatch(this,'matchGrid1')">Metaphase</div>
+                <div class="match-item" data-match="C" data-side="left" onclick="handleMatch(this,'matchGrid1')">Anaphase</div>
+                <div class="match-item" data-match="D" data-side="left" onclick="handleMatch(this,'matchGrid1')">Telophase</div>
+                <div class="match-item" data-match="E" data-side="left" onclick="handleMatch(this,'matchGrid1')">Chiasma</div>
+                <div class="match-item" data-match="F" data-side="left" onclick="handleMatch(this,'matchGrid1')">Bivalent</div>
+            </div>
+            <div>
+                <div class="match-col-header">Definitions</div>
+                <div class="match-item" data-match="C" data-side="right" onclick="handleMatch(this,'matchGrid1')">Centromeres split and chromatids are pulled to opposite poles</div>
+                <div class="match-item" data-match="F" data-side="right" onclick="handleMatch(this,'matchGrid1')">A pair of homologous chromosomes joined together during meiosis I</div>
+                <div class="match-item" data-match="A" data-side="right" onclick="handleMatch(this,'matchGrid1')">Chromosomes condense, nuclear envelope breaks down, spindle forms</div>
+                <div class="match-item" data-match="E" data-side="right" onclick="handleMatch(this,'matchGrid1')">The point where non-sister chromatids exchange material during crossing over</div>
+                <div class="match-item" data-match="D" data-side="right" onclick="handleMatch(this,'matchGrid1')">Chromosomes reach the poles, nuclear envelopes reform, chromosomes decondense</div>
+                <div class="match-item" data-match="B" data-side="right" onclick="handleMatch(this,'matchGrid1')">Chromosomes line up on the equator of the cell, attached to spindle fibres</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TIER 1 MCQ -->
+    <h3>Tier 1 Quick Quiz</h3>
+    <div id="t1Score" class="score-bar" style="display:none;">
+        <span id="t1ScoreText">0 / 5</span>
+        <div class="score-track"><div class="score-fill" id="t1ScoreFill" style="width:0%"></div></div>
+    </div>
+    <div class="content-card quiz-container" data-quiz="t1" data-qnum="1">
+        <div class="quiz-question">1. State the function of cytokinesis.</div>
+        <div class="quiz-options">
+            <button class="quiz-option" onclick="checkQuiz(this, false, 't1')">To replicate the DNA</button>
+            <button class="quiz-option" onclick="checkQuiz(this, true, 't1')">To divide the cytoplasm, producing two separate daughter cells</button>
+            <button class="quiz-option" onclick="checkQuiz(this, false, 't1')">To condense the chromosomes</button>
+            <button class="quiz-option" onclick="checkQuiz(this, false, 't1')">To separate homologous chromosomes</button>
+        </div>
+        <div class="quiz-feedback">Cytokinesis is the division of the cytoplasm to form two separate daughter cells after nuclear division.</div>
+    </div>
+    <div class="content-card quiz-container" data-quiz="t1" data-qnum="2">
+        <div class="quiz-question">2. How many chromosomes does a human gamete contain?</div>
+        <div class="quiz-options">
+            <button class="quiz-option" onclick="checkQuiz(this, false, 't1')">46</button>
+            <button class="quiz-option" onclick="checkQuiz(this, true, 't1')">23</button>
+            <button class="quiz-option" onclick="checkQuiz(this, false, 't1')">92</button>
+            <button class="quiz-option" onclick="checkQuiz(this, false, 't1')">12</button>
+        </div>
+        <div class="quiz-feedback">Human gametes are haploid (n) and contain 23 chromosomes.</div>
+    </div>
+    <div class="content-card quiz-container" data-quiz="t1" data-qnum="3">
+        <div class="quiz-question">3. Which type of cell division is used for growth and repair?</div>
+        <div class="quiz-options">
+            <button class="quiz-option" onclick="checkQuiz(this, true, 't1')">Mitosis</button>
+            <button class="quiz-option" onclick="checkQuiz(this, false, 't1')">Meiosis</button>
+            <button class="quiz-option" onclick="checkQuiz(this, false, 't1')">Binary fission</button>
+            <button class="quiz-option" onclick="checkQuiz(this, false, 't1')">Amitosis</button>
+        </div>
+        <div class="quiz-feedback">Mitosis produces genetically identical cells, essential for growth and repair of tissues.</div>
+    </div>
+    <div class="content-card quiz-container" data-quiz="t1" data-qnum="4">
+        <div class="quiz-question">4. What is the name of the structure formed when homologous chromosomes pair up in meiosis I?</div>
+        <div class="quiz-options">
+            <button class="quiz-option" onclick="checkQuiz(this, false, 't1')">Chiasma</button>
+            <button class="quiz-option" onclick="checkQuiz(this, true, 't1')">Bivalent</button>
+            <button class="quiz-option" onclick="checkQuiz(this, false, 't1')">Centromere</button>
+            <button class="quiz-option" onclick="checkQuiz(this, false, 't1')">Chromatid</button>
+        </div>
+        <div class="quiz-feedback">When homologous chromosomes pair up (synapsis) during prophase I, the structure is called a bivalent (or tetrad).</div>
+    </div>
+    <div class="content-card quiz-container" data-quiz="t1" data-qnum="5">
+        <div class="quiz-question">5. In a pollen grain, what is the role of the generative nucleus?</div>
+        <div class="quiz-options">
+            <button class="quiz-option" onclick="checkQuiz(this, false, 't1')">It controls growth of the pollen tube</button>
+            <button class="quiz-option" onclick="checkQuiz(this, false, 't1')">It produces food for the embryo</button>
+            <button class="quiz-option" onclick="checkQuiz(this, true, 't1')">It divides by mitosis to form two male gamete nuclei</button>
+            <button class="quiz-option" onclick="checkQuiz(this, false, 't1')">It develops into the embryo sac</button>
+        </div>
+        <div class="quiz-feedback">The generative nucleus divides by mitosis to produce two male gamete nuclei, which are involved in double fertilisation.</div>
+    </div>
+</div>
+
+<!-- ========== TIER 2 ========== -->
+<div class="section tier-section t2" id="tier2">
+    <div class="section-header">
+        <div class="section-number" style="background:linear-gradient(135deg, var(--tier2), #2b6cb0);">2</div>
+        <div>
+            <div class="tier-badge t2">Tier 2 | Target: C&ndash;B Grade | AO2: Application &amp; Understanding</div>
+            <h2>Application &amp; Understanding</h2>
+        </div>
+    </div>
+
+    <!-- CELL CYCLE DIAGRAM -->
+    <h3>Interactive Cell Cycle Diagram</h3>
+    <p>Click on each phase of the cell cycle to reveal a description.</p>
+    <div class="content-card">
+        <div class="diagram-container">
+            <svg viewBox="0 0 400 400" width="380" height="380" xmlns="http://www.w3.org/2000/svg">
+                <!-- Outer ring -->
+                <circle cx="200" cy="200" r="170" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="50"/>
+                <!-- G1 arc (approx 0 to 120deg) -->
+                <path d="M200,30 A170,170 0 0,1 347,285" fill="none" stroke="rgba(72,187,120,0.35)" stroke-width="48" stroke-linecap="butt" class="phase-arc" onclick="showPhase('g1')" style="cursor:pointer"/>
+                <text x="310" y="140" fill="#48bb78" font-size="16" font-weight="700" font-family="JetBrains Mono" style="cursor:pointer" onclick="showPhase('g1')">G1</text>
+                <!-- S arc (120 to 200deg) -->
+                <path d="M347,285 A170,170 0 0,1 147,358" fill="none" stroke="rgba(66,153,225,0.35)" stroke-width="48" stroke-linecap="butt" class="phase-arc" onclick="showPhase('s')" style="cursor:pointer"/>
+                <text x="230" y="355" fill="#4299e1" font-size="16" font-weight="700" font-family="JetBrains Mono" style="cursor:pointer" onclick="showPhase('s')">S</text>
+                <!-- G2 arc (200 to 270deg) -->
+                <path d="M147,358 A170,170 0 0,1 30,200" fill="none" stroke="rgba(214,158,46,0.35)" stroke-width="48" stroke-linecap="butt" class="phase-arc" onclick="showPhase('g2')" style="cursor:pointer"/>
+                <text x="68" y="320" fill="#d69e2e" font-size="16" font-weight="700" font-family="JetBrains Mono" style="cursor:pointer" onclick="showPhase('g2')">G2</text>
+                <!-- Mitosis arc (270 to 340deg) -->
+                <path d="M30,200 A170,170 0 0,1 157,37" fill="none" stroke="rgba(183,148,244,0.35)" stroke-width="48" stroke-linecap="butt" class="phase-arc" onclick="showPhase('m')" style="cursor:pointer"/>
+                <text x="68" y="105" fill="#b794f4" font-size="16" font-weight="700" font-family="JetBrains Mono" style="cursor:pointer" onclick="showPhase('m')">M</text>
+                <!-- Cytokinesis label (inside M region) -->
+                <text x="120" y="75" fill="#f6e05e" font-size="11" font-weight="600" font-family="JetBrains Mono" style="cursor:pointer" onclick="showPhase('c')">C</text>
+                <!-- Centre label -->
+                <text x="200" y="195" text-anchor="middle" fill="rgba(255,255,255,0.6)" font-size="14" font-family="Playfair Display" font-weight="600">CELL</text>
+                <text x="200" y="215" text-anchor="middle" fill="rgba(255,255,255,0.6)" font-size="14" font-family="Playfair Display" font-weight="600">CYCLE</text>
+                <!-- INTERPHASE bracket -->
+                <text x="270" y="275" text-anchor="middle" fill="rgba(255,255,255,0.3)" font-size="11" font-family="Source Sans Pro" transform="rotate(20,270,275)">INTERPHASE</text>
+            </svg>
+        </div>
+        <div class="diagram-info-panel" id="phaseInfo">
+            <p style="color:var(--text-muted); font-style:italic;">Click a phase in the diagram above to learn about it.</p>
+        </div>
+    </div>
+
+    <!-- MITOSIS vs MEIOSIS COMPARISON -->
+    <h3>Mitosis vs Meiosis Comparison</h3>
+    <p>Click on each cell in the table to reveal the answer. Test yourself first!</p>
+    <div class="content-card" style="overflow-x:auto;">
+        <table class="comp-table">
+            <tr><th>Feature</th><th>Mitosis</th><th>Meiosis</th></tr>
+            <tr><td>Number of divisions</td><td class="reveal-cell" onclick="revealCell(this)" data-val="One">Click to reveal</td><td class="reveal-cell" onclick="revealCell(this)" data-val="Two (meiosis I and meiosis II)">Click to reveal</td></tr>
+            <tr><td>Number of daughter cells</td><td class="reveal-cell" onclick="revealCell(this)" data-val="2">Click to reveal</td><td class="reveal-cell" onclick="revealCell(this)" data-val="4">Click to reveal</td></tr>
+            <tr><td>Chromosome number of daughters</td><td class="reveal-cell" onclick="revealCell(this)" data-val="Diploid (2n) — same as parent">Click to reveal</td><td class="reveal-cell" onclick="revealCell(this)" data-val="Haploid (n) — half of parent">Click to reveal</td></tr>
+            <tr><td>Genetic variation?</td><td class="reveal-cell" onclick="revealCell(this)" data-val="No — daughter cells are genetically identical to parent">Click to reveal</td><td class="reveal-cell" onclick="revealCell(this)" data-val="Yes — crossing over and independent assortment">Click to reveal</td></tr>
+            <tr><td>Where it occurs</td><td class="reveal-cell" onclick="revealCell(this)" data-val="Somatic (body) cells throughout the organism">Click to reveal</td><td class="reveal-cell" onclick="revealCell(this)" data-val="Reproductive organs (gonads in animals, anthers/ovules in plants)">Click to reveal</td></tr>
+            <tr><td>Purpose</td><td class="reveal-cell" onclick="revealCell(this)" data-val="Growth, repair of tissues, asexual reproduction">Click to reveal</td><td class="reveal-cell" onclick="revealCell(this)" data-val="Production of gametes for sexual reproduction">Click to reveal</td></tr>
+            <tr><td>Homologous pairing?</td><td class="reveal-cell" onclick="revealCell(this)" data-val="No">Click to reveal</td><td class="reveal-cell" onclick="revealCell(this)" data-val="Yes — bivalents form in prophase I">Click to reveal</td></tr>
+            <tr><td>Crossing over?</td><td class="reveal-cell" onclick="revealCell(this)" data-val="No">Click to reveal</td><td class="reveal-cell" onclick="revealCell(this)" data-val="Yes — during prophase I">Click to reveal</td></tr>
+        </table>
+    </div>
+
+    <!-- SEQUENCE MEIOSIS -->
+    <h3>Sequence the Stages of Meiosis</h3>
+    <p>Click the stages in the correct order (1st to 8th). Click &ldquo;Reset&rdquo; to start again.</p>
+    <div class="content-card">
+        <div class="sequence-container" id="seqMeiosis">
+            <div class="sequence-item" data-order="5" onclick="handleSequence(this,'seqMeiosis')"><span class="seq-num"></span>Prophase II &mdash; chromosomes condense again, no crossing over</div>
+            <div class="sequence-item" data-order="2" onclick="handleSequence(this,'seqMeiosis')"><span class="seq-num"></span>Metaphase I &mdash; bivalents line up randomly on the equator</div>
+            <div class="sequence-item" data-order="7" onclick="handleSequence(this,'seqMeiosis')"><span class="seq-num"></span>Anaphase II &mdash; centromeres split, sister chromatids pulled apart</div>
+            <div class="sequence-item" data-order="4" onclick="handleSequence(this,'seqMeiosis')"><span class="seq-num"></span>Telophase I &mdash; nuclear envelopes reform, cell divides (cytokinesis I)</div>
+            <div class="sequence-item" data-order="1" onclick="handleSequence(this,'seqMeiosis')"><span class="seq-num"></span>Prophase I &mdash; chromosomes condense, bivalents form, crossing over occurs</div>
+            <div class="sequence-item" data-order="8" onclick="handleSequence(this,'seqMeiosis')"><span class="seq-num"></span>Telophase II &mdash; four haploid daughter cells formed</div>
+            <div class="sequence-item" data-order="3" onclick="handleSequence(this,'seqMeiosis')"><span class="seq-num"></span>Anaphase I &mdash; homologous chromosomes pulled to opposite poles</div>
+            <div class="sequence-item" data-order="6" onclick="handleSequence(this,'seqMeiosis')"><span class="seq-num"></span>Metaphase II &mdash; chromosomes line up on equator of each cell</div>
+        </div>
+        <button class="check-btn" onclick="checkSequence('seqMeiosis')" style="margin-right:8px;">Check Order</button>
+        <button class="check-btn" onclick="resetSequence('seqMeiosis')" style="background:var(--bg-light);">Reset</button>
+        <div id="seqMeiosisResult" style="margin-top:12px;"></div>
+    </div>
+
+    <!-- SCAFFOLDED EXPLAIN QUESTIONS -->
+    <h3>Explain Questions (3&ndash;4 marks)</h3>
+
+    <div class="content-card scaffold-box">
+        <h4>Q1. Explain why mitosis is important for the growth of a multicellular organism. (3 marks)</h4>
+        <p style="color:var(--text-muted); font-size:0.9rem;">Use these sentence starters to structure your answer:</p>
+        <div class="sentence-starter">Mitosis is important for growth because&hellip;</div>
+        <div class="sentence-starter">The daughter cells produced are&hellip; which means&hellip;</div>
+        <div class="sentence-starter">This ensures that all new cells have&hellip;</div>
+        <textarea class="response-area" placeholder="Write your answer here..."></textarea>
+        <button class="reveal-btn" onclick="toggleAnswer(this)"><span>&#128214;</span> Reveal Model Answer</button>
+        <div class="model-answer">
+            <p>Mitosis produces <strong>two genetically identical daughter cells</strong> with the same diploid number of chromosomes as the parent cell. This is important for growth because the organism needs to <strong>increase its cell number</strong> while ensuring every new cell contains the <strong>complete set of genetic instructions</strong> needed to function correctly. Because the daughter cells are genetically identical, the <strong>same proteins can be produced</strong>, allowing the new cells to carry out the same functions as the original cell.</p>
+        </div>
+    </div>
+
+    <div class="content-card scaffold-box">
+        <h4>Q2. Explain how crossing over during meiosis leads to genetic variation. (3 marks)</h4>
+        <div class="sentence-starter">During prophase I, homologous chromosomes&hellip;</div>
+        <div class="sentence-starter">Non-sister chromatids exchange&hellip; at points called&hellip;</div>
+        <div class="sentence-starter">This results in chromatids with&hellip; which means the gametes&hellip;</div>
+        <textarea class="response-area" placeholder="Write your answer here..."></textarea>
+        <button class="reveal-btn" onclick="toggleAnswer(this)"><span>&#128214;</span> Reveal Model Answer</button>
+        <div class="model-answer">
+            <p>During prophase I of meiosis, <strong>homologous chromosomes pair up to form bivalents</strong>. Non-sister chromatids wrap around each other and <strong>exchange sections of DNA at points called chiasmata</strong>. This means the chromatids now have <strong>new combinations of alleles</strong> that were not present in either parent chromosome. The resulting gametes are therefore <strong>genetically different from each other and from the parent cell</strong>, increasing genetic variation in the offspring.</p>
+        </div>
+    </div>
+
+    <!-- APPLICATION SCENARIO -->
+    <h3>Application Scenarios</h3>
+    <div class="content-card scaffold-box">
+        <h4>Scenario: A gardener takes a cutting from a plant and grows it into a new individual. What type of cell division is responsible for the growth of this new plant, and why is the offspring genetically identical to the parent?</h4>
+        <div class="sentence-starter">The cutting grows by&hellip; because new cells are needed for&hellip;</div>
+        <div class="sentence-starter">The offspring is genetically identical because mitosis produces&hellip;</div>
+        <textarea class="response-area" placeholder="Write your answer here..."></textarea>
+        <button class="reveal-btn" onclick="toggleAnswer(this)"><span>&#128214;</span> Reveal Model Answer</button>
+        <div class="model-answer">
+            <p>The cutting grows into a new plant by <strong>mitosis</strong>, because new cells are needed for growth and development. Mitosis produces daughter cells that are <strong>genetically identical to the parent cell</strong>, as the DNA is replicated exactly during the S phase and then separated equally during nuclear division. Since only <strong>one parent is involved</strong> and no gametes or fertilisation occur, this is <strong>asexual reproduction</strong>, and the offspring is a genetic clone of the parent plant.</p>
+        </div>
+    </div>
+
+    <div class="content-card scaffold-box">
+        <h4>Scenario: After a skin wound, new cells are produced to repair the damaged tissue. Explain why mitosis, not meiosis, is used for this repair.</h4>
+        <textarea class="response-area" placeholder="Write your answer here..."></textarea>
+        <button class="reveal-btn" onclick="toggleAnswer(this)"><span>&#128214;</span> Reveal Model Answer</button>
+        <div class="model-answer">
+            <p>Mitosis is used because the replacement cells must be <strong>genetically identical to the original skin cells</strong> so they can carry out the <strong>same functions</strong> (e.g. producing the same structural proteins such as keratin). Mitosis produces <strong>diploid cells</strong> with the full set of 46 chromosomes. Meiosis would produce haploid cells with only 23 chromosomes, which would <strong>not have all the genes necessary</strong> to function as skin cells. Additionally, meiosis introduces <strong>genetic variation</strong>, which is not desirable when replacing specific tissue cells.</p>
+        </div>
+    </div>
+</div>
+
+<!-- ========== TIER 3 ========== -->
+<div class="section tier-section t3" id="tier3">
+    <div class="section-header">
+        <div class="section-number" style="background:linear-gradient(135deg, var(--tier3), #805ad5);">3</div>
+        <div>
+            <div class="tier-badge t3">Tier 3 | Target: B&ndash;A Grade | AO3: Analysis &amp; Evaluation</div>
+            <h2>Analysis &amp; Evaluation</h2>
+        </div>
+    </div>
+
+    <!-- EXTENDED RESPONSE -->
+    <h3>Extended Response Practice (6 marks)</h3>
+    <div class="content-card">
+        <h4>Evaluate the importance of meiosis in maintaining genetic variation within a population. (6 marks)</h4>
+        <p style="color:var(--text-muted); font-size:0.9rem;">Plan your answer using this checklist:</p>
+        <ul class="planning-checklist">
+            <li>Define meiosis and state what it produces</li>
+            <li>Explain crossing over and its effect on allele combinations</li>
+            <li>Explain independent assortment and its effect</li>
+            <li>Link to random fertilisation as a further source of variation</li>
+            <li>Evaluate &mdash; why is genetic variation important for survival/natural selection?</li>
+            <li>Conclude with a judgement about the overall significance of meiosis</li>
+        </ul>
+        <textarea class="response-area" style="min-height:200px;" placeholder="Write your extended response here..."></textarea>
+        <button class="reveal-btn" onclick="toggleAnswer(this)"><span>&#128214;</span> Reveal Model Answer</button>
+        <div class="model-answer">
+            <p>Meiosis is a form of nuclear division that produces <strong>four genetically different haploid gametes</strong> from a single diploid parent cell. It is the primary source of genetic variation in sexually reproducing organisms.</p>
+            <p>During <strong>prophase I</strong>, homologous chromosomes pair up to form bivalents and <strong>crossing over</strong> occurs. Non-sister chromatids exchange sections of DNA at chiasmata, producing <strong>recombinant chromatids with new combinations of alleles</strong>. This means each gamete can carry a unique set of alleles that was not present in the parent.</p>
+            <p>During <strong>metaphase I</strong>, homologous pairs align randomly on the metaphase plate in a process called <strong>independent assortment</strong>. Because each pair can orient in two ways, a human cell (with 23 pairs) can produce <strong>2<sup>23</sup> (over 8 million) different combinations</strong> of maternal and paternal chromosomes in the gametes.</p>
+            <p>When combined with <strong>random fertilisation</strong> &mdash; any sperm can fuse with any egg &mdash; the total number of possible genetic combinations becomes enormous (2<sup>23</sup> &times; 2<sup>23</sup> = over 70 trillion), and this is before accounting for crossing over.</p>
+            <p>This genetic variation is <strong>critically important for the survival of a population</strong>. It provides the raw material for <strong>natural selection</strong>: in a changing environment, some individuals will have allele combinations that confer a selective advantage, enabling them to survive and reproduce. Without meiosis, offspring would be genetically identical to their parents, and a population could be wiped out by a single disease or environmental change.</p>
+            <p>In conclusion, meiosis is <strong>fundamentally important</strong> for maintaining genetic diversity. Through crossing over, independent assortment and its link to random fertilisation, it ensures that each generation contains genetically unique individuals, enabling populations to <strong>adapt and evolve</strong> over time.</p>
+        </div>
+    </div>
+
+    <!-- EVALUATION TASK -->
+    <h3>Evaluation Task</h3>
+    <div class="content-card">
+        <h4>Some organisms reproduce only asexually (by mitosis). Evaluate whether this is an advantage or disadvantage compared to sexual reproduction involving meiosis. (6 marks)</h4>
+        <textarea class="response-area" style="min-height:180px;" placeholder="Consider: speed of reproduction, energy cost, genetic variation, adaptation to changing environments, disease susceptibility..."></textarea>
+        <button class="reveal-btn" onclick="toggleAnswer(this)"><span>&#128214;</span> Reveal Model Answer</button>
+        <div class="model-answer">
+            <p><strong>Advantages of asexual reproduction:</strong> It is faster as no mate is needed; all individuals can reproduce; offspring are genetically identical to the parent, which is advantageous in <strong>stable environments</strong> where the parent is already well-adapted; less energy is expended as there is no need to produce gametes or find a mate.</p>
+            <p><strong>Disadvantages of asexual reproduction:</strong> No genetic variation is produced (no crossing over, independent assortment or random fertilisation). This means the population is <strong>vulnerable to environmental change</strong> &mdash; a single disease or change in conditions could eliminate the entire population. There is <strong>no raw material for natural selection</strong> to act upon, so the population cannot evolve and adapt over time.</p>
+            <p><strong>Evaluation:</strong> Overall, while asexual reproduction is advantageous in stable environments for rapid population growth, sexual reproduction (involving meiosis) provides a <strong>significant long-term advantage</strong> because the genetic variation produced allows populations to adapt to changing conditions and resist pathogens. This is why the vast majority of complex organisms use sexual reproduction.</p>
+        </div>
+    </div>
+
+    <!-- DATA ANALYSIS -->
+    <h3>Data Analysis</h3>
+    <div class="content-card">
+        <h4>The table below shows chromosome numbers for different organisms. Use the data to answer the questions.</h4>
+        <table class="data-table">
+            <tr><th>Organism</th><th>Diploid number (2n)</th><th>Haploid number (n)</th></tr>
+            <tr><td>Human</td><td>46</td><td>23</td></tr>
+            <tr><td>Fruit fly</td><td>8</td><td>4</td></tr>
+            <tr><td>Potato</td><td>48</td><td>24</td></tr>
+            <tr><td>Dog</td><td>78</td><td>39</td></tr>
+            <tr><td>Wheat</td><td>42</td><td>21</td></tr>
+        </table>
+        <h4 style="margin-top:20px;">Questions:</h4>
+        <p><strong>(a)</strong> Calculate the number of possible chromosome combinations in the gametes of a fruit fly due to independent assortment alone. Show your working.</p>
+        <textarea class="response-area" style="min-height:80px;" placeholder="Working and answer..."></textarea>
+        <button class="reveal-btn" onclick="toggleAnswer(this)"><span>&#128214;</span> Reveal Answer</button>
+        <div class="model-answer">
+            <p>Number of pairs (n) = 4. Possible combinations = <strong>2<sup>n</sup> = 2<sup>4</sup> = 16 different combinations</strong>.</p>
+        </div>
+
+        <p style="margin-top:16px;"><strong>(b)</strong> A dog has a diploid number of 78. If two dogs mate, calculate the total number of possible zygote combinations due to independent assortment alone (ignoring crossing over).</p>
+        <textarea class="response-area" style="min-height:80px;" placeholder="Working and answer..."></textarea>
+        <button class="reveal-btn" onclick="toggleAnswer(this)"><span>&#128214;</span> Reveal Answer</button>
+        <div class="model-answer">
+            <p>n = 39. Each parent can produce 2<sup>39</sup> different gametes. Total combinations = 2<sup>39</sup> &times; 2<sup>39</sup> = <strong>2<sup>78</sup> &asymp; 3.0 &times; 10<sup>23</sup></strong> possible combinations. This is an astronomically large number, illustrating the enormous genetic diversity possible from independent assortment and random fertilisation alone.</p>
+        </div>
+
+        <p style="margin-top:16px;"><strong>(c)</strong> Explain why the actual number of genetically different gametes produced by an organism is even greater than the value calculated from independent assortment alone.</p>
+        <textarea class="response-area" style="min-height:80px;" placeholder="Your explanation..."></textarea>
+        <button class="reveal-btn" onclick="toggleAnswer(this)"><span>&#128214;</span> Reveal Answer</button>
+        <div class="model-answer">
+            <p>The calculation 2<sup>n</sup> only accounts for <strong>independent assortment</strong> &mdash; the random orientation of homologous pairs. <strong>Crossing over</strong> during prophase I creates additional variation by exchanging sections of DNA between non-sister chromatids, producing <strong>recombinant chromosomes</strong> with new allele combinations. Since crossing over can occur at different points along the chromosomes and involves different chromatids, the number of genetically different gametes is <strong>far greater</strong> than 2<sup>n</sup>.</p>
+        </div>
+    </div>
+
+    <!-- SYNOPTIC LINKS -->
+    <h3>Synoptic Links</h3>
+    <div class="content-card think-deeper">
+        <h4>Think Deeper: Linking Cell Division to DNA Replication</h4>
+        <span class="synoptic-link">Links to: Ch 2B &mdash; DNA Replication</span>
+        <span class="synoptic-link">Links to: Ch 2C &mdash; Mutations</span>
+        <p style="margin-top:14px;"><strong>Question:</strong> DNA replication occurs during the S phase of interphase before both mitosis and meiosis. Explain why accurate DNA replication is essential before mitosis, and discuss what could happen if errors (mutations) occur during this process.</p>
+        <textarea class="response-area" style="min-height:160px;" placeholder="Consider: semi-conservative replication, base pairing, DNA polymerase proofreading, consequences of mutation for daughter cells, link to cancer..."></textarea>
+        <button class="reveal-btn" onclick="toggleAnswer(this)"><span>&#128214;</span> Reveal Model Answer</button>
+        <div class="model-answer">
+            <p>During the S phase, DNA replication occurs by the <strong>semi-conservative mechanism</strong>: the double helix unwinds, hydrogen bonds between complementary base pairs break, and each strand acts as a template. <strong>DNA polymerase</strong> adds free nucleotides by complementary base pairing (A-T, C-G), producing two identical copies of each DNA molecule.</p>
+            <p>Accurate replication is essential before mitosis because the purpose of mitosis is to produce <strong>genetically identical daughter cells</strong>. If replication errors occur and are not corrected by proofreading enzymes, <strong>mutations</strong> may be introduced. These mutations will be passed to both daughter cells and all subsequent cells produced from them.</p>
+            <p>If a mutation affects a <strong>gene controlling the cell cycle</strong> (e.g. a proto-oncogene or tumour suppressor gene), the cell may divide uncontrollably, leading to <strong>tumour formation and potentially cancer</strong>. This illustrates how the accuracy of DNA replication is fundamentally linked to the proper regulation of cell division.</p>
+        </div>
+    </div>
+
+    <div class="content-card think-deeper">
+        <h4>Think Deeper: Cell Division and Cell Ultrastructure</h4>
+        <span class="synoptic-link">Links to: Ch 3A &mdash; Cell Ultrastructure</span>
+        <p style="margin-top:14px;"><strong>Question:</strong> Explain the role of the centrioles and the spindle fibres (microtubules) during mitosis. Why are centrioles absent in most plant cells, and how do plant cells still manage to divide?</p>
+        <textarea class="response-area" style="min-height:140px;" placeholder="Your answer..."></textarea>
+        <button class="reveal-btn" onclick="toggleAnswer(this)"><span>&#128214;</span> Reveal Model Answer</button>
+        <div class="model-answer">
+            <p>In animal cells, <strong>centrioles</strong> move to opposite poles during prophase and organise the <strong>spindle fibres</strong> (composed of microtubules made of the protein tubulin). Spindle fibres attach to <strong>centromeres</strong> of chromosomes at the kinetochore and are responsible for moving chromosomes during anaphase.</p>
+            <p>Most plant cells <strong>lack centrioles</strong> but can still form a spindle. They use <strong>microtubule organising centres (MTOCs)</strong> at each pole to nucleate spindle fibres. The process of chromosome separation is functionally the same. Additionally, during cytokinesis, plant cells cannot pinch inward due to their <strong>rigid cell wall</strong>; instead, vesicles from the <strong>Golgi apparatus</strong> fuse at the equator to form a <strong>cell plate</strong>, which develops into a new cell wall.</p>
+        </div>
+    </div>
+</div>
+
+<!-- ========== EXAM PRACTICE ========== -->
+<div class="section" id="exam">
+    <div class="section-header">
+        <div class="section-number">E</div>
+        <h2>Exam Practice</h2>
+    </div>
+
+    <!-- 2 MARK -->
+    <div class="content-card">
+        <h4>2-Mark Question</h4>
+        <p><strong>State two differences between mitosis and meiosis. (2 marks)</strong></p>
+        <textarea class="response-area" style="min-height:80px;" placeholder="Your answer..."></textarea>
+        <button class="reveal-btn" onclick="toggleAnswer(this)"><span>&#128214;</span> Reveal Mark Scheme</button>
+        <div class="model-answer">
+            <div class="mark-scheme">
+                <div class="mark-point">Mitosis produces 2 daughter cells; meiosis produces 4 daughter cells (1 mark)</div>
+                <div class="mark-point">Mitosis produces genetically identical / diploid cells; meiosis produces genetically different / haploid cells (1 mark)</div>
+            </div>
+            <p style="margin-top:8px; color:var(--text-muted); font-size:0.85rem;">Accept: crossing over occurs in meiosis but not mitosis; homologous pairing occurs in meiosis but not mitosis; mitosis involves one division, meiosis involves two.</p>
+        </div>
+    </div>
+
+    <!-- 4 MARK -->
+    <div class="content-card">
+        <h4>4-Mark Question</h4>
+        <p><strong>Describe the process of double fertilisation in flowering plants. (4 marks)</strong></p>
+        <textarea class="response-area" style="min-height:120px;" placeholder="Your answer..."></textarea>
+        <button class="reveal-btn" onclick="toggleAnswer(this)"><span>&#128214;</span> Reveal Mark Scheme</button>
+        <div class="model-answer">
+            <div class="mark-scheme">
+                <div class="mark-point">Pollen grain lands on stigma; pollen tube grows down the style towards the ovule, controlled by the tube nucleus (1 mark)</div>
+                <div class="mark-point">The generative nucleus divides by mitosis to produce two male gamete nuclei (1 mark)</div>
+                <div class="mark-point">One male gamete nucleus fuses with the egg cell nucleus to form a diploid zygote (which develops into the embryo) (1 mark)</div>
+                <div class="mark-point">The other male gamete nucleus fuses with the two polar nuclei in the central cell to form the triploid (3n) endosperm nucleus (which develops into a food store) (1 mark)</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 6 MARK -->
+    <div class="content-card">
+        <h4>6-Mark Question</h4>
+        <p><strong>Describe and explain how the structure of a mammalian sperm cell and egg cell are adapted for their roles in fertilisation. (6 marks)</strong></p>
+        <p style="color:var(--text-muted); font-size:0.9rem;">Plan your answer:</p>
+        <ul class="planning-checklist">
+            <li>Sperm: streamlined shape, acrosome, many mitochondria, flagellum/tail, haploid nucleus</li>
+            <li>Egg: large size, cytoplasm with nutrients, cortical granules, haploid nucleus, zona pellucida</li>
+            <li>Link each structural feature to its function</li>
+        </ul>
+        <textarea class="response-area" style="min-height:200px;" placeholder="Write your answer here..."></textarea>
+        <button class="reveal-btn" onclick="toggleAnswer(this)"><span>&#128214;</span> Reveal Model Answer</button>
+        <div class="model-answer">
+            <p><strong>Sperm cell adaptations:</strong></p>
+            <p>The sperm cell has a <strong>streamlined shape</strong> to reduce friction as it swims through the female reproductive tract. It possesses a <strong>long flagellum (tail)</strong> which enables it to swim towards the egg. The <strong>mid-piece contains many mitochondria</strong> arranged in a spiral, which carry out aerobic respiration to release the <strong>ATP needed to power the movement of the flagellum</strong>. The <strong>acrosome</strong> at the head contains hydrolytic enzymes (e.g. hyaluronidase and acrosin) that <strong>digest the protective layers</strong> (zona pellucida and follicle cells) surrounding the egg, allowing the sperm to penetrate. The nucleus is <strong>haploid (n)</strong> so that when it fuses with the haploid egg, the <strong>diploid number (2n) is restored</strong>.</p>
+            <p><strong>Egg cell adaptations:</strong></p>
+            <p>The egg cell is much <strong>larger than the sperm</strong> because it contains a large volume of <strong>cytoplasm rich in nutrients</strong> (lipid droplets, proteins) to nourish the early embryo after fertilisation. It has a <strong>haploid nucleus</strong> to ensure the correct diploid number upon fertilisation. The egg is surrounded by a <strong>zona pellucida</strong> (glycoprotein layer) which contains receptors for sperm binding and prevents polyspermy. After fertilisation, <strong>cortical granules</strong> release their contents, causing the zona pellucida to harden (the <strong>cortical reaction</strong>), blocking further sperm entry and ensuring only one sperm fertilises the egg.</p>
+        </div>
+    </div>
+</div>
+
+<!-- ========== FINAL ASSESSMENT ========== -->
+<div class="section" id="final">
+    <div class="section-header">
+        <div class="section-number">F</div>
+        <h2>Final Assessment</h2>
+    </div>
+    <p>Test your understanding across all three assessment objectives. These questions are more challenging than the diagnostic.</p>
+    <div id="finalScore" class="score-bar" style="display:none;">
+        <span id="finalScoreText">0 / 6</span>
+        <div class="score-track"><div class="score-fill" id="finalScoreFill" style="width:0%"></div></div>
+    </div>
+
+    <div class="content-card quiz-container" data-quiz="final" data-qnum="1">
+        <div class="quiz-question">1. A cell in G2 of interphase has 24 chromosomes. How many DNA molecules does it contain?</div>
+        <div class="quiz-options">
+            <button class="quiz-option" onclick="checkQuiz(this, false, 'final')">12</button>
+            <button class="quiz-option" onclick="checkQuiz(this, false, 'final')">24</button>
+            <button class="quiz-option" onclick="checkQuiz(this, true, 'final')">48</button>
+            <button class="quiz-option" onclick="checkQuiz(this, false, 'final')">96</button>
+        </div>
+        <div class="quiz-feedback">After the S phase, DNA has been replicated. Each chromosome consists of two sister chromatids joined at the centromere, so 24 chromosomes &times; 2 = 48 DNA molecules.</div>
+    </div>
+
+    <div class="content-card quiz-container" data-quiz="final" data-qnum="2">
+        <div class="quiz-question">2. Which of the following events occurs in meiosis but NOT in mitosis?</div>
+        <div class="quiz-options">
+            <button class="quiz-option" onclick="checkQuiz(this, false, 'final')">Condensation of chromosomes during prophase</button>
+            <button class="quiz-option" onclick="checkQuiz(this, true, 'final')">Formation of bivalents and crossing over during prophase I</button>
+            <button class="quiz-option" onclick="checkQuiz(this, false, 'final')">Attachment of spindle fibres to centromeres</button>
+            <button class="quiz-option" onclick="checkQuiz(this, false, 'final')">Separation of sister chromatids during anaphase</button>
+        </div>
+        <div class="quiz-feedback">Bivalent formation (synapsis) and crossing over are unique to meiosis I. The other events occur in both mitosis and meiosis.</div>
+    </div>
+
+    <div class="content-card quiz-container" data-quiz="final" data-qnum="3">
+        <div class="quiz-question">3. In a species with a diploid number of 6, how many different gamete combinations are possible from independent assortment alone?</div>
+        <div class="quiz-options">
+            <button class="quiz-option" onclick="checkQuiz(this, false, 'final')">3</button>
+            <button class="quiz-option" onclick="checkQuiz(this, false, 'final')">6</button>
+            <button class="quiz-option" onclick="checkQuiz(this, true, 'final')">8</button>
+            <button class="quiz-option" onclick="checkQuiz(this, false, 'final')">64</button>
+        </div>
+        <div class="quiz-feedback">2n = 6, so n = 3. Possible combinations = 2<sup>n</sup> = 2<sup>3</sup> = 8.</div>
+    </div>
+
+    <div class="content-card quiz-container" data-quiz="final" data-qnum="4">
+        <div class="quiz-question">4. During double fertilisation in plants, the endosperm nucleus is:</div>
+        <div class="quiz-options">
+            <button class="quiz-option" onclick="checkQuiz(this, false, 'final')">Haploid (n)</button>
+            <button class="quiz-option" onclick="checkQuiz(this, false, 'final')">Diploid (2n)</button>
+            <button class="quiz-option" onclick="checkQuiz(this, true, 'final')">Triploid (3n)</button>
+            <button class="quiz-option" onclick="checkQuiz(this, false, 'final')">Tetraploid (4n)</button>
+        </div>
+        <div class="quiz-feedback">One male gamete nucleus (n) fuses with two polar nuclei (n + n) = triploid endosperm nucleus (3n).</div>
+    </div>
+
+    <div class="content-card quiz-container" data-quiz="final" data-qnum="5">
+        <div class="quiz-question">5. A farmer breeds genetically identical strawberry plants using runners (a form of asexual reproduction). Which statement best evaluates the risk of this approach?</div>
+        <div class="quiz-options">
+            <button class="quiz-option" onclick="checkQuiz(this, false, 'final')">The plants will evolve quickly to resist new diseases</button>
+            <button class="quiz-option" onclick="checkQuiz(this, true, 'final')">A single disease could destroy the entire crop because all plants share the same alleles and therefore the same susceptibilities</button>
+            <button class="quiz-option" onclick="checkQuiz(this, false, 'final')">The strawberries will have increased genetic variation</button>
+            <button class="quiz-option" onclick="checkQuiz(this, false, 'final')">The plants will produce haploid offspring</button>
+        </div>
+        <div class="quiz-feedback">Without genetic variation, all individuals have the same susceptibility. This is a key evaluation point linking asexual reproduction, mitosis and genetic vulnerability.</div>
+    </div>
+
+    <div class="content-card quiz-container" data-quiz="final" data-qnum="6">
+        <div class="quiz-question">6. Which of the following correctly describes the roles of the tube nucleus and generative nucleus in a pollen grain?</div>
+        <div class="quiz-options">
+            <button class="quiz-option" onclick="checkQuiz(this, false, 'final')">The tube nucleus divides to form gametes; the generative nucleus controls pollen tube growth</button>
+            <button class="quiz-option" onclick="checkQuiz(this, true, 'final')">The tube nucleus controls pollen tube growth; the generative nucleus divides by mitosis to form two male gamete nuclei</button>
+            <button class="quiz-option" onclick="checkQuiz(this, false, 'final')">Both nuclei fuse with the egg cell during fertilisation</button>
+            <button class="quiz-option" onclick="checkQuiz(this, false, 'final')">The tube nucleus forms the embryo; the generative nucleus forms the endosperm</button>
+        </div>
+        <div class="quiz-feedback">The tube nucleus directs the growth of the pollen tube down the style. The generative nucleus undergoes mitosis to produce two male gamete nuclei for double fertilisation.</div>
+    </div>
+</div>
+
+<!-- ========== CONFIDENCE CHECK ========== -->
+<div class="section" id="confidence">
+    <div class="section-header">
+        <div class="section-number">C</div>
+        <h2>Confidence Check</h2>
+    </div>
+    <p>How confident do you feel about this topic now? Select one.</p>
+    <div class="confidence-grid">
+        <button class="confidence-btn" onclick="selectConfidence(this)"><span class="confidence-emoji">&#128534;</span>Not confident &mdash; I need to revisit the basics</button>
+        <button class="confidence-btn" onclick="selectConfidence(this)"><span class="confidence-emoji">&#128528;</span>Getting there &mdash; I know the recall but struggle with application</button>
+        <button class="confidence-btn" onclick="selectConfidence(this)"><span class="confidence-emoji">&#128578;</span>Fairly confident &mdash; I can explain and compare</button>
+        <button class="confidence-btn" onclick="selectConfidence(this)"><span class="confidence-emoji">&#128170;</span>Very confident &mdash; I can analyse, evaluate and make synoptic links</button>
+    </div>
+</div>
+
+<!-- ========== VOCABULARY ========== -->
+<div class="section" id="vocab">
+    <div class="section-header">
+        <div class="section-number">V</div>
+        <h2>Vocabulary Grid</h2>
+    </div>
+    <div class="vocab-grid">
+        <div class="vocab-item"><div class="vocab-term">Cell Cycle</div><div class="vocab-def">The regulated sequence of interphase, mitosis and cytokinesis in which a cell grows and divides.</div></div>
+        <div class="vocab-item"><div class="vocab-term">Interphase</div><div class="vocab-def">The phase of the cell cycle where the cell grows and replicates its DNA (G1, S, G2 sub-phases).</div></div>
+        <div class="vocab-item"><div class="vocab-term">G1 Phase</div><div class="vocab-def">First growth phase of interphase; cell grows, organelles replicate, proteins are synthesised.</div></div>
+        <div class="vocab-item"><div class="vocab-term">S Phase</div><div class="vocab-def">Synthesis phase; DNA replication occurs, each chromosome becomes two sister chromatids.</div></div>
+        <div class="vocab-item"><div class="vocab-term">G2 Phase</div><div class="vocab-def">Second growth phase; cell checks replicated DNA and prepares for mitosis (e.g. synthesises spindle proteins).</div></div>
+        <div class="vocab-item"><div class="vocab-term">Mitosis</div><div class="vocab-def">Nuclear division producing two genetically identical diploid nuclei. Stages: PMAT.</div></div>
+        <div class="vocab-item"><div class="vocab-term">Cytokinesis</div><div class="vocab-def">Division of the cytoplasm to form two separate daughter cells after nuclear division.</div></div>
+        <div class="vocab-item"><div class="vocab-term">Prophase</div><div class="vocab-def">Chromosomes condense and become visible; nuclear envelope breaks down; spindle fibres form.</div></div>
+        <div class="vocab-item"><div class="vocab-term">Metaphase</div><div class="vocab-def">Chromosomes align on the cell equator (metaphase plate); spindle fibres attach to centromeres.</div></div>
+        <div class="vocab-item"><div class="vocab-term">Anaphase</div><div class="vocab-def">Centromeres split; sister chromatids are pulled to opposite poles by spindle fibres.</div></div>
+        <div class="vocab-item"><div class="vocab-term">Telophase</div><div class="vocab-def">Chromosomes reach the poles and decondense; nuclear envelopes reform around each set.</div></div>
+        <div class="vocab-item"><div class="vocab-term">Meiosis</div><div class="vocab-def">Nuclear division producing four genetically different haploid cells from one diploid cell; two divisions (I and II).</div></div>
+        <div class="vocab-item"><div class="vocab-term">Haploid (n)</div><div class="vocab-def">Having one complete set of chromosomes. Gametes are haploid.</div></div>
+        <div class="vocab-item"><div class="vocab-term">Diploid (2n)</div><div class="vocab-def">Having two complete sets of chromosomes, one from each parent. Body cells are diploid.</div></div>
+        <div class="vocab-item"><div class="vocab-term">Homologous Chromosomes</div><div class="vocab-def">A matching pair of chromosomes (same size, same gene loci) with one from each parent.</div></div>
+        <div class="vocab-item"><div class="vocab-term">Bivalent</div><div class="vocab-def">A pair of homologous chromosomes associated together during prophase I of meiosis.</div></div>
+        <div class="vocab-item"><div class="vocab-term">Crossing Over</div><div class="vocab-def">Exchange of DNA between non-sister chromatids of homologous chromosomes during prophase I.</div></div>
+        <div class="vocab-item"><div class="vocab-term">Chiasma (pl. chiasmata)</div><div class="vocab-def">The point where crossing over occurs between non-sister chromatids.</div></div>
+        <div class="vocab-item"><div class="vocab-term">Independent Assortment</div><div class="vocab-def">Random orientation of homologous pairs during metaphase I, leading to random combinations in gametes.</div></div>
+        <div class="vocab-item"><div class="vocab-term">Gamete</div><div class="vocab-def">A haploid sex cell that fuses with another gamete at fertilisation (e.g. sperm, egg, pollen).</div></div>
+        <div class="vocab-item"><div class="vocab-term">Zygote</div><div class="vocab-def">A diploid cell formed by fusion of two haploid gametes; the first cell of a new organism.</div></div>
+        <div class="vocab-item"><div class="vocab-term">Fertilisation</div><div class="vocab-def">Fusion of two haploid gamete nuclei to form a diploid zygote, restoring the diploid number.</div></div>
+        <div class="vocab-item"><div class="vocab-term">Pollen Grain</div><div class="vocab-def">Male gametophyte in plants; contains tube nucleus and generative nucleus.</div></div>
+        <div class="vocab-item"><div class="vocab-term">Tube Nucleus</div><div class="vocab-def">Controls the growth of the pollen tube down through the style towards the ovule.</div></div>
+        <div class="vocab-item"><div class="vocab-term">Generative Nucleus</div><div class="vocab-def">Divides by mitosis to form two male gamete nuclei for double fertilisation.</div></div>
+        <div class="vocab-item"><div class="vocab-term">Embryo Sac</div><div class="vocab-def">Mature female gametophyte; contains the egg cell, polar nuclei, synergids and antipodal cells.</div></div>
+        <div class="vocab-item"><div class="vocab-term">Double Fertilisation</div><div class="vocab-def">In plants: one male nucleus fuses with egg (zygote), the other fuses with polar nuclei (triploid endosperm).</div></div>
+        <div class="vocab-item"><div class="vocab-term">Endosperm</div><div class="vocab-def">Triploid (3n) nutritive tissue formed from fusion of male gamete nucleus with two polar nuclei.</div></div>
+        <div class="vocab-item"><div class="vocab-term">Acrosome</div><div class="vocab-def">Structure at the head of a sperm cell containing enzymes to digest the egg's protective layers.</div></div>
+        <div class="vocab-item"><div class="vocab-term">Cortical Reaction</div><div class="vocab-def">Release of cortical granule contents after fertilisation, hardening the zona pellucida to prevent polyspermy.</div></div>
+    </div>
+</div>
+
+</div><!-- end container -->
+
+<!-- FOOTER -->
+<footer>
+    <p>IAL Biology &bull; Cell Division, Meiosis &amp; Reproduction &bull; Topic Review</p>
+    <p style="margin-top:8px; font-size:0.8rem;">Created for revision purposes. Always refer to your specification and textbook for definitive content.</p>
+</footer>
+
+<script>
+// ===== QUIZ SYSTEM =====
+const quizScores = {};
+
+function checkQuiz(option, isCorrect, quizGroup) {
+    const container = option.closest('.quiz-container');
+    const options = container.querySelectorAll('.quiz-option');
+    const feedback = container.querySelector('.quiz-feedback');
+    if (option.classList.contains('disabled')) return;
+
+    options.forEach(opt => {
+        opt.classList.add('disabled');
+        if (opt === option && !isCorrect) opt.classList.add('incorrect');
+        if (opt === option && isCorrect) opt.classList.add('correct');
+        // show correct answer
+        if (opt !== option) {
+            const isThisCorrect = opt.getAttribute('onclick').includes('true');
+            if (isThisCorrect) opt.classList.add('show-correct');
+        }
+    });
+
+    if (isCorrect) {
+        feedback.classList.add('correct-fb');
+    } else {
+        feedback.classList.add('incorrect-fb');
+    }
+
+    // Track score
+    if (!quizScores[quizGroup]) quizScores[quizGroup] = { correct: 0, total: 0 };
+    quizScores[quizGroup].total++;
+    if (isCorrect) quizScores[quizGroup].correct++;
+    updateQuizScore(quizGroup);
+}
+
+function updateQuizScore(group) {
+    const totalQs = document.querySelectorAll('[data-quiz="' + group + '"]').length;
+    const scoreBar = document.getElementById(group + 'Score');
+    const scoreText = document.getElementById(group + 'ScoreText');
+    const scoreFill = document.getElementById(group + 'ScoreFill');
+    if (!scoreBar) return;
+    const s = quizScores[group] || { correct: 0, total: 0 };
+    scoreBar.style.display = 'flex';
+    scoreText.textContent = s.correct + ' / ' + totalQs;
+    scoreFill.style.width = ((s.correct / totalQs) * 100) + '%';
+}
+
+// ===== FLASHCARD =====
+function toggleFlashcard(card) {
+    const answer = card.querySelector('.flashcard-answer');
+    const hint = card.querySelector('.tap-hint');
+    answer.classList.toggle('show');
+    hint.textContent = answer.classList.contains('show') ? 'Tap to hide' : 'Tap to reveal';
+}
+
+// ===== TOGGLE ANSWER =====
+function toggleAnswer(button) {
+    const content = button.nextElementSibling;
+    content.classList.toggle('show');
+    button.innerHTML = content.classList.contains('show')
+        ? '<span>&#128213;</span> Hide Answer'
+        : '<span>&#128214;</span> Reveal Model Answer';
+}
+
+// ===== FILL IN BLANKS =====
+function checkBlanks(btn) {
+    const card = btn.closest('.content-card');
+    const inputs = card.querySelectorAll('.blank-input');
+    let correct = 0;
+    inputs.forEach(input => {
+        const answer = input.getAttribute('data-answer').toLowerCase().trim();
+        const userAnswer = input.value.toLowerCase().trim();
+        if (userAnswer === answer) {
+            input.classList.remove('incorrect-input');
+            input.classList.add('correct-input');
+            correct++;
+        } else {
+            input.classList.remove('correct-input');
+            input.classList.add('incorrect-input');
+        }
+    });
+    btn.textContent = correct + ' / ' + inputs.length + ' correct' + (correct === inputs.length ? ' — Well done!' : ' — Try again!');
+}
+
+// ===== MATCHING =====
+const matchState = {};
+function handleMatch(item, gridId) {
+    if (item.classList.contains('matched')) return;
+    if (!matchState[gridId]) matchState[gridId] = { selected: null };
+    const state = matchState[gridId];
+    const side = item.getAttribute('data-side');
+
+    if (!state.selected) {
+        state.selected = item;
+        item.classList.add('selected');
+    } else {
+        const prevSide = state.selected.getAttribute('data-side');
+        if (prevSide === side) {
+            state.selected.classList.remove('selected');
+            state.selected = item;
+            item.classList.add('selected');
+        } else {
+            const match1 = state.selected.getAttribute('data-match');
+            const match2 = item.getAttribute('data-match');
+            if (match1 === match2) {
+                state.selected.classList.remove('selected');
+                state.selected.classList.add('matched');
+                item.classList.add('matched');
+            } else {
+                state.selected.classList.remove('selected');
+                item.classList.add('wrong-match');
+                setTimeout(() => item.classList.remove('wrong-match'), 600);
+            }
+            state.selected = null;
+        }
+    }
+}
+
+// ===== REVEAL CELL (comparison table) =====
+function revealCell(cell) {
+    if (cell.classList.contains('revealed')) return;
+    cell.textContent = cell.getAttribute('data-val');
+    cell.classList.add('revealed');
+}
+
+// ===== SEQUENCE =====
+const seqState = {};
+function handleSequence(item, seqId) {
+    if (item.classList.contains('seq-placed')) return;
+    if (!seqState[seqId]) seqState[seqId] = { currentStep: 1 };
+    const state = seqState[seqId];
+    const container = document.getElementById(seqId);
+    const items = container.querySelectorAll('.sequence-item');
+
+    // Remove previous selections
+    items.forEach(i => i.classList.remove('seq-selected'));
+    item.classList.add('seq-selected');
+
+    const numEl = item.querySelector('.seq-num');
+    numEl.textContent = state.currentStep;
+    numEl.classList.add('filled');
+    item.classList.add('seq-placed');
+    item.classList.remove('seq-selected');
+    state.currentStep++;
+}
+
+function checkSequence(seqId) {
+    const container = document.getElementById(seqId);
+    const items = container.querySelectorAll('.sequence-item');
+    const resultEl = document.getElementById(seqId + 'Result');
+    let correct = 0;
+    let total = 0;
+    items.forEach(item => {
+        if (item.classList.contains('seq-placed')) {
+            total++;
+            const expected = parseInt(item.getAttribute('data-order'));
+            const placed = parseInt(item.querySelector('.seq-num').textContent);
+            if (expected === placed) {
+                correct++;
+                item.style.borderColor = 'var(--success-light)';
+            } else {
+                item.style.borderColor = 'var(--danger)';
+            }
+        }
+    });
+    if (total === 0) {
+        resultEl.innerHTML = '<span style="color:var(--text-muted);">Click the stages in order first!</span>';
+    } else {
+        resultEl.innerHTML = '<span style="color:' + (correct === items.length ? 'var(--success-light)' : 'var(--warning)') + ';">' + correct + ' / ' + items.length + ' in the correct position' + (correct === items.length ? ' — Perfect!' : '') + '</span>';
+    }
+}
+
+function resetSequence(seqId) {
+    const container = document.getElementById(seqId);
+    const items = container.querySelectorAll('.sequence-item');
+    const resultEl = document.getElementById(seqId + 'Result');
+    seqState[seqId] = { currentStep: 1 };
+    items.forEach(item => {
+        item.classList.remove('seq-placed', 'seq-selected');
+        item.style.borderColor = '';
+        const numEl = item.querySelector('.seq-num');
+        numEl.textContent = '';
+        numEl.classList.remove('filled');
+    });
+    resultEl.innerHTML = '';
+}
+
+// ===== CELL CYCLE DIAGRAM =====
+function showPhase(phase) {
+    const info = document.getElementById('phaseInfo');
+    const data = {
+        g1: '<strong style="color:var(--tier1);">G1 Phase (First Growth Phase)</strong><br>The cell grows in size, synthesises proteins and organelles. It is metabolically very active. The cell carries out its normal functions. Checkpoints ensure the cell is ready to proceed to DNA replication. This is typically the longest phase of interphase.',
+        s: '<strong style="color:var(--tier2);">S Phase (Synthesis Phase)</strong><br>DNA replication occurs by semi-conservative replication. Each chromosome is copied to produce two identical sister chromatids joined at the centromere. The cell now has twice the normal amount of DNA. Histones and other chromosome proteins are also synthesised.',
+        g2: '<strong style="color:var(--accent);">G2 Phase (Second Growth Phase)</strong><br>The cell continues to grow and synthesises proteins needed for cell division, including tubulin for spindle fibres. ATP reserves are built up. The cell checks that DNA replication has been completed accurately before entering mitosis.',
+        m: '<strong style="color:var(--tier3);">Mitosis (M Phase)</strong><br>Nuclear division occurs in four stages: <em>Prophase</em> (chromosomes condense, spindle forms, nuclear envelope breaks down), <em>Metaphase</em> (chromosomes align at the equator), <em>Anaphase</em> (centromeres split, chromatids pulled to poles), <em>Telophase</em> (nuclear envelopes reform, chromosomes decondense).',
+        c: '<strong style="color:var(--accent-light);">Cytokinesis</strong><br>The cytoplasm divides to produce two separate daughter cells. In animal cells, a cleavage furrow forms as the membrane pinches inward. In plant cells, a cell plate forms from Golgi vesicles at the equator, which develops into a new cell wall and membrane.'
+    };
+    info.innerHTML = '<p>' + (data[phase] || '') + '</p>';
+}
+
+// ===== CONFIDENCE =====
+function selectConfidence(btn) {
+    document.querySelectorAll('.confidence-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+}
+
+// ===== SCROLL NAV =====
+function scrollToSection(id) {
+    const el = document.getElementById(id);
+    if (el) {
+        const navHeight = document.querySelector('.nav-progress').offsetHeight;
+        const y = el.getBoundingClientRect().top + window.pageYOffset - navHeight - 20;
+        window.scrollTo({ top: y, behavior: 'smooth' });
+    }
+}
+
+// ===== INTERSECTION OBSERVER FOR FADE-IN =====
+const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+        }
+    });
+}, { threshold: 0.08 });
+
+document.querySelectorAll('.section').forEach(s => observer.observe(s));
+
+// ===== SCROLL SPY FOR NAV =====
+const sectionIds = ['diagnostic','objectives','tier1','tier2','tier3','exam','final','vocab'];
+window.addEventListener('scroll', () => {
+    const navItems = document.querySelectorAll('.nav-item');
+    const scrollPos = window.scrollY + 120;
+    let activeIdx = 0;
+    sectionIds.forEach((id, idx) => {
+        const el = document.getElementById(id);
+        if (el && el.offsetTop <= scrollPos) activeIdx = idx;
+    });
+    navItems.forEach((item, idx) => {
+        item.classList.toggle('active', idx === activeIdx);
+    });
+});
+</script>
+</body>
+</html>

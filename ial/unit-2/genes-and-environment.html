@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>3C.2 Genes &amp; Environment — IAL Biology</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300..700;1,9..40,300..700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f5f0e8;--bg-warm:#efe8db;--ink:#1a1714;--ink-soft:#4a443b;--ink-muted:#8a8278;--accent:#c44b2b;--accent-light:#e8704f;--accent-bg:#fdf0ec;--teal:#1a7a6d;--teal-light:#e6f5f2;--teal-dark:#0f574d;--blue:#2a5d8f;--blue-light:#e8f0f8;--purple:#6b4c8a;--purple-light:#f0eaf5;--gold:#b8860b;--gold-light:#fdf6e3;--success:#2d8a4e;--success-bg:#e8f5ed;--error:#c44b2b;--error-bg:#fdf0ec;--card:#fffdf8;--card-border:#e0d8cc;--radius:6px;--radius-lg:12px;--shadow-sm:0 1px 3px rgba(26,23,20,0.06);--shadow-md:0 4px 12px rgba(26,23,20,0.08);--shadow-lg:0 8px 30px rgba(26,23,20,0.12);--font-display:'Instrument Serif',Georgia,serif;--font-body:'DM Sans',-apple-system,sans-serif;--font-mono:'JetBrains Mono',monospace}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}html{scroll-behavior:smooth;font-size:16px}body{font-family:var(--font-body);color:var(--ink);background:var(--bg);line-height:1.65;-webkit-font-smoothing:antialiased}
+.lesson-selector{display:flex;justify-content:center;gap:0.5rem;padding:0.5rem 1rem;background:rgba(239,232,219,0.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--card-border);position:fixed;top:0;left:0;right:0;z-index:1001}
+.lesson-pill{padding:0.3rem 0.8rem;border-radius:20px;background:var(--card);border:1px solid var(--card-border);font-size:0.75rem;font-family:var(--font-body);font-weight:600;color:var(--ink-soft);text-decoration:none;transition:all 0.2s;white-space:nowrap}
+.lesson-pill:hover{border-color:var(--accent);color:var(--accent)}.lesson-pill.active{background:var(--accent);color:white;border-color:var(--accent)}
+.progress-bar{position:fixed;top:0;left:0;z-index:1002;height:3px;background:var(--accent);width:0%;transition:width 0.3s ease}
+.lesson-nav{position:fixed;top:34px;left:0;right:0;z-index:999;background:rgba(245,240,232,0.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--card-border);padding:0.5rem 1rem;display:flex;align-items:center;gap:0.8rem;font-size:0.82rem}
+.lesson-nav .nav-title{font-family:var(--font-display);font-size:0.95rem;color:var(--accent);white-space:nowrap}
+.nav-sections{display:flex;gap:0.25rem;overflow-x:auto;scrollbar-width:none;flex:1}.nav-sections::-webkit-scrollbar{display:none}
+.nav-pill{padding:0.3rem 0.7rem;border-radius:20px;background:transparent;border:1px solid transparent;cursor:pointer;white-space:nowrap;font-size:0.75rem;font-weight:600;color:var(--ink-soft);transition:all 0.2s;font-family:var(--font-body)}
+.nav-pill:hover{background:var(--card);border-color:var(--card-border)}.nav-pill.active{background:var(--accent);color:white;border-color:var(--accent)}
+.container{max-width:860px;margin:0 auto;padding:5.5rem 1.5rem 4rem}
+.hero{text-align:center;padding:2.5rem 0 2rem;animation:fadeUp 0.8s ease}
+.hero .spec-ref{display:inline-flex;gap:0.4rem;font-family:var(--font-mono);font-size:0.72rem;color:var(--ink-muted);letter-spacing:0.05em;margin-bottom:1rem}
+.hero .spec-ref span{background:var(--card);border:1px solid var(--card-border);padding:0.15rem 0.45rem;border-radius:4px}
+.hero h1{font-family:var(--font-display);font-size:clamp(2.2rem,5vw,3.2rem);line-height:1.15;color:var(--ink);margin-bottom:0.8rem}
+.hero h1 em{color:var(--accent);font-style:italic}
+.hero .subtitle{font-size:1.05rem;color:var(--ink-soft);max-width:600px;margin:0 auto 1.5rem}
+.big-question{background:linear-gradient(135deg,var(--accent-bg),var(--gold-light));border:1px solid #e8d4c0;border-radius:var(--radius-lg);padding:1.2rem 1.5rem;font-family:var(--font-display);font-size:1.05rem;font-style:italic;color:var(--accent);max-width:650px;margin:0 auto}
+.objectives-bar{background:var(--card);border:1px solid var(--card-border);border-radius:var(--radius-lg);padding:1.2rem 1.5rem;margin:2rem 0;box-shadow:var(--shadow-sm)}
+.objectives-bar summary{cursor:pointer;font-weight:600;font-size:0.85rem;text-transform:uppercase;letter-spacing:0.06em;color:var(--teal-dark);list-style:none;display:flex;align-items:center;gap:0.5rem}
+.objectives-bar summary::before{content:'🎯'}.objectives-bar summary::after{content:'▾';margin-left:auto;transition:transform 0.2s}.objectives-bar[open] summary::after{transform:rotate(180deg)}
+.objectives-list{margin-top:1rem;display:grid;gap:0.6rem}
+.obj-item{display:flex;align-items:flex-start;gap:0.6rem;font-size:0.92rem;color:var(--ink-soft);padding:0.5rem 0.7rem;border-radius:var(--radius);background:var(--teal-light);border-left:3px solid var(--teal)}
+.obj-item .obj-tag{font-family:var(--font-mono);font-size:0.7rem;background:var(--teal);color:white;padding:0.15rem 0.4rem;border-radius:3px;white-space:nowrap;margin-top:2px}
+.section{margin:3rem 0;opacity:0;transform:translateY(20px);transition:opacity 0.6s ease,transform 0.6s ease}.section.visible{opacity:1;transform:translateY(0)}
+.section-label{display:inline-flex;align-items:center;gap:0.5rem;font-family:var(--font-mono);font-size:0.72rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--ink-muted);margin-bottom:0.5rem}
+.section-label .dot{width:8px;height:8px;border-radius:50%;display:inline-block}.dot.red{background:var(--accent)}.dot.teal{background:var(--teal)}.dot.blue{background:var(--blue)}.dot.purple{background:var(--purple)}
+h2{font-family:var(--font-display);font-size:1.9rem;line-height:1.2;margin-bottom:0.6rem}
+h3{font-family:var(--font-display);font-size:1.35rem;line-height:1.3;margin-bottom:0.5rem;margin-top:1.8rem}h3:first-child{margin-top:0}
+p{margin-bottom:1rem;color:var(--ink-soft);font-size:0.95rem}p strong{color:var(--ink)}
+.card{background:var(--card);border:1px solid var(--card-border);border-radius:var(--radius-lg);padding:1.5rem;margin:1.2rem 0;box-shadow:var(--shadow-sm)}
+.key-term{display:inline;background:var(--gold-light);border-bottom:2px solid var(--gold);padding:0.1rem 0.3rem;border-radius:2px;cursor:help;position:relative}
+.key-term .term-def{display:none;position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);background:var(--ink);color:white;padding:0.6rem 0.8rem;border-radius:var(--radius);font-size:0.82rem;line-height:1.4;width:260px;z-index:50;box-shadow:var(--shadow-lg);font-weight:400}
+.key-term:hover .term-def{display:block}
+.exam-hint{background:var(--accent-bg);border-left:4px solid var(--accent);border-radius:0 var(--radius) var(--radius) 0;padding:1rem 1.2rem;margin:1.2rem 0;font-size:0.88rem}
+.exam-hint .hint-label{font-weight:700;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.06em;color:var(--accent);margin-bottom:0.3rem}
+.learning-tip{background:var(--teal-light);border-left:4px solid var(--teal);border-radius:0 var(--radius) var(--radius) 0;padding:1rem 1.2rem;margin:1.2rem 0;font-size:0.88rem}
+.learning-tip .tip-label{font-weight:700;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.06em;color:var(--teal-dark);margin-bottom:0.3rem}
+.scaffold{background:var(--purple-light);border-left:4px solid var(--purple);border-radius:0 var(--radius) var(--radius) 0;padding:1rem 1.2rem;margin:1.2rem 0;font-size:0.88rem}
+.scaffold .scaffold-label{font-weight:700;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.06em;color:var(--purple);margin-bottom:0.3rem}
+.struggle-box{background:var(--gold-light);border-left:4px solid var(--gold);border-radius:0 var(--radius) var(--radius) 0;padding:1rem 1.2rem;margin:1.2rem 0;font-size:0.88rem}
+.struggle-box .struggle-label{font-weight:700;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.06em;color:var(--gold);margin-bottom:0.3rem}
+.diagram-container{background:white;border:1px solid var(--card-border);border-radius:var(--radius-lg);padding:1.5rem;margin:1.5rem 0;position:relative;overflow:hidden}
+.diagram-title{font-family:var(--font-mono);font-size:0.72rem;text-transform:uppercase;letter-spacing:0.06em;color:var(--ink-muted);margin-bottom:1rem}
+.bio-svg{width:100%;height:auto}.bio-svg text{font-family:var(--font-body);font-size:11px;fill:var(--ink-soft)}.bio-svg .label-bold{font-weight:600;fill:var(--ink);font-size:12px}
+.bio-svg .highlight-part{cursor:pointer;transition:opacity 0.3s}.bio-svg .highlight-part:hover{opacity:0.8}
+.info-panel{background:var(--ink);color:white;padding:0.8rem 1rem;border-radius:var(--radius);font-size:0.85rem;line-height:1.5;margin-top:0.8rem;display:none;animation:fadeUp 0.3s ease}
+.info-panel.show{display:block}.info-panel .panel-title{font-weight:700;font-size:0.78rem;text-transform:uppercase;letter-spacing:0.04em;color:var(--accent-light);margin-bottom:0.2rem}
+.quiz-widget{background:var(--card);border:2px solid var(--card-border);border-radius:var(--radius-lg);padding:1.5rem;margin:1.5rem 0;box-shadow:var(--shadow-sm)}
+.quiz-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem}
+.quiz-type{font-family:var(--font-mono);font-size:0.7rem;text-transform:uppercase;letter-spacing:0.06em;color:white;padding:0.25rem 0.6rem;border-radius:20px}
+.quiz-type.ao1{background:var(--teal)}.quiz-type.ao2{background:var(--blue)}.quiz-type.ao3{background:var(--purple)}.quiz-type.diagnostic{background:var(--gold)}
+.quiz-question{font-size:1rem;font-weight:500;color:var(--ink);margin-bottom:1rem;line-height:1.5}
+.quiz-options{display:grid;gap:0.5rem}
+.quiz-option{padding:0.7rem 1rem;border:2px solid var(--card-border);border-radius:var(--radius);cursor:pointer;font-size:0.9rem;transition:all 0.2s;background:white;display:flex;align-items:center;gap:0.6rem}
+.quiz-option:hover{border-color:var(--teal);background:var(--teal-light)}.quiz-option.selected{border-color:var(--blue);background:var(--blue-light)}
+.quiz-option.correct{border-color:var(--success);background:var(--success-bg)}.quiz-option.incorrect{border-color:var(--error);background:var(--error-bg);opacity:0.7}
+.quiz-option .opt-letter{width:24px;height:24px;border-radius:50%;background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:600;flex-shrink:0}
+.quiz-option.correct .opt-letter{background:var(--success);color:white}.quiz-option.incorrect .opt-letter{background:var(--error);color:white}
+.quiz-feedback{margin-top:1rem;padding:0.8rem 1rem;border-radius:var(--radius);font-size:0.88rem;line-height:1.5;display:none}
+.quiz-feedback.show{display:block}.quiz-feedback.correct-fb{background:var(--success-bg);border-left:3px solid var(--success)}.quiz-feedback.incorrect-fb{background:var(--error-bg);border-left:3px solid var(--error)}
+.quiz-btn{margin-top:1rem;padding:0.6rem 1.2rem;background:var(--teal);color:white;border:none;border-radius:var(--radius);font-family:var(--font-body);font-size:0.85rem;font-weight:600;cursor:pointer;transition:background 0.2s}
+.quiz-btn:hover{background:var(--teal-dark)}.quiz-btn:disabled{opacity:0.5;cursor:not-allowed}
+.fill-blank-widget{margin:1.5rem 0}.fill-item{display:flex;align-items:center;gap:0.5rem;margin-bottom:0.7rem;font-size:0.92rem;flex-wrap:wrap}
+.fill-item .blank-input{border:none;border-bottom:2px dashed var(--card-border);background:transparent;font-family:var(--font-body);font-size:0.92rem;padding:0.2rem 0.5rem;width:180px;outline:none;transition:border-color 0.2s;color:var(--ink)}
+.fill-item .blank-input:focus{border-color:var(--teal)}.fill-item .blank-input.correct-input{border-color:var(--success);border-style:solid;color:var(--success)}.fill-item .blank-input.incorrect-input{border-color:var(--error);border-style:solid;color:var(--error)}
+.sequence-widget{background:var(--card);border:2px solid var(--card-border);border-radius:var(--radius-lg);padding:1.5rem;margin:1.5rem 0}
+.seq-items{display:grid;gap:0.4rem}.seq-item{display:flex;align-items:center;gap:0.7rem;padding:0.65rem 0.9rem;background:white;border:1.5px solid var(--card-border);border-radius:var(--radius);cursor:grab;user-select:none;transition:all 0.2s;font-size:0.9rem}
+.seq-item:active{cursor:grabbing}.seq-item:hover{border-color:var(--blue);background:var(--blue-light)}.seq-item.dragging{opacity:0.4}
+.seq-item .seq-num{width:26px;height:26px;border-radius:50%;background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:700;flex-shrink:0;color:var(--ink-muted)}
+.seq-item.correct-seq{border-color:var(--success);background:var(--success-bg)}.seq-item.correct-seq .seq-num{background:var(--success);color:white}
+.seq-item.incorrect-seq{border-color:var(--error);background:var(--error-bg)}.seq-item.incorrect-seq .seq-num{background:var(--error);color:white}
+.seq-item .grip{color:var(--ink-muted);font-size:1.1rem;flex-shrink:0}
+.scenario-card{background:var(--blue-light);border:1px solid #c8daea;border-radius:var(--radius-lg);padding:1.2rem 1.5rem;margin:1.2rem 0}
+.scenario-card .scenario-label{font-family:var(--font-mono);font-size:0.7rem;text-transform:uppercase;letter-spacing:0.06em;color:var(--blue);margin-bottom:0.5rem}
+.scenario-card .scenario-q{font-weight:600;font-size:0.95rem;margin-bottom:0.7rem}
+.reveal-btn{padding:0.45rem 1rem;background:var(--blue);color:white;border:none;border-radius:var(--radius);font-family:var(--font-body);font-size:0.82rem;font-weight:500;cursor:pointer;transition:background 0.2s}
+.reveal-btn:hover{background:#1e4a73}
+.reveal-content{margin-top:0.8rem;padding:0.8rem 1rem;background:white;border-radius:var(--radius);font-size:0.88rem;line-height:1.6;display:none;border:1px solid #c8daea}
+.reveal-content.show{display:block;animation:fadeUp 0.3s ease}
+.compare-table{width:100%;border-collapse:collapse;font-size:0.88rem;margin:1rem 0}
+.compare-table th{background:var(--ink);color:white;padding:0.7rem 1rem;text-align:left;font-weight:600;font-size:0.8rem;text-transform:uppercase;letter-spacing:0.04em}
+.compare-table th:first-child{border-radius:var(--radius) 0 0 0}.compare-table th:last-child{border-radius:0 var(--radius) 0 0}
+.compare-table td{padding:0.6rem 1rem;border-bottom:1px solid var(--card-border);vertical-align:top}.compare-table tr:nth-child(even) td{background:var(--bg-warm)}
+.compare-table .feature-col{font-weight:600;color:var(--ink);white-space:nowrap}
+.vocab-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:0.6rem;margin:1rem 0}
+.vocab-card{background:white;border:1px solid var(--card-border);border-radius:var(--radius);padding:0.8rem 1rem;cursor:pointer;transition:all 0.2s}
+.vocab-card:hover{border-color:var(--gold);box-shadow:var(--shadow-sm)}.vocab-card .v-term{font-weight:700;font-size:0.9rem;color:var(--accent);margin-bottom:0.2rem}.vocab-card .v-def{font-size:0.82rem;color:var(--ink-soft);line-height:1.45}
+.flashcard-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:0.8rem;margin:1rem 0}
+.flashcard{background:var(--card);border:2px solid var(--card-border);border-radius:var(--radius-lg);padding:1.2rem;min-height:120px;cursor:pointer;transition:all 0.3s;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center}
+.flashcard:hover{border-color:var(--teal);box-shadow:var(--shadow-md)}.flashcard .fc-front{font-weight:700;font-size:1rem;color:var(--accent)}.flashcard .fc-back{display:none;font-size:0.85rem;color:var(--ink-soft);line-height:1.5}
+.flashcard.flipped .fc-front{display:none}.flashcard.flipped .fc-back{display:block}.flashcard .fc-hint{font-size:0.7rem;color:var(--ink-muted);margin-top:0.5rem}
+.vtr-widget{background:var(--card);border:2px solid var(--teal);border-radius:var(--radius-lg);padding:1.5rem;margin:1.5rem 0}
+.vtr-widget h3{color:var(--teal-dark);margin-top:0}
+.vtr-widget textarea{width:100%;min-height:60px;background:white;border:1px solid var(--card-border);border-radius:var(--radius);padding:0.7rem;font-family:var(--font-body);font-size:0.88rem;resize:vertical;outline:none;margin:0.4rem 0 1rem}
+.vtr-widget textarea:focus{border-color:var(--teal)}
+.vtr-label{font-family:var(--font-mono);font-size:0.72rem;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:0.3rem;font-weight:600}
+.vtr-label.think{color:var(--blue)}.vtr-label.puzzle{color:var(--purple)}.vtr-label.explore{color:var(--teal)}
+.tier-tabs{display:flex;gap:0;border-bottom:2px solid var(--card-border);margin-bottom:1rem}
+.tier-btn{padding:0.6rem 1.2rem;border:none;background:none;font-family:var(--font-body);font-size:0.85rem;font-weight:500;color:var(--ink-muted);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;transition:all 0.2s}
+.tier-btn:hover{color:var(--ink)}.tier-btn.active{color:var(--accent);border-bottom-color:var(--accent)}
+.tier-panel{display:none;padding:0.5rem 0}.tier-panel.active{display:block;animation:fadeUp 0.3s ease}
+.self-check details{margin-bottom:0.6rem;border:1px solid var(--card-border);border-radius:var(--radius);overflow:hidden}
+.self-check summary{padding:0.7rem 1rem;cursor:pointer;font-size:0.92rem;font-weight:500;background:var(--card);list-style:none;display:flex;align-items:center;gap:0.5rem}
+.self-check summary::before{content:'❓';font-size:0.85rem}.self-check details[open] summary{border-bottom:1px solid var(--card-border)}
+.self-check .answer{padding:0.8rem 1rem;font-size:0.88rem;line-height:1.6;color:var(--ink-soft);background:white}
+.exit-ticket{background:linear-gradient(135deg,var(--ink) 0%,#2a2520 100%);color:white;border-radius:var(--radius-lg);padding:2rem;margin:2rem 0}
+.exit-ticket h3{font-family:var(--font-display);color:var(--accent-light);margin-top:0}.exit-ticket p{color:rgba(255,255,255,0.75)}
+.exit-ticket textarea{width:100%;min-height:70px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);border-radius:var(--radius);padding:0.7rem;color:white;font-family:var(--font-body);font-size:0.88rem;resize:vertical;outline:none;margin:0.4rem 0 1rem}
+.exit-ticket textarea::placeholder{color:rgba(255,255,255,0.35)}.exit-ticket textarea:focus{border-color:var(--accent-light)}
+.confidence-row{display:flex;gap:0.6rem;flex-wrap:wrap;margin:1rem 0}
+.conf-btn{padding:0.6rem 1.2rem;border:2px solid var(--card-border);border-radius:var(--radius-lg);background:var(--card);cursor:pointer;font-size:0.88rem;transition:all 0.2s;font-family:var(--font-body)}
+.conf-btn:hover{border-color:var(--teal);background:var(--teal-light)}.conf-btn.selected{border-color:var(--teal);background:var(--teal);color:white}
+.topic-tracker{background:var(--card);border:1px solid var(--card-border);border-radius:var(--radius-lg);padding:1.2rem 1.5rem;margin:2rem 0;box-shadow:var(--shadow-sm)}
+.tracker-row{display:flex;align-items:center;gap:0.7rem;padding:0.5rem 0;border-bottom:1px solid var(--card-border);font-size:0.88rem}.tracker-row:last-child{border-bottom:none}
+.tracker-check{width:22px;height:22px;border:2px solid var(--card-border);border-radius:4px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all 0.2s;flex-shrink:0;font-size:0.75rem}
+.tracker-check.checked{background:var(--success);border-color:var(--success);color:white}
+/* Drag categorise */
+.cat-zone{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1rem 0}
+.cat-box{min-height:120px;border:2px dashed var(--card-border);border-radius:var(--radius-lg);padding:1rem;text-align:center;transition:all 0.2s}
+.cat-box.over{border-color:var(--teal);background:var(--teal-light)}
+.cat-box h4{font-family:var(--font-display);font-size:1.1rem;margin-bottom:0.5rem}
+.cat-items{display:flex;flex-wrap:wrap;gap:0.4rem;justify-content:center;margin:1rem 0}
+.cat-chip{padding:0.4rem 0.8rem;background:var(--card);border:1.5px solid var(--card-border);border-radius:20px;font-size:0.82rem;cursor:grab;user-select:none;transition:all 0.2s}
+.cat-chip:hover{border-color:var(--blue);background:var(--blue-light)}.cat-chip.placed{opacity:0.4;pointer-events:none}
+.cat-chip.correct-chip{border-color:var(--success);background:var(--success-bg)}.cat-chip.incorrect-chip{border-color:var(--error);background:var(--error-bg)}
+.lesson-footer{text-align:center;padding:2rem 0;border-top:1px solid var(--card-border);margin-top:3rem;font-size:0.82rem;color:var(--ink-muted)}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:640px){.container{padding:5rem 1rem 3rem}.hero h1{font-size:1.8rem}h2{font-size:1.5rem}.vocab-grid,.flashcard-grid{grid-template-columns:1fr}.cat-zone{grid-template-columns:1fr}.nav-sections{display:none}.lesson-selector{gap:0.3rem;padding:0.4rem 0.5rem}.lesson-pill{font-size:0.68rem;padding:0.25rem 0.5rem}}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="progressBar"></div>
+<nav class="lesson-selector">
+  <a href="cell-differentiation.html" class="lesson-pill">3C.1 Cell Differentiation</a>
+  <a href="genes-and-environment.html" class="lesson-pill active">3C.2 Genes &amp; Environment</a>
+  <a href="controlling-gene-expression.html" class="lesson-pill">3C.3 Gene Expression</a>
+</nav>
+<nav class="lesson-nav">
+  <span class="nav-title">3C.2</span>
+  <div class="nav-sections">
+    <button class="nav-pill active" onclick="scrollTo('hero')">Overview</button>
+    <button class="nav-pill" onclick="scrollTo('diagnostic')">Diagnostic</button>
+    <button class="nav-pill" onclick="scrollTo('area1')">Genes &amp; Environment</button>
+    <button class="nav-pill" onclick="scrollTo('area2')">Lac Operon</button>
+    <button class="nav-pill" onclick="scrollTo('area3')">Twin Studies</button>
+    <button class="nav-pill" onclick="scrollTo('area4')">Variation</button>
+    <button class="nav-pill" onclick="scrollTo('practice')">Exam Practice</button>
+    <button class="nav-pill" onclick="scrollTo('exit')">Exit Ticket</button>
+  </div>
+</nav>
+<div class="container">
+
+<header class="hero" id="hero">
+  <div class="spec-ref"><span>3.20(i)</span><span>3.21</span></div>
+  <h1>Genes &amp; the <em>Environment</em></h1>
+  <p class="subtitle">How phenotype results from the interaction between your genotype and the world around you.</p>
+  <div class="big-question">Identical twins share 100% of their DNA. So why does one twin sometimes develop a disease while the other stays healthy?</div>
+</header>
+
+<details class="objectives-bar" open>
+  <summary>Learning Objectives</summary>
+  <div class="objectives-list">
+    <div class="obj-item"><span class="obj-tag">AO2</span> Understand how phenotype is the result of an interaction between genotype and the environment</div>
+    <div class="obj-item"><span class="obj-tag">AO2</span> Understand how polygenic inheritance and the environment give rise to continuous variation</div>
+    <div class="obj-item"><span class="obj-tag">AO2</span> Understand how some phenotypes are affected by multiple alleles, polygenic inheritance, and the environment</div>
+  </div>
+</details>
+
+<!-- DIAGNOSTIC -->
+<section class="section" id="diagnostic">
+  <div class="section-label"><span class="dot red"></span> Prior Knowledge</div>
+  <h2>Diagnostic Quiz</h2>
+
+  <div class="quiz-widget" id="dq1">
+    <div class="quiz-header"><span class="quiz-type diagnostic">Q1</span></div>
+    <div class="quiz-question">What is a phenotype?</div>
+    <div class="quiz-options" id="dq1Options">
+      <div class="quiz-option" onclick="sel('dq1',0,this)"><span class="opt-letter">A</span> The genetic make-up of an organism</div>
+      <div class="quiz-option" onclick="sel('dq1',1,this)"><span class="opt-letter">B</span> The observable characteristics of an organism</div>
+      <div class="quiz-option" onclick="sel('dq1',2,this)"><span class="opt-letter">C</span> A section of DNA coding for a protein</div>
+      <div class="quiz-option" onclick="sel('dq1',3,this)"><span class="opt-letter">D</span> The number of chromosomes in a cell</div>
+    </div>
+    <div class="quiz-feedback" id="dq1Feedback"></div>
+    <button class="quiz-btn" onclick="check('dq1',1,'Correct! Phenotype is the observable characteristics — the result of genotype + environment.','Phenotype = the observable characteristics of an organism. Genotype = the genetic make-up.')">Check</button>
+  </div>
+
+  <div class="quiz-widget" id="dq2">
+    <div class="quiz-header"><span class="quiz-type diagnostic">Q2</span></div>
+    <div class="quiz-question">What does &lsquo;polygenic&rsquo; mean?</div>
+    <div class="quiz-options" id="dq2Options">
+      <div class="quiz-option" onclick="sel('dq2',0,this)"><span class="opt-letter">A</span> Controlled by one gene with multiple alleles</div>
+      <div class="quiz-option" onclick="sel('dq2',1,this)"><span class="opt-letter">B</span> Controlled by many genes at different loci</div>
+      <div class="quiz-option" onclick="sel('dq2',2,this)"><span class="opt-letter">C</span> Controlled by genes on the sex chromosomes</div>
+      <div class="quiz-option" onclick="sel('dq2',3,this)"><span class="opt-letter">D</span> Controlled by a single dominant gene</div>
+    </div>
+    <div class="quiz-feedback" id="dq2Feedback"></div>
+    <button class="quiz-btn" onclick="check('dq2',1,'Correct! Polygenic traits are controlled by many genes at different loci, often producing continuous variation.','Polygenic = many (poly) genes. These traits are controlled by several genes at different loci.')">Check</button>
+  </div>
+
+  <div class="quiz-widget" id="dq3">
+    <div class="quiz-header"><span class="quiz-type diagnostic">Q3</span></div>
+    <div class="quiz-question">Which of these is most likely affected by the environment?</div>
+    <div class="quiz-options" id="dq3Options">
+      <div class="quiz-option" onclick="sel('dq3',0,this)"><span class="opt-letter">A</span> Blood group</div>
+      <div class="quiz-option" onclick="sel('dq3',1,this)"><span class="opt-letter">B</span> Body mass</div>
+      <div class="quiz-option" onclick="sel('dq3',2,this)"><span class="opt-letter">C</span> Sickle cell allele</div>
+      <div class="quiz-option" onclick="sel('dq3',3,this)"><span class="opt-letter">D</span> Presence of a Y chromosome</div>
+    </div>
+    <div class="quiz-feedback" id="dq3Feedback"></div>
+    <button class="quiz-btn" onclick="check('dq3',1,'Correct! Body mass is strongly influenced by diet, exercise, and other environmental factors, alongside genetic predisposition.','Body mass is highly influenced by environmental factors (diet, exercise) alongside genes. Blood group and chromosomal sex are genetically determined.')">Check</button>
+  </div>
+</section>
+
+<!-- AREA 1: GENES MEET ENVIRONMENT -->
+<section class="section" id="area1">
+  <div class="section-label"><span class="dot red"></span> Section 1</div>
+  <h2>When Genes Meet Environment</h2>
+
+  <p>Your <span class="key-term">phenotype<span class="term-def">The observable characteristics of an organism, resulting from the interaction of its genotype with the environment.</span></span> is not determined by your genes alone. It is the result of an interaction between your <span class="key-term">genotype<span class="term-def">The genetic make-up of an organism — the alleles it possesses.</span></span> and the <strong>environment</strong>.</p>
+
+  <p>Genetically identical plants (clones) grow very differently when exposed to varying amounts of light, water, and soil nutrients. The ability of animals to grow depends heavily on environmental factors such as the amount of food available. It is more difficult to investigate the impact of environment on phenotype in animals because of the difficulty of producing large numbers of clones, genetically identical organisms, and the ethical aspects of experimentation.</p>
+
+  <h3>The Siamese Cat — A Classic Example</h3>
+  <p>The Siamese cat provides a striking example of gene-environment interaction. The gene for fur colour produces a temperature-sensitive <span class="key-term">tyrosinase<span class="term-def">An enzyme involved in the production of the pigment melanin. In Siamese cats, a mutant form is inactive at normal body temperature.</span></span> enzyme. A mutation in this gene means the enzyme only works at <strong>lower temperatures</strong>.</p>
+
+  <div class="card" style="border-left:4px solid var(--teal)">
+    <p style="margin-bottom:0.5rem"><strong>At the body core</strong> (warm, ~38°C): tyrosinase is denatured → no melanin → <strong>pale fur</strong></p>
+    <p style="margin-bottom:0"><strong>At the extremities</strong> (cool — ears, paws, nose, tail): tyrosinase is active → melanin produced → <strong>dark fur</strong></p>
+  </div>
+
+  <!-- SVG: Siamese cat temperature zones -->
+  <div class="diagram-container">
+    <div class="diagram-title">Interactive — Click each zone on the Siamese cat</div>
+    <svg viewBox="0 0 500 320" class="bio-svg" id="catSvg">
+      <!-- Cat body (pale) -->
+      <ellipse cx="250" cy="180" rx="100" ry="70" fill="#faf0e6" stroke="#d4c5b0" stroke-width="2"/>
+      <!-- Head -->
+      <circle cx="250" cy="90" r="50" fill="#faf0e6" stroke="#d4c5b0" stroke-width="2"/>
+      <!-- Dark face mask -->
+      <ellipse cx="250" cy="100" rx="30" ry="25" fill="#3d2b1f" opacity="0.7"/>
+      <!-- Ears (dark) -->
+      <polygon points="210,55 225,20 240,55" fill="#3d2b1f" stroke="#3d2b1f" stroke-width="1"/>
+      <polygon points="260,55 275,20 290,55" fill="#3d2b1f" stroke="#3d2b1f" stroke-width="1"/>
+      <!-- Paws (dark) -->
+      <ellipse cx="180" cy="270" rx="18" ry="12" fill="#3d2b1f"/>
+      <ellipse cx="320" cy="270" rx="18" ry="12" fill="#3d2b1f"/>
+      <!-- Legs -->
+      <rect x="172" y="240" width="16" height="30" rx="8" fill="#faf0e6" stroke="#d4c5b0" stroke-width="1"/>
+      <rect x="312" y="240" width="16" height="30" rx="8" fill="#faf0e6" stroke="#d4c5b0" stroke-width="1"/>
+      <!-- Tail (dark) -->
+      <path d="M350 180 Q400 170 390 220 Q385 260 370 270" fill="none" stroke="#3d2b1f" stroke-width="8" stroke-linecap="round"/>
+      <!-- Click zones -->
+      <g class="highlight-part" onclick="showCatInfo('body')">
+        <circle cx="250" cy="180" r="30" fill="transparent" stroke="var(--teal)" stroke-width="2" stroke-dasharray="4,3" opacity="0.6"/>
+        <text x="250" y="185" text-anchor="middle" fill="var(--teal)" font-size="10" font-weight="600">BODY</text>
+      </g>
+      <g class="highlight-part" onclick="showCatInfo('ears')">
+        <circle cx="250" cy="35" r="20" fill="transparent" stroke="var(--accent)" stroke-width="2" stroke-dasharray="4,3" opacity="0.6"/>
+        <text x="250" y="12" text-anchor="middle" fill="var(--accent)" font-size="10" font-weight="600">EARS</text>
+      </g>
+      <g class="highlight-part" onclick="showCatInfo('paws')">
+        <circle cx="180" cy="270" r="22" fill="transparent" stroke="var(--accent)" stroke-width="2" stroke-dasharray="4,3" opacity="0.6"/>
+        <text x="130" y="275" text-anchor="middle" fill="var(--accent)" font-size="10" font-weight="600">PAWS</text>
+      </g>
+      <g class="highlight-part" onclick="showCatInfo('tail')">
+        <circle cx="380" cy="245" r="22" fill="transparent" stroke="var(--accent)" stroke-width="2" stroke-dasharray="4,3" opacity="0.6"/>
+        <text x="420" y="250" fill="var(--accent)" font-size="10" font-weight="600">TAIL</text>
+      </g>
+    </svg>
+    <div class="info-panel" id="catInfoPanel"></div>
+  </div>
+
+  <div class="exam-hint">
+    <div class="hint-label">Exam Hint</div>
+    The Siamese cat question appears frequently. Remember: it is the <strong>environment</strong> (temperature) that determines <strong>where</strong> on the body the gene is expressed, even though every cell has the same allele.
+  </div>
+</section>
+
+<!-- AREA 2: LAC OPERON -->
+<section class="section" id="area2">
+  <div class="section-label"><span class="dot teal"></span> Section 2</div>
+  <h2>The Lac Operon</h2>
+
+  <!-- PRODUCTIVE STRUGGLE -->
+  <div class="struggle-box">
+    <div class="struggle-label">Productive Struggle — Try before you learn</div>
+    <p style="font-weight:600;color:var(--ink);margin-bottom:0.5rem"><em>E. coli</em> bacteria are grown on glucose. When lactose is added, they begin producing a new enzyme after a short delay. When lactose is removed, enzyme production stops. How might the bacterium &lsquo;know&rsquo; when to produce this enzyme?</p>
+    <textarea style="width:100%;min-height:80px;border:1px solid var(--card-border);border-radius:var(--radius);padding:0.7rem;font-family:var(--font-body);font-size:0.88rem;resize:vertical;outline:none" placeholder="My hypothesis..."></textarea>
+    <div class="tier-tabs" style="margin-top:0.8rem">
+      <button class="tier-btn active" onclick="showTier(this,'ps1')">No help</button>
+      <button class="tier-btn" onclick="showTier(this,'ps2')">Hint</button>
+      <button class="tier-btn" onclick="showTier(this,'ps3')">Sentence starter</button>
+    </div>
+    <div class="tier-panel active" id="ps1"><p style="color:var(--ink-muted);font-size:0.85rem">Try to work it out with no assistance first.</p></div>
+    <div class="tier-panel" id="ps2"><p>Think about what molecules might interact with DNA to <strong>block</strong> or <strong>allow</strong> transcription.</p></div>
+    <div class="tier-panel" id="ps3"><p>When lactose is present, it could bind to a ___ protein, which normally ___ transcription. This would mean the structural genes for the enzyme are now ___.</p></div>
+  </div>
+
+  <p>In the 1960s, French geneticists <strong>Jacob and Monod</strong> discovered a brilliant system in <em>E. coli</em> that controls gene expression in response to the environment. They called it the <span class="key-term">lac operon<span class="term-def">A cluster of genes in E. coli that are switched on or off together by the presence or absence of lactose.</span></span>.</p>
+
+  <p>Lactose is a sugar found in milk. It is broken down into glucose and galactose by the enzyme <strong>&beta;-galactosidase</strong>. If there is no lactose, there is no point making this enzyme — it would waste energy.</p>
+
+  <div class="card">
+    <h3 style="margin-top:0">How the Lac Operon Works</h3>
+    <p><strong>Lactose ABSENT:</strong></p>
+    <ul style="margin:0 0 1rem 1.5rem;color:var(--ink-soft);font-size:0.92rem">
+      <li style="margin-bottom:0.3rem">The <strong>regulatory gene</strong> produces a <strong>repressor protein</strong></li>
+      <li style="margin-bottom:0.3rem">The repressor binds to the <strong>operator</strong></li>
+      <li style="margin-bottom:0.3rem">RNA polymerase cannot pass → structural genes are <strong>NOT transcribed</strong></li>
+      <li>&beta;-galactosidase is NOT produced</li>
+    </ul>
+    <p><strong>Lactose PRESENT:</strong></p>
+    <ul style="margin:0 0 0 1.5rem;color:var(--ink-soft);font-size:0.92rem">
+      <li style="margin-bottom:0.3rem">Lactose binds to the repressor protein → <strong>changes its shape</strong></li>
+      <li style="margin-bottom:0.3rem">Repressor can <strong>no longer bind</strong> to the operator</li>
+      <li style="margin-bottom:0.3rem">RNA polymerase can now transcribe the structural genes</li>
+      <li>&beta;-galactosidase IS produced → lactose is broken down</li>
+    </ul>
+  </div>
+
+  <!-- SVG: Lac operon -->
+  <div class="diagram-container">
+    <div class="diagram-title">Interactive — Toggle between lactose absent and present</div>
+    <div style="text-align:center;margin-bottom:1rem">
+      <button class="quiz-btn" id="operonToggle" onclick="toggleOperon()" style="background:var(--blue)">Show: Lactose Present</button>
+    </div>
+    <svg viewBox="0 0 700 200" class="bio-svg" id="operonSvg">
+      <!-- DNA strand -->
+      <rect x="30" y="90" width="640" height="20" rx="10" fill="#e0d8cc" stroke="#b8860b" stroke-width="1.5"/>
+      <!-- Regulatory gene -->
+      <rect x="50" y="85" width="80" height="30" rx="4" fill="#6b4c8a" opacity="0.3" stroke="#6b4c8a" stroke-width="1.5"/>
+      <text x="90" y="105" text-anchor="middle" font-size="10" font-weight="600" fill="#6b4c8a">Regulatory</text>
+      <text x="90" y="75" text-anchor="middle" font-size="9" fill="#8a8278">Gene</text>
+      <!-- Promoter -->
+      <rect x="160" y="85" width="60" height="30" rx="4" fill="#1a7a6d" opacity="0.3" stroke="#1a7a6d" stroke-width="1.5"/>
+      <text x="190" y="105" text-anchor="middle" font-size="10" font-weight="600" fill="#1a7a6d">Promoter</text>
+      <!-- Operator -->
+      <rect x="240" y="85" width="60" height="30" rx="4" fill="#c44b2b" opacity="0.3" stroke="#c44b2b" stroke-width="1.5"/>
+      <text x="270" y="105" text-anchor="middle" font-size="10" font-weight="600" fill="#c44b2b">Operator</text>
+      <!-- Structural genes -->
+      <rect x="320" y="85" width="100" height="30" rx="4" fill="#2a5d8f" opacity="0.3" stroke="#2a5d8f" stroke-width="1.5"/>
+      <text x="370" y="105" text-anchor="middle" font-size="10" font-weight="600" fill="#2a5d8f">Structural Gene Z</text>
+      <rect x="440" y="85" width="90" height="30" rx="4" fill="#2a5d8f" opacity="0.2" stroke="#2a5d8f" stroke-width="1"/>
+      <text x="485" y="105" text-anchor="middle" font-size="10" fill="#2a5d8f">Gene Y</text>
+      <rect x="550" y="85" width="80" height="30" rx="4" fill="#2a5d8f" opacity="0.15" stroke="#2a5d8f" stroke-width="1"/>
+      <text x="590" y="105" text-anchor="middle" font-size="10" fill="#2a5d8f">Gene A</text>
+      <!-- Repressor (default: bound) -->
+      <g id="repressorBound">
+        <ellipse cx="270" cy="60" rx="30" ry="18" fill="#c44b2b" opacity="0.6" stroke="#c44b2b" stroke-width="1.5"/>
+        <text x="270" y="65" text-anchor="middle" font-size="9" fill="white" font-weight="600">Repressor</text>
+        <line x1="270" y1="78" x2="270" y2="85" stroke="#c44b2b" stroke-width="2"/>
+        <text x="270" y="155" text-anchor="middle" font-size="10" fill="#c44b2b" font-weight="600">BLOCKED — No transcription</text>
+      </g>
+      <!-- Repressor (unbound - hidden by default) -->
+      <g id="repressorFree" style="display:none">
+        <ellipse cx="120" cy="160" rx="30" ry="18" fill="#c44b2b" opacity="0.3" stroke="#c44b2b" stroke-width="1" stroke-dasharray="3,3"/>
+        <text x="120" y="165" text-anchor="middle" font-size="9" fill="#c44b2b">Repressor</text>
+        <circle cx="150" cy="170" r="8" fill="#b8860b" opacity="0.5"/>
+        <text x="150" y="173" text-anchor="middle" font-size="7" fill="#b8860b">Lac</text>
+        <!-- RNA polymerase arrow -->
+        <path d="M320 80 L500 40" fill="none" stroke="#2a5d8f" stroke-width="2" stroke-dasharray="4,3"/>
+        <text x="420" y="35" text-anchor="middle" font-size="9" fill="#2a5d8f" font-weight="600">mRNA being transcribed →</text>
+        <text x="370" y="155" text-anchor="middle" font-size="10" fill="#1a7a6d" font-weight="600">ACTIVE — Genes transcribed → β-galactosidase produced</text>
+      </g>
+    </svg>
+  </div>
+
+  <!-- Fill blanks -->
+  <div class="quiz-widget">
+    <div class="quiz-header"><span class="quiz-type ao1">AO1 Fill the Blanks</span></div>
+    <div class="quiz-question">Complete these sentences about the lac operon:</div>
+    <div class="fill-blank-widget" id="fb1">
+      <div class="fill-item">1. The regulatory gene produces a <input class="blank-input" data-answer="repressor" placeholder="________"> protein.</div>
+      <div class="fill-item">2. When lactose is absent, this protein binds to the <input class="blank-input" data-answer="operator" placeholder="________">.</div>
+      <div class="fill-item">3. This prevents <input class="blank-input" data-answer="RNA polymerase" placeholder="________"> from transcribing the structural genes.</div>
+      <div class="fill-item">4. When lactose is present, it binds to the repressor and changes its <input class="blank-input" data-answer="shape" placeholder="________">.</div>
+    </div>
+    <button class="quiz-btn" onclick="checkFill('fb1')">Check Answers</button>
+    <div class="scaffold"><div class="scaffold-label">Word Bank</div>repressor &nbsp;|&nbsp; operator &nbsp;|&nbsp; RNA polymerase &nbsp;|&nbsp; shape</div>
+  </div>
+</section>
+
+<!-- AREA 3: TWIN STUDIES -->
+<section class="section" id="area3">
+  <div class="section-label"><span class="dot blue"></span> Section 3</div>
+  <h2>Epidemiological &amp; Twin Studies</h2>
+
+  <p>One strategy to separate genetic and environmental influences is to study <span class="key-term">identical (monozygotic) twins<span class="term-def">Twins formed from a single zygote that splits — they share 100% of their DNA.</span></span>. These twins have the same genetic material. Non-identical (dizygotic) twins share about 50% of their DNA, like ordinary siblings.</p>
+
+  <p>If a trait is <strong>more similar</strong> in identical twins than in non-identical twins, it suggests a strong <strong>genetic component</strong>. If identical twins reared apart show greater differences, it suggests a strong <strong>environmental</strong> influence.</p>
+
+  <div class="card">
+    <h3 style="margin-top:0">Twin Study Data</h3>
+    <table class="compare-table">
+      <tr><th>Trait</th><th>Identical twins (reared apart)</th><th>Identical twins (reared together)</th><th>Non-identical twins</th></tr>
+      <tr><td class="feature-col">Height difference (cm)</td><td>1.8</td><td>1.7</td><td>4.4</td></tr>
+      <tr><td class="feature-col">Mass difference (kg)</td><td>4.5</td><td>1.9</td><td>4.6</td></tr>
+      <tr><td class="feature-col">IQ score difference</td><td>8.2</td><td>5.9</td><td>9.9</td></tr>
+    </table>
+  </div>
+
+  <!-- VTR: Think-Puzzle-Explore -->
+  <div class="vtr-widget">
+    <h3>Think — Puzzle — Explore</h3>
+    <div class="vtr-label think">What do you already THINK about nature vs nurture?</div>
+    <textarea placeholder="I think that genes/environment play a bigger role in... because..."></textarea>
+    <div class="vtr-label puzzle">What PUZZLES you about the twin data above?</div>
+    <textarea placeholder="I'm puzzled by the fact that..."></textarea>
+    <div class="vtr-label explore">What would you like to EXPLORE further?</div>
+    <textarea placeholder="I'd like to investigate whether..."></textarea>
+  </div>
+
+  <!-- Independent practice: tiered -->
+  <div class="card">
+    <h3 style="margin-top:0">Independent Practice — Analyse the Twin Data</h3>
+    <div class="tier-tabs">
+      <button class="tier-btn active" onclick="showTier(this,'tw1')">Level 1 (Supported)</button>
+      <button class="tier-btn" onclick="showTier(this,'tw2')">Level 2 (Guided)</button>
+      <button class="tier-btn" onclick="showTier(this,'tw3')">Level 3 (Challenge)</button>
+    </div>
+    <div class="tier-panel active" id="tw1">
+      <p>Complete these sentences using the data in the table above:</p>
+      <div class="fill-blank-widget" id="fb2">
+        <div class="fill-item">Height has a strong <input class="blank-input" data-answer="genetic" placeholder="________"> component because identical twins show very similar heights even when reared apart.</div>
+        <div class="fill-item">Body mass has a greater <input class="blank-input" data-answer="environmental" placeholder="________"> component because identical twins reared apart differ by 4.5 kg compared to only 1.9 kg reared together.</div>
+      </div>
+      <button class="quiz-btn" onclick="checkFill('fb2')">Check</button>
+      <div class="scaffold"><div class="scaffold-label">Word Bank</div>genetic &nbsp;|&nbsp; environmental</div>
+    </div>
+    <div class="tier-panel" id="tw2">
+      <p>Using the data, explain the relative contributions of genes and environment to: (a) height, (b) body mass, and (c) IQ. Write 2-3 sentences for each.</p>
+      <textarea style="width:100%;min-height:120px;border:1px solid var(--card-border);border-radius:var(--radius);padding:0.7rem;font-family:var(--font-body);font-size:0.88rem;resize:vertical;outline:none" placeholder="(a) Height: The data shows that..."></textarea>
+    </div>
+    <div class="tier-panel" id="tw3">
+      <p><strong>Challenge:</strong> Evaluate the reliability of twin studies as a method for separating genetic and environmental influences. Consider: sample size, identical environments, epigenetics, and ethical concerns.</p>
+      <textarea style="width:100%;min-height:120px;border:1px solid var(--card-border);border-radius:var(--radius);padding:0.7rem;font-family:var(--font-body);font-size:0.88rem;resize:vertical;outline:none" placeholder="Twin studies have strengths such as... however, limitations include..."></textarea>
+    </div>
+  </div>
+
+  <div class="learning-tip">
+    <div class="tip-label">Learning Tip</div>
+    In the exam, always refer to specific data when analysing tables. Say &ldquo;identical twins reared apart differ by 1.8 cm compared to 4.4 cm for non-identical twins&rdquo; rather than just &ldquo;identical twins are more similar&rdquo;.
+  </div>
+</section>
+
+<!-- AREA 4: VARIATION -->
+<section class="section" id="area4">
+  <div class="section-label"><span class="dot purple"></span> Section 4</div>
+  <h2>Discontinuous &amp; Continuous Variation</h2>
+
+  <p>In any population, there are two types of variation:</p>
+
+  <div class="card">
+    <table class="compare-table">
+      <tr><th>Feature</th><th>Discontinuous</th><th>Continuous</th></tr>
+      <tr><td class="feature-col">Definition</td><td>Features that fall into distinct categories</td><td>Features that show a range of values</td></tr>
+      <tr><td class="feature-col">Genetic basis</td><td>Usually one or very few genes</td><td>Usually polygenic (many genes)</td></tr>
+      <tr><td class="feature-col">Environmental effect</td><td>Little or none</td><td>Often significant</td></tr>
+      <tr><td class="feature-col">Distribution</td><td>Bar chart with gaps</td><td>Normal distribution (bell curve)</td></tr>
+      <tr><td class="feature-col">Examples</td><td>Blood group, sex, tongue rolling</td><td>Height, weight, skin colour</td></tr>
+    </table>
+  </div>
+
+  <p><span class="key-term">Discontinuous variation<span class="term-def">Variation where individuals fall into distinct categories with no intermediates, usually controlled by one or a few genes.</span></span> is shown by features that are either present or not (like blood groups — you are A, B, AB, or O with nothing in between). <span class="key-term">Continuous variation<span class="term-def">Variation where individuals show a range of values for a feature, usually controlled by many genes and the environment.</span></span> is shown by features with a range of values (like height — there is every value between the shortest and tallest).</p>
+
+  <!-- DRAG CATEGORISATION -->
+  <div class="quiz-widget">
+    <div class="quiz-header"><span class="quiz-type ao2">AO2 Categorisation</span></div>
+    <div class="quiz-question">Drag each trait into the correct category:</div>
+    <div class="cat-items" id="catChips">
+      <div class="cat-chip" draggable="true" data-cat="disc">Blood group</div>
+      <div class="cat-chip" draggable="true" data-cat="cont">Height</div>
+      <div class="cat-chip" draggable="true" data-cat="cont">Leaf length</div>
+      <div class="cat-chip" draggable="true" data-cat="disc">Sex (male/female)</div>
+      <div class="cat-chip" draggable="true" data-cat="cont">Body mass</div>
+      <div class="cat-chip" draggable="true" data-cat="disc">Tongue rolling</div>
+      <div class="cat-chip" draggable="true" data-cat="cont">Skin colour</div>
+      <div class="cat-chip" draggable="true" data-cat="disc">Earlobe attachment</div>
+    </div>
+    <div class="cat-zone">
+      <div class="cat-box" id="discBox" ondragover="event.preventDefault();this.classList.add('over')" ondragleave="this.classList.remove('over')" ondrop="dropChip(event,'disc')">
+        <h4 style="color:var(--accent)">Discontinuous</h4>
+        <div class="cat-placed" id="discPlaced"></div>
+      </div>
+      <div class="cat-box" id="contBox" ondragover="event.preventDefault();this.classList.add('over')" ondragleave="this.classList.remove('over')" ondrop="dropChip(event,'cont')">
+        <h4 style="color:var(--teal)">Continuous</h4>
+        <div class="cat-placed" id="contPlaced"></div>
+      </div>
+    </div>
+    <button class="quiz-btn" onclick="checkCats()">Check Categories</button>
+  </div>
+
+  <h3>Studying Continuous Variation</h3>
+  <p>When studying continuous variation in a population, you need:</p>
+  <ul style="margin:0.5rem 0 1rem 1.5rem;color:var(--ink-soft);font-size:0.92rem">
+    <li style="margin-bottom:0.3rem"><strong>Large sample sizes</strong> — to ensure the data is representative</li>
+    <li style="margin-bottom:0.3rem"><strong>Random sampling</strong> — to avoid bias</li>
+    <li style="margin-bottom:0.3rem"><strong>Frequency distribution</strong> — plot the data as a histogram → should produce a <span class="key-term">normal distribution<span class="term-def">A bell-shaped curve where most values cluster around the mean, with fewer values at the extremes.</span></span> (bell curve)</li>
+    <li>Calculate the <strong>mean</strong> and <strong>standard deviation</strong> to describe the data</li>
+  </ul>
+</section>
+
+<!-- EXAM PRACTICE -->
+<section class="section" id="practice">
+  <div class="section-label"><span class="dot purple"></span> Exam Practice</div>
+  <h2>Exam-Style Questions</h2>
+
+  <div class="card" style="border-left:4px solid var(--teal)">
+    <div class="quiz-header"><span class="quiz-type ao2">2 Marks</span></div>
+    <h3 style="margin-top:0">Question 1</h3>
+    <p><strong>A patch of white fur is removed from the back of a Siamese rabbit. A cold pack is kept on the area as the fur grows back. The new fur grows dark. Explain this observation.</strong></p>
+    <div class="self-check"><details><summary>Reveal model answer</summary><div class="answer">1. The gene for fur colour produces a temperature-sensitive enzyme (tyrosinase) that only works at lower temperatures (1 mark).<br>2. The cold pack lowers the skin temperature at that area, so the enzyme is active → melanin is produced → fur grows dark (1 mark).</div></details></div>
+  </div>
+
+  <div class="card" style="border-left:4px solid var(--blue)">
+    <div class="quiz-header"><span class="quiz-type ao2">4 Marks</span></div>
+    <h3 style="margin-top:0">Question 2</h3>
+    <p><strong>Explain how the lac operon in <em>E. coli</em> is controlled by the presence of lactose.</strong></p>
+    <div class="self-check"><details><summary>Reveal model answer</summary><div class="answer">1. The regulatory gene produces a repressor protein (1 mark).<br>2. When lactose is absent, the repressor binds to the operator, blocking RNA polymerase (1 mark).<br>3. When lactose is present, it binds to the repressor and changes its shape / the repressor can no longer bind to the operator (1 mark).<br>4. RNA polymerase can now transcribe the structural genes → &beta;-galactosidase is produced to break down lactose (1 mark).</div></details></div>
+  </div>
+
+  <div class="card" style="border-left:4px solid var(--purple)">
+    <div class="quiz-header"><span class="quiz-type ao3">6 Marks — Extended Response</span></div>
+    <h3 style="margin-top:0">Question 3</h3>
+    <p><strong>Discuss the relative contributions of genetic and environmental factors to human phenotype. Use examples from twin studies and other evidence.</strong></p>
+    <div class="scaffold"><div class="scaffold-label">Planning Checklist</div></div>
+    <div class="topic-tracker" style="margin-top:0.5rem">
+      <div class="tracker-row"><div class="tracker-check" onclick="toggleCheck(this)"></div> Define phenotype as result of genotype + environment</div>
+      <div class="tracker-row"><div class="tracker-check" onclick="toggleCheck(this)"></div> Use twin study data — identical vs non-identical</div>
+      <div class="tracker-row"><div class="tracker-check" onclick="toggleCheck(this)"></div> Height example — strong genetic component (twin data)</div>
+      <div class="tracker-row"><div class="tracker-check" onclick="toggleCheck(this)"></div> Body mass — significant environmental component (diet)</div>
+      <div class="tracker-row"><div class="tracker-check" onclick="toggleCheck(this)"></div> Siamese cat as gene-environment interaction example</div>
+      <div class="tracker-row"><div class="tracker-check" onclick="toggleCheck(this)"></div> Conclusion — most traits are influenced by both</div>
+    </div>
+    <textarea style="width:100%;min-height:150px;border:1px solid var(--card-border);border-radius:var(--radius);padding:0.8rem;font-family:var(--font-body);font-size:0.88rem;resize:vertical;outline:none;margin-top:0.8rem" placeholder="Write your response here..."></textarea>
+    <div class="self-check" style="margin-top:1rem"><details><summary>Reveal model answer</summary><div class="answer">Phenotype is the observable characteristics of an organism, resulting from the interaction between its genotype and the environment. Twin studies provide strong evidence for separating these influences. For <strong>height</strong>, identical twins reared apart show only a 1.8 cm difference compared to 4.4 cm for non-identical twins, indicating a strong genetic component. However, <strong>body mass</strong> shows greater environmental influence — identical twins reared apart differ by 4.5 kg (similar to non-identical twins at 4.6 kg), but when reared together differ by only 1.9 kg, suggesting shared environment (diet, lifestyle) plays a major role. The <strong>Siamese cat</strong> demonstrates gene-environment interaction directly: a temperature-sensitive tyrosinase enzyme produces melanin only at cooler extremities, so the same genotype produces different phenotypes in different environmental conditions. Epidemiological studies also show environmental impact — for example, smoking during pregnancy reduces birth weight regardless of genotype. In conclusion, most human characteristics result from a complex interplay of genetic predisposition and environmental factors, with some traits (like blood group) being almost entirely genetic, and others (like body mass) being heavily influenced by environment.</div></details></div>
+  </div>
+</section>
+
+<!-- FINAL ASSESSMENT + EXIT -->
+<section class="section" id="exit">
+  <h2>Final Assessment</h2>
+
+  <div class="quiz-widget" id="fa1">
+    <div class="quiz-header"><span class="quiz-type ao1">Q1</span></div>
+    <div class="quiz-question">What is the correct equation for phenotype?</div>
+    <div class="quiz-options" id="fa1Options">
+      <div class="quiz-option" onclick="sel('fa1',0,this)"><span class="opt-letter">A</span> Phenotype = genotype only</div>
+      <div class="quiz-option" onclick="sel('fa1',1,this)"><span class="opt-letter">B</span> Phenotype = genotype + environment</div>
+      <div class="quiz-option" onclick="sel('fa1',2,this)"><span class="opt-letter">C</span> Phenotype = environment only</div>
+      <div class="quiz-option" onclick="sel('fa1',3,this)"><span class="opt-letter">D</span> Phenotype = alleles + mutations</div>
+    </div>
+    <div class="quiz-feedback" id="fa1Feedback"></div>
+    <button class="quiz-btn" onclick="check('fa1',1,'Correct!','Phenotype = genotype + environment.')">Check</button>
+  </div>
+
+  <div class="quiz-widget" id="fa2">
+    <div class="quiz-header"><span class="quiz-type ao2">Q2</span></div>
+    <div class="quiz-question">In the lac operon, what happens when lactose binds to the repressor protein?</div>
+    <div class="quiz-options" id="fa2Options">
+      <div class="quiz-option" onclick="sel('fa2',0,this)"><span class="opt-letter">A</span> The repressor binds more tightly to the operator</div>
+      <div class="quiz-option" onclick="sel('fa2',1,this)"><span class="opt-letter">B</span> The repressor changes shape and can no longer bind to the operator</div>
+      <div class="quiz-option" onclick="sel('fa2',2,this)"><span class="opt-letter">C</span> The structural genes are destroyed</div>
+      <div class="quiz-option" onclick="sel('fa2',3,this)"><span class="opt-letter">D</span> RNA polymerase is denatured</div>
+    </div>
+    <div class="quiz-feedback" id="fa2Feedback"></div>
+    <button class="quiz-btn" onclick="check('fa2',1,'Correct! Lactose changes the shape of the repressor so it falls off the operator.','Lactose binds to the repressor, changing its 3D shape. The repressor can no longer fit the operator, so transcription proceeds.')">Check</button>
+  </div>
+
+  <div class="quiz-widget" id="fa3">
+    <div class="quiz-header"><span class="quiz-type ao2">Q3</span></div>
+    <div class="quiz-question">Which type of variation does human height show?</div>
+    <div class="quiz-options" id="fa3Options">
+      <div class="quiz-option" onclick="sel('fa3',0,this)"><span class="opt-letter">A</span> Discontinuous</div>
+      <div class="quiz-option" onclick="sel('fa3',1,this)"><span class="opt-letter">B</span> Continuous</div>
+      <div class="quiz-option" onclick="sel('fa3',2,this)"><span class="opt-letter">C</span> Neither — it is entirely genetic</div>
+      <div class="quiz-option" onclick="sel('fa3',3,this)"><span class="opt-letter">D</span> Neither — it is entirely environmental</div>
+    </div>
+    <div class="quiz-feedback" id="fa3Feedback"></div>
+    <button class="quiz-btn" onclick="check('fa3',1,'Correct! Height is continuous — it shows a range of values in a normal distribution, controlled by many genes plus environment.','Height is continuous variation — polygenic + environmental, producing a normal distribution.')">Check</button>
+  </div>
+
+  <div class="quiz-widget" id="fa4">
+    <div class="quiz-header"><span class="quiz-type ao2">Q4</span></div>
+    <div class="quiz-question">Siamese cats have dark fur at their extremities because:</div>
+    <div class="quiz-options" id="fa4Options">
+      <div class="quiz-option" onclick="sel('fa4',0,this)"><span class="opt-letter">A</span> The extremities have different DNA</div>
+      <div class="quiz-option" onclick="sel('fa4',1,this)"><span class="opt-letter">B</span> A temperature-sensitive enzyme is only active at cooler body parts</div>
+      <div class="quiz-option" onclick="sel('fa4',2,this)"><span class="opt-letter">C</span> UV light darkens the fur at exposed areas</div>
+      <div class="quiz-option" onclick="sel('fa4',3,this)"><span class="opt-letter">D</span> The cat licks its extremities, causing melanin production</div>
+    </div>
+    <div class="quiz-feedback" id="fa4Feedback"></div>
+    <button class="quiz-btn" onclick="check('fa4',1,'Correct! The tyrosinase enzyme is temperature-sensitive — active at cool extremities, inactive at the warm core.','The mutant tyrosinase enzyme only works at lower temperatures found at the extremities.')">Check</button>
+  </div>
+
+  <!-- Confidence -->
+  <div class="card" style="margin-top:2rem">
+    <h3 style="margin-top:0">How confident do you feel?</h3>
+    <div class="confidence-row">
+      <button class="conf-btn" onclick="pickConf(this)">😟 Need more help</button>
+      <button class="conf-btn" onclick="pickConf(this)">🤔 Getting there</button>
+      <button class="conf-btn" onclick="pickConf(this)">😊 Confident</button>
+      <button class="conf-btn" onclick="pickConf(this)">🤩 Mastered it</button>
+    </div>
+  </div>
+
+  <!-- Exit ticket -->
+  <div class="exit-ticket">
+    <h3>Exit Ticket</h3>
+    <p style="margin-bottom:1rem">Three quick questions before you go:</p>
+    <p style="color:rgba(255,255,255,0.9);font-weight:500;margin-bottom:0.3rem">1. Explain why the phenotype of an organism is not determined by genes alone.</p>
+    <textarea placeholder="The phenotype is determined by..."></textarea>
+    <p style="color:rgba(255,255,255,0.9);font-weight:500;margin-bottom:0.3rem">2. Describe how the lac operon is switched on when lactose is present.</p>
+    <textarea placeholder="When lactose is present, it..."></textarea>
+    <p style="color:rgba(255,255,255,0.9);font-weight:500;margin-bottom:0.3rem">3. Give one example each of discontinuous and continuous variation.</p>
+    <textarea placeholder="Discontinuous: ... Continuous: ..."></textarea>
+  </div>
+
+  <!-- Vocab Grid -->
+  <h3 style="margin-top:2rem">Vocabulary Grid</h3>
+  <div class="vocab-grid">
+    <div class="vocab-card"><div class="v-term">Phenotype</div><div class="v-def">Observable characteristics resulting from genotype + environment.</div></div>
+    <div class="vocab-card"><div class="v-term">Genotype</div><div class="v-def">The genetic make-up of an organism — the alleles it possesses.</div></div>
+    <div class="vocab-card"><div class="v-term">Lac operon</div><div class="v-def">A cluster of genes in E. coli controlled by the presence of lactose.</div></div>
+    <div class="vocab-card"><div class="v-term">Repressor protein</div><div class="v-def">A protein that binds to the operator and blocks transcription.</div></div>
+    <div class="vocab-card"><div class="v-term">Operator</div><div class="v-def">The region of DNA where the repressor binds in an operon.</div></div>
+    <div class="vocab-card"><div class="v-term">Discontinuous variation</div><div class="v-def">Distinct categories with no intermediates, usually one gene.</div></div>
+    <div class="vocab-card"><div class="v-term">Continuous variation</div><div class="v-def">A range of values in a population, usually polygenic + environment.</div></div>
+    <div class="vocab-card"><div class="v-term">Normal distribution</div><div class="v-def">A bell-shaped curve where most values cluster around the mean.</div></div>
+    <div class="vocab-card"><div class="v-term">Monozygotic twins</div><div class="v-def">Identical twins from one zygote — share 100% DNA.</div></div>
+    <div class="vocab-card"><div class="v-term">Tyrosinase</div><div class="v-def">Enzyme for melanin production; temperature-sensitive in Siamese cats.</div></div>
+  </div>
+
+  <div class="topic-tracker" style="margin-top:2rem">
+    <h3 style="margin-bottom:0.8rem">Self-Assessment Checklist</h3>
+    <div class="tracker-row"><div class="tracker-check" onclick="toggleCheck(this)"></div> I can explain that phenotype = genotype + environment</div>
+    <div class="tracker-row"><div class="tracker-check" onclick="toggleCheck(this)"></div> I can use the Siamese cat to explain gene-environment interaction</div>
+    <div class="tracker-row"><div class="tracker-check" onclick="toggleCheck(this)"></div> I can describe how the lac operon is regulated</div>
+    <div class="tracker-row"><div class="tracker-check" onclick="toggleCheck(this)"></div> I can analyse twin study data to separate genetic and environmental effects</div>
+    <div class="tracker-row"><div class="tracker-check" onclick="toggleCheck(this)"></div> I can distinguish between discontinuous and continuous variation</div>
+    <div class="tracker-row"><div class="tracker-check" onclick="toggleCheck(this)"></div> I can explain how to study continuous variation in a population</div>
+  </div>
+</section>
+
+<footer class="lesson-footer">
+  <p>IAL Biology — 3C.2 Interactions Between Genes and the Environment — Spec refs 3.20(i), 3.21</p>
+</footer>
+
+</div>
+
+<script>
+window.addEventListener('scroll',()=>{const h=document.documentElement.scrollHeight-window.innerHeight;document.getElementById('progressBar').style.width=(window.scrollY/h)*100+'%'});
+const obs=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('visible')})},{threshold:0.08});
+document.querySelectorAll('.section').forEach(s=>obs.observe(s));
+function scrollTo(id){document.getElementById(id).scrollIntoView({behavior:'smooth',block:'start'})}
+const secs=['hero','diagnostic','area1','area2','area3','area4','practice','exit'];
+const pills=document.querySelectorAll('.lesson-nav .nav-pill');
+window.addEventListener('scroll',()=>{let cur=secs[0];secs.forEach(id=>{const el=document.getElementById(id);if(el&&el.getBoundingClientRect().top<=130)cur=id});pills.forEach((p,i)=>p.classList.toggle('active',secs[i]===cur))});
+
+const qs={};
+function sel(qid,idx,el){if(qs[qid]?.locked)return;if(!qs[qid])qs[qid]={};qs[qid].selected=idx;el.parentElement.querySelectorAll('.quiz-option').forEach(o=>o.classList.remove('selected'));el.classList.add('selected')}
+function check(qid,correct,yesMsg,noMsg){if(qs[qid]?.locked)return;if(qs[qid]?.selected===undefined)return;qs[qid].locked=true;const opts=document.getElementById(qid+'Options').querySelectorAll('.quiz-option');const fb=document.getElementById(qid+'Feedback');opts.forEach((o,i)=>{if(i===correct)o.classList.add('correct');else if(i===qs[qid].selected)o.classList.add('incorrect')});const ok=qs[qid].selected===correct;fb.className='quiz-feedback show '+(ok?'correct-fb':'incorrect-fb');fb.innerHTML=ok?'✓ '+yesMsg:'✗ '+noMsg}
+
+function checkFill(wid){document.querySelectorAll('#'+wid+' .blank-input').forEach(inp=>{const ans=inp.dataset.answer.toLowerCase().trim();const val=inp.value.toLowerCase().trim();if(val===ans){inp.classList.remove('incorrect-input');inp.classList.add('correct-input')}else{inp.classList.remove('correct-input');inp.classList.add('incorrect-input')}})}
+
+function showTier(btn,panelId){const tabs=btn.parentElement;tabs.querySelectorAll('.tier-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');const card=tabs.closest('.card,.struggle-box,.quiz-widget');if(!card)return;card.querySelectorAll('.tier-panel').forEach(p=>p.classList.remove('active'));document.getElementById(panelId).classList.add('active')}
+
+// Cat diagram
+const catData={body:{title:'Body (Core)',text:'Temperature ~38°C. Tyrosinase is denatured at this temperature → no melanin produced → pale/cream fur.'},ears:{title:'Ears (Extremity)',text:'Temperature ~33°C. Cooler temperature means tyrosinase is active → melanin IS produced → dark brown/black fur.'},paws:{title:'Paws (Extremity)',text:'Temperature ~33°C. Same as ears — the enzyme works at this lower temperature, producing dark pigment.'},tail:{title:'Tail (Extremity)',text:'Temperature ~33°C. The furthest point from the body core. Tyrosinase functions here → dark melanin deposited in the fur.'}};
+function showCatInfo(zone){const p=document.getElementById('catInfoPanel');const d=catData[zone];p.innerHTML='<div class="panel-title">'+d.title+'</div>'+d.text;p.classList.add('show')}
+
+// Operon toggle
+let operonState=false;
+function toggleOperon(){operonState=!operonState;document.getElementById('repressorBound').style.display=operonState?'none':'block';document.getElementById('repressorFree').style.display=operonState?'block':'none';document.getElementById('operonToggle').textContent=operonState?'Show: Lactose Absent':'Show: Lactose Present'}
+
+// Drag categorise
+let draggedChip=null;
+document.querySelectorAll('.cat-chip').forEach(c=>{c.addEventListener('dragstart',e=>{draggedChip=c;e.dataTransfer.setData('text','')});c.addEventListener('click',()=>{if(c.classList.contains('placed'))return;const target=prompt('Type "d" for discontinuous or "c" for continuous:');if(target==='d')placeChip(c,'disc');else if(target==='c')placeChip(c,'cont')})});
+function dropChip(e,cat){e.preventDefault();e.currentTarget.classList.remove('over');if(draggedChip)placeChip(draggedChip,cat)}
+function placeChip(chip,cat){chip.classList.add('placed');const box=document.getElementById(cat==='disc'?'discPlaced':'contPlaced');const clone=chip.cloneNode(true);clone.classList.remove('placed');clone.style.cursor='default';clone.draggable=false;clone.dataset.expected=chip.dataset.cat;box.appendChild(clone)}
+function checkCats(){document.querySelectorAll('.cat-placed .cat-chip').forEach(c=>{const expected=c.dataset.expected;const actual=c.parentElement.id.startsWith('disc')?'disc':'cont';if(expected===actual)c.classList.add('correct-chip');else c.classList.add('incorrect-chip')})}
+
+function pickConf(btn){btn.parentElement.querySelectorAll('.conf-btn').forEach(b=>b.classList.remove('selected'));btn.classList.add('selected')}
+function toggleCheck(el){el.classList.toggle('checked');el.textContent=el.classList.contains('checked')?'✓':''}
+</script>
+</body>
+</html>

@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>3C.3 Controlling Gene Expression — IAL Biology</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300..700;1,9..40,300..700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f5f0e8;--bg-warm:#efe8db;--ink:#1a1714;--ink-soft:#4a443b;--ink-muted:#8a8278;--accent:#c44b2b;--accent-light:#e8704f;--accent-bg:#fdf0ec;--teal:#1a7a6d;--teal-light:#e6f5f2;--teal-dark:#0f574d;--blue:#2a5d8f;--blue-light:#e8f0f8;--purple:#6b4c8a;--purple-light:#f0eaf5;--gold:#b8860b;--gold-light:#fdf6e3;--success:#2d8a4e;--success-bg:#e8f5ed;--error:#c44b2b;--error-bg:#fdf0ec;--card:#fffdf8;--card-border:#e0d8cc;--radius:6px;--radius-lg:12px;--shadow-sm:0 1px 3px rgba(26,23,20,0.06);--shadow-md:0 4px 12px rgba(26,23,20,0.08);--shadow-lg:0 8px 30px rgba(26,23,20,0.12);--font-display:'Instrument Serif',Georgia,serif;--font-body:'DM Sans',-apple-system,sans-serif;--font-mono:'JetBrains Mono',monospace}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}html{scroll-behavior:smooth;font-size:16px}body{font-family:var(--font-body);color:var(--ink);background:var(--bg);line-height:1.65;-webkit-font-smoothing:antialiased}
+.lesson-selector{display:flex;justify-content:center;gap:0.5rem;padding:0.5rem 1rem;background:rgba(239,232,219,0.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--card-border);position:fixed;top:0;left:0;right:0;z-index:1001}
+.lesson-pill{padding:0.3rem 0.8rem;border-radius:20px;background:var(--card);border:1px solid var(--card-border);font-size:0.75rem;font-family:var(--font-body);font-weight:600;color:var(--ink-soft);text-decoration:none;transition:all 0.2s;white-space:nowrap}
+.lesson-pill:hover{border-color:var(--accent);color:var(--accent)}.lesson-pill.active{background:var(--accent);color:white;border-color:var(--accent)}
+.progress-bar{position:fixed;top:0;left:0;z-index:1002;height:3px;background:var(--accent);width:0%;transition:width 0.3s ease}
+.lesson-nav{position:fixed;top:34px;left:0;right:0;z-index:999;background:rgba(245,240,232,0.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--card-border);padding:0.5rem 1rem;display:flex;align-items:center;gap:0.8rem;font-size:0.82rem}
+.lesson-nav .nav-title{font-family:var(--font-display);font-size:0.95rem;color:var(--accent);white-space:nowrap}
+.nav-sections{display:flex;gap:0.25rem;overflow-x:auto;scrollbar-width:none;flex:1}.nav-sections::-webkit-scrollbar{display:none}
+.nav-pill{padding:0.3rem 0.7rem;border-radius:20px;background:transparent;border:1px solid transparent;cursor:pointer;white-space:nowrap;font-size:0.75rem;font-weight:600;color:var(--ink-soft);transition:all 0.2s;font-family:var(--font-body)}
+.nav-pill:hover{background:var(--card);border-color:var(--card-border)}.nav-pill.active{background:var(--accent);color:white;border-color:var(--accent)}
+.container{max-width:860px;margin:0 auto;padding:5.5rem 1.5rem 4rem}
+.hero{text-align:center;padding:2.5rem 0 2rem;animation:fadeUp 0.8s ease}
+.hero .spec-ref{display:inline-flex;gap:0.4rem;font-family:var(--font-mono);font-size:0.72rem;color:var(--ink-muted);letter-spacing:0.05em;margin-bottom:1rem}
+.hero .spec-ref span{background:var(--card);border:1px solid var(--card-border);padding:0.15rem 0.45rem;border-radius:4px}
+.hero h1{font-family:var(--font-display);font-size:clamp(2.2rem,5vw,3.2rem);line-height:1.15;color:var(--ink);margin-bottom:0.8rem}
+.hero h1 em{color:var(--accent);font-style:italic}
+.hero .subtitle{font-size:1.05rem;color:var(--ink-soft);max-width:600px;margin:0 auto 1.5rem}
+.big-question{background:linear-gradient(135deg,var(--accent-bg),var(--gold-light));border:1px solid #e8d4c0;border-radius:var(--radius-lg);padding:1.2rem 1.5rem;font-family:var(--font-display);font-size:1.05rem;font-style:italic;color:var(--accent);max-width:650px;margin:0 auto}
+.objectives-bar{background:var(--card);border:1px solid var(--card-border);border-radius:var(--radius-lg);padding:1.2rem 1.5rem;margin:2rem 0;box-shadow:var(--shadow-sm)}
+.objectives-bar summary{cursor:pointer;font-weight:600;font-size:0.85rem;text-transform:uppercase;letter-spacing:0.06em;color:var(--teal-dark);list-style:none;display:flex;align-items:center;gap:0.5rem}
+.objectives-bar summary::before{content:'🎯'}.objectives-bar summary::after{content:'▾';margin-left:auto;transition:transform 0.2s}.objectives-bar[open] summary::after{transform:rotate(180deg)}
+.objectives-list{margin-top:1rem;display:grid;gap:0.6rem}
+.obj-item{display:flex;align-items:flex-start;gap:0.6rem;font-size:0.92rem;color:var(--ink-soft);padding:0.5rem 0.7rem;border-radius:var(--radius);background:var(--teal-light);border-left:3px solid var(--teal)}
+.obj-item .obj-tag{font-family:var(--font-mono);font-size:0.7rem;background:var(--teal);color:white;padding:0.15rem 0.4rem;border-radius:3px;white-space:nowrap;margin-top:2px}
+.section{margin:3rem 0;opacity:0;transform:translateY(20px);transition:opacity 0.6s ease,transform 0.6s ease}.section.visible{opacity:1;transform:translateY(0)}
+.section-label{display:inline-flex;align-items:center;gap:0.5rem;font-family:var(--font-mono);font-size:0.72rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--ink-muted);margin-bottom:0.5rem}
+.section-label .dot{width:8px;height:8px;border-radius:50%;display:inline-block}.dot.red{background:var(--accent)}.dot.teal{background:var(--teal)}.dot.blue{background:var(--blue)}.dot.purple{background:var(--purple)}
+h2{font-family:var(--font-display);font-size:1.9rem;line-height:1.2;margin-bottom:0.6rem}
+h3{font-family:var(--font-display);font-size:1.35rem;line-height:1.3;margin-bottom:0.5rem;margin-top:1.8rem}h3:first-child{margin-top:0}
+p{margin-bottom:1rem;color:var(--ink-soft);font-size:0.95rem}p strong{color:var(--ink)}
+.card{background:var(--card);border:1px solid var(--card-border);border-radius:var(--radius-lg);padding:1.5rem;margin:1.2rem 0;box-shadow:var(--shadow-sm)}
+.key-term{display:inline;background:var(--gold-light);border-bottom:2px solid var(--gold);padding:0.1rem 0.3rem;border-radius:2px;cursor:help;position:relative}
+.key-term .term-def{display:none;position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);background:var(--ink);color:white;padding:0.6rem 0.8rem;border-radius:var(--radius);font-size:0.82rem;line-height:1.4;width:260px;z-index:50;box-shadow:var(--shadow-lg);font-weight:400}
+.key-term:hover .term-def{display:block}
+.exam-hint{background:var(--accent-bg);border-left:4px solid var(--accent);border-radius:0 var(--radius) var(--radius) 0;padding:1rem 1.2rem;margin:1.2rem 0;font-size:0.88rem}
+.exam-hint .hint-label{font-weight:700;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.06em;color:var(--accent);margin-bottom:0.3rem}
+.learning-tip{background:var(--teal-light);border-left:4px solid var(--teal);border-radius:0 var(--radius) var(--radius) 0;padding:1rem 1.2rem;margin:1.2rem 0;font-size:0.88rem}
+.learning-tip .tip-label{font-weight:700;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.06em;color:var(--teal-dark);margin-bottom:0.3rem}
+.scaffold{background:var(--purple-light);border-left:4px solid var(--purple);border-radius:0 var(--radius) var(--radius) 0;padding:1rem 1.2rem;margin:1.2rem 0;font-size:0.88rem}
+.scaffold .scaffold-label{font-weight:700;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.06em;color:var(--purple);margin-bottom:0.3rem}
+.struggle-box{background:var(--gold-light);border-left:4px solid var(--gold);border-radius:0 var(--radius) var(--radius) 0;padding:1rem 1.2rem;margin:1.2rem 0;font-size:0.88rem}
+.struggle-box .struggle-label{font-weight:700;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.06em;color:var(--gold);margin-bottom:0.3rem}
+.diagram-container{background:white;border:1px solid var(--card-border);border-radius:var(--radius-lg);padding:1.5rem;margin:1.5rem 0;position:relative;overflow:hidden}
+.diagram-title{font-family:var(--font-mono);font-size:0.72rem;text-transform:uppercase;letter-spacing:0.06em;color:var(--ink-muted);margin-bottom:1rem}
+.bio-svg{width:100%;height:auto}.bio-svg text{font-family:var(--font-body);font-size:11px;fill:var(--ink-soft)}.bio-svg .label-bold{font-weight:600;fill:var(--ink);font-size:12px}
+.bio-svg .highlight-part{cursor:pointer;transition:opacity 0.3s}.bio-svg .highlight-part:hover{opacity:0.8}
+.info-panel{background:var(--ink);color:white;padding:0.8rem 1rem;border-radius:var(--radius);font-size:0.85rem;line-height:1.5;margin-top:0.8rem;display:none;animation:fadeUp 0.3s ease}
+.info-panel.show{display:block}.info-panel .panel-title{font-weight:700;font-size:0.78rem;text-transform:uppercase;letter-spacing:0.04em;color:var(--accent-light);margin-bottom:0.2rem}
+.quiz-widget{background:var(--card);border:2px solid var(--card-border);border-radius:var(--radius-lg);padding:1.5rem;margin:1.5rem 0;box-shadow:var(--shadow-sm)}
+.quiz-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem}
+.quiz-type{font-family:var(--font-mono);font-size:0.7rem;text-transform:uppercase;letter-spacing:0.06em;color:white;padding:0.25rem 0.6rem;border-radius:20px}
+.quiz-type.ao1{background:var(--teal)}.quiz-type.ao2{background:var(--blue)}.quiz-type.ao3{background:var(--purple)}.quiz-type.diagnostic{background:var(--gold)}
+.quiz-question{font-size:1rem;font-weight:500;color:var(--ink);margin-bottom:1rem;line-height:1.5}
+.quiz-options{display:grid;gap:0.5rem}
+.quiz-option{padding:0.7rem 1rem;border:2px solid var(--card-border);border-radius:var(--radius);cursor:pointer;font-size:0.9rem;transition:all 0.2s;background:white;display:flex;align-items:center;gap:0.6rem}
+.quiz-option:hover{border-color:var(--teal);background:var(--teal-light)}.quiz-option.selected{border-color:var(--blue);background:var(--blue-light)}
+.quiz-option.correct{border-color:var(--success);background:var(--success-bg)}.quiz-option.incorrect{border-color:var(--error);background:var(--error-bg);opacity:0.7}
+.quiz-option .opt-letter{width:24px;height:24px;border-radius:50%;background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:600;flex-shrink:0}
+.quiz-option.correct .opt-letter{background:var(--success);color:white}.quiz-option.incorrect .opt-letter{background:var(--error);color:white}
+.quiz-feedback{margin-top:1rem;padding:0.8rem 1rem;border-radius:var(--radius);font-size:0.88rem;line-height:1.5;display:none}
+.quiz-feedback.show{display:block}.quiz-feedback.correct-fb{background:var(--success-bg);border-left:3px solid var(--success)}.quiz-feedback.incorrect-fb{background:var(--error-bg);border-left:3px solid var(--error)}
+.quiz-btn{margin-top:1rem;padding:0.6rem 1.2rem;background:var(--teal);color:white;border:none;border-radius:var(--radius);font-family:var(--font-body);font-size:0.85rem;font-weight:600;cursor:pointer;transition:background 0.2s}
+.quiz-btn:hover{background:var(--teal-dark)}.quiz-btn:disabled{opacity:0.5;cursor:not-allowed}
+.fill-blank-widget{margin:1.5rem 0}.fill-item{display:flex;align-items:center;gap:0.5rem;margin-bottom:0.7rem;font-size:0.92rem;flex-wrap:wrap}
+.fill-item .blank-input{border:none;border-bottom:2px dashed var(--card-border);background:transparent;font-family:var(--font-body);font-size:0.92rem;padding:0.2rem 0.5rem;width:180px;outline:none;transition:border-color 0.2s;color:var(--ink)}
+.fill-item .blank-input:focus{border-color:var(--teal)}.fill-item .blank-input.correct-input{border-color:var(--success);border-style:solid;color:var(--success)}.fill-item .blank-input.incorrect-input{border-color:var(--error);border-style:solid;color:var(--error)}
+.sequence-widget{background:var(--card);border:2px solid var(--card-border);border-radius:var(--radius-lg);padding:1.5rem;margin:1.5rem 0}
+.seq-items{display:grid;gap:0.4rem}.seq-item{display:flex;align-items:center;gap:0.7rem;padding:0.65rem 0.9rem;background:white;border:1.5px solid var(--card-border);border-radius:var(--radius);cursor:grab;user-select:none;transition:all 0.2s;font-size:0.9rem}
+.seq-item:active{cursor:grabbing}.seq-item:hover{border-color:var(--blue);background:var(--blue-light)}.seq-item.dragging{opacity:0.4}
+.seq-item .seq-num{width:26px;height:26px;border-radius:50%;background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:700;flex-shrink:0;color:var(--ink-muted)}
+.seq-item.correct-seq{border-color:var(--success);background:var(--success-bg)}.seq-item.correct-seq .seq-num{background:var(--success);color:white}
+.seq-item.incorrect-seq{border-color:var(--error);background:var(--error-bg)}.seq-item.incorrect-seq .seq-num{background:var(--error);color:white}
+.seq-item .grip{color:var(--ink-muted);font-size:1.1rem;flex-shrink:0}
+.scenario-card{background:var(--blue-light);border:1px solid #c8daea;border-radius:var(--radius-lg);padding:1.2rem 1.5rem;margin:1.2rem 0}
+.scenario-card .scenario-label{font-family:var(--font-mono);font-size:0.7rem;text-transform:uppercase;letter-spacing:0.06em;color:var(--blue);margin-bottom:0.5rem}
+.scenario-card .scenario-q{font-weight:600;font-size:0.95rem;margin-bottom:0.7rem}
+.reveal-btn{padding:0.45rem 1rem;background:var(--blue);color:white;border:none;border-radius:var(--radius);font-family:var(--font-body);font-size:0.82rem;font-weight:500;cursor:pointer;transition:background 0.2s}
+.reveal-btn:hover{background:#1e4a73}
+.reveal-content{margin-top:0.8rem;padding:0.8rem 1rem;background:white;border-radius:var(--radius);font-size:0.88rem;line-height:1.6;display:none;border:1px solid #c8daea}
+.reveal-content.show{display:block;animation:fadeUp 0.3s ease}
+.compare-table{width:100%;border-collapse:collapse;font-size:0.88rem;margin:1rem 0}
+.compare-table th{background:var(--ink);color:white;padding:0.7rem 1rem;text-align:left;font-weight:600;font-size:0.8rem;text-transform:uppercase;letter-spacing:0.04em}
+.compare-table th:first-child{border-radius:var(--radius) 0 0 0}.compare-table th:last-child{border-radius:0 var(--radius) 0 0}
+.compare-table td{padding:0.6rem 1rem;border-bottom:1px solid var(--card-border);vertical-align:top}.compare-table tr:nth-child(even) td{background:var(--bg-warm)}
+.compare-table .feature-col{font-weight:600;color:var(--ink);white-space:nowrap}
+.vocab-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:0.6rem;margin:1rem 0}
+.vocab-card{background:white;border:1px solid var(--card-border);border-radius:var(--radius);padding:0.8rem 1rem;cursor:pointer;transition:all 0.2s}
+.vocab-card:hover{border-color:var(--gold);box-shadow:var(--shadow-sm)}.vocab-card .v-term{font-weight:700;font-size:0.9rem;color:var(--accent);margin-bottom:0.2rem}.vocab-card .v-def{font-size:0.82rem;color:var(--ink-soft);line-height:1.45}
+.flashcard-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:0.8rem;margin:1rem 0}
+.flashcard{background:var(--card);border:2px solid var(--card-border);border-radius:var(--radius-lg);padding:1.2rem;min-height:120px;cursor:pointer;transition:all 0.3s;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center}
+.flashcard:hover{border-color:var(--teal);box-shadow:var(--shadow-md)}.flashcard .fc-front{font-weight:700;font-size:1rem;color:var(--accent)}.flashcard .fc-back{display:none;font-size:0.85rem;color:var(--ink-soft);line-height:1.5}
+.flashcard.flipped .fc-front{display:none}.flashcard.flipped .fc-back{display:block}.flashcard .fc-hint{font-size:0.7rem;color:var(--ink-muted);margin-top:0.5rem}
+.vtr-widget{background:var(--card);border:2px solid var(--teal);border-radius:var(--radius-lg);padding:1.5rem;margin:1.5rem 0}
+.vtr-widget h3{color:var(--teal-dark);margin-top:0}
+.vtr-widget textarea{width:100%;min-height:60px;background:white;border:1px solid var(--card-border);border-radius:var(--radius);padding:0.7rem;font-family:var(--font-body);font-size:0.88rem;resize:vertical;outline:none;margin:0.4rem 0 1rem}
+.vtr-widget textarea:focus{border-color:var(--teal)}
+.vtr-label{font-family:var(--font-mono);font-size:0.72rem;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:0.3rem;font-weight:600}
+.vtr-label.claim{color:var(--accent)}.vtr-label.support{color:var(--blue)}.vtr-label.question{color:var(--purple)}
+.tier-tabs{display:flex;gap:0;border-bottom:2px solid var(--card-border);margin-bottom:1rem}
+.tier-btn{padding:0.6rem 1.2rem;border:none;background:none;font-family:var(--font-body);font-size:0.85rem;font-weight:500;color:var(--ink-muted);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;transition:all 0.2s}
+.tier-btn:hover{color:var(--ink)}.tier-btn.active{color:var(--accent);border-bottom-color:var(--accent)}
+.tier-panel{display:none;padding:0.5rem 0}.tier-panel.active{display:block;animation:fadeUp 0.3s ease}
+.self-check details{margin-bottom:0.6rem;border:1px solid var(--card-border);border-radius:var(--radius);overflow:hidden}
+.self-check summary{padding:0.7rem 1rem;cursor:pointer;font-size:0.92rem;font-weight:500;background:var(--card);list-style:none;display:flex;align-items:center;gap:0.5rem}
+.self-check summary::before{content:'❓';font-size:0.85rem}.self-check details[open] summary{border-bottom:1px solid var(--card-border)}
+.self-check .answer{padding:0.8rem 1rem;font-size:0.88rem;line-height:1.6;color:var(--ink-soft);background:white}
+.exit-ticket{background:linear-gradient(135deg,var(--ink) 0%,#2a2520 100%);color:white;border-radius:var(--radius-lg);padding:2rem;margin:2rem 0}
+.exit-ticket h3{font-family:var(--font-display);color:var(--accent-light);margin-top:0}.exit-ticket p{color:rgba(255,255,255,0.75)}
+.exit-ticket textarea{width:100%;min-height:70px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);border-radius:var(--radius);padding:0.7rem;color:white;font-family:var(--font-body);font-size:0.88rem;resize:vertical;outline:none;margin:0.4rem 0 1rem}
+.exit-ticket textarea::placeholder{color:rgba(255,255,255,0.35)}.exit-ticket textarea:focus{border-color:var(--accent-light)}
+.confidence-row{display:flex;gap:0.6rem;flex-wrap:wrap;margin:1rem 0}
+.conf-btn{padding:0.6rem 1.2rem;border:2px solid var(--card-border);border-radius:var(--radius-lg);background:var(--card);cursor:pointer;font-size:0.88rem;transition:all 0.2s;font-family:var(--font-body)}
+.conf-btn:hover{border-color:var(--teal);background:var(--teal-light)}.conf-btn.selected{border-color:var(--teal);background:var(--teal);color:white}
+.topic-tracker{background:var(--card);border:1px solid var(--card-border);border-radius:var(--radius-lg);padding:1.2rem 1.5rem;margin:2rem 0;box-shadow:var(--shadow-sm)}
+.tracker-row{display:flex;align-items:center;gap:0.7rem;padding:0.5rem 0;border-bottom:1px solid var(--card-border);font-size:0.88rem}.tracker-row:last-child{border-bottom:none}
+.tracker-check{width:22px;height:22px;border:2px solid var(--card-border);border-radius:4px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all 0.2s;flex-shrink:0;font-size:0.75rem}
+.tracker-check.checked{background:var(--success);border-color:var(--success);color:white}
+.lesson-footer{text-align:center;padding:2rem 0;border-top:1px solid var(--card-border);margin-top:3rem;font-size:0.82rem;color:var(--ink-muted)}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:640px){.container{padding:5rem 1rem 3rem}.hero h1{font-size:1.8rem}h2{font-size:1.5rem}.vocab-grid,.flashcard-grid{grid-template-columns:1fr}.nav-sections{display:none}.lesson-selector{gap:0.3rem;padding:0.4rem 0.5rem}.lesson-pill{font-size:0.68rem;padding:0.25rem 0.5rem}}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="progressBar"></div>
+<nav class="lesson-selector">
+  <a href="cell-differentiation.html" class="lesson-pill">3C.1 Cell Differentiation</a>
+  <a href="genes-and-environment.html" class="lesson-pill">3C.2 Genes &amp; Environment</a>
+  <a href="controlling-gene-expression.html" class="lesson-pill active">3C.3 Gene Expression</a>
+</nav>
+<nav class="lesson-nav">
+  <span class="nav-title">3C.3</span>
+  <div class="nav-sections">
+    <button class="nav-pill active" onclick="scrollTo('hero')">Overview</button>
+    <button class="nav-pill" onclick="scrollTo('diagnostic')">Diagnostic</button>
+    <button class="nav-pill" onclick="scrollTo('area1')">Transcription Factors</button>
+    <button class="nav-pill" onclick="scrollTo('area2')">RNA Splicing</button>
+    <button class="nav-pill" onclick="scrollTo('area3')">Epigenetics</button>
+    <button class="nav-pill" onclick="scrollTo('area4')">Non-coding RNA</button>
+    <button class="nav-pill" onclick="scrollTo('practice')">Exam Practice</button>
+    <button class="nav-pill" onclick="scrollTo('exit')">Exit Ticket</button>
+  </div>
+</nav>
+<div class="container">
+
+<header class="hero" id="hero">
+  <div class="spec-ref"><span>3.18</span><span>3.19</span><span>3.20(i)</span><span>3.20(ii)</span></div>
+  <h1>Controlling <em>Gene Expression</em></h1>
+  <p class="subtitle">How cells with identical DNA become muscle, nerve, or blood cells &mdash; and how expression is regulated at every level.</p>
+  <div class="big-question">Every cell in your body contains the same 20,000+ genes. So how does a liver cell &lsquo;know&rsquo; to make albumin while a red blood cell makes haemoglobin?</div>
+</header>
+
+<details class="objectives-bar" open>
+  <summary>Learning Objectives</summary>
+  <div class="objectives-list">
+    <div class="obj-item"><span class="obj-tag">AO1</span> Understand the role of transcription factors in regulating gene expression, including the binding of promoters and enhancers</div>
+    <div class="obj-item"><span class="obj-tag">AO2</span> Understand post-transcriptional control of gene expression, including alternative RNA splicing</div>
+    <div class="obj-item"><span class="obj-tag">AO1</span> Understand how epigenetic changes (DNA methylation and histone modification) can modify gene expression</div>
+    <div class="obj-item"><span class="obj-tag">AO2</span> Understand the role of non-coding RNA in gene regulation, including X-inactivation and Barr bodies</div>
+  </div>
+</details>
+
+<!-- ═══════════════════════ DIAGNOSTIC ═══════════════════════ -->
+<section class="section" id="diagnostic">
+  <div class="section-label"><span class="dot red"></span> Prior Knowledge</div>
+  <h2>Diagnostic Quiz</h2>
+
+  <div class="quiz-widget" id="dq1">
+    <div class="quiz-header"><span class="quiz-type diagnostic">Q1</span></div>
+    <div class="quiz-question">What is the role of RNA polymerase in transcription?</div>
+    <div class="quiz-options" id="dq1Options">
+      <div class="quiz-option" onclick="sel('dq1',0,this)"><span class="opt-letter">A</span> It joins amino acids together</div>
+      <div class="quiz-option" onclick="sel('dq1',1,this)"><span class="opt-letter">B</span> It synthesises mRNA from a DNA template</div>
+      <div class="quiz-option" onclick="sel('dq1',2,this)"><span class="opt-letter">C</span> It unwinds the double helix permanently</div>
+      <div class="quiz-option" onclick="sel('dq1',3,this)"><span class="opt-letter">D</span> It removes introns from pre-mRNA</div>
+    </div>
+    <div class="quiz-feedback" id="dq1Feedback"></div>
+    <button class="quiz-btn" onclick="check('dq1',1,'Correct! RNA polymerase binds to the template strand and synthesises a complementary mRNA molecule.','RNA polymerase reads the DNA template strand and builds mRNA using complementary base pairing.')">Check</button>
+  </div>
+
+  <div class="quiz-widget" id="dq2">
+    <div class="quiz-header"><span class="quiz-type diagnostic">Q2</span></div>
+    <div class="quiz-question">Which of these is NOT part of protein synthesis?</div>
+    <div class="quiz-options" id="dq2Options">
+      <div class="quiz-option" onclick="sel('dq2',0,this)"><span class="opt-letter">A</span> Transcription</div>
+      <div class="quiz-option" onclick="sel('dq2',1,this)"><span class="opt-letter">B</span> Methylation</div>
+      <div class="quiz-option" onclick="sel('dq2',2,this)"><span class="opt-letter">C</span> Translation</div>
+      <div class="quiz-option" onclick="sel('dq2',3,this)"><span class="opt-letter">D</span> Splicing</div>
+    </div>
+    <div class="quiz-feedback" id="dq2Feedback"></div>
+    <button class="quiz-btn" onclick="check('dq2',1,'Correct! Methylation is an epigenetic modification, not a step in protein synthesis itself.','Methylation is the addition of -CH3 groups to DNA — it is an epigenetic mechanism, not part of protein synthesis.')">Check</button>
+  </div>
+
+  <div class="quiz-widget" id="dq3">
+    <div class="quiz-header"><span class="quiz-type diagnostic">Q3</span></div>
+    <div class="quiz-question">What are introns?</div>
+    <div class="quiz-options" id="dq3Options">
+      <div class="quiz-option" onclick="sel('dq3',0,this)"><span class="opt-letter">A</span> Coding sequences of a gene</div>
+      <div class="quiz-option" onclick="sel('dq3',1,this)"><span class="opt-letter">B</span> Non-coding sequences that are removed from pre-mRNA</div>
+      <div class="quiz-option" onclick="sel('dq3',2,this)"><span class="opt-letter">C</span> Proteins that regulate gene expression</div>
+      <div class="quiz-option" onclick="sel('dq3',3,this)"><span class="opt-letter">D</span> Sequences that code for tRNA</div>
+    </div>
+    <div class="quiz-feedback" id="dq3Feedback"></div>
+    <button class="quiz-btn" onclick="check('dq3',1,'Correct! Introns are non-coding &ldquo;intervening&rdquo; sequences spliced out during RNA processing.','Introns = intervening, non-coding sequences. Exons = expressed, coding sequences. Remember: introns are IN the way and get removed.')">Check</button>
+  </div>
+</section>
+
+<!-- ═══════════════════════ PRODUCTIVE STRUGGLE ═══════════════════════ -->
+<section class="section" id="struggle">
+  <div class="struggle-box">
+    <div class="struggle-label">Productive Struggle</div>
+    <p style="margin-bottom:0.6rem"><strong>Before you learn the content</strong>, have a go at this problem. It's okay to find it hard &mdash; struggling builds stronger understanding.</p>
+    <p style="font-weight:600;color:var(--ink);margin-bottom:0.8rem">Identical twins share 100% of their DNA. Yet one twin develops Type 2 diabetes at age 40 while the other remains healthy. Suggest how gene expression could explain this difference.</p>
+    <div class="tier-tabs">
+      <button class="tier-btn active" onclick="showTier(this,'strChal')">Challenge</button>
+      <button class="tier-btn" onclick="showTier(this,'strGuided')">Guided</button>
+      <button class="tier-btn" onclick="showTier(this,'strScaff')">Scaffolded</button>
+    </div>
+    <div class="tier-panel active" id="strChal">
+      <p>Write your best answer with no support. Consider what could change gene activity without altering the DNA sequence itself.</p>
+      <textarea style="width:100%;min-height:80px;border:1px solid var(--card-border);border-radius:var(--radius);padding:0.7rem;font-family:var(--font-body);font-size:0.88rem;resize:vertical" placeholder="Write your answer here..."></textarea>
+    </div>
+    <div class="tier-panel" id="strGuided">
+      <p>Use these prompts to structure your answer:</p>
+      <ul style="font-size:0.88rem;color:var(--ink-soft);padding-left:1.2rem;margin-bottom:0.5rem">
+        <li>What are epigenetic changes?</li>
+        <li>Name two types of epigenetic modification.</li>
+        <li>How could different lifestyles (diet, exercise, stress) lead to different patterns of gene expression?</li>
+      </ul>
+      <textarea style="width:100%;min-height:80px;border:1px solid var(--card-border);border-radius:var(--radius);padding:0.7rem;font-family:var(--font-body);font-size:0.88rem;resize:vertical" placeholder="Write your guided answer..."></textarea>
+    </div>
+    <div class="tier-panel" id="strScaff">
+      <p>Complete the paragraph:</p>
+      <p style="font-size:0.88rem;color:var(--ink-soft)">Although the twins have the same _______ (DNA sequence), their _______ patterns may differ. Environmental factors such as _______ and _______ can cause _______ changes &mdash; modifications that alter gene expression without changing the DNA sequence. For example, _______ groups may be added to DNA, which _______ transcription of certain genes. This means one twin may express genes for insulin resistance while the other does not.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════ AREA 1: TRANSCRIPTION FACTORS ═══════════════════════ -->
+<section class="section" id="area1">
+  <div class="section-label"><span class="dot teal"></span> Spec 3.18</div>
+  <h2>Transcription Factors</h2>
+  <p>Not all genes are active in every cell. <span class="key-term">Transcription factors<span class="term-def">Proteins that bind to specific DNA sequences near a gene to control whether RNA polymerase can transcribe it.</span></span> are proteins that regulate which genes are switched on or off by controlling whether RNA polymerase can bind and begin transcription.</p>
+
+  <div class="card">
+    <h3 style="margin-top:0">How Transcription Is Initiated</h3>
+    <p>Every gene has a <span class="key-term">promoter<span class="term-def">A region of DNA upstream of a gene where RNA polymerase and transcription factors bind to initiate transcription.</span></span> region &mdash; a specific DNA sequence just before (upstream of) the coding region. RNA polymerase cannot bind to the promoter alone; it needs transcription factors to assemble first.</p>
+    <p>Some genes also have <span class="key-term">enhancer<span class="term-def">Regulatory DNA sequences, often far from the gene, that increase the rate of transcription when activator proteins bind to them.</span></span> sequences. These can be thousands of base pairs away from the gene, but when <strong>activator proteins</strong> bind to them, the DNA loops so the enhancer comes close to the promoter, boosting transcription.</p>
+  </div>
+
+  <div class="diagram-container">
+    <div class="diagram-title">Interactive &mdash; Click each part to learn more</div>
+    <svg class="bio-svg" viewBox="0 0 700 220" xmlns="http://www.w3.org/2000/svg">
+      <!-- DNA strand -->
+      <rect x="30" y="100" width="640" height="16" rx="8" fill="#e0d8cc"/>
+      <text x="350" y="132" text-anchor="middle" class="label-bold" style="font-size:10px;fill:var(--ink-muted)">DNA</text>
+
+      <!-- Enhancer -->
+      <rect class="highlight-part" x="50" y="96" width="80" height="24" rx="6" fill="#6b4c8a" opacity="0.85" onclick="showTFInfo('enhancer')"/>
+      <text x="90" y="112" text-anchor="middle" style="fill:white;font-size:10px;font-weight:600">Enhancer</text>
+
+      <!-- Promoter -->
+      <rect class="highlight-part" x="260" y="96" width="90" height="24" rx="6" fill="#1a7a6d" opacity="0.85" onclick="showTFInfo('promoter')"/>
+      <text x="305" y="112" text-anchor="middle" style="fill:white;font-size:10px;font-weight:600">Promoter</text>
+
+      <!-- Gene -->
+      <rect class="highlight-part" x="370" y="96" width="200" height="24" rx="6" fill="#c44b2b" opacity="0.85" onclick="showTFInfo('gene')"/>
+      <text x="470" y="112" text-anchor="middle" style="fill:white;font-size:10px;font-weight:600">Gene (coding region)</text>
+
+      <!-- Terminator -->
+      <rect class="highlight-part" x="590" y="96" width="70" height="24" rx="6" fill="#b8860b" opacity="0.85" onclick="showTFInfo('terminator')"/>
+      <text x="625" y="112" text-anchor="middle" style="fill:white;font-size:9px;font-weight:600">Terminator</text>
+
+      <!-- TF complex on promoter -->
+      <ellipse class="highlight-part" cx="305" cy="72" rx="50" ry="22" fill="#2a5d8f" opacity="0.8" onclick="showTFInfo('tf')"/>
+      <text x="305" y="76" text-anchor="middle" style="fill:white;font-size:9px;font-weight:600">Transcription</text>
+      <text x="305" y="66" text-anchor="middle" style="fill:white;font-size:9px;font-weight:600">Factors</text>
+
+      <!-- RNA Pol -->
+      <ellipse class="highlight-part" cx="370" cy="56" rx="35" ry="18" fill="#1a7a6d" opacity="0.9" onclick="showTFInfo('rnapol')"/>
+      <text x="370" y="60" text-anchor="middle" style="fill:white;font-size:8px;font-weight:600">RNA Pol</text>
+
+      <!-- Arrow: activator to enhancer -->
+      <path d="M90 80 L90 60 L180 45" stroke="var(--purple)" stroke-width="1.5" fill="none" stroke-dasharray="4,3" marker-end="url(#arr)"/>
+      <text x="130" y="42" style="font-size:9px;fill:var(--purple)">Activator binds</text>
+
+      <!-- DNA loop arrow -->
+      <path d="M130 96 C150 50 230 50 260 96" stroke="var(--ink-muted)" stroke-width="1" fill="none" stroke-dasharray="3,3"/>
+      <text x="195" y="55" text-anchor="middle" style="font-size:8px;fill:var(--ink-muted)">DNA loops</text>
+
+      <!-- Arrow for direction of transcription -->
+      <line x1="400" y1="145" x2="560" y2="145" stroke="var(--accent)" stroke-width="1.5" marker-end="url(#arr2)"/>
+      <text x="480" y="160" text-anchor="middle" style="font-size:9px;fill:var(--accent)">Direction of transcription</text>
+
+      <defs>
+        <marker id="arr" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6" fill="var(--purple)"/></marker>
+        <marker id="arr2" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6" fill="var(--accent)"/></marker>
+      </defs>
+    </svg>
+    <div class="info-panel" id="tfInfoPanel"></div>
+  </div>
+
+  <div class="exam-hint">
+    <div class="hint-label">Exam Tip</div>
+    <p style="margin:0">Questions often ask you to <strong>explain how transcription factors initiate transcription</strong>. Key steps: (1) TFs bind to the promoter region, (2) this forms a transcription initiation complex, (3) RNA polymerase can then bind, (4) transcription of the gene begins.</p>
+  </div>
+
+  <div class="learning-tip">
+    <div class="tip-label">Key Distinction</div>
+    <p style="margin:0"><strong>Activators</strong> increase transcription by binding to enhancers and recruiting RNA polymerase. <strong>Repressors</strong> decrease transcription by blocking TF binding or preventing the initiation complex from forming. This is how different cell types express different genes.</p>
+  </div>
+</section>
+
+<!-- ═══════════════════════ AREA 2: RNA SPLICING ═══════════════════════ -->
+<section class="section" id="area2">
+  <div class="section-label"><span class="dot blue"></span> Spec 3.19</div>
+  <h2>Post-Transcriptional Control</h2>
+  <p>Once pre-mRNA is transcribed, it still needs processing before it can be translated. This is another level where gene expression can be regulated.</p>
+
+  <div class="card">
+    <h3 style="margin-top:0">Alternative RNA Splicing</h3>
+    <p>Pre-mRNA contains both <span class="key-term">exons<span class="term-def">Coding sequences of a gene that are expressed in the final mRNA. Exons are joined together after splicing.</span></span> (coding regions) and <span class="key-term">introns<span class="term-def">Non-coding &ldquo;intervening&rdquo; sequences within a gene that are removed (spliced out) during RNA processing.</span></span> (non-coding regions). During RNA processing, introns are removed by a complex called the <span class="key-term">spliceosome<span class="term-def">A large molecular machine made of snRNPs (small nuclear ribonucleoproteins) that catalyses the removal of introns from pre-mRNA.</span></span>, and the remaining exons are joined together.</p>
+    <p>The key insight: <strong>different combinations of exons can be joined together</strong> from the same pre-mRNA. This means one gene can produce <strong>multiple different proteins</strong>. This is called <strong>alternative RNA splicing</strong>.</p>
+  </div>
+
+  <div class="diagram-container">
+    <div class="diagram-title">Alternative RNA Splicing &mdash; Click to toggle</div>
+    <svg class="bio-svg" viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg">
+      <!-- Pre-mRNA -->
+      <text x="20" y="30" class="label-bold" style="font-size:13px">Pre-mRNA</text>
+      <rect x="20" y="40" width="100" height="28" rx="4" fill="#c44b2b" opacity="0.85"/>
+      <text x="70" y="58" text-anchor="middle" style="fill:white;font-size:10px;font-weight:600">Exon 1</text>
+      <rect x="120" y="40" width="80" height="28" rx="4" fill="#e0d8cc"/>
+      <text x="160" y="58" text-anchor="middle" style="font-size:9px;fill:var(--ink-muted)">Intron 1</text>
+      <rect x="200" y="40" width="100" height="28" rx="4" fill="#2a5d8f" opacity="0.85"/>
+      <text x="250" y="58" text-anchor="middle" style="fill:white;font-size:10px;font-weight:600">Exon 2</text>
+      <rect x="300" y="40" width="80" height="28" rx="4" fill="#e0d8cc"/>
+      <text x="340" y="58" text-anchor="middle" style="font-size:9px;fill:var(--ink-muted)">Intron 2</text>
+      <rect x="380" y="40" width="100" height="28" rx="4" fill="#1a7a6d" opacity="0.85"/>
+      <text x="430" y="58" text-anchor="middle" style="fill:white;font-size:10px;font-weight:600">Exon 3</text>
+      <rect x="480" y="40" width="80" height="28" rx="4" fill="#e0d8cc"/>
+      <text x="520" y="58" text-anchor="middle" style="font-size:9px;fill:var(--ink-muted)">Intron 3</text>
+      <rect x="560" y="40" width="100" height="28" rx="4" fill="#6b4c8a" opacity="0.85"/>
+      <text x="610" y="58" text-anchor="middle" style="fill:white;font-size:10px;font-weight:600">Exon 4</text>
+
+      <!-- Splicing arrows -->
+      <text x="20" y="110" class="label-bold" style="font-size:12px;fill:var(--accent)">Splicing Pathway A</text>
+      <path d="M70 68 L70 120" stroke="var(--accent)" stroke-width="1.5" stroke-dasharray="4,3"/>
+      <path d="M250 68 L150 120" stroke="var(--accent)" stroke-width="1.5" stroke-dasharray="4,3"/>
+      <path d="M430 68 L230 120" stroke="var(--accent)" stroke-width="1.5" stroke-dasharray="4,3"/>
+      <path d="M610 68 L370 120" stroke="var(--accent)" stroke-width="1.5" stroke-dasharray="4,3"/>
+      <!-- mRNA A: Exon 1 + 2 + 3 + 4 -->
+      <rect x="20" y="120" width="90" height="24" rx="4" fill="#c44b2b" opacity="0.85"/>
+      <text x="65" y="136" text-anchor="middle" style="fill:white;font-size:9px;font-weight:600">Exon 1</text>
+      <rect x="110" y="120" width="90" height="24" rx="4" fill="#2a5d8f" opacity="0.85"/>
+      <text x="155" y="136" text-anchor="middle" style="fill:white;font-size:9px;font-weight:600">Exon 2</text>
+      <rect x="200" y="120" width="90" height="24" rx="4" fill="#1a7a6d" opacity="0.85"/>
+      <text x="245" y="136" text-anchor="middle" style="fill:white;font-size:9px;font-weight:600">Exon 3</text>
+      <rect x="290" y="120" width="90" height="24" rx="4" fill="#6b4c8a" opacity="0.85"/>
+      <text x="335" y="136" text-anchor="middle" style="fill:white;font-size:9px;font-weight:600">Exon 4</text>
+      <text x="400" y="136" style="font-size:10px;fill:var(--ink-soft)">&#8594; Protein A</text>
+
+      <!-- Splicing pathway B -->
+      <text x="20" y="180" class="label-bold" style="font-size:12px;fill:var(--blue)">Splicing Pathway B</text>
+      <!-- mRNA B: Exon 1 + 3 + 4 (skips Exon 2) -->
+      <rect x="20" y="190" width="90" height="24" rx="4" fill="#c44b2b" opacity="0.85"/>
+      <text x="65" y="206" text-anchor="middle" style="fill:white;font-size:9px;font-weight:600">Exon 1</text>
+      <rect x="110" y="190" width="90" height="24" rx="4" fill="#1a7a6d" opacity="0.85"/>
+      <text x="155" y="206" text-anchor="middle" style="fill:white;font-size:9px;font-weight:600">Exon 3</text>
+      <rect x="200" y="190" width="90" height="24" rx="4" fill="#6b4c8a" opacity="0.85"/>
+      <text x="245" y="206" text-anchor="middle" style="fill:white;font-size:9px;font-weight:600">Exon 4</text>
+      <text x="310" y="206" style="font-size:10px;fill:var(--ink-soft)">&#8594; Protein B</text>
+      <text x="20" y="246" style="font-size:10px;fill:var(--ink-muted)">Exon 2 is skipped in Pathway B &mdash; different exon combinations produce different proteins from one gene</text>
+    </svg>
+  </div>
+
+  <div class="scenario-card">
+    <div class="scenario-label">Real-World Example</div>
+    <div class="scenario-q">The Drosophila <em>Dscam</em> gene can produce over 38,000 different mRNA variants through alternative splicing. This is crucial for the immune system &mdash; each neuron can have a unique identity.</div>
+    <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('show')">Why does this matter?</button>
+    <div class="reveal-content">This shows that the number of proteins an organism makes far exceeds the number of genes it has. Humans have ~20,000 genes but produce over 100,000 different proteins, largely thanks to alternative splicing. This is a key point for understanding how complexity arises.</div>
+  </div>
+
+  <div class="exam-hint">
+    <div class="hint-label">Exam Tip</div>
+    <p style="margin:0">Remember: <strong>exons</strong> are <strong>ex</strong>pressed (they stay). <strong>Introns</strong> are <strong>in</strong>tervening (they are removed). The spliceosome is the molecular machine that does this work.</p>
+  </div>
+</section>
+
+<!-- ═══════════════════════ AREA 3: EPIGENETICS ═══════════════════════ -->
+<section class="section" id="area3">
+  <div class="section-label"><span class="dot purple"></span> Spec 3.20(i)</div>
+  <h2>Epigenetics</h2>
+  <p><span class="key-term">Epigenetics<span class="term-def">Heritable changes in gene expression that do not involve changes to the DNA base sequence. Caused by chemical modifications to DNA or histone proteins.</span></span> literally means &ldquo;above genetics&rdquo;. These are modifications that change how genes are expressed <strong>without altering the DNA base sequence</strong>. They can be inherited through cell division and sometimes between generations.</p>
+
+  <div class="card">
+    <h3 style="margin-top:0">DNA Methylation</h3>
+    <p>A methyl group (-CH<sub>3</sub>) is added to <span class="key-term">cytosine<span class="term-def">One of the four DNA bases. When methylated (5-methylcytosine), the gene associated with that region is typically silenced.</span></span> bases in DNA, usually where cytosine is followed by guanine (CpG sites). This is catalysed by <strong>DNA methyltransferase</strong> enzymes.</p>
+    <p><strong>Effect:</strong> Methylation typically <strong>silences gene expression</strong> because:</p>
+    <ul style="font-size:0.92rem;color:var(--ink-soft);padding-left:1.2rem;margin-bottom:1rem">
+      <li>It prevents transcription factors from binding to the promoter</li>
+      <li>It recruits proteins that condense the chromatin, making the DNA less accessible</li>
+    </ul>
+    <p>Methylation patterns can be passed on during DNA replication &mdash; this is how differentiated cells &ldquo;remember&rdquo; which genes to express.</p>
+  </div>
+
+  <div class="card">
+    <h3 style="margin-top:0">Histone Modification</h3>
+    <p>DNA is wound around <span class="key-term">histone<span class="term-def">Protein &ldquo;spools&rdquo; that DNA wraps around to form nucleosomes. Chemical modifications to histones alter how tightly DNA is packaged.</span></span> proteins to form <strong>nucleosomes</strong>. The &ldquo;tails&rdquo; of histones can be chemically modified, changing how tightly DNA is packaged.</p>
+
+    <table class="compare-table">
+      <tr><th>Modification</th><th>Effect on Chromatin</th><th>Effect on Gene Expression</th></tr>
+      <tr><td class="feature-col">Acetylation</td><td>Loosens chromatin (euchromatin)</td><td>Increases transcription &mdash; DNA is accessible to RNA polymerase</td></tr>
+      <tr><td class="feature-col">Deacetylation</td><td>Tightens chromatin (heterochromatin)</td><td>Decreases transcription &mdash; DNA is tightly wound and inaccessible</td></tr>
+      <tr><td class="feature-col">Methylation</td><td>Can loosen or tighten depending on position</td><td>Can activate or repress &mdash; depends on which amino acid is methylated</td></tr>
+    </table>
+  </div>
+
+  <div class="diagram-container">
+    <div class="diagram-title">Chromatin States &mdash; Click to explore</div>
+    <svg class="bio-svg" viewBox="0 0 700 200" xmlns="http://www.w3.org/2000/svg">
+      <!-- Euchromatin side -->
+      <text x="175" y="20" text-anchor="middle" class="label-bold" style="font-size:13px;fill:var(--teal)">Euchromatin (open)</text>
+      <!-- Loose nucleosomes -->
+      <circle class="highlight-part" cx="80" cy="90" r="22" fill="#1a7a6d" opacity="0.7" onclick="showEpiInfo('euchromatin')"/>
+      <circle class="highlight-part" cx="160" cy="90" r="22" fill="#1a7a6d" opacity="0.7" onclick="showEpiInfo('euchromatin')"/>
+      <circle class="highlight-part" cx="240" cy="90" r="22" fill="#1a7a6d" opacity="0.7" onclick="showEpiInfo('euchromatin')"/>
+      <!-- DNA loosely wound -->
+      <path d="M40 90 Q60 50 80 90 Q100 130 120 90 Q140 50 160 90 Q180 130 200 90 Q220 50 240 90 Q260 130 290 90" stroke="var(--accent)" stroke-width="2.5" fill="none"/>
+      <text x="175" y="140" text-anchor="middle" style="font-size:10px">Acetyl groups on histones</text>
+      <text x="175" y="155" text-anchor="middle" style="font-size:10px;fill:var(--teal);font-weight:600">Gene ON &#10003;</text>
+
+      <!-- Heterochromatin side -->
+      <text x="525" y="20" text-anchor="middle" class="label-bold" style="font-size:13px;fill:var(--purple)">Heterochromatin (closed)</text>
+      <!-- Tight nucleosomes -->
+      <circle class="highlight-part" cx="460" cy="80" r="20" fill="#6b4c8a" opacity="0.7" onclick="showEpiInfo('heterochromatin')"/>
+      <circle class="highlight-part" cx="500" cy="95" r="20" fill="#6b4c8a" opacity="0.7" onclick="showEpiInfo('heterochromatin')"/>
+      <circle class="highlight-part" cx="540" cy="80" r="20" fill="#6b4c8a" opacity="0.7" onclick="showEpiInfo('heterochromatin')"/>
+      <circle class="highlight-part" cx="510" cy="60" r="20" fill="#6b4c8a" opacity="0.7" onclick="showEpiInfo('heterochromatin')"/>
+      <circle class="highlight-part" cx="480" cy="110" r="18" fill="#6b4c8a" opacity="0.7" onclick="showEpiInfo('heterochromatin')"/>
+      <circle class="highlight-part" cx="530" cy="110" r="18" fill="#6b4c8a" opacity="0.7" onclick="showEpiInfo('heterochromatin')"/>
+      <!-- Tight DNA -->
+      <path d="M430 85 Q450 60 465 80 Q480 95 500 80 Q510 65 520 75 Q535 85 545 75 Q555 65 570 80 Q585 95 600 85" stroke="var(--accent)" stroke-width="2" fill="none"/>
+      <text x="525" y="150" text-anchor="middle" style="font-size:10px">Methyl groups / deacetylated</text>
+      <text x="525" y="165" text-anchor="middle" style="font-size:10px;fill:var(--error);font-weight:600">Gene OFF &#10007;</text>
+
+      <!-- Dividing line -->
+      <line x1="350" y1="10" x2="350" y2="190" stroke="var(--card-border)" stroke-width="1" stroke-dasharray="5,5"/>
+    </svg>
+    <div class="info-panel" id="epiInfoPanel"></div>
+  </div>
+
+  <div class="learning-tip">
+    <div class="tip-label">Making Connections</div>
+    <p style="margin:0">Epigenetic modifications explain how <strong>differentiated cells maintain their identity</strong>. A liver cell keeps liver-specific genes active and other genes methylated/silenced. These patterns are copied when the cell divides, so daughter cells remain liver cells.</p>
+  </div>
+
+  <!-- Flashcards -->
+  <h3>Flashcard Review</h3>
+  <div class="flashcard-grid">
+    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+      <div class="fc-front">Transcription Factor</div>
+      <div class="fc-back">A protein that binds to a specific DNA sequence (promoter/enhancer) to regulate the transcription of a gene.</div>
+      <div class="fc-hint">Click to flip</div>
+    </div>
+    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+      <div class="fc-front">Promoter</div>
+      <div class="fc-back">Region of DNA upstream of a gene where RNA polymerase and transcription factors bind to initiate transcription.</div>
+      <div class="fc-hint">Click to flip</div>
+    </div>
+    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+      <div class="fc-front">Enhancer</div>
+      <div class="fc-back">A regulatory DNA sequence (can be far from the gene) that increases transcription rate when activator proteins bind to it.</div>
+      <div class="fc-hint">Click to flip</div>
+    </div>
+    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+      <div class="fc-front">Spliceosome</div>
+      <div class="fc-back">A molecular machine made of snRNPs that removes introns from pre-mRNA and joins exons together.</div>
+      <div class="fc-hint">Click to flip</div>
+    </div>
+    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+      <div class="fc-front">DNA Methylation</div>
+      <div class="fc-back">Addition of -CH3 to cytosine bases at CpG sites, typically silencing gene expression by blocking TF binding.</div>
+      <div class="fc-hint">Click to flip</div>
+    </div>
+    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+      <div class="fc-front">Histone Acetylation</div>
+      <div class="fc-back">Addition of acetyl groups to histone tails. Loosens chromatin (euchromatin), making DNA accessible for transcription.</div>
+      <div class="fc-hint">Click to flip</div>
+    </div>
+    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+      <div class="fc-front">Epigenetics</div>
+      <div class="fc-back">Heritable changes in gene expression without changes to the DNA base sequence, e.g. methylation, histone modification.</div>
+      <div class="fc-hint">Click to flip</div>
+    </div>
+    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+      <div class="fc-front">Barr Body</div>
+      <div class="fc-back">An inactivated, condensed X chromosome in female mammals, visible as a dense body at the edge of the nucleus.</div>
+      <div class="fc-hint">Click to flip</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════ AREA 4: NON-CODING RNA ═══════════════════════ -->
+<section class="section" id="area4">
+  <div class="section-label"><span class="dot purple"></span> Spec 3.20(ii)</div>
+  <h2>Non-coding RNA &amp; X-Inactivation</h2>
+  <p>Not all RNA codes for proteins. <span class="key-term">Non-coding RNA (ncRNA)<span class="term-def">RNA molecules that are not translated into protein but have regulatory roles in gene expression. Includes miRNA, siRNA, and lncRNA like Xist.</span></span> plays important regulatory roles in controlling gene expression.</p>
+
+  <div class="card">
+    <h3 style="margin-top:0">X-Inactivation</h3>
+    <p>Female mammals have two X chromosomes (XX) while males have one (XY). To prevent a &ldquo;double dose&rdquo; of X-linked gene products, one X chromosome in each female cell is <strong>inactivated</strong> early in embryonic development.</p>
+    <p>The process is controlled by a long non-coding RNA called <span class="key-term">Xist<span class="term-def">X-inactive specific transcript &mdash; a long non-coding RNA produced from the X chromosome that coats the chromosome from which it is transcribed, triggering its inactivation.</span></span> (X-inactive specific transcript):</p>
+    <ol style="font-size:0.92rem;color:var(--ink-soft);padding-left:1.2rem;margin-bottom:1rem">
+      <li>Xist RNA is transcribed from one X chromosome</li>
+      <li>It coats the chromosome from which it was produced</li>
+      <li>This recruits proteins that add repressive epigenetic marks (methylation, histone deacetylation)</li>
+      <li>The coated X chromosome condenses into a <span class="key-term">Barr body<span class="term-def">The inactivated, condensed X chromosome visible as a dark-staining body at the edge of the nucleus in female cells.</span></span></li>
+      <li>Most genes on that chromosome are permanently silenced</li>
+    </ol>
+    <p>The choice of which X to inactivate is <strong>random in each cell</strong>. This means female mammals are <strong>mosaics</strong> &mdash; some cells express the maternal X and some express the paternal X.</p>
+  </div>
+
+  <div class="scenario-card">
+    <div class="scenario-label">Real-World Example</div>
+    <div class="scenario-q">Tortoiseshell cats are almost always female. The patchy coat pattern of orange and black fur is a visible result of X-inactivation &mdash; cells with one active X show orange, cells with the other active X show black.</div>
+    <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('show')">Why can&rsquo;t males be tortoiseshell?</button>
+    <div class="reveal-content">Males (XY) only have one X chromosome, so there is no X-inactivation and no mosaicism. They express whichever colour allele is on their single X chromosome. A male can only be tortoiseshell if he has an XXY genotype (Klinefelter syndrome), which is very rare.</div>
+  </div>
+
+  <div class="card">
+    <h3 style="margin-top:0">Chromosome Puffs &amp; Cell Differentiation</h3>
+    <p>In the giant polytene chromosomes of <em>Drosophila</em> and <em>Chironomus</em> larvae, regions of active transcription can be seen as &ldquo;<span class="key-term">chromosome puffs<span class="term-def">Regions of decondensed, actively transcribing DNA visible in polytene chromosomes. Different puffs appear in different cell types, showing differential gene expression.</span></span>&rdquo; &mdash; areas where the chromatin is decondensed and genes are being actively transcribed.</p>
+    <p>Different cell types show <strong>different puffing patterns</strong>, providing direct visual evidence that different genes are expressed in different cell types. This is controlled by epigenetic mechanisms.</p>
+  </div>
+
+  <!-- VTR: Claim-Support-Question -->
+  <div class="vtr-widget">
+    <h3>Visible Thinking: Claim &mdash; Support &mdash; Question</h3>
+    <p style="color:var(--ink-soft);font-size:0.88rem;margin-bottom:1rem">Consider this statement: <em>&ldquo;Your lifestyle choices can change how your genes are expressed, and these changes could be passed to your children.&rdquo;</em></p>
+    <div class="vtr-label claim">Make a Claim</div>
+    <textarea placeholder="State whether you agree or disagree with this statement, and why..."></textarea>
+    <div class="vtr-label support">Support It</div>
+    <textarea placeholder="What evidence from this lesson supports your claim? Think about epigenetics, methylation patterns..."></textarea>
+    <div class="vtr-label question">Raise a Question</div>
+    <textarea placeholder="What question does this raise for you? What would you want to investigate further?"></textarea>
+  </div>
+</section>
+
+<!-- ═══════════════════════ FILL IN THE BLANKS ═══════════════════════ -->
+<section class="section" id="fillblanks">
+  <div class="section-label"><span class="dot teal"></span> Retrieval Practice</div>
+  <h2>Fill in the Blanks</h2>
+
+  <div class="card" id="fill1">
+    <div class="fill-blank-widget">
+      <div class="fill-item">1. Transcription factors bind to the <input class="blank-input" data-answer="promoter" placeholder="..."> region of a gene.</div>
+      <div class="fill-item">2. <input class="blank-input" data-answer="enhancer" placeholder="..."> sequences can be far from the gene but increase transcription rate.</div>
+      <div class="fill-item">3. The spliceosome removes <input class="blank-input" data-answer="introns" placeholder="..."> from pre-mRNA.</div>
+      <div class="fill-item">4. Different exon combinations from one gene produce different proteins &mdash; this is called alternative RNA <input class="blank-input" data-answer="splicing" placeholder="...">.</div>
+      <div class="fill-item">5. Addition of -CH<sub>3</sub> groups to cytosine bases is called DNA <input class="blank-input" data-answer="methylation" placeholder="...">.</div>
+      <div class="fill-item">6. Histone <input class="blank-input" data-answer="acetylation" placeholder="..."> loosens chromatin and promotes transcription.</div>
+      <div class="fill-item">7. The inactivated X chromosome forms a dense structure called a <input class="blank-input" data-answer="barr body" placeholder="...">.</div>
+      <div class="fill-item">8. The non-coding RNA responsible for X-inactivation is called <input class="blank-input" data-answer="xist" placeholder="...">.</div>
+    </div>
+    <button class="quiz-btn" onclick="checkFill('fill1')">Check Answers</button>
+    <div class="scaffold">
+      <div class="scaffold-label">Word Bank</div>
+      <p style="margin:0;font-size:0.85rem">promoter &bull; enhancer &bull; introns &bull; splicing &bull; methylation &bull; acetylation &bull; Barr body &bull; Xist</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════ SEQUENCING ═══════════════════════ -->
+<section class="section" id="sequencing">
+  <div class="section-label"><span class="dot blue"></span> Active Learning</div>
+  <h2>Sequencing: Gene Expression Control</h2>
+  <p>Drag the steps into the correct order to show how a gene is expressed and regulated.</p>
+
+  <div class="sequence-widget" id="seqWidget">
+    <div class="seq-items" id="seqItems">
+      <div class="seq-item" draggable="true" data-order="4"><span class="seq-num">?</span><span class="grip">&#9776;</span> Spliceosome removes introns and joins exons</div>
+      <div class="seq-item" draggable="true" data-order="1"><span class="seq-num">?</span><span class="grip">&#9776;</span> Transcription factors bind to the promoter</div>
+      <div class="seq-item" draggable="true" data-order="6"><span class="seq-num">?</span><span class="grip">&#9776;</span> Polypeptide folds into a functional protein</div>
+      <div class="seq-item" draggable="true" data-order="3"><span class="seq-num">?</span><span class="grip">&#9776;</span> Pre-mRNA is transcribed from the DNA template</div>
+      <div class="seq-item" draggable="true" data-order="5"><span class="seq-num">?</span><span class="grip">&#9776;</span> Mature mRNA is translated at the ribosome</div>
+      <div class="seq-item" draggable="true" data-order="2"><span class="seq-num">?</span><span class="grip">&#9776;</span> RNA polymerase binds and begins transcription</div>
+    </div>
+    <button class="quiz-btn" onclick="checkSeq()">Check Order</button>
+  </div>
+</section>
+
+<!-- ═══════════════════════ TIERED PRACTICE ═══════════════════════ -->
+<section class="section" id="tiered">
+  <div class="section-label"><span class="dot purple"></span> Independent Practice</div>
+  <h2>Tiered Practice</h2>
+
+  <div class="card">
+    <div class="tier-tabs">
+      <button class="tier-btn active" onclick="showTier(this,'tier1')">Challenge</button>
+      <button class="tier-btn" onclick="showTier(this,'tier2')">Guided</button>
+      <button class="tier-btn" onclick="showTier(this,'tier3')">Scaffolded</button>
+    </div>
+
+    <div class="tier-panel active" id="tier1">
+      <p style="font-weight:600">Explain how epigenetic mechanisms allow cells with identical DNA to become specialised for different functions. Include reference to DNA methylation, histone modification, and the role of transcription factors. [6 marks]</p>
+      <textarea style="width:100%;min-height:120px;border:1px solid var(--card-border);border-radius:var(--radius);padding:0.7rem;font-family:var(--font-body);font-size:0.88rem;resize:vertical" placeholder="Write your answer..."></textarea>
+    </div>
+
+    <div class="tier-panel" id="tier2">
+      <p style="font-weight:600">Use the prompts below to explain how cells become specialised:</p>
+      <ul style="font-size:0.88rem;color:var(--ink-soft);padding-left:1.2rem;margin-bottom:0.8rem">
+        <li>What role do transcription factors play in gene expression?</li>
+        <li>How does DNA methylation silence genes?</li>
+        <li>How does histone acetylation activate genes?</li>
+        <li>How are these patterns maintained when cells divide?</li>
+      </ul>
+      <textarea style="width:100%;min-height:120px;border:1px solid var(--card-border);border-radius:var(--radius);padding:0.7rem;font-family:var(--font-body);font-size:0.88rem;resize:vertical" placeholder="Write your guided answer..."></textarea>
+    </div>
+
+    <div class="tier-panel" id="tier3">
+      <p style="font-weight:600">Complete this model answer:</p>
+      <p style="font-size:0.88rem;color:var(--ink-soft)">All cells contain the same _______ but not all genes are expressed in every cell. <strong>Transcription factors</strong> are proteins that bind to the _______ region of a gene and allow _______ to begin transcription.</p>
+      <p style="font-size:0.88rem;color:var(--ink-soft)">Genes that are not needed in a particular cell type can be silenced by <strong>DNA _______</strong>, where -CH3 groups are added to _______ bases. This prevents transcription factors from _______.</p>
+      <p style="font-size:0.88rem;color:var(--ink-soft)">Genes that ARE needed can be activated by <strong>histone _______</strong>, which _______ the chromatin so RNA polymerase can access the DNA. These epigenetic patterns are _______ when cells divide, so daughter cells maintain the same specialisation.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════ EXAM PRACTICE ═══════════════════════ -->
+<section class="section" id="practice">
+  <div class="section-label"><span class="dot red"></span> Exam Practice</div>
+  <h2>Exam Questions</h2>
+
+  <!-- 2-mark -->
+  <div class="card">
+    <h3 style="margin-top:0">2-mark question</h3>
+    <p><strong>State two ways in which epigenetic changes differ from mutations.</strong></p>
+    <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('show')">Show model answer</button>
+    <div class="reveal-content">
+      <p style="margin-bottom:0.5rem"><strong>1.</strong> Epigenetic changes do not alter the DNA base sequence / mutations change the base sequence. (1)</p>
+      <p style="margin:0"><strong>2.</strong> Epigenetic changes are often reversible / mutations are permanent changes to the DNA. (1)</p>
+    </div>
+  </div>
+
+  <!-- 4-mark -->
+  <div class="card">
+    <h3 style="margin-top:0">4-mark question</h3>
+    <p><strong>Explain how alternative RNA splicing allows one gene to code for more than one protein.</strong></p>
+    <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('show')">Show model answer</button>
+    <div class="reveal-content">
+      <p style="margin-bottom:0.3rem"><strong>1.</strong> A gene contains both exons (coding sequences) and introns (non-coding sequences). (1)</p>
+      <p style="margin-bottom:0.3rem"><strong>2.</strong> Pre-mRNA is transcribed and contains both exons and introns. (1)</p>
+      <p style="margin-bottom:0.3rem"><strong>3.</strong> The spliceosome removes introns, but different combinations of exons can be retained / joined together. (1)</p>
+      <p style="margin:0"><strong>4.</strong> Different mature mRNA molecules are produced, which are translated into different polypeptides / proteins. (1)</p>
+    </div>
+  </div>
+
+  <!-- 6-mark -->
+  <div class="card">
+    <h3 style="margin-top:0">6-mark question</h3>
+    <p><strong>Discuss the role of epigenetic modifications in controlling gene expression and their significance in cell differentiation. Include reference to DNA methylation, histone modification, and non-coding RNA.</strong></p>
+    <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('show')">Show model answer</button>
+    <div class="reveal-content">
+      <p style="margin-bottom:0.3rem"><strong>DNA methylation:</strong> Methyl groups (-CH3) are added to cytosine bases at CpG sites. This prevents transcription factors from binding to the promoter region, silencing the gene. Methylation patterns are inherited during cell division, maintaining cell identity. (2)</p>
+      <p style="margin-bottom:0.3rem"><strong>Histone modification:</strong> Acetylation of histone tails loosens chromatin (euchromatin), making DNA accessible to RNA polymerase and transcription factors, activating genes. Deacetylation tightens chromatin (heterochromatin), silencing genes. Different patterns of histone modification in different cell types ensure only appropriate genes are expressed. (2)</p>
+      <p style="margin:0"><strong>Non-coding RNA:</strong> ncRNA such as Xist plays a role in gene regulation. Xist coats one X chromosome in female cells, recruiting proteins that add repressive epigenetic marks, condensing it into a Barr body. This is dosage compensation &mdash; ensuring females do not produce double the X-linked gene products compared to males. This demonstrates how non-coding RNA coordinates large-scale gene silencing. (2)</p>
+    </div>
+  </div>
+
+  <div class="exam-hint">
+    <div class="hint-label">6-mark Strategy</div>
+    <p style="margin:0">For &ldquo;discuss&rdquo; questions, cover <strong>each named topic</strong> with: (1) a clear description of the mechanism, (2) its effect on gene expression, (3) its significance/application. Use correct terminology throughout.</p>
+  </div>
+</section>
+
+<!-- ═══════════════════════ FINAL ASSESSMENT ═══════════════════════ -->
+<section class="section" id="exit">
+  <div class="section-label"><span class="dot red"></span> Final Assessment</div>
+  <h2>Test Yourself</h2>
+
+  <div class="quiz-widget" id="fa1">
+    <div class="quiz-header"><span class="quiz-type ao1">AO1</span><span class="quiz-score">Q1/5</span></div>
+    <div class="quiz-question">What is the role of a promoter region?</div>
+    <div class="quiz-options" id="fa1Options">
+      <div class="quiz-option" onclick="sel('fa1',0,this)"><span class="opt-letter">A</span> It codes for the protein product of a gene</div>
+      <div class="quiz-option" onclick="sel('fa1',1,this)"><span class="opt-letter">B</span> It is the binding site for transcription factors and RNA polymerase</div>
+      <div class="quiz-option" onclick="sel('fa1',2,this)"><span class="opt-letter">C</span> It is the site where ribosomes attach during translation</div>
+      <div class="quiz-option" onclick="sel('fa1',3,this)"><span class="opt-letter">D</span> It codes for enhancer proteins</div>
+    </div>
+    <div class="quiz-feedback" id="fa1Feedback"></div>
+    <button class="quiz-btn" onclick="check('fa1',1,'Correct! The promoter is where TFs and RNA polymerase bind to initiate transcription.','The promoter is a specific DNA sequence upstream of the gene where transcription factors and RNA polymerase bind.')">Check</button>
+  </div>
+
+  <div class="quiz-widget" id="fa2">
+    <div class="quiz-header"><span class="quiz-type ao2">AO2</span><span class="quiz-score">Q2/5</span></div>
+    <div class="quiz-question">A pre-mRNA molecule has 5 exons. Through alternative splicing, one mature mRNA contains exons 1, 2, 3, and 5, while another contains exons 1, 3, 4, and 5. What can you conclude?</div>
+    <div class="quiz-options" id="fa2Options">
+      <div class="quiz-option" onclick="sel('fa2',0,this)"><span class="opt-letter">A</span> The gene has mutated between the two splicing events</div>
+      <div class="quiz-option" onclick="sel('fa2',1,this)"><span class="opt-letter">B</span> Two different proteins can be produced from the same gene</div>
+      <div class="quiz-option" onclick="sel('fa2',2,this)"><span class="opt-letter">C</span> Exons 2 and 4 must be introns</div>
+      <div class="quiz-option" onclick="sel('fa2',3,this)"><span class="opt-letter">D</span> One mRNA is faulty and will not be translated</div>
+    </div>
+    <div class="quiz-feedback" id="fa2Feedback"></div>
+    <button class="quiz-btn" onclick="check('fa2',1,'Correct! Different exon combinations from the same gene = different proteins. This is the power of alternative splicing.','Different combinations of exons produce different mature mRNAs, which code for different proteins — this is alternative RNA splicing.')">Check</button>
+  </div>
+
+  <div class="quiz-widget" id="fa3">
+    <div class="quiz-header"><span class="quiz-type ao1">AO1</span><span class="quiz-score">Q3/5</span></div>
+    <div class="quiz-question">Which epigenetic modification typically silences gene expression?</div>
+    <div class="quiz-options" id="fa3Options">
+      <div class="quiz-option" onclick="sel('fa3',0,this)"><span class="opt-letter">A</span> Histone acetylation</div>
+      <div class="quiz-option" onclick="sel('fa3',1,this)"><span class="opt-letter">B</span> DNA methylation</div>
+      <div class="quiz-option" onclick="sel('fa3',2,this)"><span class="opt-letter">C</span> Phosphorylation of RNA polymerase</div>
+      <div class="quiz-option" onclick="sel('fa3',3,this)"><span class="opt-letter">D</span> Alternative RNA splicing</div>
+    </div>
+    <div class="quiz-feedback" id="fa3Feedback"></div>
+    <button class="quiz-btn" onclick="check('fa3',1,'Correct! DNA methylation adds -CH3 groups to cytosine, which blocks transcription factor binding and silences the gene.','DNA methylation (adding -CH3 to cytosine at CpG sites) prevents transcription factors from binding to the promoter, silencing the gene.')">Check</button>
+  </div>
+
+  <div class="quiz-widget" id="fa4">
+    <div class="quiz-header"><span class="quiz-type ao2">AO2</span><span class="quiz-score">Q4/5</span></div>
+    <div class="quiz-question">A Barr body is observed in a cell. What can you deduce about this cell?</div>
+    <div class="quiz-options" id="fa4Options">
+      <div class="quiz-option" onclick="sel('fa4',0,this)"><span class="opt-letter">A</span> It is from a male organism</div>
+      <div class="quiz-option" onclick="sel('fa4',1,this)"><span class="opt-letter">B</span> It is from a female organism with one inactivated X chromosome</div>
+      <div class="quiz-option" onclick="sel('fa4',2,this)"><span class="opt-letter">C</span> It has undergone a mutation</div>
+      <div class="quiz-option" onclick="sel('fa4',3,this)"><span class="opt-letter">D</span> It is a cell that is about to divide</div>
+    </div>
+    <div class="quiz-feedback" id="fa4Feedback"></div>
+    <button class="quiz-btn" onclick="check('fa4',1,'Correct! A Barr body is an inactivated X chromosome found in female (XX) cells — one X is randomly silenced by Xist RNA.','A Barr body is a condensed, inactivated X chromosome in female cells. Xist RNA coats one X, silencing it to achieve dosage compensation.')">Check</button>
+  </div>
+
+  <div class="quiz-widget" id="fa5">
+    <div class="quiz-header"><span class="quiz-type ao3">AO3</span><span class="quiz-score">Q5/5</span></div>
+    <div class="quiz-question">Scientists found that identical twins raised apart showed different patterns of DNA methylation. One twin, who smoked, had reduced methylation of a tumour suppressor gene. Suggest what effect this might have.</div>
+    <div class="quiz-options" id="fa5Options">
+      <div class="quiz-option" onclick="sel('fa5',0,this)"><span class="opt-letter">A</span> The tumour suppressor gene would be silenced, increasing cancer risk</div>
+      <div class="quiz-option" onclick="sel('fa5',1,this)"><span class="opt-letter">B</span> The tumour suppressor gene would be more active, decreasing cancer risk</div>
+      <div class="quiz-option" onclick="sel('fa5',2,this)"><span class="opt-letter">C</span> The DNA sequence of the gene would be permanently altered</div>
+      <div class="quiz-option" onclick="sel('fa5',3,this)"><span class="opt-letter">D</span> The gene would be removed from the genome</div>
+    </div>
+    <div class="quiz-feedback" id="fa5Feedback"></div>
+    <button class="quiz-btn" onclick="check('fa5',1,'Correct! Reduced methylation means the tumour suppressor gene is MORE active. Methylation silences genes, so less methylation = more expression = more tumour suppression. However, if the REDUCED methylation was on an oncogene instead, that would increase cancer risk.','Careful! Methylation typically silences genes. Reduced methylation of a tumour suppressor would actually INCREASE its expression, which is protective. The question tests your understanding of the relationship between methylation and expression.')">Check</button>
+  </div>
+
+  <!-- Confidence -->
+  <div class="card" style="margin-top:2rem">
+    <h3 style="margin-top:0">How confident do you feel?</h3>
+    <div class="confidence-row">
+      <button class="conf-btn" onclick="pickConf(this)">😟 Need more help</button>
+      <button class="conf-btn" onclick="pickConf(this)">🤔 Getting there</button>
+      <button class="conf-btn" onclick="pickConf(this)">😊 Confident</button>
+      <button class="conf-btn" onclick="pickConf(this)">🤩 Mastered it</button>
+    </div>
+  </div>
+
+  <!-- Exit ticket -->
+  <div class="exit-ticket">
+    <h3>Exit Ticket</h3>
+    <p style="margin-bottom:1rem">Three quick questions before you go:</p>
+    <p style="color:rgba(255,255,255,0.9);font-weight:500;margin-bottom:0.3rem">1. Describe the role of transcription factors in gene expression.</p>
+    <textarea placeholder="Transcription factors are proteins that..."></textarea>
+    <p style="color:rgba(255,255,255,0.9);font-weight:500;margin-bottom:0.3rem">2. Explain how one gene can produce multiple different proteins.</p>
+    <textarea placeholder="Through alternative RNA splicing..."></textarea>
+    <p style="color:rgba(255,255,255,0.9);font-weight:500;margin-bottom:0.3rem">3. Describe how DNA methylation and histone acetylation have opposite effects on gene expression.</p>
+    <textarea placeholder="DNA methylation adds -CH3 groups to..."></textarea>
+  </div>
+
+  <!-- Vocab Grid -->
+  <h3 style="margin-top:2rem">Vocabulary Grid</h3>
+  <div class="vocab-grid">
+    <div class="vocab-card"><div class="v-term">Transcription factor</div><div class="v-def">Protein that binds to promoter/enhancer to control whether a gene is transcribed.</div></div>
+    <div class="vocab-card"><div class="v-term">Promoter</div><div class="v-def">DNA region upstream of a gene where TFs and RNA polymerase bind.</div></div>
+    <div class="vocab-card"><div class="v-term">Enhancer</div><div class="v-def">Distant regulatory sequence that boosts transcription when activators bind.</div></div>
+    <div class="vocab-card"><div class="v-term">Spliceosome</div><div class="v-def">Molecular machine (snRNPs) that removes introns and joins exons.</div></div>
+    <div class="vocab-card"><div class="v-term">Alternative RNA splicing</div><div class="v-def">Different exon combinations from one pre-mRNA producing different proteins.</div></div>
+    <div class="vocab-card"><div class="v-term">Epigenetics</div><div class="v-def">Heritable changes in gene expression without altering the DNA sequence.</div></div>
+    <div class="vocab-card"><div class="v-term">DNA methylation</div><div class="v-def">Addition of -CH3 to cytosine at CpG sites; silences gene expression.</div></div>
+    <div class="vocab-card"><div class="v-term">Histone acetylation</div><div class="v-def">Acetyl groups loosen chromatin (euchromatin); promotes transcription.</div></div>
+    <div class="vocab-card"><div class="v-term">Barr body</div><div class="v-def">Inactivated, condensed X chromosome in female cells.</div></div>
+    <div class="vocab-card"><div class="v-term">Xist</div><div class="v-def">Long non-coding RNA that coats and silences one X chromosome in females.</div></div>
+  </div>
+
+  <div class="topic-tracker" style="margin-top:2rem">
+    <h3 style="margin-bottom:0.8rem">Self-Assessment Checklist</h3>
+    <div class="tracker-row"><div class="tracker-check" onclick="toggleCheck(this)"></div> I can explain how transcription factors regulate gene expression</div>
+    <div class="tracker-row"><div class="tracker-check" onclick="toggleCheck(this)"></div> I can describe the roles of promoters and enhancers</div>
+    <div class="tracker-row"><div class="tracker-check" onclick="toggleCheck(this)"></div> I can explain alternative RNA splicing and its significance</div>
+    <div class="tracker-row"><div class="tracker-check" onclick="toggleCheck(this)"></div> I can describe how DNA methylation silences genes</div>
+    <div class="tracker-row"><div class="tracker-check" onclick="toggleCheck(this)"></div> I can explain the effect of histone acetylation on chromatin structure</div>
+    <div class="tracker-row"><div class="tracker-check" onclick="toggleCheck(this)"></div> I can describe X-inactivation and the role of Xist RNA</div>
+    <div class="tracker-row"><div class="tracker-check" onclick="toggleCheck(this)"></div> I can explain what a Barr body is and why it forms</div>
+    <div class="tracker-row"><div class="tracker-check" onclick="toggleCheck(this)"></div> I can link epigenetics to cell differentiation</div>
+  </div>
+</section>
+
+<footer class="lesson-footer">
+  <p>IAL Biology — 3C.3 Controlling Gene Expression — Spec refs 3.18, 3.19, 3.20(i), 3.20(ii)</p>
+</footer>
+
+</div>
+
+<script>
+window.addEventListener('scroll',()=>{const h=document.documentElement.scrollHeight-window.innerHeight;document.getElementById('progressBar').style.width=(window.scrollY/h)*100+'%'});
+const obs=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('visible')})},{threshold:0.08});
+document.querySelectorAll('.section').forEach(s=>obs.observe(s));
+function scrollTo(id){document.getElementById(id).scrollIntoView({behavior:'smooth',block:'start'})}
+const secs=['hero','diagnostic','area1','area2','area3','area4','practice','exit'];
+const pills=document.querySelectorAll('.lesson-nav .nav-pill');
+window.addEventListener('scroll',()=>{let cur=secs[0];secs.forEach(id=>{const el=document.getElementById(id);if(el&&el.getBoundingClientRect().top<=130)cur=id});pills.forEach((p,i)=>p.classList.toggle('active',secs[i]===cur))});
+
+const qs={};
+function sel(qid,idx,el){if(qs[qid]?.locked)return;if(!qs[qid])qs[qid]={};qs[qid].selected=idx;el.parentElement.querySelectorAll('.quiz-option').forEach(o=>o.classList.remove('selected'));el.classList.add('selected')}
+function check(qid,correct,yesMsg,noMsg){if(qs[qid]?.locked)return;if(qs[qid]?.selected===undefined)return;qs[qid].locked=true;const opts=document.getElementById(qid+'Options').querySelectorAll('.quiz-option');const fb=document.getElementById(qid+'Feedback');opts.forEach((o,i)=>{if(i===correct)o.classList.add('correct');else if(i===qs[qid].selected)o.classList.add('incorrect')});const ok=qs[qid].selected===correct;fb.className='quiz-feedback show '+(ok?'correct-fb':'incorrect-fb');fb.innerHTML=ok?'✓ '+yesMsg:'✗ '+noMsg}
+
+function checkFill(wid){document.querySelectorAll('#'+wid+' .blank-input').forEach(inp=>{const ans=inp.dataset.answer.toLowerCase().trim();const val=inp.value.toLowerCase().trim();if(val===ans){inp.classList.remove('incorrect-input');inp.classList.add('correct-input')}else{inp.classList.remove('correct-input');inp.classList.add('incorrect-input')}})}
+
+function showTier(btn,panelId){const tabs=btn.parentElement;tabs.querySelectorAll('.tier-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');const card=tabs.closest('.card,.struggle-box,.quiz-widget');if(!card)return;card.querySelectorAll('.tier-panel').forEach(p=>p.classList.remove('active'));document.getElementById(panelId).classList.add('active')}
+
+// Transcription factor diagram info
+const tfData={
+  enhancer:{title:'Enhancer',text:'A regulatory DNA sequence that can be thousands of base pairs away from the gene. When activator proteins bind, the DNA loops so the enhancer contacts the promoter, boosting transcription rate.'},
+  promoter:{title:'Promoter',text:'The DNA sequence just upstream of the coding region. Transcription factors must bind here first before RNA polymerase can attach and begin transcription.'},
+  gene:{title:'Gene (Coding Region)',text:'The stretch of DNA that is transcribed into pre-mRNA. Contains both exons (coding) and introns (non-coding) in eukaryotes.'},
+  terminator:{title:'Terminator',text:'A DNA sequence that signals the end of transcription. RNA polymerase detaches from the DNA when it reaches this sequence.'},
+  tf:{title:'Transcription Factors',text:'Proteins that bind to the promoter region to form a transcription initiation complex. Without these, RNA polymerase cannot bind to the DNA and transcription cannot begin.'},
+  rnapol:{title:'RNA Polymerase',text:'The enzyme that synthesises mRNA from the DNA template strand. It can only bind after transcription factors have assembled at the promoter.'}
+};
+function showTFInfo(part){const p=document.getElementById('tfInfoPanel');const d=tfData[part];p.innerHTML='<div class="panel-title">'+d.title+'</div>'+d.text;p.classList.add('show')}
+
+// Epigenetics diagram info
+const epiData={
+  euchromatin:{title:'Euchromatin (Open Chromatin)',text:'Histone acetylation adds acetyl groups to histone tails, reducing their positive charge. This weakens the attraction between histones and negatively-charged DNA, loosening the chromatin. RNA polymerase and transcription factors can access the DNA — the gene is ACTIVE.'},
+  heterochromatin:{title:'Heterochromatin (Closed Chromatin)',text:'DNA methylation and histone deacetylation cause chromatin to condense tightly. The DNA is wound too tightly around the histones for transcription factors or RNA polymerase to access it — the gene is SILENCED.'}
+};
+function showEpiInfo(state){const p=document.getElementById('epiInfoPanel');const d=epiData[state];p.innerHTML='<div class="panel-title">'+d.title+'</div>'+d.text;p.classList.add('show')}
+
+// Sequencing drag-and-drop
+const seqContainer=document.getElementById('seqItems');
+let dragItem=null;
+seqContainer.querySelectorAll('.seq-item').forEach(item=>{
+  item.addEventListener('dragstart',()=>{dragItem=item;setTimeout(()=>item.classList.add('dragging'),0)});
+  item.addEventListener('dragend',()=>{item.classList.remove('dragging');dragItem=null});
+  item.addEventListener('dragover',e=>{e.preventDefault();if(item===dragItem)return;const rect=item.getBoundingClientRect();const mid=rect.top+rect.height/2;if(e.clientY<mid)seqContainer.insertBefore(dragItem,item);else seqContainer.insertBefore(dragItem,item.nextSibling)});
+});
+function checkSeq(){const items=seqContainer.querySelectorAll('.seq-item');items.forEach((item,i)=>{const num=item.querySelector('.seq-num');num.textContent=i+1;const correct=parseInt(item.dataset.order)===i+1;item.classList.remove('correct-seq','incorrect-seq');item.classList.add(correct?'correct-seq':'incorrect-seq')})}
+
+function pickConf(btn){btn.parentElement.querySelectorAll('.conf-btn').forEach(b=>b.classList.remove('selected'));btn.classList.add('selected')}
+function toggleCheck(el){el.classList.toggle('checked');el.textContent=el.classList.contains('checked')?'✓':''}
+</script>
+</body>
+</html>

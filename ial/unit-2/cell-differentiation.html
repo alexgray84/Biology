@@ -1,0 +1,1013 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>3C.1 Cell Differentiation — IAL Biology</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300..700;1,9..40,300..700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f5f0e8;
+  --bg-warm: #efe8db;
+  --ink: #1a1714;
+  --ink-soft: #4a443b;
+  --ink-muted: #8a8278;
+  --accent: #c44b2b;
+  --accent-light: #e8704f;
+  --accent-bg: #fdf0ec;
+  --teal: #1a7a6d;
+  --teal-light: #e6f5f2;
+  --teal-dark: #0f574d;
+  --blue: #2a5d8f;
+  --blue-light: #e8f0f8;
+  --purple: #6b4c8a;
+  --purple-light: #f0eaf5;
+  --gold: #b8860b;
+  --gold-light: #fdf6e3;
+  --success: #2d8a4e;
+  --success-bg: #e8f5ed;
+  --error: #c44b2b;
+  --error-bg: #fdf0ec;
+  --card: #fffdf8;
+  --card-border: #e0d8cc;
+  --radius: 6px;
+  --radius-lg: 12px;
+  --shadow-sm: 0 1px 3px rgba(26,23,20,0.06);
+  --shadow-md: 0 4px 12px rgba(26,23,20,0.08);
+  --shadow-lg: 0 8px 30px rgba(26,23,20,0.12);
+  --font-display: 'Instrument Serif', Georgia, serif;
+  --font-body: 'DM Sans', -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;font-size:16px}
+body{font-family:var(--font-body);color:var(--ink);background:var(--bg);line-height:1.65;-webkit-font-smoothing:antialiased}
+
+/* ─── LESSON SELECTOR (top bar) ─── */
+.lesson-selector{display:flex;justify-content:center;gap:0.5rem;padding:0.5rem 1rem;background:rgba(239,232,219,0.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--card-border);position:fixed;top:0;left:0;right:0;z-index:1001}
+.lesson-pill{padding:0.3rem 0.8rem;border-radius:20px;background:var(--card);border:1px solid var(--card-border);font-size:0.75rem;font-family:var(--font-body);font-weight:600;color:var(--ink-soft);text-decoration:none;transition:all 0.2s;white-space:nowrap}
+.lesson-pill:hover{border-color:var(--accent);color:var(--accent)}
+.lesson-pill.active{background:var(--accent);color:white;border-color:var(--accent)}
+
+/* ─── PROGRESS BAR ─── */
+.progress-bar{position:fixed;top:0;left:0;z-index:1002;height:3px;background:var(--accent);width:0%;transition:width 0.3s ease}
+
+/* ─── NAV ─── */
+.lesson-nav{position:fixed;top:34px;left:0;right:0;z-index:999;background:rgba(245,240,232,0.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--card-border);padding:0.5rem 1rem;display:flex;align-items:center;gap:0.8rem;font-size:0.82rem}
+.lesson-nav .nav-title{font-family:var(--font-display);font-size:0.95rem;color:var(--accent);white-space:nowrap}
+.nav-sections{display:flex;gap:0.25rem;overflow-x:auto;scrollbar-width:none;flex:1}
+.nav-sections::-webkit-scrollbar{display:none}
+.nav-pill{padding:0.3rem 0.7rem;border-radius:20px;background:transparent;border:1px solid transparent;cursor:pointer;white-space:nowrap;font-size:0.75rem;font-weight:600;color:var(--ink-soft);transition:all 0.2s;font-family:var(--font-body)}
+.nav-pill:hover{background:var(--card);border-color:var(--card-border)}
+.nav-pill.active{background:var(--accent);color:white;border-color:var(--accent)}
+
+/* ─── LAYOUT ─── */
+.container{max-width:860px;margin:0 auto;padding:5.5rem 1.5rem 4rem}
+
+/* ─── HERO ─── */
+.hero{text-align:center;padding:2.5rem 0 2rem;animation:fadeUp 0.8s ease}
+.hero .spec-ref{display:inline-flex;gap:0.4rem;font-family:var(--font-mono);font-size:0.72rem;color:var(--ink-muted);letter-spacing:0.05em;margin-bottom:1rem}
+.hero .spec-ref span{background:var(--card);border:1px solid var(--card-border);padding:0.15rem 0.45rem;border-radius:4px}
+.hero h1{font-family:var(--font-display);font-size:clamp(2.2rem,5vw,3.2rem);line-height:1.15;color:var(--ink);margin-bottom:0.8rem}
+.hero h1 em{color:var(--accent);font-style:italic}
+.hero .subtitle{font-size:1.05rem;color:var(--ink-soft);max-width:600px;margin:0 auto 1.5rem}
+.big-question{background:linear-gradient(135deg,var(--accent-bg),var(--gold-light));border:1px solid #e8d4c0;border-radius:var(--radius-lg);padding:1.2rem 1.5rem;font-family:var(--font-display);font-size:1.05rem;font-style:italic;color:var(--accent);max-width:650px;margin:0 auto}
+
+/* ─── OBJECTIVES ─── */
+.objectives-bar{background:var(--card);border:1px solid var(--card-border);border-radius:var(--radius-lg);padding:1.2rem 1.5rem;margin:2rem 0;box-shadow:var(--shadow-sm)}
+.objectives-bar summary{cursor:pointer;font-weight:600;font-size:0.85rem;text-transform:uppercase;letter-spacing:0.06em;color:var(--teal-dark);list-style:none;display:flex;align-items:center;gap:0.5rem}
+.objectives-bar summary::before{content:'🎯'}
+.objectives-bar summary::after{content:'▾';margin-left:auto;transition:transform 0.2s}
+.objectives-bar[open] summary::after{transform:rotate(180deg)}
+.objectives-list{margin-top:1rem;display:grid;gap:0.6rem}
+.obj-item{display:flex;align-items:flex-start;gap:0.6rem;font-size:0.92rem;color:var(--ink-soft);padding:0.5rem 0.7rem;border-radius:var(--radius);background:var(--teal-light);border-left:3px solid var(--teal)}
+.obj-item .obj-tag{font-family:var(--font-mono);font-size:0.7rem;background:var(--teal);color:white;padding:0.15rem 0.4rem;border-radius:3px;white-space:nowrap;margin-top:2px}
+
+/* ─── SECTIONS ─── */
+.section{margin:3rem 0;opacity:0;transform:translateY(20px);transition:opacity 0.6s ease,transform 0.6s ease}
+.section.visible{opacity:1;transform:translateY(0)}
+.section-label{display:inline-flex;align-items:center;gap:0.5rem;font-family:var(--font-mono);font-size:0.72rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--ink-muted);margin-bottom:0.5rem}
+.section-label .dot{width:8px;height:8px;border-radius:50%;display:inline-block}
+.section-label .dot.red{background:var(--accent)}
+.section-label .dot.teal{background:var(--teal)}
+.section-label .dot.blue{background:var(--blue)}
+.section-label .dot.purple{background:var(--purple)}
+h2{font-family:var(--font-display);font-size:1.9rem;line-height:1.2;margin-bottom:0.6rem}
+h3{font-family:var(--font-display);font-size:1.35rem;line-height:1.3;margin-bottom:0.5rem;margin-top:1.8rem}
+h3:first-child{margin-top:0}
+p{margin-bottom:1rem;color:var(--ink-soft);font-size:0.95rem}
+p strong{color:var(--ink)}
+
+/* ─── CARDS ─── */
+.card{background:var(--card);border:1px solid var(--card-border);border-radius:var(--radius-lg);padding:1.5rem;margin:1.2rem 0;box-shadow:var(--shadow-sm)}
+.key-term{display:inline;background:var(--gold-light);border-bottom:2px solid var(--gold);padding:0.1rem 0.3rem;border-radius:2px;cursor:help;position:relative}
+.key-term .term-def{display:none;position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);background:var(--ink);color:white;padding:0.6rem 0.8rem;border-radius:var(--radius);font-size:0.82rem;line-height:1.4;width:260px;z-index:50;box-shadow:var(--shadow-lg);font-weight:400}
+.key-term:hover .term-def{display:block}
+
+/* ─── CALLOUT BOXES ─── */
+.exam-hint{background:var(--accent-bg);border-left:4px solid var(--accent);border-radius:0 var(--radius) var(--radius) 0;padding:1rem 1.2rem;margin:1.2rem 0;font-size:0.88rem}
+.exam-hint .hint-label{font-weight:700;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.06em;color:var(--accent);margin-bottom:0.3rem}
+.learning-tip{background:var(--teal-light);border-left:4px solid var(--teal);border-radius:0 var(--radius) var(--radius) 0;padding:1rem 1.2rem;margin:1.2rem 0;font-size:0.88rem}
+.learning-tip .tip-label{font-weight:700;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.06em;color:var(--teal-dark);margin-bottom:0.3rem}
+.scaffold{background:var(--purple-light);border-left:4px solid var(--purple);border-radius:0 var(--radius) var(--radius) 0;padding:1rem 1.2rem;margin:1.2rem 0;font-size:0.88rem}
+.scaffold .scaffold-label{font-weight:700;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.06em;color:var(--purple);margin-bottom:0.3rem}
+.struggle-box{background:var(--gold-light);border-left:4px solid var(--gold);border-radius:0 var(--radius) var(--radius) 0;padding:1rem 1.2rem;margin:1.2rem 0;font-size:0.88rem}
+.struggle-box .struggle-label{font-weight:700;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.06em;color:var(--gold);margin-bottom:0.3rem}
+
+/* ─── DIAGRAMS ─── */
+.diagram-container{background:white;border:1px solid var(--card-border);border-radius:var(--radius-lg);padding:1.5rem;margin:1.5rem 0;position:relative;overflow:hidden}
+.diagram-title{font-family:var(--font-mono);font-size:0.72rem;text-transform:uppercase;letter-spacing:0.06em;color:var(--ink-muted);margin-bottom:1rem}
+.bio-svg{width:100%;height:auto}
+.bio-svg text{font-family:var(--font-body);font-size:11px;fill:var(--ink-soft)}
+.bio-svg .label-bold{font-weight:600;fill:var(--ink);font-size:12px}
+.bio-svg .highlight-part{cursor:pointer;transition:opacity 0.3s}
+.bio-svg .highlight-part:hover{opacity:0.8}
+.info-panel{background:var(--ink);color:white;padding:0.8rem 1rem;border-radius:var(--radius);font-size:0.85rem;line-height:1.5;margin-top:0.8rem;display:none;animation:fadeUp 0.3s ease}
+.info-panel.show{display:block}
+.info-panel .panel-title{font-weight:700;font-size:0.78rem;text-transform:uppercase;letter-spacing:0.04em;color:var(--accent-light);margin-bottom:0.2rem}
+
+/* ─── QUIZ ─── */
+.quiz-widget{background:var(--card);border:2px solid var(--card-border);border-radius:var(--radius-lg);padding:1.5rem;margin:1.5rem 0;box-shadow:var(--shadow-sm)}
+.quiz-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem}
+.quiz-type{font-family:var(--font-mono);font-size:0.7rem;text-transform:uppercase;letter-spacing:0.06em;color:white;padding:0.25rem 0.6rem;border-radius:20px}
+.quiz-type.ao1{background:var(--teal)}
+.quiz-type.ao2{background:var(--blue)}
+.quiz-type.ao3{background:var(--purple)}
+.quiz-type.diagnostic{background:var(--gold)}
+.quiz-score{font-family:var(--font-mono);font-size:0.82rem;color:var(--ink-muted)}
+.quiz-question{font-size:1rem;font-weight:500;color:var(--ink);margin-bottom:1rem;line-height:1.5}
+.quiz-options{display:grid;gap:0.5rem}
+.quiz-option{padding:0.7rem 1rem;border:2px solid var(--card-border);border-radius:var(--radius);cursor:pointer;font-size:0.9rem;transition:all 0.2s;background:white;display:flex;align-items:center;gap:0.6rem}
+.quiz-option:hover{border-color:var(--teal);background:var(--teal-light)}
+.quiz-option.selected{border-color:var(--blue);background:var(--blue-light)}
+.quiz-option.correct{border-color:var(--success);background:var(--success-bg)}
+.quiz-option.incorrect{border-color:var(--error);background:var(--error-bg);opacity:0.7}
+.quiz-option .opt-letter{width:24px;height:24px;border-radius:50%;background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:600;flex-shrink:0}
+.quiz-option.correct .opt-letter{background:var(--success);color:white}
+.quiz-option.incorrect .opt-letter{background:var(--error);color:white}
+.quiz-feedback{margin-top:1rem;padding:0.8rem 1rem;border-radius:var(--radius);font-size:0.88rem;line-height:1.5;display:none}
+.quiz-feedback.show{display:block}
+.quiz-feedback.correct-fb{background:var(--success-bg);border-left:3px solid var(--success)}
+.quiz-feedback.incorrect-fb{background:var(--error-bg);border-left:3px solid var(--error)}
+.quiz-btn{margin-top:1rem;padding:0.6rem 1.2rem;background:var(--teal);color:white;border:none;border-radius:var(--radius);font-family:var(--font-body);font-size:0.85rem;font-weight:600;cursor:pointer;transition:background 0.2s}
+.quiz-btn:hover{background:var(--teal-dark)}
+.quiz-btn:disabled{opacity:0.5;cursor:not-allowed}
+
+/* ─── FILL BLANKS ─── */
+.fill-blank-widget{margin:1.5rem 0}
+.fill-item{display:flex;align-items:center;gap:0.5rem;margin-bottom:0.7rem;font-size:0.92rem;flex-wrap:wrap}
+.fill-item .blank-input{border:none;border-bottom:2px dashed var(--card-border);background:transparent;font-family:var(--font-body);font-size:0.92rem;padding:0.2rem 0.5rem;width:180px;outline:none;transition:border-color 0.2s;color:var(--ink)}
+.fill-item .blank-input:focus{border-color:var(--teal)}
+.fill-item .blank-input.correct-input{border-color:var(--success);border-style:solid;color:var(--success)}
+.fill-item .blank-input.incorrect-input{border-color:var(--error);border-style:solid;color:var(--error)}
+
+/* ─── SEQUENCING ─── */
+.sequence-widget{background:var(--card);border:2px solid var(--card-border);border-radius:var(--radius-lg);padding:1.5rem;margin:1.5rem 0}
+.seq-items{display:grid;gap:0.4rem}
+.seq-item{display:flex;align-items:center;gap:0.7rem;padding:0.65rem 0.9rem;background:white;border:1.5px solid var(--card-border);border-radius:var(--radius);cursor:grab;user-select:none;transition:all 0.2s;font-size:0.9rem}
+.seq-item:active{cursor:grabbing}
+.seq-item:hover{border-color:var(--blue);background:var(--blue-light)}
+.seq-item.dragging{opacity:0.4}
+.seq-item .seq-num{width:26px;height:26px;border-radius:50%;background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:700;flex-shrink:0;color:var(--ink-muted)}
+.seq-item.correct-seq{border-color:var(--success);background:var(--success-bg)}
+.seq-item.correct-seq .seq-num{background:var(--success);color:white}
+.seq-item.incorrect-seq{border-color:var(--error);background:var(--error-bg)}
+.seq-item.incorrect-seq .seq-num{background:var(--error);color:white}
+.seq-item .grip{color:var(--ink-muted);font-size:1.1rem;flex-shrink:0}
+
+/* ─── SCENARIO ─── */
+.scenario-card{background:var(--blue-light);border:1px solid #c8daea;border-radius:var(--radius-lg);padding:1.2rem 1.5rem;margin:1.2rem 0}
+.scenario-card .scenario-label{font-family:var(--font-mono);font-size:0.7rem;text-transform:uppercase;letter-spacing:0.06em;color:var(--blue);margin-bottom:0.5rem}
+.scenario-card .scenario-q{font-weight:600;font-size:0.95rem;margin-bottom:0.7rem}
+.reveal-btn{padding:0.45rem 1rem;background:var(--blue);color:white;border:none;border-radius:var(--radius);font-family:var(--font-body);font-size:0.82rem;font-weight:500;cursor:pointer;transition:background 0.2s}
+.reveal-btn:hover{background:#1e4a73}
+.reveal-content{margin-top:0.8rem;padding:0.8rem 1rem;background:white;border-radius:var(--radius);font-size:0.88rem;line-height:1.6;display:none;border:1px solid #c8daea}
+.reveal-content.show{display:block;animation:fadeUp 0.3s ease}
+
+/* ─── TABLES ─── */
+.compare-table{width:100%;border-collapse:collapse;font-size:0.88rem;margin:1rem 0}
+.compare-table th{background:var(--ink);color:white;padding:0.7rem 1rem;text-align:left;font-weight:600;font-size:0.8rem;text-transform:uppercase;letter-spacing:0.04em}
+.compare-table th:first-child{border-radius:var(--radius) 0 0 0}
+.compare-table th:last-child{border-radius:0 var(--radius) 0 0}
+.compare-table td{padding:0.6rem 1rem;border-bottom:1px solid var(--card-border);vertical-align:top}
+.compare-table tr:nth-child(even) td{background:var(--bg-warm)}
+.compare-table .feature-col{font-weight:600;color:var(--ink);white-space:nowrap}
+
+/* ─── VOCAB ─── */
+.vocab-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:0.6rem;margin:1rem 0}
+.vocab-card{background:white;border:1px solid var(--card-border);border-radius:var(--radius);padding:0.8rem 1rem;cursor:pointer;transition:all 0.2s}
+.vocab-card:hover{border-color:var(--gold);box-shadow:var(--shadow-sm)}
+.vocab-card .v-term{font-weight:700;font-size:0.9rem;color:var(--accent);margin-bottom:0.2rem}
+.vocab-card .v-def{font-size:0.82rem;color:var(--ink-soft);line-height:1.45}
+
+/* ─── FLASHCARDS ─── */
+.flashcard-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:0.8rem;margin:1rem 0}
+.flashcard{background:var(--card);border:2px solid var(--card-border);border-radius:var(--radius-lg);padding:1.2rem;min-height:120px;cursor:pointer;transition:all 0.3s;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center}
+.flashcard:hover{border-color:var(--teal);box-shadow:var(--shadow-md)}
+.flashcard .fc-front{font-weight:700;font-size:1rem;color:var(--accent)}
+.flashcard .fc-back{display:none;font-size:0.85rem;color:var(--ink-soft);line-height:1.5}
+.flashcard.flipped .fc-front{display:none}
+.flashcard.flipped .fc-back{display:block}
+.flashcard .fc-hint{font-size:0.7rem;color:var(--ink-muted);margin-top:0.5rem}
+
+/* ─── VTR ─── */
+.vtr-widget{background:var(--card);border:2px solid var(--teal);border-radius:var(--radius-lg);padding:1.5rem;margin:1.5rem 0}
+.vtr-widget h3{color:var(--teal-dark);margin-top:0}
+.vtr-widget textarea{width:100%;min-height:60px;background:white;border:1px solid var(--card-border);border-radius:var(--radius);padding:0.7rem;font-family:var(--font-body);font-size:0.88rem;resize:vertical;outline:none;margin:0.4rem 0 1rem}
+.vtr-widget textarea:focus{border-color:var(--teal)}
+.vtr-label{font-family:var(--font-mono);font-size:0.72rem;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:0.3rem;font-weight:600}
+.vtr-label.see{color:var(--accent)}
+.vtr-label.think{color:var(--blue)}
+.vtr-label.wonder{color:var(--purple)}
+
+/* ─── TIERED PRACTICE ─── */
+.tier-tabs{display:flex;gap:0;border-bottom:2px solid var(--card-border);margin-bottom:1rem}
+.tier-btn{padding:0.6rem 1.2rem;border:none;background:none;font-family:var(--font-body);font-size:0.85rem;font-weight:500;color:var(--ink-muted);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;transition:all 0.2s}
+.tier-btn:hover{color:var(--ink)}
+.tier-btn.active{color:var(--accent);border-bottom-color:var(--accent)}
+.tier-panel{display:none;padding:0.5rem 0}
+.tier-panel.active{display:block;animation:fadeUp 0.3s ease}
+
+/* ─── SELF CHECK ─── */
+.self-check details{margin-bottom:0.6rem;border:1px solid var(--card-border);border-radius:var(--radius);overflow:hidden}
+.self-check summary{padding:0.7rem 1rem;cursor:pointer;font-size:0.92rem;font-weight:500;background:var(--card);list-style:none;display:flex;align-items:center;gap:0.5rem}
+.self-check summary::before{content:'❓';font-size:0.85rem}
+.self-check details[open] summary{border-bottom:1px solid var(--card-border)}
+.self-check .answer{padding:0.8rem 1rem;font-size:0.88rem;line-height:1.6;color:var(--ink-soft);background:white}
+
+/* ─── EXIT TICKET ─── */
+.exit-ticket{background:linear-gradient(135deg,var(--ink) 0%,#2a2520 100%);color:white;border-radius:var(--radius-lg);padding:2rem;margin:2rem 0}
+.exit-ticket h3{font-family:var(--font-display);color:var(--accent-light);margin-top:0}
+.exit-ticket p{color:rgba(255,255,255,0.75)}
+.exit-ticket textarea{width:100%;min-height:70px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);border-radius:var(--radius);padding:0.7rem;color:white;font-family:var(--font-body);font-size:0.88rem;resize:vertical;outline:none;margin:0.4rem 0 1rem}
+.exit-ticket textarea::placeholder{color:rgba(255,255,255,0.35)}
+.exit-ticket textarea:focus{border-color:var(--accent-light)}
+
+/* ─── CONFIDENCE ─── */
+.confidence-row{display:flex;gap:0.6rem;flex-wrap:wrap;margin:1rem 0}
+.conf-btn{padding:0.6rem 1.2rem;border:2px solid var(--card-border);border-radius:var(--radius-lg);background:var(--card);cursor:pointer;font-size:0.88rem;transition:all 0.2s;font-family:var(--font-body)}
+.conf-btn:hover{border-color:var(--teal);background:var(--teal-light)}
+.conf-btn.selected{border-color:var(--teal);background:var(--teal);color:white}
+
+/* ─── TRACKER ─── */
+.topic-tracker{background:var(--card);border:1px solid var(--card-border);border-radius:var(--radius-lg);padding:1.2rem 1.5rem;margin:2rem 0;box-shadow:var(--shadow-sm)}
+.tracker-row{display:flex;align-items:center;gap:0.7rem;padding:0.5rem 0;border-bottom:1px solid var(--card-border);font-size:0.88rem}
+.tracker-row:last-child{border-bottom:none}
+.tracker-check{width:22px;height:22px;border:2px solid var(--card-border);border-radius:4px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all 0.2s;flex-shrink:0;font-size:0.75rem}
+.tracker-check.checked{background:var(--success);border-color:var(--success);color:white}
+
+/* ─── FOOTER ─── */
+.lesson-footer{text-align:center;padding:2rem 0;border-top:1px solid var(--card-border);margin-top:3rem;font-size:0.82rem;color:var(--ink-muted)}
+
+/* ─── ANIMATIONS ─── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+
+/* ─── RESPONSIVE ─── */
+@media(max-width:640px){
+  .container{padding:5rem 1rem 3rem}
+  .hero h1{font-size:1.8rem}
+  h2{font-size:1.5rem}
+  .vocab-grid{grid-template-columns:1fr}
+  .flashcard-grid{grid-template-columns:1fr}
+  .compare-table{font-size:0.8rem}
+  .compare-table td,.compare-table th{padding:0.4rem 0.6rem}
+  .nav-sections{display:none}
+  .lesson-selector{gap:0.3rem;padding:0.4rem 0.5rem}
+  .lesson-pill{font-size:0.68rem;padding:0.25rem 0.5rem}
+}
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="progressBar"></div>
+
+<nav class="lesson-selector">
+  <a href="cell-differentiation.html" class="lesson-pill active">3C.1 Cell Differentiation</a>
+  <a href="genes-and-environment.html" class="lesson-pill">3C.2 Genes &amp; Environment</a>
+  <a href="controlling-gene-expression.html" class="lesson-pill">3C.3 Gene Expression</a>
+</nav>
+
+<nav class="lesson-nav">
+  <span class="nav-title">3C.1</span>
+  <div class="nav-sections">
+    <button class="nav-pill active" onclick="scrollTo('hero')">Overview</button>
+    <button class="nav-pill" onclick="scrollTo('diagnostic')">Diagnostic</button>
+    <button class="nav-pill" onclick="scrollTo('area1')">Gene Expression</button>
+    <button class="nav-pill" onclick="scrollTo('area2')">Multiple Alleles</button>
+    <button class="nav-pill" onclick="scrollTo('area3')">Gene Linkage</button>
+    <button class="nav-pill" onclick="scrollTo('area4')">Dihybrid Crosses</button>
+    <button class="nav-pill" onclick="scrollTo('area5')">Polygenic Traits</button>
+    <button class="nav-pill" onclick="scrollTo('practice')">Practice</button>
+    <button class="nav-pill" onclick="scrollTo('exit')">Exit Ticket</button>
+  </div>
+</nav>
+
+<div class="container">
+
+<!-- ═══════════════ HERO ═══════════════ -->
+<header class="hero" id="hero">
+  <div class="spec-ref"><span>3.9(i)</span><span>3.9(ii)</span><span>3.18</span><span>3.21</span></div>
+  <h1>Cell <em>Differentiation</em></h1>
+  <p class="subtitle">How one genome produces hundreds of different cell types — from gene expression to polygenic inheritance.</p>
+  <div class="big-question">Every cell in your body has the same DNA. So why does a neuron look and behave completely differently from a muscle cell?</div>
+</header>
+
+<!-- OBJECTIVES -->
+<details class="objectives-bar" open>
+  <summary>Learning Objectives</summary>
+  <div class="objectives-list">
+    <div class="obj-item"><span class="obj-tag">AO1</span> Know that a locus is the location of genes on a chromosome</div>
+    <div class="obj-item"><span class="obj-tag">AO1</span> Understand the linkage of genes on a chromosome</div>
+    <div class="obj-item"><span class="obj-tag">AO2</span> Understand how cells become specialised through differential gene expression, producing active mRNA leading to protein synthesis</div>
+    <div class="obj-item"><span class="obj-tag">AO2</span> Understand how phenotypes are affected by multiple alleles or polygenic inheritance</div>
+  </div>
+</details>
+
+<!-- ═══════════════ DIAGNOSTIC ═══════════════ -->
+<section class="section" id="diagnostic">
+  <div class="section-label"><span class="dot red"></span> Prior Knowledge Check</div>
+  <h2>Diagnostic Quiz</h2>
+  <p>Test what you remember from Topics 2B and 2C before we begin.</p>
+
+  <div class="quiz-widget" id="dq1">
+    <div class="quiz-header"><span class="quiz-type diagnostic">Diagnostic Q1</span></div>
+    <div class="quiz-question">What is an allele?</div>
+    <div class="quiz-options" id="dq1Options">
+      <div class="quiz-option" onclick="sel('dq1',0,this)"><span class="opt-letter">A</span> A section of DNA that codes for a protein</div>
+      <div class="quiz-option" onclick="sel('dq1',1,this)"><span class="opt-letter">B</span> A different form of a gene</div>
+      <div class="quiz-option" onclick="sel('dq1',2,this)"><span class="opt-letter">C</span> A type of chromosome</div>
+      <div class="quiz-option" onclick="sel('dq1',3,this)"><span class="opt-letter">D</span> A strand of mRNA</div>
+    </div>
+    <div class="quiz-feedback" id="dq1Feedback"></div>
+    <button class="quiz-btn" onclick="check('dq1',1,'Correct! An allele is a different form of the same gene, found at the same locus on homologous chromosomes.','Not quite. An allele is a different form of the same gene. A gene is a section of DNA — an allele is a variant of that gene.')">Check</button>
+  </div>
+
+  <div class="quiz-widget" id="dq2">
+    <div class="quiz-header"><span class="quiz-type diagnostic">Diagnostic Q2</span></div>
+    <div class="quiz-question">What does &lsquo;homozygous&rsquo; mean?</div>
+    <div class="quiz-options" id="dq2Options">
+      <div class="quiz-option" onclick="sel('dq2',0,this)"><span class="opt-letter">A</span> Having two different alleles for a gene</div>
+      <div class="quiz-option" onclick="sel('dq2',1,this)"><span class="opt-letter">B</span> Having two identical alleles for a gene</div>
+      <div class="quiz-option" onclick="sel('dq2',2,this)"><span class="opt-letter">C</span> Having only one allele for a gene</div>
+      <div class="quiz-option" onclick="sel('dq2',3,this)"><span class="opt-letter">D</span> Having three or more alleles for a gene</div>
+    </div>
+    <div class="quiz-feedback" id="dq2Feedback"></div>
+    <button class="quiz-btn" onclick="check('dq2',1,'Correct! Homozygous means both alleles at a locus are identical (e.g. AA or aa).','Not quite. Homozygous = two identical alleles (AA or aa). Heterozygous = two different alleles (Aa).')">Check</button>
+  </div>
+
+  <div class="quiz-widget" id="dq3">
+    <div class="quiz-header"><span class="quiz-type diagnostic">Diagnostic Q3</span></div>
+    <div class="quiz-question">During which process is the diploid chromosome number halved?</div>
+    <div class="quiz-options" id="dq3Options">
+      <div class="quiz-option" onclick="sel('dq3',0,this)"><span class="opt-letter">A</span> Mitosis</div>
+      <div class="quiz-option" onclick="sel('dq3',1,this)"><span class="opt-letter">B</span> DNA replication</div>
+      <div class="quiz-option" onclick="sel('dq3',2,this)"><span class="opt-letter">C</span> Meiosis</div>
+      <div class="quiz-option" onclick="sel('dq3',3,this)"><span class="opt-letter">D</span> Fertilisation</div>
+    </div>
+    <div class="quiz-feedback" id="dq3Feedback"></div>
+    <button class="quiz-btn" onclick="check('dq3',2,'Correct! Meiosis is the reduction division that halves the chromosome number from diploid (2n) to haploid (n).','Not quite. Meiosis halves the chromosome number. Mitosis maintains it, and fertilisation restores it.')">Check</button>
+  </div>
+
+  <div class="quiz-widget" id="dq4">
+    <div class="quiz-header"><span class="quiz-type diagnostic">Diagnostic Q4</span></div>
+    <div class="quiz-question">If a gene has alleles represented by B (dominant) and b (recessive), what is the phenotype of genotype Bb?</div>
+    <div class="quiz-options" id="dq4Options">
+      <div class="quiz-option" onclick="sel('dq4',0,this)"><span class="opt-letter">A</span> The recessive phenotype</div>
+      <div class="quiz-option" onclick="sel('dq4',1,this)"><span class="opt-letter">B</span> A blend of both phenotypes</div>
+      <div class="quiz-option" onclick="sel('dq4',2,this)"><span class="opt-letter">C</span> The dominant phenotype</div>
+      <div class="quiz-option" onclick="sel('dq4',3,this)"><span class="opt-letter">D</span> Neither phenotype</div>
+    </div>
+    <div class="quiz-feedback" id="dq4Feedback"></div>
+    <button class="quiz-btn" onclick="check('dq4',2,'Correct! When dominant allele B is present, the dominant phenotype is expressed, even in a heterozygous individual.','Not quite. In complete dominance, having one copy of the dominant allele (B) is enough to express the dominant phenotype.')">Check</button>
+  </div>
+</section>
+
+<!-- ═══════════════ AREA 1: GENE EXPRESSION ═══════════════ -->
+<section class="section" id="area1">
+  <div class="section-label"><span class="dot red"></span> Section 1</div>
+  <h2>Gene Expression in Action</h2>
+
+  <p>In a multicellular organism, every cell contains the same <span class="key-term">genome<span class="term-def">The complete set of genetic material (DNA) in an organism.</span></span> — the same complete set of DNA. Yet a neuron looks and functions completely differently from a red blood cell. How?</p>
+
+  <p>The answer is <span class="key-term">cell differentiation<span class="term-def">The process by which a less specialised cell becomes more specialised for a particular function.</span></span>. Different types of cell produce different proteins. All cells make <strong>housekeeping proteins</strong> — structural proteins of membranes and enzymes needed for cellular respiration. But each cell type also produces additional, specialised proteins.</p>
+
+  <div class="card">
+    <h3 style="margin-top:0">Protein Diversity Across Cell Types</h3>
+    <table class="compare-table">
+      <tr><th>Cell Type</th><th>Housekeeping Proteins</th><th>Extra Specialised Proteins</th></tr>
+      <tr><td class="feature-col">Cerebral cortex neuron</td><td>Yes</td><td>~318 extra proteins (neurotransmitters, ion channels)</td></tr>
+      <tr><td class="feature-col">Liver cell (hepatocyte)</td><td>Yes</td><td>Enzymes for detoxification, bile production</td></tr>
+      <tr><td class="feature-col">Red blood cell</td><td>Minimal (loses nucleus)</td><td>Haemoglobin</td></tr>
+      <tr><td class="feature-col">Smooth muscle cell</td><td>Yes</td><td>Mainly housekeeping proteins only</td></tr>
+    </table>
+  </div>
+
+  <p>The degree of differentiation between cells can be measured. The <span class="key-term">proteome<span class="term-def">The entire set of proteins expressed by a cell, tissue, or organism at a given time.</span></span> is the complete set of proteins produced by a cell. By comparing the proteomes of different cells, scientists can work out which genes have been expressed and which have been suppressed.</p>
+
+  <!-- INTERACTIVE SVG: One genome → many cell types -->
+  <div class="diagram-container">
+    <div class="diagram-title">Interactive diagram — One genome, many cell types. Click each cell.</div>
+    <svg viewBox="0 0 700 300" class="bio-svg" id="cellDiffSvg">
+      <!-- Central DNA -->
+      <rect x="280" y="10" width="140" height="40" rx="20" fill="#b8860b" opacity="0.15" stroke="#b8860b" stroke-width="1.5"/>
+      <text x="350" y="35" text-anchor="middle" class="label-bold" fill="#b8860b">Same DNA</text>
+      <!-- Arrows down -->
+      <line x1="320" y1="55" x2="150" y2="120" stroke="#8a8278" stroke-width="1.5" stroke-dasharray="4,3"/>
+      <line x1="350" y1="55" x2="350" y2="120" stroke="#8a8278" stroke-width="1.5" stroke-dasharray="4,3"/>
+      <line x1="380" y1="55" x2="550" y2="120" stroke="#8a8278" stroke-width="1.5" stroke-dasharray="4,3"/>
+      <!-- Neuron -->
+      <g class="highlight-part" onclick="showCellInfo('neuron')">
+        <circle cx="150" cy="150" r="30" fill="#c44b2b" opacity="0.15" stroke="#c44b2b" stroke-width="2"/>
+        <line x1="120" y1="150" x2="80" y2="140" stroke="#c44b2b" stroke-width="1.5"/>
+        <line x1="120" y1="150" x2="85" y2="165" stroke="#c44b2b" stroke-width="1.5"/>
+        <line x1="180" y1="150" x2="240" y2="150" stroke="#c44b2b" stroke-width="2"/>
+        <text x="150" y="200" text-anchor="middle" class="label-bold" fill="#c44b2b">Neuron</text>
+        <text x="150" y="215" text-anchor="middle" font-size="9" fill="#8a8278">318+ specialised proteins</text>
+      </g>
+      <!-- Muscle cell -->
+      <g class="highlight-part" onclick="showCellInfo('muscle')">
+        <rect x="315" y="125" width="70" height="50" rx="8" fill="#1a7a6d" opacity="0.15" stroke="#1a7a6d" stroke-width="2"/>
+        <line x1="325" y1="140" x2="375" y2="140" stroke="#1a7a6d" stroke-width="1" opacity="0.5"/>
+        <line x1="325" y1="150" x2="375" y2="150" stroke="#1a7a6d" stroke-width="1" opacity="0.5"/>
+        <line x1="325" y1="160" x2="375" y2="160" stroke="#1a7a6d" stroke-width="1" opacity="0.5"/>
+        <text x="350" y="200" text-anchor="middle" class="label-bold" fill="#1a7a6d">Muscle Cell</text>
+        <text x="350" y="215" text-anchor="middle" font-size="9" fill="#8a8278">Actin &amp; myosin proteins</text>
+      </g>
+      <!-- Red blood cell -->
+      <g class="highlight-part" onclick="showCellInfo('rbc')">
+        <ellipse cx="550" cy="150" rx="35" ry="22" fill="#6b4c8a" opacity="0.15" stroke="#6b4c8a" stroke-width="2"/>
+        <ellipse cx="550" cy="150" rx="12" ry="8" fill="none" stroke="#6b4c8a" stroke-width="1" opacity="0.4"/>
+        <text x="550" y="195" text-anchor="middle" class="label-bold" fill="#6b4c8a">Red Blood Cell</text>
+        <text x="550" y="210" text-anchor="middle" font-size="9" fill="#8a8278">Mainly haemoglobin</text>
+      </g>
+      <!-- Key -->
+      <text x="350" y="260" text-anchor="middle" font-size="10" fill="#8a8278">All three cell types contain identical DNA — only their gene expression differs</text>
+      <text x="350" y="280" text-anchor="middle" font-size="9" fill="#b8860b">Click a cell to learn more</text>
+    </svg>
+    <div class="info-panel" id="cellInfoPanel"></div>
+  </div>
+
+  <!-- VTR: See-Think-Wonder -->
+  <div class="vtr-widget">
+    <h3>See — Think — Wonder</h3>
+    <p style="color:var(--ink-soft);font-size:0.88rem">Scientists analyse the proteins from brain cells and liver cells of the same organism. Both cells have identical DNA, yet their protein profiles are completely different.</p>
+    <div class="vtr-label see">What do you SEE in this information?</div>
+    <textarea placeholder="I see that both cells have the same DNA but..."></textarea>
+    <div class="vtr-label think">What do you THINK is happening?</div>
+    <textarea placeholder="I think the cells must be..."></textarea>
+    <div class="vtr-label wonder">What do you WONDER about?</div>
+    <textarea placeholder="I wonder how the cell 'knows' which genes to..."></textarea>
+  </div>
+
+  <!-- Retrieval quiz -->
+  <div class="quiz-widget" id="q1">
+    <div class="quiz-header"><span class="quiz-type ao1">AO1 Retrieval</span></div>
+    <div class="quiz-question">Which type of proteins are found in ALL cells regardless of specialisation?</div>
+    <div class="quiz-options" id="q1Options">
+      <div class="quiz-option" onclick="sel('q1',0,this)"><span class="opt-letter">A</span> Haemoglobin</div>
+      <div class="quiz-option" onclick="sel('q1',1,this)"><span class="opt-letter">B</span> Housekeeping proteins</div>
+      <div class="quiz-option" onclick="sel('q1',2,this)"><span class="opt-letter">C</span> Neurotransmitter receptors</div>
+      <div class="quiz-option" onclick="sel('q1',3,this)"><span class="opt-letter">D</span> Antibodies</div>
+    </div>
+    <div class="quiz-feedback" id="q1Feedback"></div>
+    <button class="quiz-btn" onclick="check('q1',1,'Correct! Housekeeping proteins — such as membrane structural proteins and enzymes for cellular respiration — are produced by all cells.','Not quite. Housekeeping proteins are the ones found in every cell. The others are specialised proteins found only in specific cell types.')">Check</button>
+  </div>
+</section>
+
+<!-- ═══════════════ AREA 2: MULTIPLE ALLELES ═══════════════ -->
+<section class="section" id="area2">
+  <div class="section-label"><span class="dot teal"></span> Section 2</div>
+  <h2>Multiple Alleles</h2>
+
+  <p>A <span class="key-term">locus<span class="term-def">The specific position of a gene on a chromosome.</span></span> is the specific location of a gene on a chromosome. Each gene has at least two different forms, known as alleles. But some genes have <strong>more than two</strong> possible alleles — these are called <span class="key-term">multiple alleles<span class="term-def">When a gene has more than two possible alleles at a particular locus in a population.</span></span>.</p>
+
+  <h3>The ABO Blood Group System</h3>
+  <p>The best-known example is the human ABO blood group system. There are <strong>three alleles</strong>: I<sup>A</sup>, I<sup>B</sup>, and i. The alleles I<sup>A</sup> and I<sup>B</sup> are <span class="key-term">codominant<span class="term-def">When both alleles are expressed equally in the phenotype of a heterozygote.</span></span> — both are expressed when present together. The allele i is recessive to both.</p>
+
+  <div class="card">
+    <h3 style="margin-top:0">ABO Blood Group Genotypes</h3>
+    <table class="compare-table">
+      <tr><th>Genotype</th><th>Blood Group</th><th>Antigens on RBC</th></tr>
+      <tr><td class="feature-col">I<sup>A</sup>I<sup>A</sup> or I<sup>A</sup>i</td><td>A</td><td>A antigens</td></tr>
+      <tr><td class="feature-col">I<sup>B</sup>I<sup>B</sup> or I<sup>B</sup>i</td><td>B</td><td>B antigens</td></tr>
+      <tr><td class="feature-col">I<sup>A</sup>I<sup>B</sup></td><td>AB</td><td>Both A and B antigens</td></tr>
+      <tr><td class="feature-col">ii</td><td>O</td><td>Neither antigen</td></tr>
+    </table>
+  </div>
+
+  <div class="learning-tip">
+    <div class="tip-label">Learning Tip</div>
+    Remember: codominant means <strong>both</strong> alleles are fully expressed. This is different from incomplete dominance, where you get a blended phenotype. In blood group AB, both A and B antigens are present — not a mixture.
+  </div>
+
+  <!-- PRODUCTIVE STRUGGLE -->
+  <div class="struggle-box">
+    <div class="struggle-label">Productive Struggle — Try before you learn</div>
+    <p style="font-weight:600;color:var(--ink);margin-bottom:0.5rem">A couple both have blood group A. Can they have a child with blood group O? Explain your reasoning.</p>
+    <p style="font-size:0.85rem;color:var(--ink-muted);margin-bottom:0.8rem">Attempt this question <strong>before</strong> looking at the scaffolding below. Struggle is where learning happens.</p>
+    <textarea style="width:100%;min-height:80px;border:1px solid var(--card-border);border-radius:var(--radius);padding:0.7rem;font-family:var(--font-body);font-size:0.88rem;resize:vertical;outline:none" placeholder="My initial thinking..."></textarea>
+  </div>
+
+  <!-- TIERED SCAFFOLDING -->
+  <div class="card">
+    <h3 style="margin-top:0">Tiered Support</h3>
+    <div class="tier-tabs">
+      <button class="tier-btn active" onclick="showTier(this,'tier1a')">Challenge (No help)</button>
+      <button class="tier-btn" onclick="showTier(this,'tier2a')">Guided</button>
+      <button class="tier-btn" onclick="showTier(this,'tier3a')">Scaffolded</button>
+    </div>
+    <div class="tier-panel active" id="tier1a">
+      <p><strong>Using your knowledge of multiple alleles, determine whether two parents with blood group A can produce a child with blood group O. Show your working with a genetic cross.</strong></p>
+    </div>
+    <div class="tier-panel" id="tier2a">
+      <p><strong>Hint:</strong> Blood group A can be produced by <em>two different genotypes</em>. What are they? If both parents carry a hidden recessive allele, what could happen?</p>
+      <p>Parent 1 genotype: I<sup>A</sup>___&emsp;Parent 2 genotype: I<sup>A</sup>___</p>
+    </div>
+    <div class="tier-panel" id="tier3a">
+      <p><strong>Complete this Punnett square:</strong></p>
+      <p>Both parents are heterozygous: <strong>I<sup>A</sup>i &times; I<sup>A</sup>i</strong></p>
+      <table class="compare-table" style="max-width:300px">
+        <tr><th></th><th>I<sup>A</sup></th><th>i</th></tr>
+        <tr><td class="feature-col">I<sup>A</sup></td><td><input class="blank-input" data-answer="I^A I^A" placeholder="?" style="width:80px;text-align:center"></td><td><input class="blank-input" data-answer="I^A i" placeholder="?" style="width:80px;text-align:center"></td></tr>
+        <tr><td class="feature-col">i</td><td><input class="blank-input" data-answer="I^A i" placeholder="?" style="width:80px;text-align:center"></td><td><input class="blank-input" data-answer="ii" placeholder="?" style="width:80px;text-align:center"></td></tr>
+      </table>
+      <p style="margin-top:0.8rem">So the answer is: <strong>Yes</strong> — there is a 1 in 4 (25%) chance of a child with blood group O (genotype ii).</p>
+    </div>
+  </div>
+
+  <div class="exam-hint">
+    <div class="hint-label">Exam Hint</div>
+    Always show your Punnett square clearly. Write the parental phenotypes, genotypes, gametes, and then the square. Label the offspring ratios.
+  </div>
+
+  <!-- MCQ -->
+  <div class="quiz-widget" id="q2">
+    <div class="quiz-header"><span class="quiz-type ao2">AO2 Application</span></div>
+    <div class="quiz-question">A man with blood group AB and a woman with blood group O have children. Which blood groups are possible in their offspring?</div>
+    <div class="quiz-options" id="q2Options">
+      <div class="quiz-option" onclick="sel('q2',0,this)"><span class="opt-letter">A</span> A and B only</div>
+      <div class="quiz-option" onclick="sel('q2',1,this)"><span class="opt-letter">B</span> AB only</div>
+      <div class="quiz-option" onclick="sel('q2',2,this)"><span class="opt-letter">C</span> A, B, AB, and O</div>
+      <div class="quiz-option" onclick="sel('q2',3,this)"><span class="opt-letter">D</span> A, B, and O</div>
+    </div>
+    <div class="quiz-feedback" id="q2Feedback"></div>
+    <button class="quiz-btn" onclick="check('q2',0,'Correct! Father I^A I^B × Mother ii → gametes (I^A or I^B) × (i) → offspring are I^A i (group A) or I^B i (group B). No AB or O possible.','Father is I^A I^B, mother is ii. Cross: each child gets one allele from each parent. From father: I^A or I^B. From mother: i. So offspring are I^A i (A) or I^B i (B) only.')">Check</button>
+  </div>
+</section>
+
+<!-- ═══════════════ AREA 3: GENE LINKAGE ═══════════════ -->
+<section class="section" id="area3">
+  <div class="section-label"><span class="dot blue"></span> Section 3</div>
+  <h2>Gene Linkage</h2>
+
+  <p>You have previously assumed that genes are inherited independently. This is true when genes are on <strong>different chromosomes</strong>. But what happens when two genes are on the <strong>same chromosome</strong>?</p>
+
+  <p>When genes are located on the same chromosome, they tend to be inherited together. This is called <span class="key-term">gene linkage<span class="term-def">When two or more genes are located on the same chromosome and tend to be inherited together.</span></span>. Closely linked genes — those that are close together on the chromosome — rarely separate during <span class="key-term">crossing over<span class="term-def">The exchange of genetic material between homologous chromosomes during meiosis I, producing recombinant chromosomes.</span></span> in meiosis.</p>
+
+  <div class="card">
+    <h3 style="margin-top:0">Linkage and Recombination</h3>
+    <p>The tightness of linkage of a pair of genes is related to how close together the linked genes are located on the chromosome:</p>
+    <ul style="margin:0.5rem 0 1rem 1.5rem;color:var(--ink-soft);font-size:0.92rem">
+      <li style="margin-bottom:0.4rem"><strong>Closely linked genes</strong> → rarely separated by crossing over → behave as if they are one gene</li>
+      <li style="margin-bottom:0.4rem"><strong>Distantly linked genes</strong> → more likely to be separated by crossing over → more recombinant offspring</li>
+      <li><strong>Genes on different chromosomes</strong> → always assort independently</li>
+    </ul>
+  </div>
+
+  <!-- INTERACTIVE SVG: Linked genes on chromosome -->
+  <div class="diagram-container">
+    <div class="diagram-title">Interactive — Click each gene locus to learn about linkage</div>
+    <svg viewBox="0 0 700 200" class="bio-svg" id="linkageSvg">
+      <!-- Chromosome -->
+      <rect x="80" y="80" width="540" height="40" rx="20" fill="#2a5d8f" opacity="0.1" stroke="#2a5d8f" stroke-width="2"/>
+      <!-- Centromere -->
+      <ellipse cx="350" cy="100" rx="15" ry="20" fill="#2a5d8f" opacity="0.3"/>
+      <text x="350" y="145" text-anchor="middle" font-size="9" fill="#8a8278">Centromere</text>
+      <!-- Gene A (close to B) -->
+      <g class="highlight-part" onclick="showLinkInfo('geneA')">
+        <rect x="140" y="85" width="50" height="30" rx="4" fill="#c44b2b" opacity="0.3" stroke="#c44b2b" stroke-width="1.5"/>
+        <text x="165" y="105" text-anchor="middle" font-size="11" font-weight="600" fill="#c44b2b">Gene A</text>
+        <text x="165" y="72" text-anchor="middle" font-size="9" fill="#8a8278">Locus 1</text>
+      </g>
+      <!-- Gene B (close to A = closely linked) -->
+      <g class="highlight-part" onclick="showLinkInfo('geneB')">
+        <rect x="210" y="85" width="50" height="30" rx="4" fill="#c44b2b" opacity="0.3" stroke="#c44b2b" stroke-width="1.5"/>
+        <text x="235" y="105" text-anchor="middle" font-size="11" font-weight="600" fill="#c44b2b">Gene B</text>
+        <text x="235" y="72" text-anchor="middle" font-size="9" fill="#8a8278">Locus 2</text>
+      </g>
+      <!-- Bracket: closely linked -->
+      <path d="M140 120 L140 135 L260 135 L260 120" fill="none" stroke="#c44b2b" stroke-width="1"/>
+      <text x="200" y="152" text-anchor="middle" font-size="10" fill="#c44b2b" font-weight="600">Closely linked</text>
+      <text x="200" y="165" text-anchor="middle" font-size="9" fill="#8a8278">Rarely separated</text>
+      <!-- Gene C (far from A/B = distantly linked) -->
+      <g class="highlight-part" onclick="showLinkInfo('geneC')">
+        <rect x="480" y="85" width="50" height="30" rx="4" fill="#1a7a6d" opacity="0.3" stroke="#1a7a6d" stroke-width="1.5"/>
+        <text x="505" y="105" text-anchor="middle" font-size="11" font-weight="600" fill="#1a7a6d">Gene C</text>
+        <text x="505" y="72" text-anchor="middle" font-size="9" fill="#8a8278">Locus 3</text>
+      </g>
+      <!-- Arrow showing distance -->
+      <line x1="270" y1="175" x2="475" y2="175" stroke="#8a8278" stroke-width="1" stroke-dasharray="3,3"/>
+      <text x="372" y="192" text-anchor="middle" font-size="9" fill="#8a8278">Greater distance = more recombination</text>
+    </svg>
+    <div class="info-panel" id="linkInfoPanel"></div>
+  </div>
+
+  <div class="learning-tip">
+    <div class="tip-label">Learning Tip</div>
+    Think of linked genes like passengers on the same bus. Closely linked genes always get off at the same stop. Distantly linked genes might occasionally switch buses (crossing over) during the journey.
+  </div>
+
+  <!-- Fill in blanks -->
+  <div class="quiz-widget">
+    <div class="quiz-header"><span class="quiz-type ao1">AO1 Fill the Blanks</span></div>
+    <div class="quiz-question">Complete these sentences about gene linkage:</div>
+    <div class="fill-blank-widget" id="fb1">
+      <div class="fill-item">1. Genes on the same chromosome are said to be <input class="blank-input" data-answer="linked" placeholder="________">.</div>
+      <div class="fill-item">2. Closely linked genes are rarely separated during <input class="blank-input" data-answer="crossing over" placeholder="________">.</div>
+      <div class="fill-item">3. The closer two genes are on a chromosome, the <input class="blank-input" data-answer="less" placeholder="________"> likely they are to be separated.</div>
+      <div class="fill-item">4. Genes on different chromosomes assort <input class="blank-input" data-answer="independently" placeholder="________">.</div>
+    </div>
+    <button class="quiz-btn" onclick="checkFill('fb1')">Check Answers</button>
+    <div class="scaffold">
+      <div class="scaffold-label">Word Bank</div>
+      linked &nbsp;|&nbsp; crossing over &nbsp;|&nbsp; less &nbsp;|&nbsp; independently
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ AREA 4: DIHYBRID INHERITANCE ═══════════════ -->
+<section class="section" id="area4">
+  <div class="section-label"><span class="dot purple"></span> Section 4</div>
+  <h2>Dihybrid Inheritance &amp; Linkage in <em>Drosophila</em></h2>
+
+  <p>A <span class="key-term">dihybrid cross<span class="term-def">A genetic cross that tracks the inheritance of two different genes simultaneously.</span></span> involves tracking the inheritance of two genes at the same time. When genes are on <strong>different chromosomes</strong>, they assort independently — producing the classic <strong>9:3:3:1</strong> ratio in F<sub>2</sub>.</p>
+
+  <div class="card">
+    <h3 style="margin-top:0">Drosophila Example — Independent Assortment</h3>
+    <p>In <em>Drosophila</em> (fruit flies): grey body (<strong>G</strong>) is dominant to ebony (<strong>g</strong>), and long wings (<strong>L</strong>) is dominant to vestigial wings (<strong>l</strong>).</p>
+    <p>Cross: <strong>GgLl &times; GgLl</strong> (both heterozygous for both traits)</p>
+    <p>If the genes are on different chromosomes, expected offspring ratio:</p>
+    <table class="compare-table" style="max-width:400px">
+      <tr><th>Phenotype</th><th>Ratio</th></tr>
+      <tr><td>Grey body, long wings</td><td>9</td></tr>
+      <tr><td>Grey body, vestigial wings</td><td>3</td></tr>
+      <tr><td>Ebony body, long wings</td><td>3</td></tr>
+      <tr><td>Ebony body, vestigial wings</td><td>1</td></tr>
+    </table>
+  </div>
+
+  <h3>But What If the Genes Are Linked?</h3>
+  <p>When <em>Drosophila</em> with dominant broad abdomens and long wings were crossed with flies displaying recessive narrow abdomens and vestigial wings, scientists expected a <strong>9:3:3:1</strong> ratio. Instead, they observed approximately a <strong>3:1</strong> ratio.</p>
+
+  <p>This happens because the genes for abdomen width and wing length are on the <strong>same chromosome</strong> — they are <span class="key-term">linked<span class="term-def">Genes on the same chromosome that tend to be inherited together.</span></span>. The alleles travel together during meiosis as if they were a single unit.</p>
+
+  <div class="exam-hint">
+    <div class="hint-label">Exam Hint</div>
+    If you see offspring ratios that deviate significantly from 9:3:3:1 in a dihybrid cross, think about gene linkage. A ratio close to 3:1 strongly suggests the two genes are linked on the same chromosome.
+  </div>
+
+  <!-- Sequencing Activity -->
+  <div class="sequence-widget">
+    <div class="quiz-header"><span class="quiz-type ao2">AO2 Sequencing</span></div>
+    <div class="quiz-question">Put these steps in order to explain how gene expression leads to cell differentiation:</div>
+    <div class="seq-items" id="seq1">
+      <div class="seq-item" data-order="3"><span class="seq-num">?</span><span class="grip">⋮⋮</span> Specific proteins determine cell structure and function</div>
+      <div class="seq-item" data-order="0"><span class="seq-num">?</span><span class="grip">⋮⋮</span> Certain genes in the cell are switched on (expressed)</div>
+      <div class="seq-item" data-order="4"><span class="seq-num">?</span><span class="grip">⋮⋮</span> Cell becomes specialised (differentiated)</div>
+      <div class="seq-item" data-order="1"><span class="seq-num">?</span><span class="grip">⋮⋮</span> Active genes are transcribed into mRNA</div>
+      <div class="seq-item" data-order="2"><span class="seq-num">?</span><span class="grip">⋮⋮</span> mRNA is translated into specific proteins at ribosomes</div>
+    </div>
+    <button class="quiz-btn" onclick="checkSeq('seq1')">Check Sequence</button>
+  </div>
+
+  <div class="scenario-card">
+    <div class="scenario-label">AO3 — Explain the Discrepancy</div>
+    <div class="scenario-q">A student crosses two heterozygous Drosophila (BbLl &times; BbLl) and expects a 9:3:3:1 ratio. They observe 301 broad+long : 99 narrow+vestigial : 12 broad+vestigial : 8 narrow+long. Explain these results.</div>
+    <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('show');this.textContent=this.nextElementSibling.classList.contains('show')?'Hide answer':'Reveal answer'">Reveal answer</button>
+    <div class="reveal-content"><strong>The ratio is approximately 3:1</strong> (301+12 : 99+8 ≈ 313:107 ≈ 3:1), not 9:3:3:1. This indicates the genes for body width (B/b) and wing length (L/l) are <strong>linked</strong> — located on the same chromosome. They are inherited together. The small number of recombinant phenotypes (12 broad+vestigial and 8 narrow+long) are produced by <strong>crossing over</strong> during meiosis, which occasionally separates the linked alleles. The low recombination frequency (~5%) suggests the genes are closely linked.</div>
+  </div>
+</section>
+
+<!-- ═══════════════ AREA 5: POLYGENIC INHERITANCE ═══════════════ -->
+<section class="section" id="area5">
+  <div class="section-label"><span class="dot teal"></span> Section 5</div>
+  <h2>Polygenic Inheritance</h2>
+
+  <p>Most traits in living organisms are not determined by a single gene at a single locus. They are <span class="key-term">polygenic<span class="term-def">A characteristic determined by the interaction of multiple genes at different loci.</span></span> — controlled by the combined effect of several different genes at different loci, often on different chromosomes.</p>
+
+  <p>Characteristics such as <strong>eye colour, height, weight, skin colour, and intelligence</strong> are all polygenic. Each gene contributes a small effect, and the combined result produces a continuous range of phenotypes in a population.</p>
+
+  <div class="card">
+    <h3 style="margin-top:0">Monohybrid vs Polygenic</h3>
+    <table class="compare-table">
+      <tr><th>Feature</th><th>Monohybrid</th><th>Polygenic</th></tr>
+      <tr><td class="feature-col">Number of genes</td><td>One</td><td>Many (at different loci)</td></tr>
+      <tr><td class="feature-col">Type of variation</td><td>Discontinuous (distinct categories)</td><td>Continuous (range of values)</td></tr>
+      <tr><td class="feature-col">Environmental effect</td><td>Usually minimal</td><td>Often significant</td></tr>
+      <tr><td class="feature-col">Example</td><td>Blood group (A, B, AB, O)</td><td>Height, skin colour</td></tr>
+      <tr><td class="feature-col">Distribution</td><td>Discrete categories</td><td>Normal distribution (bell curve)</td></tr>
+    </table>
+  </div>
+
+  <div class="learning-tip">
+    <div class="tip-label">Learning Tip</div>
+    A helpful way to remember: <strong>mono</strong>hybrid = <strong>one</strong> gene, distinct categories. <strong>Poly</strong>genic = <strong>many</strong> genes, continuous range. The more genes involved, the smoother the distribution curve becomes.
+  </div>
+
+  <!-- Flashcards -->
+  <h3>Retrieval Practice — Key Term Flashcards</h3>
+  <p style="font-size:0.85rem;color:var(--ink-muted)">Click each card to reveal the definition.</p>
+  <div class="flashcard-grid">
+    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+      <div class="fc-front">Locus<div class="fc-hint">click to flip</div></div>
+      <div class="fc-back">The specific position of a gene on a chromosome.</div>
+    </div>
+    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+      <div class="fc-front">Multiple Alleles<div class="fc-hint">click to flip</div></div>
+      <div class="fc-back">When a gene has more than two possible alleles at a particular locus in a population.</div>
+    </div>
+    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+      <div class="fc-front">Codominant<div class="fc-hint">click to flip</div></div>
+      <div class="fc-back">When both alleles are expressed equally in the phenotype of a heterozygote.</div>
+    </div>
+    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+      <div class="fc-front">Gene Linkage<div class="fc-hint">click to flip</div></div>
+      <div class="fc-back">When genes on the same chromosome tend to be inherited together.</div>
+    </div>
+    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+      <div class="fc-front">Polygenic<div class="fc-hint">click to flip</div></div>
+      <div class="fc-back">A characteristic controlled by many genes at different loci, producing continuous variation.</div>
+    </div>
+    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+      <div class="fc-front">Cell Differentiation<div class="fc-hint">click to flip</div></div>
+      <div class="fc-back">The process by which a less specialised cell becomes specialised for a particular function.</div>
+    </div>
+    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+      <div class="fc-front">Dihybrid Cross<div class="fc-hint">click to flip</div></div>
+      <div class="fc-back">A genetic cross tracking the inheritance of two different genes simultaneously.</div>
+    </div>
+    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+      <div class="fc-front">Crossing Over<div class="fc-hint">click to flip</div></div>
+      <div class="fc-back">Exchange of genetic material between homologous chromosomes during meiosis I.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ EXAM PRACTICE ═══════════════ -->
+<section class="section" id="practice">
+  <div class="section-label"><span class="dot purple"></span> Exam Practice</div>
+  <h2>Exam-Style Questions</h2>
+
+  <!-- 2 mark -->
+  <div class="card" style="border-left:4px solid var(--teal)">
+    <div class="quiz-header"><span class="quiz-type ao1">2 Marks</span></div>
+    <h3 style="margin-top:0">Question 1</h3>
+    <p><strong>Explain what is meant by the term &lsquo;gene linkage&rsquo;.</strong></p>
+    <div class="self-check">
+      <details>
+        <summary>Reveal model answer</summary>
+        <div class="answer"><strong>Mark scheme:</strong><br>1. Gene linkage is when two or more genes are located on the same chromosome (1 mark)<br>2. They tend to be inherited together / are not independently assorted (1 mark)</div>
+      </details>
+    </div>
+  </div>
+
+  <!-- 4 mark -->
+  <div class="card" style="border-left:4px solid var(--blue)">
+    <div class="quiz-header"><span class="quiz-type ao2">4 Marks</span></div>
+    <h3 style="margin-top:0">Question 2</h3>
+    <p><strong>A man has blood group A (genotype I<sup>A</sup>i) and a woman has blood group B (genotype I<sup>B</sup>i). Using a Punnett square, determine the possible blood groups of their children.</strong></p>
+    <div class="self-check">
+      <details>
+        <summary>Reveal model answer</summary>
+        <div class="answer"><strong>Mark scheme:</strong><br>1. Correct gametes identified: Father = I<sup>A</sup> and i; Mother = I<sup>B</sup> and i (1 mark)<br>2. Correct Punnett square drawn (1 mark)<br>3. Offspring genotypes: I<sup>A</sup>I<sup>B</sup>, I<sup>A</sup>i, I<sup>B</sup>i, ii (1 mark)<br>4. Phenotypes: AB, A, B, O — all four blood groups possible, each with 25% probability (1 mark)</div>
+      </details>
+    </div>
+  </div>
+
+  <!-- 6 mark -->
+  <div class="card" style="border-left:4px solid var(--purple)">
+    <div class="quiz-header"><span class="quiz-type ao3">6 Marks — Extended Response</span></div>
+    <h3 style="margin-top:0">Question 3</h3>
+    <p><strong>A scientist crosses two Drosophila that are heterozygous for body colour (Gg) and wing length (Ll). The observed ratio of phenotypes is approximately 3:1 rather than the expected 9:3:3:1. Explain this observation.</strong></p>
+    <div class="scaffold">
+      <div class="scaffold-label">Planning Checklist</div>
+    </div>
+    <div class="topic-tracker" style="margin-top:0.5rem">
+      <div class="tracker-row"><div class="tracker-check" onclick="toggleCheck(this)"></div> State the expected ratio for independent assortment (9:3:3:1)</div>
+      <div class="tracker-row"><div class="tracker-check" onclick="toggleCheck(this)"></div> Explain that the observed 3:1 ratio suggests genes are NOT on different chromosomes</div>
+      <div class="tracker-row"><div class="tracker-check" onclick="toggleCheck(this)"></div> Define gene linkage — genes on the same chromosome</div>
+      <div class="tracker-row"><div class="tracker-check" onclick="toggleCheck(this)"></div> Explain that linked genes are inherited together as a unit</div>
+      <div class="tracker-row"><div class="tracker-check" onclick="toggleCheck(this)"></div> Mention that recombinant offspring (rare phenotypes) can occur via crossing over</div>
+      <div class="tracker-row"><div class="tracker-check" onclick="toggleCheck(this)"></div> Conclude that the low frequency of recombinants indicates close linkage</div>
+    </div>
+    <textarea style="width:100%;min-height:150px;border:1px solid var(--card-border);border-radius:var(--radius);padding:0.8rem;font-family:var(--font-body);font-size:0.88rem;resize:vertical;outline:none;margin-top:0.8rem" placeholder="Write your extended response here..."></textarea>
+    <div class="self-check" style="margin-top:1rem">
+      <details>
+        <summary>Reveal model answer</summary>
+        <div class="answer">If the two genes were on different chromosomes, they would assort independently during meiosis, producing a 9:3:3:1 ratio in the F2 generation. However, the observed ratio of approximately 3:1 indicates that the genes for body colour (G/g) and wing length (L/l) are located on the <strong>same chromosome</strong> — they are linked. Because they are on the same chromosome, the alleles G and L travel together during meiosis, as do g and l. This means the offspring predominantly inherit either the dominant combination (grey body + long wings) or the recessive combination (ebony body + vestigial wings), producing a ratio close to 3:1. A small number of recombinant phenotypes (e.g. grey body + vestigial wings) may be observed due to <strong>crossing over</strong> during prophase I of meiosis, which can separate linked alleles. The low frequency of these recombinants suggests the two genes are <strong>closely linked</strong> — positioned close together on the chromosome, making crossing over between them a rare event.</div>
+      </details>
+    </div>
+  </div>
+
+  <!-- INDEPENDENT PRACTICE: Tiered -->
+  <div class="card">
+    <h3 style="margin-top:0">Independent Practice — Dihybrid Genetics</h3>
+    <div class="tier-tabs">
+      <button class="tier-btn active" onclick="showTier(this,'ipL1')">Level 1 (Supported)</button>
+      <button class="tier-btn" onclick="showTier(this,'ipL2')">Level 2 (Guided)</button>
+      <button class="tier-btn" onclick="showTier(this,'ipL3')">Level 3 (Challenge)</button>
+    </div>
+    <div class="tier-panel active" id="ipL1">
+      <p><strong>Level 1:</strong> A plant has two traits — tall (T) dominant to short (t), and red flowers (R) dominant to white (r). Complete this Punnett square for TtRr &times; TtRr. Use the word bank.</p>
+      <div class="fill-blank-widget" id="fb2">
+        <div class="fill-item">The expected phenotypic ratio is <input class="blank-input" data-answer="9:3:3:1" placeholder="________"> .</div>
+        <div class="fill-item">The most common phenotype will be <input class="blank-input" data-answer="tall red" placeholder="________"> .</div>
+        <div class="fill-item">The rarest phenotype will be <input class="blank-input" data-answer="short white" placeholder="________"> .</div>
+      </div>
+      <button class="quiz-btn" onclick="checkFill('fb2')">Check</button>
+      <div class="scaffold"><div class="scaffold-label">Word Bank</div>9:3:3:1 &nbsp;|&nbsp; tall red &nbsp;|&nbsp; short white</div>
+    </div>
+    <div class="tier-panel" id="ipL2">
+      <p><strong>Level 2:</strong> In Drosophila, long wings (L) are dominant to vestigial wings (l), and grey body (G) is dominant to ebony body (g). Cross a heterozygous fly (GgLl) with a double recessive fly (ggll). Draw the Punnett square and state the expected ratio if genes are on different chromosomes.</p>
+      <textarea style="width:100%;min-height:100px;border:1px solid var(--card-border);border-radius:var(--radius);padding:0.7rem;font-family:var(--font-body);font-size:0.88rem;resize:vertical;outline:none" placeholder="Draw your Punnett square here..."></textarea>
+      <div class="self-check" style="margin-top:0.5rem"><details><summary>Check your answer</summary><div class="answer">GgLl &times; ggll → Gametes from GgLl: GL, Gl, gL, gl. Gametes from ggll: gl only. Offspring: GgLl (grey long), Ggll (grey vestigial), ggLl (ebony long), ggll (ebony vestigial). Ratio: 1:1:1:1 (this is a test cross).</div></details></div>
+    </div>
+    <div class="tier-panel" id="ipL3">
+      <p><strong>Level 3 (Challenge):</strong> A genetics experiment with Drosophila produces these offspring: 412 grey+long, 398 ebony+vestigial, 46 grey+vestigial, 52 ebony+long. What can you conclude about the relationship between these genes? Calculate the recombination frequency.</p>
+      <textarea style="width:100%;min-height:100px;border:1px solid var(--card-border);border-radius:var(--radius);padding:0.7rem;font-family:var(--font-body);font-size:0.88rem;resize:vertical;outline:none" placeholder="Your analysis..."></textarea>
+      <div class="self-check" style="margin-top:0.5rem"><details><summary>Check your answer</summary><div class="answer">The parental phenotypes (grey+long: 412, ebony+vestigial: 398) vastly outnumber the recombinant phenotypes (grey+vestigial: 46, ebony+long: 52). This indicates the genes are <strong>linked</strong> on the same chromosome. Recombination frequency = (46 + 52) / (412 + 398 + 46 + 52) &times; 100 = 98/908 &times; 100 = <strong>10.8%</strong>. This means the genes are linked but not very closely — approximately 10.8 map units apart.</div></details></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ FINAL ASSESSMENT ═══════════════ -->
+<section class="section" id="exit">
+  <h2>Final Assessment</h2>
+  <p>Test your understanding of the whole lesson.</p>
+
+  <div class="quiz-widget" id="fa1">
+    <div class="quiz-header"><span class="quiz-type ao1">Q1</span><span class="quiz-score" id="fa1Score"></span></div>
+    <div class="quiz-question">What is a locus?</div>
+    <div class="quiz-options" id="fa1Options">
+      <div class="quiz-option" onclick="sel('fa1',0,this)"><span class="opt-letter">A</span> A type of allele</div>
+      <div class="quiz-option" onclick="sel('fa1',1,this)"><span class="opt-letter">B</span> The specific position of a gene on a chromosome</div>
+      <div class="quiz-option" onclick="sel('fa1',2,this)"><span class="opt-letter">C</span> A section of mRNA</div>
+      <div class="quiz-option" onclick="sel('fa1',3,this)"><span class="opt-letter">D</span> A pair of homologous chromosomes</div>
+    </div>
+    <div class="quiz-feedback" id="fa1Feedback"></div>
+    <button class="quiz-btn" onclick="check('fa1',1,'Correct!','A locus is the specific position of a gene on a chromosome.')">Check</button>
+  </div>
+
+  <div class="quiz-widget" id="fa2">
+    <div class="quiz-header"><span class="quiz-type ao2">Q2</span></div>
+    <div class="quiz-question">Why do linked genes not follow the expected 9:3:3:1 ratio in a dihybrid cross?</div>
+    <div class="quiz-options" id="fa2Options">
+      <div class="quiz-option" onclick="sel('fa2',0,this)"><span class="opt-letter">A</span> Because they are on different chromosomes</div>
+      <div class="quiz-option" onclick="sel('fa2',1,this)"><span class="opt-letter">B</span> Because they are on the same chromosome and tend to be inherited together</div>
+      <div class="quiz-option" onclick="sel('fa2',2,this)"><span class="opt-letter">C</span> Because one gene is always dominant over the other</div>
+      <div class="quiz-option" onclick="sel('fa2',3,this)"><span class="opt-letter">D</span> Because crossing over always separates them</div>
+    </div>
+    <div class="quiz-feedback" id="fa2Feedback"></div>
+    <button class="quiz-btn" onclick="check('fa2',1,'Correct! Linked genes are on the same chromosome and travel together during meiosis.','Linked genes are on the same chromosome — they don\'t assort independently, so you get a ratio closer to 3:1.')">Check</button>
+  </div>
+
+  <div class="quiz-widget" id="fa3">
+    <div class="quiz-header"><span class="quiz-type ao2">Q3</span></div>
+    <div class="quiz-question">In the ABO system, a person with genotype I<sup>A</sup>I<sup>B</sup> has blood group AB because:</div>
+    <div class="quiz-options" id="fa3Options">
+      <div class="quiz-option" onclick="sel('fa3',0,this)"><span class="opt-letter">A</span> I<sup>A</sup> is dominant over I<sup>B</sup></div>
+      <div class="quiz-option" onclick="sel('fa3',1,this)"><span class="opt-letter">B</span> Both alleles are recessive</div>
+      <div class="quiz-option" onclick="sel('fa3',2,this)"><span class="opt-letter">C</span> Both alleles are codominant — both are expressed</div>
+      <div class="quiz-option" onclick="sel('fa3',3,this)"><span class="opt-letter">D</span> The alleles show incomplete dominance</div>
+    </div>
+    <div class="quiz-feedback" id="fa3Feedback"></div>
+    <button class="quiz-btn" onclick="check('fa3',2,'Correct! I^A and I^B are codominant — both antigens are produced on the red blood cell surface.','I^A and I^B are codominant. Both alleles are fully expressed, so both A and B antigens appear on the cell surface.')">Check</button>
+  </div>
+
+  <div class="quiz-widget" id="fa4">
+    <div class="quiz-header"><span class="quiz-type ao1">Q4</span></div>
+    <div class="quiz-question">Which of the following is an example of a polygenic trait?</div>
+    <div class="quiz-options" id="fa4Options">
+      <div class="quiz-option" onclick="sel('fa4',0,this)"><span class="opt-letter">A</span> ABO blood group</div>
+      <div class="quiz-option" onclick="sel('fa4',1,this)"><span class="opt-letter">B</span> Human height</div>
+      <div class="quiz-option" onclick="sel('fa4',2,this)"><span class="opt-letter">C</span> Sickle cell anaemia</div>
+      <div class="quiz-option" onclick="sel('fa4',3,this)"><span class="opt-letter">D</span> Cystic fibrosis</div>
+    </div>
+    <div class="quiz-feedback" id="fa4Feedback"></div>
+    <button class="quiz-btn" onclick="check('fa4',1,'Correct! Height is controlled by many genes at different loci, plus environmental factors like nutrition.','Height is polygenic — controlled by many genes. Blood groups, sickle cell, and CF are all determined by single genes.')">Check</button>
+  </div>
+
+  <div class="quiz-widget" id="fa5">
+    <div class="quiz-header"><span class="quiz-type ao2">Q5</span></div>
+    <div class="quiz-question">All cells in a multicellular organism contain the same DNA. Different cell types arise because:</div>
+    <div class="quiz-options" id="fa5Options">
+      <div class="quiz-option" onclick="sel('fa5',0,this)"><span class="opt-letter">A</span> Different cells have different chromosomes</div>
+      <div class="quiz-option" onclick="sel('fa5',1,this)"><span class="opt-letter">B</span> Different genes are expressed in different cells</div>
+      <div class="quiz-option" onclick="sel('fa5',2,this)"><span class="opt-letter">C</span> Mutations occur during mitosis</div>
+      <div class="quiz-option" onclick="sel('fa5',3,this)"><span class="opt-letter">D</span> Cells lose unwanted genes during development</div>
+    </div>
+    <div class="quiz-feedback" id="fa5Feedback"></div>
+    <button class="quiz-btn" onclick="check('fa5',1,'Correct! Differential gene expression — different genes being switched on or off — is how cells become specialised.','Different cells express different genes. The DNA stays the same, but which genes are active differs between cell types.')">Check</button>
+  </div>
+
+  <!-- CONFIDENCE CHECK -->
+  <div class="card" style="margin-top:2rem">
+    <h3 style="margin-top:0">How confident do you feel?</h3>
+    <div class="confidence-row">
+      <button class="conf-btn" onclick="pickConf(this)">😟 Need more help</button>
+      <button class="conf-btn" onclick="pickConf(this)">🤔 Getting there</button>
+      <button class="conf-btn" onclick="pickConf(this)">😊 Confident</button>
+      <button class="conf-btn" onclick="pickConf(this)">🤩 Mastered it</button>
+    </div>
+  </div>
+
+  <!-- EXIT TICKET -->
+  <div class="exit-ticket">
+    <h3>Exit Ticket</h3>
+    <p style="margin-bottom:1rem">Answer these before you finish:</p>
+    <p style="color:rgba(255,255,255,0.9);font-weight:500;margin-bottom:0.3rem">1. Explain why every cell has the same DNA but different cells produce different proteins.</p>
+    <textarea placeholder="Because different genes are..."></textarea>
+    <p style="color:rgba(255,255,255,0.9);font-weight:500;margin-bottom:0.3rem">2. A couple both have blood group A. What is the maximum number of different blood groups their children could have? Explain.</p>
+    <textarea placeholder="The children could have..."></textarea>
+    <p style="color:rgba(255,255,255,0.9);font-weight:500;margin-bottom:0.3rem">3. How can you tell from offspring ratios whether two genes are linked?</p>
+    <textarea placeholder="If the ratio is close to..."></textarea>
+  </div>
+
+  <!-- VOCABULARY GRID -->
+  <h3 style="margin-top:2rem">Vocabulary Grid</h3>
+  <div class="vocab-grid">
+    <div class="vocab-card"><div class="v-term">Cell differentiation</div><div class="v-def">The process by which a less specialised cell becomes specialised for a particular function.</div></div>
+    <div class="vocab-card"><div class="v-term">Locus</div><div class="v-def">The specific position of a gene on a chromosome.</div></div>
+    <div class="vocab-card"><div class="v-term">Multiple alleles</div><div class="v-def">When a gene has more than two possible alleles at a locus.</div></div>
+    <div class="vocab-card"><div class="v-term">Codominant</div><div class="v-def">Both alleles are expressed equally in the heterozygote phenotype.</div></div>
+    <div class="vocab-card"><div class="v-term">Gene linkage</div><div class="v-def">Genes on the same chromosome that tend to be inherited together.</div></div>
+    <div class="vocab-card"><div class="v-term">Crossing over</div><div class="v-def">Exchange of genetic material between homologous chromosomes in meiosis I.</div></div>
+    <div class="vocab-card"><div class="v-term">Dihybrid cross</div><div class="v-def">A genetic cross tracking the inheritance of two genes simultaneously.</div></div>
+    <div class="vocab-card"><div class="v-term">Polygenic</div><div class="v-def">A trait controlled by many genes at different loci.</div></div>
+    <div class="vocab-card"><div class="v-term">Proteome</div><div class="v-def">The complete set of proteins expressed by a cell at a given time.</div></div>
+    <div class="vocab-card"><div class="v-term">Housekeeping proteins</div><div class="v-def">Proteins produced by all cells, e.g. membrane proteins, respiratory enzymes.</div></div>
+  </div>
+
+  <!-- SELF-ASSESSMENT -->
+  <div class="topic-tracker" style="margin-top:2rem">
+    <h3 style="margin-bottom:0.8rem">Self-Assessment Checklist</h3>
+    <div class="tracker-row"><div class="tracker-check" onclick="toggleCheck(this)"></div> I can define locus, allele, and gene linkage</div>
+    <div class="tracker-row"><div class="tracker-check" onclick="toggleCheck(this)"></div> I can explain how differential gene expression leads to cell differentiation</div>
+    <div class="tracker-row"><div class="tracker-check" onclick="toggleCheck(this)"></div> I can use Punnett squares with multiple alleles (ABO blood groups)</div>
+    <div class="tracker-row"><div class="tracker-check" onclick="toggleCheck(this)"></div> I can explain why linked genes produce a 3:1 rather than 9:3:3:1 ratio</div>
+    <div class="tracker-row"><div class="tracker-check" onclick="toggleCheck(this)"></div> I can distinguish between monohybrid and polygenic inheritance</div>
+    <div class="tracker-row"><div class="tracker-check" onclick="toggleCheck(this)"></div> I can calculate recombination frequency from experimental data</div>
+  </div>
+</section>
+
+<footer class="lesson-footer">
+  <p>IAL Biology — 3C.1 Cell Differentiation — Spec refs 3.9(i), 3.9(ii), 3.18, 3.21</p>
+</footer>
+
+</div><!-- /container -->
+
+<script>
+// ─── PROGRESS BAR ───
+window.addEventListener('scroll',()=>{const h=document.documentElement.scrollHeight-window.innerHeight;document.getElementById('progressBar').style.width=(window.scrollY/h)*100+'%'});
+
+// ─── SECTION REVEAL ───
+const obs=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('visible')})},{threshold:0.08});
+document.querySelectorAll('.section').forEach(s=>obs.observe(s));
+
+// ─── NAV ───
+function scrollTo(id){document.getElementById(id).scrollIntoView({behavior:'smooth',block:'start'})}
+const secs=['hero','diagnostic','area1','area2','area3','area4','area5','practice','exit'];
+const pills=document.querySelectorAll('.lesson-nav .nav-pill');
+window.addEventListener('scroll',()=>{let cur=secs[0];secs.forEach(id=>{const el=document.getElementById(id);if(el&&el.getBoundingClientRect().top<=130)cur=id});pills.forEach((p,i)=>p.classList.toggle('active',secs[i]===cur))});
+
+// ─── MCQ ───
+const qs={};
+function sel(qid,idx,el){if(qs[qid]?.locked)return;if(!qs[qid])qs[qid]={};qs[qid].selected=idx;el.parentElement.querySelectorAll('.quiz-option').forEach(o=>o.classList.remove('selected'));el.classList.add('selected')}
+function check(qid,correct,yesMsg,noMsg){if(qs[qid]?.locked)return;if(qs[qid]?.selected===undefined)return;qs[qid].locked=true;const opts=document.getElementById(qid+'Options').querySelectorAll('.quiz-option');const fb=document.getElementById(qid+'Feedback');opts.forEach((o,i)=>{if(i===correct)o.classList.add('correct');else if(i===qs[qid].selected)o.classList.add('incorrect')});const ok=qs[qid].selected===correct;fb.className='quiz-feedback show '+(ok?'correct-fb':'incorrect-fb');fb.innerHTML=ok?'✓ '+yesMsg:'✗ '+noMsg}
+
+// ─── FILL BLANKS ───
+function checkFill(wid){const inputs=document.querySelectorAll('#'+wid+' .blank-input');inputs.forEach(inp=>{const ans=inp.dataset.answer.toLowerCase().trim();const val=inp.value.toLowerCase().trim();if(val===ans){inp.classList.remove('incorrect-input');inp.classList.add('correct-input')}else{inp.classList.remove('correct-input');inp.classList.add('incorrect-input')}})}
+
+// ─── SEQUENCING ───
+(function(){document.querySelectorAll('.seq-items').forEach(container=>{let dragItem=null;const items=container.querySelectorAll('.seq-item');items.forEach(item=>{item.draggable=true;item.addEventListener('dragstart',()=>{dragItem=item;setTimeout(()=>item.classList.add('dragging'),0)});item.addEventListener('dragend',()=>{item.classList.remove('dragging');dragItem=null;updateNums(container)});item.addEventListener('dragover',e=>{e.preventDefault();if(item!==dragItem){const rect=item.getBoundingClientRect();const mid=rect.top+rect.height/2;if(e.clientY<mid)container.insertBefore(dragItem,item);else container.insertBefore(dragItem,item.nextSibling)}});item.addEventListener('touchstart',e=>{dragItem=item},{passive:true});item.addEventListener('touchmove',e=>{e.preventDefault();const touch=e.touches[0];const target=document.elementFromPoint(touch.clientX,touch.clientY);if(target&&target.closest('.seq-item')&&target.closest('.seq-item')!==dragItem){const si=target.closest('.seq-item');const rect=si.getBoundingClientRect();if(touch.clientY<rect.top+rect.height/2)container.insertBefore(dragItem,si);else container.insertBefore(dragItem,si.nextSibling)}},{passive:false})})});function updateNums(c){c.querySelectorAll('.seq-item').forEach((it,i)=>{it.querySelector('.seq-num').textContent=i+1})}document.querySelectorAll('.seq-items').forEach(updateNums)})();
+function checkSeq(id){const items=document.querySelectorAll('#'+id+' .seq-item');items.forEach((it,i)=>{it.classList.remove('correct-seq','incorrect-seq');if(parseInt(it.dataset.order)===i)it.classList.add('correct-seq');else it.classList.add('incorrect-seq')})}
+
+// ─── TIER TABS ───
+function showTier(btn,panelId){const tabs=btn.parentElement;tabs.querySelectorAll('.tier-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');const card=tabs.parentElement;card.querySelectorAll('.tier-panel').forEach(p=>p.classList.remove('active'));document.getElementById(panelId).classList.add('active')}
+
+// ─── DIAGRAM INFO ───
+const cellInfoData={neuron:{title:'Neuron',text:'Neurons express ~318 specialised proteins beyond housekeeping proteins. These include neurotransmitter receptors, ion channel proteins, and myelin-associated proteins. The cerebral cortex has the most diverse proteome of any tissue.'},muscle:{title:'Muscle Cell',text:'Muscle cells express actin and myosin (contractile proteins), as well as troponin and tropomyosin. Smooth muscle cells express relatively few extra proteins beyond the housekeeping set.'},rbc:{title:'Red Blood Cell',text:'Red blood cells are unusual — they lose their nucleus during maturation. Their proteome is dominated by haemoglobin, which makes up ~97% of their dry weight. They retain minimal housekeeping proteins.'}};
+function showCellInfo(type){const p=document.getElementById('cellInfoPanel');const d=cellInfoData[type];p.innerHTML='<div class="panel-title">'+d.title+'</div>'+d.text;p.classList.add('show')}
+
+const linkData={geneA:{title:'Gene A (Locus 1)',text:'Located close to Gene B on the chromosome. Because they are near each other, crossing over between them is very rare. They are closely linked and almost always inherited together.'},geneB:{title:'Gene B (Locus 2)',text:'Adjacent to Gene A. These two genes behave almost as a single unit during inheritance. Recombination frequency between A and B is very low (<5%).'},geneC:{title:'Gene C (Locus 3)',text:'Located far from genes A and B on the same chromosome. Although technically linked, the large distance means crossing over frequently separates Gene C from A and B. Recombination frequency is higher (~30-40%).'}};
+function showLinkInfo(gene){const p=document.getElementById('linkInfoPanel');const d=linkData[gene];p.innerHTML='<div class="panel-title">'+d.title+'</div>'+d.text;p.classList.add('show')}
+
+// ─── CONFIDENCE ───
+function pickConf(btn){btn.parentElement.querySelectorAll('.conf-btn').forEach(b=>b.classList.remove('selected'));btn.classList.add('selected')}
+
+// ─── TOGGLE CHECK ───
+function toggleCheck(el){el.classList.toggle('checked');el.textContent=el.classList.contains('checked')?'✓':''}
+</script>
+</body>
+</html>
