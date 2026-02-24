@@ -1,0 +1,1486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IGCSE Biology — Selective Breeding</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0f110f;
+  --surface: #1a1d1a;
+  --surface-2: #222622;
+  --surface-3: #2a2e2a;
+  --border: #3a3e3a;
+  --text: #e8e6e3;
+  --text-muted: #9a9890;
+  --accent: #7cb342;
+  --accent-light: #9ccc65;
+  --accent-dim: #558b2f;
+  --accent-glow: rgba(124,179,66,0.15);
+  --foundation: #42a5f5;
+  --foundation-bg: rgba(66,165,245,0.08);
+  --core: #ffa726;
+  --core-bg: rgba(255,167,38,0.08);
+  --challenge: #ef5350;
+  --challenge-bg: rgba(239,83,80,0.08);
+  --correct: #66bb6a;
+  --correct-bg: rgba(102,187,106,0.1);
+  --incorrect: #ef5350;
+  --incorrect-bg: rgba(239,83,80,0.1);
+  --interleave: #ab47bc;
+  --interleave-bg: rgba(171,71,188,0.08);
+  --radius: 12px;
+  --radius-sm: 8px;
+  --shadow: 0 2px 20px rgba(0,0,0,0.3);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  font-size: 16px;
+  overflow-x: hidden;
+}
+
+/* ── NAV ── */
+.lesson-nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(15,17,15,0.92);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  padding: 0;
+}
+.nav-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.nav-inner::-webkit-scrollbar { display: none; }
+.nav-btn {
+  flex-shrink: 0;
+  padding: 14px 20px;
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: all 0.3s;
+  white-space: nowrap;
+  letter-spacing: 0.02em;
+}
+.nav-btn:hover { color: var(--text); }
+.nav-btn.active {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+.nav-label {
+  display: block;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  opacity: 0.6;
+  margin-top: 2px;
+}
+
+/* ── PROGRESS BAR ── */
+.progress-track {
+  height: 3px;
+  background: var(--surface-2);
+}
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent-dim), var(--accent));
+  transition: width 0.5s ease;
+  border-radius: 0 2px 2px 0;
+}
+
+/* ── SECTIONS ── */
+.section {
+  display: none;
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 40px 24px 80px;
+  animation: fadeUp 0.4s ease;
+}
+.section.active { display: block; }
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ── TYPOGRAPHY ── */
+h1 {
+  font-family: 'Instrument Serif', serif;
+  font-size: 2.8rem;
+  font-weight: 400;
+  line-height: 1.15;
+  margin-bottom: 8px;
+  color: var(--text);
+}
+h2 {
+  font-family: 'Instrument Serif', serif;
+  font-size: 1.8rem;
+  font-weight: 400;
+  margin: 40px 0 16px;
+  color: var(--text);
+}
+h3 {
+  font-size: 1.05rem;
+  font-weight: 600;
+  margin: 28px 0 12px;
+  color: var(--accent-light);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-size: 0.85rem;
+}
+p { margin-bottom: 16px; color: var(--text); opacity: 0.92; }
+.subtitle { color: var(--text-muted); font-size: 1.1rem; margin-bottom: 32px; }
+.spec-tag {
+  display: inline-block;
+  background: var(--accent-glow);
+  color: var(--accent-light);
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  margin-right: 8px;
+  margin-bottom: 8px;
+}
+
+/* ── CARDS ── */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 28px;
+  margin: 20px 0;
+}
+.card-accent {
+  border-left: 3px solid var(--accent);
+}
+.note-card {
+  background: var(--accent-glow);
+  border: 1px solid rgba(124,179,66,0.2);
+  border-radius: var(--radius);
+  padding: 20px 24px;
+  margin: 20px 0;
+  font-size: 0.95rem;
+}
+.note-card::before {
+  content: '📝 NOTE DOWN';
+  display: block;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--accent);
+  margin-bottom: 10px;
+}
+
+/* ── KEY TERMS ── */
+.key-term {
+  display: inline;
+  color: var(--accent-light);
+  font-weight: 600;
+  cursor: help;
+  border-bottom: 1px dashed var(--accent-dim);
+  position: relative;
+}
+.key-term .tooltip {
+  display: none;
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--surface-3);
+  border: 1px solid var(--border);
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  font-size: 0.85rem;
+  font-weight: 400;
+  color: var(--text);
+  white-space: normal;
+  width: 260px;
+  z-index: 50;
+  box-shadow: var(--shadow);
+  line-height: 1.5;
+}
+.key-term:hover .tooltip { display: block; }
+
+/* ── TIERED TASKS ── */
+.tier-tabs {
+  display: flex;
+  gap: 0;
+  margin: 20px 0 0;
+  border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+  overflow: hidden;
+}
+.tier-tab {
+  flex: 1;
+  padding: 12px 16px;
+  border: none;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  transition: all 0.3s;
+}
+.tier-tab.foundation { background: rgba(66,165,245,0.12); color: var(--foundation); }
+.tier-tab.core { background: rgba(255,167,38,0.12); color: var(--core); }
+.tier-tab.challenge { background: rgba(239,83,80,0.12); color: var(--challenge); }
+.tier-tab.active.foundation { background: var(--foundation); color: #000; }
+.tier-tab.active.core { background: var(--core); color: #000; }
+.tier-tab.active.challenge { background: var(--challenge); color: #fff; }
+
+.tier-content {
+  display: none;
+  padding: 24px;
+  border: 1px solid var(--border);
+  border-top: none;
+  border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+  background: var(--surface);
+}
+.tier-content.active { display: block; }
+.tier-content.foundation-content { border-color: rgba(66,165,245,0.2); }
+.tier-content.core-content { border-color: rgba(255,167,38,0.2); }
+.tier-content.challenge-content { border-color: rgba(239,83,80,0.2); }
+
+.scaffold-hint {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  font-style: italic;
+  margin-top: 12px;
+  padding: 10px 14px;
+  background: var(--surface-2);
+  border-radius: var(--radius-sm);
+  display: none;
+}
+
+/* ── QUIZ / MCQ ── */
+.quiz-block {
+  margin: 24px 0;
+  padding: 24px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+.quiz-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+  color: var(--accent);
+}
+.quiz-label.interleaved {
+  color: var(--interleave);
+}
+.quiz-q {
+  font-weight: 500;
+  margin-bottom: 14px;
+  font-size: 1rem;
+}
+.quiz-options { display: flex; flex-direction: column; gap: 8px; }
+.quiz-opt {
+  padding: 12px 16px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.95rem;
+  color: var(--text);
+  transition: all 0.2s;
+  text-align: left;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.quiz-opt:hover { border-color: var(--accent-dim); background: var(--surface-3); }
+.quiz-opt.selected { border-color: var(--accent); background: var(--accent-glow); }
+.quiz-opt.correct { border-color: var(--correct); background: var(--correct-bg); }
+.quiz-opt.incorrect { border-color: var(--incorrect); background: var(--incorrect-bg); }
+.quiz-opt .opt-letter {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--surface-3);
+  font-size: 0.8rem;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+.quiz-feedback {
+  margin-top: 14px;
+  padding: 14px 16px;
+  border-radius: var(--radius-sm);
+  font-size: 0.9rem;
+  display: none;
+  line-height: 1.6;
+}
+.quiz-feedback.show { display: block; }
+.quiz-feedback.correct { background: var(--correct-bg); border: 1px solid rgba(102,187,106,0.2); }
+.quiz-feedback.incorrect { background: var(--incorrect-bg); border: 1px solid rgba(239,83,80,0.2); }
+.check-btn {
+  margin-top: 14px;
+  padding: 10px 24px;
+  background: var(--accent);
+  color: #000;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.check-btn:hover { background: var(--accent-light); }
+.check-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* ── VTR BLOCKS ── */
+.vtr-block {
+  margin: 28px 0;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.vtr-header {
+  padding: 16px 24px;
+  background: var(--surface-2);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.vtr-badge {
+  background: var(--accent-glow);
+  color: var(--accent);
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.vtr-title {
+  font-weight: 600;
+  font-size: 1rem;
+}
+.vtr-body { padding: 24px; }
+.vtr-prompt {
+  font-style: italic;
+  color: var(--text-muted);
+  margin-bottom: 16px;
+  font-size: 0.95rem;
+}
+.vtr-input {
+  width: 100%;
+  min-height: 80px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 14px;
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.95rem;
+  resize: vertical;
+  line-height: 1.6;
+  transition: border-color 0.2s;
+}
+.vtr-input:focus { outline: none; border-color: var(--accent); }
+.vtr-input::placeholder { color: var(--text-muted); opacity: 0.5; }
+.vtr-section-label {
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin: 18px 0 8px;
+}
+
+/* ── FILL IN BLANKS ── */
+.blank-input {
+  display: inline-block;
+  width: 140px;
+  padding: 4px 10px;
+  background: var(--surface-2);
+  border: 1px dashed var(--border);
+  border-radius: 4px;
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.95rem;
+  text-align: center;
+  transition: border-color 0.2s;
+}
+.blank-input:focus { outline: none; border-color: var(--accent); border-style: solid; }
+.blank-input.correct { border-color: var(--correct); border-style: solid; background: var(--correct-bg); }
+.blank-input.incorrect { border-color: var(--incorrect); border-style: solid; background: var(--incorrect-bg); }
+.word-bank {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 12px 0;
+  padding: 14px;
+  background: var(--surface-2);
+  border-radius: var(--radius-sm);
+}
+.word-chip {
+  padding: 5px 14px;
+  background: var(--surface-3);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  cursor: default;
+}
+
+/* ── INTERLEAVED ── */
+.interleaved-banner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 18px;
+  background: var(--interleave-bg);
+  border: 1px solid rgba(171,71,188,0.2);
+  border-radius: var(--radius-sm);
+  margin: 32px 0 20px;
+  font-size: 0.85rem;
+  color: var(--interleave);
+  font-weight: 600;
+}
+.interleaved-banner span { font-size: 1.1rem; }
+
+/* ── REVEAL TOGGLE ── */
+.reveal-btn {
+  padding: 8px 18px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text-muted);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-top: 10px;
+}
+.reveal-btn:hover { border-color: var(--accent-dim); color: var(--text); }
+.reveal-content {
+  display: none;
+  margin-top: 12px;
+  padding: 16px;
+  background: var(--surface-2);
+  border-radius: var(--radius-sm);
+  border-left: 3px solid var(--accent);
+  font-size: 0.92rem;
+  line-height: 1.7;
+}
+.reveal-content.show { display: block; }
+
+/* ── SVG DIAGRAMS ── */
+.diagram-container {
+  margin: 24px 0;
+  padding: 24px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  text-align: center;
+}
+.diagram-container svg { max-width: 100%; height: auto; }
+
+/* ── CONFIDENCE TRACKER ── */
+.confidence-bar {
+  display: flex;
+  gap: 4px;
+  margin: 16px 0;
+}
+.conf-btn {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid var(--border);
+  background: var(--surface-2);
+  border-radius: var(--radius-sm);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.82rem;
+  cursor: pointer;
+  color: var(--text-muted);
+  transition: all 0.2s;
+  text-align: center;
+}
+.conf-btn:hover { border-color: var(--accent-dim); }
+.conf-btn.selected { background: var(--accent-glow); border-color: var(--accent); color: var(--accent-light); }
+
+/* ── STRUGGLE ZONE ── */
+.struggle-zone {
+  margin: 28px 0;
+  padding: 24px;
+  background: linear-gradient(135deg, rgba(239,83,80,0.06), rgba(255,167,38,0.06));
+  border: 1px solid rgba(239,83,80,0.15);
+  border-radius: var(--radius);
+}
+.struggle-zone h3 {
+  color: var(--challenge);
+  margin-top: 0;
+}
+
+/* ── TABLE ── */
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 16px 0;
+  font-size: 0.92rem;
+}
+.data-table th, .data-table td {
+  padding: 12px 16px;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+}
+.data-table th {
+  background: var(--surface-2);
+  font-weight: 600;
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+}
+.data-table td { background: var(--surface); }
+
+/* ── MISC ── */
+.divider { height: 1px; background: var(--border); margin: 40px 0; }
+.emoji { font-size: 1.4rem; }
+.flex-row { display: flex; gap: 16px; flex-wrap: wrap; }
+.flex-row > * { flex: 1; min-width: 260px; }
+
+@media (max-width: 640px) {
+  h1 { font-size: 2rem; }
+  .section { padding: 24px 16px 60px; }
+  .card, .quiz-block, .vtr-body { padding: 18px; }
+  .nav-btn { padding: 12px 14px; font-size: 12px; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAVIGATION -->
+<nav class="lesson-nav">
+  <div class="nav-inner" id="navInner">
+    <button class="nav-btn active" onclick="goTo(0)">01<span class="nav-label">Activate</span></button>
+    <button class="nav-btn" onclick="goTo(1)">02<span class="nav-label">What Is It?</span></button>
+    <button class="nav-btn" onclick="goTo(2)">03<span class="nav-label">Plants</span></button>
+    <button class="nav-btn" onclick="goTo(3)">04<span class="nav-label">Animals</span></button>
+    <button class="nav-btn" onclick="goTo(4)">05<span class="nav-label">Progress 1</span></button>
+    <button class="nav-btn" onclick="goTo(5)">06<span class="nav-label">Interleave</span></button>
+    <button class="nav-btn" onclick="goTo(6)">07<span class="nav-label">Progress 2</span></button>
+    <button class="nav-btn" onclick="goTo(7)">08<span class="nav-label">Struggle</span></button>
+    <button class="nav-btn" onclick="goTo(8)">09<span class="nav-label">Reflect</span></button>
+  </div>
+</nav>
+<div class="progress-track"><div class="progress-fill" id="progressFill" style="width:11%"></div></div>
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- SECTION 0: ACTIVATE PRIOR KNOWLEDGE -->
+<!-- ══════════════════════════════════════════════ -->
+<div class="section active" id="sec0">
+  <div style="margin-bottom:12px">
+    <span class="spec-tag">5.10</span><span class="spec-tag">5.11</span>
+  </div>
+  <h1>Selective Breeding</h1>
+  <p class="subtitle">How humans shape the characteristics of living organisms through controlled reproduction.</p>
+
+  <!-- VTR: Think-Puzzle-Explore -->
+  <div class="vtr-block">
+    <div class="vtr-header">
+      <span class="vtr-badge">VTR</span>
+      <span class="vtr-title">Think–Puzzle–Explore</span>
+    </div>
+    <div class="vtr-body">
+      <p class="vtr-prompt">Before we begin — let's surface what you already know and where your curiosity lies.</p>
+      
+      <div class="vtr-section-label">What do you THINK you know about selective breeding?</div>
+      <textarea class="vtr-input" placeholder="Write what comes to mind... e.g. I think farmers choose the best animals to breed..."></textarea>
+      
+      <div class="vtr-section-label">What PUZZLES you about it?</div>
+      <textarea class="vtr-input" placeholder="What questions do you have? What seems confusing or interesting?"></textarea>
+      
+      <div class="vtr-section-label">How could we EXPLORE these puzzles?</div>
+      <textarea class="vtr-input" placeholder="What would help answer your questions? Experiments? Examples? Data?"></textarea>
+    </div>
+  </div>
+
+  <!-- Retrieval: Prior knowledge check -->
+  <h3>Prior Knowledge Retrieval</h3>
+  <p style="font-size:0.9rem;color:var(--text-muted);margin-bottom:16px">Before we learn new content, let's check what you remember from earlier topics.</p>
+  
+  <div class="quiz-block" id="q_prior1">
+    <div class="quiz-label">Retrieval Practice</div>
+    <p class="quiz-q">Organisms of the same species show differences in their characteristics. What is the term for these differences?</p>
+    <div class="quiz-options">
+      <button class="quiz-opt" onclick="selectOpt(this)"><span class="opt-letter">A</span> Mutation</button>
+      <button class="quiz-opt" onclick="selectOpt(this)"><span class="opt-letter">B</span> Variation</button>
+      <button class="quiz-opt" onclick="selectOpt(this)"><span class="opt-letter">C</span> Adaptation</button>
+      <button class="quiz-opt" onclick="selectOpt(this)"><span class="opt-letter">D</span> Evolution</button>
+    </div>
+    <button class="check-btn" onclick="checkMCQ(this, 'B', 'Correct! Variation refers to the differences in characteristics within a species. This variation is what makes selective breeding possible — breeders can choose organisms with particular variations.', 'Not quite. The term for differences in characteristics within a species is <strong>variation</strong>. Remember: variation is the raw material for both natural AND selective breeding.')">Check</button>
+    <div class="quiz-feedback"></div>
+  </div>
+
+  <div class="quiz-block" id="q_prior2">
+    <div class="quiz-label">Retrieval Practice</div>
+    <p class="quiz-q">What is natural selection?</p>
+    <div class="quiz-options">
+      <button class="quiz-opt" onclick="selectOpt(this)"><span class="opt-letter">A</span> Humans choosing which organisms to breed</button>
+      <button class="quiz-opt" onclick="selectOpt(this)"><span class="opt-letter">B</span> Organisms with advantageous characteristics surviving and reproducing more</button>
+      <button class="quiz-opt" onclick="selectOpt(this)"><span class="opt-letter">C</span> Random changes in DNA</button>
+      <button class="quiz-opt" onclick="selectOpt(this)"><span class="opt-letter">D</span> Organisms learning new behaviours</button>
+    </div>
+    <button class="check-btn" onclick="checkMCQ(this, 'B', 'Correct! Natural selection is when organisms with characteristics better suited to their environment survive and reproduce more. Keep this in mind — selective breeding is similar but the selection pressure comes from <strong>humans</strong>, not the environment.', 'Not quite. Natural selection is the process where organisms with advantageous characteristics are more likely to survive and reproduce. The key difference from selective breeding is <strong>who applies the selection pressure</strong>.')">Check</button>
+    <div class="quiz-feedback"></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- SECTION 1: WHAT IS SELECTIVE BREEDING? -->
+<!-- ══════════════════════════════════════════════ -->
+<div class="section" id="sec1">
+  <h2>What is Selective Breeding?</h2>
+  
+  <div class="note-card">
+    <strong>Selective breeding</strong> is the breeding of only those individuals with desirable features or characteristics. It is sometimes called <strong>'artificial selection'</strong> because human choice, rather than environmental factors, provides the selection pressure.
+  </div>
+
+  <div class="card card-accent">
+    <h3 style="margin-top:0">The History</h3>
+    <p>About 12,000 years ago, human life changed dramatically. Humans began to grow plants and keep animals for milk and meat — becoming farmers rather than hunters. This first took place in the Middle East, with similar changes in the Americas and Far East.</p>
+    <p>Ever since the cultivation of the first wheat and barley, humans have tried to obtain bigger yields. They cross-bred different plants to obtain strains that produced more grain. They bred sheep and goats to give more milk and meat. Selective breeding had begun.</p>
+    <p>Today, modern gene technology makes it possible to create a new strain of plant within <strong>weeks</strong>, rather than years.</p>
+  </div>
+
+  <!-- Dual Coding: Natural vs Artificial Selection Comparison -->
+  <h3>Dual Coding — Compare the Processes</h3>
+  <div class="diagram-container">
+    <svg viewBox="0 0 760 320" xmlns="http://www.w3.org/2000/svg" style="max-width:700px">
+      <!-- Natural Selection Side -->
+      <rect x="10" y="10" width="360" height="300" rx="12" fill="#1a1d1a" stroke="#3a3e3a" stroke-width="1"/>
+      <text x="190" y="45" text-anchor="middle" fill="#9ccc65" font-family="DM Sans" font-weight="700" font-size="14" letter-spacing="1">NATURAL SELECTION</text>
+      <text x="190" y="75" text-anchor="middle" fill="#9a9890" font-family="DM Sans" font-size="12">Selection pressure: ENVIRONMENT</text>
+      
+      <rect x="40" y="100" width="140" height="50" rx="8" fill="#222622" stroke="#3a3e3a"/>
+      <text x="110" y="130" text-anchor="middle" fill="#e8e6e3" font-family="DM Sans" font-size="11">Variation exists in population</text>
+      
+      <line x1="110" y1="150" x2="110" y2="170" stroke="#558b2f" stroke-width="2" marker-end="url(#arrow)"/>
+      
+      <rect x="40" y="170" width="140" height="50" rx="8" fill="#222622" stroke="#3a3e3a"/>
+      <text x="110" y="195" text-anchor="middle" fill="#e8e6e3" font-family="DM Sans" font-size="10">Best adapted survive</text>
+      <text x="110" y="210" text-anchor="middle" fill="#e8e6e3" font-family="DM Sans" font-size="10">+ reproduce</text>
+      
+      <line x1="110" y1="220" x2="110" y2="240" stroke="#558b2f" stroke-width="2"/>
+      
+      <rect x="40" y="240" width="140" height="50" rx="8" fill="#222622" stroke="#3a3e3a"/>
+      <text x="110" y="265" text-anchor="middle" fill="#e8e6e3" font-family="DM Sans" font-size="10">Advantageous alleles</text>
+      <text x="110" y="280" text-anchor="middle" fill="#e8e6e3" font-family="DM Sans" font-size="10">increase in frequency</text>
+
+      <text x="290" y="130" text-anchor="middle" fill="#9a9890" font-family="DM Sans" font-size="11">Takes many</text>
+      <text x="290" y="148" text-anchor="middle" fill="#9a9890" font-family="DM Sans" font-size="11">generations</text>
+      <text x="290" y="200" text-anchor="middle" fill="#9a9890" font-family="DM Sans" font-size="11">No human</text>
+      <text x="290" y="218" text-anchor="middle" fill="#9a9890" font-family="DM Sans" font-size="11">involvement</text>
+
+      <!-- Artificial Selection Side -->
+      <rect x="390" y="10" width="360" height="300" rx="12" fill="#1a1d1a" stroke="#7cb342" stroke-width="1"/>
+      <text x="570" y="45" text-anchor="middle" fill="#7cb342" font-family="DM Sans" font-weight="700" font-size="14" letter-spacing="1">SELECTIVE BREEDING</text>
+      <text x="570" y="75" text-anchor="middle" fill="#9a9890" font-family="DM Sans" font-size="12">Selection pressure: HUMANS</text>
+      
+      <rect x="420" y="100" width="140" height="50" rx="8" fill="#222622" stroke="#7cb342" stroke-opacity="0.3"/>
+      <text x="490" y="130" text-anchor="middle" fill="#e8e6e3" font-family="DM Sans" font-size="11">Variation exists in population</text>
+      
+      <line x1="490" y1="150" x2="490" y2="170" stroke="#7cb342" stroke-width="2"/>
+      
+      <rect x="420" y="170" width="140" height="50" rx="8" fill="#222622" stroke="#7cb342" stroke-opacity="0.3"/>
+      <text x="490" y="195" text-anchor="middle" fill="#e8e6e3" font-family="DM Sans" font-size="10">Humans choose organisms</text>
+      <text x="490" y="210" text-anchor="middle" fill="#e8e6e3" font-family="DM Sans" font-size="10">with desired traits to breed</text>
+      
+      <line x1="490" y1="220" x2="490" y2="240" stroke="#7cb342" stroke-width="2"/>
+      
+      <rect x="420" y="240" width="140" height="50" rx="8" fill="#222622" stroke="#7cb342" stroke-opacity="0.3"/>
+      <text x="490" y="265" text-anchor="middle" fill="#e8e6e3" font-family="DM Sans" font-size="10">Offspring with desired</text>
+      <text x="490" y="280" text-anchor="middle" fill="#e8e6e3" font-family="DM Sans" font-size="10">traits selected again</text>
+
+      <text x="660" y="130" text-anchor="middle" fill="#9a9890" font-family="DM Sans" font-size="11">Can be done</text>
+      <text x="660" y="148" text-anchor="middle" fill="#9a9890" font-family="DM Sans" font-size="11">quickly</text>
+      <text x="660" y="200" text-anchor="middle" fill="#9a9890" font-family="DM Sans" font-size="11">Deliberate</text>
+      <text x="660" y="218" text-anchor="middle" fill="#9a9890" font-family="DM Sans" font-size="11">human choice</text>
+    </svg>
+  </div>
+
+  <!-- Quick Check -->
+  <div class="quiz-block" id="q_def1">
+    <div class="quiz-label">Quick Check</div>
+    <p class="quiz-q">What is the key difference between natural selection and selective breeding?</p>
+    <div class="quiz-options">
+      <button class="quiz-opt" onclick="selectOpt(this)"><span class="opt-letter">A</span> Natural selection is faster</button>
+      <button class="quiz-opt" onclick="selectOpt(this)"><span class="opt-letter">B</span> In selective breeding, humans provide the selection pressure</button>
+      <button class="quiz-opt" onclick="selectOpt(this)"><span class="opt-letter">C</span> Selective breeding only works on plants</button>
+      <button class="quiz-opt" onclick="selectOpt(this)"><span class="opt-letter">D</span> Natural selection requires genetic engineering</button>
+    </div>
+    <button class="check-btn" onclick="checkMCQ(this, 'B', 'Exactly right. In natural selection, the environment determines which organisms survive. In selective breeding (artificial selection), <strong>humans choose</strong> which organisms breed based on desired characteristics.', 'Not quite. The key difference is about <strong>who provides the selection pressure</strong>. In selective breeding, it is humans who decide which organisms breed — not the environment.')">Check</button>
+    <div class="quiz-feedback"></div>
+  </div>
+
+  <div class="quiz-block" id="q_def2">
+    <div class="quiz-label">Quick Check</div>
+    <p class="quiz-q">Which of the following is another term for selective breeding?</p>
+    <div class="quiz-options">
+      <button class="quiz-opt" onclick="selectOpt(this)"><span class="opt-letter">A</span> Cloning</button>
+      <button class="quiz-opt" onclick="selectOpt(this)"><span class="opt-letter">B</span> Natural selection</button>
+      <button class="quiz-opt" onclick="selectOpt(this)"><span class="opt-letter">C</span> Artificial insemination</button>
+      <button class="quiz-opt" onclick="selectOpt(this)"><span class="opt-letter">D</span> Artificial selection</button>
+    </div>
+    <button class="check-btn" onclick="checkMCQ(this, 'D', 'Correct! Selective breeding is also called <strong>artificial selection</strong>. It\'s \"artificial\" because humans (not nature) are providing the selection pressure. Note: artificial insemination is a <em>technique used in</em> selective breeding, but it is not the same thing.', 'Not quite. Selective breeding is also known as <strong>artificial selection</strong>. Be careful not to confuse it with artificial insemination, which is a technique that can be <em>used within</em> selective breeding programmes.')">Check</button>
+    <div class="quiz-feedback"></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- SECTION 2: SELECTIVE BREEDING IN PLANTS -->
+<!-- ══════════════════════════════════════════════ -->
+<div class="section" id="sec2">
+  <h2>Selective Breeding in Plants</h2>
+  <span class="spec-tag">5.10</span>
+
+  <div class="note-card">
+    Crop plants are bred to produce strains that: give <strong>higher yields</strong>, are <strong>resistant to certain diseases</strong>, are <strong>resistant to insect pest damage</strong>, are <strong>hardier</strong> (survive in harsher climates or are productive for longer), and have a <strong>better balance of nutrients</strong>.
+  </div>
+
+  <div class="card">
+    <h3 style="margin-top:0">Case Study: Wheat</h3>
+    <p>The production of modern bread wheat is one of the earliest examples of selective breeding. About 11,000 years ago, two strains of wild wheat (<em>Triticum monococcum</em> and an unknown wild wheat) were cultivated. Initially, cross-breeding produced only sterile offspring.</p>
+    <p>About 8,000 years ago, a fertile hybrid called <em>Triticum turgidum</em> (emmer wheat) appeared — with a much higher yield. This was then cross-bred with another wild relative to produce <em>Triticum aestivum</em> — modern bread wheat, with an even bigger yield and much easier to process into flour.</p>
+    <p style="font-size:0.88rem;color:var(--text-muted);padding:12px;background:var(--surface-2);border-radius:8px;margin-top:12px"><strong>Did you know?</strong> Each original wild wheat species had 14 chromosomes per cell. The wild emmer hybrid had 28 chromosomes per cell. Modern bread wheat has 42 chromosomes per cell.</p>
+  </div>
+
+  <div class="card">
+    <h3 style="margin-top:0">Case Study: Brassica</h3>
+    <p><em>Brassica</em> is a genus of cabbage-like plants. One species of wild brassica (<em>Brassica oleracea</em>) was selectively bred to give several strains, each with specific enhanced features:</p>
+    
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;margin-top:16px">
+      <div style="padding:14px;background:var(--surface-2);border-radius:8px;text-align:center">
+        <div style="font-size:1.4rem;margin-bottom:6px">🥬</div>
+        <strong>Cabbage</strong><br><span style="font-size:0.85rem;color:var(--text-muted)">Terminal bud enlarged</span>
+      </div>
+      <div style="padding:14px;background:var(--surface-2);border-radius:8px;text-align:center">
+        <div style="font-size:1.4rem;margin-bottom:6px">🥦</div>
+        <strong>Broccoli</strong><br><span style="font-size:0.85rem;color:var(--text-muted)">Flowers and stems</span>
+      </div>
+      <div style="padding:14px;background:var(--surface-2);border-radius:8px;text-align:center">
+        <div style="font-size:1.4rem;margin-bottom:6px">🌿</div>
+        <strong>Kale</strong><br><span style="font-size:0.85rem;color:var(--text-muted)">Large leaves</span>
+      </div>
+      <div style="padding:14px;background:var(--surface-2);border-radius:8px;text-align:center">
+        <div style="font-size:1.4rem;margin-bottom:6px">🥗</div>
+        <strong>Cauliflower</strong><br><span style="font-size:0.85rem;color:var(--text-muted)">Large flower cluster</span>
+      </div>
+      <div style="padding:14px;background:var(--surface-2);border-radius:8px;text-align:center">
+        <div style="font-size:1.4rem;margin-bottom:6px">🟢</div>
+        <strong>Brussels Sprouts</strong><br><span style="font-size:0.85rem;color:var(--text-muted)">Lateral buds enlarged</span>
+      </div>
+      <div style="padding:14px;background:var(--surface-2);border-radius:8px;text-align:center">
+        <div style="font-size:1.4rem;margin-bottom:6px">🟩</div>
+        <strong>Kohlrabi</strong><br><span style="font-size:0.85rem;color:var(--text-muted)">Swollen stem</span>
+      </div>
+    </div>
+    <p style="margin-top:16px;font-size:0.88rem;color:var(--text-muted)">All of these vegetables came from the <strong>same original wild plant</strong>. The only difference is which feature humans selected for when breeding.</p>
+  </div>
+
+  <!-- VTR: See-Think-Wonder on Brassica -->
+  <div class="vtr-block">
+    <div class="vtr-header">
+      <span class="vtr-badge">VTR</span>
+      <span class="vtr-title">See–Think–Wonder</span>
+    </div>
+    <div class="vtr-body">
+      <p class="vtr-prompt">Look at the Brassica varieties above. All came from one wild plant species.</p>
+      <div class="vtr-section-label">What do you SEE?</div>
+      <textarea class="vtr-input" rows="2" placeholder="Describe what you observe about the different Brassica varieties..."></textarea>
+      <div class="vtr-section-label">What do you THINK is going on?</div>
+      <textarea class="vtr-input" rows="2" placeholder="What does this tell you about how selective breeding works?"></textarea>
+      <div class="vtr-section-label">What does it make you WONDER?</div>
+      <textarea class="vtr-input" rows="2" placeholder="What questions arise? What would you investigate further?"></textarea>
+    </div>
+  </div>
+
+  <!-- Tiered Progress Check -->
+  <h3>Progress Check — Plants</h3>
+  <div class="tier-tabs">
+    <button class="tier-tab foundation active" onclick="switchTier(this, 'plants')">🔵 Foundation</button>
+    <button class="tier-tab core" onclick="switchTier(this, 'plants')">🟠 Core</button>
+    <button class="tier-tab challenge" onclick="switchTier(this, 'plants')">🔴 Challenge</button>
+  </div>
+  <div class="tier-content foundation-content active" data-group="plants" data-tier="foundation">
+    <p><strong>Complete the sentences using the word bank below:</strong></p>
+    <div class="word-bank">
+      <span class="word-chip">desirable</span>
+      <span class="word-chip">yields</span>
+      <span class="word-chip">resistant</span>
+      <span class="word-chip">selective breeding</span>
+      <span class="word-chip">cross-bred</span>
+      <span class="word-chip">humans</span>
+    </div>
+    <p style="line-height:2.4">
+      Farmers have used <input class="blank-input" data-answer="selective breeding" placeholder="___________"> for thousands of years to produce crops with higher <input class="blank-input" data-answer="yields" placeholder="___________">. Plants with <input class="blank-input" data-answer="desirable" placeholder="___________"> features are <input class="blank-input" data-answer="cross-bred" placeholder="___________"> together. The selection pressure comes from <input class="blank-input" data-answer="humans" placeholder="___________">, not the environment. Some crops have been bred to be <input class="blank-input" data-answer="resistant" placeholder="___________"> to diseases or pests.
+    </p>
+    <button class="check-btn" onclick="checkBlanks(this)">Check Answers</button>
+  </div>
+  <div class="tier-content core-content" data-group="plants" data-tier="core">
+    <p><strong>Answer in full sentences:</strong></p>
+    <p>1. Describe the process by which modern bread wheat (<em>Triticum aestivum</em>) was developed from wild wheat species.</p>
+    <textarea class="vtr-input" rows="4" placeholder="Write your answer here..."></textarea>
+    <button class="reveal-btn" onclick="toggleReveal(this)">Show model answer</button>
+    <div class="reveal-content">Two wild wheat species (Triticum monococcum and an unknown wild wheat) were cross-bred about 11,000 years ago. Initially this produced only sterile offspring. About 8,000 years ago, a fertile hybrid called emmer wheat (Triticum turgidum) appeared with a much higher yield. This emmer wheat was then cross-bred with another wild relative to produce Triticum aestivum — modern bread wheat — which had an even higher yield and was easier to process into flour.</div>
+    <p style="margin-top:20px">2. Explain why all Brassica vegetables (cabbage, broccoli, kale, etc.) are considered the result of selective breeding from one species.</p>
+    <textarea class="vtr-input" rows="4" placeholder="Write your answer here..."></textarea>
+    <button class="reveal-btn" onclick="toggleReveal(this)">Show model answer</button>
+    <div class="reveal-content">All these vegetables originated from the same wild species, Brassica oleracea. Farmers selectively bred plants with specific enhanced features over many generations. Those with larger terminal buds became cabbage, those with larger flower clusters became cauliflower, those with enlarged lateral buds became Brussels sprouts, and so on. Each variety was produced by choosing plants with the desired feature and breeding them together repeatedly.</div>
+  </div>
+  <div class="tier-content challenge-content" data-group="plants" data-tier="challenge">
+    <p><strong>Extended response — no scaffolding:</strong></p>
+    <p>A plant breeder wants to develop a new variety of tomato that is both disease-resistant AND produces larger fruit. The breeder has two existing varieties: one that is disease-resistant but produces small fruit, and one that produces large fruit but is easily infected by disease.</p>
+    <p>Describe in detail how the breeder could use selective breeding to develop the desired variety. Explain why this process would take several generations.</p>
+    <textarea class="vtr-input" rows="6" placeholder="Write your extended answer here..."></textarea>
+    <button class="reveal-btn" onclick="toggleReveal(this)">Show model answer</button>
+    <div class="reveal-content">The breeder would cross-breed the disease-resistant small-fruited plant with the large-fruited disease-susceptible plant. The offspring (F1 generation) would show a mix of characteristics. The breeder would then select offspring that show both desirable traits — some disease resistance AND larger-than-normal fruit. These selected individuals would be bred together. This process would be repeated over many generations, each time selecting the offspring that best combine both traits. It takes several generations because: (1) the desired combination of alleles may not appear in every offspring due to random assortment during meiosis, (2) the traits may be controlled by multiple genes, (3) each generation must be grown and assessed before selection can occur, and (4) the breeder needs to establish a stable breeding line where the traits breed true.</div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- SECTION 3: SELECTIVE BREEDING IN ANIMALS -->
+<!-- ══════════════════════════════════════════════ -->
+<div class="section" id="sec3">
+  <h2>Selective Breeding in Animals</h2>
+  <span class="spec-tag">5.11</span>
+
+  <div class="note-card">
+    Farmers have bred stock animals to produce increased: <strong>meat, milk or egg production</strong>; <strong>fur quality</strong>; <strong>offspring numbers</strong>; and <strong>disease resistance</strong>. All modern dog breeds originated from the domesticated wolf.
+  </div>
+
+  <div class="card">
+    <h3 style="margin-top:0">How It Works</h3>
+    <p>For many thousands of years, the only way to improve livestock was to mate a male and a female with the features desired in the offspring. For example, high-yielding cows would be bred with bulls from other high-yielding cows.</p>
+    <p>Since about 1950, <span class="key-term">artificial insemination (AI)<span class="tooltip">A technique where semen is collected from a male with desirable features, diluted, frozen, and stored. It can then be used to inseminate many females — meaning one prize bull can father thousands of calves.</span></span> has become widely available. Bulls with many desirable features are kept and semen is obtained, diluted, frozen and stored. This makes it possible for one prize bull to fertilise many thousands of cows.</p>
+  </div>
+
+  <div class="card">
+    <h3 style="margin-top:0">Case Study: Dogs from Wolves</h3>
+    <p>All modern dog breeds — from Great Danes to Chihuahuas — originated from the domesticated wolf. In domesticating the wolf, humans gained an animal capable of herding stock. The sheepdog has all the same instincts as the wolf except the instinct to kill — this has been selectively 'bred out'.</p>
+    <p>The enormous variety of dog breeds today demonstrates the power of selective breeding to dramatically change an organism's characteristics over many generations.</p>
+  </div>
+
+  <!-- Tiered Progress Check -->
+  <h3>Progress Check — Animals</h3>
+  <div class="tier-tabs">
+    <button class="tier-tab foundation active" onclick="switchTier(this, 'animals')">🔵 Foundation</button>
+    <button class="tier-tab core" onclick="switchTier(this, 'animals')">🟠 Core</button>
+    <button class="tier-tab challenge" onclick="switchTier(this, 'animals')">🔴 Challenge</button>
+  </div>
+  <div class="tier-content foundation-content active" data-group="animals" data-tier="foundation">
+    <p><strong>Match the animal breeding goal with the correct description:</strong></p>
+    <div class="quiz-block" style="margin:12px 0;padding:16px" id="q_match1">
+      <p class="quiz-q">Which of these is a reason farmers selectively breed cattle?</p>
+      <div class="quiz-options">
+        <button class="quiz-opt" onclick="selectOpt(this)"><span class="opt-letter">A</span> To make them better pets</button>
+        <button class="quiz-opt" onclick="selectOpt(this)"><span class="opt-letter">B</span> To increase milk yield</button>
+        <button class="quiz-opt" onclick="selectOpt(this)"><span class="opt-letter">C</span> To change their colour</button>
+        <button class="quiz-opt" onclick="selectOpt(this)"><span class="opt-letter">D</span> To make them smaller</button>
+      </div>
+      <button class="check-btn" onclick="checkMCQ(this, 'B', 'Correct! Cattle are selectively bred primarily for increased milk yield, meat production, and disease resistance.', 'Not quite. Farmers selectively breed cattle for practical purposes like <strong>increased milk yield</strong>, meat production, and disease resistance.')">Check</button>
+      <div class="quiz-feedback"></div>
+    </div>
+    <div class="quiz-block" style="margin:12px 0;padding:16px" id="q_match2">
+      <p class="quiz-q">What best describes artificial insemination?</p>
+      <div class="quiz-options">
+        <button class="quiz-opt" onclick="selectOpt(this)"><span class="opt-letter">A</span> Transplanting an embryo in the uterus</button>
+        <button class="quiz-opt" onclick="selectOpt(this)"><span class="opt-letter">B</span> Taking sperm and placing it directly in the uterus</button>
+        <button class="quiz-opt" onclick="selectOpt(this)"><span class="opt-letter">C</span> Selectively breeding healthy animals</button>
+        <button class="quiz-opt" onclick="selectOpt(this)"><span class="opt-letter">D</span> Fertilisation of an egg in a test tube</button>
+      </div>
+      <button class="check-btn" onclick="checkMCQ(this, 'B', 'Correct! Artificial insemination involves collecting semen from a male with desirable features, then transferring it directly into the female\'s uterus using a syringe.', 'Not quite. Artificial insemination specifically involves <strong>collecting semen and placing it directly into the female\'s uterus</strong>. This allows one male to father many offspring.')">Check</button>
+      <div class="quiz-feedback"></div>
+    </div>
+    <div class="scaffold-hint" style="display:block">💡 <strong>Hint:</strong> Think about what "artificial" means (done by humans) and "insemination" means (introducing sperm).</div>
+  </div>
+  <div class="tier-content core-content" data-group="animals" data-tier="core">
+    <p><strong>Answer in full sentences:</strong></p>
+    <p>1. Explain the advantage of artificial insemination over traditional breeding methods in a selective breeding programme.</p>
+    <textarea class="vtr-input" rows="4" placeholder="Write your answer here..."></textarea>
+    <button class="reveal-btn" onclick="toggleReveal(this)">Show model answer</button>
+    <div class="reveal-content">Artificial insemination allows semen from one prize male with many desirable characteristics to be collected, diluted, frozen and stored. This semen can then be used to fertilise many thousands of females, rather than the male being limited to mating with only a few females naturally. This means desirable genes can be spread much more quickly through a population, speeding up the selective breeding process and allowing farmers to improve their herds more efficiently.</div>
+    <p style="margin-top:20px">2. Explain how modern dog breeds demonstrate the effects of selective breeding.</p>
+    <textarea class="vtr-input" rows="4" placeholder="Write your answer here..."></textarea>
+    <button class="reveal-btn" onclick="toggleReveal(this)">Show model answer</button>
+    <div class="reveal-content">All modern dogs originated from one ancestral type — the domesticated wolf. The enormous range of dog breeds today (from tiny Chihuahuas to large Great Danes, with many different coat types, body shapes, and temperaments) demonstrates that selective breeding can produce dramatic changes in an organism's characteristics over many generations. Different breeds were produced by selecting for different traits — speed in greyhounds, herding ability in sheepdogs, companionship in labradors, etc.</div>
+  </div>
+  <div class="tier-content challenge-content" data-group="animals" data-tier="challenge">
+    <p><strong>Extended analysis — no scaffolding:</strong></p>
+    <p>A diagram shows features of a cow that might be used in a breeding programme: total body mass, milk yield, growth rate, meat:fat ratio, and feed to meat/milk conversion rate.</p>
+    <p>a) Which features would you consider important in a breeding programme for <strong>dairy cattle</strong>? Justify your choices.</p>
+    <textarea class="vtr-input" rows="4" placeholder="Write your answer here..."></textarea>
+    <p style="margin-top:16px">b) Assume you had all the techniques of modern selective breeding available. Describe how you would set about producing a herd of <strong>high-yielding beef cattle</strong>.</p>
+    <textarea class="vtr-input" rows="6" placeholder="Write your answer here..."></textarea>
+    <button class="reveal-btn" onclick="toggleReveal(this)">Show model answer</button>
+    <div class="reveal-content"><strong>a)</strong> For dairy cattle, the most important features would be: milk yield (the primary product), feed to milk conversion rate (efficiency reduces costs), and total body mass (larger cows may produce more milk but also require more feed, so there's an optimum). Growth rate and meat:fat ratio are less important for dairy cattle as the focus is on milk production, not meat.<br><br><strong>b)</strong> To produce high-yielding beef cattle: (1) Identify bulls and cows with the best combination of high growth rate, high meat:fat ratio, high total body mass, and efficient feed to meat conversion. (2) Use artificial insemination from the best bulls to fertilise many cows. (3) Monitor the offspring for these desired characteristics. (4) Select the best offspring and breed them together. (5) Continue this process over several generations, always selecting for the combination of desired traits. (6) Maintain genetic records to avoid inbreeding, which could reduce the health of the herd.</div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- SECTION 4: PROGRESS CHECK 1 -->
+<!-- ══════════════════════════════════════════════ -->
+<div class="section" id="sec4">
+  <h2>Progress Check 1</h2>
+  <p class="subtitle">Retrieval practice on selective breeding content. Try to answer without looking back.</p>
+
+  <div class="quiz-block" id="q_pc1">
+    <div class="quiz-label">Progress Check</div>
+    <p class="quiz-q">1. Which of the following statements is/are correct?<br>
+    &nbsp;&nbsp;1. Antibiotics are made by bacteria<br>
+    &nbsp;&nbsp;2. Antibiotics kill bacteria<br>
+    &nbsp;&nbsp;3. Antibiotics do not work on viruses</p>
+    <div class="quiz-options">
+      <button class="quiz-opt" onclick="selectOpt(this)"><span class="opt-letter">A</span> 1 and 2</button>
+      <button class="quiz-opt" onclick="selectOpt(this)"><span class="opt-letter">B</span> 2 only</button>
+      <button class="quiz-opt" onclick="selectOpt(this)"><span class="opt-letter">C</span> 2 and 3</button>
+      <button class="quiz-opt" onclick="selectOpt(this)"><span class="opt-letter">D</span> 1, 2 and 3</button>
+    </div>
+    <button class="check-btn" onclick="checkMCQ(this, 'D', 'Correct! All three statements are true. Some antibiotics are produced naturally by bacteria and fungi. Antibiotics kill bacteria (or prevent them reproducing). Antibiotics have no effect on viruses because viruses are not living cells — they reproduce inside host cells.', 'All three statements are actually true. Antibiotics are made by microorganisms (including bacteria), they kill bacteria, AND they do not work on viruses. The answer is <strong>D — 1, 2 and 3</strong>.')">Check</button>
+    <div class="quiz-feedback"></div>
+  </div>
+
+  <div class="quiz-block" id="q_pc2">
+    <div class="quiz-label">Progress Check</div>
+    <p class="quiz-q">2. Which of the following best describes the meaning of biological 'fitness'?</p>
+    <div class="quiz-options">
+      <button class="quiz-opt" onclick="selectOpt(this)"><span class="opt-letter">A</span> A measure of an organism's ability to survive in different habitats</button>
+      <button class="quiz-opt" onclick="selectOpt(this)"><span class="opt-letter">B</span> A measure of the reproductive success of an organism</button>
+      <button class="quiz-opt" onclick="selectOpt(this)"><span class="opt-letter">C</span> A measure of the relative health of an organism</button>
+      <button class="quiz-opt" onclick="selectOpt(this)"><span class="opt-letter">D</span> A measure of the strength of an organism</button>
+    </div>
+    <button class="check-btn" onclick="checkMCQ(this, 'B', 'Correct! In biology, fitness refers to <strong>reproductive success</strong> — the ability of an organism to pass on its alleles to the next generation. An organism is \"fit\" if it successfully reproduces, regardless of how strong or healthy it is.', 'In biology, fitness doesn\'t mean physical strength or health. It specifically refers to <strong>reproductive success</strong> — how effectively an organism passes its alleles to the next generation.')">Check</button>
+    <div class="quiz-feedback"></div>
+  </div>
+
+  <div class="quiz-block" id="q_pc3">
+    <div class="quiz-label">Progress Check</div>
+    <p class="quiz-q">3. What is the source of genetic variation?</p>
+    <div class="quiz-options">
+      <button class="quiz-opt" onclick="selectOpt(this)"><span class="opt-letter">A</span> Mutations</button>
+      <button class="quiz-opt" onclick="selectOpt(this)"><span class="opt-letter">B</span> Mitosis</button>
+      <button class="quiz-opt" onclick="selectOpt(this)"><span class="opt-letter">C</span> Selection pressures</button>
+      <button class="quiz-opt" onclick="selectOpt(this)"><span class="opt-letter">D</span> Changes in the environment</button>
+    </div>
+    <button class="check-btn" onclick="checkMCQ(this, 'A', 'Correct! Mutations are the ultimate source of new genetic variation. They are random changes in DNA that create new alleles. Without mutation, there would be no new variation for natural or artificial selection to act upon.', 'The source of genetic variation is <strong>mutations</strong> — random changes in DNA that create new alleles. Selection pressures and environmental changes can influence which variations survive, but they don\'t create the variation.')">Check</button>
+    <div class="quiz-feedback"></div>
+  </div>
+
+  <div class="quiz-block" id="q_pc4">
+    <div class="quiz-label">Progress Check</div>
+    <p class="quiz-q">4. Why is natural selection easy to observe in bacteria?</p>
+    <div class="quiz-options">
+      <button class="quiz-opt" onclick="selectOpt(this)"><span class="opt-letter">A</span> They are very small</button>
+      <button class="quiz-opt" onclick="selectOpt(this)"><span class="opt-letter">B</span> They can be killed by antibiotics</button>
+      <button class="quiz-opt" onclick="selectOpt(this)"><span class="opt-letter">C</span> They are composed of simple cells</button>
+      <button class="quiz-opt" onclick="selectOpt(this)"><span class="opt-letter">D</span> They reproduce very quickly</button>
+    </div>
+    <button class="check-btn" onclick="checkMCQ(this, 'D', 'Correct! Bacteria reproduce by binary fission very rapidly (some can divide every 20 minutes). This means many generations pass in a short time, making it possible to observe natural selection happening — for example, the development of antibiotic resistance.', 'The key reason is that bacteria <strong>reproduce very quickly</strong> — some divide every 20 minutes. This means many generations can pass in a short time, allowing us to observe natural selection (like antibiotic resistance developing) in days rather than centuries.')">Check</button>
+    <div class="quiz-feedback"></div>
+  </div>
+
+  <!-- Confidence Tracker -->
+  <h3>How confident are you so far?</h3>
+  <div class="confidence-bar">
+    <button class="conf-btn" onclick="selectConf(this)">😟 Not sure yet</button>
+    <button class="conf-btn" onclick="selectConf(this)">🤔 Getting there</button>
+    <button class="conf-btn" onclick="selectConf(this)">😊 Fairly confident</button>
+    <button class="conf-btn" onclick="selectConf(this)">💪 Very confident</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- SECTION 5: INTERLEAVED QUESTIONS -->
+<!-- ══════════════════════════════════════════════ -->
+<div class="section" id="sec5">
+  <h2>Interleaved Practice</h2>
+  <p class="subtitle">Questions from earlier topics mixed with selective breeding — this helps build stronger long-term memory.</p>
+
+  <div class="interleaved-banner">
+    <span>🔀</span> These questions deliberately mix topics. This "desirable difficulty" strengthens your retrieval.
+  </div>
+
+  <!-- Cell Structure -->
+  <div class="quiz-block" id="q_il1">
+    <div class="quiz-label interleaved">Interleaved — Cell Structure</div>
+    <p class="quiz-q">Which structure is found in plant cells but NOT in animal cells?</p>
+    <div class="quiz-options">
+      <button class="quiz-opt" onclick="selectOpt(this)"><span class="opt-letter">A</span> Nucleus</button>
+      <button class="quiz-opt" onclick="selectOpt(this)"><span class="opt-letter">B</span> Cell wall</button>
+      <button class="quiz-opt" onclick="selectOpt(this)"><span class="opt-letter">C</span> Cell membrane</button>
+      <button class="quiz-opt" onclick="selectOpt(this)"><span class="opt-letter">D</span> Cytoplasm</button>
+    </div>
+    <button class="check-btn" onclick="checkMCQ(this, 'B', 'Correct! Plant cells have a cell wall made of cellulose, which provides structural support. Animal cells have only a cell membrane, no cell wall. Both cell types have a nucleus, cell membrane, and cytoplasm.', 'Not quite. Plant cells have a <strong>cell wall</strong> (made of cellulose) that animal cells lack. Both types have a nucleus, cell membrane, and cytoplasm.')">Check</button>
+    <div class="quiz-feedback"></div>
+  </div>
+
+  <!-- Selective Breeding -->
+  <div class="quiz-block" id="q_il2">
+    <div class="quiz-label">Back to Selective Breeding</div>
+    <p class="quiz-q">A farmer wants to breed sheep that produce more wool. Which is the correct process?</p>
+    <div class="quiz-options">
+      <button class="quiz-opt" onclick="selectOpt(this)"><span class="opt-letter">A</span> Choose sheep with the most wool, breed them together, select offspring with most wool, repeat</button>
+      <button class="quiz-opt" onclick="selectOpt(this)"><span class="opt-letter">B</span> Feed sheep more food to make them grow more wool</button>
+      <button class="quiz-opt" onclick="selectOpt(this)"><span class="opt-letter">C</span> Only shear sheep once per year</button>
+      <button class="quiz-opt" onclick="selectOpt(this)"><span class="opt-letter">D</span> Cross sheep with goats to combine their fibres</button>
+    </div>
+    <button class="check-btn" onclick="checkMCQ(this, 'A', 'Correct! This is the fundamental process of selective breeding: identify individuals with the desired trait → breed them together → select the best offspring → repeat over many generations.', 'The correct process is A — select individuals with the desired characteristic, breed them, select the best offspring, and repeat. This is the fundamental cycle of selective breeding.')">Check</button>
+    <div class="quiz-feedback"></div>
+  </div>
+
+  <!-- Biological Molecules -->
+  <div class="quiz-block" id="q_il3">
+    <div class="quiz-label interleaved">Interleaved — Biological Molecules</div>
+    <p class="quiz-q">Starch is a storage molecule found in plants. What is starch made of?</p>
+    <div class="quiz-options">
+      <button class="quiz-opt" onclick="selectOpt(this)"><span class="opt-letter">A</span> Amino acids</button>
+      <button class="quiz-opt" onclick="selectOpt(this)"><span class="opt-letter">B</span> Fatty acids and glycerol</button>
+      <button class="quiz-opt" onclick="selectOpt(this)"><span class="opt-letter">C</span> Glucose molecules</button>
+      <button class="quiz-opt" onclick="selectOpt(this)"><span class="opt-letter">D</span> Nucleotides</button>
+    </div>
+    <button class="check-btn" onclick="checkMCQ(this, 'C', 'Correct! Starch is a polysaccharide — a polymer made of many glucose molecules joined together. Plants store glucose as starch because starch is insoluble and won\'t affect water potential in cells.', 'Starch is made of <strong>glucose molecules</strong> joined together (it\'s a polysaccharide). Amino acids make proteins, fatty acids + glycerol make lipids, and nucleotides make DNA/RNA.')">Check</button>
+    <div class="quiz-feedback"></div>
+  </div>
+
+  <!-- Diffusion / Movement of Substances -->
+  <div class="quiz-block" id="q_il4">
+    <div class="quiz-label interleaved">Interleaved — Movement of Substances</div>
+    <p class="quiz-q">Which process moves molecules from a region of higher concentration to a region of lower concentration without requiring energy?</p>
+    <div class="quiz-options">
+      <button class="quiz-opt" onclick="selectOpt(this)"><span class="opt-letter">A</span> Active transport</button>
+      <button class="quiz-opt" onclick="selectOpt(this)"><span class="opt-letter">B</span> Osmosis</button>
+      <button class="quiz-opt" onclick="selectOpt(this)"><span class="opt-letter">C</span> Diffusion</button>
+      <button class="quiz-opt" onclick="selectOpt(this)"><span class="opt-letter">D</span> Endocytosis</button>
+    </div>
+    <button class="check-btn" onclick="checkMCQ(this, 'C', 'Correct! Diffusion is the net movement of particles from a region of higher concentration to a region of lower concentration. It is a passive process — no energy is required. Osmosis is the diffusion specifically of <em>water</em> across a partially permeable membrane.', 'The process is <strong>diffusion</strong> — the net movement of particles down a concentration gradient. No energy is required (passive). Active transport moves molecules <em>against</em> the concentration gradient and requires energy.')">Check</button>
+    <div class="quiz-feedback"></div>
+  </div>
+
+  <!-- Respiration -->
+  <div class="quiz-block" id="q_il5">
+    <div class="quiz-label interleaved">Interleaved — Respiration</div>
+    <p class="quiz-q">What is the word equation for aerobic respiration?</p>
+    <div class="quiz-options">
+      <button class="quiz-opt" onclick="selectOpt(this)"><span class="opt-letter">A</span> Glucose → lactic acid (+ energy)</button>
+      <button class="quiz-opt" onclick="selectOpt(this)"><span class="opt-letter">B</span> Glucose + oxygen → carbon dioxide + water (+ energy)</button>
+      <button class="quiz-opt" onclick="selectOpt(this)"><span class="opt-letter">C</span> Carbon dioxide + water → glucose + oxygen</button>
+      <button class="quiz-opt" onclick="selectOpt(this)"><span class="opt-letter">D</span> Glucose → ethanol + carbon dioxide (+ energy)</button>
+    </div>
+    <button class="check-btn" onclick="checkMCQ(this, 'B', 'Correct! Aerobic respiration: glucose + oxygen → carbon dioxide + water (+ energy released). Option C is photosynthesis (the reverse), A is anaerobic respiration in animals, and D is anaerobic respiration in yeast.', 'Aerobic respiration is: <strong>glucose + oxygen → carbon dioxide + water (+ energy)</strong>. Option C describes photosynthesis, A describes anaerobic respiration in animals, D describes anaerobic respiration in yeast.')">Check</button>
+    <div class="quiz-feedback"></div>
+  </div>
+
+  <!-- Transport -->
+  <div class="quiz-block" id="q_il6">
+    <div class="quiz-label interleaved">Interleaved — Transport</div>
+    <p class="quiz-q">Which type of blood vessel carries blood away from the heart?</p>
+    <div class="quiz-options">
+      <button class="quiz-opt" onclick="selectOpt(this)"><span class="opt-letter">A</span> Veins</button>
+      <button class="quiz-opt" onclick="selectOpt(this)"><span class="opt-letter">B</span> Capillaries</button>
+      <button class="quiz-opt" onclick="selectOpt(this)"><span class="opt-letter">C</span> Arteries</button>
+      <button class="quiz-opt" onclick="selectOpt(this)"><span class="opt-letter">D</span> Lymph vessels</button>
+    </div>
+    <button class="check-btn" onclick="checkMCQ(this, 'C', 'Correct! <strong>Arteries</strong> carry blood away from the heart (remember: A = Away). They have thick, muscular walls to withstand high pressure. Veins carry blood back to the heart, and capillaries are the tiny vessels where exchange occurs.', '<strong>Arteries</strong> carry blood away from the heart. A helpful memory trick: <strong>A</strong>rteries = <strong>A</strong>way from heart. Veins carry blood <em>towards</em> the heart.')">Check</button>
+    <div class="quiz-feedback"></div>
+  </div>
+
+  <!-- Selective Breeding again -->
+  <div class="quiz-block" id="q_il7">
+    <div class="quiz-label">Back to Selective Breeding</div>
+    <p class="quiz-q">Warfarin is a pesticide developed to kill rats. When first used in 1950, it was very effective. Some rats had a mutant allele that made them resistant. Nowadays warfarin is much less effective. Which best explains this?</p>
+    <div class="quiz-options">
+      <button class="quiz-opt" onclick="selectOpt(this)"><span class="opt-letter">A</span> Rats learned to avoid warfarin</button>
+      <button class="quiz-opt" onclick="selectOpt(this)"><span class="opt-letter">B</span> Warfarin became weaker over time</button>
+      <button class="quiz-opt" onclick="selectOpt(this)"><span class="opt-letter">C</span> Natural selection favoured resistant rats, so the resistance allele increased in frequency</button>
+      <button class="quiz-opt" onclick="selectOpt(this)"><span class="opt-letter">D</span> Rats developed immunity by being exposed to small amounts</button>
+    </div>
+    <button class="check-btn" onclick="checkMCQ(this, 'C', 'Correct! This is natural selection in action. When warfarin was used, rats with the resistance allele survived and reproduced while non-resistant rats died. Over many generations, the proportion of rats carrying the resistance allele increased, making warfarin less effective.', 'This is explained by <strong>natural selection</strong>. Resistant rats survived warfarin exposure and passed on the resistance allele. Over generations, more and more rats in the population carried this allele, reducing warfarin\'s effectiveness.')">Check</button>
+    <div class="quiz-feedback"></div>
+  </div>
+
+  <!-- Gas Exchange -->
+  <div class="quiz-block" id="q_il8">
+    <div class="quiz-label interleaved">Interleaved — Gas Exchange</div>
+    <p class="quiz-q">Which feature of alveoli helps maximise the rate of gas exchange?</p>
+    <div class="quiz-options">
+      <button class="quiz-opt" onclick="selectOpt(this)"><span class="opt-letter">A</span> They have thick walls to protect the lungs</button>
+      <button class="quiz-opt" onclick="selectOpt(this)"><span class="opt-letter">B</span> They have a large surface area and thin walls</button>
+      <button class="quiz-opt" onclick="selectOpt(this)"><span class="opt-letter">C</span> They contain valves to prevent backflow</button>
+      <button class="quiz-opt" onclick="selectOpt(this)"><span class="opt-letter">D</span> They are surrounded by cartilage rings</button>
+    </div>
+    <button class="check-btn" onclick="checkMCQ(this, 'B', 'Correct! Alveoli have a <strong>very large surface area</strong> (millions of them) and walls that are <strong>only one cell thick</strong>, creating a short diffusion distance. They also have a rich blood supply and are kept moist — all maximising gas exchange rate.', 'Alveoli maximise gas exchange through: <strong>large surface area</strong> (millions of alveoli), <strong>thin walls</strong> (one cell thick = short diffusion distance), rich blood supply (maintains concentration gradient), and moist lining.')">Check</button>
+    <div class="quiz-feedback"></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- SECTION 6: PROGRESS CHECK 2 — TIERED -->
+<!-- ══════════════════════════════════════════════ -->
+<div class="section" id="sec6">
+  <h2>Progress Check 2 — Tiered</h2>
+  <p class="subtitle">Select your level. Foundation has scaffolding. Core is guided. Challenge is independent.</p>
+
+  <div class="tier-tabs">
+    <button class="tier-tab foundation active" onclick="switchTier(this, 'pc2')">🔵 Foundation</button>
+    <button class="tier-tab core" onclick="switchTier(this, 'pc2')">🟠 Core</button>
+    <button class="tier-tab challenge" onclick="switchTier(this, 'pc2')">🔴 Challenge</button>
+  </div>
+
+  <div class="tier-content foundation-content active" data-group="pc2" data-tier="foundation">
+    <p><strong>Fill in the blanks to describe the selective breeding process:</strong></p>
+    <div class="word-bank">
+      <span class="word-chip">desirable</span>
+      <span class="word-chip">breed</span>
+      <span class="word-chip">offspring</span>
+      <span class="word-chip">selected</span>
+      <span class="word-chip">generations</span>
+      <span class="word-chip">artificial</span>
+    </div>
+    <div class="card" style="line-height:2.4">
+      <p>Step 1: Choose individuals with <input class="blank-input" data-answer="desirable" placeholder="___________"> characteristics.</p>
+      <p>Step 2: <input class="blank-input" data-answer="breed" placeholder="___________"> these individuals together.</p>
+      <p>Step 3: From the <input class="blank-input" data-answer="offspring" placeholder="___________">, choose those with the best characteristics.</p>
+      <p>Step 4: These are <input class="blank-input" data-answer="selected" placeholder="___________"> and bred again.</p>
+      <p>Step 5: Repeat over many <input class="blank-input" data-answer="generations" placeholder="___________">.</p>
+      <p>This process is also called <input class="blank-input" data-answer="artificial" placeholder="___________"> selection.</p>
+    </div>
+    <button class="check-btn" onclick="checkBlanks(this)">Check Answers</button>
+  </div>
+
+  <div class="tier-content core-content" data-group="pc2" data-tier="core">
+    <!-- VTR: Claim-Support-Question -->
+    <div class="vtr-block" style="margin:0">
+      <div class="vtr-header">
+        <span class="vtr-badge">VTR</span>
+        <span class="vtr-title">Claim–Support–Question</span>
+      </div>
+      <div class="vtr-body">
+        <p class="vtr-prompt">Consider this claim: <strong>"Selective breeding is always beneficial for the species being bred."</strong></p>
+        <div class="vtr-section-label">Make a CLAIM — do you agree or disagree? State your position.</div>
+        <textarea class="vtr-input" rows="2" placeholder="I claim that..."></textarea>
+        <div class="vtr-section-label">Provide SUPPORT — what evidence supports your claim?</div>
+        <textarea class="vtr-input" rows="3" placeholder="Evidence that supports my claim includes..."></textarea>
+        <div class="vtr-section-label">Raise a QUESTION — what challenge or uncertainty remains?</div>
+        <textarea class="vtr-input" rows="2" placeholder="A question that remains is..."></textarea>
+      </div>
+    </div>
+    <button class="reveal-btn" onclick="toggleReveal(this)" style="margin-top:16px">See thinking points</button>
+    <div class="reveal-content">
+      <strong>Key thinking points:</strong><br>
+      • Selective breeding can reduce genetic diversity within a population, making organisms more vulnerable to disease.<br>
+      • Inbreeding (breeding closely related individuals) can lead to health problems — many pedigree dog breeds suffer from genetic disorders.<br>
+      • While humans benefit from higher yields, the organisms themselves may not benefit (e.g., broiler chickens bred for such rapid growth that their legs cannot support their body weight).<br>
+      • Selective breeding has provided food security for billions of people.<br>
+      • The process is irreversible — once genetic diversity is lost, it cannot be recovered.
+    </div>
+  </div>
+
+  <div class="tier-content challenge-content" data-group="pc2" data-tier="challenge">
+    <p><strong>Read the scenario and answer all parts:</strong></p>
+    <div class="card" style="font-size:0.92rem">
+      <p>Natural selection happens when a selection pressure favours individuals with particular characteristics, so that they have a selective advantage.</p>
+      <p>Some plants growing in areas contaminated by waste from mines have developed a tolerance to toxic metals such as lead and copper. They are able to grow on polluted soil, while non-tolerant plants are killed by the metals in the soil.</p>
+    </div>
+    <p style="margin-top:16px"><strong>a)</strong> How did the new tolerant varieties of plants arise?</p>
+    <textarea class="vtr-input" rows="3" placeholder="Your answer..."></textarea>
+    <p style="margin-top:12px"><strong>b)</strong> With reference to this example, explain the terms:</p>
+    <p style="margin-left:20px"><em>i. selection pressure</em></p>
+    <textarea class="vtr-input" rows="2" placeholder="Your answer..."></textarea>
+    <p style="margin-left:20px;margin-top:8px"><em>ii. selective advantage</em></p>
+    <textarea class="vtr-input" rows="2" placeholder="Your answer..."></textarea>
+    <p style="margin-left:20px;margin-top:8px"><em>iii. natural selection</em></p>
+    <textarea class="vtr-input" rows="2" placeholder="Your answer..."></textarea>
+    <p style="margin-top:12px"><strong>c)</strong> When metal-tolerant plants are grown on uncontaminated soil, they are out-competed by non-tolerant plants. Suggest a reason for this.</p>
+    <textarea class="vtr-input" rows="3" placeholder="Your answer..."></textarea>
+    <button class="reveal-btn" onclick="toggleReveal(this)">Show model answer</button>
+    <div class="reveal-content">
+      <strong>a)</strong> Random mutations in some plants gave them alleles that allowed them to tolerate toxic metals. These plants survived on contaminated soil while others died, and they reproduced and passed on the tolerance alleles.<br><br>
+      <strong>b) i. Selection pressure:</strong> The toxic metals in the soil act as the selection pressure — they kill non-tolerant plants, meaning only tolerant plants survive to reproduce.<br>
+      <strong>ii. Selective advantage:</strong> Metal-tolerant plants have a selective advantage on contaminated soil because they can survive and reproduce where other plants cannot.<br>
+      <strong>iii. Natural selection:</strong> The process by which the tolerant plants survive and reproduce more than non-tolerant plants on contaminated soil, leading to an increase in the frequency of the tolerance allele in the population over generations.<br><br>
+      <strong>c)</strong> Metal tolerance likely comes with an energy cost or reduced growth rate. On uncontaminated soil, there is no advantage to being tolerant, so non-tolerant plants that don't bear this cost can grow faster and out-compete the tolerant plants for resources like light, water, and minerals.
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- SECTION 7: STRUGGLE ZONE -->
+<!-- ══════════════════════════════════════════════ -->
+<div class="section" id="sec7">
+  <h2>Struggle Zone</h2>
+  <p class="subtitle">These questions are designed to be challenging. Productive struggle strengthens learning.</p>
+
+  <div class="struggle-zone">
+    <h3>🧠 Struggle Question 1 — Maize Breeding Programme</h3>
+    <p>The diagram in your textbook shows the results of a breeding programme to improve the yield of maize (sweetcorn). Pure line A × Pure line B → Hybrid E. Pure line C × Pure line D → Hybrid F. Then Hybrid E × Hybrid F → Hybrid G.</p>
+    <p style="margin-top:16px"><strong>a)</strong> Describe the breeding procedure used to produce hybrid G.</p>
+    <textarea class="vtr-input" rows="4" placeholder="Think carefully about each step..."></textarea>
+    <p style="margin-top:12px"><strong>b)</strong> Why might hybrid G have a higher yield than any of the pure lines?</p>
+    <textarea class="vtr-input" rows="3" placeholder="Consider: what happens when you combine genetic material from different lines?"></textarea>
+    <p style="margin-top:12px"><strong>c)</strong> How could you show that the differences between hybrid G and pure line C are genetic rather than environmental?</p>
+    <textarea class="vtr-input" rows="4" placeholder="Think about how you'd design a fair test..."></textarea>
+    <button class="reveal-btn" onclick="toggleReveal(this)">Reveal approach</button>
+    <div class="reveal-content">
+      <strong>a)</strong> First, pure line A was cross-bred with pure line B to produce hybrid E. Separately, pure line C was cross-bred with pure line D to produce hybrid F. Then hybrid E was cross-bred with hybrid F to produce hybrid G. Each cross was between two different parental lines, bringing together different combinations of alleles.<br><br>
+      <strong>b)</strong> Hybrid G combines genetic material from four different pure lines (A, B, C, and D). This gives it a wider range of alleles, potentially including the best yield-related alleles from each line. This is known as hybrid vigour (heterosis) — the offspring can be more productive than either parent because they benefit from the combined advantages.<br><br>
+      <strong>c)</strong> Grow hybrid G and pure line C in exactly the same environmental conditions (same soil type, same watering regime, same temperature, same light levels, same fertiliser). If the differences in characteristics persist under identical conditions, then the differences must be genetic rather than environmental. You should also grow multiple plants of each type to ensure the results are reliable.
+    </div>
+  </div>
+
+  <div class="struggle-zone" style="margin-top:28px">
+    <h3>🧠 Struggle Question 2 — Connecting Concepts</h3>
+    <p>A farmer uses selective breeding to produce a herd of high-milk-yield dairy cattle over 20 years. After 20 years, a new disease spreads through the herd and kills 90% of the cattle.</p>
+    <p style="margin-top:16px"><strong>a)</strong> Using your knowledge of genetics and variation, explain why the disease was able to kill so many of the cattle.</p>
+    <textarea class="vtr-input" rows="4" placeholder="Think about what happens to genetic diversity during selective breeding..."></textarea>
+    <p style="margin-top:12px"><strong>b)</strong> Compare what happened to this herd with what might happen in a wild population of cattle facing the same disease. Explain the difference.</p>
+    <textarea class="vtr-input" rows="4" placeholder="Consider the difference in genetic diversity between a selectively bred population and a wild one..."></textarea>
+    <button class="reveal-btn" onclick="toggleReveal(this)">Reveal approach</button>
+    <div class="reveal-content">
+      <strong>a)</strong> Selective breeding reduces genetic diversity because the farmer only breeds cattle with high milk yield, selecting a narrow range of alleles. Over 20 years, the herd becomes genetically very similar (homozygous for many genes). When the disease arrives, if none of the cattle carry alleles for resistance to this specific disease, the entire herd is vulnerable — they all share the same genetic weakness.<br><br>
+      <strong>b)</strong> A wild population would have much greater genetic diversity because natural variation is maintained — no one is selecting which individuals breed. This means that within a large, genetically diverse wild population, some individuals are likely to carry alleles that provide resistance to the disease. These individuals would survive and reproduce (natural selection), and the population would recover. The selectively bred herd lacked this "genetic safety net."
+    </div>
+  </div>
+
+  <!-- One more interleaved -->
+  <div class="interleaved-banner">
+    <span>🔀</span> Final interleaved retrieval
+  </div>
+
+  <div class="quiz-block" id="q_il_exc">
+    <div class="quiz-label interleaved">Interleaved — Excretion</div>
+    <p class="quiz-q">Which organ is primarily responsible for removing urea from the blood?</p>
+    <div class="quiz-options">
+      <button class="quiz-opt" onclick="selectOpt(this)"><span class="opt-letter">A</span> Liver</button>
+      <button class="quiz-opt" onclick="selectOpt(this)"><span class="opt-letter">B</span> Kidneys</button>
+      <button class="quiz-opt" onclick="selectOpt(this)"><span class="opt-letter">C</span> Lungs</button>
+      <button class="quiz-opt" onclick="selectOpt(this)"><span class="opt-letter">D</span> Skin</button>
+    </div>
+    <button class="check-btn" onclick="checkMCQ(this, 'B', 'Correct! The <strong>kidneys</strong> filter urea out of the blood. Urea is produced in the liver from the breakdown of excess amino acids (deamination), but it is the kidneys that excrete it in urine.', 'The <strong>kidneys</strong> filter urea from the blood and excrete it in urine. The liver produces urea (from deamination of amino acids), but it is the kidneys that remove it from the blood.')">Check</button>
+    <div class="quiz-feedback"></div>
+  </div>
+
+  <div class="quiz-block" id="q_il_coord">
+    <div class="quiz-label interleaved">Interleaved — Coordination & Response</div>
+    <p class="quiz-q">What is the function of a receptor in the nervous system?</p>
+    <div class="quiz-options">
+      <button class="quiz-opt" onclick="selectOpt(this)"><span class="opt-letter">A</span> To carry electrical impulses to the brain</button>
+      <button class="quiz-opt" onclick="selectOpt(this)"><span class="opt-letter">B</span> To detect changes (stimuli) in the environment</button>
+      <button class="quiz-opt" onclick="selectOpt(this)"><span class="opt-letter">C</span> To produce a response in muscles or glands</button>
+      <button class="quiz-opt" onclick="selectOpt(this)"><span class="opt-letter">D</span> To release hormones into the blood</button>
+    </div>
+    <button class="check-btn" onclick="checkMCQ(this, 'B', 'Correct! Receptors <strong>detect stimuli</strong> (changes in the environment). Sensory neurons carry impulses to the CNS, and effectors (muscles/glands) produce the response.', 'Receptors <strong>detect stimuli</strong> — they are specialised cells that respond to changes in the environment. Sensory neurons carry the impulses, and effectors produce the response.')">Check</button>
+    <div class="quiz-feedback"></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- SECTION 8: REFLECTION -->
+<!-- ══════════════════════════════════════════════ -->
+<div class="section" id="sec8">
+  <h2>Reflect on Your Learning</h2>
+
+  <!-- VTR: I Used to Think... Now I Think -->
+  <div class="vtr-block">
+    <div class="vtr-header">
+      <span class="vtr-badge">VTR</span>
+      <span class="vtr-title">I Used to Think… Now I Think</span>
+    </div>
+    <div class="vtr-body">
+      <p class="vtr-prompt">Reflect on how your understanding has changed during this lesson.</p>
+      <div class="vtr-section-label">I used to think…</div>
+      <textarea class="vtr-input" rows="3" placeholder="Before this lesson, I used to think selective breeding was..."></textarea>
+      <div class="vtr-section-label">Now I think…</div>
+      <textarea class="vtr-input" rows="3" placeholder="After this lesson, now I think..."></textarea>
+      <div class="vtr-section-label">I still wonder…</div>
+      <textarea class="vtr-input" rows="2" placeholder="Something I'm still curious about is..."></textarea>
+    </div>
+  </div>
+
+  <!-- VTR: Connect-Extend-Challenge -->
+  <div class="vtr-block" style="margin-top:24px">
+    <div class="vtr-header">
+      <span class="vtr-badge">VTR</span>
+      <span class="vtr-title">Connect–Extend–Challenge</span>
+    </div>
+    <div class="vtr-body">
+      <div class="vtr-section-label">CONNECT — How does selective breeding connect to what you already knew about natural selection and variation?</div>
+      <textarea class="vtr-input" rows="2" placeholder="I can connect this to..."></textarea>
+      <div class="vtr-section-label">EXTEND — How has this lesson extended your thinking beyond what you knew before?</div>
+      <textarea class="vtr-input" rows="2" placeholder="This has extended my thinking because..."></textarea>
+      <div class="vtr-section-label">CHALLENGE — What is still challenging or unclear? What do you need to revisit?</div>
+      <textarea class="vtr-input" rows="2" placeholder="I still find it challenging to..."></textarea>
+    </div>
+  </div>
+
+  <!-- Exit Ticket -->
+  <h3>Exit Ticket</h3>
+  <div class="card card-accent">
+    <p style="margin-bottom:12px">Write a 3-sentence summary of selective breeding that includes:</p>
+    <p style="font-size:0.9rem;padding-left:16px;border-left:2px solid var(--accent-dim);margin-bottom:12px">
+      ✓ A definition of selective breeding<br>
+      ✓ One example in plants<br>
+      ✓ One example in animals
+    </p>
+    <textarea class="vtr-input" rows="4" placeholder="Selective breeding is..."></textarea>
+  </div>
+
+  <!-- Final Confidence -->
+  <h3>Final Confidence Check</h3>
+  <p style="font-size:0.9rem;color:var(--text-muted);margin-bottom:8px">Rate your confidence on each learning objective:</p>
+  
+  <div class="card" style="margin-bottom:12px">
+    <p style="margin-bottom:8px"><strong>5.10</strong> — I understand how selective breeding develops plants with desired characteristics</p>
+    <div class="confidence-bar">
+      <button class="conf-btn" onclick="selectConf(this)">😟 1</button>
+      <button class="conf-btn" onclick="selectConf(this)">🤔 2</button>
+      <button class="conf-btn" onclick="selectConf(this)">😊 3</button>
+      <button class="conf-btn" onclick="selectConf(this)">💪 4</button>
+    </div>
+  </div>
+  <div class="card">
+    <p style="margin-bottom:8px"><strong>5.11</strong> — I understand how selective breeding develops animals with desired characteristics</p>
+    <div class="confidence-bar">
+      <button class="conf-btn" onclick="selectConf(this)">😟 1</button>
+      <button class="conf-btn" onclick="selectConf(this)">🤔 2</button>
+      <button class="conf-btn" onclick="selectConf(this)">😊 3</button>
+      <button class="conf-btn" onclick="selectConf(this)">💪 4</button>
+    </div>
+  </div>
+
+  <div style="text-align:center;margin-top:40px;padding:24px;background:var(--surface);border-radius:var(--radius);border:1px solid var(--border)">
+    <p style="font-size:1.1rem;margin-bottom:4px">Lesson Complete</p>
+    <p style="color:var(--text-muted);font-size:0.9rem">Evidence-informed design · Retrieval practice · Dual coding · Interleaving · Visible Thinking Routines</p>
+  </div>
+</div>
+
+<script>
+// ── NAVIGATION ──
+let currentSection = 0;
+const sections = document.querySelectorAll('.section');
+const navBtns = document.querySelectorAll('.nav-btn');
+const progressFill = document.getElementById('progressFill');
+
+function goTo(index) {
+  sections[currentSection].classList.remove('active');
+  navBtns[currentSection].classList.remove('active');
+  currentSection = index;
+  sections[currentSection].classList.add('active');
+  navBtns[currentSection].classList.add('active');
+  progressFill.style.width = ((index + 1) / sections.length * 100) + '%';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ── MCQ ──
+function selectOpt(btn) {
+  const parent = btn.closest('.quiz-options');
+  parent.querySelectorAll('.quiz-opt').forEach(o => o.classList.remove('selected'));
+  btn.classList.add('selected');
+}
+
+function checkMCQ(checkBtn, correctLetter, correctFeedback, incorrectFeedback) {
+  const block = checkBtn.closest('.quiz-block') || checkBtn.closest('.tier-content') || checkBtn.parentElement;
+  const selected = block.querySelector('.quiz-opt.selected');
+  if (!selected) return;
+  
+  const feedbackEl = block.querySelector('.quiz-feedback');
+  const letter = selected.querySelector('.opt-letter').textContent.trim();
+  const allOpts = block.querySelectorAll('.quiz-opt');
+  
+  allOpts.forEach(o => {
+    o.style.pointerEvents = 'none';
+    const l = o.querySelector('.opt-letter').textContent.trim();
+    if (l === correctLetter) o.classList.add('correct');
+    else if (o.classList.contains('selected')) o.classList.add('incorrect');
+  });
+  
+  checkBtn.disabled = true;
+  
+  if (letter === correctLetter) {
+    feedbackEl.className = 'quiz-feedback show correct';
+    feedbackEl.innerHTML = '✓ ' + correctFeedback;
+  } else {
+    feedbackEl.className = 'quiz-feedback show incorrect';
+    feedbackEl.innerHTML = '✗ ' + incorrectFeedback;
+  }
+}
+
+// ── FILL IN BLANKS ──
+function checkBlanks(btn) {
+  const container = btn.closest('.tier-content') || btn.parentElement;
+  const blanks = container.querySelectorAll('.blank-input');
+  blanks.forEach(b => {
+    const answer = b.dataset.answer.toLowerCase().trim();
+    const userAnswer = b.value.toLowerCase().trim();
+    if (userAnswer === answer) {
+      b.classList.add('correct');
+      b.classList.remove('incorrect');
+    } else {
+      b.classList.add('incorrect');
+      b.classList.remove('correct');
+    }
+  });
+  btn.disabled = true;
+}
+
+// ── TIERS ──
+function switchTier(btn, group) {
+  const tabs = btn.parentElement.querySelectorAll('.tier-tab');
+  tabs.forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  
+  const tierName = btn.classList.contains('foundation') ? 'foundation' : 
+                   btn.classList.contains('core') ? 'core' : 'challenge';
+  
+  const contents = document.querySelectorAll(`.tier-content[data-group="${group}"]`);
+  contents.forEach(c => c.classList.remove('active'));
+  document.querySelector(`.tier-content[data-group="${group}"][data-tier="${tierName}"]`).classList.add('active');
+}
+
+// ── REVEAL ──
+function toggleReveal(btn) {
+  const content = btn.nextElementSibling;
+  content.classList.toggle('show');
+  btn.textContent = content.classList.contains('show') ? 'Hide' : btn.textContent.includes('model') ? 'Show model answer' : btn.textContent.includes('thinking') ? 'See thinking points' : 'Reveal approach';
+  if (content.classList.contains('show')) btn.textContent = 'Hide';
+}
+
+// ── CONFIDENCE ──
+function selectConf(btn) {
+  const bar = btn.parentElement;
+  bar.querySelectorAll('.conf-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+}
+</script>
+</body>
+</html>
