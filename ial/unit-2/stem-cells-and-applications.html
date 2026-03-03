@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AS Biology — Stem Cells &amp; Their Applications</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #F7F5F0;
+  --fg: #1A1A1A;
+  --accent: #2D6A4F;
+  --accent-light: #D8F3DC;
+  --accent-mid: #52B788;
+  --highlight: #E76F51;
+  --card: #FFFFFF;
+  --muted: #6B7280;
+  --border: #E5E1DA;
+  --quiz-correct: #2D6A4F;
+  --quiz-wrong: #E76F51;
+  --serif: 'Instrument Serif', Georgia, serif;
+  --sans: 'DM Sans', system-ui, sans-serif;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family: var(--sans); background: var(--bg); color: var(--fg); line-height:1.7; font-size:16px; }
+.container { max-width:780px; margin:0 auto; padding: 20px 24px 80px; }
+
+/* HEADER */
+.hero { text-align:center; padding: 48px 0 32px; border-bottom: 2px solid var(--accent); margin-bottom: 32px; }
+.hero-label { font-family:var(--sans); font-size:12px; letter-spacing:3px; text-transform:uppercase; color:var(--accent); font-weight:600; margin-bottom:12px; }
+.hero h1 { font-family:var(--serif); font-size:clamp(2rem,5vw,3.2rem); font-weight:400; line-height:1.2; color:var(--fg); margin-bottom:8px; }
+.hero h1 em { font-style:italic; color:var(--accent); }
+.hero .spec { font-size:13px; color:var(--muted); margin-top:12px; }
+
+/* LESSON NAV (top level) */
+.lesson-nav { display:flex; gap:12px; margin-bottom:16px; position:sticky; top:0; background:var(--bg); padding:12px 0 8px; z-index:100; }
+.lesson-nav button { flex:1; padding:12px 16px; border:2px solid var(--border); background:var(--card); border-radius:8px; font-family:var(--sans); font-size:14px; font-weight:600; cursor:pointer; transition:all .2s; }
+.lesson-nav button:hover { border-color:var(--accent); }
+.lesson-nav button.active { background:var(--accent); color:#fff; border-color:var(--accent); }
+
+/* SUB-TAB NAV (within each lesson) */
+.sub-nav { display:flex; gap:6px; margin-bottom:32px; position:sticky; top:52px; background:var(--bg); padding:0 0 12px; z-index:90; flex-wrap:wrap; border-bottom:1px solid var(--border); }
+.sub-nav button { padding:8px 14px; border:none; background:transparent; border-bottom:2px solid transparent; font-family:var(--sans); font-size:13px; font-weight:500; cursor:pointer; transition:all .2s; color:var(--muted); white-space:nowrap; }
+.sub-nav button:hover { color:var(--fg); border-bottom-color:var(--border); }
+.sub-nav button.active { color:var(--accent); border-bottom-color:var(--accent); font-weight:700; }
+.sub-nav button .tab-num { display:inline-flex; align-items:center; justify-content:center; width:20px; height:20px; border-radius:50%; background:var(--border); font-size:11px; font-weight:700; margin-right:5px; color:var(--muted); }
+.sub-nav button.active .tab-num { background:var(--accent); color:#fff; }
+.sub-nav button.completed .tab-num { background:var(--accent-mid); color:#fff; }
+
+/* SECTIONS */
+.lesson { display:none; }
+.lesson.active { display:block; }
+.sub-section { display:none; animation: fadeIn .3s ease; }
+.sub-section.active { display:block; }
+@keyframes fadeIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+
+/* NAV BUTTONS (prev/next) */
+.step-nav { display:flex; justify-content:space-between; margin-top:40px; padding-top:24px; border-top:1px solid var(--border); }
+.step-btn { display:inline-flex; align-items:center; gap:8px; padding:12px 24px; border:2px solid var(--accent); border-radius:8px; font-family:var(--sans); font-size:14px; font-weight:600; cursor:pointer; transition:all .2s; background:var(--card); color:var(--accent); }
+.step-btn:hover { background:var(--accent); color:#fff; }
+.step-btn.next { background:var(--accent); color:#fff; border-color:var(--accent); }
+.step-btn.next:hover { background:#245A42; }
+.step-btn:disabled { opacity:.3; pointer-events:none; }
+
+/* THINKING ROUTINE BOXES */
+.vtr-box { background: linear-gradient(135deg, #F0FDF4 0%, #ECFDF5 100%); border-left:4px solid var(--accent); border-radius:0 12px 12px 0; padding:24px 28px; margin:24px 0; }
+.vtr-box h3 { font-family:var(--serif); font-size:1.3rem; color:var(--accent); margin-bottom:8px; }
+.vtr-box p { font-size:14px; color:var(--muted); margin-bottom:16px; }
+.vtr-box textarea { width:100%; min-height:80px; border:1px solid var(--border); border-radius:8px; padding:12px; font-family:var(--sans); font-size:14px; resize:vertical; background:#fff; }
+.vtr-box textarea:focus { outline:none; border-color:var(--accent); box-shadow:0 0 0 3px rgba(45,106,79,.12); }
+.vtr-box label { display:block; font-weight:600; font-size:13px; margin:16px 0 6px; color:var(--fg); }
+
+/* CONTENT */
+.section { margin-bottom:32px; }
+.section-number { font-family:var(--serif); font-size:3rem; color:var(--accent-light); line-height:1; margin-bottom:-8px; }
+.section h2 { font-family:var(--serif); font-size:1.6rem; color:var(--fg); margin-bottom:16px; line-height:1.3; }
+.section h3 { font-family:var(--sans); font-weight:700; color:var(--accent); margin:24px 0 8px; text-transform:uppercase; letter-spacing:1px; font-size:12px; }
+.content-card { background:var(--card); border-radius:12px; padding:28px; margin:16px 0; box-shadow:0 1px 3px rgba(0,0,0,.06); border:1px solid var(--border); }
+.content-card p { margin-bottom:12px; }
+.content-card p:last-child { margin-bottom:0; }
+
+.key-term { display:inline; background: linear-gradient(180deg, transparent 60%, var(--accent-light) 60%); font-weight:600; cursor:help; }
+.compare-table { width:100%; border-collapse:separate; border-spacing:0; border-radius:12px; overflow:hidden; margin:16px 0; font-size:14px; }
+.compare-table th { background:var(--accent); color:#fff; padding:12px 16px; text-align:left; font-weight:600; font-size:13px; }
+.compare-table td { padding:12px 16px; border-bottom:1px solid var(--border); background:var(--card); vertical-align:top; }
+.compare-table tr:last-child td { border-bottom:none; }
+.compare-table tr:nth-child(even) td { background:#FAFAF8; }
+.analogy { background:#FFF7ED; border:1px solid #FED7AA; border-radius:12px; padding:20px 24px; margin:20px 0; }
+.analogy::before { content:'💡'; font-size:1.2rem; margin-right:8px; }
+.analogy strong { color:var(--highlight); }
+.exam-hint { background:#FEF2F2; border:1px solid #FECACA; border-radius:12px; padding:20px 24px; margin:20px 0; font-size:14px; }
+.exam-hint::before { content:'🎯 Exam Tip: '; font-weight:700; color:var(--highlight); }
+
+/* QUIZ */
+.quiz-block { background:var(--card); border:2px solid var(--border); border-radius:12px; padding:28px; margin:24px 0; }
+.quiz-block.hinge { border-color:var(--accent); border-style:dashed; }
+.quiz-label { font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--accent); margin-bottom:12px; }
+.quiz-block h4 { font-family:var(--serif); font-size:1.15rem; margin-bottom:16px; line-height:1.4; }
+.quiz-options { display:flex; flex-direction:column; gap:8px; }
+.quiz-option { display:flex; align-items:flex-start; gap:12px; padding:12px 16px; border:1px solid var(--border); border-radius:8px; cursor:pointer; transition:all .15s; font-size:14px; }
+.quiz-option:hover { border-color:var(--accent); background:#F0FDF4; }
+.quiz-option.correct { border-color:var(--quiz-correct); background:#D1FAE5; }
+.quiz-option.wrong { border-color:var(--quiz-wrong); background:#FEE2E2; }
+.quiz-option .letter { min-width:24px; height:24px; border-radius:50%; border:2px solid var(--border); display:flex; align-items:center; justify-content:center; font-weight:700; font-size:12px; flex-shrink:0; }
+.quiz-option.correct .letter { background:var(--quiz-correct); color:#fff; border-color:var(--quiz-correct); }
+.quiz-option.wrong .letter { background:var(--quiz-wrong); color:#fff; border-color:var(--quiz-wrong); }
+.quiz-feedback { margin-top:16px; padding:16px; border-radius:8px; font-size:14px; display:none; line-height:1.6; }
+.quiz-feedback.show { display:block; }
+.quiz-feedback.correct { background:#D1FAE5; color:#065F46; }
+.quiz-feedback.wrong { background:#FEE2E2; color:#991B1B; }
+
+/* RETRIEVAL */
+.retrieval-block { background:#F5F3FF; border:2px solid #C4B5FD; border-radius:12px; padding:28px; margin:24px 0; }
+.retrieval-block .quiz-label { color:#7C3AED; }
+.retrieval-block h4 { font-family:var(--serif); font-size:1.1rem; margin-bottom:12px; }
+.retrieval-block textarea { width:100%; min-height:70px; border:1px solid #C4B5FD; border-radius:8px; padding:12px; font-family:var(--sans); font-size:14px; resize:vertical; }
+.retrieval-block textarea:focus { outline:none; border-color:#7C3AED; box-shadow:0 0 0 3px rgba(124,58,237,.12); }
+.reveal-btn { display:inline-flex; align-items:center; gap:6px; margin-top:12px; padding:8px 16px; background:#7C3AED; color:#fff; border:none; border-radius:6px; font-family:var(--sans); font-size:13px; font-weight:600; cursor:pointer; transition:background .2s; }
+.reveal-btn:hover { background:#6D28D9; }
+.model-answer { margin-top:12px; padding:16px; background:#EDE9FE; border-radius:8px; font-size:14px; display:none; line-height:1.6; }
+.model-answer.show { display:block; }
+.model-answer strong { color:#7C3AED; }
+
+/* PRODUCTIVE STRUGGLE */
+.struggle-box { background:#FFFBEB; border:2px solid #FCD34D; border-radius:12px; padding:28px; margin:24px 0; }
+.struggle-box .quiz-label { color:#B45309; }
+.struggle-box h4 { font-family:var(--serif); font-size:1.1rem; margin-bottom:8px; }
+.struggle-box p { font-size:14px; color:var(--muted); margin-bottom:12px; }
+.struggle-box textarea { width:100%; min-height:80px; border:1px solid #FCD34D; border-radius:8px; padding:12px; font-family:var(--sans); font-size:14px; resize:vertical; }
+.hint-btn { display:inline-flex; align-items:center; gap:6px; margin-top:8px; padding:8px 16px; background:transparent; color:#B45309; border:1px solid #FCD34D; border-radius:6px; font-family:var(--sans); font-size:13px; font-weight:600; cursor:pointer; transition:all .2s; }
+.hint-btn:hover { background:#FEF3C7; }
+.hint-text { margin-top:8px; padding:12px 16px; background:#FEF3C7; border-radius:8px; font-size:13px; display:none; color:#92400E; }
+.hint-text.show { display:block; }
+
+/* FLOW DIAGRAM */
+.flow { display:flex; flex-direction:column; align-items:center; gap:0; margin:20px 0; }
+.flow-step { background:var(--accent); color:#fff; padding:14px 24px; border-radius:10px; font-size:14px; font-weight:500; text-align:center; max-width:380px; width:100%; }
+.flow-step.alt { background:var(--highlight); }
+.flow-arrow { font-size:20px; color:var(--accent); padding:4px 0; }
+
+/* ETHICS */
+.ethics-card { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin:16px 0; }
+.ethics-for, .ethics-against { padding:20px; border-radius:12px; font-size:14px; }
+.ethics-for { background:#D1FAE5; border:1px solid #6EE7B7; }
+.ethics-against { background:#FEE2E2; border:1px solid #FCA5A5; }
+.ethics-for h4, .ethics-against h4 { font-size:13px; font-weight:700; margin-bottom:8px; text-transform:uppercase; letter-spacing:1px; }
+.ethics-for h4 { color:#065F46; }
+.ethics-against h4 { color:#991B1B; }
+.ethics-for ul, .ethics-against ul { padding-left:16px; }
+.ethics-for li, .ethics-against li { margin-bottom:6px; }
+
+/* REFLECTION GRID */
+.reflection-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin:16px 0; }
+.reflection-grid > div { padding:20px; border-radius:12px; }
+.reflection-grid .before { background:#FEF3C7; border:1px solid #FCD34D; }
+.reflection-grid .after { background:#D1FAE5; border:1px solid #6EE7B7; }
+.reflection-grid label { display:block; font-weight:700; font-size:13px; margin-bottom:8px; }
+.reflection-grid textarea { width:100%; min-height:80px; border:1px solid var(--border); border-radius:8px; padding:10px; font-family:var(--sans); font-size:14px; resize:vertical; }
+
+/* PROGRESS BAR */
+.progress-bar { position:fixed; top:0; left:0; height:3px; background:var(--accent); z-index:200; transition:width .3s; }
+
+/* RESPONSIVE */
+@media (max-width:600px) {
+  .container { padding:16px; }
+  .ethics-card, .reflection-grid { grid-template-columns:1fr; }
+  .lesson-nav { flex-direction:column; }
+  .sub-nav { gap:4px; }
+  .sub-nav button { padding:6px 10px; font-size:12px; }
+}
+@media print {
+  .lesson-nav, .sub-nav, .progress-bar, .reveal-btn, .hint-btn, .step-nav { display:none; }
+  .lesson, .sub-section { display:block !important; }
+}
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="progressBar"></div>
+
+<div class="container">
+
+<header class="hero">
+  <div class="hero-label">Edexcel Biology B — Topic 3C</div>
+  <h1>Stem Cells &amp; <em>Their Applications</em></h1>
+  <p class="spec">Specification Reference 3.17(ii) · Distance Learning Resource · Lessons 4 &amp; 5</p>
+</header>
+
+<nav class="lesson-nav">
+  <button class="active" onclick="showLesson('lesson1', this)">Lesson 4: Stem Cell Types</button>
+  <button onclick="showLesson('lesson2', this)">Lesson 5: Applications &amp; Ethics</button>
+</nav>
+
+<!-- ==================== LESSON 1 ==================== -->
+<div class="lesson active" id="lesson1">
+
+<nav class="sub-nav" id="lesson1-tabs">
+  <button class="active" onclick="showTab('lesson1', 0, this)"><span class="tab-num">1</span>Activate</button>
+  <button onclick="showTab('lesson1', 1, this)"><span class="tab-num">2</span>Differentiation</button>
+  <button onclick="showTab('lesson1', 2, this)"><span class="tab-num">3</span>Stem Cell Hierarchy</button>
+  <button onclick="showTab('lesson1', 3, this)"><span class="tab-num">4</span>Sources &amp; iPS Cells</button>
+  <button onclick="showTab('lesson1', 4, this)"><span class="tab-num">5</span>Therapeutic Cloning</button>
+  <button onclick="showTab('lesson1', 5, this)"><span class="tab-num">6</span>Practice &amp; Reflect</button>
+</nav>
+
+<!-- L1 Tab 0: Activate -->
+<div class="sub-section active" data-lesson="lesson1" data-tab="0">
+  <div class="vtr-box">
+    <h3>🔬 See — Think — Wonder</h3>
+    <p>Before reading anything, activate your prior knowledge. This makes new learning stick better.</p>
+    <label>What do you THINK you already know about stem cells?</label>
+    <textarea placeholder="Write freely — there are no wrong answers here. What comes to mind when you hear 'stem cells'?"></textarea>
+    <label>What PUZZLES you about stem cells?</label>
+    <textarea placeholder="What questions do you have? What would you like to understand?"></textarea>
+  </div>
+  <div class="step-nav">
+    <span></span>
+    <button class="step-btn next" onclick="showTab('lesson1', 1)">Differentiation →</button>
+  </div>
+</div>
+
+<!-- L1 Tab 1: Differentiation -->
+<div class="sub-section" data-lesson="lesson1" data-tab="1">
+  <div class="section">
+    <div class="section-number">01</div>
+    <h2>Cell Specialisation &amp; Differentiation</h2>
+    <div class="content-card">
+      <p>Every cell in your body contains the same DNA — the same complete instruction manual. Yet a neurone looks and behaves completely differently from a red blood cell. How?</p>
+      <p>The answer is <span class="key-term" title="The process by which a cell becomes specialised for a particular function">differentiation</span> — the process by which cells become specialised by switching certain genes on and off. Once a cell differentiates, it typically cannot go back.</p>
+      <p>Stem cells are different. They are <span class="key-term" title="Cells that have not yet differentiated and retain the ability to divide and develop into different cell types">undifferentiated cells</span> that retain the ability to divide and develop into different cell types. Their potential depends on how many types of cell they can become.</p>
+    </div>
+    <div class="analogy">
+      <strong>Think of it this way:</strong> Your DNA is like a cookbook with every recipe ever written. Differentiation is like bookmarking only the dessert pages — the cell can now only "cook" desserts. A stem cell still has all the bookmarks available.
+    </div>
+  </div>
+  <div class="step-nav">
+    <button class="step-btn" onclick="showTab('lesson1', 0)">← Activate</button>
+    <button class="step-btn next" onclick="showTab('lesson1', 2)">Stem Cell Hierarchy →</button>
+  </div>
+</div>
+
+<!-- L1 Tab 2: Hierarchy -->
+<div class="sub-section" data-lesson="lesson1" data-tab="2">
+  <div class="section">
+    <div class="section-number">02</div>
+    <h2>The Stem Cell Hierarchy</h2>
+    <div class="content-card">
+      <p>Not all stem cells are equal. Scientists classify them by their <em>potency</em> — how many different cell types they can produce:</p>
+    </div>
+    <table class="compare-table">
+      <thead><tr><th>Type</th><th>Meaning</th><th>Example</th><th>Can form…</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Totipotent</strong></td><td>Can form <em>any</em> cell type including extraembryonic tissue (placenta)</td><td>Zygote; cells up to ~4-day embryo</td><td>Entire new organism</td></tr>
+        <tr><td><strong>Pluripotent</strong></td><td>Can form <em>most</em> cell types (all 3 germ layers) but not placenta</td><td>Embryonic stem cells from inner cell mass of blastocyst</td><td>Most cell types</td></tr>
+        <tr><td><strong>Multipotent</strong></td><td>Can form a <em>limited range</em> of related cell types</td><td>Adult bone marrow stem cells; brain stem cells</td><td>Several related types</td></tr>
+        <tr><td><strong>Unipotent</strong></td><td>Can form <em>only one</em> cell type</td><td>Skin stem cells; muscle satellite cells</td><td>One specific cell type</td></tr>
+      </tbody>
+    </table>
+    <div class="exam-hint">A common exam mistake is confusing totipotent and pluripotent. Remember: <strong>toti = total</strong> (everything including placenta), <strong>pluri = plural</strong> (many but not all).</div>
+  </div>
+
+  <div class="quiz-block hinge" id="hinge1">
+    <div class="quiz-label">⚡ Hinge Question — Check Before Continuing</div>
+    <h4>A cell from the inner cell mass of a blastocyst can develop into liver cells, neurones, and muscle cells, but cannot form placental tissue. This cell is best described as:</h4>
+    <div class="quiz-options">
+      <div class="quiz-option" onclick="checkQuiz(this,false,'hinge1','This would mean it can form ALL cell types including placenta. The question says it cannot form placental tissue.')"><span class="letter">A</span><span>Totipotent</span></div>
+      <div class="quiz-option" onclick="checkQuiz(this,true,'hinge1','Correct! Pluripotent cells can form most cell types from all three germ layers, but not extraembryonic tissue like the placenta.')"><span class="letter">B</span><span>Pluripotent</span></div>
+      <div class="quiz-option" onclick="checkQuiz(this,false,'hinge1','Multipotent cells only form a limited range of related cell types. This cell forms liver, neurones AND muscle — from different germ layers — so its potential is broader.')"><span class="letter">C</span><span>Multipotent</span></div>
+      <div class="quiz-option" onclick="checkQuiz(this,false,'hinge1','Unipotent cells produce only one cell type. This cell produces multiple very different cell types.')"><span class="letter">D</span><span>Unipotent</span></div>
+    </div>
+    <div class="quiz-feedback" id="hinge1-feedback"></div>
+  </div>
+
+  <div class="step-nav">
+    <button class="step-btn" onclick="showTab('lesson1', 1)">← Differentiation</button>
+    <button class="step-btn next" onclick="showTab('lesson1', 3)">Sources &amp; iPS Cells →</button>
+  </div>
+</div>
+
+<!-- L1 Tab 3: Sources & iPS -->
+<div class="sub-section" data-lesson="lesson1" data-tab="3">
+  <div class="section">
+    <div class="section-number">03</div>
+    <h2>Sources of Stem Cells</h2>
+    <div class="content-card">
+      <h3>Embryonic Stem Cells</h3>
+      <p>Harvested from the <span class="key-term" title="A hollow ball of cells formed ~5 days after fertilisation">blastocyst</span> — an early embryo ~5 days after fertilisation. The inner cell mass contains pluripotent stem cells. Extraction destroys the embryo, raising significant ethical debate.</p>
+      <h3>Adult Stem Cells</h3>
+      <p>Found in bone marrow, brain, and skin. Typically multipotent — bone marrow stem cells form all blood cell types but not neurones. In the 1990s, scientists also found they can generate bone, fat, cartilage, and tissue.</p>
+      <h3>Umbilical Cord Blood</h3>
+      <p>Contains stem cells more versatile than typical adult stem cells. Some parents bank this blood at birth.</p>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-number">04</div>
+    <h2>Induced Pluripotent Stem Cells (iPS Cells)</h2>
+    <div class="content-card">
+      <p>In 2006, Japanese researchers took adult mouse cells and, using genetic engineering, <span class="key-term" title="Reprogrammed adult cells converted back to a pluripotent state using transcription factors">reprogrammed them to become pluripotent again</span> — without using an embryo.</p>
+      <p>The process uses modified viruses to carry four genes for specific transcription factors into adult skin cells. These <strong>induced pluripotent stem cells (iPS cells)</strong> renew themselves and behave very similarly to embryonic stem cells.</p>
+    </div>
+    <div class="analogy"><strong>Think of it this way:</strong> If differentiation is like bookmarking only the dessert pages, iPS reprogramming is like removing all the bookmarks and resetting the cookbook — the cell can access any recipe again.</div>
+    <div class="content-card">
+      <h3>Why iPS Cells Matter</h3>
+      <p>iPS cells overcome the major ethical objection — no embryo is destroyed. A patient's own cells can be used, eliminating rejection risk. However, the reprogramming genes are strongly associated with cancer development, and controlling differentiation remains difficult.</p>
+    </div>
+  </div>
+
+  <div class="quiz-block hinge" id="hinge2">
+    <div class="quiz-label">⚡ Hinge Question</div>
+    <h4>Which statement about induced pluripotent stem (iPS) cells is correct?</h4>
+    <div class="quiz-options">
+      <div class="quiz-option" onclick="checkQuiz(this,false,'hinge2','iPS cells are pluripotent, not totipotent. They cannot form extraembryonic tissues.')"><span class="letter">A</span><span>They are totipotent and can form all cell types</span></div>
+      <div class="quiz-option" onclick="checkQuiz(this,false,'hinge2','iPS cells are made from adult somatic cells (like skin cells), not embryonic cells.')"><span class="letter">B</span><span>They are derived from embryonic tissue</span></div>
+      <div class="quiz-option" onclick="checkQuiz(this,true,'hinge2','Correct! Specific transcription factors are introduced via modified viruses to reprogramme adult cells back to a pluripotent state.')"><span class="letter">C</span><span>They are created by reprogramming adult cells using transcription factors</span></div>
+      <div class="quiz-option" onclick="checkQuiz(this,false,'hinge2','There are still concerns — reprogramming genes are associated with cancer development, and differentiation control remains difficult.')"><span class="letter">D</span><span>They have no associated risks or limitations</span></div>
+    </div>
+    <div class="quiz-feedback" id="hinge2-feedback"></div>
+  </div>
+
+  <div class="step-nav">
+    <button class="step-btn" onclick="showTab('lesson1', 2)">← Hierarchy</button>
+    <button class="step-btn next" onclick="showTab('lesson1', 4)">Therapeutic Cloning →</button>
+  </div>
+</div>
+
+<!-- L1 Tab 4: Therapeutic Cloning -->
+<div class="sub-section" data-lesson="lesson1" data-tab="4">
+  <div class="section">
+    <div class="section-number">05</div>
+    <h2>Therapeutic Cloning</h2>
+    <div class="content-card">
+      <p><span class="key-term" title="Creating cloned embryos to harvest stem cells genetically identical to the patient">Therapeutic cloning</span> is an experimental technique aimed at producing large quantities of healthy tissue. The process:</p>
+    </div>
+    <div class="flow">
+      <div class="flow-step">Remove nucleus from patient's adult cell</div><div class="flow-arrow">↓</div>
+      <div class="flow-step alt">Remove nucleus from donor human ovum (egg cell)</div><div class="flow-arrow">↓</div>
+      <div class="flow-step">Transfer patient's nucleus into empty ovum</div><div class="flow-arrow">↓</div>
+      <div class="flow-step alt">Apply mild electric shock to trigger development</div><div class="flow-arrow">↓</div>
+      <div class="flow-step">New cell divides by mitosis → forms ball of cells</div><div class="flow-arrow">↓</div>
+      <div class="flow-step alt">Stem cells harvested, cultured, and differentiated</div><div class="flow-arrow">↓</div>
+      <div class="flow-step">Tissue transplanted — no rejection (same DNA as patient)</div>
+    </div>
+    <div class="exam-hint">The key advantage is no immune rejection because the stem cells have the same genetic information as the patient. Explain <em>why</em> — the nucleus came from the patient's own cell.</div>
+  </div>
+
+  <div class="retrieval-block">
+    <div class="quiz-label">🧠 Retrieval Practice</div>
+    <h4>From memory, describe the steps in therapeutic cloning. Start from the patient who needs new tissue.</h4>
+    <textarea placeholder="Try to recall the sequence without looking at the diagram above..."></textarea>
+    <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('show')">Reveal Model Answer</button>
+    <div class="model-answer"><strong>Steps:</strong> (1) Remove nucleus from patient's body cell. (2) Remove nucleus from donor egg cell. (3) Insert patient's nucleus into empty egg. (4) Apply mild electric shock to fuse and stimulate division. (5) Cell divides by mitosis to form ball of cells. (6) Stem cells harvested and cultured. (7) Differentiated into required tissue type. (8) Transplanted with no rejection risk — same DNA.</div>
+  </div>
+
+  <div class="step-nav">
+    <button class="step-btn" onclick="showTab('lesson1', 3)">← Sources &amp; iPS</button>
+    <button class="step-btn next" onclick="showTab('lesson1', 5)">Practice &amp; Reflect →</button>
+  </div>
+</div>
+
+<!-- L1 Tab 5: Practice & Reflect -->
+<div class="sub-section" data-lesson="lesson1" data-tab="5">
+
+  <div class="retrieval-block">
+    <div class="quiz-label">🧠 Retrieval Practice — No Peeking!</div>
+    <h4>List the four types of stem cell potency in order from most to least versatile, with one example each.</h4>
+    <textarea placeholder="Challenge yourself to recall from memory before checking..."></textarea>
+    <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('show')">Reveal Model Answer</button>
+    <div class="model-answer">
+      <strong>1. Totipotent</strong> — can form any cell type including placenta (e.g. zygote)<br>
+      <strong>2. Pluripotent</strong> — can form most cell types but not placenta (e.g. embryonic stem cells from blastocyst)<br>
+      <strong>3. Multipotent</strong> — limited range of related types (e.g. bone marrow → blood cells)<br>
+      <strong>4. Unipotent</strong> — one cell type only (e.g. skin stem cells)
+    </div>
+  </div>
+
+  <div class="struggle-box">
+    <div class="quiz-label">🔥 Productive Struggle — Stretch Your Thinking</div>
+    <h4>A student argues: "iPS cells make embryonic stem cell research unnecessary." Evaluate this claim.</h4>
+    <p>This is meant to be challenging. Spend at least 3 minutes thinking before using the hints.</p>
+    <textarea placeholder="Consider: What can each type do? What are iPS limitations? Why might scientists still want embryonic stem cells?"></textarea>
+    <button class="hint-btn" onclick="showHint('hint1a')">💡 Hint 1</button>
+    <div class="hint-text" id="hint1a">Think about whether iPS cells and embryonic stem cells behave identically. Are there risks unique to iPS cells?</div>
+    <button class="hint-btn" onclick="showHint('hint1b')">💡 Hint 2</button>
+    <div class="hint-text" id="hint1b">iPS cells appear similar but not identical to embryonic stem cells. Reprogramming genes are linked to cancer. Most successful therapies to date used embryonic stem cells.</div>
+    <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('show')" style="background:#B45309;">Reveal Suggested Response</button>
+    <div class="model-answer" style="background:#FEF3C7; color:#92400E;">
+      <strong>A strong answer would include:</strong><br><br>While iPS cells overcome the ethical problem of embryo destruction, they are not a complete replacement because: (1) iPS cells behave similarly but not identically to embryonic stem cells; (2) reprogramming genes are associated with cancer risk; (3) controlling differentiation is still very difficult; (4) most successful stem cell therapies to date used embryonic-derived cells. Many scientists believe research into both types should continue. Therefore, "unnecessary" overstates current iPS capabilities.
+    </div>
+  </div>
+
+  <div class="vtr-box">
+    <h3>🪞 I Used to Think… Now I Think</h3>
+    <p>Reflect on how your understanding has changed during this lesson.</p>
+    <div class="reflection-grid">
+      <div class="before"><label>I used to think…</label><textarea placeholder="Before this lesson, I thought stem cells were..."></textarea></div>
+      <div class="after"><label>Now I think…</label><textarea placeholder="Now I understand that..."></textarea></div>
+    </div>
+    <label>What caused your thinking to shift?</label>
+    <textarea placeholder="Was there a specific concept, analogy, or question that changed your understanding?"></textarea>
+  </div>
+
+  <div class="step-nav">
+    <button class="step-btn" onclick="showTab('lesson1', 4)">← Therapeutic Cloning</button>
+    <button class="step-btn next" onclick="showLesson('lesson2', document.querySelectorAll('.lesson-nav button')[1])">Start Lesson 5 →</button>
+  </div>
+</div>
+
+</div><!-- end lesson1 -->
+
+<!-- ==================== LESSON 2 ==================== -->
+<div class="lesson" id="lesson2">
+
+<nav class="sub-nav" id="lesson2-tabs">
+  <button class="active" onclick="showTab('lesson2', 0, this)"><span class="tab-num">1</span>Activate</button>
+  <button onclick="showTab('lesson2', 1, this)"><span class="tab-num">2</span>Current Therapies</button>
+  <button onclick="showTab('lesson2', 2, this)"><span class="tab-num">3</span>Who Benefits?</button>
+  <button onclick="showTab('lesson2', 3, this)"><span class="tab-num">4</span>Problems &amp; Ethics</button>
+  <button onclick="showTab('lesson2', 4, this)"><span class="tab-num">5</span>Practice &amp; Reflect</button>
+</nav>
+
+<!-- L2 Tab 0: Activate -->
+<div class="sub-section active" data-lesson="lesson2" data-tab="0">
+  <div class="vtr-box">
+    <h3>🔗 Connect — Extend — Challenge</h3>
+    <p>Before starting, connect to what you already know from Lesson 4.</p>
+    <label>🔗 CONNECT: How does this topic link to stem cell types and sources?</label>
+    <textarea placeholder="What links can you make to Lesson 4?"></textarea>
+    <label>➕ EXTEND: What medical possibilities do stem cells open up?</label>
+    <textarea placeholder="Think about diseases or conditions with no current cure..."></textarea>
+    <label>⚠️ CHALLENGE: What tensions or difficulties might arise?</label>
+    <textarea placeholder="Consider scientific, ethical, and practical challenges..."></textarea>
+  </div>
+  <div class="step-nav">
+    <span></span>
+    <button class="step-btn next" onclick="showTab('lesson2', 1)">Current Therapies →</button>
+  </div>
+</div>
+
+<!-- L2 Tab 1: Current Therapies -->
+<div class="sub-section" data-lesson="lesson2" data-tab="1">
+  <div class="section">
+    <div class="section-number">06</div>
+    <h2>Stem Cell Therapy: Current Progress</h2>
+    <div class="content-card">
+      <p>When stem cells were first cultured, scientists hoped they could produce replacement tissues. Progress has been promising but challenging — controlling differentiation remains difficult, and some early treatments caused unexpected cancers.</p>
+      <p>The most established success is <span class="key-term" title="Transplant of bone marrow stem cells to treat blood cancers and immune disorders">bone marrow transplantation</span>. About 30 years ago, scientists discovered that bone marrow stem cells form all types of blood cell. These transplants now regularly treat certain cancers and immune diseases. Transplants require matched donors to avoid rejection.</p>
+      <p>Adult stem cells seeded onto collagen-based frameworks have successfully grown new tracheas, and research into repairing hearts damaged by heart attacks using adult stem cells has shown significant improvement in some cases.</p>
+    </div>
+  </div>
+  <div class="step-nav">
+    <button class="step-btn" onclick="showTab('lesson2', 0)">← Activate</button>
+    <button class="step-btn next" onclick="showTab('lesson2', 2)">Who Benefits? →</button>
+  </div>
+</div>
+
+<!-- L2 Tab 2: Who Benefits? -->
+<div class="sub-section" data-lesson="lesson2" data-tab="2">
+  <div class="section">
+    <div class="section-number">07</div>
+    <h2>Who Could Benefit?</h2>
+    <div class="content-card">
+      <h3>Parkinson's Disease</h3>
+      <p>Parkinson's is the second most common age-related brain disorder. Nerve cells producing <span class="key-term" title="A neurotransmitter involved in movement control">dopamine</span> stop working and are lost. As dopamine falls, people develop uncontrollable tremors, rigidity, and eventually cannot move normally.</p>
+      <p>Scientists created dopamine neurones from mouse stem cells and transplanted them into rats with Parkinson's — the cells grew, released dopamine, and improved movement. The hope: pluripotent stem cells could replace damaged brain cells.</p>
+    </div>
+    <div class="content-card">
+      <h3>Type 1 Diabetes</h3>
+      <p>Insulin-secreting cells in the <span class="key-term" title="Clusters of cells in the pancreas containing beta cells">islets of Langerhans</span> are destroyed or stop producing insulin. Stem cell therapy could provide working pancreas cells to restore insulin production.</p>
+      <p>Mouse stem cells formed insulin-producing cells that improved glucose control when transplanted. In 2014, Harvard researchers developed mature human beta cells from embryonic stem cells in large quantities — human trials are underway.</p>
+    </div>
+    <div class="content-card">
+      <h3>Damaged Nerves</h3>
+      <p>Spinal cord injuries cause permanent paralysis because nervous tissue doesn't regrow naturally. Stem cells transplanted into mice/rats with spinal damage grew into working nerve cells, restoring some movement. In 2013, Australian researchers produced mini-kidneys from skin-derived stem cells.</p>
+    </div>
+    <div class="content-card">
+      <h3>Organs for Transplants</h3>
+      <p>Many people die waiting for transplants. Pluripotent stem cells could provide unlimited organs grown from a patient's own cells, eliminating rejection. This remains experimental but is advancing rapidly.</p>
+    </div>
+  </div>
+
+  <div class="quiz-block hinge" id="hinge3">
+    <div class="quiz-label">⚡ Hinge Question</div>
+    <h4>A Type 1 diabetes patient receives stem cell therapy using their own iPS cells reprogrammed into insulin-producing beta cells. What is the MAIN advantage of using iPS cells over embryonic stem cells here?</h4>
+    <div class="quiz-options">
+      <div class="quiz-option" onclick="checkQuiz(this,false,'hinge3','Both iPS and embryonic stem cells are pluripotent — this is not a distinguishing advantage.')"><span class="letter">A</span><span>iPS cells can differentiate into more cell types</span></div>
+      <div class="quiz-option" onclick="checkQuiz(this,true,'hinge3','Correct! Because iPS cells are derived from the patient\'s own cells, they carry the same DNA and surface markers. The immune system recognises them as \"self.\"')"><span class="letter">B</span><span>No risk of immune rejection as cells are genetically identical to the patient</span></div>
+      <div class="quiz-option" onclick="checkQuiz(this,false,'hinge3','This is actually a concern with iPS cells — reprogramming is associated with cancer. This is a disadvantage.')"><span class="letter">C</span><span>iPS cells have no risk of causing cancer</span></div>
+      <div class="quiz-option" onclick="checkQuiz(this,false,'hinge3','iPS technology is actually more complex and expensive. Cost is not the main advantage.')"><span class="letter">D</span><span>iPS cells are cheaper to produce</span></div>
+    </div>
+    <div class="quiz-feedback" id="hinge3-feedback"></div>
+  </div>
+
+  <div class="step-nav">
+    <button class="step-btn" onclick="showTab('lesson2', 1)">← Current Therapies</button>
+    <button class="step-btn next" onclick="showTab('lesson2', 3)">Problems &amp; Ethics →</button>
+  </div>
+</div>
+
+<!-- L2 Tab 3: Problems & Ethics -->
+<div class="sub-section" data-lesson="lesson2" data-tab="3">
+  <div class="section">
+    <div class="section-number">08</div>
+    <h2>Pitfalls &amp; Problems</h2>
+    <div class="content-card">
+      <p><strong>Immune rejection:</strong> Cell membrane glycoproteins trigger immune responses. The immune system recognises "self" vs "non-self." Unless stem cells come from the patient (iPS/therapeutic cloning), lifelong immunosuppressants are needed, increasing infection risk.</p>
+      <p><strong>Cancer risk:</strong> Stem cells may trigger cancer. Bone marrow transplant recipients are at higher risk of later cancers.</p>
+      <p><strong>Differentiation control:</strong> We cannot yet fully control which cell types stem cells become.</p>
+      <p><strong>Limited success:</strong> Few successful pluripotent stem cell therapies in humans so far, though results with macular degeneration are positive and scientists expect dramatic increases within 10 years.</p>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-number">09</div>
+    <h2>Ethical Questions</h2>
+    <div class="content-card">
+      <p>The debate is framed by four ethical principles:</p>
+      <p><strong>Respect for autonomy</strong> — not performing procedures without consent.<br>
+      <strong>Beneficence</strong> — doing good, relieving suffering.<br>
+      <strong>Non-maleficence</strong> — doing no harm.<br>
+      <strong>Justice</strong> — treating everyone equally, sharing resources fairly.</p>
+    </div>
+    <div class="ethics-card">
+      <div class="ethics-for">
+        <h4>✅ Arguments For</h4>
+        <ul>
+          <li>Could save millions of lives from incurable diseases</li>
+          <li>Reduces suffering (beneficence)</li>
+          <li>Surplus IVF embryos would be destroyed anyway</li>
+          <li>iPS cells offer alternatives to embryos</li>
+          <li>Strict regulation exists in most countries</li>
+        </ul>
+      </div>
+      <div class="ethics-against">
+        <h4>❌ Arguments Against</h4>
+        <ul>
+          <li>Destroys a potential human life</li>
+          <li>Some religions: life begins at conception</li>
+          <li>Slippery slope to reproductive cloning</li>
+          <li>Shortage of donor eggs; ethical concerns</li>
+          <li>Long-term safety unknown; cancer risks</li>
+        </ul>
+      </div>
+    </div>
+    <div class="exam-hint">In ethics questions, always consider BOTH sides and use the four ethical principles. Don't just list — explain <em>why</em> each argument matters.</div>
+  </div>
+
+  <div class="quiz-block hinge" id="hinge4">
+    <div class="quiz-label">⚡ Hinge Question</div>
+    <h4>Which ethical principle is MOST directly relevant when considering whether patients should be informed about the experimental nature of a stem cell treatment before consenting?</h4>
+    <div class="quiz-options">
+      <div class="quiz-option" onclick="checkQuiz(this,true,'hinge4','Correct! Respect for autonomy means individuals must make informed decisions. Informed consent is its practical expression.')"><span class="letter">A</span><span>Respect for autonomy</span></div>
+      <div class="quiz-option" onclick="checkQuiz(this,false,'hinge4','Beneficence is about doing good — important but not directly about the consent process.')"><span class="letter">B</span><span>Beneficence</span></div>
+      <div class="quiz-option" onclick="checkQuiz(this,false,'hinge4','Non-maleficence relates to the treatment itself, not specifically to consent.')"><span class="letter">C</span><span>Non-maleficence</span></div>
+      <div class="quiz-option" onclick="checkQuiz(this,false,'hinge4','Justice is about fair distribution. Less directly relevant to individual consent than autonomy.')"><span class="letter">D</span><span>Justice</span></div>
+    </div>
+    <div class="quiz-feedback" id="hinge4-feedback"></div>
+  </div>
+
+  <div class="step-nav">
+    <button class="step-btn" onclick="showTab('lesson2', 2)">← Who Benefits?</button>
+    <button class="step-btn next" onclick="showTab('lesson2', 4)">Practice &amp; Reflect →</button>
+  </div>
+</div>
+
+<!-- L2 Tab 4: Practice & Reflect -->
+<div class="sub-section" data-lesson="lesson2" data-tab="4">
+
+  <div class="retrieval-block">
+    <div class="quiz-label">🧠 Retrieval Practice</div>
+    <h4>Name three diseases/conditions that could benefit from stem cell therapy. For each, explain what the stem cells would need to do.</h4>
+    <textarea placeholder="Push yourself to recall specifics — which cell types need replacing? Why?"></textarea>
+    <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('show')">Reveal Model Answer</button>
+    <div class="model-answer">
+      <strong>1. Parkinson's:</strong> Differentiate into dopamine-producing neurones → transplant into brain → restore dopamine production and motor control.<br><br>
+      <strong>2. Type 1 Diabetes:</strong> Differentiate into insulin-secreting beta cells → transplant into pancreas → restore blood glucose regulation.<br><br>
+      <strong>3. Spinal cord injuries:</strong> Differentiate into nerve cells → transplant into damaged spinal cord → restore neural connections and movement.
+    </div>
+  </div>
+
+  <div class="struggle-box">
+    <div class="quiz-label">🔥 Exam-Style Extended Response [6 marks]</div>
+    <h4>Discuss the scientific and ethical issues associated with the use of stem cells in medicine.</h4>
+    <p>Plan your answer. Include: scientific challenges, ethical principles, different stem cell sources, and a balanced conclusion.</p>
+    <textarea style="min-height:120px;" placeholder="Structure with clear paragraphs. Use scientific terminology and balanced arguments..."></textarea>
+    <button class="hint-btn" onclick="showHint('hint2a')">💡 Hint 1: Structure</button>
+    <div class="hint-text" id="hint2a">Para 1: Scientific issues (differentiation, cancer, rejection). Para 2: Ethical issues for embryonic cells. Para 3: How iPS/cloning address concerns. Para 4: Balanced conclusion.</div>
+    <button class="hint-btn" onclick="showHint('hint2b')">💡 Hint 2: Key terminology</button>
+    <div class="hint-text" id="hint2b">Include: differentiation, pluripotent, immune rejection, glycoproteins, immunosuppressant, beneficence, non-maleficence, autonomy, justice, iPS cells, transcription factors, therapeutic cloning.</div>
+    <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('show')" style="background:#B45309;">Reveal Model Answer</button>
+    <div class="model-answer" style="background:#FEF3C7; color:#92400E;">
+      <strong>Scientific issues:</strong> Controlling differentiation remains a major challenge. There is evidence stem cell treatments may increase cancer risk, as pluripotency genes are associated with uncontrolled division. Immune rejection is a problem when donor cells are used — the patient's immune system recognises foreign glycoproteins and destroys transplanted cells. Lifelong immunosuppressants increase infection risk.<br><br>
+      <strong>Ethical issues:</strong> Embryonic stem cell research requires destroying embryos — some consider this destroying potential human life. Non-maleficence conflicts with beneficence. Justice raises questions about access to expensive treatments.<br><br>
+      <strong>Addressing concerns:</strong> iPS cells and therapeutic cloning avoid embryo destruction. iPS cells also eliminate rejection since cells come from the patient. However, iPS cells carry cancer risks, and most successful therapies used embryonic stem cells.<br><br>
+      <strong>Conclusion:</strong> Stem cell therapy offers transformative potential but significant hurdles remain. Most scientists argue all types should be researched under strict regulation.
+    </div>
+  </div>
+
+  <div class="retrieval-block">
+    <div class="quiz-label">🧠 Interleaved Retrieval — Mixing Lessons 4 &amp; 5</div>
+    <h4>Without looking back:</h4>
+    <p style="font-size:14px; margin-bottom:8px;"><strong>1.</strong> Define totipotent, pluripotent, and multipotent.</p>
+    <p style="font-size:14px; margin-bottom:8px;"><strong>2.</strong> Explain why therapeutic cloning avoids immune rejection.</p>
+    <p style="font-size:14px; margin-bottom:12px;"><strong>3.</strong> State two concerns about using iPS cells.</p>
+    <textarea style="min-height:120px;" placeholder="The effort of retrieval strengthens your long-term memory..."></textarea>
+    <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('show')">Reveal Model Answers</button>
+    <div class="model-answer">
+      <strong>1.</strong> Totipotent: any cell type including placenta — can produce an entire organism. Pluripotent: most cell types (all three germ layers) but not placenta. Multipotent: limited range of related cell types.<br><br>
+      <strong>2.</strong> The nucleus from the patient's own cell is placed into an enucleated egg. Resulting stem cells carry the patient's DNA and express the same surface glycoproteins. Immune system recognises them as "self" — no rejection.<br><br>
+      <strong>3.</strong> (i) Reprogramming genes are strongly associated with cancer. (ii) Difficult to control differentiation — cells may behave unpredictably.
+    </div>
+  </div>
+
+  <div class="vtr-box">
+    <h3>📝 Claim — Support — Question</h3>
+    <p>Construct an evidence-based argument about stem cell research.</p>
+    <label>📝 CLAIM: What is your main assertion?</label>
+    <textarea placeholder="State a clear, one-sentence claim about the future of stem cell therapy..."></textarea>
+    <label>📊 SUPPORT: What evidence backs this up?</label>
+    <textarea placeholder="Cite specific examples — Parkinson's research, diabetes trials, iPS development..."></textarea>
+    <label>❓ QUESTION: What would challenge your claim?</label>
+    <textarea placeholder="What counter-evidence exists? What gaps remain?"></textarea>
+  </div>
+
+  <div class="vtr-box">
+    <h3>🪞 I Used to Think… Now I Think</h3>
+    <p>Reflect on how your understanding has evolved across both lessons.</p>
+    <div class="reflection-grid">
+      <div class="before"><label>I used to think…</label><textarea placeholder="Before these lessons, my understanding was..."></textarea></div>
+      <div class="after"><label>Now I think…</label><textarea placeholder="Now I understand the reality is more complex because..."></textarea></div>
+    </div>
+  </div>
+
+  <div class="step-nav">
+    <button class="step-btn" onclick="showTab('lesson2', 3)">← Problems &amp; Ethics</button>
+    <span></span>
+  </div>
+</div>
+
+</div><!-- end lesson2 -->
+
+</div><!-- end container -->
+
+<script>
+// Track visited tabs
+const visited = { lesson1: new Set([0]), lesson2: new Set([0]) };
+
+function showLesson(id, btn) {
+  document.querySelectorAll('.lesson').forEach(l => l.classList.remove('active'));
+  document.querySelectorAll('.lesson-nav button').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  if (btn) btn.classList.add('active');
+  document.querySelectorAll('.lesson-nav button').forEach(b => { if(b.textContent.includes(id === 'lesson1' ? '4' : '5')) b.classList.add('active'); });
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function showTab(lessonId, tabIndex, btn) {
+  // Hide all sub-sections in this lesson
+  document.querySelectorAll(`#${lessonId} .sub-section`).forEach(s => s.classList.remove('active'));
+  // Show target
+  const target = document.querySelector(`#${lessonId} .sub-section[data-tab="${tabIndex}"]`);
+  if (target) target.classList.add('active');
+  // Update tab buttons
+  const tabNav = document.getElementById(`${lessonId}-tabs`);
+  if (tabNav) {
+    tabNav.querySelectorAll('button').forEach((b, i) => {
+      b.classList.remove('active');
+      if (i === tabIndex) b.classList.add('active');
+    });
+  }
+  // Track visited
+  visited[lessonId].add(tabIndex);
+  updateTabStates(lessonId);
+  // Scroll to top
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function updateTabStates(lessonId) {
+  const tabNav = document.getElementById(`${lessonId}-tabs`);
+  if (!tabNav) return;
+  tabNav.querySelectorAll('button').forEach((b, i) => {
+    if (visited[lessonId].has(i) && !b.classList.contains('active')) {
+      b.classList.add('completed');
+    } else {
+      b.classList.remove('completed');
+    }
+  });
+}
+
+// Quiz
+let answered = {};
+function checkQuiz(el, isCorrect, quizId, feedback) {
+  if (answered[quizId]) return;
+  answered[quizId] = true;
+  const options = el.parentElement.querySelectorAll('.quiz-option');
+  options.forEach(o => o.style.pointerEvents = 'none');
+  if (isCorrect) { el.classList.add('correct'); }
+  else { el.classList.add('wrong'); options.forEach(o => { if(o.getAttribute('onclick').includes('true')) o.classList.add('correct'); }); }
+  const fb = document.getElementById(quizId + '-feedback');
+  fb.textContent = feedback;
+  fb.className = 'quiz-feedback show ' + (isCorrect ? 'correct' : 'wrong');
+}
+
+function showHint(id) { document.getElementById(id).classList.toggle('show'); }
+
+// Progress bar
+window.addEventListener('scroll', () => {
+  const h = document.documentElement.scrollHeight - window.innerHeight;
+  const p = h > 0 ? (window.scrollY / h) * 100 : 0;
+  document.getElementById('progressBar').style.width = p + '%';
+});
+</script>
+</body>
+</html>
