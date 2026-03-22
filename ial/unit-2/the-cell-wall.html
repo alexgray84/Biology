@@ -1,0 +1,1068 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>4A: The Cell Wall — IAL Biology</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #F7F5F0;
+  --fg: #1A1A1A;
+  --accent: #2D6A4F;
+  --accent-light: #D8F3DC;
+  --accent-mid: #52B788;
+  --highlight: #E76F51;
+  --card: #FFFFFF;
+  --muted: #6B7280;
+  --border: #E5E1DA;
+  --quiz-correct: #2D6A4F;
+  --quiz-wrong: #E76F51;
+  --serif: 'Instrument Serif', Georgia, serif;
+  --sans: 'DM Sans', system-ui, sans-serif;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family: var(--sans); background: var(--bg); color: var(--fg); line-height:1.7; font-size:16px; }
+.container { max-width:780px; margin:0 auto; padding: 20px 24px 80px; }
+
+/* HEADER */
+.hero { text-align:center; padding: 48px 0 32px; border-bottom: 2px solid var(--accent); margin-bottom: 32px; }
+.hero-label { font-family:var(--sans); font-size:12px; letter-spacing:3px; text-transform:uppercase; color:var(--accent); font-weight:600; margin-bottom:12px; }
+.hero h1 { font-family:var(--serif); font-size:clamp(2rem,5vw,3.2rem); font-weight:400; line-height:1.2; color:var(--fg); margin-bottom:8px; }
+.hero h1 em { font-style:italic; color:var(--accent); }
+.hero .spec { font-size:13px; color:var(--muted); margin-top:12px; }
+.spec-tags { display:flex; gap:8px; justify-content:center; flex-wrap:wrap; margin-top:12px; }
+.spec-tag { background:var(--accent); color:#fff; font-size:11px; font-weight:700; padding:3px 10px; border-radius:20px; letter-spacing:1px; }
+
+/* LESSON NAV */
+.lesson-nav { display:flex; gap:12px; margin-bottom:16px; position:sticky; top:0; background:var(--bg); padding:12px 0 8px; z-index:100; }
+.lesson-nav button { flex:1; padding:12px 16px; border:2px solid var(--border); background:var(--card); border-radius:8px; font-family:var(--sans); font-size:13px; font-weight:600; cursor:pointer; transition:all .2s; }
+.lesson-nav button:hover { border-color:var(--accent); }
+.lesson-nav button.active { background:var(--accent); color:#fff; border-color:var(--accent); }
+
+/* SUB-TAB NAV */
+.sub-nav { display:flex; gap:6px; margin-bottom:32px; position:sticky; top:52px; background:var(--bg); padding:0 0 12px; z-index:90; flex-wrap:wrap; border-bottom:1px solid var(--border); }
+.sub-nav button { padding:8px 14px; border:none; background:transparent; border-bottom:2px solid transparent; font-family:var(--sans); font-size:13px; font-weight:500; cursor:pointer; transition:all .2s; color:var(--muted); white-space:nowrap; }
+.sub-nav button:hover { color:var(--fg); border-bottom-color:var(--border); }
+.sub-nav button.active { color:var(--accent); border-bottom-color:var(--accent); font-weight:700; }
+.sub-nav button .tab-num { display:inline-flex; align-items:center; justify-content:center; width:20px; height:20px; border-radius:50%; background:var(--border); font-size:11px; font-weight:700; margin-right:5px; color:var(--muted); }
+.sub-nav button.active .tab-num { background:var(--accent); color:#fff; }
+.sub-nav button.completed .tab-num { background:var(--accent-mid); color:#fff; }
+
+/* SECTIONS */
+.lesson { display:none; }
+.lesson.active { display:block; }
+.sub-section { display:none; animation: fadeIn .3s ease; }
+.sub-section.active { display:block; }
+@keyframes fadeIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+
+/* NAV BUTTONS */
+.step-nav { display:flex; justify-content:space-between; margin-top:40px; padding-top:24px; border-top:1px solid var(--border); }
+.step-btn { display:inline-flex; align-items:center; gap:8px; padding:12px 24px; border:2px solid var(--accent); border-radius:8px; font-family:var(--sans); font-size:14px; font-weight:600; cursor:pointer; transition:all .2s; background:var(--card); color:var(--accent); }
+.step-btn:hover { background:var(--accent); color:#fff; }
+.step-btn.next { background:var(--accent); color:#fff; border-color:var(--accent); }
+.step-btn.next:hover { background:#245A42; }
+.step-btn:disabled { opacity:.3; pointer-events:none; }
+
+/* THINKING ROUTINES */
+.vtr-box { background: linear-gradient(135deg, #F0FDF4 0%, #ECFDF5 100%); border-left:4px solid var(--accent); border-radius:0 12px 12px 0; padding:24px 28px; margin:24px 0; }
+.vtr-box h3 { font-family:var(--serif); font-size:1.3rem; color:var(--accent); margin-bottom:8px; }
+.vtr-box p { font-size:14px; color:var(--muted); margin-bottom:16px; }
+.vtr-box textarea { width:100%; min-height:80px; border:1px solid var(--border); border-radius:8px; padding:12px; font-family:var(--sans); font-size:14px; resize:vertical; background:#fff; }
+.vtr-box textarea:focus { outline:none; border-color:var(--accent); box-shadow:0 0 0 3px rgba(45,106,79,.12); }
+.vtr-box label { display:block; font-weight:600; font-size:13px; margin:16px 0 6px; color:var(--fg); }
+
+/* CONTENT */
+.section { margin-bottom:32px; }
+.section-number { font-family:var(--serif); font-size:3rem; color:var(--accent-light); line-height:1; margin-bottom:-8px; }
+.section h2 { font-family:var(--serif); font-size:1.6rem; color:var(--fg); margin-bottom:16px; line-height:1.3; }
+.section h3 { font-family:var(--sans); font-weight:700; color:var(--accent); margin:24px 0 8px; text-transform:uppercase; letter-spacing:1px; font-size:12px; }
+.content-card { background:var(--card); border-radius:12px; padding:28px; margin:16px 0; box-shadow:0 1px 3px rgba(0,0,0,.06); border:1px solid var(--border); }
+.content-card p { margin-bottom:12px; }
+.content-card p:last-child { margin-bottom:0; }
+
+.key-term { display:inline; background: linear-gradient(180deg, transparent 60%, var(--accent-light) 60%); font-weight:600; cursor:help; }
+.compare-table { width:100%; border-collapse:separate; border-spacing:0; border-radius:12px; overflow:hidden; margin:16px 0; font-size:14px; }
+.compare-table th { background:var(--accent); color:#fff; padding:12px 16px; text-align:left; font-weight:600; font-size:13px; }
+.compare-table td { padding:12px 16px; border-bottom:1px solid var(--border); background:var(--card); vertical-align:top; }
+.compare-table tr:last-child td { border-bottom:none; }
+.compare-table tr:nth-child(even) td { background:#FAFAF8; }
+.analogy { background:#FFF7ED; border:1px solid #FED7AA; border-radius:12px; padding:20px 24px; margin:20px 0; }
+.analogy::before { content:'💡'; font-size:1.2rem; margin-right:8px; }
+.analogy strong { color:var(--highlight); }
+.exam-hint { background:#FEF2F2; border:1px solid #FECACA; border-radius:12px; padding:20px 24px; margin:20px 0; font-size:14px; }
+.exam-hint::before { content:'🎯 Exam Tip: '; font-weight:700; color:var(--highlight); }
+
+/* ORGANELLE CARDS */
+.organelle-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin:20px 0; }
+.organelle-card { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:20px; }
+.organelle-card h4 { font-family:var(--serif); font-size:1.1rem; color:var(--accent); margin-bottom:8px; }
+.organelle-card .badge { display:inline-block; font-size:10px; font-weight:700; letter-spacing:1px; text-transform:uppercase; background:var(--accent-light); color:var(--accent); padding:2px 8px; border-radius:10px; margin-bottom:8px; }
+.organelle-card p { font-size:14px; color:var(--muted); line-height:1.6; }
+.organelle-card ul { font-size:14px; color:var(--muted); padding-left:18px; }
+.organelle-card li { margin-bottom:4px; }
+
+/* STRUCTURE DIAGRAM */
+.structure-visual { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:24px; margin:20px 0; text-align:center; }
+.structure-visual svg { width:100%; max-width:600px; height:auto; }
+
+/* FLOW */
+.flow { display:flex; flex-direction:column; align-items:center; gap:0; margin:20px 0; }
+.flow-step { background:var(--accent); color:#fff; padding:14px 24px; border-radius:10px; font-size:14px; font-weight:500; text-align:center; max-width:420px; width:100%; }
+.flow-step.alt { background:var(--highlight); }
+.flow-step.light { background:var(--accent-light); color:var(--accent); border:1px solid var(--accent-mid); }
+.flow-arrow { font-size:20px; color:var(--accent); padding:4px 0; }
+
+/* QUIZ */
+.quiz-block { background:var(--card); border:2px solid var(--border); border-radius:12px; padding:28px; margin:24px 0; }
+.quiz-block.hinge { border-color:var(--accent); border-style:dashed; }
+.quiz-label { font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--accent); margin-bottom:12px; }
+.quiz-block h4 { font-family:var(--serif); font-size:1.15rem; margin-bottom:16px; line-height:1.4; }
+.quiz-options { display:flex; flex-direction:column; gap:8px; }
+.quiz-option { display:flex; align-items:flex-start; gap:12px; padding:12px 16px; border:1px solid var(--border); border-radius:8px; cursor:pointer; transition:all .15s; font-size:14px; }
+.quiz-option:hover { border-color:var(--accent); background:#F0FDF4; }
+.quiz-option.correct { border-color:var(--quiz-correct); background:#D1FAE5; }
+.quiz-option.wrong { border-color:var(--quiz-wrong); background:#FEE2E2; }
+.quiz-option.disabled { pointer-events:none; }
+.quiz-option .letter { min-width:24px; height:24px; border-radius:50%; border:2px solid var(--border); display:flex; align-items:center; justify-content:center; font-weight:700; font-size:12px; flex-shrink:0; }
+.quiz-option.correct .letter { background:var(--quiz-correct); color:#fff; border-color:var(--quiz-correct); }
+.quiz-option.wrong .letter { background:var(--quiz-wrong); color:#fff; border-color:var(--quiz-wrong); }
+.quiz-feedback { margin-top:16px; padding:16px; border-radius:8px; font-size:14px; display:none; line-height:1.6; }
+.quiz-feedback.show { display:block; }
+.quiz-feedback.correct { background:#D1FAE5; color:#065F46; }
+.quiz-feedback.wrong { background:#FEE2E2; color:#991B1B; }
+
+/* RETRIEVAL */
+.retrieval-block { background:#F5F3FF; border:2px solid #C4B5FD; border-radius:12px; padding:28px; margin:24px 0; }
+.retrieval-block .quiz-label { color:#7C3AED; }
+.retrieval-block h4 { font-family:var(--serif); font-size:1.1rem; margin-bottom:12px; }
+.retrieval-block textarea { width:100%; min-height:70px; border:1px solid #C4B5FD; border-radius:8px; padding:12px; font-family:var(--sans); font-size:14px; resize:vertical; }
+.retrieval-block textarea:focus { outline:none; border-color:#7C3AED; box-shadow:0 0 0 3px rgba(124,58,237,.12); }
+.reveal-btn { display:inline-flex; align-items:center; gap:6px; margin-top:12px; padding:8px 16px; background:#7C3AED; color:#fff; border:none; border-radius:6px; font-family:var(--sans); font-size:13px; font-weight:600; cursor:pointer; transition:background .2s; }
+.reveal-btn:hover { background:#6D28D9; }
+.model-answer { margin-top:12px; padding:16px; background:#EDE9FE; border-radius:8px; font-size:14px; display:none; line-height:1.6; }
+.model-answer.show { display:block; }
+.model-answer strong { color:#7C3AED; }
+
+/* PRODUCTIVE STRUGGLE */
+.struggle-box { background:#FFFBEB; border:2px solid #FCD34D; border-radius:12px; padding:28px; margin:24px 0; }
+.struggle-box .quiz-label { color:#B45309; }
+.struggle-box h4 { font-family:var(--serif); font-size:1.1rem; margin-bottom:8px; }
+.struggle-box p { font-size:14px; color:var(--muted); margin-bottom:12px; }
+.struggle-box textarea { width:100%; min-height:80px; border:1px solid #FCD34D; border-radius:8px; padding:12px; font-family:var(--sans); font-size:14px; resize:vertical; }
+.hint-btn { display:inline-flex; align-items:center; gap:6px; margin-top:8px; padding:8px 16px; background:transparent; color:#B45309; border:1px solid #FCD34D; border-radius:6px; font-family:var(--sans); font-size:13px; font-weight:600; cursor:pointer; transition:all .2s; }
+.hint-btn:hover { background:#FEF3C7; }
+.hint-text { margin-top:8px; padding:12px 16px; background:#FEF3C7; border-radius:8px; font-size:13px; display:none; color:#92400E; }
+.hint-text.show { display:block; }
+
+/* REFLECTION GRID */
+.reflection-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin:16px 0; }
+.reflection-grid > div { padding:20px; border-radius:12px; }
+.reflection-grid .before { background:#FEF3C7; border:1px solid #FCD34D; }
+.reflection-grid .after { background:#D1FAE5; border:1px solid #6EE7B7; }
+.reflection-grid label { display:block; font-weight:700; font-size:13px; margin-bottom:8px; }
+.reflection-grid textarea { width:100%; min-height:80px; border:1px solid var(--border); border-radius:8px; padding:10px; font-family:var(--sans); font-size:14px; resize:vertical; }
+
+/* EM DIAGRAM */
+.em-diagram { background:#1A1A2E; border-radius:12px; padding:28px; margin:20px 0; position:relative; overflow:hidden; }
+.em-diagram svg { width:100%; height:auto; }
+.em-label { position:absolute; font-size:11px; font-weight:700; color:#E0E0E0; pointer-events:none; }
+
+/* PROGRESS BAR */
+.progress-bar { position:fixed; top:0; left:0; height:3px; background:var(--accent); z-index:200; transition:width .3s; }
+
+/* GLUCOSE VISUAL */
+.glucose-row { display:flex; align-items:center; gap:4px; margin:12px 0; flex-wrap:wrap; }
+.glucose-box { width:52px; height:52px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700; text-align:center; line-height:1.2; border:2px solid; flex-shrink:0; }
+.glucose-alpha { background:#DBEAFE; border-color:#3B82F6; color:#1D4ED8; }
+.glucose-beta { background:#D1FAE5; border-color:#10B981; color:#065F46; }
+.glucose-beta.flipped { transform:rotate(180deg); }
+.bond-line { width:16px; height:2px; background:#9CA3AF; flex-shrink:0; }
+.bond-hb { width:1px; height:30px; background:repeating-linear-gradient(to bottom, #9CA3AF 0, #9CA3AF 4px, transparent 4px, transparent 8px); margin:0 2px; }
+
+/* RESPONSIVE */
+@media (max-width:600px) {
+  .container { padding:16px; }
+  .reflection-grid { grid-template-columns:1fr; }
+  .organelle-grid { grid-template-columns:1fr; }
+  .lesson-nav { flex-direction:column; }
+  .sub-nav { gap:4px; }
+  .sub-nav button { padding:6px 10px; font-size:12px; }
+}
+@media print {
+  .lesson-nav, .sub-nav, .progress-bar, .reveal-btn, .hint-btn, .step-nav { display:none; }
+  .lesson, .sub-section { display:block !important; }
+}
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="progressBar"></div>
+
+<div class="container">
+
+<header class="hero">
+  <div class="hero-label">Edexcel IAL Biology — Unit 2 · Topic 4</div>
+  <h1>4A: <em>The Cell Wall</em></h1>
+  <p class="spec">Plant Cell Ultrastructure · Electron Microscopy · Cellulose Structure</p>
+  <div class="spec-tags">
+    <span class="spec-tag">4.1(i)</span>
+    <span class="spec-tag">4.1(ii)</span>
+    <span class="spec-tag">4.2</span>
+    <span class="spec-tag">4.3</span>
+  </div>
+</header>
+
+<nav class="lesson-nav">
+  <button class="active" onclick="showLesson('lesson1', this)">Lesson 1: Plant Cell Structure</button>
+  <button onclick="showLesson('lesson2', this)">Lesson 2: Under the Electron Microscope</button>
+  <button onclick="showLesson('lesson3', this)">Lesson 3: Cellulose</button>
+</nav>
+
+<!-- ==================== LESSON 1: PLANT CELL STRUCTURE ==================== -->
+<div class="lesson active" id="lesson1">
+<nav class="sub-nav" id="lesson1-tabs">
+  <button class="active" onclick="showTab('lesson1', 0, this)"><span class="tab-num">1</span>Activate</button>
+  <button onclick="showTab('lesson1', 1, this)"><span class="tab-num">2</span>Plant-Only Structures</button>
+  <button onclick="showTab('lesson1', 2, this)"><span class="tab-num">3</span>Structure &amp; Function</button>
+  <button onclick="showTab('lesson1', 3, this)"><span class="tab-num">4</span>Plant vs Animal</button>
+  <button onclick="showTab('lesson1', 4, this)"><span class="tab-num">5</span>Check &amp; Retrieve</button>
+</nav>
+
+<!-- L1 Tab 0: Activate -->
+<div class="sub-section active" data-lesson="lesson1" data-tab="0">
+  <div class="vtr-box">
+    <h3>🔬 Connect to Prior Knowledge</h3>
+    <p>You have already studied eukaryotic cell structure (Topic 3A) and prokaryotic cells (3B). Use this to activate what you already know before we go deeper into plant cells.</p>
+    <label>List as many organelles as you can recall from a typical eukaryotic cell:</label>
+    <textarea placeholder="Nucleus, mitochondria... what else?"></textarea>
+    <label>Which of those do you think are ONLY in plant cells (not animal cells)?</label>
+    <textarea placeholder="Think about what a plant needs to do that an animal doesn't..."></textarea>
+  </div>
+  <div class="step-nav">
+    <span></span>
+    <button class="step-btn next" onclick="showTab('lesson1', 1)">Plant-Only Structures →</button>
+  </div>
+</div>
+
+<!-- L1 Tab 1: Plant-Only Structures -->
+<div class="sub-section" data-lesson="lesson1" data-tab="1">
+  <div class="section">
+    <div class="section-number">01</div>
+    <h2>What Makes a Plant Cell a Plant Cell?</h2>
+    <div class="content-card">
+      <p>Plants and animals are both <span class="key-term" title="Organisms whose cells contain a membrane-bound nucleus and membrane-bound organelles">eukaryotes</span> — their cells share many features: nucleus, endoplasmic reticulum, Golgi apparatus, mitochondria, ribosomes, and a cell surface membrane. However, plant cells contain several structures not found in animal cells.</p>
+      <p>This lesson focuses on the plant-specific structures you need to know for 4.1 and how they relate to plant life.</p>
+    </div>
+
+    <div class="organelle-grid">
+      <div class="organelle-card">
+        <div class="badge">Spec 4.1</div>
+        <h4>Cell Wall</h4>
+        <p>Rigid outer layer outside the cell surface membrane, made of <strong>cellulose microfibrils</strong>. Provides structural support and prevents excessive water uptake.</p>
+      </div>
+      <div class="organelle-card">
+        <div class="badge">Spec 4.1</div>
+        <h4>Middle Lamella</h4>
+        <p>Thin layer of <strong>calcium pectate</strong> (pectin) between adjacent cell walls. Acts as a cement, holding neighbouring cells together.</p>
+      </div>
+      <div class="organelle-card">
+        <div class="badge">Spec 4.1</div>
+        <h4>Plasmodesmata</h4>
+        <p>Tiny channels (pores) through the cell wall that connect the cytoplasm of adjacent cells. Allow communication, water movement, and transport of small molecules.</p>
+      </div>
+      <div class="organelle-card">
+        <div class="badge">Spec 4.1</div>
+        <h4>Pits</h4>
+        <p>Thin areas in the cell wall where secondary thickening is absent. Often paired with pits in adjacent cells to allow water movement between cells.</p>
+      </div>
+      <div class="organelle-card">
+        <div class="badge">Spec 4.1</div>
+        <h4>Vacuole &amp; Tonoplast</h4>
+        <p>Large, permanent central <strong>vacuole</strong> filled with cell sap (water, salts, sugars). The <strong>tonoplast</strong> is the single membrane surrounding it — controls what enters and leaves.</p>
+      </div>
+      <div class="organelle-card">
+        <div class="badge">Spec 4.1</div>
+        <h4>Chloroplast</h4>
+        <p>Double membrane-bound organelle containing chlorophyll pigments. Site of <strong>photosynthesis</strong>. Found only in cells that carry out photosynthesis (e.g. mesophyll cells).</p>
+      </div>
+      <div class="organelle-card">
+        <div class="badge">Spec 4.1</div>
+        <h4>Amyloplast</h4>
+        <p>Colourless plastid that <strong>stores starch grains</strong>. Found in storage cells (e.g. potato tuber). Unlike animal cells, which store glycogen in the cytoplasm.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="quiz-block hinge" id="hinge1a">
+    <div class="quiz-label">⚡ Hinge Question — Check Before Continuing</div>
+    <h4>A student says: "The tonoplast is a thick rigid layer that protects the vacuole." What is wrong with this statement?</h4>
+    <div class="quiz-options">
+      <div class="quiz-option" onclick="checkQuiz(this,false,'hinge1a','The tonoplast is not a cell wall equivalent — it is a membrane, not a rigid layer.')"><span class="letter">A</span><span>Nothing — this is a correct description</span></div>
+      <div class="quiz-option" onclick="checkQuiz(this,true,'hinge1a','Correct! The tonoplast is a single phospholipid membrane (not thick or rigid) surrounding the vacuole. Its role is to control the movement of substances into and out of the vacuole — not physical protection.')"><span class="letter">B</span><span>The tonoplast is a membrane, not a rigid layer — its role is selective transport, not structural protection</span></div>
+      <div class="quiz-option" onclick="checkQuiz(this,false,'hinge1a','The tonoplast surrounds the vacuole, not the cell as a whole. The cell surface membrane and cell wall surround the cell.')"><span class="letter">C</span><span>The tonoplast surrounds the whole cell, not just the vacuole</span></div>
+      <div class="quiz-option" onclick="checkQuiz(this,false,'hinge1a','The tonoplast is membrane-bound and is found in eukaryotic plant cells.')"><span class="letter">D</span><span>Tonoplasts are found in prokaryotic cells, not eukaryotic ones</span></div>
+    </div>
+    <div class="quiz-feedback" id="hinge1a-feedback"></div>
+  </div>
+
+  <div class="step-nav">
+    <button class="step-btn" onclick="showTab('lesson1', 0)">← Activate</button>
+    <button class="step-btn next" onclick="showTab('lesson1', 2)">Structure &amp; Function →</button>
+  </div>
+</div>
+
+<!-- L1 Tab 2: Structure & Function detail -->
+<div class="sub-section" data-lesson="lesson1" data-tab="2">
+  <div class="section">
+    <div class="section-number">02</div>
+    <h2>Structure and Function in Depth</h2>
+    <div class="content-card">
+      <h3>The Cell Wall in Detail</h3>
+      <p>A plant cell is surrounded by <strong>two walls</strong>:</p>
+      <ul style="padding-left:20px; margin:8px 0 12px; font-size:15px;">
+        <li style="margin-bottom:8px;"><strong>Primary cell wall</strong> — present in all plant cells; made of loosely arranged cellulose microfibrils embedded in a matrix of pectin and other polysaccharides. Flexible, allows the cell to grow.</li>
+        <li style="margin-bottom:8px;"><strong>Secondary cell wall</strong> — deposited inside the primary wall in some specialised cells (e.g. xylem vessels, sclerenchyma). Made of tightly packed cellulose microfibrils, often impregnated with <strong>lignin</strong>. Provides great tensile strength but kills the cell. Not required for 4.1 but links to 4.4.</li>
+      </ul>
+    </div>
+
+    <div class="content-card">
+      <h3>Chloroplast Internal Structure</h3>
+      <p>The chloroplast has a complex internal structure that maximises the surface area available for the light-dependent reactions:</p>
+      <ul style="padding-left:20px; margin:8px 0 12px; font-size:15px;">
+        <li style="margin-bottom:6px;"><span class="key-term" title="Stacks of flattened membrane sacs (thylakoids) inside the chloroplast">Grana</span> (singular: granum) — stacks of flattened, disc-like membrane sacs called <strong>thylakoids</strong>. Chlorophyll is embedded in the thylakoid membranes. Site of the light-dependent reactions.</li>
+        <li style="margin-bottom:6px;"><span class="key-term" title="The fluid-filled matrix of the chloroplast surrounding the grana">Stroma</span> — fluid-filled matrix surrounding the grana. Contains enzymes for the light-independent reactions (Calvin cycle) and its own DNA and ribosomes.</li>
+      </ul>
+    </div>
+
+    <div class="analogy"><strong>Think of it this way:</strong> The chloroplast is like a solar power station. The grana are the solar panels (capturing light), and the stroma is the generator room (using that energy to make sugars).</div>
+
+    <div class="content-card">
+      <h3>Amyloplast vs Chloroplast</h3>
+      <p>Both are <span class="key-term" title="A family of double membrane-bound organelles found in plant cells, including chloroplasts, amyloplasts and chromoplasts">plastids</span> — a family of double membrane-bound organelles unique to plants. They develop from the same precursor (proplastid) but differentiate depending on their role:</p>
+    </div>
+
+    <table class="compare-table">
+      <thead><tr><th>Feature</th><th>Chloroplast</th><th>Amyloplast</th></tr></thead>
+      <tbody>
+        <tr><td>Membranes</td><td>Double outer membrane + internal thylakoid membranes</td><td>Double outer membrane only (no thylakoids)</td></tr>
+        <tr><td>Contents</td><td>Chlorophyll, grana, stroma, own DNA</td><td>Starch grains, no chlorophyll</td></tr>
+        <tr><td>Function</td><td>Photosynthesis</td><td>Starch storage</td></tr>
+        <tr><td>Location</td><td>Green parts: leaf mesophyll, stem cortex</td><td>Storage organs: potato, endosperm seeds</td></tr>
+        <tr><td>Colour</td><td>Green</td><td>Colourless / white</td></tr>
+      </tbody>
+    </table>
+
+    <div class="exam-hint">A common exam error is saying "plant cells store starch in the cytoplasm." Plants store starch <strong>inside amyloplasts</strong>. Animal cells store <strong>glycogen granules</strong> in the cytoplasm — not in an organelle.</div>
+  </div>
+
+  <div class="step-nav">
+    <button class="step-btn" onclick="showTab('lesson1', 1)">← Plant-Only Structures</button>
+    <button class="step-btn next" onclick="showTab('lesson1', 3)">Plant vs Animal →</button>
+  </div>
+</div>
+
+<!-- L1 Tab 3: Plant vs Animal -->
+<div class="sub-section" data-lesson="lesson1" data-tab="3">
+  <div class="section">
+    <div class="section-number">03</div>
+    <h2>Comparing Plant and Animal Cells</h2>
+    <div class="content-card">
+      <p>The specification requires you to be able to compare plant and animal cells (4.1(ii)). This is a common exam question — often as a table, a diagram labelling task, or a "describe the differences" question worth 3–5 marks.</p>
+    </div>
+
+    <table class="compare-table">
+      <thead>
+        <tr>
+          <th>Feature</th>
+          <th>Plant cell</th>
+          <th>Animal cell</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Cell wall</strong></td>
+          <td>✅ Present — cellulose (primary); sometimes secondary (lignin)</td>
+          <td>❌ Absent</td>
+        </tr>
+        <tr>
+          <td><strong>Middle lamella</strong></td>
+          <td>✅ Calcium pectate between adjacent cell walls</td>
+          <td>❌ Absent</td>
+        </tr>
+        <tr>
+          <td><strong>Plasmodesmata</strong></td>
+          <td>✅ Cytoplasmic channels through cell walls</td>
+          <td>❌ Absent (gap junctions serve a similar role)</td>
+        </tr>
+        <tr>
+          <td><strong>Vacuole</strong></td>
+          <td>✅ Large, permanent, central — contains cell sap</td>
+          <td>❌ Small, temporary vesicles only</td>
+        </tr>
+        <tr>
+          <td><strong>Tonoplast</strong></td>
+          <td>✅ Membrane surrounding the vacuole</td>
+          <td>❌ Absent (no large vacuole)</td>
+        </tr>
+        <tr>
+          <td><strong>Chloroplasts</strong></td>
+          <td>✅ In photosynthetic cells</td>
+          <td>❌ Absent</td>
+        </tr>
+        <tr>
+          <td><strong>Amyloplasts</strong></td>
+          <td>✅ In storage cells</td>
+          <td>❌ Absent</td>
+        </tr>
+        <tr>
+          <td><strong>Carbohydrate storage</strong></td>
+          <td>Starch (in amyloplasts)</td>
+          <td>Glycogen (granules in cytoplasm)</td>
+        </tr>
+        <tr>
+          <td><strong>Centrioles</strong></td>
+          <td>❌ Absent in most plant cells</td>
+          <td>✅ Present — involved in cell division</td>
+        </tr>
+        <tr>
+          <td><strong>Nucleus, mitochondria, ER, Golgi, ribosomes</strong></td>
+          <td>✅ Present</td>
+          <td>✅ Present</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="exam-hint">When an exam question asks you to describe how a plant cell differs from an animal cell, state the feature AND say what is present in one but absent in the other. "Plant cells have a cell wall; animal cells do not" scores more consistently than just "plant cells have a cell wall."</div>
+  </div>
+
+  <div class="quiz-block hinge" id="hinge1b">
+    <div class="quiz-label">⚡ Hinge Question</div>
+    <h4>An electron micrograph shows a cell with: a large central vacuole, no centrioles, chloroplasts, and a cell wall. A student claims the cell must be storing starch in the cytoplasm. Are they correct?</h4>
+    <div class="quiz-options">
+      <div class="quiz-option" onclick="checkQuiz(this,false,'hinge1b','The cell is clearly a plant cell (cell wall, chloroplasts, large vacuole). But plant cells store starch in amyloplasts, not loose in the cytoplasm.')"><span class="letter">A</span><span>Yes — plant cells store starch granules directly in the cytoplasm</span></div>
+      <div class="quiz-option" onclick="checkQuiz(this,true,'hinge1b','Correct! This is a plant cell, but starch is stored inside amyloplasts (membrane-bound plastids) — not free in the cytoplasm. Animal cells store glycogen granules in the cytoplasm.')"><span class="letter">B</span><span>No — in plant cells, starch is stored inside amyloplasts, not freely in the cytoplasm</span></div>
+      <div class="quiz-option" onclick="checkQuiz(this,false,'hinge1b','The cell does have a cell wall, so it is a plant cell. The issue is where the starch is stored.')"><span class="letter">C</span><span>The question is unanswerable because this could be an animal cell</span></div>
+      <div class="quiz-option" onclick="checkQuiz(this,false,'hinge1b','Starch is found in plant cells (in amyloplasts), while glycogen is stored by animal cells. This cell is clearly a plant cell.')"><span class="letter">D</span><span>No — plant cells store glycogen, not starch</span></div>
+    </div>
+    <div class="quiz-feedback" id="hinge1b-feedback"></div>
+  </div>
+
+  <div class="step-nav">
+    <button class="step-btn" onclick="showTab('lesson1', 2)">← Structure &amp; Function</button>
+    <button class="step-btn next" onclick="showTab('lesson1', 4)">Check &amp; Retrieve →</button>
+  </div>
+</div>
+
+<!-- L1 Tab 4: Check & Retrieve -->
+<div class="sub-section" data-lesson="lesson1" data-tab="4">
+
+  <div class="retrieval-block">
+    <div class="quiz-label">🧠 Retrieval Practice — No Peeking!</div>
+    <h4>Name and give the function of FIVE structures found in a plant cell but not in an animal cell.</h4>
+    <textarea placeholder="Don't look back — try to retrieve from memory. Structure → Function for each one."></textarea>
+    <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('show')">Reveal Model Answer</button>
+    <div class="model-answer">
+      <strong>Any five of:</strong><br>
+      1. <strong>Cell wall</strong> — provides structural support; prevents excess water uptake (made of cellulose)<br>
+      2. <strong>Middle lamella</strong> — cements adjacent cells together (calcium pectate / pectin)<br>
+      3. <strong>Plasmodesmata</strong> — channels through cell walls; allow communication and transport between adjacent cells<br>
+      4. <strong>Pits</strong> — thin areas of cell wall; allow water movement between cells<br>
+      5. <strong>Vacuole (large, permanent)</strong> — contains cell sap; maintains turgor pressure<br>
+      6. <strong>Tonoplast</strong> — membrane surrounding vacuole; controls movement of substances in/out<br>
+      7. <strong>Chloroplast</strong> — site of photosynthesis; contains chlorophyll<br>
+      8. <strong>Amyloplast</strong> — stores starch grains
+    </div>
+  </div>
+
+  <div class="retrieval-block">
+    <div class="quiz-label">🧠 Retrieval Practice</div>
+    <h4>A student sees a cell in an electron micrograph. They cannot see any chloroplasts or amyloplasts, but there is a large central vacuole and a cell wall. Could this be a plant cell? Explain your answer.</h4>
+    <textarea placeholder="Consider which structures are always present vs only in some plant cells..."></textarea>
+    <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('show')">Reveal Model Answer</button>
+    <div class="model-answer">
+      <strong>Yes, this is still consistent with a plant cell.</strong> Not all plant cells contain chloroplasts (only photosynthetic cells do) and not all contain amyloplasts (only storage cells). However, all plant cells have a cell wall and, when mature, a large central vacuole. The presence of both of these features is strong evidence that this is a plant cell. To confirm, you would also expect to see a tonoplast (membrane around the vacuole) and possibly plasmodesmata in the cell wall.
+    </div>
+  </div>
+
+  <div class="struggle-box">
+    <div class="quiz-label">🔥 Productive Struggle</div>
+    <h4>Explain why having a large permanent vacuole is particularly important for plant cells, given that plants have a cell wall.</h4>
+    <p>Think about what happens when a plant takes in water. What is turgor? Why does the cell wall make this useful rather than dangerous?</p>
+    <textarea placeholder="Try to construct a mechanistic explanation linking vacuole → water uptake → pressure → cell wall..."></textarea>
+    <button class="hint-btn" onclick="showHint('hint1_1')">💡 Hint 1</button>
+    <div class="hint-text" id="hint1_1">What happens by osmosis when a cell is placed in a solution with a lower water potential than its cell sap?</div>
+    <button class="hint-btn" onclick="showHint('hint1_2')">💡 Hint 2</button>
+    <div class="hint-text" id="hint1_2">As the vacuole fills with water, it pushes outward against the cell wall. What is this pressure called, and why is a rigid cell wall needed for it to work?</div>
+    <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('show')" style="background:#B45309;">Reveal Suggested Response</button>
+    <div class="model-answer" style="background:#FEF3C7; color:#92400E;">
+      <strong>A strong answer would include:</strong><br><br>
+      The large central vacuole contains cell sap (high solute concentration → low water potential). Water enters by osmosis, inflating the vacuole. This pushes outward on the cytoplasm and cell surface membrane, generating pressure against the cell wall — called <strong>turgor pressure</strong>. Because the cell wall is rigid (made of cellulose), it resists this pressure and pushes back (wall pressure). The result is a turgid cell that is mechanically rigid. This is critical for plant support (especially in non-woody tissue like leaves and stems), since plants lack a skeleton. Without the cell wall, the increasing pressure would cause the cell to lyse (burst). The cell wall therefore converts osmotic uptake of water into structural rigidity — a key adaptation in plants.
+    </div>
+  </div>
+
+  <div class="vtr-box">
+    <h3>🪞 I Used to Think… Now I Think</h3>
+    <p>Reflect on how your understanding has developed in this lesson.</p>
+    <div class="reflection-grid">
+      <div class="before"><label>I used to think…</label><textarea placeholder="Before this lesson, I thought plant cells were..."></textarea></div>
+      <div class="after"><label>Now I think…</label><textarea placeholder="Now I understand that..."></textarea></div>
+    </div>
+  </div>
+
+  <div class="step-nav">
+    <button class="step-btn" onclick="showTab('lesson1', 3)">← Plant vs Animal</button>
+    <button class="step-btn next" onclick="showLesson('lesson2', document.querySelectorAll('.lesson-nav button')[1])">Lesson 2: EM →</button>
+  </div>
+</div>
+</div><!-- end lesson1 -->
+
+<!-- ==================== LESSON 2: ELECTRON MICROSCOPE ==================== -->
+<div class="lesson" id="lesson2">
+<nav class="sub-nav" id="lesson2-tabs">
+  <button class="active" onclick="showTab('lesson2', 0, this)"><span class="tab-num">1</span>EM Overview</button>
+  <button onclick="showTab('lesson2', 1, this)"><span class="tab-num">2</span>Cell Wall &amp; Membranes</button>
+  <button onclick="showTab('lesson2', 2, this)"><span class="tab-num">3</span>Plastids</button>
+  <button onclick="showTab('lesson2', 3, this)"><span class="tab-num">4</span>Practice &amp; Describe</button>
+</nav>
+
+<!-- L2 Tab 0: EM Overview -->
+<div class="sub-section active" data-lesson="lesson2" data-tab="0">
+  <div class="section">
+    <div class="section-number">01</div>
+    <h2>What Can We See Under the Electron Microscope?</h2>
+    <div class="content-card">
+      <p>Specification point 4.2 states you must <em>know the appearance of plant organelles under the electron microscope</em>. This means you need to be able to: (a) identify named structures in electron micrographs, and (b) describe their appearance in written answers.</p>
+      <p>The <span class="key-term" title="Transmission electron microscope — uses electrons transmitted through a thin section of material to produce a 2D image at very high magnification">transmission electron microscope (TEM)</span> produces greyscale 2D images of thin cell sections at magnifications of ×1,000 to ×500,000. The images are sometimes artificially coloured for teaching, but in exams they are greyscale.</p>
+    </div>
+    <div class="content-card">
+      <h3>Key Rules for Describing EM Images</h3>
+      <ul style="padding-left:20px; font-size:15px;">
+        <li style="margin-bottom:8px;">Describe <strong>shape</strong> — oval, elongated, irregular, circular, disc-like</li>
+        <li style="margin-bottom:8px;">Describe <strong>membranes</strong> — single membrane, double membrane, highly folded</li>
+        <li style="margin-bottom:8px;">Describe <strong>internal structure</strong> — grana/thylakoids (chloroplast), granules/crystals (amyloplast), double membrane only (nuclear envelope)</li>
+        <li style="margin-bottom:8px;">Describe <strong>electron density</strong> — dark regions are electron-dense (stain heavily, e.g. dense starch granules, membranes); light regions are electron-lucent</li>
+        <li style="margin-bottom:8px;">Give <strong>relative size</strong> if you can calculate it from the scale bar</li>
+      </ul>
+    </div>
+  </div>
+  <div class="step-nav">
+    <span></span>
+    <button class="step-btn next" onclick="showTab('lesson2', 1)">Cell Wall &amp; Membranes →</button>
+  </div>
+</div>
+
+<!-- L2 Tab 1: Cell Wall & Membranes -->
+<div class="sub-section" data-lesson="lesson2" data-tab="1">
+  <div class="section">
+    <div class="section-number">02</div>
+    <h2>Cell Wall, Tonoplast and Plasmodesmata Under the EM</h2>
+
+    <div class="content-card">
+      <h3>Cell Wall</h3>
+      <p>Appears as a thick, electron-dense layer <em>outside</em> the cell surface membrane. In TEM images, the primary cell wall appears as a relatively uniform, moderately electron-dense region. If secondary thickening is present, this inner layer is much darker and thicker.</p>
+      <p>The <strong>middle lamella</strong> appears as a thin, electron-dense line between adjacent cell walls — it can be difficult to distinguish from the walls themselves at low magnification.</p>
+    </div>
+
+    <div class="content-card">
+      <h3>Plasmodesmata</h3>
+      <p>Visible as narrow, dark channels passing through the cell wall, connecting the cytoplasm of adjacent cells. They appear as very fine, thread-like gaps in the cell wall. Each contains a thin strand of endoplasmic reticulum (the <em>desmotubule</em>), though this detail is beyond the specification.</p>
+    </div>
+
+    <div class="content-card">
+      <h3>Tonoplast</h3>
+      <p>Appears as a single electron-dense line (membrane) surrounding the large, pale/electron-lucent vacuole. The vacuole itself appears very light (low electron density) as it is mostly water. The tonoplast can be contrasted with the cell surface membrane — both are single membranes but the tonoplast borders the vacuole on the inside of the cell.</p>
+    </div>
+
+    <div class="exam-hint">In a TEM image question, if you see: (1) a very pale, large central space — that is the vacuole; (2) a single dark line surrounding it — that is the tonoplast; (3) a thick dark line at the cell edge — that is the cell wall. Practise identifying all three on past paper micrographs.</div>
+
+    <table class="compare-table" style="margin-top:20px;">
+      <thead><tr><th>Structure</th><th>EM Appearance</th><th>Location</th></tr></thead>
+      <tbody>
+        <tr><td>Cell wall (primary)</td><td>Moderately electron-dense layer; relatively uniform thickness</td><td>Outside cell surface membrane</td></tr>
+        <tr><td>Middle lamella</td><td>Thin, electron-dense line between adjacent cell walls</td><td>Between two adjacent cell walls</td></tr>
+        <tr><td>Plasmodesmata</td><td>Narrow, dark channels through the cell wall</td><td>Within the cell wall</td></tr>
+        <tr><td>Vacuole</td><td>Large, electron-lucent (pale) central space</td><td>Central region of cell</td></tr>
+        <tr><td>Tonoplast</td><td>Single electron-dense membrane surrounding the vacuole</td><td>Surrounds the vacuole</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="step-nav">
+    <button class="step-btn" onclick="showTab('lesson2', 0)">← EM Overview</button>
+    <button class="step-btn next" onclick="showTab('lesson2', 2)">Plastids →</button>
+  </div>
+</div>
+
+<!-- L2 Tab 2: Plastids -->
+<div class="sub-section" data-lesson="lesson2" data-tab="2">
+  <div class="section">
+    <div class="section-number">03</div>
+    <h2>Chloroplasts and Amyloplasts Under the EM</h2>
+
+    <div class="content-card">
+      <h3>Chloroplast</h3>
+      <p>One of the most distinctive organelles in a TEM image. Key features to identify and describe:</p>
+      <ul style="padding-left:20px; font-size:15px; margin-top:8px;">
+        <li style="margin-bottom:8px;"><strong>Double membrane</strong> (envelope) — two electron-dense lines closely apposed, clearly visible at the outer boundary</li>
+        <li style="margin-bottom:8px;"><strong>Grana</strong> — stacks of densely-staining (dark) parallel lines, representing the stacked thylakoid membranes. Appear as dense, layered bundles within the organelle.</li>
+        <li style="margin-bottom:8px;"><strong>Stroma</strong> — pale, granular matrix surrounding the grana. Less electron-dense than the grana.</li>
+        <li style="margin-bottom:8px;"><strong>Overall shape</strong> — oval/elongated (lens-shaped in 3D), approximately 4–10 μm in length</li>
+      </ul>
+    </div>
+
+    <div class="content-card">
+      <h3>Amyloplast</h3>
+      <p>Less structurally complex than chloroplasts. Key features:</p>
+      <ul style="padding-left:20px; font-size:15px; margin-top:8px;">
+        <li style="margin-bottom:8px;"><strong>Double membrane</strong> — two outer membranes visible (similar to chloroplast envelope), but no internal thylakoid system</li>
+        <li style="margin-bottom:8px;"><strong>Starch grains</strong> — appear as large, very electron-dense (very dark), irregular or granular shapes within the organelle. May fill most of the organelle's interior.</li>
+        <li style="margin-bottom:8px;"><strong>No grana or stroma lamellae</strong> — distinguishes it from a chloroplast</li>
+        <li style="margin-bottom:8px;"><strong>Overall shape</strong> — variable; often irregular or rounded</li>
+      </ul>
+    </div>
+
+    <div class="analogy"><strong>Telling them apart in an EM image:</strong> Chloroplast = has internal striped/layered grana visible. Amyloplast = filled with large, very dark, featureless blobs (starch grains), no internal membrane system.</div>
+
+    <table class="compare-table">
+      <thead><tr><th>Feature</th><th>Chloroplast (EM)</th><th>Amyloplast (EM)</th></tr></thead>
+      <tbody>
+        <tr><td>Outer boundary</td><td>Double membrane (two dark lines)</td><td>Double membrane (two dark lines)</td></tr>
+        <tr><td>Internal membranes</td><td>Grana — stacked dark parallel lines</td><td>None visible</td></tr>
+        <tr><td>Internal contents</td><td>Pale stroma + dark grana</td><td>Very electron-dense starch grains</td></tr>
+        <tr><td>Size (approx.)</td><td>4–10 μm</td><td>Variable (1–30 μm with starch)</td></tr>
+        <tr><td>Shape</td><td>Oval/elongated</td><td>Irregular, rounded</td></tr>
+      </tbody>
+    </table>
+
+    <div class="exam-hint">Past paper questions often show a plant cell TEM and ask you to: (i) identify a labelled organelle; (ii) give evidence for your answer. Always give TWO pieces of evidence — e.g. for chloroplast: "It has a double membrane AND grana (stacked thylakoids) are visible internally."</div>
+  </div>
+
+  <div class="quiz-block hinge" id="hinge2a">
+    <div class="quiz-label">⚡ Hinge Question</div>
+    <h4>In a TEM image, a student identifies a large organelle with a double outer membrane and several very dark, irregular-shaped internal granules, but no visible internal membrane system. What is this organelle?</h4>
+    <div class="quiz-options">
+      <div class="quiz-option" onclick="checkQuiz(this,false,'hinge2a','A chloroplast has a double membrane, but also has a distinctive internal membrane system with grana (stacked thylakoids). The absence of an internal membrane system rules this out.')"><span class="letter">A</span><span>Chloroplast</span></div>
+      <div class="quiz-option" onclick="checkQuiz(this,true,'hinge2a','Correct! An amyloplast has a double outer membrane and contains starch grains, which appear as very electron-dense (dark), irregular granules. It has no internal membrane system like the grana of a chloroplast.')"><span class="letter">B</span><span>Amyloplast</span></div>
+      <div class="quiz-option" onclick="checkQuiz(this,false,'hinge2a','A mitochondrion has a double membrane, but its internal structure shows cristae (infolded inner membrane) — not dark granules. Also, mitochondria are found in animal cells too.')"><span class="letter">C</span><span>Mitochondrion</span></div>
+      <div class="quiz-option" onclick="checkQuiz(this,false,'hinge2a','The nucleus has a double membrane (nuclear envelope) with pores, and contains chromatin/nucleolus — not dark granules.')"><span class="letter">D</span><span>Nucleus</span></div>
+    </div>
+    <div class="quiz-feedback" id="hinge2a-feedback"></div>
+  </div>
+
+  <div class="step-nav">
+    <button class="step-btn" onclick="showTab('lesson2', 1)">← Cell Wall &amp; Membranes</button>
+    <button class="step-btn next" onclick="showTab('lesson2', 3)">Practice &amp; Describe →</button>
+  </div>
+</div>
+
+<!-- L2 Tab 3: Practice & Describe -->
+<div class="sub-section" data-lesson="lesson2" data-tab="3">
+
+  <div class="retrieval-block">
+    <div class="quiz-label">🧠 Retrieval Practice</div>
+    <h4>Describe the appearance of a chloroplast as seen in a transmission electron micrograph. Include: shape, membranes, and internal structure. (4 marks)</h4>
+    <textarea placeholder="Write as if answering an exam question. Aim for at least 4 distinct, creditworthy points..."></textarea>
+    <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('show')">Reveal Mark Scheme</button>
+    <div class="model-answer">
+      <strong>Award 1 mark each for any four of:</strong><br>
+      • Oval / elongated / lens-shaped (1)<br>
+      • Surrounded by a double (outer) membrane (1)<br>
+      • Grana / stacked thylakoids visible as parallel, electron-dense lines / layers (1)<br>
+      • Pale stroma (matrix) surrounds / is between the grana (1)<br>
+      • Approximately 4–10 μm in length (1)<br>
+      • Contains its own DNA / ribosomes (credit if stated as a contextual detail) (1)
+    </div>
+  </div>
+
+  <div class="retrieval-block">
+    <div class="quiz-label">🧠 Retrieval Practice</div>
+    <h4>Draw and label a diagram of a plant cell as seen in an electron micrograph. Include: cell wall, middle lamella, tonoplast, vacuole, chloroplast (with internal structure), amyloplast, plasmalemma, nucleus.</h4>
+    <textarea placeholder="Sketch your diagram on paper, then use this box to describe what each label should show..."></textarea>
+    <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('show')">Reveal Key Points</button>
+    <div class="model-answer">
+      <strong>Cell wall:</strong> Thick line(s) outside the plasma membrane (labelled outside CSM).<br>
+      <strong>Middle lamella:</strong> Thin line between two adjacent cell walls (only visible if two cells shown).<br>
+      <strong>Tonoplast:</strong> Single membrane surrounding the large pale central vacuole.<br>
+      <strong>Vacuole:</strong> Large, pale (electron-lucent) central space.<br>
+      <strong>Chloroplast:</strong> Oval, double outer membrane, internal grana (stacked dark lines), pale stroma.<br>
+      <strong>Amyloplast:</strong> Double membrane, large dark electron-dense starch granules inside, no internal membrane system.<br>
+      <strong>Plasmalemma (cell surface membrane):</strong> Single membrane just inside the cell wall.<br>
+      <strong>Nucleus:</strong> Double membrane (nuclear envelope), nucleolus visible as a darker region within.
+    </div>
+  </div>
+
+  <div class="step-nav">
+    <button class="step-btn" onclick="showTab('lesson2', 2)">← Plastids</button>
+    <button class="step-btn next" onclick="showLesson('lesson3', document.querySelectorAll('.lesson-nav button')[2])">Lesson 3: Cellulose →</button>
+  </div>
+</div>
+</div><!-- end lesson2 -->
+
+<!-- ==================== LESSON 3: CELLULOSE ==================== -->
+<div class="lesson" id="lesson3">
+<nav class="sub-nav" id="lesson3-tabs">
+  <button class="active" onclick="showTab('lesson3', 0, this)"><span class="tab-num">1</span>Activate</button>
+  <button onclick="showTab('lesson3', 1, this)"><span class="tab-num">2</span>β-Glucose</button>
+  <button onclick="showTab('lesson3', 2, this)"><span class="tab-num">3</span>Microfibrils</button>
+  <button onclick="showTab('lesson3', 3, this)"><span class="tab-num">4</span>Cellulose vs Starch</button>
+  <button onclick="showTab('lesson3', 4, this)"><span class="tab-num">5</span>Retrieval &amp; Stretch</button>
+</nav>
+
+<!-- L3 Tab 0: Activate -->
+<div class="sub-section active" data-lesson="lesson3" data-tab="0">
+  <div class="vtr-box">
+    <h3>🔗 Recall and Connect</h3>
+    <p>Cellulose overlaps with Topic 1 (Unit 1) carbohydrate chemistry. This is an important synoptic link — use this section to connect prior learning.</p>
+    <label>What is a polysaccharide? What is the difference between α-glucose and β-glucose?</label>
+    <textarea placeholder="Recall from Topic 1: structure of carbohydrates..."></textarea>
+    <label>What do you already know about how cellulose differs from starch?</label>
+    <textarea placeholder="Think about structure and function..."></textarea>
+  </div>
+  <div class="step-nav">
+    <span></span>
+    <button class="step-btn next" onclick="showTab('lesson3', 1)">β-Glucose →</button>
+  </div>
+</div>
+
+<!-- L3 Tab 1: β-Glucose -->
+<div class="sub-section" data-lesson="lesson3" data-tab="1">
+  <div class="section">
+    <div class="section-number">01</div>
+    <h2>β-Glucose: The Building Block of Cellulose</h2>
+    <div class="content-card">
+      <p>Cellulose is a polysaccharide made entirely of <span class="key-term" title="A monosaccharide in which the OH group on carbon 1 is in the β (up) position">β-glucose</span> monomers. This is in contrast to starch and glycogen, which are made of <span class="key-term" title="A monosaccharide in which the OH group on carbon 1 is in the α (down) position">α-glucose</span>.</p>
+      <p>The critical structural difference between α- and β-glucose is the position of the <strong>hydroxyl (–OH) group on carbon 1</strong>:</p>
+      <ul style="padding-left:20px; font-size:15px; margin:8px 0 12px;">
+        <li style="margin-bottom:6px;"><strong>α-glucose:</strong> –OH on C1 is on the <em>same side</em> as the –CH₂OH group (below the ring in the Haworth projection)</li>
+        <li style="margin-bottom:6px;"><strong>β-glucose:</strong> –OH on C1 is on the <em>opposite side</em> to the –CH₂OH group (above the ring in the Haworth projection)</li>
+      </ul>
+    </div>
+
+    <div class="structure-visual">
+      <p style="font-size:12px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--muted); margin-bottom:16px;">β-Glucose Haworth Projection (simplified)</p>
+      <svg viewBox="0 0 500 220" xmlns="http://www.w3.org/2000/svg" style="max-width:480px;">
+        <!-- Ring -->
+        <polygon points="140,60 260,60 300,130 200,170 100,130" fill="#D1FAE5" stroke="#2D6A4F" stroke-width="2"/>
+        <!-- O in ring -->
+        <text x="190" y="56" font-size="14" font-family="monospace" fill="#2D6A4F" font-weight="bold">O</text>
+        <!-- C labels -->
+        <text x="126" y="58" font-size="11" font-family="monospace" fill="#374151">C1</text>
+        <text x="256" y="58" font-size="11" font-family="monospace" fill="#374151">C2</text>
+        <text x="304" y="133" font-size="11" font-family="monospace" fill="#374151">C3</text>
+        <text x="196" y="185" font-size="11" font-family="monospace" fill="#374151">C4</text>
+        <text x="84" y="133" font-size="11" font-family="monospace" fill="#374151">C5</text>
+        <!-- OH on C1 — pointing UP (β) -->
+        <line x1="140" y1="60" x2="140" y2="22" stroke="#E76F51" stroke-width="2"/>
+        <text x="100" y="18" font-size="13" font-family="monospace" fill="#E76F51" font-weight="bold">OH (β — up)</text>
+        <!-- CH2OH on C5 -->
+        <line x1="100" y1="130" x2="60" y2="105" stroke="#374151" stroke-width="2"/>
+        <text x="10" y="103" font-size="12" font-family="monospace" fill="#374151">CH₂OH</text>
+        <!-- Other OHs -->
+        <line x1="260" y1="60" x2="260" y2="30" stroke="#374151" stroke-width="1.5"/>
+        <text x="264" y="26" font-size="12" font-family="monospace" fill="#374151">OH</text>
+        <line x1="300" y1="130" x2="330" y2="115" stroke="#374151" stroke-width="1.5"/>
+        <text x="334" y="118" font-size="12" font-family="monospace" fill="#374151">OH</text>
+        <line x1="200" y1="170" x2="200" y2="198" stroke="#374151" stroke-width="1.5"/>
+        <text x="204" y="212" font-size="12" font-family="monospace" fill="#374151">OH</text>
+        <!-- Note -->
+        <text x="20" y="215" font-size="11" font-family="sans-serif" fill="#6B7280">Note: –OH on C1 points UP (β position) — opposite to –CH₂OH on C5</text>
+      </svg>
+    </div>
+
+    <div class="content-card">
+      <h3>Why Does This Matter?</h3>
+      <p>When β-glucose monomers join together via <span class="key-term" title="A covalent bond formed between two monosaccharides when a water molecule is removed (condensation reaction)">1,4-glycosidic bonds</span>, every alternate glucose must <strong>rotate 180°</strong> to allow bond formation. This means the chain is straight and unbranched, unlike amylose (which forms a helix) or amylopectin (which branches).</p>
+    </div>
+
+    <div class="analogy"><strong>Think of it this way:</strong> α-glucose is like a brick laid flat — stack them and they naturally form a spiral staircase (helix). β-glucose is like a brick that has to be flipped alternately — this creates a perfectly straight wall instead.</div>
+
+    <div class="quiz-block hinge" id="hinge3a">
+      <div class="quiz-label">⚡ Hinge Question</div>
+      <h4>Which of the following correctly describes how β-glucose monomers join to form a cellulose chain?</h4>
+      <div class="quiz-options">
+        <div class="quiz-option" onclick="checkQuiz(this,false,'hinge3a','α-glucose is used to make starch and glycogen. Cellulose uses β-glucose.')"><span class="letter">A</span><span>α-glucose monomers join by 1,4-glycosidic bonds, with every alternate monomer rotated</span></div>
+        <div class="quiz-option" onclick="checkQuiz(this,true,'hinge3a','Correct! β-glucose monomers are joined by 1,4-glycosidic bonds, but because of the orientation of the –OH on C1, every alternate monomer is rotated 180°. This results in a straight, unbranched chain.')"><span class="letter">B</span><span>β-glucose monomers join by 1,4-glycosidic bonds, with every alternate monomer rotated 180°</span></div>
+        <div class="quiz-option" onclick="checkQuiz(this,false,'hinge3a','Cellulose uses 1,4-glycosidic bonds (between C1 and C4). 1,6-glycosidic bonds are used in amylopectin and glycogen to form branch points.')"><span class="letter">C</span><span>β-glucose monomers join by 1,6-glycosidic bonds to form branching chains</span></div>
+        <div class="quiz-option" onclick="checkQuiz(this,false,'hinge3a','The straight chain is a property of cellulose, but it results from β-glucose (not α-glucose), and involves 1,4 (not 1,6) bonds.')"><span class="letter">D</span><span>α-glucose monomers join by 1,6-glycosidic bonds to form a straight chain</span></div>
+      </div>
+      <div class="quiz-feedback" id="hinge3a-feedback"></div>
+    </div>
+
+    <div class="step-nav">
+      <button class="step-btn" onclick="showTab('lesson3', 0)">← Activate</button>
+      <button class="step-btn next" onclick="showTab('lesson3', 2)">Microfibrils →</button>
+    </div>
+  </div>
+</div>
+
+<!-- L3 Tab 2: Microfibrils -->
+<div class="sub-section" data-lesson="lesson3" data-tab="2">
+  <div class="section">
+    <div class="section-number">02</div>
+    <h2>From β-Glucose to Microfibrils</h2>
+    <div class="content-card">
+      <p>The straight cellulose chains produced from β-glucose are able to run parallel to one another. This allows <span class="key-term" title="Weak, individually but collectively strong bonds between partial charges on δ+ hydrogen atoms and δ− oxygen atoms">hydrogen bonds</span> to form between the <strong>–OH groups</strong> of adjacent chains.</p>
+      <p>Although each hydrogen bond is individually weak, the huge number of them across the full length of the chains collectively produces enormous tensile strength.</p>
+    </div>
+
+    <div class="flow">
+      <div class="flow-step">β-glucose monomers joined by 1,4-glycosidic bonds (condensation)</div><div class="flow-arrow">↓</div>
+      <div class="flow-step light">Every alternate β-glucose rotated 180° → straight, unbranched chain</div><div class="flow-arrow">↓</div>
+      <div class="flow-step">Parallel chains linked by hydrogen bonds between –OH groups</div><div class="flow-arrow">↓</div>
+      <div class="flow-step light">Bundle of ~60–70 parallel chains = one <strong>cellulose microfibril</strong></div><div class="flow-arrow">↓</div>
+      <div class="flow-step">Microfibrils laid down in layers at different angles in the cell wall</div><div class="flow-arrow">↓</div>
+      <div class="flow-step alt">Result: a strong, flexible wall that resists stretching in multiple directions</div>
+    </div>
+
+    <div class="content-card" style="margin-top:20px;">
+      <h3>Why Hydrogen Bonds Between Chains?</h3>
+      <p>Because the cellulose chain is straight (not helical), adjacent chains can run parallel and very close together. The spacing allows –OH groups on one chain to form hydrogen bonds with –OH groups on the next chain. This is <em>not possible</em> with starch (α-glucose chains form a helix, preventing this close packing).</p>
+      <p>The result is a microfibril with <strong>high tensile strength</strong> — it resists being pulled apart along its length. Multiple microfibrils crossing at different angles in the wall provide strength in multiple directions, like a criss-cross weave.</p>
+    </div>
+
+    <div class="exam-hint">Exam questions often ask you to explain how cellulose structure contributes to its function. Your answer must link: <strong>(1) β-glucose → straight chain → (2) parallel chains → hydrogen bonds → (3) microfibrils → strength in cell wall</strong>. Missing any step loses marks.</div>
+  </div>
+
+  <div class="step-nav">
+    <button class="step-btn" onclick="showTab('lesson3', 1)">← β-Glucose</button>
+    <button class="step-btn next" onclick="showTab('lesson3', 3)">Cellulose vs Starch →</button>
+  </div>
+</div>
+
+<!-- L3 Tab 3: Cellulose vs Starch -->
+<div class="sub-section" data-lesson="lesson3" data-tab="3">
+  <div class="section">
+    <div class="section-number">03</div>
+    <h2>Cellulose vs Starch: A Comparison</h2>
+    <div class="content-card">
+      <p>Both cellulose and starch are polysaccharides made entirely of glucose. The difference in their properties comes entirely from which isomer of glucose they contain.</p>
+    </div>
+
+    <table class="compare-table">
+      <thead>
+        <tr>
+          <th>Feature</th>
+          <th>Cellulose</th>
+          <th>Starch (amylose)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Monomer</td>
+          <td>β-glucose</td>
+          <td>α-glucose</td>
+        </tr>
+        <tr>
+          <td>Bond type</td>
+          <td>1,4-glycosidic bonds</td>
+          <td>1,4-glycosidic bonds (amylose); 1,4 and 1,6 (amylopectin)</td>
+        </tr>
+        <tr>
+          <td>Chain shape</td>
+          <td>Straight, unbranched (alternating rotation of monomers)</td>
+          <td>Helical (coiled), unbranched (amylose); branched (amylopectin)</td>
+        </tr>
+        <tr>
+          <td>Hydrogen bonds</td>
+          <td>Between parallel adjacent chains → microfibrils</td>
+          <td>Within the helix (stabilise the coil); between helices</td>
+        </tr>
+        <tr>
+          <td>Overall structure</td>
+          <td>Microfibrils → macrofibrils → cell wall layers</td>
+          <td>Compact granules (helices coil into dense starch grain)</td>
+        </tr>
+        <tr>
+          <td>Solubility</td>
+          <td>Insoluble</td>
+          <td>Insoluble (but can be hydrolysed to release glucose)</td>
+        </tr>
+        <tr>
+          <td>Function</td>
+          <td>Structural — provides tensile strength in cell walls</td>
+          <td>Energy storage — compact, insoluble, osmotically inactive</td>
+        </tr>
+        <tr>
+          <td>Where stored/found</td>
+          <td>Cell wall (all plant cells)</td>
+          <td>Inside amyloplasts; in chloroplast stroma (short-term)</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="analogy"><strong>Structure determines function:</strong> α-glucose → helix → compact granule = perfect for packing a lot of energy into a small space (storage). β-glucose → straight chain → microfibrils = perfect for a strong, tensile fibre (structure). The same atomic formula (C₆H₁₂O₆), the same type of bond — but the shape of the monomer changes everything.</div>
+
+    <div class="quiz-block hinge" id="hinge3b">
+      <div class="quiz-label">⚡ Hinge Question</div>
+      <h4>A student states: "Cellulose and starch both form hydrogen bonds, so their properties must be similar." Evaluate this statement.</h4>
+      <div class="quiz-options">
+        <div class="quiz-option" onclick="checkQuiz(this,false,'hinge3b','Both molecules do form hydrogen bonds, but the location and effect of those bonds are completely different — leading to very different structures and functions.')"><span class="letter">A</span><span>The statement is correct — both form hydrogen bonds so they are structurally similar</span></div>
+        <div class="quiz-option" onclick="checkQuiz(this,false,'hinge3b','Both molecules do form hydrogen bonds — this part is correct. The student's error is assuming this leads to similar properties.')"><span class="letter">B</span><span>The statement is incorrect because neither cellulose nor starch forms hydrogen bonds</span></div>
+        <div class="quiz-option" onclick="checkQuiz(this,true,'hinge3b','Correct! Both molecules form hydrogen bonds, but the type of glucose (α vs β) leads to completely different chain shapes. In cellulose, H-bonds form between parallel straight chains creating strong microfibrils. In starch, H-bonds stabilise the helical coil creating compact storage granules. Same interaction, very different outcome.')"><span class="letter">C</span><span>Partly correct — both form hydrogen bonds, but the chain shape (straight vs helical) determines completely different structural outcomes and functions</span></div>
+        <div class="quiz-option" onclick="checkQuiz(this,false,'hinge3b','Cellulose is insoluble — if it were soluble it would be osmotically active, which would be a problem in the cell wall.')"><span class="letter">D</span><span>The statement is incorrect because cellulose is soluble and starch is insoluble</span></div>
+      </div>
+      <div class="quiz-feedback" id="hinge3b-feedback"></div>
+    </div>
+
+    <div class="step-nav">
+      <button class="step-btn" onclick="showTab('lesson3', 2)">← Microfibrils</button>
+      <button class="step-btn next" onclick="showTab('lesson3', 4)">Retrieval &amp; Stretch →</button>
+    </div>
+  </div>
+</div>
+
+<!-- L3 Tab 4: Retrieval & Stretch -->
+<div class="sub-section" data-lesson="lesson3" data-tab="4">
+
+  <div class="retrieval-block">
+    <div class="quiz-label">🧠 Retrieval Practice — Exam Style (4 marks)</div>
+    <h4>Explain how the structure of cellulose makes it suitable for its function in the cell wall.</h4>
+    <textarea placeholder="Write a 4-mark exam answer. Think: monomer → chain → microfibril → cell wall..."></textarea>
+    <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('show')">Reveal Mark Scheme</button>
+    <div class="model-answer">
+      <strong>Award 1 mark each for any four of:</strong><br>
+      • Cellulose is made of β-glucose monomers (1)<br>
+      • β-glucose molecules alternate in orientation (rotate 180°) / joined by 1,4-glycosidic bonds (1)<br>
+      • This produces a long, straight, unbranched chain (1)<br>
+      • Parallel chains are held together by hydrogen bonds between –OH groups (1)<br>
+      • Multiple chains form microfibrils (1)<br>
+      • Microfibrils are arranged in layers at different angles / form a mesh (1)<br>
+      • This gives the cell wall high tensile strength / resists stretching (1)
+    </div>
+  </div>
+
+  <div class="retrieval-block">
+    <div class="quiz-label">🧠 Retrieval Practice — Exam Style (3 marks)</div>
+    <h4>State THREE differences between the structure of cellulose and starch.</h4>
+    <textarea placeholder="One mark per well-stated difference. Structure: name feature — difference for each molecule."></textarea>
+    <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('show')">Reveal Mark Scheme</button>
+    <div class="model-answer">
+      <strong>Any three of (1 mark each):</strong><br>
+      • Cellulose contains β-glucose; starch contains α-glucose (1)<br>
+      • Cellulose chains are straight; starch (amylose) chains are helical/coiled (1)<br>
+      • Cellulose is unbranched; starch (amylopectin) is branched (1)<br>
+      • Cellulose forms microfibrils with cross-chain hydrogen bonds; starch forms compact granules with intra-chain hydrogen bonds (1)<br>
+      • Cellulose has a structural role; starch has an energy storage role (1)
+    </div>
+  </div>
+
+  <div class="struggle-box">
+    <div class="quiz-label">🔥 Productive Struggle — Synoptic Stretch</div>
+    <h4>Humans cannot digest cellulose, despite having the enzyme amylase (which digests starch). Explain, using your knowledge of enzyme action and cellulose structure, why amylase cannot digest cellulose.</h4>
+    <p>This connects your knowledge of cellulose with enzyme specificity (Topic 2). Think about active site shape and substrate shape.</p>
+    <textarea placeholder="Consider: what determines enzyme specificity? How does cellulose structure differ from starch? What does amylase 'recognise'?"></textarea>
+    <button class="hint-btn" onclick="showHint('hint3_1')">💡 Hint 1</button>
+    <div class="hint-text" id="hint3_1">Enzymes are specific to their substrate. What determines this specificity — and what structural feature of the substrate must complement the enzyme?</div>
+    <button class="hint-btn" onclick="showHint('hint3_2')">💡 Hint 2</button>
+    <div class="hint-text" id="hint3_2">Amylase's active site is complementary in shape to the helical α-1,4-glycosidic bonds of starch. The 1,4-glycosidic bonds in cellulose are geometrically different because the alternating β-glucose creates a different bond angle.</div>
+    <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('show')" style="background:#B45309;">Reveal Suggested Response</button>
+    <div class="model-answer" style="background:#FEF3C7; color:#92400E;">
+      <strong>A strong answer:</strong><br><br>
+      Amylase is specific to α-1,4-glycosidic bonds (the bonds in starch). This specificity arises because the enzyme's active site is complementary in shape (and charge) to the substrate — in this case, the α-glucose residues at an α-1,4-linkage. <br><br>In cellulose, the glucose units are β-glucose, and the alternating 180° rotation creates a different bond geometry at the 1,4-glycosidic bond. This means the cellulose chain has a different 3D shape at the bond site. Amylase's active site is <strong>not complementary</strong> to this β-1,4-linkage geometry, so it cannot bind to cellulose — the enzyme-substrate complex cannot form. Therefore, amylase cannot catalyse the hydrolysis of cellulose even though the bond type (1,4-glycosidic) appears superficially similar.
+    </div>
+  </div>
+
+  <div class="vtr-box">
+    <h3>🪞 I Used to Think… Now I Think</h3>
+    <p>Reflect on what has changed in your understanding of cellulose and carbohydrate structure.</p>
+    <div class="reflection-grid">
+      <div class="before"><label>I used to think…</label><textarea placeholder="Before these lessons, I thought cellulose was just another carbohydrate..."></textarea></div>
+      <div class="after"><label>Now I think…</label><textarea placeholder="Now I can explain how the monomer's shape determines the polymer's function..."></textarea></div>
+    </div>
+  </div>
+
+  <div class="step-nav">
+    <button class="step-btn" onclick="showTab('lesson3', 3)">← Cellulose vs Starch</button>
+    <span style="font-size:14px; color:var(--muted); display:flex; align-items:center;">✅ Lesson complete</span>
+  </div>
+</div>
+</div><!-- end lesson3 -->
+
+</div><!-- end container -->
+
+<script>
+// ─── Navigation ───────────────────────────────────────────────────────────────
+function showLesson(lessonId, btn) {
+  document.querySelectorAll('.lesson').forEach(l => l.classList.remove('active'));
+  document.querySelectorAll('.lesson-nav button').forEach(b => b.classList.remove('active'));
+  document.getElementById(lessonId).classList.add('active');
+  if (btn) btn.classList.add('active');
+  // Reset to first tab
+  const tabs = document.querySelectorAll('#' + lessonId + '-tabs button');
+  if (tabs.length) {
+    tabs.forEach(t => t.classList.remove('active'));
+    tabs[0].classList.add('active');
+  }
+  const sections = document.querySelectorAll('#' + lessonId + ' .sub-section');
+  sections.forEach((s, i) => { s.classList.toggle('active', i === 0); });
+  window.scrollTo({top: 0, behavior: 'smooth'});
+  updateProgress();
+}
+
+function showTab(lessonId, tabIndex, btn) {
+  const sections = document.querySelectorAll('#' + lessonId + ' .sub-section');
+  sections.forEach((s, i) => { s.classList.toggle('active', i === tabIndex); });
+  const tabs = document.querySelectorAll('#' + lessonId + '-tabs button');
+  tabs.forEach((t, i) => {
+    t.classList.remove('active');
+    if (i === tabIndex) t.classList.add('active');
+    if (i < tabIndex) t.classList.add('completed');
+  });
+  if (!btn) {
+    // called programmatically
+    const tab = tabs[tabIndex];
+    if (tab) tab.classList.add('active');
+  }
+  window.scrollTo({top: 80, behavior: 'smooth'});
+  updateProgress();
+}
+
+// ─── Quizzes ──────────────────────────────────────────────────────────────────
+function checkQuiz(optionEl, isCorrect, blockId, feedback) {
+  const block = document.getElementById(blockId);
+  if (!block) return;
+  // Disable all options
+  block.querySelectorAll('.quiz-option').forEach(o => o.classList.add('disabled'));
+  optionEl.classList.add(isCorrect ? 'correct' : 'wrong');
+  // If wrong, show the correct one
+  if (!isCorrect) {
+    const opts = block.querySelectorAll('.quiz-option');
+    opts.forEach(o => {
+      if (o.getAttribute('onclick') && o.getAttribute('onclick').includes(',true,')) {
+        o.classList.add('correct');
+      }
+    });
+  }
+  const feedbackEl = document.getElementById(blockId + '-feedback');
+  if (feedbackEl) {
+    feedbackEl.textContent = feedback;
+    feedbackEl.className = 'quiz-feedback show ' + (isCorrect ? 'correct' : 'wrong');
+  }
+}
+
+// ─── Hints ────────────────────────────────────────────────────────────────────
+function showHint(id) {
+  const el = document.getElementById(id);
+  if (el) el.classList.toggle('show');
+}
+
+// ─── Progress bar ─────────────────────────────────────────────────────────────
+function updateProgress() {
+  const completedTabs = document.querySelectorAll('.sub-nav button.completed').length;
+  const totalTabs = document.querySelectorAll('.sub-nav button').length;
+  const pct = totalTabs > 0 ? Math.round((completedTabs / totalTabs) * 100) : 0;
+  const bar = document.getElementById('progressBar');
+  if (bar) bar.style.width = pct + '%';
+}
+
+// Scroll-based progress
+window.addEventListener('scroll', () => {
+  const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+  const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+  const scrolled = height > 0 ? (winScroll / height) * 100 : 0;
+  const bar = document.getElementById('progressBar');
+  if (bar) bar.style.width = scrolled + '%';
+});
+</script>
+</body>
+</html>
