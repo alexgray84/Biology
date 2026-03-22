@@ -1,0 +1,1014 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mission: Space — Student Resource Hub</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Space+Grotesk:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    /* ─── Reset & Base ─── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --void:      #03040a;
+      --deep:      #080c1a;
+      --panel:     rgba(10, 16, 40, 0.72);
+      --panel-b:   rgba(15, 22, 55, 0.85);
+      --border:    rgba(100, 160, 255, 0.15);
+      --border-h:  rgba(120, 200, 255, 0.45);
+      --nebula-a:  #7c3aed;
+      --nebula-b:  #1d4ed8;
+      --nebula-c:  #0ea5e9;
+      --aurora:    #06b6d4;
+      --star:      #e0eaff;
+      --gold:      #fbbf24;
+      --red-dwarf: #f97316;
+      --green-neb: #10b981;
+      --text:      #cdd5f3;
+      --text-dim:  #7080b0;
+      --white:     #eef2ff;
+      --glow-blue: 0 0 20px rgba(14, 165, 233, 0.4), 0 0 60px rgba(14, 165, 233, 0.15);
+      --glow-purple: 0 0 20px rgba(124, 58, 237, 0.4), 0 0 60px rgba(124, 58, 237, 0.15);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Space Grotesk', sans-serif;
+      background: var(--void);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ─── Canvas Starfield ─── */
+    #starfield {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    /* ─── Nebula blobs (CSS) ─── */
+    .nebula {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.18;
+      pointer-events: none;
+      z-index: 0;
+      animation: nebula-drift 25s ease-in-out infinite alternate;
+    }
+    .nebula-1 { width: 600px; height: 400px; background: var(--nebula-a); top: -100px; left: -150px; animation-delay: 0s; }
+    .nebula-2 { width: 500px; height: 500px; background: var(--nebula-b); top: 30%; right: -100px; animation-delay: -8s; }
+    .nebula-3 { width: 700px; height: 350px; background: var(--aurora);   bottom: 10%; left: 20%; animation-delay: -15s; }
+    @keyframes nebula-drift {
+      0%   { transform: translate(0, 0) scale(1); }
+      50%  { transform: translate(30px, -20px) scale(1.05); }
+      100% { transform: translate(-20px, 30px) scale(0.95); }
+    }
+
+    /* ─── Layout wrapper ─── */
+    .wrapper {
+      position: relative;
+      z-index: 1;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* ─── Nav ─── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      background: rgba(3, 4, 10, 0.7);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 24px;
+    }
+    .nav-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 60px;
+    }
+    .nav-logo {
+      font-family: 'Orbitron', monospace;
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      color: var(--aurora);
+      text-transform: uppercase;
+    }
+    .nav-logo span { color: var(--white); }
+    .nav-badge {
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      background: rgba(14,165,233,0.08);
+      border: 1px solid var(--border);
+      padding: 4px 12px;
+      border-radius: 20px;
+    }
+
+    /* ─── Hero ─── */
+    .hero {
+      padding: 140px 0 80px;
+      text-align: center;
+      position: relative;
+    }
+    .hero-tag {
+      display: inline-block;
+      font-family: 'Orbitron', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--aurora);
+      border: 1px solid rgba(6,182,212,0.4);
+      padding: 6px 18px;
+      border-radius: 20px;
+      margin-bottom: 28px;
+      background: rgba(6,182,212,0.06);
+      animation: pulse-tag 3s ease-in-out infinite;
+    }
+    @keyframes pulse-tag {
+      0%,100% { box-shadow: 0 0 0 0 rgba(6,182,212,0.0); }
+      50%      { box-shadow: 0 0 0 6px rgba(6,182,212,0.08); }
+    }
+    .hero h1 {
+      font-family: 'Orbitron', monospace;
+      font-size: clamp(2.2rem, 6vw, 4.5rem);
+      font-weight: 900;
+      line-height: 1.1;
+      letter-spacing: 0.02em;
+      color: var(--white);
+      text-shadow: 0 0 40px rgba(14,165,233,0.4);
+      margin-bottom: 8px;
+    }
+    .hero h1 .gradient {
+      background: linear-gradient(135deg, var(--aurora) 0%, var(--nebula-a) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero-sub {
+      font-size: 1.05rem;
+      color: var(--text-dim);
+      max-width: 540px;
+      margin: 20px auto 0;
+      line-height: 1.7;
+      font-weight: 300;
+    }
+
+    /* ─── Stats strip ─── */
+    .stats {
+      display: flex;
+      justify-content: center;
+      gap: 48px;
+      margin: 48px 0 64px;
+      flex-wrap: wrap;
+    }
+    .stat {
+      text-align: center;
+    }
+    .stat-num {
+      font-family: 'Orbitron', monospace;
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--aurora);
+      display: block;
+    }
+    .stat-label {
+      font-size: 0.72rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      margin-top: 4px;
+    }
+
+    /* ─── Filter bar ─── */
+    .filter-bar {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 52px;
+      flex-wrap: wrap;
+    }
+    .filter-btn {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.8rem;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 9px 22px;
+      border-radius: 30px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text-dim);
+      cursor: pointer;
+      transition: all 0.25s ease;
+    }
+    .filter-btn:hover {
+      border-color: var(--border-h);
+      color: var(--white);
+      background: rgba(14,165,233,0.06);
+    }
+    .filter-btn.active {
+      background: linear-gradient(135deg, var(--nebula-b), var(--nebula-a));
+      border-color: transparent;
+      color: var(--white);
+      box-shadow: var(--glow-blue);
+    }
+
+    /* ─── Section label ─── */
+    .section-label {
+      font-family: 'Orbitron', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(to right, var(--border), transparent);
+    }
+
+    /* ─── Card grid ─── */
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 24px;
+      margin-bottom: 80px;
+    }
+
+    /* ─── Resource card ─── */
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      backdrop-filter: blur(20px);
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      cursor: default;
+    }
+    .card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,0.03) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    .card::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(to right, transparent, rgba(255,255,255,0.15), transparent);
+    }
+    .card:hover {
+      border-color: var(--border-h);
+      transform: translateY(-4px);
+      background: var(--panel-b);
+    }
+    .card:hover .card-icon {
+      transform: scale(1.1);
+    }
+
+    /* Card accent colours per type */
+    .card[data-type="video"]:hover    { box-shadow: 0 8px 40px rgba(124,58,237,0.2); }
+    .card[data-type="interactive"]:hover { box-shadow: 0 8px 40px rgba(6,182,212,0.2); }
+    .card[data-type="article"]:hover  { box-shadow: 0 8px 40px rgba(16,185,129,0.2); }
+
+    .card-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .card-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      flex-shrink: 0;
+      transition: transform 0.3s ease;
+    }
+    .card[data-type="video"]       .card-icon { background: rgba(124,58,237,0.18); }
+    .card[data-type="interactive"] .card-icon { background: rgba(6,182,212,0.18); }
+    .card[data-type="article"]     .card-icon { background: rgba(16,185,129,0.18); }
+
+    .card-badges {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 6px;
+    }
+    .badge {
+      font-size: 0.65rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 3px 10px;
+      border-radius: 12px;
+      white-space: nowrap;
+    }
+    .badge-video       { background: rgba(124,58,237,0.2); color: #a78bfa; border: 1px solid rgba(124,58,237,0.35); }
+    .badge-interactive { background: rgba(6,182,212,0.2);  color: #67e8f9; border: 1px solid rgba(6,182,212,0.35); }
+    .badge-article     { background: rgba(16,185,129,0.2); color: #6ee7b7; border: 1px solid rgba(16,185,129,0.35); }
+    .badge-free        { background: rgba(251,191,36,0.12); color: #fcd34d; border: 1px solid rgba(251,191,36,0.25); }
+    .badge-nasa        { background: rgba(249,115,22,0.15); color: #fdba74; border: 1px solid rgba(249,115,22,0.3); }
+
+    .card-title {
+      font-family: 'Orbitron', monospace;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--white);
+      line-height: 1.35;
+      letter-spacing: 0.01em;
+    }
+    .card-source {
+      font-size: 0.72rem;
+      color: var(--text-dim);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-top: 2px;
+    }
+    .card-desc {
+      font-size: 0.88rem;
+      color: var(--text);
+      line-height: 1.65;
+      font-weight: 300;
+      flex: 1;
+    }
+    .card-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .tag {
+      font-size: 0.68rem;
+      color: var(--text-dim);
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 8px;
+      padding: 3px 9px;
+    }
+    .card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 4px;
+    }
+    .card-meta {
+      font-size: 0.72rem;
+      color: var(--text-dim);
+    }
+    .card-meta span { color: var(--text); }
+
+    .launch-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: 'Orbitron', monospace;
+      font-size: 0.68rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--white);
+      background: linear-gradient(135deg, rgba(14,165,233,0.25), rgba(124,58,237,0.25));
+      border: 1px solid rgba(14,165,233,0.4);
+      padding: 10px 20px;
+      border-radius: 30px;
+      text-decoration: none;
+      transition: all 0.25s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .launch-btn::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(14,165,233,0.15), rgba(124,58,237,0.15));
+      opacity: 0;
+      transition: opacity 0.25s;
+    }
+    .launch-btn:hover {
+      box-shadow: var(--glow-blue);
+      border-color: rgba(14,165,233,0.7);
+      transform: translateY(-1px);
+    }
+    .launch-btn:hover::before { opacity: 1; }
+    .launch-arrow {
+      font-size: 0.85rem;
+      transition: transform 0.25s;
+    }
+    .launch-btn:hover .launch-arrow { transform: translateX(3px); }
+
+    /* ─── Featured card (full-width spotlight) ─── */
+    .card-featured {
+      grid-column: 1 / -1;
+      flex-direction: row;
+      align-items: center;
+      gap: 32px;
+      padding: 36px;
+      background: linear-gradient(135deg, rgba(124,58,237,0.12) 0%, rgba(14,165,233,0.08) 100%);
+      border-color: rgba(124,58,237,0.3);
+    }
+    .card-featured:hover { box-shadow: 0 8px 60px rgba(124,58,237,0.25); }
+    .card-featured .card-icon {
+      width: 72px;
+      height: 72px;
+      font-size: 2rem;
+      background: rgba(124,58,237,0.2);
+      border-radius: 20px;
+    }
+    .card-featured-body { flex: 1; display: flex; flex-direction: column; gap: 12px; }
+    .card-featured-actions { display: flex; flex-direction: column; align-items: flex-end; gap: 12px; }
+    .featured-label {
+      font-family: 'Orbitron', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--nebula-a);
+      background: rgba(124,58,237,0.1);
+      border: 1px solid rgba(124,58,237,0.3);
+      padding: 4px 12px;
+      border-radius: 20px;
+      display: inline-block;
+    }
+    @media (max-width: 700px) {
+      .card-featured { flex-direction: column; }
+      .card-featured-actions { align-items: flex-start; }
+    }
+
+    /* ─── No results ─── */
+    .no-results {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--text-dim);
+      font-size: 0.9rem;
+      display: none;
+    }
+
+    /* ─── Divider ─── */
+    .divider {
+      height: 1px;
+      background: linear-gradient(to right, transparent, var(--border), transparent);
+      margin: 16px 0 40px;
+    }
+
+    /* ─── Footer ─── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 36px 24px;
+      text-align: center;
+    }
+    .footer-inner { max-width: 1200px; margin: 0 auto; }
+    .footer-logo {
+      font-family: 'Orbitron', monospace;
+      font-size: 0.75rem;
+      letter-spacing: 0.2em;
+      color: var(--aurora);
+      margin-bottom: 8px;
+    }
+    .footer-text {
+      font-size: 0.78rem;
+      color: var(--text-dim);
+      line-height: 1.6;
+    }
+
+    /* ─── Scroll progress bar ─── */
+    #progress-bar {
+      position: fixed;
+      top: 60px; left: 0;
+      height: 2px;
+      width: 0%;
+      background: linear-gradient(to right, var(--nebula-a), var(--aurora));
+      z-index: 200;
+      transition: width 0.1s linear;
+      box-shadow: 0 0 8px var(--aurora);
+    }
+
+    /* ─── Hidden state for filter ─── */
+    .card.hidden { display: none; }
+
+    /* ─── Orbit ring decoration ─── */
+    .orbit-ring {
+      position: fixed;
+      border-radius: 50%;
+      border: 1px solid rgba(14,165,233,0.06);
+      pointer-events: none;
+      z-index: 0;
+      animation: orbit-spin linear infinite;
+    }
+    .orbit-1 { width: 600px; height: 600px; top: -100px; right: -200px; animation-duration: 60s; }
+    .orbit-2 { width: 900px; height: 900px; top: -250px; right: -350px; animation-duration: 90s; }
+    @keyframes orbit-spin {
+      from { transform: rotate(0deg); }
+      to   { transform: rotate(360deg); }
+    }
+
+    /* ─── Intro paragraph ─── */
+    .intro-text {
+      text-align: center;
+      max-width: 680px;
+      margin: 0 auto 56px;
+      font-size: 0.95rem;
+      color: var(--text-dim);
+      line-height: 1.75;
+      font-style: italic;
+    }
+    .intro-text strong { color: var(--text); font-style: normal; }
+  </style>
+</head>
+<body>
+
+<!-- Starfield canvas -->
+<canvas id="starfield"></canvas>
+
+<!-- Nebula atmosphere -->
+<div class="nebula nebula-1"></div>
+<div class="nebula nebula-2"></div>
+<div class="nebula nebula-3"></div>
+
+<!-- Orbit decorations -->
+<div class="orbit-ring orbit-1"></div>
+<div class="orbit-ring orbit-2"></div>
+
+<!-- Scroll progress -->
+<div id="progress-bar"></div>
+
+<!-- Navigation -->
+<nav>
+  <div class="nav-inner">
+    <div class="nav-logo">⬡ <span>Mission:</span> Space</div>
+    <div class="nav-badge">KS3 · Year 7 · Physics P6</div>
+  </div>
+</nav>
+
+<!-- Hero -->
+<div class="wrapper">
+  <section class="hero">
+    <div class="hero-tag">★ Student Resource Hub ★</div>
+    <h1>
+      Explore<br>
+      <span class="gradient">The Universe</span>
+    </h1>
+    <p class="hero-sub">
+      A curated mission pack of videos, interactives and articles to take you deeper into space than any textbook can.
+    </p>
+  </section>
+
+  <!-- Stats strip -->
+  <div class="stats">
+    <div class="stat">
+      <span class="stat-num" id="count-total">10</span>
+      <span class="stat-label">Resources</span>
+    </div>
+    <div class="stat">
+      <span class="stat-num">3</span>
+      <span class="stat-label">Types</span>
+    </div>
+    <div class="stat">
+      <span class="stat-num">∞</span>
+      <span class="stat-label">Curiosity</span>
+    </div>
+  </div>
+
+  <!-- Intro -->
+  <p class="intro-text">
+    <strong>How to use this page:</strong> Pick a resource that grabs you, click <em>Launch Mission</em>, and follow wherever it takes you. These are <strong>not homework</strong> — they're rabbit holes worth falling into.
+  </p>
+
+  <!-- Filter bar -->
+  <div class="filter-bar">
+    <button class="filter-btn active" onclick="filterCards('all', this)">🌌 All Resources</button>
+    <button class="filter-btn" onclick="filterCards('video', this)">🎬 Videos</button>
+    <button class="filter-btn" onclick="filterCards('interactive', this)">🚀 Interactive</button>
+    <button class="filter-btn" onclick="filterCards('article', this)">📡 Articles &amp; Images</button>
+  </div>
+
+  <!-- ════════════════════════════════════════════ -->
+  <!--  RESOURCE CARDS                              -->
+  <!-- ════════════════════════════════════════════ -->
+  <div class="card-grid" id="card-grid">
+
+    <!-- ── FEATURED: Kurzgesagt Solar System ── -->
+    <div class="card card-featured" data-type="video">
+      <div class="card-icon">🪐</div>
+      <div class="card-featured-body">
+        <span class="featured-label">★ Mission Recommended</span>
+        <div class="card-title">The Solar System — Our Home in Space</div>
+        <div class="card-source">Kurzgesagt – In a Nutshell</div>
+        <p class="card-desc">
+          An animated tour through the entire solar system — from the scorching surface of Mercury to the icy edge of the Kuiper Belt. Breathtaking visuals and perfectly explained science. This is where to start.
+        </p>
+        <div class="card-tags">
+          <span class="tag">Solar System</span>
+          <span class="tag">Planets</span>
+          <span class="tag">Scale</span>
+          <span class="tag">Animation</span>
+        </div>
+      </div>
+      <div class="card-featured-actions">
+        <div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end;">
+          <span class="badge badge-video">Video</span>
+          <span class="badge badge-free">Free</span>
+        </div>
+        <div class="card-meta">⏱ <span>~8 min</span></div>
+        <a class="launch-btn" href="https://www.youtube.com/watch?v=mls8tiiI3uc" target="_blank" rel="noopener">
+          Launch Mission <span class="launch-arrow">→</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- ── Video: Kurzgesagt Scale ── -->
+    <div class="card" data-type="video">
+      <div class="card-header">
+        <div class="card-icon">🌌</div>
+        <div class="card-badges">
+          <span class="badge badge-video">Video</span>
+          <span class="badge badge-free">Free</span>
+        </div>
+      </div>
+      <div class="card-title">How Large is the Universe?</div>
+      <div class="card-source">Kurzgesagt – In a Nutshell</div>
+      <p class="card-desc">
+        Mind-bending scale comparisons that show just how tiny our solar system is inside the Milky Way — and how small the Milky Way is inside the observable universe. Your brain may need a moment.
+      </p>
+      <div class="card-tags">
+        <span class="tag">Universe Scale</span>
+        <span class="tag">Galaxy</span>
+        <span class="tag">Light-years</span>
+      </div>
+      <div class="card-footer">
+        <div class="card-meta">⏱ <span>~9 min</span></div>
+        <a class="launch-btn" href="https://www.youtube.com/watch?v=GoW8Tf7hTGA" target="_blank" rel="noopener">
+          Launch Mission <span class="launch-arrow">→</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- ── Interactive: NASA Eyes ── -->
+    <div class="card" data-type="interactive">
+      <div class="card-header">
+        <div class="card-icon">🛸</div>
+        <div class="card-badges">
+          <span class="badge badge-interactive">Interactive</span>
+          <span class="badge badge-nasa">NASA</span>
+        </div>
+      </div>
+      <div class="card-title">Eyes on the Solar System</div>
+      <div class="card-source">NASA — Real Mission Data</div>
+      <p class="card-desc">
+        A real-time 3D simulation of our solar system using actual NASA mission data. Fly to any planet, moon or spacecraft. Track where Voyager 1 is right now, 24 billion km away. This is the real deal.
+      </p>
+      <div class="card-tags">
+        <span class="tag">3D Interactive</span>
+        <span class="tag">Real Data</span>
+        <span class="tag">Explore</span>
+      </div>
+      <div class="card-footer">
+        <div class="card-meta">🌐 <span>Web App</span></div>
+        <a class="launch-btn" href="https://eyes.nasa.gov/apps/solar-system/" target="_blank" rel="noopener">
+          Launch Mission <span class="launch-arrow">→</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- ── Interactive: NASA Space Place ── -->
+    <div class="card" data-type="interactive">
+      <div class="card-header">
+        <div class="card-icon">🔭</div>
+        <div class="card-badges">
+          <span class="badge badge-interactive">Interactive</span>
+          <span class="badge badge-nasa">NASA</span>
+        </div>
+      </div>
+      <div class="card-title">NASA Space Place</div>
+      <div class="card-source">NASA — Education Hub</div>
+      <p class="card-desc">
+        NASA's dedicated student site — games, articles, activities and short videos covering every topic in space from comets to black holes. Great for independent research or just wandering.
+      </p>
+      <div class="card-tags">
+        <span class="tag">Research</span>
+        <span class="tag">Games</span>
+        <span class="tag">Articles</span>
+        <span class="tag">All Topics</span>
+      </div>
+      <div class="card-footer">
+        <div class="card-meta">🌐 <span>Web Hub</span></div>
+        <a class="launch-btn" href="https://spaceplace.nasa.gov" target="_blank" rel="noopener">
+          Launch Mission <span class="launch-arrow">→</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- ── Article: APOD ── -->
+    <div class="card" data-type="article">
+      <div class="card-header">
+        <div class="card-icon">📸</div>
+        <div class="card-badges">
+          <span class="badge badge-article">Daily Update</span>
+          <span class="badge badge-nasa">NASA</span>
+        </div>
+      </div>
+      <div class="card-title">Astronomy Picture of the Day</div>
+      <div class="card-source">NASA APOD — Updated Daily</div>
+      <p class="card-desc">
+        A different jaw-dropping space photograph every single day, with a short explanation by a professional astronomer. Supernovas, nebulae, galaxies and eclipses — check it daily and you'll never run out of wonder.
+      </p>
+      <div class="card-tags">
+        <span class="tag">Photography</span>
+        <span class="tag">Daily</span>
+        <span class="tag">Explained</span>
+      </div>
+      <div class="card-footer">
+        <div class="card-meta">📅 <span>New every day</span></div>
+        <a class="launch-btn" href="https://apod.nasa.gov" target="_blank" rel="noopener">
+          Launch Mission <span class="launch-arrow">→</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- ── Article: James Webb 2025 ── -->
+    <div class="card" data-type="article">
+      <div class="card-header">
+        <div class="card-icon">✨</div>
+        <div class="card-badges">
+          <span class="badge badge-article">Article</span>
+          <span class="badge badge-free">2025</span>
+        </div>
+      </div>
+      <div class="card-title">Best James Webb Telescope Images of 2025</div>
+      <div class="card-source">Scientific American</div>
+      <p class="card-desc">
+        The James Webb Space Telescope is the most powerful telescope ever built — and it's been sending back images that no human has ever seen before. This roundup shows the very best from 2025. Discuss: what <em>are</em> you looking at?
+      </p>
+      <div class="card-tags">
+        <span class="tag">JWST</span>
+        <span class="tag">Deep Space</span>
+        <span class="tag">Galaxies</span>
+        <span class="tag">Current Science</span>
+      </div>
+      <div class="card-footer">
+        <div class="card-meta">📖 <span>5 min read</span></div>
+        <a class="launch-btn" href="https://www.scientificamerican.com/article/the-best-space-photos-of-2025-reveal-the-most-jaw-dropping-views-of-the/" target="_blank" rel="noopener">
+          Launch Mission <span class="launch-arrow">→</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- ── Article: ESA Kids ── -->
+    <div class="card" data-type="article">
+      <div class="card-header">
+        <div class="card-icon">🌍</div>
+        <div class="card-badges">
+          <span class="badge badge-article">Article</span>
+          <span class="badge badge-free">ESA</span>
+        </div>
+      </div>
+      <div class="card-title">Our Solar System and Its Planets</div>
+      <div class="card-source">European Space Agency — ESA Kids</div>
+      <p class="card-desc">
+        Clear, well-written overviews from the European Space Agency covering each planet, dwarf planets, moons and more. Perfect for building or checking your knowledge before an assessment.
+      </p>
+      <div class="card-tags">
+        <span class="tag">Planets</span>
+        <span class="tag">Revision</span>
+        <span class="tag">Fact Checked</span>
+      </div>
+      <div class="card-footer">
+        <div class="card-meta">📖 <span>Reference</span></div>
+        <a class="launch-btn" href="https://www.esa.int/kids/en/learn/Our_Universe/Planets_and_moons/The_Solar_System_and_its_planets" target="_blank" rel="noopener">
+          Launch Mission <span class="launch-arrow">→</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- ── Interactive: BBC Bitesize ── -->
+    <div class="card" data-type="interactive">
+      <div class="card-header">
+        <div class="card-icon">📡</div>
+        <div class="card-badges">
+          <span class="badge badge-interactive">Interactive</span>
+          <span class="badge badge-free">Free</span>
+        </div>
+      </div>
+      <div class="card-title">KS3 Space Science — Revision &amp; Quizzes</div>
+      <div class="card-source">BBC Bitesize</div>
+      <p class="card-desc">
+        Curriculum-aligned revision pages with videos, summaries and interactive quizzes covering everything on the KS3 space specification. Good for checking your understanding before a test.
+      </p>
+      <div class="card-tags">
+        <span class="tag">KS3</span>
+        <span class="tag">Revision</span>
+        <span class="tag">Quizzes</span>
+        <span class="tag">Curriculum</span>
+      </div>
+      <div class="card-footer">
+        <div class="card-meta">✅ <span>Exam aligned</span></div>
+        <a class="launch-btn" href="https://www.bbc.co.uk/bitesize/topics/zkbbkqt" target="_blank" rel="noopener">
+          Launch Mission <span class="launch-arrow">→</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- ── Video: Brian Cox ── -->
+    <div class="card" data-type="video">
+      <div class="card-header">
+        <div class="card-icon">🌠</div>
+        <div class="card-badges">
+          <span class="badge badge-video">Video</span>
+          <span class="badge badge-free">BBC</span>
+        </div>
+      </div>
+      <div class="card-title">Wonders of the Solar System</div>
+      <div class="card-source">BBC — Professor Brian Cox</div>
+      <p class="card-desc">
+        Brian Cox visits some of Earth's most extreme environments to explain the forces that shape our solar system. Stunning cinematography meets brilliant science. Available via BBC iPlayer — look for the Planets series.
+      </p>
+      <div class="card-tags">
+        <span class="tag">Documentary</span>
+        <span class="tag">Planets</span>
+        <span class="tag">Brian Cox</span>
+      </div>
+      <div class="card-footer">
+        <div class="card-meta">⏱ <span>50 min episodes</span></div>
+        <a class="launch-btn" href="https://www.bbc.co.uk/iplayer/episodes/p06qj2yv/planets" target="_blank" rel="noopener">
+          Launch Mission <span class="launch-arrow">→</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- ── Article: Space.com Planet Guide ── -->
+    <div class="card" data-type="article">
+      <div class="card-header">
+        <div class="card-icon">📰</div>
+        <div class="card-badges">
+          <span class="badge badge-article">Article</span>
+          <span class="badge badge-free">Free</span>
+        </div>
+      </div>
+      <div class="card-title">Planet Guide — Complete Solar System Overview</div>
+      <div class="card-source">Space.com</div>
+      <p class="card-desc">
+        Up-to-date, accessible profiles of all eight planets with key facts, images and links to the latest mission news. Good starting point for research tasks or comparing planetary data.
+      </p>
+      <div class="card-tags">
+        <span class="tag">Facts</span>
+        <span class="tag">Research</span>
+        <span class="tag">Data</span>
+      </div>
+      <div class="card-footer">
+        <div class="card-meta">📖 <span>Reference</span></div>
+        <a class="launch-btn" href="https://www.space.com/solarsystem/" target="_blank" rel="noopener">
+          Launch Mission <span class="launch-arrow">→</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- No results placeholder -->
+    <div class="no-results" id="no-results">No missions found for this filter. Try another category.</div>
+
+  </div><!-- /card-grid -->
+
+</div><!-- /wrapper -->
+
+<!-- Footer -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-logo">⬡ MISSION: SPACE</div>
+    <p class="footer-text">
+      Curated for Year 7 Physics P6 · Arcadia British School Dubai<br>
+      Resources are free and open — let curiosity be your guide.
+    </p>
+  </div>
+</footer>
+
+<!-- ════════════════════════════════════════════ -->
+<!-- JS                                           -->
+<!-- ════════════════════════════════════════════ -->
+<script>
+  /* ── Starfield ── */
+  (function () {
+    const canvas = document.getElementById('starfield');
+    const ctx = canvas.getContext('2d');
+    let stars = [];
+    const NUM_STARS = 280;
+
+    function resize() {
+      canvas.width  = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+
+    function createStars() {
+      stars = [];
+      for (let i = 0; i < NUM_STARS; i++) {
+        stars.push({
+          x:    Math.random() * canvas.width,
+          y:    Math.random() * canvas.height,
+          r:    Math.random() * 1.4 + 0.2,
+          a:    Math.random(),
+          da:   (Math.random() - 0.5) * 0.005,
+          speed: Math.random() * 0.06 + 0.01,
+        });
+      }
+    }
+
+    function draw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      for (const s of stars) {
+        s.a += s.da;
+        if (s.a <= 0 || s.a >= 1) s.da *= -1;
+        s.y += s.speed;
+        if (s.y > canvas.height) { s.y = 0; s.x = Math.random() * canvas.width; }
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(200, 215, 255, ${s.a})`;
+        ctx.fill();
+      }
+      requestAnimationFrame(draw);
+    }
+
+    window.addEventListener('resize', () => { resize(); createStars(); });
+    resize();
+    createStars();
+    draw();
+  })();
+
+  /* ── Scroll progress bar ── */
+  window.addEventListener('scroll', () => {
+    const doc = document.documentElement;
+    const scrolled = (doc.scrollTop / (doc.scrollHeight - doc.clientHeight)) * 100;
+    document.getElementById('progress-bar').style.width = scrolled + '%';
+  });
+
+  /* ── Filter cards ── */
+  function filterCards(type, btn) {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+
+    const cards = document.querySelectorAll('#card-grid .card');
+    let visible = 0;
+    cards.forEach(card => {
+      if (type === 'all' || card.dataset.type === type) {
+        card.classList.remove('hidden');
+        visible++;
+      } else {
+        card.classList.add('hidden');
+      }
+    });
+
+    document.getElementById('no-results').style.display = visible === 0 ? 'block' : 'none';
+    document.getElementById('count-total').textContent = type === 'all' ? '10' : visible;
+  }
+
+  /* ── Staggered card entry animation ── */
+  window.addEventListener('load', () => {
+    const cards = document.querySelectorAll('.card');
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.opacity = '1';
+          entry.target.style.transform = entry.target.classList.contains('card-featured')
+            ? 'translateY(0)'
+            : 'translateY(0)';
+          io.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.08 });
+
+    cards.forEach((card, i) => {
+      card.style.opacity = '0';
+      card.style.transform = 'translateY(24px)';
+      card.style.transition = `opacity 0.5s ease ${i * 0.07}s, transform 0.5s ease ${i * 0.07}s, box-shadow 0.3s ease, border-color 0.3s ease, background 0.3s ease`;
+      io.observe(card);
+    });
+  });
+</script>
+
+</body>
+</html>
