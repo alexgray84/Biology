@@ -1,0 +1,1139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>P6.1: The Night Sky — KS3 Space</title>
+<style>
+/* ── BASE ─────────────────────────────────────────────────────── */
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+:root {
+  --navy:   #0a0e2e;
+  --blue:   #1565C0;
+  --blue-l: #E3F2FD;
+  --gold:   #F57F17;
+  --gold-l: #FFF8E1;
+  --green:  #2E7D32;
+  --green-l:#E8F5E9;
+  --purple: #6A1B9A;
+  --purple-l:#F3E5F5;
+  --red:    #C62828;
+  --bg:     #F0F4FF;
+  --card:   #FFFFFF;
+  --border: #D1D9F0;
+  --text:   #1A1A2E;
+  --muted:  #6B7280;
+  --sans: 'Segoe UI', system-ui, sans-serif;
+}
+body { font-family: var(--sans); background:var(--bg); color:var(--text); line-height:1.7; font-size:16px; }
+
+/* ── HEADER ───────────────────────────────────────────────────── */
+.hero {
+  background: linear-gradient(135deg, #0a0e2e 0%, #1a1a6e 50%, #0d47a1 100%);
+  padding: 40px 24px 32px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content:'';
+  position:absolute; inset:0;
+  background-image:
+    radial-gradient(1px 1px at 15% 20%, rgba(255,255,255,0.9) 0%, transparent 100%),
+    radial-gradient(1px 1px at 30% 60%, rgba(255,255,255,0.7) 0%, transparent 100%),
+    radial-gradient(1.5px 1.5px at 55% 15%, rgba(255,255,255,0.8) 0%, transparent 100%),
+    radial-gradient(1px 1px at 70% 70%, rgba(255,255,255,0.6) 0%, transparent 100%),
+    radial-gradient(1px 1px at 85% 30%, rgba(255,255,255,0.9) 0%, transparent 100%),
+    radial-gradient(1.5px 1.5px at 20% 80%, rgba(255,255,255,0.5) 0%, transparent 100%),
+    radial-gradient(1px 1px at 45% 45%, rgba(255,255,255,0.7) 0%, transparent 100%),
+    radial-gradient(1px 1px at 90% 85%, rgba(255,255,255,0.6) 0%, transparent 100%),
+    radial-gradient(1.5px 1.5px at 60% 55%, rgba(255,255,255,0.5) 0%, transparent 100%),
+    radial-gradient(1px 1px at 10% 50%, rgba(255,255,255,0.8) 0%, transparent 100%),
+    radial-gradient(1px 1px at 75% 10%, rgba(255,255,255,0.7) 0%, transparent 100%),
+    radial-gradient(1.5px 1.5px at 40% 90%, rgba(255,255,255,0.6) 0%, transparent 100%);
+  pointer-events:none;
+}
+.hero-badge { display:inline-block; background:rgba(245,127,23,0.9); color:#fff; font-size:11px; font-weight:700; letter-spacing:3px; text-transform:uppercase; padding:4px 14px; border-radius:20px; margin-bottom:12px; }
+.hero h1 { font-size:clamp(1.8rem,4vw,2.8rem); color:#fff; font-weight:700; margin-bottom:6px; }
+.hero h1 em { color:#ffd54f; font-style:normal; }
+.hero .sub { color:rgba(255,255,255,0.75); font-size:15px; margin-bottom:20px; }
+.objective-pills { display:flex; gap:8px; justify-content:center; flex-wrap:wrap; }
+.obj-pill { background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.3); color:#fff; font-size:12px; padding:5px 14px; border-radius:20px; backdrop-filter:blur(4px); }
+
+/* ── KEYWORD BAR ──────────────────────────────────────────────── */
+.keyword-bar { background:var(--navy); padding:10px 24px; display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+.keyword-bar .kw-label { color:rgba(255,255,255,0.5); font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase; margin-right:4px; }
+.kw-chip { background:rgba(255,255,255,0.12); color:#ffd54f; font-size:11px; font-weight:600; padding:3px 10px; border-radius:12px; border:1px solid rgba(255,213,79,0.3); cursor:pointer; transition:all .2s; }
+.kw-chip:hover, .kw-chip.active { background:#ffd54f; color:var(--navy); }
+.kw-tooltip { display:none; position:fixed; background:var(--navy); color:#fff; font-size:13px; padding:10px 14px; border-radius:8px; border:1px solid #ffd54f; max-width:260px; z-index:999; box-shadow:0 8px 24px rgba(0,0,0,0.3); pointer-events:none; }
+
+/* ── NAV TABS ─────────────────────────────────────────────────── */
+.tab-nav { background:var(--card); border-bottom:2px solid var(--border); position:sticky; top:0; z-index:100; display:flex; gap:0; overflow-x:auto; }
+.tab-btn { padding:14px 18px; border:none; background:transparent; font-family:var(--sans); font-size:13px; font-weight:600; color:var(--muted); cursor:pointer; white-space:nowrap; border-bottom:3px solid transparent; margin-bottom:-2px; transition:all .2s; display:flex; align-items:center; gap:6px; }
+.tab-btn:hover { color:var(--blue); background:var(--blue-l); }
+.tab-btn.active { color:var(--blue); border-bottom-color:var(--blue); }
+.tab-btn .tab-icon { font-size:1.1rem; }
+.tab-btn .tab-num { width:20px; height:20px; border-radius:50%; background:var(--border); font-size:10px; font-weight:700; display:flex; align-items:center; justify-content:center; color:var(--muted); }
+.tab-btn.active .tab-num { background:var(--blue); color:#fff; }
+.tab-btn.done .tab-num { background:var(--green); color:#fff; }
+
+/* ── MAIN ─────────────────────────────────────────────────────── */
+.main { max-width:860px; margin:0 auto; padding:24px 20px 80px; }
+.tab-panel { display:none; animation:fadeUp .3s ease; }
+.tab-panel.active { display:block; }
+@keyframes fadeUp { from{opacity:0;transform:translateY(10px);} to{opacity:1;transform:translateY(0);} }
+
+/* ── CARDS ────────────────────────────────────────────────────── */
+.card { background:var(--card); border-radius:14px; padding:28px; margin-bottom:20px; border:1px solid var(--border); box-shadow:0 2px 8px rgba(0,0,0,.05); }
+.card h2 { font-size:1.4rem; color:var(--navy); margin-bottom:6px; }
+.card h3 { font-size:1.1rem; color:var(--blue); margin:18px 0 8px; font-weight:700; }
+.card p { margin-bottom:10px; }
+
+/* BADGES */
+.badge-row { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:14px; }
+.badge { font-size:10px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; padding:3px 10px; border-radius:20px; }
+.badge.retrieval  { background:#FFF3E0; color:#E65100; }
+.badge.dual       { background:#E8F5E9; color:#1B5E20; }
+.badge.elaboration{ background:#E3F2FD; color:#0D47A1; }
+.badge.interleave { background:#F3E5F5; color:#4A148C; }
+.badge.creative   { background:#FCE4EC; color:#880E4F; }
+
+/* INFO BOXES */
+.info-box { border-radius:10px; padding:16px 18px; margin:14px 0; }
+.info-box.blue  { background:var(--blue-l); border-left:4px solid var(--blue); }
+.info-box.gold  { background:var(--gold-l); border-left:4px solid var(--gold); }
+.info-box.green { background:var(--green-l); border-left:4px solid var(--green); }
+.info-box.space { background:linear-gradient(135deg,#e8eaf6,#e3f2fd); border-left:4px solid #3f51b5; }
+.info-box h4 { font-size:13px; font-weight:700; text-transform:uppercase; letter-spacing:1px; margin-bottom:6px; color:inherit; }
+.info-box.blue h4 { color:var(--blue); }
+.info-box.gold h4 { color:var(--gold); }
+.info-box.green h4 { color:var(--green); }
+.info-box.space h4 { color:#3f51b5; }
+
+/* ── DIFFERENTIATION ──────────────────────────────────────────── */
+.diff-wrap { margin:16px 0; }
+.diff-tabs { display:flex; gap:0; border-radius:8px 8px 0 0; overflow:hidden; }
+.diff-tab { flex:1; padding:10px; border:none; cursor:pointer; font-family:var(--sans); font-weight:700; font-size:12px; text-align:center; transition:all .2s; }
+.diff-tab.f { background:#C8E6C9; color:#1B5E20; }
+.diff-tab.f.active, .diff-tab.f:hover { background:var(--green); color:#fff; }
+.diff-tab.c { background:#BBDEFB; color:#0D47A1; }
+.diff-tab.c.active, .diff-tab.c:hover { background:var(--blue); color:#fff; }
+.diff-tab.ch { background:#E1BEE7; color:#4A148C; }
+.diff-tab.ch.active, .diff-tab.ch:hover { background:var(--purple); color:#fff; }
+.diff-tab .sub-label { display:block; font-weight:400; font-size:10px; opacity:.8; margin-top:1px; }
+.diff-panel { display:none; padding:18px 20px; border-radius:0 0 8px 8px; border:1px solid var(--border); }
+.diff-panel.f.active { display:block; background:var(--green-l); border-color:#A5D6A7; }
+.diff-panel.c.active { display:block; background:var(--blue-l); border-color:#90CAF9; }
+.diff-panel.ch.active { display:block; background:var(--purple-l); border-color:#CE93D8; }
+
+/* ── INPUTS ───────────────────────────────────────────────────── */
+.input-group { margin:12px 0; }
+.input-group label { display:block; font-weight:600; font-size:13px; margin-bottom:5px; color:var(--text); }
+.input-group textarea { width:100%; padding:12px; border:2px solid var(--border); border-radius:8px; font-family:var(--sans); font-size:14px; resize:vertical; min-height:72px; transition:border .2s; background:#fff; }
+.input-group textarea:focus { outline:none; border-color:var(--blue); box-shadow:0 0 0 3px rgba(21,101,192,.1); }
+.input-group input[type=text] { width:100%; padding:10px 12px; border:2px solid var(--border); border-radius:8px; font-family:var(--sans); font-size:14px; background:#fff; transition:border .2s; }
+.input-group input[type=text]:focus { outline:none; border-color:var(--blue); box-shadow:0 0 0 3px rgba(21,101,192,.1); }
+.scaffold-box { background:var(--gold-l); border:1px solid #FFE082; border-radius:8px; padding:14px 16px; margin:10px 0; }
+.scaffold-box .scaffold-title { font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--gold); margin-bottom:6px; }
+.word-bank { display:flex; flex-wrap:wrap; gap:6px; margin-top:6px; }
+.word-bank span { background:#fff; border:1px solid #FFD54F; color:var(--navy); padding:4px 11px; border-radius:14px; font-size:13px; cursor:pointer; transition:all .2s; }
+.word-bank span:hover { background:#FFD54F; }
+.sentence-starter { background:#E3F2FD; border-left:3px solid var(--blue); padding:10px 14px; border-radius:0 6px 6px 0; margin:8px 0; font-style:italic; font-size:14px; color:#0D47A1; }
+
+/* ── REVEAL ───────────────────────────────────────────────────── */
+.reveal-btn { display:inline-flex; align-items:center; gap:6px; padding:9px 18px; background:var(--navy); color:#fff; border:none; border-radius:7px; font-family:var(--sans); font-size:13px; font-weight:600; cursor:pointer; transition:all .2s; margin-top:10px; }
+.reveal-btn:hover { background:var(--blue); }
+.reveal-box { display:none; margin-top:10px; padding:16px 18px; background:var(--green-l); border-radius:8px; border-left:4px solid var(--green); font-size:14px; line-height:1.7; }
+.reveal-box.show { display:block; animation:fadeUp .3s ease; }
+.reveal-box ul { padding-left:18px; }
+.reveal-box li { margin-bottom:4px; }
+
+/* ── QUIZ ─────────────────────────────────────────────────────── */
+.quiz-block { background:var(--card); border:2px solid var(--border); border-radius:10px; padding:20px; margin:16px 0; }
+.quiz-block.hinge { border-color:var(--blue); }
+.quiz-label { font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--blue); margin-bottom:8px; }
+.quiz-block h4 { font-size:15px; margin-bottom:14px; line-height:1.5; }
+.quiz-opts { display:flex; flex-direction:column; gap:7px; }
+.quiz-opt { display:flex; align-items:center; gap:10px; padding:10px 14px; border:2px solid var(--border); border-radius:8px; cursor:pointer; font-size:14px; transition:all .15s; background:#fff; }
+.quiz-opt:hover { border-color:var(--blue); background:var(--blue-l); }
+.quiz-opt.correct { border-color:var(--green); background:var(--green-l); }
+.quiz-opt.wrong { border-color:var(--red); background:#FFEBEE; }
+.quiz-opt.disabled { pointer-events:none; }
+.quiz-opt .ltr { width:26px; height:26px; border-radius:50%; border:2px solid var(--border); display:flex; align-items:center; justify-content:center; font-weight:700; font-size:12px; flex-shrink:0; }
+.quiz-opt.correct .ltr { background:var(--green); color:#fff; border-color:var(--green); }
+.quiz-opt.wrong .ltr { background:var(--red); color:#fff; border-color:var(--red); }
+.quiz-feedback { display:none; margin-top:10px; padding:12px 14px; border-radius:7px; font-size:14px; line-height:1.6; }
+.quiz-feedback.show { display:block; }
+.quiz-feedback.ok { background:var(--green-l); color:var(--green); }
+.quiz-feedback.no { background:#FFEBEE; color:var(--red); }
+
+/* ── MATCH-UP ─────────────────────────────────────────────────── */
+.match-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin:14px 0; }
+.match-card { padding:14px 16px; border-radius:10px; border:2px solid var(--border); background:#fff; cursor:pointer; font-size:14px; text-align:center; transition:all .2s; font-weight:500; }
+.match-card:hover { border-color:var(--blue); background:var(--blue-l); }
+.match-card.selected { border-color:var(--blue); background:var(--blue-l); }
+.match-card.matched { border-color:var(--green); background:var(--green-l); pointer-events:none; }
+.match-card.wrong-flash { border-color:var(--red); background:#FFEBEE; animation:flash .5s ease; }
+@keyframes flash { 0%,100%{opacity:1;} 50%{opacity:.4;} }
+.match-term { background:linear-gradient(135deg, #1565C0, #1E88E5); color:#fff; border-color:var(--blue); }
+.match-def { background:#fff; }
+.match-result { text-align:center; font-weight:700; color:var(--green); margin-top:8px; display:none; }
+
+/* ── PLANET TABLE ─────────────────────────────────────────────── */
+.planet-table { width:100%; border-collapse:separate; border-spacing:0; border-radius:10px; overflow:hidden; margin:14px 0; font-size:13.5px; }
+.planet-table th { background:var(--navy); color:#ffd54f; padding:10px 14px; text-align:left; font-weight:700; font-size:12px; }
+.planet-table td { padding:10px 14px; border-bottom:1px solid var(--border); background:#fff; }
+.planet-table tr:last-child td { border-bottom:none; }
+.planet-table tr:nth-child(even) td { background:#F8FAFF; }
+.planet-chip { display:inline-block; padding:2px 10px; border-radius:12px; font-size:11px; font-weight:700; }
+.planet-chip.rocky { background:#FFCDD2; color:#B71C1C; }
+.planet-chip.gas   { background:#C8E6C9; color:#1B5E20; }
+.planet-chip.ice   { background:#E3F2FD; color:#0D47A1; }
+
+/* ── SCALE EXPLORER ───────────────────────────────────────────── */
+.scale-viz { background:linear-gradient(135deg, #0a0e2e, #1a237e); border-radius:12px; padding:24px; margin:16px 0; overflow:hidden; position:relative; }
+.scale-row { display:flex; align-items:center; gap:12px; margin:8px 0; }
+.scale-label { color:#fff; font-size:13px; font-weight:600; min-width:130px; }
+.scale-bar { height:16px; border-radius:8px; background:linear-gradient(90deg,#ffd54f,#ff9800); transition:width .6s ease; }
+.scale-val { color:#ffd54f; font-size:12px; font-weight:600; white-space:nowrap; }
+
+/* ── LIGHT TABLE ──────────────────────────────────────────────── */
+.light-table { width:100%; border-collapse:separate; border-spacing:0; border-radius:10px; overflow:hidden; margin:14px 0; }
+.light-table th { background:var(--navy); color:#ffd54f; padding:10px 14px; text-align:left; font-size:12px; font-weight:700; }
+.light-table td { padding:10px 14px; border-bottom:1px solid var(--border); background:#fff; font-size:14px; }
+.light-table tr:nth-child(even) td { background:#F8FAFF; }
+.light-table tr:last-child td { border-bottom:none; }
+.light-table td input { width:100%; padding:6px 8px; border:1.5px solid var(--border); border-radius:6px; font-family:var(--sans); font-size:13px; }
+.light-table td input:focus { outline:none; border-color:var(--blue); }
+
+/* ── EXTENDED WRITING ─────────────────────────────────────────── */
+.ew-scaffold { background:linear-gradient(135deg, #e8eaf6, #e3f2fd); border-radius:12px; padding:22px; margin:14px 0; border:1px solid #9FA8DA; }
+.ew-scaffold h4 { color:#283593; font-size:14px; font-weight:700; margin-bottom:12px; }
+.sentence-scaffold { display:flex; flex-direction:column; gap:8px; margin-bottom:12px; }
+.ss-item { background:#fff; border:1px dashed #9FA8DA; border-radius:6px; padding:10px 12px; font-size:13px; color:#283593; cursor:pointer; transition:all .2s; }
+.ss-item:hover { background:#e8eaf6; }
+.ss-item .ss-label { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:#5C6BC0; display:block; margin-bottom:3px; }
+
+/* ── STEP NAV ─────────────────────────────────────────────────── */
+.step-nav { display:flex; justify-content:space-between; margin-top:32px; padding-top:20px; border-top:1px solid var(--border); }
+.step-btn { display:inline-flex; align-items:center; gap:8px; padding:11px 22px; border:2px solid var(--blue); border-radius:8px; font-family:var(--sans); font-size:14px; font-weight:600; cursor:pointer; transition:all .2s; background:#fff; color:var(--blue); }
+.step-btn:hover, .step-btn.primary { background:var(--blue); color:#fff; }
+.step-btn.primary:hover { background:#0D47A1; }
+.step-btn:disabled { opacity:.35; pointer-events:none; }
+
+/* ── RAG SELF-ASSESS ──────────────────────────────────────────── */
+.rag-row { display:flex; align-items:center; gap:12px; padding:12px 0; border-bottom:1px solid var(--border); font-size:14px; }
+.rag-row:last-child { border-bottom:none; }
+.rag-btns { display:flex; gap:6px; margin-left:auto; flex-shrink:0; }
+.rag-btn { width:34px; height:34px; border-radius:50%; border:2px solid var(--border); cursor:pointer; font-size:0.9rem; transition:all .2s; display:flex; align-items:center; justify-content:center; background:#fff; }
+.rag-btn.r { border-color:#ef5350; }
+.rag-btn.r:hover, .rag-btn.r.lit { background:#ef5350; color:#fff; }
+.rag-btn.a { border-color:#FFA726; }
+.rag-btn.a:hover, .rag-btn.a.lit { background:#FFA726; color:#fff; }
+.rag-btn.g { border-color:var(--green); }
+.rag-btn.g:hover, .rag-btn.g.lit { background:var(--green); color:#fff; }
+
+/* ── PROGRESS ─────────────────────────────────────────────────── */
+.progress-bar { position:fixed; top:0; left:0; height:3px; background:linear-gradient(90deg,#ffd54f,#f57f17); z-index:200; transition:width .3s; pointer-events:none; }
+
+/* ── RESPONSIVE ───────────────────────────────────────────────── */
+@media(max-width:600px) {
+  .main { padding:16px 12px 60px; }
+  .card { padding:18px; }
+  .match-grid { grid-template-columns:1fr; }
+  .diff-tabs { flex-direction:column; }
+  .step-nav { flex-direction:column; gap:8px; }
+}
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="progressBar"></div>
+<div class="kw-tooltip" id="kwTooltip"></div>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="hero-badge">P6 Space · Lesson 1</div>
+  <h1>🌌 The <em>Night Sky</em></h1>
+  <p class="sub">KS3 Physics · Year 7 · Distance Learning</p>
+  <div class="objective-pills">
+    <span class="obj-pill">🔭 Describe objects in the night sky</span>
+    <span class="obj-pill">🪐 Explain the structure of the Solar System</span>
+    <span class="obj-pill">🌌 Describe the scale of the Universe</span>
+  </div>
+</header>
+
+<!-- KEYWORD BAR -->
+<div class="keyword-bar" id="kwBar">
+  <span class="kw-label">Key words:</span>
+</div>
+
+<!-- TAB NAV -->
+<nav class="tab-nav" id="tabNav">
+  <button class="tab-btn active" onclick="goTab(0)"><span class="tab-num">1</span><span class="tab-icon">👁️</span>Activate</button>
+  <button class="tab-btn" onclick="goTab(1)"><span class="tab-num">2</span><span class="tab-icon">🛰️</span>Satellites</button>
+  <button class="tab-btn" onclick="goTab(2)"><span class="tab-num">3</span><span class="tab-icon">🪐</span>Solar System</button>
+  <button class="tab-btn" onclick="goTab(3)"><span class="tab-num">4</span><span class="tab-icon">☄️</span>Comets &amp; Meteors</button>
+  <button class="tab-btn" onclick="goTab(4)"><span class="tab-num">5</span><span class="tab-icon">🌌</span>Galaxy &amp; Universe</button>
+  <button class="tab-btn" onclick="goTab(5)"><span class="tab-num">6</span><span class="tab-icon">✍️</span>Big Questions</button>
+  <button class="tab-btn" onclick="goTab(6)"><span class="tab-num">7</span><span class="tab-icon">✅</span>Check &amp; Reflect</button>
+</nav>
+
+<main class="main">
+
+<!-- ══════════════════════════════════════════════════════════════
+     TAB 0 — ACTIVATE
+══════════════════════════════════════════════════════════════ -->
+<div class="tab-panel active" id="tab0">
+  <div class="card">
+    <div class="badge-row">
+      <span class="badge retrieval">Retrieval Practice</span>
+      <span class="badge dual">Prior Knowledge Activation</span>
+    </div>
+    <h2>🌙 Look Up</h2>
+    <p style="color:var(--muted); margin-bottom:16px;">Before you learn anything new, activate what you already know. This makes new information stick much more effectively.</p>
+
+    <div class="info-box space">
+      <h4>🌟 The Starter Question</h4>
+      <p>On a clear night, away from city lights, how many individual stars do you think you can see with the naked eye? Scientists estimate it's somewhere between <strong>2,500 and 5,000</strong> — but they're all in just our own galaxy. There are estimated to be <em>2 trillion</em> galaxies in the observable Universe.</p>
+    </div>
+
+    <div class="diff-wrap">
+      <div class="diff-tabs" data-group="act">
+        <button class="diff-tab f active" onclick="switchDiff('act','f',this)">🌱 Foundation<span class="sub-label">Guided prompts</span></button>
+        <button class="diff-tab c" onclick="switchDiff('act','c',this)">⭐ Core<span class="sub-label">Open recall</span></button>
+        <button class="diff-tab ch" onclick="switchDiff('act','ch',this)">🚀 Challenge<span class="sub-label">Extend and connect</span></button>
+      </div>
+
+      <div class="diff-panel f active" data-group="act">
+        <div class="scaffold-box">
+          <div class="scaffold-title">📌 Prompts to help you</div>
+          <p>Think about what you can see in the night sky. Use these picture prompts:</p>
+          <div class="word-bank" style="margin-top:8px;">
+            <span>stars</span><span>the Moon</span><span>planets</span><span>shooting stars</span><span>the Sun</span><span>satellites</span><span>clouds</span><span>the Milky Way</span>
+          </div>
+        </div>
+        <div class="input-group">
+          <label>Complete the sentences:</label>
+          <p style="margin:8px 0 4px; font-size:14px;">When I look at the night sky I can see _______________.</p>
+          <input type="text" placeholder="Name at least 3 things...">
+          <p style="margin:12px 0 4px; font-size:14px;">I know that the Moon is _______________.</p>
+          <input type="text" placeholder="What do you already know about the Moon?">
+          <p style="margin:12px 0 4px; font-size:14px;">The Sun is different from the Moon because _______________.</p>
+          <input type="text" placeholder="Think about light...">
+        </div>
+      </div>
+
+      <div class="diff-panel c" data-group="act">
+        <div class="input-group">
+          <label>1. Write down everything you can think of that you might see in the night sky. Include what you know about each one.</label>
+          <textarea placeholder="Try to recall at least 5 things with a brief description of each..."></textarea>
+        </div>
+        <div class="input-group">
+          <label>2. What do you think the difference is between a star and a planet?</label>
+          <textarea placeholder="Think about where the light comes from..."></textarea>
+        </div>
+      </div>
+
+      <div class="diff-panel ch" data-group="act">
+        <div class="input-group">
+          <label>1. Create a mini-concept map. In the centre is "Things in the Night Sky." Write as many connected ideas as you can, including: what they are, where they are, how far away they are, and whether they produce their own light.</label>
+          <textarea rows="5" placeholder="Describe your concept map here — you could also draw it on paper and photograph it..."></textarea>
+        </div>
+        <div class="input-group">
+          <label>2. 🌟 Astronomer's puzzle: If you look at a star tonight, the light hitting your eyes left that star potentially thousands of years ago. What does this mean about what you're actually seeing?</label>
+          <textarea placeholder="This is designed to make you think — there's no single right answer yet..."></textarea>
+        </div>
+      </div>
+    </div>
+
+    <div class="quiz-block hinge" id="qA1">
+      <div class="quiz-label">⚡ Quick Check — Luminous vs Non-Luminous</div>
+      <h4>The Moon appears bright in the night sky. Why can we see the Moon?</h4>
+      <div class="quiz-opts">
+        <div class="quiz-opt" onclick="checkQ(this,false,'qA1','Not quite. The Moon does not produce its own light — it is not a luminous object.')"><span class="ltr">A</span> The Moon produces its own light, like the Sun</div>
+        <div class="quiz-opt" onclick="checkQ(this,true,'qA1','Correct! The Moon is non-luminous — it reflects light from the Sun. This is why it looks different from stars, which are luminous and produce their own light.')"><span class="ltr">B</span> The Moon reflects light from the Sun</div>
+        <div class="quiz-opt" onclick="checkQ(this,false,'qA1','Stars do produce light, but the Moon is not a star. The Moon is a natural satellite of Earth.')"><span class="ltr">C</span> The Moon absorbs starlight and re-emits it</div>
+        <div class="quiz-opt" onclick="checkQ(this,false,'qA1','Earth\'s atmosphere bends light but this is not why the Moon is visible. Consider where the Moon\'s light actually comes from.')"><span class="ltr">D</span> Earth's atmosphere makes the Moon glow</div>
+      </div>
+      <div class="quiz-feedback" id="qA1-f"></div>
+    </div>
+  </div>
+
+  <div class="step-nav">
+    <button class="step-btn" disabled>← Back</button>
+    <button class="step-btn primary" onclick="goTab(1)">Satellites →</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════
+     TAB 1 — SATELLITES
+══════════════════════════════════════════════════════════════ -->
+<div class="tab-panel" id="tab1">
+  <div class="card">
+    <div class="badge-row">
+      <span class="badge dual">Dual Coding</span>
+      <span class="badge elaboration">Elaborative Interrogation</span>
+    </div>
+    <h2>🛰️ Satellites</h2>
+    <p style="color:var(--muted);">A satellite is any object that <strong>orbits</strong> another object.</p>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin:16px 0;">
+      <div class="info-box blue">
+        <h4>🌕 Natural Satellite</h4>
+        <p>An object that orbits another naturally — formed by nature. Example: <strong>the Moon</strong> orbits Earth. The Moon is kept in orbit by Earth's <strong>gravity</strong> and its own sideways motion.</p>
+        <p style="margin-top:8px; font-size:13px; color:var(--muted);">💡 Many planets have natural satellites — Jupiter has over 90 moons!</p>
+      </div>
+      <div class="info-box gold">
+        <h4>🛸 Artificial Satellite</h4>
+        <p>An object made by humans and put into orbit. Examples include <strong>GPS satellites</strong>, <strong>weather satellites</strong>, and the <strong>International Space Station (ISS)</strong>.</p>
+        <p style="margin-top:8px; font-size:13px; color:var(--muted);">💡 The ISS is visible to the naked eye — light reflected from it reaches us in a fraction of a second.</p>
+      </div>
+    </div>
+
+    <div class="info-box space">
+      <h4>🌍 Why Don't Satellites Fall Down?</h4>
+      <p>A satellite is constantly falling towards Earth due to gravity — but it's also moving sideways so fast that it keeps "missing" Earth. This sideways motion + gravity = orbit. Think of it like swinging a ball on a string: the string is gravity.</p>
+    </div>
+
+    <h3>Match the Satellite Types</h3>
+    <p style="font-size:14px; color:var(--muted); margin-bottom:10px;">Click a <strong>blue term</strong> then the correct <strong>white description</strong> to match them up.</p>
+
+    <div class="match-grid" id="matchA">
+      <div class="match-card match-term" data-id="1">The Moon</div>
+      <div class="match-card match-term" data-id="2">The International Space Station</div>
+      <div class="match-card match-term" data-id="3">A GPS satellite</div>
+      <div class="match-card match-term" data-id="4">Phobos (orbits Mars)</div>
+      <div class="match-card match-def" data-id="1">Natural satellite of Earth — reflects sunlight</div>
+      <div class="match-card match-def" data-id="2">Artificial — built &amp; launched by humans, orbits at ~400 km altitude</div>
+      <div class="match-card match-def" data-id="3">Artificial — helps us navigate using signals from orbit</div>
+      <div class="match-card match-def" data-id="4">Natural satellite of Mars — one of two Martian moons</div>
+    </div>
+    <div class="match-result" id="matchA-result">🎉 All matched correctly!</div>
+
+    <div class="diff-wrap" style="margin-top:20px;">
+      <div class="diff-tabs" data-group="sat">
+        <button class="diff-tab f active" onclick="switchDiff('sat','f',this)">🌱 Foundation<span class="sub-label">Describe it</span></button>
+        <button class="diff-tab c" onclick="switchDiff('sat','c',this)">⭐ Core<span class="sub-label">Explain it</span></button>
+        <button class="diff-tab ch" onclick="switchDiff('sat','ch',this)">🚀 Challenge<span class="sub-label">Evaluate it</span></button>
+      </div>
+      <div class="diff-panel f active" data-group="sat">
+        <div class="scaffold-box">
+          <div class="scaffold-title">Sentence starters</div>
+          <div class="sentence-starter">"A natural satellite is... An example is..."</div>
+          <div class="sentence-starter">"An artificial satellite is... An example is..."</div>
+        </div>
+        <div class="input-group">
+          <label>Describe the difference between a natural and an artificial satellite.</label>
+          <textarea placeholder="Use the sentence starters above to help you..."></textarea>
+        </div>
+      </div>
+      <div class="diff-panel c" data-group="sat">
+        <div class="input-group">
+          <label>Explain why the Moon stays in orbit around Earth. Use the words: gravity, speed, orbit.</label>
+          <textarea placeholder="Think about what would happen if the Moon was moving too slowly... or too fast..."></textarea>
+        </div>
+        <div class="input-group">
+          <label>Give two uses of artificial satellites and explain why they need to be in space (rather than on the ground).</label>
+          <textarea placeholder="GPS, weather forecasting, communication..."></textarea>
+        </div>
+      </div>
+      <div class="diff-panel ch" data-group="sat">
+        <div class="input-group">
+          <label>🌟 Some people want to clear up space debris — old, broken satellites orbiting Earth. Explain why this might be important and suggest what challenges scientists might face in doing so.</label>
+          <textarea rows="5" placeholder="Consider: how many satellites are up there? What happens if they collide? Who is responsible?"></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="step-nav">
+    <button class="step-btn" onclick="goTab(0)">← Activate</button>
+    <button class="step-btn primary" onclick="goTab(2)">Solar System →</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════
+     TAB 2 — SOLAR SYSTEM
+══════════════════════════════════════════════════════════════ -->
+<div class="tab-panel" id="tab2">
+  <div class="card">
+    <div class="badge-row">
+      <span class="badge retrieval">Retrieval Practice</span>
+      <span class="badge dual">Dual Coding</span>
+    </div>
+    <h2>🪐 Our Solar System</h2>
+    <p style="color:var(--muted);">Our Solar System contains the Sun, eight planets, their moons, dwarf planets, asteroids, and comets — all held together by the Sun's gravity.</p>
+
+    <h3>The Eight Planets — In Order</h3>
+    <div class="info-box blue">
+      <h4>🧠 Memory Trick</h4>
+      <p>Use a mnemonic to remember the planets in order from the Sun. One classic is:<br><strong>"My Very Educated Mother Just Served Us Nachos"</strong><br><em>Mercury, Venus, Earth, Mars, Jupiter, Saturn, Uranus, Neptune</em></p>
+    </div>
+
+    <table class="planet-table">
+      <thead>
+        <tr>
+          <th>#</th><th>Planet</th><th>Type</th><th>Approx. distance from Sun</th><th>Interesting fact</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>1</td><td>☿ Mercury</td><td><span class="planet-chip rocky">Rocky</span></td><td>58 million km</td><td>No atmosphere — extreme temperature swings</td></tr>
+        <tr><td>2</td><td>♀ Venus</td><td><span class="planet-chip rocky">Rocky</span></td><td>108 million km</td><td>Hottest planet — thick CO₂ atmosphere traps heat</td></tr>
+        <tr><td>3</td><td>🌍 Earth</td><td><span class="planet-chip rocky">Rocky</span></td><td>150 million km</td><td>Only known planet with life</td></tr>
+        <tr><td>4</td><td>♂ Mars</td><td><span class="planet-chip rocky">Rocky</span></td><td>228 million km</td><td>Has the largest volcano in the Solar System</td></tr>
+        <tr><td colspan="5" style="background:#e8eaf6; color:#283593; font-size:12px; font-weight:700; letter-spacing:1px; text-align:center; padding:7px;">⭐ ASTEROID BELT — between rocky inner planets and gas giants ⭐</td></tr>
+        <tr><td>5</td><td>♃ Jupiter</td><td><span class="planet-chip gas">Gas Giant</span></td><td>778 million km</td><td>Largest planet — the Great Red Spot is a storm bigger than Earth</td></tr>
+        <tr><td>6</td><td>♄ Saturn</td><td><span class="planet-chip gas">Gas Giant</span></td><td>1.4 billion km</td><td>Famous rings made of ice and rock; could float on water!</td></tr>
+        <tr><td>7</td><td>♅ Uranus</td><td><span class="planet-chip ice">Ice Giant</span></td><td>2.9 billion km</td><td>Rotates on its side — nearly 90° tilt</td></tr>
+        <tr><td>8</td><td>♆ Neptune</td><td><span class="planet-chip ice">Ice Giant</span></td><td>4.5 billion km</td><td>Strongest winds in the Solar System — up to 2,100 km/h</td></tr>
+      </tbody>
+    </table>
+
+    <div class="info-box gold">
+      <h4>🔴 Wait — What About Pluto?</h4>
+      <p>Pluto was classified as the 9th planet until 2006. The International Astronomical Union then defined a "planet" as an object that: (1) orbits the Sun, (2) has enough mass to be roughly spherical, and (3) <strong>has cleared its orbital neighbourhood of other debris</strong>. Pluto fails condition 3 — it shares its orbit with other Kuiper Belt objects — so it was reclassified as a <strong>dwarf planet</strong>.</p>
+    </div>
+
+    <div class="quiz-block hinge" id="qB1">
+      <div class="quiz-label">⚡ Hinge Question</div>
+      <h4>Venus is closer to the Sun than Earth, but Mercury is even closer. Yet Venus is hotter than Mercury. What best explains this?</h4>
+      <div class="quiz-opts">
+        <div class="quiz-opt" onclick="checkQ(this,false,'qB1','Venus is actually closer to the Sun than Mercury is — Mercury is closer. Distance alone doesn\'t explain this.')"><span class="ltr">A</span> Venus is actually closer to the Sun than Mercury</div>
+        <div class="quiz-opt" onclick="checkQ(this,false,'qB1','Size does not directly determine surface temperature. Many large planets are actually cold because they are far from the Sun.')"><span class="ltr">B</span> Venus is larger than Mercury so it absorbs more heat</div>
+        <div class="quiz-opt" onclick="checkQ(this,true,'qB1','Correct! Venus has a thick atmosphere of carbon dioxide, which creates a powerful greenhouse effect — trapping heat and raising the surface temperature to about 465°C. Mercury has no atmosphere so heat escapes straight back into space.')"><span class="ltr">C</span> Venus has a thick atmosphere that traps heat (greenhouse effect)</div>
+        <div class="quiz-opt" onclick="checkQ(this,false,'qB1','Venus rotates slowly, but this doesn\'t raise the temperature — it\'s the greenhouse effect from the thick CO₂ atmosphere that matters.')"><span class="ltr">D</span> Venus rotates more slowly, giving it more time to warm up</div>
+      </div>
+      <div class="quiz-feedback" id="qB1-f"></div>
+    </div>
+
+    <h3>Years and Orbits</h3>
+    <div class="info-box blue">
+      <h4>📅 What is a Year?</h4>
+      <p>A year is the time it takes for a planet to <strong>complete one orbit around the Sun</strong>. The further a planet is from the Sun, the longer its orbit path AND the slower its orbital speed — so years get much longer.</p>
+      <p style="margin-top:8px;"><strong>Earth:</strong> 365 days &nbsp;|&nbsp; <strong>Mercury:</strong> 88 days &nbsp;|&nbsp; <strong>Neptune:</strong> 165 Earth years</p>
+    </div>
+
+    <div class="diff-wrap">
+      <div class="diff-tabs" data-group="sol">
+        <button class="diff-tab f active" onclick="switchDiff('sol','f',this)">🌱 Foundation<span class="sub-label">List &amp; describe</span></button>
+        <button class="diff-tab c" onclick="switchDiff('sol','c',this)">⭐ Core<span class="sub-label">Explain patterns</span></button>
+        <button class="diff-tab ch" onclick="switchDiff('sol','ch',this)">🚀 Challenge<span class="sub-label">Analyse &amp; evaluate</span></button>
+      </div>
+      <div class="diff-panel f active" data-group="sol">
+        <div class="scaffold-box">
+          <div class="scaffold-title">Word Bank</div>
+          <div class="word-bank"><span>rocky</span><span>gas giant</span><span>asteroid belt</span><span>orbit</span><span>gravity</span><span>Sun</span><span>dwarf planet</span><span>moons</span><span>atmosphere</span></div>
+        </div>
+        <div class="input-group">
+          <label>Write the 8 planets in order from the Sun:</label>
+          <input type="text" placeholder="1. Mercury, 2. Venus...">
+        </div>
+        <div class="input-group">
+          <label>Name TWO rocky planets and TWO gas giants:</label>
+          <input type="text" placeholder="Rocky: _______ and _______    Gas giants: _______ and _______">
+        </div>
+        <div class="input-group">
+          <label>What is found between the rocky planets and the gas giants?</label>
+          <input type="text" placeholder="The ___ belt">
+        </div>
+      </div>
+      <div class="diff-panel c" data-group="sol">
+        <div class="input-group">
+          <label>1. Explain why planets further from the Sun have longer years. Think about orbit distance AND orbital speed.</label>
+          <textarea placeholder="As you move further from the Sun..."></textarea>
+        </div>
+        <div class="input-group">
+          <label>2. Why is Venus the hottest planet in the Solar System, even though Mercury is closer to the Sun?</label>
+          <textarea placeholder="Consider what Venus has that Mercury doesn't..."></textarea>
+        </div>
+        <div class="input-group">
+          <label>3. Why is Pluto no longer classified as a planet?</label>
+          <textarea placeholder="Use the three criteria for being a planet..."></textarea>
+        </div>
+      </div>
+      <div class="diff-panel ch" data-group="sol">
+        <div class="input-group">
+          <label>🌟 If you were choosing a planet (other than Earth) to send robotic probes to search for signs of past life, which would you choose and why? Consider: temperature, atmosphere, presence of water, distance from Sun. Make a scientific argument.</label>
+          <textarea rows="6" placeholder="Consider Mars (evidence of ancient water), Europa (moon of Jupiter with sub-surface ocean), or others..."></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="step-nav">
+    <button class="step-btn" onclick="goTab(1)">← Satellites</button>
+    <button class="step-btn primary" onclick="goTab(3)">Comets &amp; Meteors →</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════
+     TAB 3 — COMETS & METEORS
+══════════════════════════════════════════════════════════════ -->
+<div class="tab-panel" id="tab3">
+  <div class="card">
+    <div class="badge-row">
+      <span class="badge dual">Dual Coding</span>
+      <span class="badge retrieval">Retrieval Practice</span>
+    </div>
+    <h2>☄️ Comets &amp; Meteors</h2>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin:14px 0;">
+      <div class="info-box blue">
+        <h4>☄️ Comets</h4>
+        <p>Comets are <strong>balls of ice and dust</strong> that orbit the Sun in long, stretched elliptical orbits. When a comet comes close to the Sun:</p>
+        <ul style="padding-left:16px; margin-top:6px; font-size:14px;">
+          <li>The Sun heats the ice → it turns to gas</li>
+          <li>This gas and dust is blown back by solar wind</li>
+          <li>This creates the comet's glowing <strong>tail</strong></li>
+          <li>The tail always points <em>away from the Sun</em></li>
+        </ul>
+        <p style="margin-top:8px; font-size:13px; color:var(--muted);">Example: Halley's Comet passes Earth every ~76 years. It will return in 2061.</p>
+      </div>
+      <div class="info-box gold">
+        <h4>🌠 Meteors &amp; Meteorites</h4>
+        <p>As Earth moves through space, it collides with small lumps of material (rock, metal, dust):</p>
+        <ul style="padding-left:16px; margin-top:6px; font-size:14px;">
+          <li><strong>Meteor</strong> — burns up in Earth's atmosphere creating a streak of light ("shooting star"). The friction with air causes it to glow.</li>
+          <li><strong>Meteorite</strong> — a larger meteor that does NOT fully burn up and hits Earth's surface.</li>
+        </ul>
+        <p style="margin-top:8px; font-size:13px; color:var(--muted);">💡 The Chicxulub meteorite, which hit Earth ~66 million years ago, is linked to the extinction of the dinosaurs.</p>
+      </div>
+    </div>
+
+    <div class="info-box space">
+      <h4>🌑 Comet Structure</h4>
+      <p><strong>Nucleus:</strong> The solid centre — a "dirty snowball" of ice, rock and dust (typically 1–50 km wide).</p>
+      <p style="margin-top:4px;"><strong>Coma:</strong> A fuzzy cloud of gas and dust surrounding the nucleus when near the Sun.</p>
+      <p style="margin-top:4px;"><strong>Tail:</strong> Can stretch for millions of km. Always points away from the Sun due to solar wind pressure.</p>
+    </div>
+
+    <div class="quiz-block hinge" id="qC1">
+      <div class="quiz-label">⚡ Hinge Question</div>
+      <h4>A comet is travelling around the Sun in its orbit. Where in its orbit would you expect the comet's tail to be longest and brightest?</h4>
+      <div class="quiz-opts">
+        <div class="quiz-opt" onclick="checkQ(this,false,'qC1','At the farthest point from the Sun (aphelion), the comet is very cold — no sublimation occurs, so there is virtually no tail at all.')"><span class="ltr">A</span> When it is farthest from the Sun</div>
+        <div class="quiz-opt" onclick="checkQ(this,true,'qC1','Correct! When a comet is closest to the Sun (perihelion), solar heat causes the ice to sublimate rapidly, creating the most gas and dust — and the longest, brightest tail. The tail always points away from the Sun.')"><span class="ltr">B</span> When it is closest to the Sun</div>
+        <div class="quiz-opt" onclick="checkQ(this,false,'qC1','The tail is not constant — it only forms when the comet is close enough for solar heat to cause sublimation. Size of the comet matters less than distance from the Sun.')"><span class="ltr">C</span> The tail stays the same size throughout the orbit</div>
+        <div class="quiz-opt" onclick="checkQ(this,false,'qC1','A comet at Earth\'s distance would certainly have a tail, but it would be brightest when even closer to the Sun. The Sun\'s heat drives tail formation.')"><span class="ltr">D</span> When it passes Earth's orbit</div>
+      </div>
+      <div class="quiz-feedback" id="qC1-f"></div>
+    </div>
+
+    <div class="diff-wrap">
+      <div class="diff-tabs" data-group="com">
+        <button class="diff-tab f active" onclick="switchDiff('com','f',this)">🌱 Foundation<span class="sub-label">Compare &amp; describe</span></button>
+        <button class="diff-tab c" onclick="switchDiff('com','c',this)">⭐ Core<span class="sub-label">Explain &amp; apply</span></button>
+        <button class="diff-tab ch" onclick="switchDiff('com','ch',this)">🚀 Challenge<span class="sub-label">Evaluate threats</span></button>
+      </div>
+      <div class="diff-panel f active" data-group="com">
+        <div class="scaffold-box">
+          <div class="scaffold-title">Table scaffold — complete it</div>
+        </div>
+        <table class="planet-table">
+          <thead><tr><th>Feature</th><th>Comet</th><th>Meteor</th></tr></thead>
+          <tbody>
+            <tr><td>What is it made of?</td><td><input type="text" style="border:none; background:transparent; width:100%; font-size:13px;" placeholder="ice and..."></td><td><input type="text" style="border:none; background:transparent; width:100%; font-size:13px;" placeholder="rock/metal..."></td></tr>
+            <tr><td>Does it orbit the Sun?</td><td><input type="text" style="border:none; background:transparent; width:100%; font-size:13px;" placeholder="Yes/No"></td><td><input type="text" style="border:none; background:transparent; width:100%; font-size:13px;" placeholder="Yes/No"></td></tr>
+            <tr><td>What do we see from Earth?</td><td><input type="text" style="border:none; background:transparent; width:100%; font-size:13px;" placeholder="a bright..."></td><td><input type="text" style="border:none; background:transparent; width:100%; font-size:13px;" placeholder="a streak of..."></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="diff-panel c" data-group="com">
+        <div class="input-group">
+          <label>Explain why a comet's tail always points away from the Sun, no matter which direction the comet is travelling.</label>
+          <textarea placeholder="Think about solar wind and what it does to the gas and dust released by the comet..."></textarea>
+        </div>
+        <div class="input-group">
+          <label>What is the difference between a meteor and a meteorite? Why does a meteor glow as it passes through the atmosphere?</label>
+          <textarea placeholder="Think about what happens when a solid object moves very quickly through air..."></textarea>
+        </div>
+      </div>
+      <div class="diff-panel ch" data-group="com">
+        <div class="input-group">
+          <label>🌟 Some scientists argue that Earth needs a planetary defence system to protect against large meteorites. Others say the money would be better spent on problems here on Earth. Evaluate both sides of this argument. What do you think?</label>
+          <textarea rows="6" placeholder="Consider: probability of impact, consequences, cost, other priorities..."></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="step-nav">
+    <button class="step-btn" onclick="goTab(2)">← Solar System</button>
+    <button class="step-btn primary" onclick="goTab(4)">Galaxy &amp; Universe →</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════
+     TAB 4 — GALAXY & UNIVERSE
+══════════════════════════════════════════════════════════════ -->
+<div class="tab-panel" id="tab4">
+  <div class="card">
+    <div class="badge-row">
+      <span class="badge dual">Dual Coding</span>
+      <span class="badge elaboration">Elaborative Interrogation</span>
+    </div>
+    <h2>🌌 Galaxy &amp; Universe</h2>
+
+    <div class="info-box space">
+      <h4>🔭 The Scale of Everything</h4>
+      <p>The Universe is almost incomprehensibly large. Scientists use <strong>light-years</strong> as a unit of distance because normal units (km, miles) are far too small to be useful. One light-year = the distance light travels in one year = about <strong>9.5 trillion km</strong>.</p>
+    </div>
+
+    <!-- Scale visualiser -->
+    <h3>Scale Explorer: Objects in the Universe</h3>
+    <p style="font-size:14px; color:var(--muted); margin-bottom:12px;">The bars below show the relative scale of different objects — hover over each to read the data.</p>
+    <div class="scale-viz">
+      <div class="scale-row">
+        <div class="scale-label" style="color:#fff;">🌍 Earth</div>
+        <div class="scale-bar" style="width:4px; background:#4fc3f7;"></div>
+        <div class="scale-val">12,742 km diameter</div>
+      </div>
+      <div class="scale-row">
+        <div class="scale-label" style="color:#fff;">☀️ The Sun</div>
+        <div class="scale-bar" style="width:40px; background:#ffd54f;"></div>
+        <div class="scale-val">1.4 million km (109× Earth)</div>
+      </div>
+      <div class="scale-row">
+        <div class="scale-label" style="color:#fff;">🪐 Solar System</div>
+        <div class="scale-bar" style="width:130px; background:#80cbc4;"></div>
+        <div class="scale-val">~9 light-hours across</div>
+      </div>
+      <div class="scale-row">
+        <div class="scale-label" style="color:#fff;">⭐ To nearest star</div>
+        <div class="scale-bar" style="width:280px; background:#ef9a9a;"></div>
+        <div class="scale-val">4.2 light-years (Proxima Centauri)</div>
+      </div>
+      <div class="scale-row">
+        <div class="scale-label" style="color:#fff;">🌌 Milky Way</div>
+        <div class="scale-bar" style="width:420px; max-width:calc(100% - 145px); background:linear-gradient(90deg,#ce93d8,#7986cb);"></div>
+        <div class="scale-val">~100,000 light-years wide</div>
+      </div>
+      <div style="margin-top:10px; color:rgba(255,255,255,0.5); font-size:12px; font-style:italic;">The Universe (~93 billion light-years) is too large to show — the bar would need to be the length of a continent!</div>
+    </div>
+
+    <h3>Light Travel Times — the Language of Astronomy</h3>
+    <div class="info-box blue">
+      <h4>⏱️ Why does distance = time for light?</h4>
+      <p>Light travels at <strong>300,000 km per second</strong> — the fastest anything in the Universe can travel. Even at this speed, the Universe is so enormous that we measure distances by how long light takes to travel them.</p>
+      <p style="margin-top:8px; font-size:13px; color:var(--muted);">🌟 Fascinating: when you look at the night sky, you are looking back in <em>time</em>. The star you see might not even exist anymore.</p>
+    </div>
+
+    <table class="light-table">
+      <thead>
+        <tr><th>Object</th><th>Distance</th><th>Light travel time</th><th>What does this mean?</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>The Moon</strong></td>
+          <td>384,000 km</td>
+          <td>~1.3 seconds</td>
+          <td>When you look at the Moon, you see it as it was 1.3 seconds ago</td>
+        </tr>
+        <tr>
+          <td><strong>The Sun</strong></td>
+          <td>150 million km</td>
+          <td>~8 minutes</td>
+          <td>If the Sun disappeared, we wouldn't know for 8 minutes</td>
+        </tr>
+        <tr>
+          <td><strong>Saturn</strong></td>
+          <td>1.4 billion km</td>
+          <td>~1.5 hours</td>
+          <td>Light from Venus takes ~2 minutes; from Saturn ~1.5 hours</td>
+        </tr>
+        <tr>
+          <td><strong>Proxima Centauri</strong> (nearest star)</td>
+          <td>40 trillion km</td>
+          <td><strong>4.2 years</strong></td>
+          <td>The light you see left there 4.2 years ago</td>
+        </tr>
+        <tr>
+          <td><strong>Andromeda Galaxy</strong></td>
+          <td>2.5 million light-years</td>
+          <td><strong>2.5 million years</strong></td>
+          <td>Andromeda is visible to the naked eye — you're seeing it as it was 2.5 million years ago</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>The Milky Way &amp; Our Place in It</h3>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px; margin:12px 0;">
+      <div class="info-box blue">
+        <h4>🌌 Our Galaxy</h4>
+        <p>Our Solar System is part of the <strong>Milky Way</strong> galaxy — a spiral galaxy containing an estimated <strong>100–400 billion stars</strong>. Our Sun is one ordinary star, about two-thirds of the way from the centre.</p>
+        <p style="margin-top:8px; font-size:13px; color:var(--muted);">The Milky Way is ~100,000 light-years wide. It takes 230 million years for our Solar System to orbit the galactic centre once.</p>
+      </div>
+      <div class="info-box gold">
+        <h4>🌌 The Universe</h4>
+        <p>The Universe contains an estimated <strong>2 trillion galaxies</strong>. It began approximately <strong>13.8 billion years ago</strong> in the Big Bang — and it is still expanding today.</p>
+        <p style="margin-top:8px; font-size:13px; color:var(--muted);">Our nearest large galaxy is <strong>Andromeda</strong> (M31) — just about visible to the naked eye as a faint smudge on a dark night.</p>
+      </div>
+    </div>
+
+    <div class="quiz-block hinge" id="qD1">
+      <div class="quiz-label">⚡ Hinge Question</div>
+      <h4>A student says: "The Andromeda galaxy is 2.5 million light-years away. This means Andromeda is 2.5 million years old." What is wrong with this statement?</h4>
+      <div class="quiz-opts">
+        <div class="quiz-opt" onclick="checkQ(this,false,'qD1','The statement about Andromeda\'s distance is correct — 2.5 million light-years. The error is in the conclusion drawn from that distance.')"><span class="ltr">A</span> Nothing — the statement is correct</div>
+        <div class="quiz-opt" onclick="checkQ(this,false,'qD1','Andromeda is actually much older than 2.5 million years — the Universe is 13.8 billion years old. But the student\'s main error is confusing travel time for age.')"><span class="ltr">B</span> Andromeda is actually only a few thousand years old</div>
+        <div class="quiz-opt" onclick="checkQ(this,true,'qD1','Correct! A light-year is a unit of DISTANCE — how far light travels in one year. The 2.5 million light-year distance means light takes 2.5 million years to travel from Andromeda to us. This tells us how far away it is, not how old it is. Andromeda is actually billions of years old. It also means we see it as it was 2.5 million years ago.')"><span class="ltr">C</span> A light-year is a unit of distance, not time — 2.5 million light-years tells us how far away Andromeda is, not its age</div>
+        <div class="quiz-opt" onclick="checkQ(this,false,'qD1','Andromeda is actually our nearest large galaxy neighbour, but the student\'s key error is misunderstanding what a light-year means.')"><span class="ltr">D</span> Andromeda is actually much further away than 2.5 million light-years</div>
+      </div>
+      <div class="quiz-feedback" id="qD1-f"></div>
+    </div>
+
+    <div class="diff-wrap">
+      <div class="diff-tabs" data-group="gal">
+        <button class="diff-tab f active" onclick="switchDiff('gal','f',this)">🌱 Foundation<span class="sub-label">Sequence &amp; describe</span></button>
+        <button class="diff-tab c" onclick="switchDiff('gal','c',this)">⭐ Core<span class="sub-label">Explain &amp; compare</span></button>
+        <button class="diff-tab ch" onclick="switchDiff('gal','ch',this)">🚀 Challenge<span class="sub-label">Big ideas</span></button>
+      </div>
+      <div class="diff-panel f active" data-group="gal">
+        <div class="scaffold-box">
+          <div class="scaffold-title">Order these objects from smallest to largest</div>
+          <div class="word-bank"><span>Moon</span><span>Earth</span><span>Solar System</span><span>Milky Way galaxy</span><span>Universe</span><span>Sun</span></div>
+        </div>
+        <div class="input-group">
+          <label>Write them in order, smallest first:</label>
+          <input type="text" placeholder="Smallest: ___ → ___ → ___ → ___ → ___ → Largest: ___">
+        </div>
+        <div class="input-group">
+          <label>What is the name of our galaxy?</label>
+          <input type="text" placeholder="The ___ Way">
+        </div>
+        <div class="input-group">
+          <label>What is our nearest galaxy called?</label>
+          <input type="text" placeholder="The ___ galaxy">
+        </div>
+      </div>
+      <div class="diff-panel c" data-group="gal">
+        <div class="input-group">
+          <label>Explain what scientists mean when they say a star is "10 light-years away." Include what a light-year is and what this distance means for observing that star today.</label>
+          <textarea placeholder="A light-year is the distance... When we observe a star 10 light-years away, we are actually seeing light that..."></textarea>
+        </div>
+        <div class="input-group">
+          <label>Use the data from the light travel times table to compare the distances to the Moon, the Sun, and the nearest star. What does this comparison reveal about the scale of the Universe?</label>
+          <textarea placeholder="The Moon is... compared to the Sun... The nearest star is even further..."></textarea>
+        </div>
+      </div>
+      <div class="diff-panel ch" data-group="gal">
+        <div class="input-group">
+          <label>🌟 "We will never be able to travel to another star system in a human lifetime." Using what you know about the speed of light and the distances involved, explain why this seems to be true — and what would need to happen for it to be possible.</label>
+          <textarea rows="6" placeholder="Proxima Centauri is 4.2 light-years away. Even if we could travel at 1% the speed of light... Consider: how long would it take? What technology would we need? Is it theoretically possible?"></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="step-nav">
+    <button class="step-btn" onclick="goTab(3)">← Comets &amp; Meteors</button>
+    <button class="step-btn primary" onclick="goTab(5)">Big Questions →</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════
+     TAB 5 — BIG QUESTIONS (PRACTICE)
+══════════════════════════════════════════════════════════════ -->
+<div class="tab-panel" id="tab5">
+  <div class="card">
+    <div class="badge-row">
+      <span class="badge retrieval">Retrieval Practice</span>
+      <span class="badge interleave">Interleaving</span>
+      <span class="badge creative">Extended Writing</span>
+    </div>
+    <h2>✍️ Big Questions</h2>
+    <p style="color:var(--muted);">These questions draw on everything from this lesson. Answer from memory first — then use the reveal buttons to check.</p>
+
+    <div class="info-box green">
+      <h4>🧠 Why Answer From Memory?</h4>
+      <p>Research shows that trying to recall information — even when you're not sure — strengthens your memory far more than re-reading. This is called the <strong>testing effect</strong>. Don't look back at the lesson first!</p>
+    </div>
+
+    <!-- Q1 -->
+    <div style="border-left:4px solid var(--blue); padding-left:16px; margin:20px 0;">
+      <p style="font-weight:700; font-size:15px; margin-bottom:6px;">Q1. What is a satellite? Give one example of a natural and one example of an artificial satellite. <span style="color:var(--muted); font-size:13px;">[3 marks]</span></p>
+      <div class="input-group"><textarea placeholder="Write your answer here before revealing..."></textarea></div>
+      <button class="reveal-btn" onclick="toggleReveal(this)">▶ Show answer</button>
+      <div class="reveal-box">A satellite is any object that orbits another object. (1)<br>Natural example: the Moon (orbits Earth). (1)<br>Artificial example: the International Space Station / GPS satellite / weather satellite. (1)</div>
+    </div>
+
+    <!-- Q2 -->
+    <div style="border-left:4px solid var(--blue); padding-left:16px; margin:20px 0;">
+      <p style="font-weight:700; font-size:15px; margin-bottom:6px;">Q2. Write the eight planets in order from the Sun. <span style="color:var(--muted); font-size:13px;">[2 marks]</span></p>
+      <div class="input-group"><input type="text" placeholder="1. 2. 3. 4. 5. 6. 7. 8."></div>
+      <button class="reveal-btn" onclick="toggleReveal(this)">▶ Show answer</button>
+      <div class="reveal-box">Mercury, Venus, Earth, Mars, Jupiter, Saturn, Uranus, Neptune. (2 marks: all 8 correct = 2; 5–7 correct = 1)</div>
+    </div>
+
+    <!-- Q3 -->
+    <div style="border-left:4px solid var(--blue); padding-left:16px; margin:20px 0;">
+      <p style="font-weight:700; font-size:15px; margin-bottom:6px;">Q3. What is the difference between a meteor and a meteorite? <span style="color:var(--muted); font-size:13px;">[2 marks]</span></p>
+      <div class="input-group"><textarea placeholder="Think about what happens to each..."></textarea></div>
+      <button class="reveal-btn" onclick="toggleReveal(this)">▶ Show answer</button>
+      <div class="reveal-box">A meteor burns up completely in Earth's atmosphere, appearing as a streak of light (1). A meteorite is a meteor that does not completely burn up and reaches Earth's surface (1).</div>
+    </div>
+
+    <!-- Q4 -->
+    <div style="border-left:4px solid var(--blue); padding-left:16px; margin:20px 0;">
+      <p style="font-weight:700; font-size:15px; margin-bottom:6px;">Q4. Explain why planets and moons are visible in the night sky, even though they do not produce their own light. <span style="color:var(--muted); font-size:13px;">[2 marks]</span></p>
+      <div class="input-group"><textarea placeholder="Think about where their light comes from..."></textarea></div>
+      <button class="reveal-btn" onclick="toggleReveal(this)">▶ Show answer</button>
+      <div class="reveal-box">Planets and moons are non-luminous — they do not produce their own light (1). They are visible because they reflect light from the Sun (1).</div>
+    </div>
+
+    <!-- Q5 — 6-mark extended -->
+    <div style="border-left:4px solid var(--gold); padding-left:16px; margin:20px 0;">
+      <p style="font-weight:700; font-size:15px; margin-bottom:4px;">Q5. ⭐ Extended Writing (6 marks)</p>
+      <p style="font-size:14px; margin-bottom:12px; color:#444;">"Compare the time it takes for light to reach us from different objects that you can see in the night sky. Use specific examples and explain what these differences in light travel time tell us about the scale of the Universe."</p>
+
+      <div class="ew-scaffold">
+        <h4>📐 Writing scaffold — click a sentence starter to copy it to your answer box</h4>
+        <div class="sentence-scaffold">
+          <div class="ss-item" onclick="appendToAnswer('ew5', this.querySelector('.ss-text').textContent)"><span class="ss-label">Introduce your comparison</span><span class="ss-text">Objects in the night sky are at very different distances from Earth. For example...</span></div>
+          <div class="ss-item" onclick="appendToAnswer('ew5', this.querySelector('.ss-text').textContent)"><span class="ss-label">Moon — closest example</span><span class="ss-text">The Moon is our closest neighbour — light from the Moon takes only about 1.3 seconds to reach Earth, which means...</span></div>
+          <div class="ss-item" onclick="appendToAnswer('ew5', this.querySelector('.ss-text').textContent)"><span class="ss-label">The Sun</span><span class="ss-text">The Sun is 150 million km away, so its light takes approximately 8 minutes to reach us. This means that if the Sun were to suddenly go out...</span></div>
+          <div class="ss-item" onclick="appendToAnswer('ew5', this.querySelector('.ss-text').textContent)"><span class="ss-label">Stars (nearest)</span><span class="ss-text">Even our nearest star beyond the Sun, Proxima Centauri, is 4.2 light-years away. This means the light we see left there 4.2 years ago, so...</span></div>
+          <div class="ss-item" onclick="appendToAnswer('ew5', this.querySelector('.ss-text').textContent)"><span class="ss-label">Andromeda Galaxy</span><span class="ss-text">The Andromeda galaxy is the most distant object visible to the naked eye — at 2.5 million light-years, we are seeing it as it was 2.5 million years ago. This tells us that...</span></div>
+          <div class="ss-item" onclick="appendToAnswer('ew5', this.querySelector('.ss-text').textContent)"><span class="ss-label">Conclusion about scale</span><span class="ss-text">These enormous differences in light travel time show us that the Universe is almost incomprehensibly vast. The fact that we can see Andromeda means...</span></div>
+        </div>
+      </div>
+
+      <div class="input-group">
+        <label>Your extended answer (aim for 6 clear points):</label>
+        <textarea id="ew5" rows="10" placeholder="Write or build your answer here. You can click the sentence starters above to add them, or write your own..."></textarea>
+      </div>
+
+      <button class="reveal-btn" onclick="toggleReveal(this)">▶ Show model answer</button>
+      <div class="reveal-box">
+        <strong>Mark scheme — award 1 mark per distinct, correct point (max 6):</strong>
+        <ul>
+          <li>The Moon is ~384,000 km away; light takes ~1.3 seconds to reach Earth (1)</li>
+          <li>The Sun is 150 million km away; light takes ~8 minutes (1)</li>
+          <li>Planets are at varying distances — Venus ~2 minutes, Saturn ~1.5 hours (1)</li>
+          <li>The nearest star (Proxima Centauri) is 4.2 light-years — light takes 4.2 years to reach us (1)</li>
+          <li>Andromeda galaxy is 2.5 million light-years away — we see it as it was 2.5 million years ago (1)</li>
+          <li>The enormous range of light travel times (1.3 seconds to millions of years) demonstrates the vast scale of the Universe (1)</li>
+          <li>Looking into space means looking back in time — distant objects are seen as they were in the past (1)</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="step-nav">
+    <button class="step-btn" onclick="goTab(4)">← Galaxy &amp; Universe</button>
+    <button class="step-btn primary" onclick="goTab(6)">Check &amp; Reflect →</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════
+     TAB 6 — CHECK & REFLECT
+══════════════════════════════════════════════════════════════ -->
+<div class="tab-panel" id="tab6">
+  <div class="card">
+    <div class="badge-row">
+      <span class="badge retrieval">Self-Assessment</span>
+      <span class="badge interleave">Metacognition</span>
+    </div>
+    <h2>✅ Check &amp; Reflect</h2>
+
+    <h3>🚦 RAG Self-Assessment — How Confident Are You?</h3>
+    <p style="font-size:14px; color:var(--muted); margin-bottom:14px;">For each learning goal, click 🔴 (not yet), 🟡 (getting there), or 🟢 (confident). Be honest — this helps you know what to revisit.</p>
+
+    <div id="ragList">
+      <div class="rag-row"><span>I can explain the difference between luminous and non-luminous objects</span><div class="rag-btns"><button class="rag-btn r" onclick="setRag(this)">🔴</button><button class="rag-btn a" onclick="setRag(this)">🟡</button><button class="rag-btn g" onclick="setRag(this)">🟢</button></div></div>
+      <div class="rag-row"><span>I can define "satellite" and give examples of natural and artificial satellites</span><div class="rag-btns"><button class="rag-btn r" onclick="setRag(this)">🔴</button><button class="rag-btn a" onclick="setRag(this)">🟡</button><button class="rag-btn g" onclick="setRag(this)">🟢</button></div></div>
+      <div class="rag-row"><span>I can name the 8 planets in order from the Sun</span><div class="rag-btns"><button class="rag-btn r" onclick="setRag(this)">🔴</button><button class="rag-btn a" onclick="setRag(this)">🟡</button><button class="rag-btn g" onclick="setRag(this)">🟢</button></div></div>
+      <div class="rag-row"><span>I can explain why Venus is hotter than Mercury despite being further from the Sun</span><div class="rag-btns"><button class="rag-btn r" onclick="setRag(this)">🔴</button><button class="rag-btn a" onclick="setRag(this)">🟡</button><button class="rag-btn g" onclick="setRag(this)">🟢</button></div></div>
+      <div class="rag-row"><span>I can explain why Pluto is no longer classed as a planet</span><div class="rag-btns"><button class="rag-btn r" onclick="setRag(this)">🔴</button><button class="rag-btn a" onclick="setRag(this)">🟡</button><button class="rag-btn g" onclick="setRag(this)">🟢</button></div></div>
+      <div class="rag-row"><span>I can describe the structure of a comet and explain where its tail comes from</span><div class="rag-btns"><button class="rag-btn r" onclick="setRag(this)">🔴</button><button class="rag-btn a" onclick="setRag(this)">🟡</button><button class="rag-btn g" onclick="setRag(this)">🟢</button></div></div>
+      <div class="rag-row"><span>I can distinguish between a meteor and a meteorite</span><div class="rag-btns"><button class="rag-btn r" onclick="setRag(this)">🔴</button><button class="rag-btn a" onclick="setRag(this)">🟡</button><button class="rag-btn g" onclick="setRag(this)">🟢</button></div></div>
+      <div class="rag-row"><span>I can explain what a light-year is and why we use it</span><div class="rag-btns"><button class="rag-btn r" onclick="setRag(this)">🔴</button><button class="rag-btn a" onclick="setRag(this)">🟡</button><button class="rag-btn g" onclick="setRag(this)">🟢</button></div></div>
+      <div class="rag-row"><span>I can describe the structure of the Universe: Solar System → Galaxy → Universe</span><div class="rag-btns"><button class="rag-btn r" onclick="setRag(this)">🔴</button><button class="rag-btn a" onclick="setRag(this)">🟡</button><button class="rag-btn g" onclick="setRag(this)">🟢</button></div></div>
+      <div class="rag-row"><span>I can explain why looking at distant objects in space means looking back in time</span><div class="rag-btns"><button class="rag-btn r" onclick="setRag(this)">🔴</button><button class="rag-btn a" onclick="setRag(this)">🟡</button><button class="rag-btn g" onclick="setRag(this)">🟢</button></div></div>
+    </div>
+
+    <div class="info-box gold" style="margin-top:20px;">
+      <h4>📌 What to do next</h4>
+      <p><strong>🔴 Red items:</strong> Go back to that section and re-read it, then try answering the questions again without notes.</p>
+      <p style="margin-top:6px;"><strong>🟡 Amber items:</strong> You almost have it — try writing a one-sentence explanation from memory.</p>
+      <p style="margin-top:6px;"><strong>🟢 Green items:</strong> You're confident — try teaching it to someone else, or attempt the Challenge tasks.</p>
+    </div>
+
+    <h3>🪞 Reflection — I Used to Think… Now I Think</h3>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px; margin:14px 0;">
+      <div style="background:var(--gold-l); border:1px solid #FFE082; border-radius:10px; padding:18px;">
+        <label style="font-weight:700; font-size:13px; color:var(--gold);">Before this lesson, I thought…</label>
+        <textarea style="width:100%; margin-top:8px; border:1px solid #FFE082; border-radius:6px; padding:10px; font-size:14px; font-family:var(--sans); min-height:80px;" placeholder="What did you think space was like before today?"></textarea>
+      </div>
+      <div style="background:var(--green-l); border:1px solid #A5D6A7; border-radius:10px; padding:18px;">
+        <label style="font-weight:700; font-size:13px; color:var(--green);">Now I think / understand…</label>
+        <textarea style="width:100%; margin-top:8px; border:1px solid #A5D6A7; border-radius:6px; padding:10px; font-size:14px; font-family:var(--sans); min-height:80px;" placeholder="What was most surprising or new for you?"></textarea>
+      </div>
+    </div>
+
+    <div class="input-group">
+      <label>🌟 One question I still have about space:</label>
+      <input type="text" placeholder="What would you like to find out in future lessons?">
+    </div>
+
+    <div style="background:linear-gradient(135deg,#0a0e2e,#1a237e); border-radius:12px; padding:24px; text-align:center; margin-top:24px; color:#fff;">
+      <div style="font-size:2.5rem; margin-bottom:10px;">🚀</div>
+      <h3 style="color:#ffd54f; margin-bottom:8px;">Well done — you've completed P6.1: The Night Sky!</h3>
+      <p style="opacity:.85; font-size:14px;">Next lesson: <strong>P6.2 — Day and Night, Seasons &amp; Eclipses</strong></p>
+      <p style="opacity:.6; font-size:13px; margin-top:6px;">Remember: the best way to remember this is to come back tomorrow and try to recall it without notes.</p>
+    </div>
+  </div>
+
+  <div class="step-nav">
+    <button class="step-btn" onclick="goTab(5)">← Big Questions</button>
+    <button class="step-btn primary" onclick="goTab(0)">🔁 Start Again</button>
+  </div>
+</div>
+
+</main>
+
+<script>
+// ── Keywords ────────────────────────────────────────────────────────────────
+const KEYWORDS = {
+  'satellite':     'Any object that orbits another object. Can be natural (e.g. the Moon) or artificial (e.g. ISS).',
+  'orbit':         'The curved path of one object around another due to gravity.',
+  'luminous':      'An object that produces its own light, e.g. the Sun, stars.',
+  'non-luminous':  'An object that does not produce its own light — it reflects light instead, e.g. the Moon, planets.',
+  'solar system':  'The Sun and everything that orbits it: 8 planets, moons, asteroids, comets, and dwarf planets.',
+  'light-year':    'A unit of DISTANCE — the distance light travels in one year (~9.5 trillion km). NOT a unit of time.',
+  'galaxy':        'A massive system of stars, gas, dust, and dark matter held together by gravity. Our galaxy is the Milky Way.',
+  'comet':         'A body of ice and dust that orbits the Sun. Develops a tail when near the Sun due to sublimation.',
+  'meteor':        'A small rocky body that burns up in Earth\'s atmosphere, creating a streak of light.',
+  'meteorite':     'A meteor that survives passing through the atmosphere and lands on Earth\'s surface.',
+  'milky way':     'Our home galaxy — a spiral galaxy containing 100–400 billion stars. Our Solar System is in one of its spiral arms.',
+  'universe':      'Everything that exists — all matter, energy, space and time. Contains ~2 trillion galaxies.',
+  'dwarf planet':  'A body that orbits the Sun and is spherical, but has not cleared its orbital neighbourhood. Example: Pluto.',
+};
+const bar = document.getElementById('kwBar');
+const tooltip = document.getElementById('kwTooltip');
+Object.entries(KEYWORDS).forEach(([kw, def]) => {
+  const chip = document.createElement('span');
+  chip.className = 'kw-chip';
+  chip.textContent = kw;
+  chip.addEventListener('mouseenter', e => {
+    tooltip.innerHTML = `<strong>${kw}</strong><br>${def}`;
+    tooltip.style.display = 'block';
+    positionTooltip(e);
+  });
+  chip.addEventListener('mousemove', positionTooltip);
+  chip.addEventListener('mouseleave', () => { tooltip.style.display = 'none'; });
+  bar.appendChild(chip);
+});
+function positionTooltip(e) {
+  const x = Math.min(e.clientX + 12, window.innerWidth - 280);
+  const y = e.clientY + 20;
+  tooltip.style.left = x + 'px';
+  tooltip.style.top  = y + 'px';
+}
+
+// ── Tab navigation ──────────────────────────────────────────────────────────
+const panels = document.querySelectorAll('.tab-panel');
+const tabBtns = document.querySelectorAll('.tab-btn');
+function goTab(idx) {
+  panels.forEach((p,i) => p.classList.toggle('active', i === idx));
+  tabBtns.forEach((b,i) => {
+    b.classList.toggle('active', i === idx);
+    if (i < idx) b.classList.add('done');
+  });
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  updateProgress();
+}
+
+// ── Progress bar ─────────────────────────────────────────────────────────────
+function updateProgress() {
+  const active = [...tabBtns].findIndex(b => b.classList.contains('active'));
+  const pct = ((active + 1) / tabBtns.length) * 100;
+  document.getElementById('progressBar').style.width = pct + '%';
+}
+window.addEventListener('scroll', () => {
+  const el = document.documentElement;
+  const pct = (el.scrollTop / (el.scrollHeight - el.clientHeight)) * 100;
+  document.getElementById('progressBar').style.width = pct + '%';
+});
+updateProgress();
+
+// ── Differentiation panels ──────────────────────────────────────────────────
+function switchDiff(group, level, btn) {
+  const tabsContainer = btn.closest('.diff-tabs');
+  tabsContainer.querySelectorAll('.diff-tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  const wrap = btn.closest('.diff-wrap');
+  wrap.querySelectorAll(`.diff-panel[data-group="${group}"]`).forEach(p => p.classList.remove('active'));
+  const target = wrap.querySelector(`.diff-panel.${level}[data-group="${group}"]`);
+  if (target) target.classList.add('active');
+}
+
+// ── Quiz ─────────────────────────────────────────────────────────────────────
+function checkQ(optEl, isCorrect, blockId, feedback) {
+  const block = document.getElementById(blockId);
+  block.querySelectorAll('.quiz-opt').forEach(o => o.classList.add('disabled'));
+  optEl.classList.add(isCorrect ? 'correct' : 'wrong');
+  if (!isCorrect) {
+    block.querySelectorAll('.quiz-opt').forEach(o => {
+      if (o.getAttribute('onclick') && o.getAttribute('onclick').includes(',true,')) o.classList.add('correct');
+    });
+  }
+  const fb = document.getElementById(blockId + '-f');
+  if (fb) { fb.textContent = feedback; fb.className = 'quiz-feedback show ' + (isCorrect ? 'ok' : 'no'); }
+}
+
+// ── Reveal ───────────────────────────────────────────────────────────────────
+function toggleReveal(btn) {
+  const box = btn.nextElementSibling;
+  const open = box.classList.toggle('show');
+  btn.textContent = open ? '▼ Hide answer' : '▶ Show answer';
+}
+
+// ── Match-up ──────────────────────────────────────────────────────────────────
+let matchSel = null;
+document.querySelectorAll('.match-card').forEach(card => {
+  card.addEventListener('click', () => {
+    if (card.classList.contains('matched')) return;
+    if (!matchSel) {
+      matchSel = card;
+      card.classList.add('selected');
+    } else {
+      if (card === matchSel) { card.classList.remove('selected'); matchSel = null; return; }
+      const aId = matchSel.dataset.id, bId = card.dataset.id;
+      const aIsTerm = matchSel.classList.contains('match-term');
+      const bIsTerm = card.classList.contains('match-term');
+      if ((aIsTerm && !bIsTerm) || (!aIsTerm && bIsTerm)) {
+        if (aId === bId) {
+          matchSel.classList.add('matched'); card.classList.add('matched'); matchSel.classList.remove('selected');
+          const grid = matchSel.closest('.match-grid');
+          const all = grid.querySelectorAll('.match-card');
+          const result = document.getElementById(grid.id + '-result');
+          if ([...all].every(c => c.classList.contains('matched')) && result) result.style.display = 'block';
+        } else {
+          matchSel.classList.add('wrong-flash'); card.classList.add('wrong-flash');
+          setTimeout(() => { matchSel.classList.remove('wrong-flash','selected'); card.classList.remove('wrong-flash'); matchSel = null; }, 600);
+          return;
+        }
+      } else { matchSel.classList.remove('selected'); matchSel = card; card.classList.add('selected'); return; }
+      matchSel = null;
+    }
+  });
+});
+
+// ── Extended writing scaffold ────────────────────────────────────────────────
+function appendToAnswer(textareaId, text) {
+  const ta = document.getElementById(textareaId);
+  ta.value += (ta.value ? '\n\n' : '') + text;
+  ta.focus();
+}
+
+// ── RAG ──────────────────────────────────────────────────────────────────────
+function setRag(btn) {
+  const group = btn.closest('.rag-btns');
+  group.querySelectorAll('.rag-btn').forEach(b => b.classList.remove('lit'));
+  btn.classList.add('lit');
+}
+</script>
+</body>
+</html>
