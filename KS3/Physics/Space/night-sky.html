@@ -67,18 +67,21 @@ body { font-family: var(--sans); background:var(--bg); color:var(--text); line-h
 .kw-chip:hover, .kw-chip.active { background:#ffd54f; color:var(--navy); }
 .kw-tooltip { display:none; position:fixed; background:var(--navy); color:#fff; font-size:13px; padding:10px 14px; border-radius:8px; border:1px solid #ffd54f; max-width:260px; z-index:999; box-shadow:0 8px 24px rgba(0,0,0,0.3); pointer-events:none; }
 
-/* ── NAV TABS ─────────────────────────────────────────────────── */
-.tab-nav { background:var(--card); border-bottom:2px solid var(--border); position:sticky; top:0; z-index:100; display:flex; gap:0; overflow-x:auto; }
-.tab-btn { padding:14px 18px; border:none; background:transparent; font-family:var(--sans); font-size:13px; font-weight:600; color:var(--muted); cursor:pointer; white-space:nowrap; border-bottom:3px solid transparent; margin-bottom:-2px; transition:all .2s; display:flex; align-items:center; gap:6px; }
+/* ── PAGE LAYOUT ─────────────────────────────────────────────── */
+.page-layout { display:grid; grid-template-columns:220px 1fr; max-width:1300px; margin:0 auto; }
+
+/* ── NAV TABS (sidebar) ──────────────────────────────────────── */
+.tab-nav { background:#f8faff; border-right:2px solid var(--border); position:sticky; top:0; z-index:100; display:flex; flex-direction:column; gap:0; height:100vh; padding:12px 0; }
+.tab-btn { padding:11px 16px; border:none; background:transparent; font-family:var(--sans); font-size:13px; font-weight:600; color:var(--muted); cursor:pointer; white-space:nowrap; border-left:3px solid transparent; transition:all .2s; display:flex; align-items:center; gap:6px; }
 .tab-btn:hover { color:var(--blue); background:var(--blue-l); }
-.tab-btn.active { color:var(--blue); border-bottom-color:var(--blue); }
+.tab-btn.active { color:var(--blue); border-left-color:var(--blue); background:#eef3ff; }
 .tab-btn .tab-icon { font-size:1.1rem; }
 .tab-btn .tab-num { width:20px; height:20px; border-radius:50%; background:var(--border); font-size:10px; font-weight:700; display:flex; align-items:center; justify-content:center; color:var(--muted); }
 .tab-btn.active .tab-num { background:var(--blue); color:#fff; }
 .tab-btn.done .tab-num { background:var(--green); color:#fff; }
 
 /* ── MAIN ─────────────────────────────────────────────────────── */
-.main { max-width:860px; margin:0 auto; padding:24px 20px 80px; }
+.main { max-width:none; padding:28px 36px 80px; }
 .tab-panel { display:none; animation:fadeUp .3s ease; }
 .tab-panel.active { display:block; }
 @keyframes fadeUp { from{opacity:0;transform:translateY(10px);} to{opacity:1;transform:translateY(0);} }
@@ -236,7 +239,19 @@ body { font-family: var(--sans); background:var(--bg); color:var(--text); line-h
 /* ── PROGRESS ─────────────────────────────────────────────────── */
 .progress-bar { position:fixed; top:0; left:0; height:3px; background:linear-gradient(90deg,#ffd54f,#f57f17); z-index:200; transition:width .3s; pointer-events:none; }
 
+/* ── LAYOUT UTILITIES ────────────────────────────────────────── */
+.row-2 { display:grid; grid-template-columns:1fr 1fr; gap:20px; align-items:start; }
+.row-2 > div { margin:0; }
+
 /* ── RESPONSIVE ───────────────────────────────────────────────── */
+@media(max-width:900px) {
+  .page-layout { grid-template-columns:1fr; }
+  .tab-nav { flex-direction:row; height:auto; border-right:none; border-bottom:2px solid var(--border); padding:0; overflow-x:auto; }
+  .tab-btn { border-left:none; border-bottom:3px solid transparent; margin-bottom:-2px; padding:14px 16px; }
+  .tab-btn.active { border-left-color:transparent; border-bottom-color:var(--blue); background:transparent; }
+  .row-2 { grid-template-columns:1fr; }
+  .main { padding:24px 20px 80px; }
+}
 @media(max-width:600px) {
   .main { padding:16px 12px 60px; }
   .card { padding:18px; }
@@ -267,6 +282,8 @@ body { font-family: var(--sans); background:var(--bg); color:var(--text); line-h
 <div class="keyword-bar" id="kwBar">
   <span class="kw-label">Key words:</span>
 </div>
+
+<div class="page-layout">
 
 <!-- TAB NAV -->
 <nav class="tab-nav" id="tabNav">
@@ -850,6 +867,7 @@ body { font-family: var(--sans); background:var(--bg); color:var(--text); line-h
       <p>Research shows that trying to recall information — even when you're not sure — strengthens your memory far more than re-reading. This is called the <strong>testing effect</strong>. Don't look back at the lesson first!</p>
     </div>
 
+    <div class="row-2">
     <!-- Q1 -->
     <div style="border-left:4px solid var(--blue); padding-left:16px; margin:20px 0;">
       <p style="font-weight:700; font-size:15px; margin-bottom:6px;">Q1. What is a satellite? Give one example of a natural and one example of an artificial satellite. <span style="color:var(--muted); font-size:13px;">[3 marks]</span></p>
@@ -881,6 +899,7 @@ body { font-family: var(--sans); background:var(--bg); color:var(--text); line-h
       <button class="reveal-btn" onclick="toggleReveal(this)">▶ Show answer</button>
       <div class="reveal-box">Planets and moons are non-luminous — they do not produce their own light (1). They are visible because they reflect light from the Sun (1).</div>
     </div>
+    </div><!-- /row-2 -->
 
     <!-- Q5 — 6-mark extended -->
     <div style="border-left:4px solid var(--gold); padding-left:16px; margin:20px 0;">
@@ -992,6 +1011,7 @@ body { font-family: var(--sans); background:var(--bg); color:var(--text); line-h
 </div>
 
 </main>
+</div><!-- /page-layout -->
 
 <script>
 // ── Keywords ────────────────────────────────────────────────────────────────
