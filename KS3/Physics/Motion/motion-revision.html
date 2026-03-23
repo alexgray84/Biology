@@ -1,0 +1,1022 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Motion Revision — KS3 Physics</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;}
+    body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:linear-gradient(135deg,#1a1a2e 0%,#16213e 100%);min-height:100vh;color:#e8e8e8;}
+
+    /* ---- HEADER ---- */
+    .header{background:linear-gradient(90deg,#0f3460,#533483);padding:1.5rem 2rem;text-align:center;box-shadow:0 4px 20px rgba(0,0,0,.4);}
+    .header h1{font-size:2rem;color:#fff;margin-bottom:.3rem;}
+    .header .subtitle{color:#e94560;font-size:1rem;font-weight:600;}
+    .header .meta{font-size:.8rem;color:#aaa;margin-top:.2rem;}
+
+    /* ---- PROGRESS ---- */
+    .prog-bar-wrap{background:rgba(255,255,255,.08);padding:.5rem 2rem;display:flex;align-items:center;gap:1rem;}
+    .prog-track{flex:1;height:8px;background:rgba(255,255,255,.15);border-radius:4px;overflow:hidden;}
+    .prog-fill{height:100%;background:linear-gradient(90deg,#e94560,#533483);border-radius:4px;transition:width .5s ease;width:0%;}
+    .prog-label{font-size:.8rem;color:#aaa;white-space:nowrap;}
+
+    /* ---- NAV TABS ---- */
+    .nav-tabs{display:flex;justify-content:center;background:rgba(15,52,96,.85);padding:.5rem;gap:.3rem;flex-wrap:wrap;position:sticky;top:0;z-index:100;backdrop-filter:blur(10px);}
+    .nav-tab{padding:.55rem .9rem;background:transparent;border:2px solid transparent;color:#909090;cursor:pointer;font-size:.8rem;font-weight:700;border-radius:8px;transition:all .25s;}
+    .nav-tab:hover{color:#fff;background:rgba(233,69,96,.2);}
+    .nav-tab.active{background:linear-gradient(135deg,#e94560,#533483);color:#fff;}
+    .nav-tab.done{border-color:rgba(76,175,80,.5);color:#81c784;}
+    .nav-tab .ck{display:none;}
+    .nav-tab.done .ck{display:inline;}
+
+    /* ---- LAYOUT ---- */
+    .main-content{max-width:900px;margin:2rem auto;padding:0 1.5rem 4rem;}
+    .section{display:none;animation:fadeIn .4s ease;}
+    .section.active{display:block;}
+    @keyframes fadeIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+
+    /* ---- CARDS ---- */
+    .card{background:rgba(255,255,255,.05);border-radius:16px;padding:1.5rem;margin-bottom:1.5rem;border:1px solid rgba(255,255,255,.1);}
+    .card h2{font-size:1.3rem;color:#fff;margin-bottom:1rem;display:flex;align-items:center;gap:.5rem;}
+    .card h3{font-size:1rem;color:#e94560;margin:1rem 0 .5rem;}
+
+    /* ---- INFO BOXES ---- */
+    .ibox{border-radius:10px;padding:.9rem 1rem;margin:.6rem 0;line-height:1.6;}
+    .ibox.blue{background:rgba(33,150,243,.12);border-left:4px solid #2196f3;}
+    .ibox.green{background:rgba(76,175,80,.12);border-left:4px solid #4caf50;}
+    .ibox.yellow{background:rgba(255,193,7,.12);border-left:4px solid #ffc107;}
+    .ibox.red{background:rgba(233,69,96,.12);border-left:4px solid #e94560;}
+    .ibox.purple{background:rgba(156,39,176,.12);border-left:4px solid #9c27b0;}
+    .ibox h4{font-size:.88rem;margin-bottom:.35rem;}
+    .ibox.blue h4{color:#64b5f6;}
+    .ibox.green h4{color:#81c784;}
+    .ibox.yellow h4{color:#ffc107;}
+    .ibox.red h4{color:#e94560;}
+    .ibox.purple h4{color:#ce93d8;}
+    .ibox p,.ibox li{font-size:.88rem;}
+    .ibox ul{padding-left:1.2rem;}
+
+    /* ---- FORMULA TRIANGLE ---- */
+    .tri-wrap{display:flex;flex-direction:column;align-items:center;margin:.8rem 0;}
+    .tri-box{display:grid;grid-template-columns:1fr 1fr;width:160px;border-radius:12px;overflow:hidden;border:2px solid rgba(255,255,255,.2);font-size:1.3rem;font-weight:900;text-align:center;}
+    .tri-top{grid-column:1/3;background:#e94560;padding:10px;color:#fff;border-bottom:2px solid rgba(255,255,255,.3);}
+    .tri-bl{background:#533483;color:#fff;padding:10px;border-right:1px solid rgba(255,255,255,.3);}
+    .tri-br{background:#533483;color:#fff;padding:10px;}
+    .tri-hint{font-size:.72rem;color:#aaa;margin-top:.4rem;text-align:center;}
+    .formula-row{display:flex;flex-wrap:wrap;gap:2rem;justify-content:center;margin:.8rem 0;}
+
+    /* ---- EQUATION PILL ---- */
+    .eq{background:rgba(233,69,96,.18);border:2px solid rgba(233,69,96,.4);border-radius:10px;padding:.75rem 1.5rem;text-align:center;font-size:1.1rem;font-weight:700;margin:.6rem 0;}
+
+    /* ---- WORKED EXAMPLE ---- */
+    .worked{background:rgba(33,150,243,.1);border:1px solid rgba(33,150,243,.3);border-radius:12px;padding:1rem 1.2rem;margin:.8rem 0;}
+    .worked h4{color:#64b5f6;margin-bottom:.6rem;font-size:.9rem;}
+    .step{display:flex;gap:.7rem;margin-bottom:.5rem;font-size:.85rem;line-height:1.5;}
+    .snum{width:22px;height:22px;background:#e94560;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;flex-shrink:0;margin-top:1px;}
+
+    /* ---- QUESTION BLOCKS ---- */
+    .qblock{background:rgba(0,0,0,.25);border-radius:12px;padding:1.1rem;margin:.7rem 0;}
+    .q-diff{display:inline-block;padding:.15rem .55rem;border-radius:10px;font-size:.68rem;font-weight:700;margin-bottom:.4rem;}
+    .q-diff.f{background:rgba(76,175,80,.3);color:#81c784;}
+    .q-diff.c{background:rgba(33,150,243,.3);color:#64b5f6;}
+    .q-diff.ch{background:rgba(156,39,176,.3);color:#ba68c8;}
+    .q-text{font-size:.9rem;line-height:1.6;margin-bottom:.6rem;}
+
+    /* ---- BUTTONS ---- */
+    .btn{padding:.5rem 1.1rem;border:none;border-radius:8px;cursor:pointer;font-weight:700;font-size:.8rem;transition:all .2s;margin:.2rem .2rem .2rem 0;}
+    .btn:hover{filter:brightness(1.2);transform:translateY(-1px);}
+    .btn-hint{background:rgba(255,193,7,.25);color:#ffc107;border:1px solid rgba(255,193,7,.35);}
+    .btn-ans{background:rgba(76,175,80,.25);color:#81c784;border:1px solid rgba(76,175,80,.35);}
+    .btn-primary{background:linear-gradient(135deg,#e94560,#533483);color:#fff;}
+    .btn-next{background:linear-gradient(135deg,#e94560,#533483);color:#fff;padding:.75rem 2rem;font-size:.95rem;margin-top:1.2rem;}
+
+    /* ---- REVEAL BOXES ---- */
+    .reveal{display:none;padding:.75rem;border-radius:8px;margin-top:.4rem;font-size:.85rem;animation:fadeIn .3s ease;}
+    .reveal.show{display:block;}
+    .reveal.hint{background:rgba(255,193,7,.12);border-left:3px solid #ffc107;color:#ffe082;}
+    .reveal.answer{background:rgba(76,175,80,.12);border-left:3px solid #4caf50;color:#c8e6c9;}
+
+    /* ---- VOCAB CARDS ---- */
+    .vocab-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(175px,1fr));gap:.8rem;margin:.8rem 0;}
+    .vcard{background:rgba(255,255,255,.06);border:2px solid rgba(255,255,255,.1);border-radius:12px;padding:.9rem;cursor:pointer;transition:all .25s;min-height:75px;}
+    .vcard:hover{border-color:#e94560;background:rgba(233,69,96,.1);}
+    .vcard .vterm{font-size:.95rem;font-weight:700;color:#e94560;margin-bottom:.3rem;}
+    .vcard .vdef{font-size:.78rem;color:#ccc;display:none;line-height:1.4;}
+    .vcard .vdef.show{display:block;}
+    .vcard .vtap{font-size:.68rem;color:#555;margin-top:.3rem;}
+
+    /* ---- TABLE ---- */
+    .data-table{width:100%;border-collapse:collapse;margin:.8rem 0;border-radius:10px;overflow:hidden;font-size:.88rem;}
+    .data-table th{background:rgba(233,69,96,.35);padding:.7rem .9rem;text-align:left;font-weight:700;}
+    .data-table td{padding:.55rem .9rem;border-bottom:1px solid rgba(255,255,255,.07);}
+    .data-table tr:hover td{background:rgba(255,255,255,.04);}
+    .data-table .spd{font-weight:700;color:#e94560;}
+
+    /* ---- SVG GRAPHS ---- */
+    .graph-wrap{background:rgba(0,0,0,.3);border-radius:12px;padding:.8rem;margin:.8rem 0;overflow-x:auto;}
+    .graph-wrap svg{width:100%;max-width:580px;height:auto;display:block;margin:0 auto;}
+
+    /* ---- GRAPH THEORY TILES ---- */
+    .theory-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(195px,1fr));gap:.7rem;margin:.8rem 0;}
+    .theory-tile{background:rgba(255,255,255,.05);border-radius:10px;padding:.8rem;border-left:3px solid #e94560;}
+    .theory-tile .ttitle{font-weight:700;color:#e94560;font-size:.82rem;margin-bottom:.25rem;}
+    .theory-tile .tbody{font-size:.8rem;color:#ccc;line-height:1.4;}
+
+    /* ---- UNSCRAMBLE ---- */
+    .scramble-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(185px,1fr));gap:.7rem;margin:.8rem 0;}
+    .sc-item{background:rgba(255,255,255,.05);border:2px solid rgba(255,255,255,.1);border-radius:10px;padding:.75rem;}
+    .sc-word{font-family:monospace;font-size:1rem;font-weight:700;color:#e94560;letter-spacing:2px;margin-bottom:.35rem;}
+    .sc-item input{width:100%;padding:.38rem .55rem;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:6px;color:#fff;font-size:.85rem;}
+    .sc-item input:focus{outline:none;border-color:#e94560;}
+    .sc-ans{display:none;font-size:.82rem;color:#81c784;margin-top:.3rem;font-weight:600;}
+    .sc-ans.show{display:block;}
+
+    /* ---- QUIZ ---- */
+    .quiz-q{background:rgba(0,0,0,.25);border-radius:12px;padding:1.1rem;margin:.7rem 0;}
+    .quiz-qnum{color:#e94560;font-weight:700;font-size:.8rem;margin-bottom:.4rem;}
+    .quiz-q p{font-size:.9rem;line-height:1.6;margin-bottom:.7rem;}
+    .quiz-opts{display:flex;flex-direction:column;gap:.35rem;}
+    .quiz-opt{display:flex;align-items:center;gap:.7rem;padding:.65rem .9rem;background:rgba(255,255,255,.05);border:2px solid transparent;border-radius:8px;cursor:pointer;transition:all .2s;font-size:.88rem;}
+    .quiz-opt:hover{background:rgba(255,255,255,.1);border-color:rgba(233,69,96,.4);}
+    .quiz-opt.correct{background:rgba(76,175,80,.2);border-color:#4caf50;color:#a5d6a7;pointer-events:none;}
+    .quiz-opt.wrong{background:rgba(233,69,96,.2);border-color:#e94560;color:#ef9a9a;pointer-events:none;}
+    .quiz-opt .olabel{width:26px;height:26px;background:rgba(255,255,255,.1);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;flex-shrink:0;}
+    .quiz-fb{display:none;padding:.65rem;border-radius:8px;margin-top:.4rem;font-size:.82rem;line-height:1.5;}
+    .quiz-fb.show{display:block;}
+    .quiz-fb.ok{background:rgba(76,175,80,.15);color:#a5d6a7;border-left:3px solid #4caf50;}
+    .quiz-fb.bad{background:rgba(233,69,96,.15);color:#ef9a9a;border-left:3px solid #e94560;}
+    .score-box{text-align:center;padding:2rem;display:none;}
+    .score-box.show{display:block;}
+    .score-ring{width:120px;height:120px;border-radius:50%;background:linear-gradient(135deg,#e94560,#533483);display:flex;flex-direction:column;align-items:center;justify-content:center;margin:0 auto 1rem;}
+    .score-ring .sn{font-size:2.4rem;font-weight:900;color:#fff;}
+    .score-ring .so{font-size:.85rem;color:rgba(255,255,255,.8);}
+
+    /* ---- SECTION NAV ---- */
+    .sec-nav{display:flex;justify-content:flex-end;margin-top:2rem;padding-top:1rem;border-top:1px solid rgba(255,255,255,.1);}
+
+    /* ---- RESPONSIVE ---- */
+    @media(max-width:600px){
+      .header h1{font-size:1.4rem;}
+      .nav-tab{font-size:.7rem;padding:.45rem .6rem;}
+      .formula-row{gap:1rem;}
+      .vocab-grid{grid-template-columns:repeat(2,1fr);}
+    }
+  </style>
+</head>
+<body>
+
+<div class="header">
+  <h1>⚡ Motion Revision</h1>
+  <div class="subtitle">KS3 Physics — Distance Learning</div>
+  <div class="meta">Speed · Distance-Time Graphs · Acceleration · Velocity-Time Graphs</div>
+</div>
+
+<div class="prog-bar-wrap">
+  <div class="prog-track"><div class="prog-fill" id="progFill"></div></div>
+  <div class="prog-label" id="progLabel">Section 1 of 7</div>
+</div>
+
+<nav class="nav-tabs" id="navTabs">
+  <button class="nav-tab active" onclick="goTo(0)"><span class="ck">✓ </span>1. Do Now</button>
+  <button class="nav-tab" onclick="goTo(1)"><span class="ck">✓ </span>2. Key Words</button>
+  <button class="nav-tab" onclick="goTo(2)"><span class="ck">✓ </span>3. Speed</button>
+  <button class="nav-tab" onclick="goTo(3)"><span class="ck">✓ </span>4. D-T Graphs</button>
+  <button class="nav-tab" onclick="goTo(4)"><span class="ck">✓ </span>5. Acceleration</button>
+  <button class="nav-tab" onclick="goTo(5)"><span class="ck">✓ </span>6. V-T Graphs</button>
+  <button class="nav-tab" onclick="goTo(6)"><span class="ck">✓ </span>7. Final Quiz</button>
+</nav>
+
+<div class="main-content">
+
+<!-- ============================================================ -->
+<!-- SECTION 1: DO NOW                                           -->
+<!-- ============================================================ -->
+<div class="section active" id="sec0">
+  <div class="card">
+    <h2>🔀 Do Now — Unscramble the Words</h2>
+    <div class="ibox blue">
+      <h4>📋 Instructions</h4>
+      <p>These are all key words from Motion. Unscramble each word and type your answer in the box. When you're done, click <strong>Show Answers</strong>.</p>
+    </div>
+    <div class="scramble-grid" id="scrambleGrid"></div>
+    <button class="btn btn-primary" onclick="showScrambleAnswers()">Show All Answers</button>
+    <button class="btn btn-primary" style="margin-left:.5rem" onclick="checkScramble()">Check My Answers</button>
+  </div>
+  <div class="sec-nav">
+    <button class="btn btn-next" onclick="goTo(1)">Next: Key Words →</button>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SECTION 2: KEY VOCABULARY                                   -->
+<!-- ============================================================ -->
+<div class="section" id="sec1">
+  <div class="card">
+    <h2>📚 Key Vocabulary</h2>
+    <div class="ibox yellow">
+      <h4>💡 How to use these cards</h4>
+      <p>Click each card to reveal the definition. Try to say the definition in your head <em>before</em> you click — this is retrieval practice!</p>
+    </div>
+    <div class="vocab-grid" id="vocabGrid"></div>
+  </div>
+
+  <div class="card">
+    <h2>📊 Scalar vs Vector</h2>
+    <div class="ibox blue">
+      <h4>🎯 Key Distinction</h4>
+      <p>Some quantities only have a size (magnitude). Others have both a size AND a direction.</p>
+    </div>
+    <table class="data-table">
+      <thead><tr><th>Type</th><th>Definition</th><th>Examples</th></tr></thead>
+      <tbody>
+        <tr><td><strong style="color:#e94560">Scalar</strong></td><td>Has magnitude (size) only</td><td>Speed, Distance, Mass, Temperature</td></tr>
+        <tr><td><strong style="color:#64b5f6">Vector</strong></td><td>Has magnitude AND direction</td><td>Velocity, Displacement, Force, Acceleration</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="sec-nav">
+    <button class="btn btn-next" onclick="goTo(2)">Next: Speed →</button>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SECTION 3: SPEED, DISTANCE & TIME                          -->
+<!-- ============================================================ -->
+<div class="section" id="sec2">
+  <div class="card">
+    <h2>🚀 Speed, Distance &amp; Time</h2>
+
+    <div class="ibox red">
+      <h4>⭐ The equation — learn this!</h4>
+      <p style="font-size:1rem;font-weight:700;text-align:center;margin:.4rem 0;">Speed = Distance ÷ Time &nbsp;&nbsp;|&nbsp;&nbsp; v = s ÷ t</p>
+      <p style="text-align:center;font-size:.82rem;">Speed in m/s &nbsp;·&nbsp; Distance in metres (m) &nbsp;·&nbsp; Time in seconds (s)</p>
+    </div>
+
+    <h3>Formula Triangle</h3>
+    <p style="font-size:.85rem;color:#bbb;margin-bottom:.5rem;">Cover the quantity you want to find with your finger — the triangle shows you what to do with the other two.</p>
+    <div class="formula-row">
+      <div class="tri-wrap">
+        <div class="tri-box">
+          <div class="tri-top">s</div>
+          <div class="tri-bl">v</div>
+          <div class="tri-br">t</div>
+        </div>
+        <div class="tri-hint">Cover <em>s</em> → v × t &nbsp;|&nbsp; Cover <em>v</em> → s ÷ t &nbsp;|&nbsp; Cover <em>t</em> → s ÷ v</div>
+      </div>
+    </div>
+
+    <h3>The Three Rearrangements</h3>
+    <div class="ibox green">
+      <ul>
+        <li><strong>Speed:</strong> v = s ÷ t</li>
+        <li><strong>Distance:</strong> s = v × t</li>
+        <li><strong>Time:</strong> t = s ÷ v</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>🚶 Typical Speeds</h2>
+    <p style="font-size:.85rem;color:#bbb;margin-bottom:.8rem;">You need to know roughly how fast these things move.</p>
+    <table class="data-table">
+      <thead><tr><th>Activity / Object</th><th class="spd">Speed (m/s)</th><th>Speed (km/h)</th></tr></thead>
+      <tbody>
+        <tr><td>👣 Walking</td><td class="spd">≈ 1.5 m/s</td><td>≈ 5 km/h</td></tr>
+        <tr><td>🏃 Running</td><td class="spd">≈ 3 m/s</td><td>≈ 11 km/h</td></tr>
+        <tr><td>🚲 Cycling</td><td class="spd">≈ 6 m/s</td><td>≈ 22 km/h</td></tr>
+        <tr><td>🚗 Car (urban)</td><td class="spd">≈ 13 m/s</td><td>≈ 50 km/h</td></tr>
+        <tr><td>🚗 Car (motorway)</td><td class="spd">≈ 30 m/s</td><td>≈ 110 km/h</td></tr>
+        <tr><td>✈️ Aeroplane</td><td class="spd">≈ 250 m/s</td><td>≈ 900 km/h</td></tr>
+        <tr><td>🔊 Speed of Sound</td><td class="spd">330 m/s</td><td>≈ 1200 km/h</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>✏️ Worked Examples</h2>
+    <div class="worked">
+      <h4>📖 Example 1 — Finding Speed</h4>
+      <p style="font-size:.85rem;margin-bottom:.6rem;color:#ccc">Will walks 200 metres in 40 seconds. What is his speed?</p>
+      <div class="step"><div class="snum">1</div><div>Write down the values: <strong>s = 200 m, t = 40 s, v = ?</strong></div></div>
+      <div class="step"><div class="snum">2</div><div>Write the formula: <strong>v = s ÷ t</strong></div></div>
+      <div class="step"><div class="snum">3</div><div>Substitute: <strong>v = 200 ÷ 40</strong></div></div>
+      <div class="step"><div class="snum">4</div><div>Calculate: <strong style="color:#81c784">v = 5 m/s</strong></div></div>
+    </div>
+
+    <div class="worked">
+      <h4>📖 Example 2 — Finding Distance</h4>
+      <p style="font-size:.85rem;margin-bottom:.6rem;color:#ccc">Aaron travels at 50 m/s for 20 s. How far does he go?</p>
+      <div class="step"><div class="snum">1</div><div>Write down values: <strong>v = 50 m/s, t = 20 s, s = ?</strong></div></div>
+      <div class="step"><div class="snum">2</div><div>Rearrange: <strong>s = v × t</strong></div></div>
+      <div class="step"><div class="snum">3</div><div>Substitute: <strong>s = 50 × 20</strong></div></div>
+      <div class="step"><div class="snum">4</div><div>Calculate: <strong style="color:#81c784">s = 1000 m</strong></div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>📝 Practice Questions — Speed</h2>
+    <div class="ibox yellow"><h4>💡 Scaffold</h4><p>Use the formula triangle! Write down what you know first, then substitute. Always include the unit (m/s).</p></div>
+
+    <div id="speedQs"></div>
+  </div>
+
+  <div class="sec-nav">
+    <button class="btn btn-next" onclick="goTo(3)">Next: Distance-Time Graphs →</button>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SECTION 4: DISTANCE-TIME GRAPHS                            -->
+<!-- ============================================================ -->
+<div class="section" id="sec3">
+  <div class="card">
+    <h2>📈 Distance-Time Graphs — Key Ideas</h2>
+    <div class="ibox purple">
+      <h4>🔑 The gradient = the speed</h4>
+      <p>On a distance-time graph, the <strong>steeper the line, the faster the object is moving</strong>. Gradient = rise ÷ run = change in distance ÷ change in time = speed.</p>
+    </div>
+    <div class="theory-grid">
+      <div class="theory-tile"><div class="ttitle">📏 Diagonal line going up</div><div class="tbody">Object moving at <strong>constant speed</strong> away from the start.</div></div>
+      <div class="theory-tile"><div class="ttitle">➡️ Horizontal line (flat)</div><div class="tbody">Object is <strong>stationary</strong> (not moving). Distance stays the same.</div></div>
+      <div class="theory-tile"><div class="ttitle">📐 Steeper diagonal line</div><div class="tbody">Object is moving <strong>faster</strong> than a shallower line.</div></div>
+      <div class="theory-tile"><div class="ttitle">📉 Diagonal line going down</div><div class="tbody">Object is moving <strong>back towards the start</strong>.</div></div>
+    </div>
+
+    <h3>How to calculate speed from the graph</h3>
+    <div class="worked">
+      <h4>📖 Method: Gradient = Rise ÷ Run</h4>
+      <div class="step"><div class="snum">1</div><div>Pick two clear points on the line.</div></div>
+      <div class="step"><div class="snum">2</div><div>Find the <strong>change in distance</strong> (rise): subtract the smaller distance from the larger.</div></div>
+      <div class="step"><div class="snum">3</div><div>Find the <strong>change in time</strong> (run): subtract the smaller time from the larger.</div></div>
+      <div class="step"><div class="snum">4</div><div>Speed = change in distance ÷ change in time. Include the unit (m/s).</div></div>
+    </div>
+  </div>
+
+  <!-- DT Graph 1 -->
+  <div class="card">
+    <h2>📊 Graph 1 — Read the Graph</h2>
+    <div class="graph-wrap">
+      <svg id="dtg1" viewBox="0 0 580 340"></svg>
+    </div>
+    <div id="dtg1Qs"></div>
+  </div>
+
+  <!-- DT Graph 2 - Multiple People -->
+  <div class="card">
+    <h2>📊 Graph 2 — Who Is Fastest?</h2>
+    <p style="font-size:.85rem;color:#bbb;margin-bottom:.5rem;">This graph shows four different people's journeys. Use the gradients to answer the questions.</p>
+    <div class="graph-wrap">
+      <svg id="dtg2" viewBox="0 0 580 340"></svg>
+    </div>
+    <div id="dtg2Qs"></div>
+  </div>
+
+  <!-- DT Graph 3 -->
+  <div class="card">
+    <h2>📊 Graph 3 — Velocity from a Graph</h2>
+    <div class="ibox blue"><h4>💡 Note</h4><p>Velocity is speed with a direction. On a distance-time graph, a downward slope means the object is travelling <em>back</em> towards the start — this gives a <strong>negative velocity</strong>.</p></div>
+    <div class="graph-wrap">
+      <svg id="dtg3" viewBox="0 0 580 340"></svg>
+    </div>
+    <div id="dtg3Qs"></div>
+  </div>
+
+  <!-- DT Graph 4 -->
+  <div class="card">
+    <h2>📊 Graph 4 — More Practice</h2>
+    <div class="graph-wrap">
+      <svg id="dtg4" viewBox="0 0 580 340"></svg>
+    </div>
+    <div id="dtg4Qs"></div>
+  </div>
+
+  <!-- Christina drawing task -->
+  <div class="card">
+    <h2>✏️ Drawing Task — Christina's Journey</h2>
+    <div class="ibox yellow">
+      <h4>📋 Task</h4>
+      <p>On paper or in your notebook, draw a distance-time graph for Christina's journey:</p>
+      <ul style="margin-top:.4rem;padding-left:1.2rem;font-size:.85rem;">
+        <li>Walks <strong>50 m</strong> in <strong>20 seconds</strong></li>
+        <li>Stands still for <strong>10 seconds</strong></li>
+        <li>Runs <strong>100 m further</strong> in <strong>30 seconds</strong></li>
+        <li>Stands still again for <strong>20 seconds</strong></li>
+        <li>Walks all the way back to the start (<strong>150 m</strong>) in <strong>50 seconds</strong></li>
+      </ul>
+      <p style="margin-top:.4rem;font-size:.82rem;color:#ffc107;">💡 Hint: Your time axis goes to 130 s. Your distance axis needs to go to at least 150 m.</p>
+    </div>
+    <button class="btn btn-ans" onclick="toggleReveal('christinaAns')">Show Answer Graph</button>
+    <div class="reveal answer" id="christinaAns">
+      <div class="graph-wrap">
+        <svg id="dtg_christina" viewBox="0 0 580 340"></svg>
+      </div>
+      <p style="font-size:.8rem;color:#aaa;margin-top:.4rem;">The graph goes up steeply (fast walk), flat (stationary), up steeply again (run), flat (standing), then comes back down to zero.</p>
+    </div>
+  </div>
+
+  <div class="sec-nav">
+    <button class="btn btn-next" onclick="goTo(4)">Next: Acceleration →</button>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SECTION 5: ACCELERATION                                    -->
+<!-- ============================================================ -->
+<div class="section" id="sec4">
+  <div class="card">
+    <h2>⚡ Acceleration</h2>
+
+    <div class="ibox red">
+      <h4>⭐ The equation — learn this!</h4>
+      <p style="font-size:1rem;font-weight:700;text-align:center;margin:.4rem 0;">Acceleration = Change in Velocity ÷ Time &nbsp;&nbsp;|&nbsp;&nbsp; a = (v − u) ÷ t</p>
+      <p style="text-align:center;font-size:.82rem;">a in m/s² &nbsp;·&nbsp; v = final velocity (m/s) &nbsp;·&nbsp; u = initial velocity (m/s) &nbsp;·&nbsp; t = time (s)</p>
+    </div>
+
+    <h3>Formula Triangle</h3>
+    <p style="font-size:.85rem;color:#bbb;margin-bottom:.5rem;">The top section is the <em>change in velocity</em> (v − u).</p>
+    <div class="formula-row">
+      <div class="tri-wrap">
+        <div class="tri-box">
+          <div class="tri-top">v−u</div>
+          <div class="tri-bl">a</div>
+          <div class="tri-br">t</div>
+        </div>
+        <div class="tri-hint">Cover <em>v−u</em> → a × t &nbsp;|&nbsp; Cover <em>a</em> → (v−u) ÷ t &nbsp;|&nbsp; Cover <em>t</em> → (v−u) ÷ a</div>
+      </div>
+    </div>
+
+    <div class="ibox blue">
+      <h4>💡 What is deceleration?</h4>
+      <p>Deceleration is <strong>negative acceleration</strong> — the object is slowing down. You get a negative value for <em>a</em> when v is smaller than u. Just write the magnitude and say "deceleration".</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>✏️ Worked Examples — Acceleration</h2>
+    <div class="worked">
+      <h4>📖 Example 1 — Finding Acceleration</h4>
+      <p style="font-size:.85rem;margin-bottom:.6rem;color:#ccc">A cyclist accelerates from 0 to 10 m/s in 5 seconds. What is her acceleration?</p>
+      <div class="step"><div class="snum">1</div><div>u = 0 m/s &nbsp;·&nbsp; v = 10 m/s &nbsp;·&nbsp; t = 5 s &nbsp;·&nbsp; a = ?</div></div>
+      <div class="step"><div class="snum">2</div><div>Change in velocity: v − u = 10 − 0 = 10 m/s</div></div>
+      <div class="step"><div class="snum">3</div><div>a = (v − u) ÷ t = 10 ÷ 5</div></div>
+      <div class="step"><div class="snum">4</div><div><strong style="color:#81c784">a = 2 m/s²</strong></div></div>
+    </div>
+
+    <div class="worked">
+      <h4>📖 Example 2 — Finding Final Velocity</h4>
+      <p style="font-size:.85rem;margin-bottom:.6rem;color:#ccc">A ball accelerates at 10 m/s² for 5 seconds from rest. How fast will it be going?</p>
+      <div class="step"><div class="snum">1</div><div>a = 10 m/s² &nbsp;·&nbsp; t = 5 s &nbsp;·&nbsp; u = 0 m/s &nbsp;·&nbsp; v = ?</div></div>
+      <div class="step"><div class="snum">2</div><div>Rearrange: v − u = a × t &nbsp;→&nbsp; v = u + (a × t)</div></div>
+      <div class="step"><div class="snum">3</div><div>v = 0 + (10 × 5) = 50</div></div>
+      <div class="step"><div class="snum">4</div><div><strong style="color:#81c784">v = 50 m/s</strong></div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>📝 Practice Questions — Acceleration</h2>
+    <div class="ibox yellow"><h4>💡 Scaffold</h4><p>Always write u (start speed) and v (end speed) first. Calculate (v − u) before dividing by time.</p></div>
+    <div id="accQs"></div>
+  </div>
+
+  <div class="sec-nav">
+    <button class="btn btn-next" onclick="goTo(5)">Next: Velocity-Time Graphs →</button>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SECTION 6: VELOCITY-TIME GRAPHS                            -->
+<!-- ============================================================ -->
+<div class="section" id="sec5">
+  <div class="card">
+    <h2>📈 Velocity-Time Graphs — Key Ideas</h2>
+    <div class="theory-grid">
+      <div class="theory-tile"><div class="ttitle">📈 Line going up (positive slope)</div><div class="tbody">Object is <strong>accelerating</strong> (speeding up). Steeper = greater acceleration.</div></div>
+      <div class="theory-tile"><div class="ttitle">➡️ Horizontal line</div><div class="tbody">Object is moving at <strong>constant velocity</strong> (no acceleration).</div></div>
+      <div class="theory-tile"><div class="ttitle">📉 Line going down (negative slope)</div><div class="tbody">Object is <strong>decelerating</strong> (slowing down).</div></div>
+      <div class="theory-tile"><div class="ttitle">📐 Steeper upward line</div><div class="tbody">Object has <strong>greater acceleration</strong> than a shallower upward line.</div></div>
+    </div>
+
+    <div class="ibox purple">
+      <h4>🔑 Area under a V-T graph = Distance travelled</h4>
+      <p>To find the total distance, calculate the area of each shape under the line:</p>
+      <ul style="margin-top:.4rem;font-size:.85rem;">
+        <li><strong>Rectangle:</strong> Area = base × height (= time × velocity)</li>
+        <li><strong>Triangle:</strong> Area = ½ × base × height</li>
+        <li><strong>Trapezium:</strong> Area = ½ × (a + b) × height</li>
+      </ul>
+      <p style="margin-top:.4rem;font-size:.82rem;color:#ffc107;">Add all the shapes together to get the total distance!</p>
+    </div>
+
+    <h3>How to find acceleration from a V-T graph</h3>
+    <div class="worked">
+      <h4>📖 Method: Gradient = Change in Velocity ÷ Time</h4>
+      <div class="step"><div class="snum">1</div><div>Find the change in velocity (rise): final v − initial v for that section.</div></div>
+      <div class="step"><div class="snum">2</div><div>Find the time for that section (run).</div></div>
+      <div class="step"><div class="snum">3</div><div>Acceleration = change in velocity ÷ time. Unit: m/s²</div></div>
+    </div>
+  </div>
+
+  <!-- VT Graph 1 -->
+  <div class="card">
+    <h2>📊 V-T Graph 1 — Read the Graph</h2>
+    <div class="graph-wrap">
+      <svg id="vtg1" viewBox="0 0 580 340"></svg>
+    </div>
+    <div id="vtg1Qs"></div>
+  </div>
+
+  <!-- VT Graph 2 -->
+  <div class="card">
+    <h2>📊 V-T Graph 2 — More Practice</h2>
+    <div class="graph-wrap">
+      <svg id="vtg2" viewBox="0 0 580 340"></svg>
+    </div>
+    <div id="vtg2Qs"></div>
+  </div>
+
+  <!-- VT Graph 3 - David -->
+  <div class="card">
+    <h2>📊 David's Journey Home</h2>
+    <p style="font-size:.85rem;color:#bbb;margin-bottom:.5rem;">This velocity-time graph shows David's journey home. Use the area under the graph to find how far away he lives.</p>
+    <div class="graph-wrap">
+      <svg id="vtg3" viewBox="0 0 580 340"></svg>
+    </div>
+    <div class="ibox yellow">
+      <h4>💡 Scaffold — How to find the total distance</h4>
+      <p style="font-size:.85rem;">Break the graph into triangles, rectangles, and trapeziums. Find the area of each shape and add them together.</p>
+    </div>
+    <button class="btn btn-hint" onclick="toggleReveal('davidHint')">Show Hint</button>
+    <button class="btn btn-ans" onclick="toggleReveal('davidAns')">Show Answer</button>
+    <div class="reveal hint" id="davidHint">
+      Break the graph into: Triangle (0–10s) + Rectangle (10–25s) + Trapezium (25–35s) + Triangle (35–50s).<br>
+      Triangle area = ½ × base × height &nbsp;|&nbsp; Rectangle = base × height &nbsp;|&nbsp; Trapezium = ½ × (a+b) × h
+    </div>
+    <div class="reveal answer" id="davidAns">
+      ½×10×60 + 15×60 + ½×(60+80)×10 + ½×15×80 = 300 + 900 + 700 + 600 = <strong>2500 m</strong>
+    </div>
+  </div>
+
+  <!-- VT Graph 4 - Sonny -->
+  <div class="card">
+    <h2>📊 Sonny's Journey to School</h2>
+    <p style="font-size:.85rem;color:#bbb;margin-bottom:.5rem;">This velocity-time graph shows Sonny's journey to school. How far away does he live?</p>
+    <div class="graph-wrap">
+      <svg id="vtg4" viewBox="0 0 580 340"></svg>
+    </div>
+    <button class="btn btn-hint" onclick="toggleReveal('sonnyHint')">Show Hint</button>
+    <button class="btn btn-ans" onclick="toggleReveal('sonnyAns')">Show Answer</button>
+    <div class="reveal hint" id="sonnyHint">
+      Break into: Triangle (0–10s) + Rectangle (10–20s) + Trapezium (20–40s) + Triangle (40–50s).
+    </div>
+    <div class="reveal answer" id="sonnyAns">
+      ½×10×40 + 10×40 + ½×(40+80)×20 + ½×10×80 = 200 + 400 + 1200 + 400 = <strong>2200 m</strong>
+    </div>
+  </div>
+
+  <div class="sec-nav">
+    <button class="btn btn-next" onclick="goTo(6)">Final Quiz →</button>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SECTION 7: FINAL QUIZ                                      -->
+<!-- ============================================================ -->
+<div class="section" id="sec6">
+  <div class="card">
+    <h2>🎯 Final Quiz</h2>
+    <div class="ibox blue"><h4>📋 Instructions</h4><p>Answer all 10 questions. Click an option to see if you're right. Your score will appear at the end!</p></div>
+    <div id="quizContainer"></div>
+    <button class="btn btn-primary" onclick="showScore()" style="margin-top:1rem">Show My Score</button>
+    <div class="score-box" id="scoreBox">
+      <div class="score-ring"><div class="sn" id="scoreNum">0</div><div class="so">out of 10</div></div>
+      <p id="scoreMsg" style="font-size:1rem;margin-bottom:.5rem;"></p>
+      <p style="font-size:.85rem;color:#aaa;">Review any questions you got wrong — re-read the section and try to understand why before your next lesson.</p>
+      <button class="btn btn-primary" onclick="goTo(0)" style="margin-top:.8rem">↺ Restart from the Beginning</button>
+    </div>
+  </div>
+</div>
+
+</div><!-- /.main-content -->
+
+<script>
+// ================================================================
+// DATA
+// ================================================================
+const scrambleWords = [
+  {scrambled:"EOCFSR", answer:"FORCES"},
+  {scrambled:"EESPD", answer:"SPEED"},
+  {scrambled:"EIVTLYCO", answer:"VELOCITY"},
+  {scrambled:"CETLAORACNIE", answer:"ACCELERATION"},
+  {scrambled:"SNTDICAE", answer:"DISTANCE"},
+  {scrambled:"LNITSPMEDACE", answer:"DISPLACEMENT"},
+  {scrambled:"AARSLC", answer:"SCALAR"},
+  {scrambled:"CVEOTR", answer:"VECTOR"}
+];
+
+const vocabData = [
+  {term:"Force", def:"A push or pull that can change the speed, direction, or shape of an object. Measured in Newtons (N)."},
+  {term:"Speed", def:"How fast an object moves. Speed = distance ÷ time. It is a scalar (no direction). Unit: m/s."},
+  {term:"Velocity", def:"Speed in a specific direction. It is a vector quantity (has direction). Unit: m/s."},
+  {term:"Acceleration", def:"How quickly velocity changes. a = (v−u) ÷ t. Unit: m/s². Can be negative (deceleration)."},
+  {term:"Distance", def:"The total length of the path an object travels. A scalar quantity. Unit: metres (m)."},
+  {term:"Displacement", def:"The straight-line distance from start to finish, including direction. A vector quantity."},
+  {term:"Scalar", def:"A quantity with only magnitude (size). Examples: speed, distance, mass, temperature."},
+  {term:"Vector", def:"A quantity with both magnitude (size) AND direction. Examples: velocity, displacement, force."}
+];
+
+const speedQsData = [
+  {diff:"f", q:"Will walks 200 metres in 40 seconds. What is his speed?", hint:"v = s ÷ t = 200 ÷ 40", ans:"v = 200 ÷ 40 = <strong>5 m/s</strong>"},
+  {diff:"f", q:"Ruby covers 2000 m in 1000 seconds. What is her speed?", hint:"v = 2000 ÷ 1000", ans:"v = 2000 ÷ 1000 = <strong>2 m/s</strong>"},
+  {diff:"f", q:"How long would it take Sophie to run 100 m if she runs at 10 m/s?", hint:"t = s ÷ v = 100 ÷ 10", ans:"t = 100 ÷ 10 = <strong>10 s</strong>"},
+  {diff:"f", q:"Aaron runs at 50 m/s for 20 s. How far does he go?", hint:"s = v × t = 50 × 20", ans:"s = 50 × 20 = <strong>1000 m</strong>"},
+  {diff:"c", q:"Taylor drives at about 40 m/s. How long does it take her to drive 20 km (20,000 m)?", hint:"t = s ÷ v = 20000 ÷ 40", ans:"t = 20000 ÷ 40 = <strong>500 s</strong>"},
+  {diff:"c", q:"Eliza walks 2000 m in 50 minutes. What is her speed in m/s? (Careful with the units!)", hint:"Convert 50 minutes to seconds first: 50 × 60 = 3000 s", ans:"t = 50 × 60 = 3000 s &nbsp;→&nbsp; v = 2000 ÷ 3000 = <strong>0.67 m/s</strong>"},
+  {diff:"c", q:"Archie walks 2000 m at a speed of 5 m/s. How long does he take?", hint:"t = s ÷ v = 2000 ÷ 5", ans:"t = 2000 ÷ 5 = <strong>400 s</strong>"},
+  {diff:"ch", q:"The speed of sound is 330 m/s. Isobel shouts at a mountain and hears the echo 3 seconds later. How far away is the mountain? (Careful — the sound travels there AND back!)", hint:"Total distance = v × t = 330 × 3 = 990 m. But the sound travels to the mountain AND back, so…", ans:"Total distance = 330 × 3 = 990 m. Mountain is half that distance: 990 ÷ 2 = <strong>495 m</strong>"}
+];
+
+const accQsData = [
+  {diff:"f", q:"A cyclist accelerates from 0 to 10 m/s in 5 seconds. What is her acceleration?", hint:"a = (v−u) ÷ t = (10−0) ÷ 5", ans:"a = 10 ÷ 5 = <strong>2 m/s²</strong>"},
+  {diff:"f", q:"A ball accelerates at 10 m/s² for 5 seconds from rest. How fast will it be going?", hint:"v − u = a × t → v = u + a×t = 0 + 10×5", ans:"v = 0 + 10 × 5 = <strong>50 m/s</strong>"},
+  {diff:"f", q:"A car accelerates from 0 to 20 m/s with an acceleration of 2 m/s². How long did this take?", hint:"t = (v−u) ÷ a = (20−0) ÷ 2", ans:"t = 20 ÷ 2 = <strong>10 s</strong>"},
+  {diff:"f", q:"A rocket accelerates from 0 to 5000 m/s in 2 seconds. What is its acceleration?", hint:"a = (5000−0) ÷ 2", ans:"a = 5000 ÷ 2 = <strong>2500 m/s²</strong>"},
+  {diff:"c", q:"A cyclist slows down from 10 to 0 m/s in 5 seconds. What is her acceleration? (Is it positive or negative?)", hint:"a = (v−u) ÷ t = (0−10) ÷ 5. It will be negative because she's slowing down.", ans:"a = (0−10) ÷ 5 = <strong>−2 m/s²</strong> (deceleration of 2 m/s²)"},
+  {diff:"c", q:"Eliza accelerates from rest to 50 m/s in 25 seconds. What is her acceleration?", hint:"a = (50−0) ÷ 25", ans:"a = 50 ÷ 25 = <strong>2 m/s²</strong>"},
+  {diff:"c", q:"Hayden accelerates at 5 m/s² for 5 seconds, starting at 10 m/s. What is his new speed?", hint:"v = u + a×t = 10 + 5×5", ans:"v = 10 + 25 = <strong>35 m/s</strong>"},
+  {diff:"ch", q:"A rocket accelerates from 1000 m/s to 5000 m/s in 2 seconds. What is its acceleration?", hint:"a = (v−u) ÷ t = (5000−1000) ÷ 2", ans:"a = 4000 ÷ 2 = <strong>2000 m/s²</strong>"}
+];
+
+// ================================================================
+// QUIZ DATA
+// ================================================================
+const quizData = [
+  {q:"What is the correct equation for speed?", opts:["Speed = distance × time","Speed = distance ÷ time","Speed = time ÷ distance","Speed = distance − time"], ans:1, fb:"Speed = distance ÷ time (v = s ÷ t). Remember the formula triangle with 's' on top, 'v' and 't' on the bottom."},
+  {q:"A car travels 300 m in 60 seconds. What is its speed?", opts:["5 m/s","18000 m/s","0.2 m/s","360 m/s"], ans:0, fb:"v = s ÷ t = 300 ÷ 60 = 5 m/s. Always divide distance by time to get speed."},
+  {q:"What does a horizontal line on a distance-time graph represent?", opts:["The object is accelerating","The object is moving at constant speed","The object is stationary","The object is decelerating"], ans:2, fb:"A horizontal line means the distance isn't changing — the object is stationary (not moving)."},
+  {q:"What does a steeper gradient on a distance-time graph indicate?", opts:["Greater distance","Longer time","Greater speed","Smaller acceleration"], ans:2, fb:"Gradient = speed. A steeper gradient means a greater speed."},
+  {q:"What is the unit for acceleration?", opts:["m/s","m/s²","m","s"], ans:1, fb:"Acceleration is measured in metres per second squared (m/s²) because it is a change in velocity per second."},
+  {q:"A cyclist speeds up from 0 to 20 m/s in 5 seconds. What is the acceleration?", opts:["25 m/s²","0.25 m/s²","4 m/s²","100 m/s²"], ans:2, fb:"a = (v−u) ÷ t = (20−0) ÷ 5 = 4 m/s²"},
+  {q:"What does the area under a velocity-time graph represent?", opts:["Acceleration","Speed","Time","Distance"], ans:3, fb:"Area under a velocity-time graph = distance travelled. Break the area into rectangles and triangles to calculate it."},
+  {q:"On a velocity-time graph, what does a downward-sloping line represent?", opts:["Constant speed","Acceleration","Deceleration (slowing down)","The object is stationary"], ans:2, fb:"A downward slope on a V-T graph means velocity is decreasing — the object is decelerating."},
+  {q:"What is the difference between distance and displacement?", opts:["There is no difference","Displacement has direction; distance does not","Distance is in metres; displacement is in km","Distance is a vector; displacement is a scalar"], ans:1, fb:"Displacement is a vector — it has magnitude AND direction. Distance is a scalar — it only has magnitude (the total path length)."},
+  {q:"A car decelerates from 30 m/s to 0 m/s in 10 seconds. What is the magnitude of its deceleration?", opts:["300 m/s²","0.33 m/s²","3 m/s²","30 m/s²"], ans:2, fb:"a = (v−u) ÷ t = (0−30) ÷ 10 = −3 m/s². The magnitude of the deceleration is 3 m/s²."}
+];
+
+// ================================================================
+// SVG GRAPH BUILDER
+// ================================================================
+function makeSVG(cfg){
+  // cfg: { type: 'DT'|'VT'|'DT_CHRIS', datasets: [{pts:[[x,y],...], color, label, dashed}], title }
+  const W=580, H=340;
+  const pad={l:62,r:20,t:22,b:52};
+  const pw=W-pad.l-pad.r, ph=H-pad.t-pad.b; // plot area dims
+
+  let xMax,yMax,xLabel,yLabel,xTick,yTick;
+  if(cfg.type==='DT'){
+    xMax=100;yMax=40;xLabel='Time (s)';yLabel='Distance (m)';xTick=20;yTick=10;
+  }else if(cfg.type==='VT'){
+    xMax=50;yMax=80;xLabel='Time (s)';yLabel='Velocity (m/s)';xTick=10;yTick=20;
+  }else{ // DT_CHRIS
+    xMax=130;yMax=160;xLabel='Time (s)';yLabel='Distance (m)';xTick=20;yTick=25;
+  }
+
+  function sx(v){return pad.l + (v/xMax)*pw;}
+  function sy(v){return pad.t + ph - (v/yMax)*ph;}
+
+  let svg=`<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">`;
+  svg+=`<rect width="${W}" height="${H}" fill="#0d1117" rx="8"/>`;
+
+  // grid
+  for(let x=xTick;x<=xMax;x+=xTick){
+    svg+=`<line x1="${sx(x)}" y1="${pad.t}" x2="${sx(x)}" y2="${pad.t+ph}" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>`;
+  }
+  for(let y=yTick;y<=yMax;y+=yTick){
+    svg+=`<line x1="${pad.l}" y1="${sy(y)}" x2="${pad.l+pw}" y2="${sy(y)}" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>`;
+  }
+
+  // axes
+  svg+=`<line x1="${pad.l}" y1="${pad.t+ph}" x2="${pad.l+pw}" y2="${pad.t+ph}" stroke="#e8e8e8" stroke-width="2"/>`;
+  svg+=`<line x1="${pad.l}" y1="${pad.t}" x2="${pad.l}" y2="${pad.t+ph}" stroke="#e8e8e8" stroke-width="2"/>`;
+
+  // x tick labels
+  for(let x=0;x<=xMax;x+=xTick){
+    svg+=`<text x="${sx(x)}" y="${pad.t+ph+16}" fill="#aaa" font-size="11" text-anchor="middle">${x}</text>`;
+  }
+  // y tick labels
+  for(let y=0;y<=yMax;y+=yTick){
+    svg+=`<text x="${pad.l-6}" y="${sy(y)+4}" fill="#aaa" font-size="11" text-anchor="end">${y}</text>`;
+  }
+
+  // axis labels
+  svg+=`<text x="${pad.l+pw/2}" y="${H-4}" fill="#ccc" font-size="12" text-anchor="middle">${xLabel}</text>`;
+  svg+=`<text x="14" y="${pad.t+ph/2}" fill="#ccc" font-size="12" text-anchor="middle" transform="rotate(-90,14,${pad.t+ph/2})">${yLabel}</text>`;
+
+  // datasets
+  (cfg.datasets||[]).forEach(ds=>{
+    const pts=ds.pts.map(p=>`${sx(p[0])},${sy(p[1])}`).join(' ');
+    const dash=ds.dashed?'stroke-dasharray="6,4"':'';
+    svg+=`<polyline points="${pts}" fill="none" stroke="${ds.color||'#e94560'}" stroke-width="3" stroke-linejoin="round" ${dash}/>`;
+    // dots at key points
+    ds.pts.forEach(p=>{
+      svg+=`<circle cx="${sx(p[0])}" cy="${sy(p[1])}" r="4" fill="${ds.color||'#e94560'}"/>`;
+    });
+    // label
+    if(ds.label){
+      const last=ds.pts[ds.pts.length-1];
+      svg+=`<text x="${sx(last[0])+6}" y="${sy(last[1])+4}" fill="${ds.color}" font-size="13" font-weight="bold">${ds.label}</text>`;
+    }
+  });
+
+  // shaded area for VT graphs
+  if(cfg.shadeArea && cfg.datasets && cfg.datasets[0]){
+    const ds=cfg.datasets[0];
+    const baseY=sy(0);
+    const pts=ds.pts.map(p=>`${sx(p[0])},${sy(p[1])}`).join(' ');
+    const firstX=sx(ds.pts[0][0]);
+    const lastX=sx(ds.pts[ds.pts.length-1][0]);
+    const shadeColor=ds.color||'#e94560';
+    const shadeRgb=shadeColor==='#e94560'?'233,69,96':shadeColor==='#2196f3'?'33,150,243':shadeColor==='#ffc107'?'255,193,7':'76,175,80';
+    svg+=`<polygon points="${firstX},${baseY} ${pts} ${lastX},${baseY}" fill="rgba(${shadeRgb},0.12)" stroke="none"/>`;
+    // re-draw line on top
+    svg+=`<polyline points="${pts}" fill="none" stroke="${ds.color||'#e94560'}" stroke-width="3" stroke-linejoin="round"/>`;
+  }
+
+  svg+=`</svg>`;
+  return svg;
+}
+
+// ================================================================
+// QUESTION BLOCK BUILDER
+// ================================================================
+function buildQs(containerId, items){
+  const el=document.getElementById(containerId);
+  if(!el)return;
+  el.innerHTML = items.map((q,i)=>{
+    const diffClass = q.diff==='f'?'f':q.diff==='c'?'c':'ch';
+    const diffLabel = q.diff==='f'?'Foundation':q.diff==='c'?'Core':'Challenge';
+    return `<div class="qblock">
+      <span class="q-diff ${diffClass}">${diffLabel}</span>
+      <div class="q-text"><strong>Q${i+1}.</strong> ${q.q}</div>
+      <button class="btn btn-hint" onclick="toggleReveal('h_${containerId}_${i}')">💡 Hint</button>
+      <button class="btn btn-ans" onclick="toggleReveal('a_${containerId}_${i}')">✓ Answer</button>
+      <div class="reveal hint" id="h_${containerId}_${i}"><strong>Hint:</strong> ${q.hint}</div>
+      <div class="reveal answer" id="a_${containerId}_${i}"><strong>Answer:</strong> ${q.ans}</div>
+    </div>`;
+  }).join('');
+}
+
+// ================================================================
+// GRAPH QUESTIONS
+// ================================================================
+const dtg1Questions = [
+  {q:"What is the speed during the first 20 seconds?", hint:"Gradient = rise ÷ run = change in distance ÷ change in time. From 0 s to 20 s, the distance goes from 0 to 10 m.", ans:"Speed = 10 ÷ 20 = <strong>0.5 m/s</strong>"},
+  {q:"How far is the object from the start after 60 seconds?", hint:"Read directly off the graph at t = 60 s.", ans:"<strong>40 m</strong> from the start."},
+  {q:"What is the speed during the last 40 seconds (60–100 s)?", hint:"From t=60s (d=40m) to t=100s (d=0m): change in distance = 40m, time = 40s.", ans:"Speed = 40 ÷ 40 = <strong>1 m/s</strong>"},
+  {q:"During which section was the object travelling the fastest?", hint:"The fastest section has the steepest gradient. Compare the slopes of each section.", ans:"<strong>40–60 seconds</strong> — the gradient is steepest here (30 m in 20 s = 1.5 m/s)."}
+];
+
+const dtg2Questions = [
+  {q:"Who was travelling the fastest?", hint:"The steepest line = greatest speed.", ans:"<strong>N</strong> — their line has the greatest gradient (steepest slope)."},
+  {q:"Who was travelling the slowest (but still moving)?", hint:"The gentlest slope — not flat, but the least steep of the moving lines.", ans:"<strong>G</strong> — their line has the shallowest gradient of the three moving objects."},
+  {q:"Who didn't move at all?", hint:"Which line is completely flat (horizontal)?", ans:"<strong>Y</strong> — their line is horizontal, meaning distance stays constant = stationary."}
+];
+
+const dtg3Questions = [
+  {q:"What was the velocity in the first 20 seconds?", hint:"Velocity = gradient = rise ÷ run. Distance goes from 0 to 30 m in 20 s.", ans:"v = 30 ÷ 20 = <strong>+1.5 m/s</strong> (moving away from start)"},
+  {q:"What was the velocity between 20 and 40 seconds?", hint:"Distance increases from 30 m to 40 m in 20 s.", ans:"v = (40−30) ÷ 20 = <strong>+0.5 m/s</strong>"},
+  {q:"During which section was this person travelling the fastest?", hint:"Look for the steepest gradient — it could be upward or downward.", ans:"<strong>80–100 seconds</strong> — they travel 40 m in 20 s = 2 m/s (returning to start)."},
+  {q:"What was the average speed for the first 40 seconds?", hint:"Average speed = total distance ÷ total time. Total distance in first 40 s = 40 m.", ans:"Average speed = 40 ÷ 40 = <strong>1 m/s</strong>"}
+];
+
+const dtg4Questions = [
+  {q:"What is the speed during the first 20 seconds?", hint:"Distance goes from 0 m to 40 m in 20 s.", ans:"Speed = 40 ÷ 20 = <strong>2 m/s</strong>"},
+  {q:"How far is the object from the start after 50 seconds?", hint:"Read the graph at t = 50 s. The object started returning at t = 40 s.", ans:"<strong>35 m</strong> from the start."},
+  {q:"What is the speed during the last 40 seconds (60–100 s)?", hint:"From t=60s (d=30m) to t=100s (d=20m): distance change = 10m, time = 40s.", ans:"Speed = 10 ÷ 40 = <strong>0.25 m/s</strong>"},
+  {q:"When was the object standing still?", hint:"Look for a horizontal (flat) section of the graph.", ans:"<strong>20–40 seconds</strong> — the line is horizontal here."}
+];
+
+const vtg1Questions = [
+  {q:"How fast was the object going after 10 seconds?", hint:"Read the velocity directly off the graph at t = 10 s.", ans:"<strong>40 m/s</strong>"},
+  {q:"What is the acceleration from 20 to 30 seconds?", hint:"Gradient = change in velocity ÷ time. Velocity goes from 40 to 60 m/s in 10 s.", ans:"a = (60−40) ÷ 10 = <strong>2 m/s²</strong>"},
+  {q:"What was the deceleration from 30 to 50 seconds?", hint:"Velocity goes from 60 m/s down to 0 m/s in 20 s.", ans:"a = (0−60) ÷ 20 = −3 m/s² → deceleration = <strong>3 m/s²</strong>"},
+  {q:"How far did the object travel altogether? (Area under the graph)", hint:"Break into: Triangle (0–10s) + Rectangle (10–20s) + Trapezium (20–30s) + Triangle (30–50s)", ans:"½×10×40 + 10×40 + ½×(40+60)×10 + ½×20×60 = 200+400+500+600 = <strong>1700 m</strong>"}
+];
+
+const vtg2Questions = [
+  {q:"How fast was the object going after 10 seconds?", hint:"The velocity increases from 0 to 20 m/s over the first 20 seconds. At t = 10 s it is halfway.", ans:"<strong>10 m/s</strong>"},
+  {q:"What is the acceleration from 20 to 30 seconds?", hint:"Velocity changes from 20 to 60 m/s in 10 s.", ans:"a = (60−20) ÷ 10 = <strong>4 m/s²</strong>"},
+  {q:"What was the deceleration from 40 to 50 seconds?", hint:"Velocity drops from 60 m/s to 0 m/s in 10 s.", ans:"a = (0−60) ÷ 10 = −6 m/s² → deceleration = <strong>6 m/s²</strong>"},
+  {q:"How far did the object travel altogether? (Area under the graph)", hint:"Triangle (0–20s) + Trapezium (20–30s) + Rectangle (30–40s) + Triangle (40–50s)", ans:"½×20×20 + ½×(20+60)×10 + 60×10 + ½×10×60 = 200+400+600+300 = <strong>1500 m</strong>"}
+];
+
+// ================================================================
+// INIT FUNCTIONS
+// ================================================================
+function buildScramble(){
+  document.getElementById('scrambleGrid').innerHTML = scrambleWords.map((w,i)=>`
+    <div class="sc-item">
+      <div class="sc-word">${w.scrambled}</div>
+      <input type="text" id="sc_${i}" placeholder="Your answer…" onkeyup="this.value=this.value.toUpperCase()">
+      <div class="sc-ans" id="sca_${i}">✓ ${w.answer}</div>
+    </div>`).join('');
+}
+
+function showScrambleAnswers(){
+  scrambleWords.forEach((_,i)=>document.getElementById('sca_'+i).classList.add('show'));
+}
+
+function checkScramble(){
+  scrambleWords.forEach((w,i)=>{
+    const inp=document.getElementById('sc_'+i);
+    const ansEl=document.getElementById('sca_'+i);
+    if(inp.value.trim().toUpperCase()===w.answer){
+      inp.style.borderColor='#4caf50';
+      ansEl.textContent='✓ Correct!';
+      ansEl.classList.add('show');
+    }else if(inp.value.trim()!==''){
+      inp.style.borderColor='#e94560';
+      ansEl.textContent='✗ '+w.answer;
+      ansEl.classList.add('show');
+    }
+  });
+}
+
+function buildVocab(){
+  document.getElementById('vocabGrid').innerHTML = vocabData.map((v,i)=>`
+    <div class="vcard" onclick="toggleVocab(${i})">
+      <div class="vterm">${v.term}</div>
+      <div class="vdef" id="vd_${i}">${v.def}</div>
+      <div class="vtap">👆 Tap to reveal</div>
+    </div>`).join('');
+}
+function toggleVocab(i){document.getElementById('vd_'+i).classList.toggle('show');}
+
+function buildGraphs(){
+  // DT Graph 1 — (0,0),(20,10),(40,10),(60,40),(100,0)
+  document.getElementById('dtg1').outerHTML = makeSVG({type:'DT',datasets:[
+    {pts:[[0,0],[20,10],[40,10],[60,40],[100,0]],color:'#e94560'}
+  ]});
+
+  // DT Graph 2 — multiple people
+  document.getElementById('dtg2').outerHTML = makeSVG({type:'DT',datasets:[
+    {pts:[[0,0],[100,0]],color:'#ffc107',label:'Y'},
+    {pts:[[0,0],[100,15]],color:'#4caf50',label:'G'},
+    {pts:[[0,0],[100,25]],color:'#2196f3',label:'B'},
+    {pts:[[0,0],[100,35]],color:'#e94560',label:'N'}
+  ]});
+
+  // DT Graph 3 — (0,0),(20,30),(40,40),(80,40),(100,0)
+  document.getElementById('dtg3').outerHTML = makeSVG({type:'DT',datasets:[
+    {pts:[[0,0],[20,30],[40,40],[80,40],[100,0]],color:'#e94560'}
+  ]});
+
+  // DT Graph 4 — (0,0),(20,40),(40,40),(60,30),(100,20)
+  document.getElementById('dtg4').outerHTML = makeSVG({type:'DT',datasets:[
+    {pts:[[0,0],[20,40],[40,40],[60,30],[100,20]],color:'#e94560'}
+  ]});
+
+  // Christina's DT graph
+  document.getElementById('dtg_christina').outerHTML = makeSVG({type:'DT_CHRIS',datasets:[
+    {pts:[[0,0],[20,50],[30,50],[60,150],[80,150],[130,0]],color:'#4caf50'}
+  ]});
+
+  // VT Graph 1 — (0,0),(10,40),(20,40),(30,60),(50,0)
+  document.getElementById('vtg1').outerHTML = makeSVG({type:'VT',shadeArea:true,datasets:[
+    {pts:[[0,0],[10,40],[20,40],[30,60],[50,0]],color:'#e94560'}
+  ]});
+
+  // VT Graph 2 — (0,0),(20,20),(30,60),(40,60),(50,0)
+  document.getElementById('vtg2').outerHTML = makeSVG({type:'VT',shadeArea:true,datasets:[
+    {pts:[[0,0],[20,20],[30,60],[40,60],[50,0]],color:'#2196f3'}
+  ]});
+
+  // VT Graph 3 — David's journey — (0,0),(10,60),(25,60),(35,80),(50,0)
+  document.getElementById('vtg3').outerHTML = makeSVG({type:'VT',shadeArea:true,datasets:[
+    {pts:[[0,0],[10,60],[25,60],[35,80],[50,0]],color:'#ffc107'}
+  ]});
+
+  // VT Graph 4 — Sonny's journey — (0,0),(10,40),(20,40),(40,80),(50,0)
+  document.getElementById('vtg4').outerHTML = makeSVG({type:'VT',shadeArea:true,datasets:[
+    {pts:[[0,0],[10,40],[20,40],[40,80],[50,0]],color:'#4caf50'}
+  ]});
+}
+
+function buildGraphQuestions(){
+  function makeGQs(containerId, items){
+    const el=document.getElementById(containerId);
+    if(!el)return;
+    el.innerHTML=items.map((q,i)=>`
+      <div class="qblock">
+        <div class="q-text"><strong>Q${i+1}.</strong> ${q.q}</div>
+        <button class="btn btn-hint" onclick="toggleReveal('gh_${containerId}_${i}')">💡 Hint</button>
+        <button class="btn btn-ans" onclick="toggleReveal('ga_${containerId}_${i}')">✓ Answer</button>
+        <div class="reveal hint" id="gh_${containerId}_${i}"><strong>Hint:</strong> ${q.hint}</div>
+        <div class="reveal answer" id="ga_${containerId}_${i}"><strong>Answer:</strong> ${q.ans}</div>
+      </div>`).join('');
+  }
+  makeGQs('dtg1Qs', dtg1Questions);
+  makeGQs('dtg2Qs', dtg2Questions);
+  makeGQs('dtg3Qs', dtg3Questions);
+  makeGQs('dtg4Qs', dtg4Questions);
+  makeGQs('vtg1Qs', vtg1Questions);
+  makeGQs('vtg2Qs', vtg2Questions);
+}
+
+function buildQuiz(){
+  const el=document.getElementById('quizContainer');
+  el.innerHTML=quizData.map((q,qi)=>`
+    <div class="quiz-q">
+      <div class="quiz-qnum">Question ${qi+1} of ${quizData.length}</div>
+      <p>${q.q}</p>
+      <div class="quiz-opts">
+        ${q.opts.map((o,oi)=>`
+          <div class="quiz-opt" onclick="answerQuiz(${qi},${oi},${q.ans})">
+            <span class="olabel">${'ABCD'[oi]}</span>${o}
+          </div>`).join('')}
+      </div>
+      <div class="quiz-fb" id="qfb_${qi}"></div>
+    </div>`).join('');
+}
+
+let quizScore=0;
+let quizAnswered=new Array(quizData.length).fill(false);
+
+function answerQuiz(qi, chosen, correct){
+  if(quizAnswered[qi])return;
+  quizAnswered[qi]=true;
+  const opts=document.querySelectorAll(`.quiz-q:nth-child(${qi+1}) .quiz-opt`);
+  opts.forEach((o,i)=>{
+    if(i===correct)o.classList.add('correct');
+    else if(i===chosen)o.classList.add('wrong');
+    o.style.pointerEvents='none';
+  });
+  const fb=document.getElementById('qfb_'+qi);
+  if(chosen===correct){
+    quizScore++;
+    fb.textContent='✓ Correct! '+quizData[qi].fb;
+    fb.className='quiz-fb ok show';
+  }else{
+    fb.textContent='✗ Not quite. '+quizData[qi].fb;
+    fb.className='quiz-fb bad show';
+  }
+}
+
+function showScore(){
+  const box=document.getElementById('scoreBox');
+  box.classList.add('show');
+  document.getElementById('scoreNum').textContent=quizScore;
+  const pct=quizScore/quizData.length;
+  let msg='';
+  if(pct===1) msg='🌟 Perfect score! Outstanding work!';
+  else if(pct>=0.8) msg='🎉 Excellent! You really know your Motion!';
+  else if(pct>=0.6) msg='👍 Good effort — review the sections you missed.';
+  else if(pct>=0.4) msg='📚 Keep going! Re-read the sections and try again.';
+  else msg='💪 Don\'t give up — go back to the start and work through each section carefully.';
+  document.getElementById('scoreMsg').textContent=msg;
+  box.scrollIntoView({behavior:'smooth'});
+}
+
+// ================================================================
+// NAV / PROGRESS
+// ================================================================
+let currentSection=0;
+const totalSections=7;
+const completed=new Array(totalSections).fill(false);
+
+function goTo(idx){
+  completed[currentSection]=true;
+  document.querySelectorAll('.section').forEach((s,i)=>{
+    s.classList.toggle('active',i===idx);
+  });
+  document.querySelectorAll('.nav-tab').forEach((t,i)=>{
+    t.classList.toggle('active',i===idx);
+    if(completed[i])t.classList.add('done');
+  });
+  currentSection=idx;
+  const fill=Math.round(((idx)/(totalSections-1))*100);
+  document.getElementById('progFill').style.width=fill+'%';
+  document.getElementById('progLabel').textContent=`Section ${idx+1} of ${totalSections}`;
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function toggleReveal(id){
+  const el=document.getElementById(id);
+  if(el)el.classList.toggle('show');
+}
+
+// ================================================================
+// INIT
+// ================================================================
+window.addEventListener('DOMContentLoaded',()=>{
+  buildScramble();
+  buildVocab();
+  buildQs('speedQs', speedQsData);
+  buildQs('accQs', accQsData);
+  buildGraphs();
+  buildGraphQuestions();
+  buildQuiz();
+});
+</script>
+</body>
+</html>
