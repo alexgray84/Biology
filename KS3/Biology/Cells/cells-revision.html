@@ -1,0 +1,1342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KS3 Biology – Cells Revision</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,600;0,800;1,300&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #07090f;
+    --surface: #0f1623;
+    --surface2: #161f30;
+    --border: rgba(255,255,255,0.07);
+    --green: #00e5a0;
+    --green-dim: rgba(0,229,160,0.12);
+    --blue: #4da6ff;
+    --blue-dim: rgba(77,166,255,0.12);
+    --amber: #fbbf24;
+    --amber-dim: rgba(251,191,36,0.12);
+    --red: #f87171;
+    --text: #e8edf8;
+    --muted: #6b7a99;
+    --heading-font: 'Fraunces', Georgia, serif;
+    --body-font: 'DM Sans', sans-serif;
+    --mono: 'DM Mono', monospace;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--body-font);
+    font-size: 16px;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: rgba(7,9,15,0.85);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 2rem;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 56px;
+  }
+  .nav-logo { font-family: var(--heading-font); font-weight: 600; font-size: 1rem; color: var(--green); letter-spacing: 0.01em; }
+  .nav-links { display: flex; gap: 0.25rem; list-style: none; flex-wrap: wrap; }
+  .nav-links a { color: var(--muted); text-decoration: none; font-size: 0.75rem; padding: 0.35rem 0.65rem; border-radius: 6px; transition: all 0.2s; font-weight: 500; }
+  .nav-links a:hover { color: var(--text); background: var(--surface2); }
+  .nav-links a.active { color: var(--green); background: var(--green-dim); }
+
+  #progress-bar { position: fixed; top: 56px; left: 0; height: 2px; background: var(--green); width: 0%; z-index: 99; transition: width 0.1s; box-shadow: 0 0 8px var(--green); }
+
+  .hero { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: flex-start; padding: 8rem 4rem 4rem; position: relative; overflow: hidden; }
+  .hero::before { content: ''; position: absolute; top: -200px; right: -200px; width: 600px; height: 600px; border-radius: 50%; background: radial-gradient(circle, rgba(0,229,160,0.07) 0%, transparent 70%); pointer-events: none; }
+  .hero::after { content: ''; position: absolute; bottom: -150px; left: 10%; width: 400px; height: 400px; border-radius: 50%; background: radial-gradient(circle, rgba(77,166,255,0.05) 0%, transparent 70%); pointer-events: none; }
+  .hero-tag { font-family: var(--mono); font-size: 0.72rem; color: var(--green); letter-spacing: 0.15em; text-transform: uppercase; background: var(--green-dim); border: 1px solid rgba(0,229,160,0.2); padding: 0.3rem 0.8rem; border-radius: 4px; margin-bottom: 1.5rem; display: inline-block; }
+  .hero h1 { font-family: var(--heading-font); font-weight: 800; font-size: clamp(3rem, 7vw, 6rem); line-height: 1.05; letter-spacing: -0.02em; margin-bottom: 1.5rem; max-width: 800px; }
+  .hero h1 em { font-style: italic; font-weight: 300; color: var(--green); }
+  .hero-sub { color: var(--muted); font-size: 1.05rem; max-width: 520px; margin-bottom: 3rem; font-weight: 400; }
+  .lo-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 0.75rem; width: 100%; max-width: 860px; }
+  .lo-chip { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 0.75rem 1rem; font-size: 0.8rem; color: var(--muted); display: flex; align-items: flex-start; gap: 0.6rem; }
+  .lo-chip .lo-num { font-family: var(--mono); color: var(--green); font-size: 0.7rem; background: var(--green-dim); padding: 0.15rem 0.4rem; border-radius: 3px; white-space: nowrap; flex-shrink: 0; margin-top: 0.1rem; }
+  .scroll-hint { position: absolute; bottom: 2.5rem; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 0.5rem; color: var(--muted); font-size: 0.75rem; letter-spacing: 0.08em; animation: bounce 2s infinite; }
+  .scroll-hint svg { opacity: 0.5; }
+  @keyframes bounce { 0%,100%{transform:translateX(-50%) translateY(0)} 50%{transform:translateX(-50%) translateY(6px)} }
+
+  .section { padding: 6rem 4rem; max-width: 1100px; margin: 0 auto; border-top: 1px solid var(--border); }
+  .section-header { display: flex; align-items: center; gap: 1rem; margin-bottom: 3rem; flex-wrap: wrap; }
+  .section-num { font-family: var(--mono); font-size: 0.7rem; color: var(--muted); background: var(--surface); border: 1px solid var(--border); padding: 0.25rem 0.6rem; border-radius: 4px; }
+  .section-title { font-family: var(--heading-font); font-weight: 600; font-size: clamp(1.6rem, 3vw, 2.4rem); line-height: 1.2; }
+  .section-title span { color: var(--green); }
+  .lo-badge { font-family: var(--mono); font-size: 0.68rem; background: var(--green-dim); color: var(--green); border: 1px solid rgba(0,229,160,0.25); padding: 0.2rem 0.6rem; border-radius: 4px; margin-left: auto; }
+
+  .tier-badge { font-family: var(--mono); font-size: 0.65rem; padding: 0.15rem 0.5rem; border-radius: 3px; font-weight: 500; display: inline-block; margin-right: 0.5rem; }
+  .tier-foundation { background: rgba(0,229,160,0.12); color: #00e5a0; }
+  .tier-core { background: rgba(77,166,255,0.12); color: #4da6ff; }
+  .tier-challenge { background: rgba(251,191,36,0.12); color: #fbbf24; }
+
+  .tier-box { border-radius: 10px; padding: 1.25rem 1.5rem; margin: 1rem 0; border-left: 3px solid; }
+  .tier-box.foundation { background: rgba(0,229,160,0.04); border-color: #00e5a0; }
+  .tier-box.core { background: rgba(77,166,255,0.04); border-color: #4da6ff; }
+  .tier-box.challenge { background: rgba(251,191,36,0.04); border-color: #fbbf24; }
+  .tier-box strong { color: var(--text); }
+  .tier-box p { margin: 0; font-size: 0.9rem; }
+
+  .starter-card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 2.5rem; display: grid; grid-template-columns: 1fr 1fr; gap: 2.5rem; align-items: start; }
+  .starter-prompt { font-family: var(--heading-font); font-style: italic; font-size: 1.4rem; color: var(--text); line-height: 1.4; margin-bottom: 1rem; }
+  .timer-display { font-family: var(--mono); font-size: 3rem; color: var(--green); font-weight: 500; line-height: 1; }
+  .btn { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.6rem 1.4rem; border-radius: 8px; border: none; cursor: pointer; font-family: var(--body-font); font-size: 0.875rem; font-weight: 500; transition: all 0.2s; text-decoration: none; }
+  .btn-green { background: var(--green); color: #07090f; }
+  .btn-green:hover { background: #00ffb3; transform: translateY(-1px); }
+  .btn-outline { background: transparent; color: var(--text); border: 1px solid var(--border); }
+  .btn-outline:hover { background: var(--surface2); }
+  .cell-svg-wrap { position: relative; }
+  .reveal-overlay { position: absolute; inset: 0; background: var(--surface); display: flex; align-items: center; justify-content: center; border-radius: 12px; border: 1px dashed rgba(0,229,160,0.3); cursor: pointer; transition: opacity 0.4s; z-index: 10; }
+  .reveal-overlay.hidden { opacity: 0; pointer-events: none; }
+  .reveal-overlay p { color: var(--green); font-size: 0.85rem; font-weight: 500; text-align: center; }
+  .cell-diagram { width: 100%; max-width: 420px; }
+
+  .hierarchy { display: flex; flex-direction: column; gap: 0.5rem; }
+  .hier-row { display: grid; grid-template-columns: 120px 1fr auto; align-items: center; gap: 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 1rem 1.5rem; opacity: 0; transform: translateX(-20px); transition: opacity 0.5s, transform 0.5s; }
+  .hier-row.visible { opacity: 1; transform: none; }
+  .hier-label { font-family: var(--heading-font); font-weight: 600; font-size: 1.1rem; color: var(--green); }
+  .hier-def { color: var(--text); font-size: 0.9rem; }
+  .hier-ex { font-family: var(--mono); font-size: 0.75rem; color: var(--muted); text-align: right; }
+  .hier-arrow { text-align: center; color: var(--muted); font-size: 1.2rem; padding: 0.2rem 0; }
+  .misconception { background: rgba(251,191,36,0.06); border: 1px solid rgba(251,191,36,0.2); border-radius: 10px; padding: 1.25rem 1.5rem; margin-top: 1.5rem; display: flex; gap: 0.75rem; align-items: flex-start; font-size: 0.875rem; }
+  .misconception-icon { font-size: 1.1rem; flex-shrink: 0; margin-top: 0.1rem; }
+  .misconception strong { color: var(--amber); }
+
+  .tab-nav { display: flex; gap: 0.5rem; margin-bottom: 2rem; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; flex-wrap: wrap; }
+  .tab-btn { font-family: var(--body-font); font-size: 0.875rem; font-weight: 500; padding: 0.5rem 1.25rem; border-radius: 8px 8px 0 0; border: 1px solid transparent; background: transparent; color: var(--muted); cursor: pointer; transition: all 0.2s; border-bottom: none; }
+  .tab-btn:hover { color: var(--text); background: var(--surface2); }
+  .tab-btn.active { background: var(--surface); color: var(--green); border-color: var(--border); border-bottom-color: var(--surface); margin-bottom: -1px; }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  .organelle-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1rem; }
+  .org-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; transition: border-color 0.2s, transform 0.2s; }
+  .org-card:hover { border-color: rgba(0,229,160,0.3); transform: translateY(-2px); }
+  .org-card-header { padding: 1rem 1.25rem; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 0.75rem; }
+  .org-icon { width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; flex-shrink: 0; }
+  .org-name { font-family: var(--heading-font); font-weight: 600; font-size: 1rem; }
+  .org-tag { font-family: var(--mono); font-size: 0.65rem; padding: 0.15rem 0.5rem; border-radius: 3px; margin-left: auto; }
+  .tag-both { background: var(--blue-dim); color: var(--blue); }
+  .tag-plant { background: var(--green-dim); color: var(--green); }
+  .org-body { padding: 1.25rem; }
+  .org-section-label { font-family: var(--mono); font-size: 0.65rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.35rem; }
+  .org-text { font-size: 0.875rem; color: var(--text); margin-bottom: 1rem; }
+  .org-text:last-child { margin-bottom: 0; }
+  .exam-tip { font-size: 0.8rem; background: rgba(251,191,36,0.06); border: 1px solid rgba(251,191,36,0.2); border-radius: 6px; padding: 0.5rem 0.75rem; color: var(--amber); display: flex; gap: 0.5rem; align-items: flex-start; margin-top: 0.75rem; }
+
+  .compare-table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
+  .compare-table th { font-family: var(--heading-font); font-size: 0.95rem; font-weight: 600; padding: 1rem 1.5rem; text-align: left; background: var(--surface); border-bottom: 2px solid var(--border); }
+  .compare-table th:first-child { border-radius: 8px 0 0 0; }
+  .compare-table th:last-child { border-radius: 0 8px 0 0; }
+  .compare-table td { padding: 0.85rem 1.5rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+  .compare-table tr:hover td { background: var(--surface2); }
+  .check { color: var(--green); font-size: 1rem; }
+  .cross { color: var(--red); font-size: 1rem; }
+  .plant-col { color: var(--green); }
+  .animal-col { color: var(--blue); }
+
+  .evo-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2rem; }
+  .evo-card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; }
+  .evo-card-head { padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 0.75rem; }
+  .evo-card-head.euk { border-top: 3px solid var(--blue); }
+  .evo-card-head.prok { border-top: 3px solid var(--green); }
+  .evo-title { font-family: var(--heading-font); font-weight: 600; font-size: 1.1rem; }
+  .evo-card-body { padding: 1.5rem; }
+  .evo-feature { display: flex; align-items: flex-start; gap: 0.75rem; padding: 0.5rem 0; border-bottom: 1px solid var(--border); font-size: 0.875rem; }
+  .evo-feature:last-child { border-bottom: none; }
+  .evo-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; margin-top: 0.55rem; }
+  .dot-blue { background: var(--blue); }
+  .dot-green { background: var(--green); }
+  .evo-feat-name { font-weight: 500; color: var(--muted); min-width: 90px; font-size: 0.8rem; }
+
+  .spec-cell-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
+  .spec-cell-card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; transition: border-color 0.2s, transform 0.2s; }
+  .spec-cell-card:hover { border-color: rgba(0,229,160,0.3); transform: translateY(-2px); }
+  .spec-cell-svg { width: 100%; height: 200px; background: var(--surface2); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: center; }
+  .spec-cell-content { padding: 1.5rem; }
+  .spec-cell-name { font-family: var(--heading-font); font-weight: 600; font-size: 1.05rem; margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem; }
+  .spec-cell-section { margin-bottom: 1rem; }
+  .spec-cell-label { font-family: var(--mono); font-size: 0.65rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.35rem; }
+  .spec-cell-text { font-size: 0.85rem; color: var(--text); line-height: 1.5; }
+
+  .label-activity { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 2rem; margin: 2rem 0; }
+  .label-activity h4 { font-family: var(--heading-font); font-size: 1.15rem; margin-bottom: 1.5rem; color: var(--green); }
+  .label-svg-wrap { max-width: 500px; margin: 0 auto 2rem; }
+  .label-svg-wrap svg { width: 100%; height: auto; }
+  .label-options { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; margin-bottom: 1.5rem; }
+  .label-option { display: flex; flex-direction: column; gap: 0.3rem; }
+  .label-option label { font-family: var(--mono); font-size: 0.75rem; color: var(--muted); text-transform: uppercase; margin-bottom: 0.35rem; font-weight: 500; }
+  .label-select { width: 100%; padding: 0.6rem; background: var(--bg); border: 1px solid var(--border); border-radius: 6px; color: var(--text); font-family: var(--body-font); font-size: 0.875rem; cursor: pointer; transition: border-color 0.2s; }
+  .label-select:focus { outline: none; border-color: var(--green); }
+  .label-select:hover { border-color: rgba(0,229,160,0.3); }
+  .label-submit { margin-top: 1rem; }
+  .label-feedback { margin-top: 1.5rem; padding: 1rem; border-radius: 8px; font-size: 0.875rem; display: none; }
+  .label-feedback.show { display: block; }
+  .label-feedback.correct { background: rgba(0,229,160,0.08); border: 1px solid rgba(0,229,160,0.2); color: #00e5a0; }
+  .label-feedback.wrong { background: rgba(248,113,113,0.08); border: 1px solid rgba(248,113,113,0.2); color: var(--red); }
+
+  .quiz-wrap { display: flex; flex-direction: column; gap: 1.5rem; }
+  .quiz-q { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; opacity: 0; transform: translateY(10px); transition: opacity 0.4s, transform 0.4s; }
+  .quiz-q.visible { opacity: 1; transform: none; }
+  .quiz-q-header { padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
+  .q-num { width: 28px; height: 28px; border-radius: 50%; background: var(--surface2); display: flex; align-items: center; justify-content: center; font-family: var(--mono); font-size: 0.75rem; color: var(--green); flex-shrink: 0; }
+  .q-text { font-size: 0.95rem; font-weight: 500; }
+  .quiz-options { padding: 1.25rem 1.5rem; display: flex; flex-direction: column; gap: 0.6rem; }
+  .quiz-opt { padding: 0.65rem 1rem; border-radius: 8px; border: 1px solid var(--border); background: var(--bg); cursor: pointer; font-size: 0.875rem; text-align: left; font-family: var(--body-font); color: var(--text); transition: all 0.15s; display: flex; align-items: center; gap: 0.6rem; }
+  .quiz-opt:hover:not(:disabled) { border-color: var(--green); color: var(--green); }
+  .quiz-opt.correct { background: var(--green-dim); border-color: var(--green); color: var(--green); }
+  .quiz-opt.wrong { background: rgba(248,113,113,0.08); border-color: var(--red); color: var(--red); }
+  .quiz-opt:disabled { cursor: default; }
+  .opt-letter { font-family: var(--mono); font-size: 0.7rem; color: var(--muted); width: 18px; flex-shrink: 0; }
+  .quiz-feedback { padding: 0 1.5rem 1.25rem; font-size: 0.83rem; color: var(--muted); display: none; }
+  .quiz-feedback.show { display: block; }
+  .quiz-score { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 2.5rem; text-align: center; display: none; }
+  .quiz-score.show { display: block; }
+  .score-num { font-family: var(--heading-font); font-size: 4rem; font-weight: 800; color: var(--green); line-height: 1; }
+  .score-label { font-family: var(--mono); font-size: 0.8rem; color: var(--muted); margin-top: 0.5rem; margin-bottom: 1.5rem; }
+
+  .summary-table { width: 100%; border-collapse: collapse; font-size: 0.875rem; overflow: hidden; border-radius: 10px; border: 1px solid var(--border); }
+  .summary-table th { background: var(--surface2); padding: 0.8rem 1.2rem; text-align: left; font-family: var(--mono); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); font-weight: 500; }
+  .summary-table td { padding: 0.8rem 1.2rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+  .summary-table tr:last-child td { border-bottom: none; }
+  .summary-table tr:hover td { background: var(--surface2); }
+  .orga-name { font-weight: 500; color: var(--text); }
+
+  footer { text-align: center; padding: 3rem 2rem; border-top: 1px solid var(--border); color: var(--muted); font-size: 0.8rem; }
+
+  @keyframes fadeUp { from { opacity:0; transform: translateY(20px); } to { opacity:1; transform: none; } }
+  .fade-in { animation: fadeUp 0.6s ease both; }
+  .delay-1 { animation-delay: 0.1s; }
+  .delay-2 { animation-delay: 0.2s; }
+
+  @media (max-width: 768px) {
+    .hero { padding: 7rem 1.5rem 3rem; }
+    .section { padding: 4rem 1.5rem; }
+    .starter-card { grid-template-columns: 1fr; }
+    .evo-grid { grid-template-columns: 1fr; }
+    nav { padding: 0 1rem; }
+    .nav-links { display: flex; gap: 0.25rem; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <span class="nav-logo">Bio · Cells</span>
+  <ul class="nav-links">
+    <li><a href="#starter">Starter</a></li>
+    <li><a href="#organisation">Organisation</a></li>
+    <li><a href="#structures">Structures</a></li>
+    <li><a href="#comparison">Plant vs Animal</a></li>
+    <li><a href="#specialised">Specialised</a></li>
+    <li><a href="#label">Label Activity</a></li>
+    <li><a href="#eukprok">Euk vs Prok</a></li>
+    <li><a href="#quiz">Quiz</a></li>
+  </ul>
+</nav>
+<div id="progress-bar"></div>
+
+<section class="hero" id="top">
+  <div class="hero-tag">KS3 Biology · Revision</div>
+  <h1 class="fade-in">The Building<br>Blocks of <em>Life</em></h1>
+  <p class="hero-sub fade-in delay-1">A complete revision lesson covering cell structure, function, and the differences between plant, animal, and prokaryotic cells.</p>
+  <div class="lo-grid fade-in delay-2">
+    <div class="lo-chip"><span class="lo-num">01</span>Levels of organisation in organisms</div>
+    <div class="lo-chip"><span class="lo-num">02</span>Cell structures — nucleus, membrane, wall, and more</div>
+    <div class="lo-chip"><span class="lo-num">03</span>Functions of each cell organelle</div>
+    <div class="lo-chip"><span class="lo-num">04</span>Specialised cells and their adaptations</div>
+    <div class="lo-chip"><span class="lo-num">05</span>Plant vs animal cells: key differences</div>
+    <div class="lo-chip"><span class="lo-num">06</span>Prokaryotic vs eukaryotic cells</div>
+  </div>
+  <div class="scroll-hint">
+    <span>scroll to begin</span>
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M4 9l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </div>
+</section>
+
+<section class="section" id="starter">
+  <div class="section-header">
+    <span class="section-num">00</span>
+    <h2 class="section-title"><span>Retrieval</span> Starter</h2>
+  </div>
+  <div class="starter-card">
+    <div>
+      <p class="starter-prompt">"How many organelles can you name and describe in 60 seconds?"</p>
+      <p style="color:var(--muted);font-size:0.85rem;margin-bottom:1.5rem;">Write or say aloud as many as you can before the timer runs out. No notes.</p>
+      <div style="display:flex;align-items:center;gap:1.5rem;margin-bottom:1.5rem;">
+        <div class="timer-display" id="timer">1:00</div>
+        <div style="display:flex;flex-direction:column;gap:0.5rem;">
+          <button class="btn btn-green" onclick="startTimer()">▶ Start</button>
+          <button class="btn btn-outline" onclick="resetTimer()">↺ Reset</button>
+        </div>
+      </div>
+      <p style="color:var(--muted);font-size:0.8rem;">Then click the diagram to reveal labels and check your answers.</p>
+    </div>
+    <div class="cell-svg-wrap">
+      <div class="reveal-overlay" id="reveal-overlay" onclick="revealCell()">
+        <p>⏱ Complete the timer first,<br>then click to reveal labels</p>
+      </div>
+      <svg class="cell-diagram" viewBox="0 0 420 320" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <radialGradient id="cellGrad" cx="45%" cy="40%"><stop offset="0%" stop-color="#1a2840"/><stop offset="100%" stop-color="#0f1623"/></radialGradient>
+          <radialGradient id="nucGrad" cx="40%" cy="40%"><stop offset="0%" stop-color="#1e3a5f"/><stop offset="100%" stop-color="#0f2a45"/></radialGradient>
+        </defs>
+        <ellipse cx="210" cy="160" rx="190" ry="148" fill="url(#cellGrad)" stroke="#4da6ff" stroke-width="2.5" opacity="0.95"/>
+        <ellipse cx="190" cy="155" rx="62" ry="52" fill="url(#nucGrad)" stroke="#60a5fa" stroke-width="2"/>
+        <ellipse cx="185" cy="150" rx="18" ry="14" fill="#1e4a7a" stroke="#93c5fd" stroke-width="1"/>
+        <ellipse cx="100" cy="95" rx="28" ry="16" fill="#0d2518" stroke="#00e5a0" stroke-width="1.5"/>
+        <path d="M78,92 Q90,85 100,92 Q110,99 122,92" stroke="#00e5a0" stroke-width="1" fill="none"/>
+        <ellipse cx="320" cy="210" rx="24" ry="14" fill="#0d2518" stroke="#00e5a0" stroke-width="1.5"/>
+        <path d="M300,208 Q312,201 320,208 Q328,215 344,208" stroke="#00e5a0" stroke-width="1" fill="none"/>
+        <circle cx="280" cy="120" r="3.5" fill="#fbbf24"/>
+        <circle cx="295" cy="130" r="3.5" fill="#fbbf24"/>
+        <circle cx="270" cy="135" r="3.5" fill="#fbbf24"/>
+        <circle cx="150" cy="230" r="3.5" fill="#fbbf24"/>
+        <circle cx="165" cy="222" r="3.5" fill="#fbbf24"/>
+        <circle cx="135" cy="218" r="3.5" fill="#fbbf24"/>
+        <g id="labels" opacity="0" style="transition:opacity 0.5s">
+          <line x1="390" y1="95" x2="370" y2="130" stroke="#4da6ff" stroke-width="1" stroke-dasharray="3"/>
+          <text x="392" y="92" fill="#4da6ff" font-size="10" font-family="DM Sans,sans-serif">Cell membrane</text>
+          <line x1="190" y1="103" x2="215" y2="70" stroke="#93c5fd" stroke-width="1" stroke-dasharray="3"/>
+          <text x="218" y="68" fill="#93c5fd" font-size="10" font-family="DM Sans,sans-serif">Nucleus</text>
+          <line x1="190" y1="148" x2="240" y2="130" stroke="#bfdbfe" stroke-width="1" stroke-dasharray="3"/>
+          <text x="242" y="128" fill="#bfdbfe" font-size="10" font-family="DM Sans,sans-serif">Nucleolus</text>
+          <line x1="100" y1="79" x2="100" y2="55" stroke="#00e5a0" stroke-width="1" stroke-dasharray="3"/>
+          <text x="50" y="50" fill="#00e5a0" font-size="10" font-family="DM Sans,sans-serif">Mitochondrion</text>
+          <line x1="285" y1="120" x2="320" y2="100" stroke="#fbbf24" stroke-width="1" stroke-dasharray="3"/>
+          <text x="322" y="98" fill="#fbbf24" font-size="10" font-family="DM Sans,sans-serif">Ribosomes</text>
+          <text x="105" y="185" fill="rgba(107,122,153,0.7)" font-size="10" font-family="DM Sans,sans-serif" font-style="italic">Cytoplasm</text>
+        </g>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="organisation">
+  <div class="section-header">
+    <span class="section-num">01</span>
+    <h2 class="section-title">Levels of <span>Organisation</span></h2>
+  </div>
+  <p style="color:var(--muted);margin-bottom:2rem;max-width:600px;">Living things are arranged in a precise hierarchy from the smallest functional unit to the complete organism.</p>
+  <div class="hierarchy" id="hierarchy">
+    <div class="hier-row"><div class="hier-label">Organelle</div><div class="hier-def">Specialised structure <em>inside</em> a cell — the smallest level of biological organisation</div><div class="hier-ex">Mitochondrion · Nucleus</div></div>
+    <div class="hier-arrow">↓</div>
+    <div class="hier-row"><div class="hier-label">Cell</div><div class="hier-def">The basic structural and functional unit of life</div><div class="hier-ex">Red blood cell · Leaf cell</div></div>
+    <div class="hier-arrow">↓</div>
+    <div class="hier-row"><div class="hier-label">Tissue</div><div class="hier-def">A group of <strong>similar cells</strong> working together to perform one function</div><div class="hier-ex">Muscle tissue · Xylem tissue</div></div>
+    <div class="hier-arrow">↓</div>
+    <div class="hier-row"><div class="hier-label">Organ</div><div class="hier-def">A group of <strong>different tissues</strong> working together as one structure</div><div class="hier-ex">Heart · Leaf · Stomach</div></div>
+    <div class="hier-arrow">↓</div>
+    <div class="hier-row"><div class="hier-label">System</div><div class="hier-def">A group of <strong>organs</strong> working together to carry out a major body function</div><div class="hier-ex">Circulatory · Digestive</div></div>
+    <div class="hier-arrow">↓</div>
+    <div class="hier-row"><div class="hier-label">Organism</div><div class="hier-def">A complete independent living thing made of all the systems above</div><div class="hier-ex">Human · Oak tree</div></div>
+  </div>
+  <div class="misconception">
+    <span class="misconception-icon">⚠️</span>
+    <div><strong>Common misconception:</strong> Students often confuse <em>tissue</em> and <em>organ</em>. A tissue is made of <strong>one type</strong> of cell; an organ contains <strong>multiple tissue types</strong>.</div>
+  </div>
+  <div style="margin-top:2rem;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1.25rem 1.5rem;">
+    <p style="font-family:var(--mono);font-size:0.75rem;color:var(--muted);margin-bottom:0.5rem;text-transform:uppercase;letter-spacing:0.08em;">Exam-ready sentence</p>
+    <p style="font-style:italic;color:var(--text);">"Cells are grouped into tissues, which combine to form organs, which work together as organ systems within an organism."</p>
+  </div>
+</section>
+
+<section class="section" id="structures">
+  <div class="section-header">
+    <span class="section-num">02</span>
+    <h2 class="section-title">Cell Structures <span>&amp; Functions</span></h2>
+  </div>
+  <div class="tab-nav">
+    <button class="tab-btn active" onclick="switchTab('animal',event)">🐾 Animal Cell</button>
+    <button class="tab-btn" onclick="switchTab('plant',event)">🌿 Plant (extra structures)</button>
+    <button class="tab-btn" onclick="switchTab('summary',event)">📋 Summary Table</button>
+  </div>
+
+  <div class="tab-panel active" id="tab-animal">
+    <div class="organelle-grid">
+      <div class="org-card">
+        <div class="org-card-header"><div class="org-icon" style="background:rgba(77,166,255,0.12)">🔵</div><span class="org-name">Nucleus</span><span class="org-tag tag-both">Both</span></div>
+        <div class="org-body">
+          <div class="tier-box foundation">
+            <span class="tier-badge tier-foundation">FOUNDATION</span>
+            <p><strong>Think of it as:</strong> The "brain" of the cell that controls what the cell does.</p>
+          </div>
+          <p class="org-section-label">Structure</p><p class="org-text">Largest organelle. Surrounded by a double nuclear membrane with pores. Houses chromosomes made of DNA. Contains a dark nucleolus inside.</p>
+          <p class="org-section-label">Function</p><p class="org-text">Controls all cell activities. Contains genetic information (DNA) for protein synthesis, growth, and cell division.</p>
+        </div>
+      </div>
+      <div class="org-card">
+        <div class="org-card-header"><div class="org-icon" style="background:rgba(148,163,184,0.1)">💧</div><span class="org-name">Cytoplasm</span><span class="org-tag tag-both">Both</span></div>
+        <div class="org-body">
+          <p class="org-section-label">Structure</p><p class="org-text">Jelly-like fluid (mostly water) filling the cell. Site of many chemical reactions.</p>
+          <p class="org-section-label">Function</p><p class="org-text">Provides medium for organelles. Location of many metabolic reactions (e.g., anaerobic respiration).</p>
+        </div>
+      </div>
+      <div class="org-card">
+        <div class="org-card-header"><div class="org-icon" style="background:rgba(77,166,255,0.12)">🫧</div><span class="org-name">Cell Membrane</span><span class="org-tag tag-both">Both</span></div>
+        <div class="org-body">
+          <p class="org-section-label">Structure</p><p class="org-text">Thin, flexible layer made of phospholipids and proteins. Partially (selectively) permeable.</p>
+          <p class="org-section-label">Function</p><p class="org-text">Controls what enters and leaves the cell. Maintains cell integrity and shape.</p>
+          <div class="tier-box challenge">
+            <span class="tier-badge tier-challenge">CHALLENGE</span>
+            <p>Why is the cell membrane described as "selectively permeable" rather than just "permeable"?</p>
+          </div>
+        </div>
+      </div>
+      <div class="org-card">
+        <div class="org-card-header"><div class="org-icon" style="background:rgba(0,229,160,0.12)">⚡</div><span class="org-name">Mitochondria</span><span class="org-tag tag-both">Both</span></div>
+        <div class="org-body">
+          <p class="org-section-label">Structure</p><p class="org-text">Bean/oval-shaped with a double membrane. Inner membrane folded into <strong>cristae</strong> to increase surface area.</p>
+          <p class="org-section-label">Function</p><p class="org-text">Site of <strong>aerobic respiration</strong> — releases energy (ATP) from glucose. High energy cells have more mitochondria.</p>
+          <div class="tier-box challenge">
+            <span class="tier-badge tier-challenge">CHALLENGE</span>
+            <p>Muscle cells have many more mitochondria than skin cells. Why do you think this is?</p>
+          </div>
+          <div class="exam-tip">💡 <span><strong>Exam tip:</strong> "More mitochondria = more energy needed."</span></div>
+        </div>
+      </div>
+      <div class="org-card">
+        <div class="org-card-header"><div class="org-icon" style="background:rgba(251,191,36,0.12)">🔴</div><span class="org-name">Ribosomes</span><span class="org-tag tag-both">Both</span></div>
+        <div class="org-body">
+          <p class="org-section-label">Structure</p><p class="org-text">Tiny organelles. Found free in cytoplasm or on rough endoplasmic reticulum. <strong>Not membrane-bound.</strong></p>
+          <p class="org-section-label">Function</p><p class="org-text">Site of <strong>protein synthesis</strong> — assembles amino acids into proteins using mRNA instructions.</p>
+          <div class="exam-tip">💡 <span>Present in ALL cells — eukaryotic and prokaryotic (size differs).</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tab-panel" id="tab-plant">
+    <p style="color:var(--muted);margin-bottom:1.5rem;font-size:0.9rem;">Plant cells have all five animal cell structures <strong>plus</strong> these three additional ones:</p>
+    <div class="organelle-grid">
+      <div class="org-card" style="border-color:rgba(0,229,160,0.25)">
+        <div class="org-card-header"><div class="org-icon" style="background:rgba(0,229,160,0.12)">🧱</div><span class="org-name">Cell Wall</span><span class="org-tag tag-plant">Plant only</span></div>
+        <div class="org-body">
+          <div class="tier-box foundation">
+            <span class="tier-badge tier-foundation">FOUNDATION</span>
+            <p><strong>Function:</strong> Keeps the plant rigid and upright, like a skeleton made of cellulose.</p>
+          </div>
+          <p class="org-section-label">Structure</p><p class="org-text">Rigid outer layer surrounding the cell membrane. Made of <strong>cellulose</strong> (a polysaccharide). Fully permeable.</p>
+          <p class="org-section-label">Function</p><p class="org-text">Provides structural support and shape. Prevents the cell bursting when full of water.</p>
+          <div class="exam-tip">💡 <span><strong>Key word:</strong> Always state the material is <strong>cellulose</strong>.</span></div>
+        </div>
+      </div>
+      <div class="org-card" style="border-color:rgba(0,229,160,0.25)">
+        <div class="org-card-header"><div class="org-icon" style="background:rgba(0,229,160,0.12)">🌿</div><span class="org-name">Chloroplasts</span><span class="org-tag tag-plant">Plant only</span></div>
+        <div class="org-body">
+          <div class="tier-box foundation">
+            <span class="tier-badge tier-foundation">FOUNDATION</span>
+            <p><strong>Function:</strong> The solar panels of plant cells — they capture light energy to make food.</p>
+          </div>
+          <p class="org-section-label">Structure</p><p class="org-text">Disc-shaped, double membrane. Contains green pigment <strong>chlorophyll</strong> on stacks called <strong>grana</strong>. Only in green parts.</p>
+          <p class="org-section-label">Function</p><p class="org-text">Site of <strong>photosynthesis</strong> — converts CO₂ + water → glucose + oxygen using light energy.</p>
+          <div class="exam-tip">💡 <span>Not found in root cells — no light reaches roots.</span></div>
+        </div>
+      </div>
+      <div class="org-card" style="border-color:rgba(0,229,160,0.25)">
+        <div class="org-card-header"><div class="org-icon" style="background:rgba(0,229,160,0.12)">💠</div><span class="org-name">Vacuole</span><span class="org-tag tag-plant">Mainly Plant</span></div>
+        <div class="org-body">
+          <div class="tier-box foundation">
+            <span class="tier-badge tier-foundation">FOUNDATION</span>
+            <p><strong>Think of it as:</strong> A large water storage tank that keeps the plant cell firm and rigid.</p>
+          </div>
+          <p class="org-section-label">Structure</p><p class="org-text">Large, central, fluid-filled sac. Surrounded by the <strong>tonoplast</strong>. Contains <strong>cell sap</strong> (water + dissolved sugars/salts).</p>
+          <p class="org-section-label">Function</p><p class="org-text">Maintains <strong>turgor pressure</strong> — keeps cell rigid. Stores nutrients and waste products.</p>
+          <div class="exam-tip">💡 <span>Animal vacuoles are small and temporary; plant vacuoles are large and permanent.</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tab-panel" id="tab-summary">
+    <table class="summary-table">
+      <thead>
+        <tr>
+          <th>Organelle</th>
+          <th>Structure</th>
+          <th>Animal Cell</th>
+          <th>Plant Cell</th>
+          <th>Function</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="orga-name">Nucleus</td>
+          <td style="font-size:0.8rem;">Large, double membrane, pores</td>
+          <td><span class="check">✓</span></td>
+          <td><span class="check">✓</span></td>
+          <td style="font-size:0.8rem;">Controls cell activity, contains DNA</td>
+        </tr>
+        <tr>
+          <td class="orga-name">Cytoplasm</td>
+          <td style="font-size:0.8rem;">Jelly-like fluid</td>
+          <td><span class="check">✓</span></td>
+          <td><span class="check">✓</span></td>
+          <td style="font-size:0.8rem;">Site of metabolic reactions</td>
+        </tr>
+        <tr>
+          <td class="orga-name">Cell Membrane</td>
+          <td style="font-size:0.8rem;">Phospholipid bilayer</td>
+          <td><span class="check">✓</span></td>
+          <td><span class="check">✓</span></td>
+          <td style="font-size:0.8rem;">Controls entry/exit</td>
+        </tr>
+        <tr>
+          <td class="orga-name">Mitochondria</td>
+          <td style="font-size:0.8rem;">Bean-shaped, cristae</td>
+          <td><span class="check">✓</span></td>
+          <td><span class="check">✓</span></td>
+          <td style="font-size:0.8rem;">Aerobic respiration, energy (ATP)</td>
+        </tr>
+        <tr>
+          <td class="orga-name">Ribosomes</td>
+          <td style="font-size:0.8rem;">Tiny, no membrane</td>
+          <td><span class="check">✓</span></td>
+          <td><span class="check">✓</span></td>
+          <td style="font-size:0.8rem;">Protein synthesis</td>
+        </tr>
+        <tr>
+          <td class="orga-name">Cell Wall</td>
+          <td style="font-size:0.8rem;">Cellulose, rigid</td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span></td>
+          <td style="font-size:0.8rem;">Support and shape</td>
+        </tr>
+        <tr>
+          <td class="orga-name">Chloroplasts</td>
+          <td style="font-size:0.8rem;">Disc, grana, chlorophyll</td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span></td>
+          <td style="font-size:0.8rem;">Photosynthesis</td>
+        </tr>
+        <tr>
+          <td class="orga-name">Vacuole</td>
+          <td style="font-size:0.8rem;">Large, central (plants)</td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span></td>
+          <td style="font-size:0.8rem;">Turgor pressure, storage</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="section" id="comparison">
+  <div class="section-header">
+    <span class="section-num">03</span>
+    <h2 class="section-title">Plant vs Animal <span>Cells</span></h2>
+  </div>
+  <p style="color:var(--muted);margin-bottom:2rem;max-width:750px;">Plant and animal cells are both eukaryotic, but plants have evolved special structures to suit their stationary lifestyle.</p>
+  
+  <div style="margin-bottom:3rem;">
+    <h3 style="font-family:var(--heading-font);font-weight:600;font-size:1.25rem;margin-bottom:1.5rem;color:var(--text);">Animal Cell Diagram</h3>
+    <svg viewBox="0 0 500 380" xmlns="http://www.w3.org/2000/svg" style="max-width:500px;width:100%;margin:0 auto;">
+      <defs>
+        <linearGradient id="animalGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#d4a574"/>
+          <stop offset="100%" stop-color="#c4915d"/>
+        </linearGradient>
+      </defs>
+      <ellipse cx="250" cy="190" rx="220" ry="170" fill="#f5f1eb" stroke="url(#animalGrad)" stroke-width="3" opacity="0.95"/>
+      <ellipse cx="180" cy="140" rx="75" ry="65" fill="#2a2a2a" stroke="#1a1a1a" stroke-width="1.5"/>
+      <ellipse cx="175" cy="135" rx="22" ry="18" fill="#3a3a3a" stroke="#1a1a1a" stroke-width="0.5"/>
+      <ellipse cx="310" cy="100" rx="18" ry="12" fill="#8b5a3c" stroke="#6b4423" stroke-width="1"/>
+      <ellipse cx="340" cy="110" rx="18" ry="12" fill="#8b5a3c" stroke="#6b4423" stroke-width="1"/>
+      <ellipse cx="300" cy="280" rx="18" ry="12" fill="#8b5a3c" stroke="#6b4423" stroke-width="1"/>
+      <ellipse cx="330" cy="260" rx="18" ry="12" fill="#8b5a3c" stroke="#6b4423" stroke-width="1"/>
+      <circle cx="120" cy="160" r="4" fill="#fbbf24"/>
+      <circle cx="135" cy="175" r="4" fill="#fbbf24"/>
+      <circle cx="150" cy="150" r="4" fill="#fbbf24"/>
+      <text x="390" y="140" fill="#d4a574" font-size="14" font-weight="600" font-family="DM Sans,sans-serif">A - Cell membrane</text>
+      <text x="80" y="310" fill="#8b5a3c" font-size="14" font-weight="600" font-family="DM Sans,sans-serif">B - Mitochondria</text>
+      <text x="200" y="340" fill="#f5f1eb" font-size="14" font-weight="600" font-family="DM Sans,sans-serif">C - Cytoplasm</text>
+      <text x="50" y="160" fill="#2a2a2a" font-size="14" font-weight="600" font-family="DM Sans,sans-serif">D - Nucleus</text>
+    </svg>
+  </div>
+
+  <div style="margin-bottom:3rem;">
+    <h3 style="font-family:var(--heading-font);font-weight:600;font-size:1.25rem;margin-bottom:1.5rem;color:var(--text);">Plant Cell Diagram</h3>
+    <svg viewBox="0 0 500 420" xmlns="http://www.w3.org/2000/svg" style="max-width:500px;width:100%;margin:0 auto;">
+      <defs>
+        <linearGradient id="plantGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#2d5016"/>
+          <stop offset="100%" stop-color="#1d3810"/>
+        </linearGradient>
+      </defs>
+      <rect x="80" y="60" width="340" height="300" fill="none" stroke="url(#plantGrad)" stroke-width="3" rx="8"/>
+      <rect x="85" y="65" width="330" height="290" fill="#b8d4a8" stroke="none" opacity="0.3"/>
+      <ellipse cx="200" cy="180" rx="130" ry="110" fill="#a8c896" stroke="#7ba85a" stroke-width="1.5"/>
+      <ellipse cx="200" cy="180" rx="100" ry="85" fill="#e8f0e0" stroke="none"/>
+      <ellipse cx="180" cy="150" rx="45" ry="38" fill="#4a4a4a" stroke="#2a2a2a" stroke-width="1"/>
+      <ellipse cx="175" cy="145" rx="14" ry="11" fill="#5a5a5a" stroke="#2a2a2a" stroke-width="0.5"/>
+      <ellipse cx="240" cy="120" rx="22" ry="16" fill="#1a5d1a" stroke="#0d4d0d" stroke-width="1"/>
+      <path d="M228,120 Q235,115 245,120 Q245,128 240,135 Q235,130 228,132" fill="#1a5d1a" stroke="#0d4d0d" stroke-width="0.5"/>
+      <ellipse cx="280" cy="130" rx="22" ry="16" fill="#1a5d1a" stroke="#0d4d0d" stroke-width="1"/>
+      <path d="M268,130 Q275,125 285,130 Q285,138 280,145 Q275,140 268,142" fill="#1a5d1a" stroke="#0d4d0d" stroke-width="0.5"/>
+      <ellipse cx="260" cy="220" rx="28" ry="18" fill="#8b5a3c" stroke="#6b4423" stroke-width="1"/>
+      <ellipse cx="140" cy="240" rx="28" ry="18" fill="#8b5a3c" stroke="#6b4423" stroke-width="1"/>
+      <circle cx="220" cy="90" r="4" fill="#fbbf24"/>
+      <circle cx="205" cy="100" r="4" fill="#fbbf24"/>
+      <text x="320" y="75" fill="#7ba85a" font-size="13" font-weight="600" font-family="DM Sans,sans-serif">Cell wall</text>
+      <text x="315" y="185" fill="#1a5d1a" font-size="13" font-weight="600" font-family="DM Sans,sans-serif">Chloroplasts</text>
+      <text x="90" y="250" fill="#8b5a3c" font-size="13" font-weight="600" font-family="DM Sans,sans-serif">Vacuole</text>
+      <text x="50" y="160" fill="#4a4a4a" font-size="13" font-weight="600" font-family="DM Sans,sans-serif">Nucleus</text>
+    </svg>
+  </div>
+
+  <div class="tier-box foundation">
+    <span class="tier-badge tier-foundation">FOUNDATION</span>
+    <p><strong>Quick summary:</strong> Plant cells have a rigid cell wall, large vacuole, and chloroplasts. Animal cells don't have any of these.</p>
+  </div>
+</section>
+
+<section class="section" id="specialised">
+  <div class="section-header">
+    <span class="section-num">04</span>
+    <h2 class="section-title">Specialised <span>Cells</span></h2>
+  </div>
+  <p style="color:var(--muted);margin-bottom:3rem;max-width:750px;">Cells are adapted to their specific jobs through changes in structure. These adaptations link structure to function — a key idea in biology.</p>
+
+  <div class="spec-cell-grid">
+    <div class="spec-cell-card">
+      <div class="spec-cell-svg">
+        <svg viewBox="0 0 220 200" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="110" cy="100" r="35" fill="none" stroke="#4da6ff" stroke-width="2"/>
+          <g stroke="#4da6ff" stroke-width="2" fill="none">
+            <line x1="110" y1="30" x2="110" y2="10"/>
+            <line x1="110" y1="30" x2="130" y2="15"/>
+            <line x1="110" y1="30" x2="140" y2="25"/>
+            <line x1="110" y1="30" x2="95" y2="10"/>
+            <line x1="80" y1="70" x2="40" y2="50"/>
+            <line x1="75" y1="80" x2="35" y2="70"/>
+            <line x1="70" y1="90" x2="30" y2="90"/>
+            <line x1="80" y1="130" x2="40" y2="150"/>
+            <line x1="75" y1="120" x2="35" y2="130"/>
+          </g>
+          <ellipse cx="110" cy="100" rx="15" ry="18" fill="#1a2840" stroke="#4da6ff" stroke-width="1"/>
+        </svg>
+      </div>
+      <div class="spec-cell-content">
+        <div class="spec-cell-name">🧠 Nerve Cell</div>
+        <div class="spec-cell-section">
+          <div class="spec-cell-label">Adaptations</div>
+          <div class="spec-cell-text">Long axon to carry signals over distance. Branching dendrites connect to other cells. Insulated myelin sheath.</div>
+        </div>
+        <div class="spec-cell-section">
+          <div class="spec-cell-label">Function Link</div>
+          <div class="spec-cell-text">Shape allows electrical signals to travel from the brain/spinal cord to distant parts of the body quickly.</div>
+        </div>
+        <div class="tier-box foundation">
+          <span class="tier-badge tier-foundation">FOUNDATION</span>
+          <p>Neurons carry electrical "messages" from the brain to your muscles.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="spec-cell-card">
+      <div class="spec-cell-svg">
+        <svg viewBox="0 0 220 200" xmlns="http://www.w3.org/2000/svg">
+          <ellipse cx="110" cy="100" rx="50" ry="65" fill="none" stroke="#00e5a0" stroke-width="2.5"/>
+          <ellipse cx="110" cy="65" rx="50" ry="45" fill="#00e5a0" stroke="#00e5a0" stroke-width="1" opacity="0.6"/>
+          <ellipse cx="110" cy="130" rx="50" ry="45" fill="#00e5a0" stroke="#00e5a0" stroke-width="1" opacity="0.6"/>
+        </svg>
+      </div>
+      <div class="spec-cell-content">
+        <div class="spec-cell-name">🩸 Red Blood Cell</div>
+        <div class="spec-cell-section">
+          <div class="spec-cell-label">Adaptations</div>
+          <div class="spec-cell-text">Biconcave disc shape. No nucleus (mammalian RBCs). Flexible to squeeze through tiny capillaries.</div>
+        </div>
+        <div class="spec-cell-section">
+          <div class="spec-cell-label">Function Link</div>
+          <div class="spec-cell-text">Biconcave shape = large surface area for absorbing oxygen. No nucleus = more room for haemoglobin (oxygen-carrying protein).</div>
+        </div>
+        <div class="tier-box challenge">
+          <span class="tier-badge tier-challenge">CHALLENGE</span>
+          <p>Why is it an advantage for red blood cells to have no nucleus?</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="spec-cell-card">
+      <div class="spec-cell-svg">
+        <svg viewBox="0 0 220 200" xmlns="http://www.w3.org/2000/svg">
+          <ellipse cx="70" cy="100" rx="32" ry="38" fill="none" stroke="#4da6ff" stroke-width="2.5"/>
+          <circle cx="70" cy="95" r="12" fill="#2a2a2a" stroke="#4da6ff" stroke-width="1"/>
+          <line x1="95" y1="100" x2="180" y2="100" stroke="#4da6ff" stroke-width="2.5"/>
+          <g fill="#4da6ff" opacity="0.3">
+            <rect x="110" y="95" width="15" height="10"/>
+            <rect x="135" y="95" width="15" height="10"/>
+            <rect x="160" y="95" width="15" height="10"/>
+          </g>
+        </svg>
+      </div>
+      <div class="spec-cell-content">
+        <div class="spec-cell-name">🚀 Sperm Cell</div>
+        <div class="spec-cell-section">
+          <div class="spec-cell-label">Adaptations</div>
+          <div class="spec-cell-text">Streamlined head with nucleus. Long tail (flagellum) for swimming. Many mitochondria in midpiece for energy.</div>
+        </div>
+        <div class="spec-cell-section">
+          <div class="spec-cell-label">Function Link</div>
+          <div class="spec-cell-text">Tail propels it through the female reproductive system. Mitochondria power the tail's movement. Needs to swim to reach the egg.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="spec-cell-card">
+      <div class="spec-cell-svg">
+        <svg viewBox="0 0 220 200" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="110" cy="110" rx="60" ry="65" fill="none" stroke="#fbbf24" stroke-width="2.5"/>
+          <circle cx="110" cy="110" rx="55" ry="60" fill="#fbbf24" opacity="0.1" stroke="none"/>
+          <circle cx="110" cy="110" r="18" fill="#2a2a2a" stroke="#fbbf24" stroke-width="1"/>
+          <circle cx="85" cy="50" r="6" fill="#fbbf24" opacity="0.4"/>
+          <circle cx="120" cy="45" r="6" fill="#fbbf24" opacity="0.4"/>
+          <circle cx="150" cy="70" r="6" fill="#fbbf24" opacity="0.4"/>
+          <circle cx="160" cy="100" r="6" fill="#fbbf24" opacity="0.4"/>
+        </svg>
+      </div>
+      <div class="spec-cell-content">
+        <div class="spec-cell-name">🥚 Egg Cell (Ovum)</div>
+        <div class="spec-cell-section">
+          <div class="spec-cell-label">Adaptations</div>
+          <div class="spec-cell-text">Large cell with abundant cytoplasm. Contains food reserves. Protective corona radiata layer. Changes after fertilisation.</div>
+        </div>
+        <div class="spec-cell-section">
+          <div class="spec-cell-label">Function Link</div>
+          <div class="spec-cell-text">Large size and food stores nourish the early embryo. Cell membrane changes after sperm entry to prevent other sperm from entering.</div>
+        </div>
+        <div class="tier-box foundation">
+          <span class="tier-badge tier-foundation">FOUNDATION</span>
+          <p>Egg cells are much bigger than sperm cells because they need to feed the developing embryo.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="spec-cell-card">
+      <div class="spec-cell-svg">
+        <svg viewBox="0 0 220 200" xmlns="http://www.w3.org/2000/svg">
+          <rect x="50" y="80" width="120" height="60" fill="none" stroke="#00e5a0" stroke-width="2"/>
+          <g stroke="#00e5a0" stroke-width="2" fill="none">
+            <line x1="60" y1="50" x2="60" y2="25"/>
+            <path d="M45,45 Q60,20 75,45"/>
+            <line x1="110" y1="50" x2="110" y2="25"/>
+            <path d="M95,45 Q110,20 125,45"/>
+            <line x1="160" y1="50" x2="160" y2="25"/>
+            <path d="M145,45 Q160,20 175,45"/>
+          </g>
+          <circle cx="70" cy="165" r="5" fill="#00e5a0"/>
+          <circle cx="110" cy="165" r="5" fill="#00e5a0"/>
+          <circle cx="150" cy="165" r="5" fill="#00e5a0"/>
+        </svg>
+      </div>
+      <div class="spec-cell-content">
+        <div class="spec-cell-name">🫁 Ciliated Epithelial Cell</div>
+        <div class="spec-cell-section">
+          <div class="spec-cell-label">Adaptations</div>
+          <div class="spec-cell-text">Hair-like cilia on the surface that beat in a wave. Many mitochondria for energy. Found in airways and reproductive tract.</div>
+        </div>
+        <div class="spec-cell-section">
+          <div class="spec-cell-label">Function Link</div>
+          <div class="spec-cell-text">Cilia wave back and forth to move mucus and trapped particles out of the lungs. Mitochondria provide ATP energy for cilia to beat.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="spec-cell-card">
+      <div class="spec-cell-svg">
+        <svg viewBox="0 0 220 200" xmlns="http://www.w3.org/2000/svg">
+          <ellipse cx="110" cy="100" rx="35" ry="55" fill="none" stroke="#fbbf24" stroke-width="2.5"/>
+          <circle cx="85" cy="80" r="4" fill="#2a2a2a"/>
+          <circle cx="110" cy="65" r="4" fill="#2a2a2a"/>
+          <circle cx="135" cy="80" r="4" fill="#2a2a2a"/>
+          <g stroke="#fbbf24" stroke-width="1.5" fill="none" opacity="0.6">
+            <path d="M90,130 Q100,145 95,155"/>
+            <path d="M110,155 Q115,145 120,155"/>
+            <path d="M130,130 Q120,145 125,155"/>
+          </g>
+        </svg>
+      </div>
+      <div class="spec-cell-content">
+        <div class="spec-cell-name">💪 Muscle Cell (Fibre)</div>
+        <div class="spec-cell-section">
+          <div class="spec-cell-label">Adaptations</div>
+          <div class="spec-cell-text">Long, elongated spindle shape. Many mitochondria packed inside. Multiple nuclei. Contains contractile protein fibres (actin and myosin).</div>
+        </div>
+        <div class="spec-cell-section">
+          <div class="spec-cell-label">Function Link</div>
+          <div class="spec-cell-text">Length allows the cell to shorten when it contracts. Protein filaments slide past each other to create contraction. Mitochondria provide the huge amount of ATP needed for muscle contraction.</div>
+        </div>
+        <div class="tier-box challenge">
+          <span class="tier-badge tier-challenge">CHALLENGE</span>
+          <p>Why do muscle cells have many mitochondria and an egg cell does not?</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="misconception" style="margin-top:2rem;">
+    <span class="misconception-icon">⚠️</span>
+    <div><strong>Common misconception:</strong> "Specialised cells have fewer organelles." Actually, specialised cells often have <strong>more</strong> of certain organelles (e.g., muscle cells have more mitochondria) because they need them to do their specific job.</div>
+  </div>
+</section>
+
+<section class="section" id="label">
+  <div class="section-header">
+    <span class="section-num">05</span>
+    <h2 class="section-title">Label the <span>Diagram</span></h2>
+  </div>
+  <p style="color:var(--muted);margin-bottom:2rem;">Test your knowledge of cell structures. Select the correct label for each letter.</p>
+
+  <div class="label-activity">
+    <h4>🐾 Animal Cell Labelling Challenge</h4>
+    <div class="label-svg-wrap">
+      <svg viewBox="0 0 500 380" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="animalGrad2" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#d4a574"/>
+            <stop offset="100%" stop-color="#c4915d"/>
+          </linearGradient>
+        </defs>
+        <ellipse cx="250" cy="190" rx="220" ry="170" fill="#f5f1eb" stroke="url(#animalGrad2)" stroke-width="3" opacity="0.95"/>
+        <ellipse cx="180" cy="140" rx="75" ry="65" fill="#2a2a2a" stroke="#1a1a1a" stroke-width="1.5"/>
+        <ellipse cx="175" cy="135" rx="22" ry="18" fill="#3a3a3a" stroke="#1a1a1a" stroke-width="0.5"/>
+        <ellipse cx="310" cy="100" rx="18" ry="12" fill="#8b5a3c" stroke="#6b4423" stroke-width="1"/>
+        <ellipse cx="340" cy="110" rx="18" ry="12" fill="#8b5a3c" stroke="#6b4423" stroke-width="1"/>
+        <ellipse cx="300" cy="280" rx="18" ry="12" fill="#8b5a3c" stroke="#6b4423" stroke-width="1"/>
+        <ellipse cx="330" cy="260" rx="18" ry="12" fill="#8b5a3c" stroke="#6b4423" stroke-width="1"/>
+        <circle cx="120" cy="160" r="4" fill="#fbbf24"/>
+        <circle cx="135" cy="175" r="4" fill="#fbbf24"/>
+        <circle cx="150" cy="150" r="4" fill="#fbbf24"/>
+        <text x="395" y="143" fill="#d4a574" font-size="16" font-weight="bold" font-family="DM Sans,sans-serif">A</text>
+        <text x="50" y="310" fill="#8b5a3c" font-size="16" font-weight="bold" font-family="DM Sans,sans-serif">B</text>
+        <text x="170" y="360" fill="#f5f1eb" font-size="16" font-weight="bold" font-family="DM Sans,sans-serif">C</text>
+        <text x="30" y="150" fill="#2a2a2a" font-size="16" font-weight="bold" font-family="DM Sans,sans-serif">D</text>
+      </svg>
+    </div>
+    <div class="label-options">
+      <div class="label-option">
+        <label>Label A:</label>
+        <select class="label-select" id="labelA">
+          <option value="">Select...</option>
+          <option value="Cell membrane">Cell membrane</option>
+          <option value="Nucleus">Nucleus</option>
+          <option value="Mitochondrion">Mitochondrion</option>
+          <option value="Cytoplasm">Cytoplasm</option>
+        </select>
+      </div>
+      <div class="label-option">
+        <label>Label B:</label>
+        <select class="label-select" id="labelB">
+          <option value="">Select...</option>
+          <option value="Cell membrane">Cell membrane</option>
+          <option value="Nucleus">Nucleus</option>
+          <option value="Mitochondrion">Mitochondrion</option>
+          <option value="Cytoplasm">Cytoplasm</option>
+        </select>
+      </div>
+      <div class="label-option">
+        <label>Label C:</label>
+        <select class="label-select" id="labelC">
+          <option value="">Select...</option>
+          <option value="Cell membrane">Cell membrane</option>
+          <option value="Nucleus">Nucleus</option>
+          <option value="Mitochondrion">Mitochondrion</option>
+          <option value="Cytoplasm">Cytoplasm</option>
+        </select>
+      </div>
+      <div class="label-option">
+        <label>Label D:</label>
+        <select class="label-select" id="labelD">
+          <option value="">Select...</option>
+          <option value="Cell membrane">Cell membrane</option>
+          <option value="Nucleus">Nucleus</option>
+          <option value="Mitochondrion">Mitochondrion</option>
+          <option value="Cytoplasm">Cytoplasm</option>
+        </select>
+      </div>
+    </div>
+    <button class="btn btn-green label-submit" onclick="checkLabels()">Check Answers</button>
+    <div class="label-feedback" id="labelFeedback"></div>
+  </div>
+</section>
+
+<section class="section" id="eukprok">
+  <div class="section-header">
+    <span class="section-num">06</span>
+    <h2 class="section-title">Eukaryotic vs <span>Prokaryotic</span></h2>
+  </div>
+  <p style="color:var(--muted);margin-bottom:2rem;max-width:750px;">All cells are either eukaryotic (with a nucleus) or prokaryotic (without a nucleus). This fundamental division shaped the evolution of life.</p>
+
+  <div style="margin-bottom:3rem;display:grid;grid-template-columns:1fr 1fr;gap:2rem;">
+    <div>
+      <h3 style="font-family:var(--heading-font);font-weight:600;font-size:1.15rem;margin-bottom:1.5rem;color:var(--blue);">Eukaryotic Cell (Animal)</h3>
+      <svg viewBox="0 0 280 320" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="140" cy="160" rx="130" ry="150" fill="none" stroke="#4da6ff" stroke-width="2.5"/>
+        <ellipse cx="140" cy="140" rx="55" ry="62" fill="#1a2840" stroke="#4da6ff" stroke-width="1.5"/>
+        <circle cx="140" cy="135" r="15" fill="#2a3a50" stroke="#4da6ff" stroke-width="0.5"/>
+        <ellipse cx="90" cy="100" rx="18" ry="12" fill="#0d2518" stroke="#00e5a0" stroke-width="1" opacity="0.6"/>
+        <ellipse cx="190" cy="105" rx="18" ry="12" fill="#0d2518" stroke="#00e5a0" stroke-width="1" opacity="0.6"/>
+        <ellipse cx="70" cy="200" rx="18" ry="12" fill="#8b5a3c" stroke="#6b4423" stroke-width="1"/>
+        <ellipse cx="200" cy="210" rx="18" ry="12" fill="#8b5a3c" stroke="#6b4423" stroke-width="1"/>
+        <circle cx="110" cy="80" r="3" fill="#fbbf24"/>
+        <circle cx="160" cy="85" r="3" fill="#fbbf24"/>
+        <text x="220" y="145" fill="#4da6ff" font-size="12" font-weight="600" font-family="DM Sans,sans-serif">Nucleus</text>
+        <text x="155" y="250" fill="#8b5a3c" font-size="12" font-weight="600" font-family="DM Sans,sans-serif">Mitochondria</text>
+        <text x="25" y="300" fill="#4da6ff" font-size="12" font-weight="600" font-family="DM Sans,sans-serif">Cell membrane</text>
+      </svg>
+    </div>
+    <div>
+      <h3 style="font-family:var(--heading-font);font-weight:600;font-size:1.15rem;margin-bottom:1.5rem;color:var(--green);">Prokaryotic Cell (Bacteria)</h3>
+      <svg viewBox="0 0 280 320" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="140" cy="160" rx="90" ry="120" fill="none" stroke="#9d4edd" stroke-width="2.5"/>
+        <ellipse cx="140" cy="160" rx="85" ry="115" fill="none" stroke="#c77dff" stroke-width="2" opacity="0.6"/>
+        <path d="M80,140 Q70,130 65,140 Q70,150 80,150 Q90,145 95,140" fill="#a0522d" stroke="#8b4513" stroke-width="0.8" opacity="0.8"/>
+        <path d="M90,190 Q85,200 90,210 Q95,200 100,195" fill="none" stroke="#c77dff" stroke-width="2"/>
+        <path d="M100,210 Q110,220 120,210" fill="none" stroke="#c77dff" stroke-width="2"/>
+        <circle cx="120" cy="155" r="3" fill="#fbbf24" opacity="0.7"/>
+        <circle cx="150" cy="160" r="3" fill="#fbbf24" opacity="0.7"/>
+        <circle cx="135" cy="130" r="3" fill="#fbbf24" opacity="0.7"/>
+        <text x="180" y="160" fill="#9d4edd" font-size="12" font-weight="600" font-family="DM Sans,sans-serif">DNA</text>
+        <text x="190" y="210" fill="#c77dff" font-size="12" font-weight="600" font-family="DM Sans,sans-serif">Flagellum</text>
+        <text x="25" y="300" fill="#9d4edd" font-size="12" font-weight="600" font-family="DM Sans,sans-serif">Cell membrane</text>
+      </svg>
+    </div>
+  </div>
+
+  <div class="evo-grid">
+    <div class="evo-card">
+      <div class="evo-card-head euk">
+        <div class="evo-title" style="color:var(--blue);">Eukaryotic</div>
+      </div>
+      <div class="evo-card-body">
+        <div class="evo-feature">
+          <div class="evo-dot dot-blue"></div>
+          <div class="evo-feat-name">Nucleus</div>
+          <div style="flex:1;font-size:0.85rem;">DNA enclosed in membrane</div>
+        </div>
+        <div class="evo-feature">
+          <div class="evo-dot dot-blue"></div>
+          <div class="evo-feat-name">Organelles</div>
+          <div style="flex:1;font-size:0.85rem;">Membrane-bound (mitochondria, chloroplasts, ER)</div>
+        </div>
+        <div class="evo-feature">
+          <div class="evo-dot dot-blue"></div>
+          <div class="evo-feat-name">Size</div>
+          <div style="flex:1;font-size:0.85rem;">Larger (10–100 μm)</div>
+        </div>
+        <div class="evo-feature">
+          <div class="evo-dot dot-blue"></div>
+          <div class="evo-feat-name">Examples</div>
+          <div style="flex:1;font-size:0.85rem;">Animals, plants, fungi, protists</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="evo-card">
+      <div class="evo-card-head prok">
+        <div class="evo-title" style="color:var(--green);">Prokaryotic</div>
+      </div>
+      <div class="evo-card-body">
+        <div class="evo-feature">
+          <div class="evo-dot dot-green"></div>
+          <div class="evo-feat-name">No nucleus</div>
+          <div style="flex:1;font-size:0.85rem;">DNA floating in cytoplasm (nucleoid)</div>
+        </div>
+        <div class="evo-feature">
+          <div class="evo-dot dot-green"></div>
+          <div class="evo-feat-name">No organelles</div>
+          <div style="flex:1;font-size:0.85rem;">No membrane-bound structures (but ribosomes present)</div>
+        </div>
+        <div class="evo-feature">
+          <div class="evo-dot dot-green"></div>
+          <div class="evo-feat-name">Size</div>
+          <div style="flex:1;font-size:0.85rem;">Smaller (1–10 μm)</div>
+        </div>
+        <div class="evo-feature">
+          <div class="evo-dot dot-green"></div>
+          <div class="evo-feat-name">Examples</div>
+          <div style="flex:1;font-size:0.85rem;">Bacteria and archaea</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tier-box foundation">
+    <span class="tier-badge tier-foundation">FOUNDATION</span>
+    <p><strong>Key point:</strong> The main difference is the nucleus. Eukaryotes have a nucleus and organelles. Prokaryotes don't.</p>
+  </div>
+
+  <div class="tier-box challenge">
+    <span class="tier-badge tier-challenge">CHALLENGE</span>
+    <p><strong>Extension question:</strong> Why might having a nucleus and organelles make eukaryotic cells more complex and efficient than prokaryotic cells?</p>
+  </div>
+</section>
+
+<section class="section" id="quiz">
+  <div class="section-header">
+    <span class="section-num">07</span>
+    <h2 class="section-title">Exit <span>Quiz</span></h2>
+  </div>
+  <p style="color:var(--muted);margin-bottom:2rem;">Answer all 12 questions to check your understanding. Questions are tagged by difficulty level.</p>
+
+  <div class="quiz-wrap" id="quiz-wrap">
+    <!-- Foundation Questions (Q1-4) -->
+    <div class="quiz-q">
+      <div class="quiz-q-header">
+        <div class="q-num">1</div>
+        <div class="q-text">Which organelle controls all cell activities?</div>
+        <span class="tier-badge tier-foundation">FOUNDATION</span>
+      </div>
+      <div class="quiz-options">
+        <button class="quiz-opt" data-correct="true" onclick="checkAnswer(this)"><span class="opt-letter">A</span> Nucleus</button>
+        <button class="quiz-opt" onclick="checkAnswer(this)"><span class="opt-letter">B</span> Mitochondria</button>
+        <button class="quiz-opt" onclick="checkAnswer(this)"><span class="opt-letter">C</span> Ribosome</button>
+        <button class="quiz-opt" onclick="checkAnswer(this)"><span class="opt-letter">D</span> Cytoplasm</button>
+      </div>
+      <div class="quiz-feedback">The nucleus contains DNA and controls all the cell's genetic information and activities.</div>
+    </div>
+
+    <div class="quiz-q">
+      <div class="quiz-q-header">
+        <div class="q-num">2</div>
+        <div class="q-text">What is the cell membrane made of?</div>
+        <span class="tier-badge tier-foundation">FOUNDATION</span>
+      </div>
+      <div class="quiz-options">
+        <button class="quiz-opt" onclick="checkAnswer(this)"><span class="opt-letter">A</span> Cellulose</button>
+        <button class="quiz-opt" data-correct="true" onclick="checkAnswer(this)"><span class="opt-letter">B</span> Phospholipids and proteins</button>
+        <button class="quiz-opt" onclick="checkAnswer(this)"><span class="opt-letter">C</span> Chitin</button>
+        <button class="quiz-opt" onclick="checkAnswer(this)"><span class="opt-letter">D</span> Collagen</button>
+      </div>
+      <div class="quiz-feedback">The cell membrane is a bilayer of phospholipids with embedded proteins. It controls what enters and leaves the cell.</div>
+    </div>
+
+    <div class="quiz-q">
+      <div class="quiz-q-header">
+        <div class="q-num">3</div>
+        <div class="q-text">Which structure is found ONLY in plant cells?</div>
+        <span class="tier-badge tier-foundation">FOUNDATION</span>
+      </div>
+      <div class="quiz-options">
+        <button class="quiz-opt" data-correct="true" onclick="checkAnswer(this)"><span class="opt-letter">A</span> Chloroplast</button>
+        <button class="quiz-opt" onclick="checkAnswer(this)"><span class="opt-letter">B</span> Nucleus</button>
+        <button class="quiz-opt" onclick="checkAnswer(this)"><span class="opt-letter">C</span> Mitochondria</button>
+        <button class="quiz-opt" onclick="checkAnswer(this)"><span class="opt-letter">D</span> Ribosome</button>
+      </div>
+      <div class="quiz-feedback">Chloroplasts are found only in plant cells (in green parts). They contain chlorophyll for photosynthesis.</div>
+    </div>
+
+    <div class="quiz-q">
+      <div class="quiz-q-header">
+        <div class="q-num">4</div>
+        <div class="q-text">Where does aerobic respiration take place?</div>
+        <span class="tier-badge tier-foundation">FOUNDATION</span>
+      </div>
+      <div class="quiz-options">
+        <button class="quiz-opt" onclick="checkAnswer(this)"><span class="opt-letter">A</span> Chloroplast</button>
+        <button class="quiz-opt" onclick="checkAnswer(this)"><span class="opt-letter">B</span> Nucleus</button>
+        <button class="quiz-opt" data-correct="true" onclick="checkAnswer(this)"><span class="opt-letter">C</span> Mitochondria</button>
+        <button class="quiz-opt" onclick="checkAnswer(this)"><span class="opt-letter">D</span> Ribosome</button>
+      </div>
+      <div class="quiz-feedback">Mitochondria are the site of aerobic respiration — they release energy from glucose as ATP.</div>
+    </div>
+
+    <!-- Core Questions (Q5-8) -->
+    <div class="quiz-q">
+      <div class="quiz-q-header">
+        <div class="q-num">5</div>
+        <div class="q-text">Why do muscle cells have many more mitochondria than skin cells?</div>
+        <span class="tier-badge tier-core">CORE</span>
+      </div>
+      <div class="quiz-options">
+        <button class="quiz-opt" onclick="checkAnswer(this)"><span class="opt-letter">A</span> Skin cells photosynthesise</button>
+        <button class="quiz-opt" onclick="checkAnswer(this)"><span class="opt-letter">B</span> Muscles need to stay warm</button>
+        <button class="quiz-opt" data-correct="true" onclick="checkAnswer(this)"><span class="opt-letter">C</span> Muscles need more energy to contract</button>
+        <button class="quiz-opt" onclick="checkAnswer(this)"><span class="opt-letter">D</span> Muscles provide skeletal support</button>
+      </div>
+      <div class="quiz-feedback">Muscle contraction is energy-intensive, so muscle cells need more ATP from aerobic respiration in mitochondria.</div>
+    </div>
+
+    <div class="quiz-q">
+      <div class="quiz-q-header">
+        <div class="q-num">6</div>
+        <div class="q-text">A plant cell is placed in pure water and becomes turgid. Which structure is responsible for this?</div>
+        <span class="tier-badge tier-core">CORE</span>
+      </div>
+      <div class="quiz-options">
+        <button class="quiz-opt" onclick="checkAnswer(this)"><span class="opt-letter">A</span> Cell wall absorbing water</button>
+        <button class="quiz-opt" data-correct="true" onclick="checkAnswer(this)"><span class="opt-letter">B</span> Large vacuole filling with water</button>
+        <button class="quiz-opt" onclick="checkAnswer(this)"><span class="opt-letter">C</span> Chloroplast expanding</button>
+        <button class="quiz-opt" onclick="checkAnswer(this)"><span class="opt-letter">D</span> Nucleus enlarging</button>
+      </div>
+      <div class="quiz-feedback">The vacuole absorbs water by osmosis and pushes outwards, creating turgor pressure against the cell wall.</div>
+    </div>
+
+    <div class="quiz-q">
+      <div class="quiz-q-header">
+        <div class="q-num">7</div>
+        <div class="q-text">Red blood cells have no nucleus. Why is this an advantage?</div>
+        <span class="tier-badge tier-core">CORE</span>
+      </div>
+      <div class="quiz-options">
+        <button class="quiz-opt" data-correct="true" onclick="checkAnswer(this)"><span class="opt-letter">A</span> More space for haemoglobin molecules</button>
+        <button class="quiz-opt" onclick="checkAnswer(this)"><span class="opt-letter">B</span> Cells divide more quickly</button>
+        <button class="quiz-opt" onclick="checkAnswer(this)"><span class="opt-letter">C</span> Cells are more flexible</button>
+        <button class="quiz-opt" onclick="checkAnswer(this)"><span class="opt-letter">D</span> Cells use less energy</button>
+      </div>
+      <div class="quiz-feedback">Without a nucleus, more cytoplasm space is available for oxygen-carrying haemoglobin — so the cell can carry more oxygen.</div>
+    </div>
+
+    <div class="quiz-q">
+      <div class="quiz-q-header">
+        <div class="q-num">8</div>
+        <div class="q-text">Which statement correctly describes the relationship between prokaryotic and eukaryotic cells?</div>
+        <span class="tier-badge tier-core">CORE</span>
+      </div>
+      <div class="quiz-options">
+        <button class="quiz-opt" onclick="checkAnswer(this)"><span class="opt-letter">A</span> Eukaryotic cells are always smaller</button>
+        <button class="quiz-opt" onclick="checkAnswer(this)"><span class="opt-letter">B</span> Bacteria have nuclei but no organelles</button>
+        <button class="quiz-opt" onclick="checkAnswer(this)"><span class="opt-letter">C</span> Prokaryotes are a kingdom of organisms</button>
+        <button class="quiz-opt" data-correct="true" onclick="checkAnswer(this)"><span class="opt-letter">D</span> Prokaryotic cells are simpler, lacking a nucleus and membrane-bound organelles</button>
+      </div>
+      <div class="quiz-feedback">Prokaryotic cells (like bacteria) are simpler — they have no true nucleus and no membrane-bound organelles.</div>
+    </div>
+
+    <!-- Challenge Questions (Q9-12) -->
+    <div class="quiz-q">
+      <div class="quiz-q-header">
+        <div class="q-num">9</div>
+        <div class="q-text">Ciliated epithelial cells have many mitochondria. What does this tell us about the energy needed to beat cilia?</div>
+        <span class="tier-badge tier-challenge">CHALLENGE</span>
+      </div>
+      <div class="quiz-options">
+        <button class="quiz-opt" onclick="checkAnswer(this)"><span class="opt-letter">A</span> Cilia photosynthesise to make energy</button>
+        <button class="quiz-opt" data-correct="true" onclick="checkAnswer(this)"><span class="opt-letter">B</span> Beating cilia requires large amounts of ATP energy</button>
+        <button class="quiz-opt" onclick="checkAnswer(this)"><span class="opt-letter">C</span> Cilia replicate very rapidly</button>
+        <button class="quiz-opt" onclick="checkAnswer(this)"><span class="opt-letter">D</span> Cilia are made of protein that requires energy to build</button>
+      </div>
+      <div class="quiz-feedback">The coordinated beating of cilia is energy-intensive, requiring continuous ATP from aerobic respiration in mitochondria.</div>
+    </div>
+
+    <div class="quiz-q">
+      <div class="quiz-q-header">
+        <div class="q-num">10</div>
+        <div class="q-text">The biconcave shape of red blood cells increases surface area. Why is this an example of a structure–function adaptation?</div>
+        <span class="tier-badge tier-challenge">CHALLENGE</span>
+      </div>
+      <div class="quiz-options">
+        <button class="quiz-opt" onclick="checkAnswer(this)"><span class="opt-letter">A</span> Red blood cells are coloured for easy identification</button>
+        <button class="quiz-opt" onclick="checkAnswer(this)"><span class="opt-letter">B</span> Shape mainly helps cells move through blood vessels</button>
+        <button class="quiz-opt" onclick="checkAnswer(this)"><span class="opt-letter">C</span> Shape allows cells to divide more efficiently</button>
+        <button class="quiz-opt" data-correct="true" onclick="checkAnswer(this)"><span class="opt-letter">D</span> The cell's shape directly improves its ability to absorb and carry oxygen</button>
+      </div>
+      <div class="quiz-feedback">Structure–function means the cell's physical features are specifically suited to maximise how well it does its job.</div>
+    </div>
+
+    <div class="quiz-q">
+      <div class="quiz-q-header">
+        <div class="q-num">11</div>
+        <div class="q-text">Which feature is present in BOTH eukaryotic animal cells and prokaryotic bacteria?</div>
+        <span class="tier-badge tier-challenge">CHALLENGE</span>
+      </div>
+      <div class="quiz-options">
+        <button class="quiz-opt" data-correct="true" onclick="checkAnswer(this)"><span class="opt-letter">A</span> Ribosomes for protein synthesis</button>
+        <button class="quiz-opt" onclick="checkAnswer(this)"><span class="opt-letter">B</span> A nucleus containing DNA</button>
+        <button class="quiz-opt" onclick="checkAnswer(this)"><span class="opt-letter">C</span> Membrane-bound organelles</button>
+        <button class="quiz-opt" onclick="checkAnswer(this)"><span class="opt-letter">D</span> Chloroplasts for photosynthesis</button>
+      </div>
+      <div class="quiz-feedback">Both eukaryotic and prokaryotic cells have ribosomes (though prokaryotic ones are smaller — 70S vs 80S).</div>
+    </div>
+
+    <div class="quiz-q">
+      <div class="quiz-q-header">
+        <div class="q-num">12</div>
+        <div class="q-text">Sperm cells have a long tail and many mitochondria; egg cells are large with food reserves. How do these adaptations reflect their different roles?</div>
+        <span class="tier-badge tier-challenge">CHALLENGE</span>
+      </div>
+      <div class="quiz-options">
+        <button class="quiz-opt" onclick="checkAnswer(this)"><span class="opt-letter">A</span> Sperm are protected by the tail; eggs are protected by their size</button>
+        <button class="quiz-opt" onclick="checkAnswer(this)"><span class="opt-letter">B</span> Sperm are faster; eggs are stronger</button>
+        <button class="quiz-opt" data-correct="true" onclick="checkAnswer(this)"><span class="opt-letter">C</span> Sperm must swim to reach the egg; eggs must nourish the early embryo after fertilisation</button>
+        <button class="quiz-opt" onclick="checkAnswer(this)"><span class="opt-letter">D</span> Sperm divide more quickly than eggs</button>
+      </div>
+      <div class="quiz-feedback">Each gamete's structure matches its role: sperm needs mobility (tail + mitochondria for energy), egg needs nutrients for the embryo.</div>
+    </div>
+  </div>
+
+  <div class="quiz-score" id="score">
+    <div class="score-num" id="scoreNum">0/12</div>
+    <div class="score-label">QUESTIONS CORRECT</div>
+    <div id="scoreMsg" style="color:var(--muted);margin-top:1rem;font-size:0.9rem;"></div>
+    <button class="btn btn-green" onclick="resetQuiz()" style="margin-top:1.5rem;">↺ Retake Quiz</button>
+  </div>
+</section>
+
+<footer>
+  <p>KS3 Biology – Cells Revision | © 2025 Arcadia British School Dubai | Built for student learning</p>
+</footer>
+
+<script>
+  let timerInterval = null;
+  let timeLeft = 60;
+  let timerStarted = false;
+
+  function startTimer() {
+    if (timerStarted) return;
+    timerStarted = true;
+    timeLeft = 60;
+    timerInterval = setInterval(() => {
+      timeLeft--;
+      document.getElementById('timer').textContent = Math.floor(timeLeft / 60) + ':' + (timeLeft % 60 < 10 ? '0' : '') + (timeLeft % 60);
+      if (timeLeft <= 0) {
+        clearInterval(timerInterval);
+        document.getElementById('reveal-overlay').classList.remove('hidden');
+      }
+    }, 1000);
+  }
+
+  function resetTimer() {
+    timerStarted = false;
+    clearInterval(timerInterval);
+    timeLeft = 60;
+    document.getElementById('timer').textContent = '1:00';
+  }
+
+  function revealCell() {
+    document.getElementById('labels').style.opacity = '1';
+  }
+
+  function switchTab(tab, e) {
+    e.preventDefault();
+    document.querySelectorAll('.tab-panel').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+    document.getElementById('tab-' + tab).classList.add('active');
+    e.target.classList.add('active');
+  }
+
+  function checkLabels() {
+    const answers = {
+      A: 'Cell membrane',
+      B: 'Mitochondrion',
+      C: 'Cytoplasm',
+      D: 'Nucleus'
+    };
+    let correct = 0;
+    for (let letter in answers) {
+      const sel = document.getElementById('label' + letter);
+      const val = sel.value;
+      sel.style.borderColor = val === answers[letter] ? 'var(--green)' : 'var(--red)';
+      if (val === answers[letter]) correct++;
+    }
+    const feedback = document.getElementById('labelFeedback');
+    feedback.classList.remove('wrong', 'correct');
+    if (correct === 4) {
+      feedback.classList.add('correct');
+      feedback.innerHTML = '✓ Perfect! All 4 labels are correct.';
+    } else {
+      feedback.classList.add('wrong');
+      feedback.innerHTML = '✗ ' + correct + ' out of 4 correct. Try again!';
+    }
+    feedback.classList.add('show');
+  }
+
+  let quizScore = 0;
+  let quizAnswered = 0;
+  const quizTotal = 12;
+
+  function checkAnswer(btn) {
+    const card = btn.closest('.quiz-q');
+    if (card.dataset.answered) return;
+    card.dataset.answered = 'true';
+    const options = card.querySelectorAll('.quiz-opt');
+    const isCorrect = btn.hasAttribute('data-correct');
+    if (isCorrect) quizScore++;
+    quizAnswered++;
+    options.forEach(opt => {
+      opt.disabled = true;
+      if (opt.hasAttribute('data-correct')) opt.classList.add('correct');
+      else if (opt === btn && !isCorrect) opt.classList.add('wrong');
+    });
+    const fb = card.querySelector('.quiz-feedback');
+    if (!isCorrect) {
+      fb.style.color = 'var(--red)';
+      fb.innerHTML = '✗ ' + fb.textContent;
+    } else {
+      fb.innerHTML = '✓ ' + fb.textContent;
+    }
+    fb.classList.add('show');
+    if (quizAnswered === quizTotal) {
+      setTimeout(() => {
+        const el = document.getElementById('score');
+        document.getElementById('scoreNum').textContent = quizScore + '/' + quizTotal;
+        const msgs = [
+          [0, 4, 'Keep reviewing — focus on organelle functions and the comparison sections above.'],
+          [5, 7, 'Good effort! Re-read the structures and specialised cells sections, then try again.'],
+          [8, 10, 'Strong work — just a few gaps. Check your exam technique.'],
+          [11, 12, 'Excellent! You\'ve nailed this topic. Well done! 🎉']
+        ];
+        const msg = msgs.find(([lo, hi]) => quizScore >= lo && quizScore <= hi);
+        document.getElementById('scoreMsg').textContent = msg ? msg[2] : '';
+        el.classList.add('show');
+      }, 600);
+    }
+  }
+
+  function resetQuiz() {
+    quizScore = 0; quizAnswered = 0;
+    document.querySelectorAll('.quiz-q').forEach(q => {
+      delete q.dataset.answered;
+      q.querySelectorAll('.quiz-opt').forEach(o => { o.disabled = false; o.classList.remove('correct', 'wrong'); });
+      const fb = q.querySelector('.quiz-feedback');
+      fb.classList.remove('show'); fb.style.color = '';
+    });
+    document.getElementById('score').classList.remove('show');
+    document.getElementById('quiz-wrap').scrollIntoView({ behavior: 'smooth' });
+  }
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        if (entry.target.classList.contains('quiz-q')) {
+          entry.target.classList.add('visible');
+        }
+        if (entry.target.classList.contains('hier-row')) {
+          entry.target.classList.add('visible');
+        }
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.quiz-q, .hier-row').forEach(el => observer.observe(el));
+
+  window.addEventListener('scroll', () => {
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    const scrolled = window.scrollY / docHeight;
+    document.getElementById('progress-bar').style.width = (scrolled * 100) + '%';
+
+    const navLinks = document.querySelectorAll('.nav-links a');
+    const sections = ['starter', 'organisation', 'structures', 'comparison', 'specialised', 'label', 'eukprok', 'quiz'];
+    sections.forEach(id => {
+      const el = document.getElementById(id);
+      if (el && window.scrollY >= el.offsetTop - 80) {
+        navLinks.forEach(a => a.classList.remove('active'));
+        const link = document.querySelector(`.nav-links a[href="#${id}"]`);
+        if (link) link.classList.add('active');
+      }
+    });
+  });
+</script>
+</body>
+</html>
