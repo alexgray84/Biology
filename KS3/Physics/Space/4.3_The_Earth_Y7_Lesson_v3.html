@@ -1,0 +1,1280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>4.3 The Earth — Y7 Lesson</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink:     #1c2b3a;
+  --mid:     #4a6070;
+  --muted:   #8aa4b8;
+  --border:  #dce8f0;
+  --bg:      #f4f8fb;
+  --white:   #ffffff;
+  --sky:     #eaf4fb;
+
+  --teal:    #0f8a7d;
+  --teal-l:  #d4f0ec;
+  --teal-xl: #edfaf8;
+  --gold:    #d4880a;
+  --gold-l:  #fef3d4;
+  --gold-xl: #fffbf0;
+  --coral:   #c94040;
+  --coral-l: #fdeaea;
+  --green:   #247a50;
+  --green-l: #d4f0e4;
+  --purple:  #6040a8;
+  --purple-l:#ede8ff;
+
+  --space:   #07111f;
+  --r: 14px;
+  --shadow: 0 2px 16px rgba(28,43,58,0.09);
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  line-height: 1.7;
+}
+
+/* ── PROGRESS ── */
+.progress-bar { height: 5px; background: var(--border); position: sticky; top: 0; z-index: 100; }
+.progress-fill { height: 100%; width: 0%; background: linear-gradient(90deg, var(--teal), #3ecfbf); transition: width 0.5s ease; }
+
+/* ── HEADER ── */
+header {
+  background: var(--space);
+  color: white;
+  padding: 48px 24px 40px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+header::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 20% 50%, rgba(15,138,125,0.18) 0%, transparent 60%),
+    radial-gradient(ellipse at 80% 50%, rgba(212,136,10,0.12) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+/* Starfield */
+header::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(1px 1px at 15% 20%, rgba(255,255,255,0.7) 0%, transparent 100%),
+    radial-gradient(1.5px 1.5px at 75% 15%, rgba(255,255,255,0.6) 0%, transparent 100%),
+    radial-gradient(1px 1px at 45% 70%, rgba(255,255,255,0.5) 0%, transparent 100%),
+    radial-gradient(1px 1px at 90% 55%, rgba(255,255,255,0.6) 0%, transparent 100%),
+    radial-gradient(1px 1px at 30% 85%, rgba(255,255,255,0.4) 0%, transparent 100%),
+    radial-gradient(1.5px 1.5px at 60% 35%, rgba(255,255,255,0.5) 0%, transparent 100%),
+    radial-gradient(1px 1px at 8% 60%, rgba(255,255,255,0.5) 0%, transparent 100%),
+    radial-gradient(1px 1px at 85% 80%, rgba(255,255,255,0.4) 0%, transparent 100%);
+  pointer-events: none;
+}
+
+.header-inner { position: relative; z-index: 1; max-width: 640px; margin: 0 auto; }
+
+.lesson-tag {
+  display: inline-block;
+  background: rgba(15,138,125,0.25);
+  color: #5fd4c8;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 5px 14px;
+  border-radius: 100px;
+  margin-bottom: 18px;
+}
+
+header h1 {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(2rem, 5vw, 3rem);
+  font-weight: 400;
+  margin-bottom: 12px;
+  line-height: 1.15;
+}
+
+header h1 em { font-style: italic; color: #5fd4c8; }
+
+.header-desc {
+  color: rgba(255,255,255,0.5);
+  font-size: 15px;
+  margin-bottom: 28px;
+  max-width: 480px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Mission pills */
+.missions { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
+
+.m-pill {
+  display: flex; align-items: center; gap: 8px;
+  padding: 7px 16px;
+  border-radius: 100px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
+  font-size: 13px; font-weight: 600;
+  color: rgba(255,255,255,0.4);
+  transition: all 0.35s;
+}
+.m-pill.done { background: rgba(15,138,125,0.2); border-color: rgba(95,212,200,0.35); color: #5fd4c8; }
+
+/* ── LAYOUT ── */
+.container { max-width: 820px; margin: 0 auto; padding: 40px 24px 80px; }
+
+/* ── CHAPTER DIVIDER ── */
+.chapter {
+  display: flex; align-items: center; gap: 14px;
+  margin: 48px 0 24px;
+  opacity: 0; transform: translateY(16px);
+  transition: opacity 0.5s, transform 0.5s;
+}
+.chapter.visible { opacity: 1; transform: none; }
+
+.ch-badge {
+  width: 44px; height: 44px; border-radius: 50%;
+  font-weight: 700; font-size: 15px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.ch-badge.teal   { background: var(--teal-l); color: var(--teal); }
+.ch-badge.gold   { background: var(--gold-l); color: var(--gold); }
+.ch-badge.green  { background: var(--green-l); color: var(--green); }
+
+.ch-text h2 { font-family: 'DM Serif Display', serif; font-size: 1.4rem; font-weight: 400; }
+.ch-text span { font-size: 12px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+
+/* ── CARDS ── */
+.card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  margin-bottom: 20px;
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  opacity: 0; transform: translateY(16px);
+  transition: opacity 0.5s, transform 0.5s;
+}
+.card.visible { opacity: 1; transform: none; }
+.card.delay1 { transition-delay: 0.08s; }
+.card.delay2 { transition-delay: 0.16s; }
+.card.delay3 { transition-delay: 0.24s; }
+
+.card-body { padding: 26px 28px; }
+.card-body > p { font-size: 15px; margin-bottom: 14px; color: var(--ink); }
+.card-body > p:last-child { margin-bottom: 0; }
+
+/* ── TEACH SECTION (input panels) ── */
+.teach-header {
+  background: var(--space);
+  color: white;
+  padding: 14px 22px;
+  font-size: 12px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+  display: flex; align-items: center; gap: 10px;
+  color: rgba(255,255,255,0.55);
+}
+.teach-dot { width: 8px; height: 8px; border-radius: 50%; background: #5fd4c8; }
+
+.teach-body { padding: 26px 28px; }
+.teach-body h3 {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.25rem; font-weight: 400;
+  margin-bottom: 14px;
+  line-height: 1.3;
+}
+.teach-body p { font-size: 15px; line-height: 1.75; color: var(--ink); margin-bottom: 14px; }
+.teach-body p:last-child { margin-bottom: 0; }
+.teach-body strong { font-weight: 700; }
+.teach-body em { font-style: italic; color: var(--teal); }
+
+/* Key concept box */
+.concept-box {
+  background: var(--space);
+  border-radius: 10px;
+  padding: 18px 22px;
+  margin: 18px 0;
+  color: rgba(255,255,255,0.85);
+  font-size: 14px;
+  line-height: 1.7;
+  border-left: 4px solid #5fd4c8;
+}
+.concept-box strong { color: white; font-weight: 700; }
+
+/* Fact row */
+.fact-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: 12px;
+  margin: 18px 0;
+}
+.fact-cell {
+  background: var(--sky);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 16px;
+  text-align: center;
+}
+.fact-cell .emoji { font-size: 28px; display: block; margin-bottom: 8px; }
+.fact-cell h4 { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+.fact-cell p { font-size: 13px; color: var(--mid); margin: 0; }
+
+/* Ray diagram */
+.ray-diagram {
+  border-radius: 10px;
+  overflow: hidden;
+  margin: 18px 0;
+  background: var(--space);
+}
+.ray-diagram svg { width: 100%; display: block; }
+
+/* ── CALLOUTS ── */
+.callout {
+  border-radius: 10px; padding: 14px 18px;
+  margin: 16px 0; font-size: 14px; line-height: 1.6;
+  display: flex; gap: 12px; align-items: flex-start;
+}
+.callout .ico { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
+.callout.teal  { background: var(--teal-xl); color: #085f56; border: 1px solid #b8e0db; }
+.callout.gold  { background: var(--gold-xl); color: #7a4800; border: 1px solid #f0d080; }
+.callout.purple{ background: var(--purple-l); color: var(--purple); border: 1px solid #c8b8f0; }
+.callout strong { font-weight: 700; display: block; margin-bottom: 2px; }
+
+/* ── INTERACTIVE THINK MOMENTS ── */
+.think-block {
+  background: linear-gradient(135deg, var(--gold-xl), #fffdf5);
+  border: 2px solid var(--gold-l);
+  border-radius: 12px;
+  padding: 22px 24px;
+  margin: 20px 0;
+}
+
+.think-block .think-label {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--gold); margin-bottom: 12px;
+}
+.think-block .think-label span { font-size: 16px; }
+
+.think-block h4 { font-size: 16px; font-weight: 700; margin-bottom: 14px; line-height: 1.4; }
+
+/* Option buttons */
+.think-options {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 9px;
+  margin-bottom: 10px;
+}
+
+.think-opt {
+  background: var(--white);
+  border: 2px solid var(--border);
+  border-radius: 10px;
+  padding: 12px 14px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px; font-weight: 500;
+  color: var(--ink);
+  cursor: pointer;
+  text-align: left;
+  line-height: 1.4;
+  transition: all 0.15s;
+}
+.think-opt:hover:not(:disabled) { border-color: var(--gold); background: var(--gold-xl); }
+.think-opt.correct { background: var(--green-l); border-color: var(--green); color: #1a5c3a; }
+.think-opt.wrong   { background: var(--coral-l); border-color: var(--coral); color: #7a1f14; }
+
+.think-reveal {
+  display: none;
+  margin-top: 14px;
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 16px 18px;
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--ink);
+}
+.think-reveal.show { display: block; }
+.think-reveal strong { color: var(--teal); }
+
+/* Text predict */
+.think-predict textarea {
+  width: 100%; border: 1px solid var(--border);
+  border-radius: 8px; padding: 12px 14px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px; color: var(--ink);
+  background: var(--white); resize: none;
+  outline: none; transition: border-color 0.2s;
+  line-height: 1.6;
+}
+.think-predict textarea:focus { border-color: var(--gold); }
+.think-predict textarea::placeholder { color: var(--muted); }
+
+.reveal-btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 10px 20px; border-radius: 100px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px; font-weight: 700;
+  cursor: pointer; border: none;
+  background: var(--gold); color: white;
+  margin-top: 12px;
+  transition: all 0.18s;
+}
+.reveal-btn:hover { background: #b87008; transform: translateY(-1px); }
+.reveal-btn:disabled { background: var(--border); color: var(--muted); cursor: not-allowed; transform: none; }
+
+/* ── APPLY SECTION ── */
+.apply-header {
+  background: linear-gradient(90deg, var(--teal), #0a6d63);
+  padding: 14px 22px;
+  display: flex; align-items: center; gap: 10px;
+}
+.apply-header span { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.6); }
+.apply-badge {
+  background: rgba(255,255,255,0.15);
+  color: white; border-radius: 100px;
+  padding: 3px 12px; font-size: 12px; font-weight: 700;
+}
+
+/* ── DIAGRAM LABELLING ── */
+.label-bank {
+  display: flex; flex-wrap: wrap; gap: 9px;
+  margin: 16px 0 10px;
+}
+
+.label-chip {
+  background: var(--gold-xl);
+  border: 2px solid #f0d080;
+  border-radius: 8px;
+  padding: 7px 13px;
+  font-size: 13px; font-weight: 600;
+  color: #5a3800;
+  cursor: pointer;
+  transition: all 0.15s;
+  display: flex; align-items: center; gap: 6px;
+}
+.label-chip:hover:not(.used) { background: #fde68a; border-color: var(--gold); transform: translateY(-1px); }
+.label-chip.selected { background: var(--ink); border-color: var(--ink); color: white; }
+.label-chip.used { opacity: 0.3; cursor: not-allowed; filter: grayscale(0.7); }
+
+.label-instruction { font-size: 13px; color: var(--mid); margin-bottom: 10px; }
+.label-instruction strong { color: var(--ink); }
+
+.diagram-wrap {
+  position: relative;
+  border-radius: 12px; overflow: hidden;
+  background: var(--space);
+  margin: 14px 0;
+  cursor: crosshair;
+  user-select: none;
+}
+.diagram-wrap svg { width: 100%; display: block; }
+
+#labelsContainer { position: absolute; inset: 0; pointer-events: none; }
+
+.placed-label {
+  position: absolute;
+  background: #fffbe6;
+  border: 2px solid var(--gold);
+  border-radius: 8px;
+  padding: 5px 10px;
+  font-size: 12px; font-weight: 600;
+  color: #3a2800;
+  white-space: nowrap;
+  pointer-events: all;
+  cursor: move;
+  display: flex; align-items: center; gap: 6px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+  transform: translate(-50%, -50%);
+  z-index: 10;
+}
+.placed-label .x {
+  background: none; border: none; cursor: pointer;
+  color: #c84a00; font-size: 14px; font-weight: 900;
+  line-height: 1; padding: 0; opacity: 0.6;
+  transition: opacity 0.15s;
+}
+.placed-label .x:hover { opacity: 1; }
+
+.label-counter {
+  font-size: 13px; color: var(--mid); font-weight: 600;
+  display: flex; align-items: center; gap: 6px;
+  margin-bottom: 8px;
+}
+.label-counter strong { color: var(--teal); font-size: 16px; }
+
+.diagram-hint {
+  text-align: center;
+  padding: 8px;
+  font-size: 12px;
+  color: rgba(255,255,255,0.35);
+  font-style: italic;
+}
+
+/* Screenshot box */
+.screenshot-box {
+  background: var(--teal-xl);
+  border: 2px dashed #a0d8d2;
+  border-radius: 10px;
+  padding: 16px 20px;
+  margin: 16px 0;
+  display: flex; gap: 14px;
+}
+.screenshot-box .ico { font-size: 24px; flex-shrink: 0; }
+.screenshot-box h4 { font-size: 14px; font-weight: 700; color: var(--teal); margin-bottom: 4px; }
+.screenshot-box p { font-size: 13px; color: #085f56; margin: 0; line-height: 1.5; }
+.kbds { display: flex; gap: 8px; margin-top: 8px; flex-wrap: wrap; }
+.kbd { background: white; border: 1px solid #a0d8d2; border-radius: 5px; padding: 3px 9px; font-size: 11px; font-weight: 700; color: var(--teal); }
+
+/* ── RESEARCH ── */
+.r-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px,1fr)); gap: 12px; margin: 16px 0; }
+
+.r-card {
+  border: 2px solid var(--border); border-radius: 12px;
+  padding: 16px; cursor: pointer; transition: all 0.2s;
+  background: var(--white); position: relative;
+}
+.r-card:hover { border-color: var(--gold); transform: translateY(-2px); box-shadow: 0 5px 16px rgba(212,136,10,0.12); }
+.r-card.selected { border-color: var(--teal); background: var(--teal-xl); }
+.r-card .tick {
+  position: absolute; top: 10px; right: 10px;
+  width: 20px; height: 20px; border-radius: 50%;
+  background: var(--teal); color: white;
+  font-size: 11px; font-weight: 900;
+  display: none; align-items: center; justify-content: center;
+}
+.r-card.selected .tick { display: flex; }
+.r-card .em { font-size: 28px; display: block; margin-bottom: 10px; }
+.r-card h4 { font-size: 14px; font-weight: 700; margin-bottom: 5px; }
+.r-card p  { font-size: 12px; color: var(--mid); line-height: 1.5; margin: 0; }
+
+.r-write { display: none; margin-top: 18px; }
+.r-write.show { display: block; }
+
+.field-lbl { font-size: 13px; font-weight: 700; color: var(--ink); display: block; margin-bottom: 8px; }
+
+textarea, input[type="text"] {
+  width: 100%; border: 1px solid var(--border);
+  border-radius: 10px; padding: 12px 14px;
+  font-family: 'DM Sans', sans-serif; font-size: 14px; color: var(--ink);
+  background: var(--sky); resize: vertical; outline: none;
+  transition: border-color 0.2s; line-height: 1.6;
+}
+textarea:focus, input:focus { border-color: var(--teal); background: white; }
+textarea::placeholder, input::placeholder { color: var(--muted); }
+
+.source-row { display: flex; gap: 10px; align-items: center; margin-top: 10px; }
+.source-row label { font-size: 13px; font-weight: 700; color: var(--mid); white-space: nowrap; }
+
+/* ── QUIZ ── */
+.quiz-q { margin-bottom: 26px; padding-bottom: 26px; border-bottom: 1px solid var(--border); }
+.quiz-q:last-of-type { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+
+.quiz-q h4 { font-size: 15px; font-weight: 700; margin-bottom: 14px; line-height: 1.5; }
+.q-num { display: inline-block; background: var(--ink); color: white; border-radius: 5px; padding: 2px 8px; font-size: 11px; font-weight: 700; margin-right: 6px; vertical-align: middle; }
+
+.q-opts { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; }
+.q-opt {
+  background: var(--sky); border: 2px solid var(--border);
+  border-radius: 10px; padding: 11px 14px;
+  font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 500;
+  color: var(--ink); cursor: pointer; text-align: left;
+  transition: all 0.15s; line-height: 1.4;
+}
+.q-opt:hover:not(:disabled) { border-color: var(--teal); background: var(--teal-xl); }
+.q-opt.correct { background: var(--green-l); border-color: var(--green); color: #1a5c3a; }
+.q-opt.wrong   { background: var(--coral-l); border-color: var(--coral); color: #7a1f14; }
+
+.q-fb { display: none; margin-top: 10px; font-size: 13px; line-height: 1.6; padding: 10px 14px; border-radius: 8px; }
+.q-fb.show { display: block; }
+.q-fb.correct { background: var(--green-l); color: #1a5c3a; }
+.q-fb.wrong   { background: var(--coral-l); color: #7a1f14; }
+
+/* Score */
+.score-card { display: none; text-align: center; padding: 28px; border-radius: 12px; margin-top: 24px; background: var(--sky); border: 1px solid var(--border); }
+.score-card.show { display: block; }
+.big-score { font-family: 'DM Serif Display', serif; font-size: 3.5rem; color: var(--teal); line-height: 1; margin-bottom: 6px; }
+.score-msg { font-size: 15px; color: var(--mid); }
+.stars { font-size: 26px; letter-spacing: 3px; margin-bottom: 10px; }
+
+/* ── BUTTONS ── */
+.btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 12px 22px; border-radius: 100px;
+  font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 700;
+  cursor: pointer; border: none; transition: all 0.18s;
+}
+.btn-teal { background: var(--teal); color: white; }
+.btn-teal:hover { background: #0a6d63; transform: translateY(-1px); box-shadow: 0 5px 16px rgba(15,138,125,0.3); }
+.btn-gold { background: var(--gold); color: white; }
+.btn-gold:hover { background: #b87008; transform: translateY(-1px); }
+.btn-outline { background: transparent; border: 2px solid var(--border); color: var(--mid); }
+.btn-outline:hover { border-color: var(--teal); color: var(--teal); }
+.btn-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 18px; }
+
+/* ── SUBMIT PANEL ── */
+.submit-panel { display: none; background: var(--space); color: white; border-radius: var(--r); padding: 32px; margin-top: 32px; }
+.submit-panel.show { display: block; }
+.submit-panel h3 { font-family: 'DM Serif Display', serif; font-size: 1.5rem; font-weight: 400; margin-bottom: 8px; }
+.submit-panel .desc { color: rgba(255,255,255,0.5); font-size: 14px; margin-bottom: 22px; }
+
+.sub-steps { list-style: none; margin-bottom: 22px; }
+.sub-steps li { display: flex; gap: 14px; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.07); font-size: 14px; color: rgba(255,255,255,0.75); line-height: 1.5; }
+.sub-steps li:last-child { border-bottom: none; }
+.step-c { width: 26px; height: 26px; border-radius: 50%; background: rgba(95,212,200,0.15); border: 1px solid rgba(95,212,200,0.3); color: #5fd4c8; font-size: 12px; font-weight: 900; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+
+.summary-box { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 16px 18px; font-size: 13px; color: rgba(255,255,255,0.6); white-space: pre-wrap; line-height: 1.7; margin-bottom: 16px; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 560px) {
+  .think-options, .q-opts { grid-template-columns: 1fr; }
+  .r-grid { grid-template-columns: 1fr 1fr; }
+  .fact-row { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 380px) {
+  .r-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+
+<!-- HEADER -->
+<header>
+  <div class="header-inner">
+    <div class="lesson-tag">🔬 Science · Topic 4.3 · Year 7</div>
+    <h1>The <em>Earth</em>,<br>Seasons &amp; Stars</h1>
+    <p class="header-desc">Work through each section in order. Read carefully, think first, then apply what you've learnt.</p>
+    <div class="missions">
+      <div class="m-pill" id="pill1"><span>🏷</span> Label the Diagram</div>
+      <div class="m-pill" id="pill2"><span>🔭</span> Research Task</div>
+      <div class="m-pill" id="pill3"><span>🎯</span> Quiz</div>
+    </div>
+  </div>
+</header>
+
+<div class="container">
+
+<!-- ═══════════════════════════════════════
+     CHAPTER 1 — WHY DO WE HAVE SEASONS?
+     ═══════════════════════════════════════ -->
+
+<div class="chapter" id="ch1">
+  <div class="ch-badge teal">1</div>
+  <div class="ch-text">
+    <h2>Why do we have seasons?</h2>
+    <span>Read · Think · Label</span>
+  </div>
+</div>
+
+<!-- TEACH 1A: The tilt -->
+<div class="card" id="t1a">
+  <div class="teach-header"><div class="teach-dot"></div> Read this carefully</div>
+  <div class="teach-body">
+    <h3>The Earth's tilted axis</h3>
+    <p>You already know that the Earth spins on its <strong>axis</strong> — an imaginary line through the North and South Poles — giving us day and night. But there's something crucial about that axis: <em>it is tilted</em>.</p>
+    <p>The Earth's axis is tilted at <strong>23.5°</strong>. And here's the key thing — it always tilts in the same direction, towards the <strong>Pole Star</strong>. It doesn't tilt towards or away from the Sun. Instead, as the Earth <strong>orbits</strong> the Sun over the course of a year, the tilt means that sometimes the northern hemisphere leans towards the Sun, and sometimes it leans away.</p>
+
+    <div class="concept-box">
+      <strong>🔑 Key idea:</strong> It's not that the Earth changes its tilt — it's that the same tilt points towards the Sun at some points in the orbit, and away at others. <em>That's</em> what causes seasons.
+    </div>
+
+    <div class="fact-row">
+      <div class="fact-cell">
+        <span class="emoji">🌍</span>
+        <h4>23.5°</h4>
+        <p>The angle of Earth's axial tilt</p>
+      </div>
+      <div class="fact-cell">
+        <span class="emoji">⭐</span>
+        <h4>Pole Star</h4>
+        <p>The axis always points this direction</p>
+      </div>
+      <div class="fact-cell">
+        <span class="emoji">📅</span>
+        <h4>365.25 days</h4>
+        <p>One complete orbit of the Sun</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- THINK 1: Predict day length -->
+<div class="card delay1" id="think1">
+  <div class="card-body">
+    <div class="think-block">
+      <div class="think-label"><span>🤔</span> Think first — before you scroll</div>
+      <h4>In June, the northern hemisphere tilts towards the Sun. What do you think that means for day length in the UK in summer compared to winter?</h4>
+      <div class="think-predict">
+        <textarea id="t1predict" rows="2" placeholder="Write your prediction here — it doesn't matter if you're not sure yet..."></textarea>
+        <button class="reveal-btn" onclick="revealThink('r1', this)">👁 Reveal the answer</button>
+      </div>
+      <div class="think-reveal" id="r1">
+        <strong>Here's what actually happens:</strong> When the northern hemisphere tilts towards the Sun, more of the UK is lit up as the Earth spins — giving us <strong>longer days and shorter nights</strong>. In June, the UK can get over 16 hours of daylight. In December, when the northern hemisphere tilts away, we get fewer than 8 hours. The Sun also rises higher in the sky in summer, meaning its energy is more concentrated on the ground.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TEACH 1B: The angle of rays -->
+<div class="card delay2" id="t1b">
+  <div class="teach-header"><div class="teach-dot"></div> Read this carefully</div>
+  <div class="teach-body">
+    <h3>Why does the angle of sunlight matter?</h3>
+    <p>It's not just about how long the Sun is up — it's also about the <strong>angle</strong> of the Sun's rays when they hit Earth.</p>
+    <p>In summer, the Sun is higher in the sky. Its rays hit the UK at a steep angle, concentrating energy over a <strong>small area</strong> — like shining a torch straight down at the floor. In winter, the Sun is low in the sky. The same rays arrive at a shallow angle and spread over a <strong>much larger area</strong>, so the energy is diluted. The same amount of sunshine, spread over more ground, means less warmth per square metre.</p>
+    <p>This is why summer is warmer — not because the Earth is closer to the Sun (it's actually slightly <em>further</em> away in summer!) but because the rays hit us more directly.</p>
+
+    <!-- Ray angle diagram -->
+    <div class="ray-diagram">
+      <svg viewBox="0 0 700 220" xmlns="http://www.w3.org/2000/svg">
+        <rect width="700" height="220" fill="#0d1f33"/>
+        <!-- Ground line -->
+        <line x1="0" y1="180" x2="700" y2="180" stroke="rgba(255,255,255,0.15)" stroke-width="1.5"/>
+
+        <!-- SUMMER side -->
+        <text x="160" y="22" fill="#ffd44a" font-family="DM Sans,sans-serif" font-size="14" font-weight="700" text-anchor="middle">☀️ SUMMER</text>
+        <!-- Steep rays -->
+        <line x1="100" y1="40" x2="100" y2="178" stroke="#ffd44a" stroke-width="2.5" opacity="0.9"/>
+        <line x1="140" y1="40" x2="140" y2="178" stroke="#ffd44a" stroke-width="2.5" opacity="0.9"/>
+        <line x1="180" y1="40" x2="180" y2="178" stroke="#ffd44a" stroke-width="2.5" opacity="0.9"/>
+        <line x1="220" y1="40" x2="220" y2="178" stroke="#ffd44a" stroke-width="2.5" opacity="0.9"/>
+        <!-- Concentrated area -->
+        <rect x="100" y="178" width="120" height="8" fill="#ffd44a" opacity="0.55" rx="2"/>
+        <text x="160" y="205" fill="#ffd44a" font-family="DM Sans,sans-serif" font-size="12" text-anchor="middle" opacity="0.85">Rays concentrated</text>
+        <text x="160" y="218" fill="#ffd44a" font-family="DM Sans,sans-serif" font-size="12" text-anchor="middle" opacity="0.85">= more heat per m²</text>
+
+        <!-- Divider -->
+        <line x1="350" y1="10" x2="350" y2="220" stroke="rgba(255,255,255,0.08)" stroke-width="1" stroke-dasharray="5 4"/>
+
+        <!-- WINTER side -->
+        <text x="530" y="22" fill="#8ab8d8" font-family="DM Sans,sans-serif" font-size="14" font-weight="700" text-anchor="middle">❄️ WINTER</text>
+        <!-- Shallow angle rays -->
+        <line x1="390" y1="100" x2="480" y2="178" stroke="#8ab8d8" stroke-width="2.5" opacity="0.75"/>
+        <line x1="420" y1="80" x2="530" y2="178" stroke="#8ab8d8" stroke-width="2.5" opacity="0.75"/>
+        <line x1="450" y1="65" x2="580" y2="178" stroke="#8ab8d8" stroke-width="2.5" opacity="0.75"/>
+        <line x1="480" y1="55" x2="630" y2="178" stroke="#8ab8d8" stroke-width="2.5" opacity="0.75"/>
+        <!-- Spread area -->
+        <rect x="480" y="178" width="150" height="8" fill="#8ab8d8" opacity="0.35" rx="2"/>
+        <text x="530" y="205" fill="#8ab8d8" font-family="DM Sans,sans-serif" font-size="12" text-anchor="middle" opacity="0.75">Rays spread out</text>
+        <text x="530" y="218" fill="#8ab8d8" font-family="DM Sans,sans-serif" font-size="12" text-anchor="middle" opacity="0.75">= less heat per m²</text>
+      </svg>
+    </div>
+  </div>
+</div>
+
+<!-- THINK 2: Which diagram shows summer? -->
+<div class="card delay3" id="think2">
+  <div class="card-body">
+    <div class="think-block">
+      <div class="think-label"><span>🤔</span> Quick check</div>
+      <h4>A student says: "The UK is hotter in summer because the Earth is closer to the Sun." Are they correct?</h4>
+      <div class="think-options">
+        <button class="think-opt" onclick="thinkAnswer(this, false, 'r2', 'r2msg')">Yes — closer to the Sun means more heat</button>
+        <button class="think-opt" onclick="thinkAnswer(this, true, 'r2', 'r2msg')">No — it's about the angle of the rays, not the distance</button>
+      </div>
+      <div class="think-reveal" id="r2">
+        <strong>Correct — the student is wrong.</strong> The Earth is actually <em>slightly further</em> from the Sun in summer (July) than in winter (January). The real reason is the <strong>angle of the Sun's rays</strong>. Because the northern hemisphere tilts towards the Sun in summer, the rays hit at a steeper angle and concentrate their energy over a smaller area. This is a very common misconception — you won't make that mistake now!
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- APPLY 1: Label the diagram -->
+<div class="card" id="apply1">
+  <div class="apply-header">
+    <div class="apply-badge">Apply it</div>
+    <span>Use what you've just read to label the diagram below</span>
+  </div>
+  <div class="card-body">
+    <p>The diagram shows the Earth at four points in its orbit. Use the label bank to label the diagram correctly. Select a label, then click on the diagram to place it. You can drag labels to move them.</p>
+
+    <p class="label-instruction"><strong>Label bank</strong> — click a label to select it, then click on the diagram:</p>
+    <div class="label-bank" id="labelBank">
+      <div class="label-chip" data-label="☀️ The Sun" onclick="pickLabel(this)">☀️ The Sun</div>
+      <div class="label-chip" data-label="🌍 N. Hemisphere towards Sun" onclick="pickLabel(this)">🌍 N. Hemisphere towards Sun</div>
+      <div class="label-chip" data-label="🌍 N. Hemisphere away from Sun" onclick="pickLabel(this)">🌍 N. Hemisphere away from Sun</div>
+      <div class="label-chip" data-label="☃️ UK Winter — December" onclick="pickLabel(this)">☃️ UK Winter — December</div>
+      <div class="label-chip" data-label="☀️ UK Summer — June" onclick="pickLabel(this)">☀️ UK Summer — June</div>
+      <div class="label-chip" data-label="🔴 Earth's tilted axis" onclick="pickLabel(this)">🔴 Earth's tilted axis</div>
+      <div class="label-chip" data-label="⟳ Earth's orbit path" onclick="pickLabel(this)">⟳ Earth's orbit path</div>
+    </div>
+
+    <div class="label-counter">Labels placed: <strong id="lblCount">0</strong> / 7</div>
+
+    <div class="diagram-wrap" id="dWrap">
+      <svg viewBox="0 0 800 480" xmlns="http://www.w3.org/2000/svg">
+        <rect width="800" height="480" fill="#07111f"/>
+        <!-- Stars -->
+        <g fill="white" opacity="0.45">
+          <circle cx="30" cy="25" r="1.2"/><circle cx="120" cy="55" r="0.9"/>
+          <circle cx="210" cy="18" r="1.3"/><circle cx="500" cy="22" r="1.1"/>
+          <circle cx="620" cy="50" r="1.3"/><circle cx="730" cy="28" r="0.9"/>
+          <circle cx="770" cy="75" r="1.1"/><circle cx="55" cy="420" r="1.0"/>
+          <circle cx="145" cy="450" r="0.8"/><circle cx="690" cy="435" r="1.1"/>
+          <circle cx="775" cy="460" r="0.9"/><circle cx="78" cy="210" r="0.8"/>
+          <circle cx="748" cy="205" r="1.0"/><circle cx="28" cy="315" r="1.1"/>
+          <circle cx="785" cy="308" r="0.8"/><circle cx="310" cy="42" r="0.9"/>
+        </g>
+        <!-- Orbit ellipse (dashed) -->
+        <ellipse cx="400" cy="240" rx="322" ry="188" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1.5" stroke-dasharray="8 6"/>
+
+        <!-- SUN -->
+        <circle cx="400" cy="240" r="72" fill="#ff9a00" opacity="0.07"/>
+        <circle cx="400" cy="240" r="52" fill="#ff9a00" opacity="0.12"/>
+        <circle cx="400" cy="240" r="40" fill="#ffc800"/>
+        <circle cx="400" cy="240" r="34" fill="#ffb200"/>
+        <!-- Rays -->
+        <g stroke="#ffcc00" stroke-width="2" stroke-linecap="round" opacity="0.45">
+          <line x1="400" y1="197" x2="400" y2="186"/>
+          <line x1="400" y1="283" x2="400" y2="294"/>
+          <line x1="357" y1="240" x2="346" y2="240"/>
+          <line x1="443" y1="240" x2="454" y2="240"/>
+          <line x1="370" y1="210" x2="362" y2="202"/>
+          <line x1="430" y1="270" x2="438" y2="278"/>
+          <line x1="430" y1="210" x2="438" y2="202"/>
+          <line x1="370" y1="270" x2="362" y2="278"/>
+        </g>
+
+        <!-- EARTH LEFT = June/Summer -->
+        <!-- Rays hitting (concentrated, steep) -->
+        <line x1="365" y1="195" x2="124" y2="215" stroke="#ffc800" stroke-width="1" stroke-dasharray="4 3" opacity="0.3"/>
+        <line x1="362" y1="208" x2="116" y2="240" stroke="#ffc800" stroke-width="1" stroke-dasharray="4 3" opacity="0.3"/>
+        <line x1="363" y1="220" x2="118" y2="264" stroke="#ffc800" stroke-width="1" stroke-dasharray="4 3" opacity="0.3"/>
+        <circle cx="112" cy="240" r="38" fill="#1a6bc4"/>
+        <ellipse cx="104" cy="227" rx="14" ry="9" fill="#3a8a3a" transform="rotate(-15,104,227)"/>
+        <ellipse cx="124" cy="249" rx="11" ry="7" fill="#3a8a3a" transform="rotate(10,124,249)"/>
+        <ellipse cx="108" cy="258" rx="8" ry="5" fill="#3a8a3a"/>
+        <ellipse cx="112" cy="204" rx="11" ry="5" fill="white" opacity="0.65"/>
+        <ellipse cx="112" cy="276" rx="11" ry="5" fill="white" opacity="0.5"/>
+        <!-- axis tilted towards sun -->
+        <line x1="100" y1="201" x2="124" y2="280" stroke="#ff4444" stroke-width="2.5" stroke-linecap="round"/>
+        <polygon points="100,201 95,213 105,213" fill="#ff4444"/>
+        <polygon points="124,280 119,268 129,268" fill="#ff4444"/>
+        <!-- Season label -->
+        <text x="56" y="308" fill="rgba(255,255,255,0.4)" font-family="DM Sans,sans-serif" font-size="11" font-weight="700">JUNE</text>
+
+        <!-- EARTH RIGHT = December/Winter -->
+        <line x1="435" y1="195" x2="674" y2="188" stroke="#88aacc" stroke-width="1" stroke-dasharray="4 3" opacity="0.22"/>
+        <line x1="440" y1="208" x2="680" y2="240" stroke="#88aacc" stroke-width="1" stroke-dasharray="4 3" opacity="0.22"/>
+        <line x1="437" y1="220" x2="678" y2="292" stroke="#88aacc" stroke-width="1" stroke-dasharray="4 3" opacity="0.22"/>
+        <circle cx="688" cy="240" r="38" fill="#1a6bc4"/>
+        <ellipse cx="680" cy="227" rx="14" ry="9" fill="#3a8a3a" transform="rotate(15,680,227)"/>
+        <ellipse cx="700" cy="249" rx="11" ry="7" fill="#3a8a3a" transform="rotate(-10,700,249)"/>
+        <ellipse cx="682" cy="258" rx="8" ry="5" fill="#3a8a3a"/>
+        <ellipse cx="688" cy="204" rx="13" ry="6" fill="white" opacity="0.7"/>
+        <ellipse cx="688" cy="276" rx="13" ry="6" fill="white" opacity="0.7"/>
+        <!-- axis tilted away from sun -->
+        <line x1="700" y1="201" x2="676" y2="280" stroke="#ff4444" stroke-width="2.5" stroke-linecap="round"/>
+        <polygon points="700,201 695,213 705,213" fill="#ff4444"/>
+        <polygon points="676,280 671,268 681,268" fill="#ff4444"/>
+        <text x="638" y="308" fill="rgba(255,255,255,0.4)" font-family="DM Sans,sans-serif" font-size="11" font-weight="700">DECEMBER</text>
+
+        <!-- EARTH TOP = March -->
+        <circle cx="400" cy="50" r="24" fill="#1a6bc4"/>
+        <ellipse cx="393" cy="44" rx="9" ry="5" fill="#3a8a3a" transform="rotate(-10,393,44)"/>
+        <ellipse cx="408" cy="56" rx="7" ry="4" fill="#3a8a3a"/>
+        <ellipse cx="400" cy="28" rx="8" ry="3.5" fill="white" opacity="0.6"/>
+        <ellipse cx="400" cy="72" rx="8" ry="3.5" fill="white" opacity="0.6"/>
+        <line x1="407" y1="27" x2="393" y2="73" stroke="#ff4444" stroke-width="2" stroke-linecap="round"/>
+        <text x="352" y="90" fill="rgba(255,255,255,0.4)" font-family="DM Sans,sans-serif" font-size="11" font-weight="700">MARCH</text>
+
+        <!-- EARTH BOTTOM = September -->
+        <circle cx="400" cy="430" r="24" fill="#1a6bc4"/>
+        <ellipse cx="393" cy="424" rx="9" ry="5" fill="#3a8a3a" transform="rotate(-10,393,424)"/>
+        <ellipse cx="408" cy="436" rx="7" ry="4" fill="#3a8a3a"/>
+        <ellipse cx="400" cy="408" rx="8" ry="3.5" fill="white" opacity="0.6"/>
+        <ellipse cx="400" cy="452" rx="8" ry="3.5" fill="white" opacity="0.6"/>
+        <line x1="407" y1="407" x2="393" y2="453" stroke="#ff4444" stroke-width="2" stroke-linecap="round"/>
+        <text x="350" y="468" fill="rgba(255,255,255,0.4)" font-family="DM Sans,sans-serif" font-size="11" font-weight="700">SEPTEMBER</text>
+      </svg>
+      <div id="labelsContainer"></div>
+      <div class="diagram-hint" id="dHint">👆 Select a label from the bank above, then click on the diagram to place it</div>
+    </div>
+
+    <div class="screenshot-box">
+      <span class="ico">📸</span>
+      <div>
+        <h4>Screenshot your completed diagram</h4>
+        <p>Once all labels are placed, take a screenshot to submit to Google Classroom.</p>
+        <div class="kbds">
+          <span class="kbd">Windows: Win+Shift+S</span>
+          <span class="kbd">Mac: Cmd+Shift+4</span>
+          <span class="kbd">Chromebook: Ctrl+Shift+▭</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-teal" onclick="doneTask(1)">✓ I've labelled &amp; screenshotted my diagram</button>
+      <button class="btn btn-outline" onclick="clearAllLabels()">🗑 Clear labels</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     CHAPTER 2 — EXTREME EXAMPLES
+     ═══════════════════════════════════════ -->
+<div class="chapter" id="ch2">
+  <div class="ch-badge gold">2</div>
+  <div class="ch-text">
+    <h2>Extreme examples of Earth's tilt</h2>
+    <span>Read · Think · Research</span>
+  </div>
+</div>
+
+<!-- TEACH 2A -->
+<div class="card" id="t2a">
+  <div class="teach-header"><div class="teach-dot"></div> Read this carefully</div>
+  <div class="teach-body">
+    <h3>The poles, the equator, and why they're so different</h3>
+    <p>The effects of Earth's tilt aren't the same everywhere. They become <strong>more extreme</strong> the further you move from the equator towards the poles.</p>
+    <p>At the <strong>equator</strong>, the tilt barely affects day length at all. The equator always receives roughly <strong>12 hours of daylight</strong> all year round, because no matter which way Earth tilts, the equator stays in the middle and faces the Sun equally.</p>
+    <p>At the <strong>poles</strong>, the effect is dramatic. In summer, the North Pole is tilted so far towards the Sun that it <em>never</em> dips into darkness — the Sun just circles the horizon for months. This is called the <strong>Midnight Sun</strong>. In winter, the opposite happens: the pole is tilted away so steeply that the Sun never rises at all. This is <strong>polar night</strong>.</p>
+
+    <div class="callout teal">
+      <span class="ico">🌍</span>
+      <div>
+        <strong>The Southern Hemisphere is always opposite to the Northern Hemisphere</strong>
+        When it is summer in the UK (northern hemisphere), it is winter in Australia (southern hemisphere) — and vice versa. They experience exactly the same mechanism, just flipped.
+      </div>
+    </div>
+
+    <p>And what about the <strong>stars</strong>? As the Earth orbits the Sun, the night side of Earth faces different directions in space. This means the constellations we can see change throughout the year — in winter, Orion is visible; in summer, Scorpius. The stars themselves haven't moved — <em>we</em> have.</p>
+  </div>
+</div>
+
+<!-- THINK 3 -->
+<div class="card delay1" id="think3">
+  <div class="card-body">
+    <div class="think-block">
+      <div class="think-label"><span>🤔</span> Think first</div>
+      <h4>A student in Norway says it never gets dark in June — the Sun is still visible at midnight. What scientific term describes this, and why does it happen?</h4>
+      <div class="think-predict">
+        <textarea id="t3predict" rows="2" placeholder="Write your answer — use the vocabulary from the section above if you can..."></textarea>
+        <button class="reveal-btn" onclick="revealThink('r3', this)">👁 Reveal the answer</button>
+      </div>
+      <div class="think-reveal" id="r3">
+        <strong>This is called the Midnight Sun.</strong> Norway is close to the Arctic Circle, meaning in June — when the northern hemisphere is tilted towards the Sun — the Sun never fully dips below the horizon. As Earth rotates, instead of the country rotating into night, the Sun just tracks around the sky. The further north you go (towards the North Pole), the longer this lasts — at the actual North Pole it can last for months.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- APPLY 2: Research task -->
+<div class="card delay2" id="apply2">
+  <div class="apply-header">
+    <div class="apply-badge">Apply it</div>
+    <span>Choose a topic to research independently</span>
+  </div>
+  <div class="card-body">
+    <p>You've just read about the key ideas — now go deeper on one of them. Choose a topic card below and use a reliable website (BBC Bitesize, NASA Kids, National Geographic) to find out more.</p>
+
+    <div class="r-grid">
+      <div class="r-card" onclick="pickResearch(this,'midnight')">
+        <div class="tick">✓</div>
+        <span class="em">🌅</span>
+        <h4>The Midnight Sun</h4>
+        <p>Which countries experience it? How long does it last? Find a specific example.</p>
+      </div>
+      <div class="r-card" onclick="pickResearch(this,'solstice')">
+        <div class="tick">✓</div>
+        <span class="em">☀️</span>
+        <h4>Summer Solstice</h4>
+        <p>When is the longest day in the UK this year? How many hours of daylight does it get?</p>
+      </div>
+      <div class="r-card" onclick="pickResearch(this,'constellations')">
+        <div class="tick">✓</div>
+        <span class="em">⭐</span>
+        <h4>Seasonal Constellations</h4>
+        <p>Name a winter and summer constellation visible from the UK. Why do they change?</p>
+      </div>
+      <div class="r-card" onclick="pickResearch(this,'polar')">
+        <div class="tick">✓</div>
+        <span class="em">🧊</span>
+        <h4>Polar Night</h4>
+        <p>What is polar night? How long can it last, and which countries experience it most?</p>
+      </div>
+    </div>
+
+    <div class="r-write" id="rWrite">
+      <span class="field-lbl">Write 3–5 sentences about what you found:</span>
+      <textarea id="rText" rows="5" placeholder="Include: what you found, one surprising fact, and how it links to Earth's tilt..." oninput="updateProg()"></textarea>
+      <div class="source-row">
+        <label>🌐 Website used:</label>
+        <input type="text" id="rSource" placeholder="e.g. www.bbc.co.uk/bitesize" oninput="updateProg()">
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-gold" onclick="doneTask(2)">✓ Research complete</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     CHAPTER 3 — QUIZ
+     ═══════════════════════════════════════ -->
+<div class="chapter" id="ch3">
+  <div class="ch-badge green">3</div>
+  <div class="ch-text">
+    <h2>Check what you know</h2>
+    <span>Quiz · 6 questions</span>
+  </div>
+</div>
+
+<div class="card" id="apply3">
+  <div class="apply-header">
+    <div class="apply-badge">Apply it</div>
+    <span>Answer every question — feedback appears after each one</span>
+  </div>
+  <div class="card-body">
+    <p>Answer each question below. You'll get instant feedback after each one — read it carefully even if you got it right.</p>
+
+    <!-- Q1 -->
+    <div class="quiz-q">
+      <h4><span class="q-num">Q1</span> What is the main reason the UK is hotter in summer than in winter?</h4>
+      <div class="q-opts">
+        <button class="q-opt" onclick="qAns(this,false,1)">The Earth is closer to the Sun in summer</button>
+        <button class="q-opt" onclick="qAns(this,true,1)">The Earth's tilt means the Sun's rays hit the UK at a steeper angle</button>
+        <button class="q-opt" onclick="qAns(this,false,1)">The Sun produces more energy in summer</button>
+        <button class="q-opt" onclick="qAns(this,false,1)">The UK moves towards the Sun in summer</button>
+      </div>
+      <div class="q-fb" id="qf1"></div>
+    </div>
+
+    <!-- Q2 -->
+    <div class="quiz-q">
+      <h4><span class="q-num">Q2</span> Earth's axis always tilts towards which object in space?</h4>
+      <div class="q-opts">
+        <button class="q-opt" onclick="qAns(this,false,2)">The Sun</button>
+        <button class="q-opt" onclick="qAns(this,false,2)">The Moon</button>
+        <button class="q-opt" onclick="qAns(this,true,2)">The Pole Star</button>
+        <button class="q-opt" onclick="qAns(this,false,2)">The centre of the Milky Way</button>
+      </div>
+      <div class="q-fb" id="qf2"></div>
+    </div>
+
+    <!-- Q3 -->
+    <div class="quiz-q">
+      <h4><span class="q-num">Q3</span> In December, it is winter in the UK. What season is it in Australia at the same time?</h4>
+      <div class="q-opts">
+        <button class="q-opt" onclick="qAns(this,false,3)">Winter</button>
+        <button class="q-opt" onclick="qAns(this,true,3)">Summer</button>
+        <button class="q-opt" onclick="qAns(this,false,3)">Spring</button>
+        <button class="q-opt" onclick="qAns(this,false,3)">Australia doesn't have seasons</button>
+      </div>
+      <div class="q-fb" id="qf3"></div>
+    </div>
+
+    <!-- Q4 -->
+    <div class="quiz-q">
+      <h4><span class="q-num">Q4</span> Why does the Equator always get roughly 12 hours of daylight throughout the year?</h4>
+      <div class="q-opts">
+        <button class="q-opt" onclick="qAns(this,false,4)">It is closest to the Sun</button>
+        <button class="q-opt" onclick="qAns(this,false,4)">The Sun stays directly above the equator all year</button>
+        <button class="q-opt" onclick="qAns(this,true,4)">The tilt doesn't affect the equator — it always faces the Sun equally</button>
+        <button class="q-opt" onclick="qAns(this,false,4)">It rotates faster than the rest of Earth</button>
+      </div>
+      <div class="q-fb" id="qf4"></div>
+    </div>
+
+    <!-- Q5 -->
+    <div class="quiz-q">
+      <h4><span class="q-num">Q5</span> What would happen to the seasons if the Earth's axis was NOT tilted?</h4>
+      <div class="q-opts">
+        <button class="q-opt" onclick="qAns(this,false,5)">Summers would be much hotter</button>
+        <button class="q-opt" onclick="qAns(this,false,5)">Only the poles would have seasons</button>
+        <button class="q-opt" onclick="qAns(this,true,5)">There would be no seasons — every day would be the same</button>
+        <button class="q-opt" onclick="qAns(this,false,5)">The Earth would orbit the Sun faster</button>
+      </div>
+      <div class="q-fb" id="qf5"></div>
+    </div>
+
+    <!-- Q6 -->
+    <div class="quiz-q">
+      <h4><span class="q-num">Q6</span> Why do we see different constellations in winter compared to summer?</h4>
+      <div class="q-opts">
+        <button class="q-opt" onclick="qAns(this,false,6)">The stars move around the Earth with the seasons</button>
+        <button class="q-opt" onclick="qAns(this,false,6)">The Moon blocks different stars in different seasons</button>
+        <button class="q-opt" onclick="qAns(this,true,6)">As Earth orbits the Sun, the night side faces a different direction in space</button>
+        <button class="q-opt" onclick="qAns(this,false,6)">Our eyes work differently in different temperatures</button>
+      </div>
+      <div class="q-fb" id="qf6"></div>
+    </div>
+
+    <div class="score-card" id="scoreCard">
+      <div class="stars" id="starsEl">⭐⭐⭐⭐⭐⭐</div>
+      <div class="big-score" id="scoreNum">—</div>
+      <div class="score-msg" id="scoreMsg"></div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-teal" id="quizBtn" onclick="submitQuiz()" style="display:none">🎯 See my score</button>
+    </div>
+  </div>
+</div>
+
+<!-- SUBMIT -->
+<div class="submit-panel" id="submitPanel">
+  <h3>🎉 Lesson complete!</h3>
+  <p class="desc">Well done for working through everything. Here's how to submit to Google Classroom:</p>
+  <ul class="sub-steps">
+    <li><div class="step-c">1</div>Take a screenshot of your labelled diagram (use the shortcuts shown earlier).</li>
+    <li><div class="step-c">2</div>Open your Google Classroom assignment for this lesson.</li>
+    <li><div class="step-c">3</div>Click <strong>Add or create → File</strong> and upload your screenshot.</li>
+    <li><div class="step-c">4</div>Copy the summary below and paste it into the <strong>Private comment</strong> box, then click <strong>Turn in</strong>.</li>
+  </ul>
+  <div class="summary-box" id="summaryBox"></div>
+  <div class="btn-row">
+    <button class="btn btn-teal" onclick="copySummary()">📋 Copy summary text</button>
+  </div>
+</div>
+
+</div><!-- /container -->
+
+<script>
+// ─── STATE ───
+let activeLabel = null;
+const placed = {};
+let researchTopic = null;
+const qAnswers = {};
+let quizDone = false;
+let quizScore = 0;
+const tasks = [false, false, false];
+
+const qFeedback = {
+  1: { t: "✅ Correct! The tilt means the Sun's rays hit at a steeper angle in summer, concentrating energy over a smaller area. Remember — the Earth is actually slightly further from the Sun in summer.", f: "❌ Not quite. Earth is actually further from the Sun in July than in January! It's all about the angle of the rays — a steeper angle concentrates the Sun's energy over a smaller area." },
+  2: { t: "✅ Correct! Earth always tilts toward the Pole Star (Polaris). As it orbits the Sun, this fixed direction means sometimes the northern hemisphere faces the Sun and sometimes it faces away.", f: "❌ Not the Sun — it tilts toward the Pole Star. This is important: because the tilt direction is fixed, sometimes the northern hemisphere faces toward the Sun (summer) and sometimes away (winter)." },
+  3: { t: "✅ Correct! When the northern hemisphere tilts away from the Sun (UK winter), the southern hemisphere tilts toward it — giving Australia their summer.", f: "❌ Remember: the hemispheres are always opposite. When the northern hemisphere tilts away (UK winter), the southern hemisphere tilts toward the Sun — so Australia has summer." },
+  4: { t: "✅ Correct! The equator sits in the middle of Earth's tilt. No matter which way Earth is angled, the equator stays equally lit by the Sun all year — always roughly 12 hours of day and night.", f: "❌ The key is the tilt. The poles are most affected by the tilt; the equator sits in the middle and is barely affected at all — it always faces the Sun equally, regardless of the season." },
+  5: { t: "✅ Exactly right! Without any tilt, the Sun's rays would always hit every part of Earth at the same angle all year round. No variation in day length, no variation in temperature — no seasons at all.", f: "❌ Think about what the tilt actually does: it causes the variation in angle and day length throughout the year. Remove the tilt, and there's nothing to cause that variation — every day would be identical." },
+  6: { t: "✅ Correct! The stars don't move — we do. As Earth orbits the Sun over the year, the night side points in different directions through space, so we see different patches of stars in different seasons.", f: "❌ Stars don't move (on human timescales). As Earth orbits the Sun, the night side of Earth faces a different part of space each season — so different constellations become visible." }
+};
+
+// ─── SCROLL REVEAL ───
+const io = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.06 });
+document.querySelectorAll('.card, .chapter').forEach(el => io.observe(el));
+
+// ─── THINK REVEALS ───
+function revealThink(id, btn) {
+  document.getElementById(id).classList.add('show');
+  btn.disabled = true;
+  btn.textContent = '✓ Revealed';
+}
+
+function thinkAnswer(btn, correct, revealId) {
+  const opts = btn.closest('.think-options').querySelectorAll('.think-opt');
+  opts.forEach(o => o.disabled = true);
+  btn.classList.add(correct ? 'correct' : 'wrong');
+  if (!correct) {
+    opts.forEach(o => {
+      if (o !== btn && o.getAttribute('onclick').includes('true')) o.classList.add('correct');
+    });
+  }
+  document.getElementById(revealId).classList.add('show');
+}
+
+// ─── LABELLING ───
+function pickLabel(chip) {
+  if (chip.classList.contains('used')) return;
+  document.querySelectorAll('.label-chip').forEach(c => c.classList.remove('selected'));
+  if (activeLabel === chip.dataset.label) { activeLabel = null; return; }
+  chip.classList.add('selected');
+  activeLabel = chip.dataset.label;
+  document.getElementById('dHint').textContent = '👆 Now click on the diagram to place: ' + activeLabel;
+}
+
+document.getElementById('dWrap').addEventListener('click', function(e) {
+  if (!activeLabel) return;
+  if (e.target.closest('.placed-label')) return;
+  const rect = this.getBoundingClientRect();
+  const x = ((e.clientX - rect.left) / rect.width * 100).toFixed(2);
+  const y = ((e.clientY - rect.top) / rect.height * 100).toFixed(2);
+  if (placed[activeLabel]) {
+    placed[activeLabel].style.left = x + '%';
+    placed[activeLabel].style.top  = y + '%';
+  } else {
+    addLabel(activeLabel, x, y);
+  }
+  document.querySelectorAll('.label-chip').forEach(c => c.classList.remove('selected'));
+  activeLabel = null;
+  document.getElementById('dHint').textContent = '👆 Select a label above, then click on the diagram to place it';
+  updateCount();
+});
+
+function addLabel(text, xp, yp) {
+  const wrap = document.getElementById('labelsContainer');
+  const d = document.createElement('div');
+  d.className = 'placed-label';
+  d.style.left = xp + '%';
+  d.style.top  = yp + '%';
+  d.setAttribute('data-lbl', text);
+  const s = document.createElement('span');
+  s.textContent = text;
+  const b = document.createElement('button');
+  b.className = 'x'; b.textContent = '✕';
+  b.addEventListener('click', ev => { ev.stopPropagation(); removeLabel(text, d); });
+  d.append(s, b);
+  wrap.appendChild(d);
+  placed[text] = d;
+  document.querySelectorAll('.label-chip').forEach(c => { if (c.dataset.label === text) c.classList.add('used'); });
+  makeDrag(d);
+  updateCount();
+}
+
+function removeLabel(text, el) {
+  el.remove();
+  delete placed[text];
+  document.querySelectorAll('.label-chip').forEach(c => { if (c.dataset.label === text) c.classList.remove('used', 'selected'); });
+  updateCount();
+}
+
+function clearAllLabels() {
+  document.querySelectorAll('.placed-label').forEach(el => el.remove());
+  Object.keys(placed).forEach(k => delete placed[k]);
+  document.querySelectorAll('.label-chip').forEach(c => c.classList.remove('used','selected'));
+  activeLabel = null;
+  updateCount();
+  document.getElementById('dHint').textContent = '👆 Select a label above, then click on the diagram to place it';
+}
+
+function updateCount() {
+  document.getElementById('lblCount').textContent = Object.keys(placed).length;
+}
+
+function makeDrag(el) {
+  let drag = false, sx, sy, sl, st;
+  el.addEventListener('mousedown', e => {
+    if (e.target.classList.contains('x')) return;
+    drag = true; sx = e.clientX; sy = e.clientY;
+    sl = parseFloat(el.style.left); st = parseFloat(el.style.top);
+    e.preventDefault();
+  });
+  document.addEventListener('mousemove', e => {
+    if (!drag) return;
+    const w = document.getElementById('dWrap').getBoundingClientRect();
+    el.style.left = Math.max(0,Math.min(100, sl + (e.clientX-sx)/w.width*100)) + '%';
+    el.style.top  = Math.max(0,Math.min(100, st + (e.clientY-sy)/w.height*100)) + '%';
+  });
+  document.addEventListener('mouseup', () => drag = false);
+  el.addEventListener('touchstart', e => {
+    if (e.target.classList.contains('x')) return;
+    const t = e.touches[0]; drag=true; sx=t.clientX; sy=t.clientY;
+    sl=parseFloat(el.style.left); st=parseFloat(el.style.top);
+  }, {passive:true});
+  document.addEventListener('touchmove', e => {
+    if (!drag) return;
+    const t = e.touches[0];
+    const w = document.getElementById('dWrap').getBoundingClientRect();
+    el.style.left = Math.max(0,Math.min(100, sl+(t.clientX-sx)/w.width*100))+'%';
+    el.style.top  = Math.max(0,Math.min(100, st+(t.clientY-sy)/w.height*100))+'%';
+  }, {passive:true});
+  document.addEventListener('touchend', () => drag=false);
+}
+
+// ─── RESEARCH ───
+function pickResearch(card, topic) {
+  document.querySelectorAll('.r-card').forEach(c => c.classList.remove('selected'));
+  card.classList.add('selected');
+  researchTopic = topic;
+  document.getElementById('rWrite').classList.add('show');
+}
+
+// ─── QUIZ ───
+function qAns(btn, correct, n) {
+  if (qAnswers[n] !== undefined) return;
+  qAnswers[n] = correct;
+  btn.closest('.q-opts').querySelectorAll('.q-opt').forEach(o => {
+    o.disabled = true;
+    if (o !== btn && o.getAttribute('onclick').includes('true')) o.classList.add('correct');
+  });
+  btn.classList.add(correct ? 'correct' : 'wrong');
+  const fb = document.getElementById('qf' + n);
+  fb.textContent = qFeedback[n][correct ? 't' : 'f'];
+  fb.className = 'q-fb show ' + (correct ? 'correct' : 'wrong');
+  if (Object.keys(qAnswers).length === 6) document.getElementById('quizBtn').style.display = 'flex';
+  updateProg();
+}
+
+function submitQuiz() {
+  if (quizDone) return;
+  quizDone = true;
+  quizScore = Object.values(qAnswers).filter(Boolean).length;
+  document.getElementById('scoreCard').classList.add('show');
+  document.getElementById('scoreNum').textContent = quizScore + ' / 6';
+  const msgs = ['Keep going — review the lesson and try again!','A few good ideas — check the feedback above.','Getting there — solid on some of the key ideas.','Good work — you understand most of this topic.','Really strong — just one to review.','Perfect! Outstanding work — you\'ve nailed it. 🌟'];
+  document.getElementById('scoreMsg').textContent = msgs[quizScore];
+  let stars = '';
+  for (let i=0;i<6;i++) stars += i < quizScore ? '⭐' : '<span style="filter:grayscale(1)opacity(.25)">⭐</span>';
+  document.getElementById('starsEl').innerHTML = stars;
+  document.getElementById('quizBtn').style.display = 'none';
+  doneTask(3);
+}
+
+// ─── TASK TRACKING ───
+function doneTask(n) {
+  tasks[n-1] = true;
+  document.getElementById('pill'+n).classList.add('done');
+  updateProg();
+  if (tasks.every(Boolean)) {
+    buildSummary();
+    const sp = document.getElementById('submitPanel');
+    sp.classList.add('show');
+    sp.scrollIntoView({behavior:'smooth', block:'start'});
+  }
+}
+
+function updateProg() {
+  const pct = Math.round(tasks.filter(Boolean).length / 3 * 100);
+  document.getElementById('progressFill').style.width = Math.min(100, pct + (Object.keys(qAnswers).length > 0 ? 5 : 0)) + '%';
+}
+
+// ─── SUMMARY ───
+const topicNames = { midnight:'The Midnight Sun', solstice:'Summer Solstice', constellations:'Seasonal Constellations', polar:'Polar Night' };
+
+function buildSummary() {
+  const lines = [
+    '=== 4.3 The Earth — Lesson Summary ===',
+    '',
+    'Task 1 — Labelling diagram',
+    Object.keys(placed).length + '/7 labels placed (see screenshot)',
+    '',
+    'Task 2 — Research task',
+    'Topic chosen: ' + (topicNames[researchTopic] || 'not selected'),
+    'Notes: ' + (document.getElementById('rText').value.trim() || '[not completed]'),
+    'Source: ' + (document.getElementById('rSource').value.trim() || '[not provided]'),
+    '',
+    'Task 3 — Quiz',
+    'Score: ' + (quizDone ? quizScore + '/6' : 'not submitted'),
+  ];
+  document.getElementById('summaryBox').textContent = lines.join('\n');
+}
+
+function copySummary() {
+  buildSummary();
+  navigator.clipboard.writeText(document.getElementById('summaryBox').textContent).then(() => {
+    const btn = event.currentTarget;
+    const orig = btn.textContent;
+    btn.textContent = '✅ Copied!';
+    setTimeout(() => btn.textContent = orig, 2000);
+  });
+}
+</script>
+</body>
+</html>
