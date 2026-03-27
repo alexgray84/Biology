@@ -1,0 +1,1312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>4A – The Importance of Water & Minerals in Plants</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,700;0,900;1,300&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --green-deep: #1a3d2b;
+    --green-mid: #2d6a4f;
+    --green-bright: #52b788;
+    --green-pale: #b7e4c7;
+    --gold: #d4a017;
+    --gold-light: #f5c842;
+    --cream: #faf7f0;
+    --warm-white: #fffef9;
+    --slate: #3d3d3d;
+    --slate-light: #6b6b6b;
+    --accent-red: #c94040;
+    --accent-blue: #2b6cb0;
+    --border: rgba(26,61,43,0.12);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--cream);
+    color: var(--slate);
+    min-height: 100vh;
+  }
+
+  /* ── HEADER ── */
+  .lesson-header {
+    background: var(--green-deep);
+    color: white;
+    padding: 0;
+    position: relative;
+    overflow: hidden;
+  }
+  .lesson-header::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -80px;
+    width: 320px; height: 320px;
+    border-radius: 50%;
+    background: rgba(82,183,136,0.15);
+  }
+  .lesson-header::after {
+    content: '';
+    position: absolute;
+    bottom: -40px; left: 20%;
+    width: 200px; height: 200px;
+    border-radius: 50%;
+    background: rgba(212,160,23,0.1);
+  }
+  .header-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 36px 40px 32px;
+    position: relative;
+    z-index: 1;
+  }
+  .spec-badge {
+    display: inline-block;
+    background: var(--gold);
+    color: var(--green-deep);
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    padding: 4px 10px;
+    border-radius: 4px;
+    letter-spacing: 0.08em;
+    margin-bottom: 14px;
+  }
+  .lesson-title {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(28px, 4vw, 46px);
+    font-weight: 900;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    margin-bottom: 16px;
+  }
+  .lesson-title span { color: var(--green-bright); }
+  .lo-strip {
+    background: rgba(255,255,255,0.08);
+    border-left: 3px solid var(--gold);
+    padding: 12px 18px;
+    border-radius: 0 6px 6px 0;
+    font-size: 13.5px;
+    line-height: 1.5;
+    color: rgba(255,255,255,0.9);
+    margin-top: 8px;
+  }
+  .lo-strip strong { color: var(--gold-light); }
+
+  /* ── PHASE NAV ── */
+  .phase-nav {
+    background: var(--green-mid);
+    padding: 0 40px;
+    display: flex;
+    gap: 0;
+    max-width: 100%;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .phase-nav::-webkit-scrollbar { display: none; }
+  .phase-btn {
+    flex: none;
+    background: none;
+    border: none;
+    color: rgba(255,255,255,0.65);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12.5px;
+    font-weight: 500;
+    padding: 14px 20px;
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    white-space: nowrap;
+  }
+  .phase-btn:hover { color: white; background: rgba(255,255,255,0.06); }
+  .phase-btn.active {
+    color: var(--gold-light);
+    border-bottom-color: var(--gold);
+    background: rgba(255,255,255,0.08);
+  }
+  .phase-icon { font-size: 14px; }
+  .phase-time {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    background: rgba(255,255,255,0.12);
+    padding: 2px 6px;
+    border-radius: 20px;
+    color: rgba(255,255,255,0.7);
+  }
+
+  /* ── MAIN ── */
+  .main { max-width: 1100px; margin: 0 auto; padding: 40px 40px 80px; }
+  .phase-panel { display: none; }
+  .phase-panel.active { display: block; animation: fadeIn 0.3s ease; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+  /* ── SECTION HEADERS ── */
+  .phase-heading {
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+    margin-bottom: 28px;
+  }
+  .phase-heading h2 {
+    font-family: 'Fraunces', serif;
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--green-deep);
+  }
+  .phase-heading .phase-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--green-bright);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  /* ── CARDS ── */
+  .card {
+    background: white;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    padding: 28px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+  }
+  .card-title {
+    font-family: 'Fraunces', serif;
+    font-weight: 700;
+    font-size: 16px;
+    color: var(--green-mid);
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .card-title .icon {
+    width: 30px; height: 30px;
+    background: var(--green-pale);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px;
+    flex-shrink: 0;
+  }
+
+  /* ── RETRIEVAL STARTER ── */
+  .retrieval-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 14px;
+  }
+  .retrieval-q {
+    background: var(--green-deep);
+    color: white;
+    border-radius: 10px;
+    padding: 18px;
+    cursor: pointer;
+    transition: transform 0.15s;
+    position: relative;
+    min-height: 90px;
+  }
+  .retrieval-q:hover { transform: translateY(-2px); }
+  .retrieval-q .q-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--green-bright);
+    margin-bottom: 8px;
+  }
+  .retrieval-q .q-text {
+    font-size: 13.5px;
+    line-height: 1.45;
+    font-weight: 500;
+  }
+  .retrieval-q .q-answer {
+    display: none;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid rgba(82,183,136,0.4);
+    font-size: 12.5px;
+    color: var(--green-pale);
+    line-height: 1.5;
+  }
+  .retrieval-q.revealed .q-answer { display: block; }
+  .retrieval-q .reveal-hint {
+    position: absolute;
+    bottom: 10px; right: 12px;
+    font-size: 10px;
+    color: rgba(255,255,255,0.35);
+    font-family: 'DM Mono', monospace;
+  }
+  .retrieval-q.revealed .reveal-hint { display: none; }
+
+  /* ── VTR SECTION ── */
+  .vtr-box {
+    background: linear-gradient(135deg, #1a3d2b 0%, #2d6a4f 100%);
+    border-radius: 12px;
+    padding: 28px;
+    color: white;
+    position: relative;
+    overflow: hidden;
+  }
+  .vtr-box::before {
+    content: 'SEE · THINK · WONDER';
+    position: absolute;
+    top: 14px; right: 18px;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: rgba(255,255,255,0.2);
+    letter-spacing: 0.15em;
+  }
+  .vtr-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    color: var(--gold-light);
+    margin-bottom: 8px;
+    text-transform: uppercase;
+  }
+  .vtr-box h3 {
+    font-family: 'Fraunces', serif;
+    font-size: 18px;
+    margin-bottom: 16px;
+  }
+  .vtr-prompt-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  .vtr-prompt {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 8px;
+    padding: 14px;
+  }
+  .vtr-prompt-label {
+    font-size: 11px;
+    font-family: 'DM Mono', monospace;
+    color: var(--gold-light);
+    margin-bottom: 6px;
+  }
+  .vtr-prompt-q { font-size: 13px; line-height: 1.45; color: rgba(255,255,255,0.85); }
+  .mineral-deficiency-visual {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 10px;
+    margin-top: 16px;
+  }
+  .def-plant {
+    background: rgba(255,255,255,0.06);
+    border-radius: 8px;
+    padding: 12px 8px;
+    text-align: center;
+    border: 1px solid rgba(255,255,255,0.08);
+  }
+  .def-plant .plant-icon { font-size: 28px; margin-bottom: 6px; }
+  .def-plant .plant-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: rgba(255,255,255,0.5);
+    margin-bottom: 4px;
+  }
+  .def-plant .plant-status {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 7px;
+    border-radius: 4px;
+  }
+  .status-healthy { background: rgba(82,183,136,0.3); color: var(--green-pale); }
+  .status-poor { background: rgba(201,64,64,0.3); color: #fca5a5; }
+
+  /* ── CONTENT EXPLAINER ── */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .three-col { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+
+  .mineral-card {
+    border-radius: 10px;
+    padding: 20px;
+    border: 1px solid var(--border);
+    background: white;
+    position: relative;
+    overflow: hidden;
+  }
+  .mineral-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 4px; height: 100%;
+  }
+  .mineral-nitrate::before { background: var(--accent-blue); }
+  .mineral-calcium::before { background: var(--gold); }
+  .mineral-magnesium::before { background: var(--green-bright); }
+
+  .mineral-card h4 {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    font-weight: 500;
+  }
+  .mineral-nitrate h4 { color: var(--accent-blue); }
+  .mineral-calcium h4 { color: var(--gold); }
+  .mineral-magnesium h4 { color: var(--green-mid); }
+
+  .mineral-card .function {
+    font-size: 13px;
+    line-height: 1.55;
+    color: var(--slate);
+    margin-bottom: 12px;
+  }
+  .mineral-card .deficiency {
+    background: #fef2f2;
+    border-radius: 6px;
+    padding: 10px 12px;
+    font-size: 12px;
+    color: var(--accent-red);
+    line-height: 1.45;
+  }
+  .mineral-card .deficiency-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    margin-bottom: 4px;
+    opacity: 0.7;
+  }
+
+  .water-role-card {
+    background: white;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    padding: 18px;
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+  }
+  .water-icon {
+    width: 40px; height: 40px;
+    background: #e8f4fd;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+  .water-role-card h4 {
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--green-deep);
+    margin-bottom: 5px;
+  }
+  .water-role-card p { font-size: 12.5px; line-height: 1.5; color: var(--slate-light); }
+
+  /* ── PROGRESS CHECKS ── */
+  .tier-tabs { display: flex; gap: 8px; margin-bottom: 16px; }
+  .tier-tab {
+    padding: 8px 18px;
+    border-radius: 6px;
+    border: 1.5px solid var(--border);
+    background: white;
+    cursor: pointer;
+    font-size: 12.5px;
+    font-weight: 500;
+    transition: all 0.15s;
+    font-family: 'DM Sans', sans-serif;
+    color: var(--slate-light);
+  }
+  .tier-tab:hover { border-color: var(--green-bright); }
+  .tier-tab.active-foundation { background: #dcfce7; border-color: #16a34a; color: #15803d; }
+  .tier-tab.active-core { background: #dbeafe; border-color: #2563eb; color: #1d4ed8; }
+  .tier-tab.active-challenge { background: #fef9c3; border-color: #ca8a04; color: #a16207; }
+
+  .tier-panel { display: none; }
+  .tier-panel.active { display: block; animation: fadeIn 0.2s ease; }
+
+  .progress-q {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 18px 22px;
+    margin-bottom: 12px;
+  }
+  .progress-q .q-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  .q-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 4px;
+  }
+  .foundation-label { background: #dcfce7; color: #15803d; }
+  .core-label { background: #dbeafe; color: #1d4ed8; }
+  .challenge-label { background: #fef9c3; color: #a16207; }
+  .marks-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--slate-light);
+  }
+  .progress-q .question-text {
+    font-size: 14px;
+    line-height: 1.55;
+    color: var(--slate);
+    margin-bottom: 14px;
+    font-weight: 500;
+  }
+  .answer-area {
+    width: 100%;
+    border: 1.5px solid var(--border);
+    border-radius: 6px;
+    padding: 10px 12px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    resize: vertical;
+    min-height: 72px;
+    color: var(--slate);
+    transition: border-color 0.15s;
+    background: var(--cream);
+  }
+  .answer-area:focus { outline: none; border-color: var(--green-bright); background: white; }
+  .mark-scheme-btn {
+    margin-top: 10px;
+    background: none;
+    border: 1px solid var(--green-mid);
+    color: var(--green-mid);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    padding: 6px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .mark-scheme-btn:hover { background: var(--green-mid); color: white; }
+  .mark-scheme {
+    display: none;
+    margin-top: 12px;
+    background: #f0fdf4;
+    border-left: 3px solid var(--green-bright);
+    border-radius: 0 6px 6px 0;
+    padding: 12px 16px;
+    font-size: 12.5px;
+    line-height: 1.6;
+    color: var(--green-deep);
+  }
+  .mark-scheme.visible { display: block; animation: fadeIn 0.2s ease; }
+  .mark-scheme ul { padding-left: 18px; }
+  .mark-scheme li { margin-bottom: 4px; }
+
+  /* ── STRUGGLE QUESTION ── */
+  .struggle-box {
+    background: linear-gradient(135deg, #1c1c1c 0%, #2d2418 100%);
+    border-radius: 12px;
+    padding: 26px 28px;
+    color: white;
+    position: relative;
+    overflow: hidden;
+    margin-top: 24px;
+  }
+  .struggle-box::before {
+    content: '🔥';
+    position: absolute;
+    top: -10px; right: 20px;
+    font-size: 60px;
+    opacity: 0.12;
+  }
+  .struggle-badge {
+    display: inline-block;
+    background: var(--gold);
+    color: black;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    font-weight: 500;
+    padding: 3px 10px;
+    border-radius: 4px;
+    letter-spacing: 0.08em;
+    margin-bottom: 12px;
+  }
+  .struggle-box h4 {
+    font-family: 'Fraunces', serif;
+    font-size: 18px;
+    margin-bottom: 10px;
+    font-weight: 700;
+  }
+  .struggle-box p {
+    font-size: 13.5px;
+    line-height: 1.6;
+    color: rgba(255,255,255,0.8);
+    margin-bottom: 16px;
+  }
+  .struggle-area {
+    width: 100%;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 6px;
+    padding: 12px;
+    color: white;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    resize: vertical;
+    min-height: 80px;
+  }
+  .struggle-area::placeholder { color: rgba(255,255,255,0.3); }
+  .struggle-area:focus { outline: none; border-color: var(--gold); }
+
+  /* ── DUAL CODING ── */
+  .diagram-task {
+    background: white;
+    border-radius: 10px;
+    border: 2px dashed var(--border);
+    padding: 24px;
+    text-align: center;
+    margin-bottom: 16px;
+  }
+  .diagram-task .task-icon { font-size: 36px; margin-bottom: 10px; }
+  .diagram-task h4 { font-size: 15px; font-weight: 600; color: var(--green-deep); margin-bottom: 6px; }
+  .diagram-task p { font-size: 13px; color: var(--slate-light); line-height: 1.5; }
+
+  /* ── EXAM HINT ── */
+  .exam-hint-box {
+    background: white;
+    border: 1px solid var(--gold);
+    border-left: 4px solid var(--gold);
+    border-radius: 6px;
+    padding: 14px 18px;
+    margin-top: 20px;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+  .exam-hint-box .hint-icon { font-size: 18px; flex-shrink: 0; }
+  .exam-hint-box .hint-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    color: var(--gold);
+    margin-bottom: 4px;
+  }
+  .exam-hint-box p { font-size: 13px; line-height: 1.5; color: var(--slate); }
+
+  /* ── SUMMARY TABLE ── */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13.5px;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 1px 8px rgba(0,0,0,0.06);
+  }
+  th {
+    background: var(--green-deep);
+    color: white;
+    padding: 12px 16px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 12.5px;
+    letter-spacing: 0.03em;
+  }
+  td {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+    line-height: 1.5;
+  }
+  tr:nth-child(even) td { background: #f9faf9; }
+  tr:last-child td { border-bottom: none; }
+  .ion-badge {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    font-weight: 500;
+    padding: 3px 8px;
+    border-radius: 4px;
+  }
+  .badge-blue { background: #dbeafe; color: #1d4ed8; }
+  .badge-yellow { background: #fef9c3; color: #a16207; }
+  .badge-green { background: #dcfce7; color: #15803d; }
+
+  /* ── CHECKPOINT ── */
+  .checkpoint-header {
+    background: var(--green-deep);
+    color: white;
+    border-radius: 10px 10px 0 0;
+    padding: 16px 22px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .checkpoint-header h3 { font-family: 'Fraunces', serif; font-size: 18px; }
+  .checkpoint-body {
+    background: white;
+    border: 1px solid var(--border);
+    border-top: none;
+    border-radius: 0 0 10px 10px;
+    padding: 22px;
+  }
+  .checkpoint-q {
+    display: flex;
+    gap: 14px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--border);
+    align-items: flex-start;
+  }
+  .checkpoint-q:last-child { border-bottom: none; padding-bottom: 0; }
+  .q-num-badge {
+    width: 26px; height: 26px;
+    background: var(--green-pale);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--green-deep);
+    flex-shrink: 0;
+  }
+  .checkpoint-q .q-content { flex: 1; }
+  .checkpoint-q .q-text { font-size: 13.5px; font-weight: 500; color: var(--slate); margin-bottom: 6px; }
+  .checkpoint-q .q-hint { font-size: 12px; color: var(--slate-light); }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 768px) {
+    .main { padding: 24px 20px 60px; }
+    .header-inner { padding: 24px 20px; }
+    .phase-nav { padding: 0 20px; }
+    .two-col { grid-template-columns: 1fr; }
+    .three-col { grid-template-columns: 1fr; }
+    .vtr-prompt-grid { grid-template-columns: 1fr; }
+    .mineral-deficiency-visual { grid-template-columns: repeat(3, 1fr); }
+  }
+
+  /* ── INTERLEAVED TAG ── */
+  .interleaved-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: #fdf4ff;
+    border: 1px solid #e879f9;
+    color: #a21caf;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    padding: 3px 9px;
+    border-radius: 4px;
+    margin-left: 8px;
+    letter-spacing: 0.05em;
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="lesson-header">
+  <div class="header-inner">
+    <div class="spec-badge">SPECIFICATION REF 4.8 · SECTION 4A</div>
+    <h1 class="lesson-title">The Importance of <span>Water &amp; Minerals</span><br>in Plants</h1>
+    <div class="lo-strip">
+      <strong>Learning Objective:</strong> Understand the importance of water and inorganic ions — nitrate, calcium and magnesium — to plants, including their roles and symptoms of deficiency.
+    </div>
+  </div>
+</header>
+
+<!-- PHASE NAV -->
+<nav class="phase-nav">
+  <button class="phase-btn active" onclick="showPhase('starter')">
+    <span class="phase-icon">🧠</span> Retrieval Starter <span class="phase-time">8 min</span>
+  </button>
+  <button class="phase-btn" onclick="showPhase('vtr')">
+    <span class="phase-icon">👁</span> See–Think–Wonder <span class="phase-time">7 min</span>
+  </button>
+  <button class="phase-btn" onclick="showPhase('content')">
+    <span class="phase-icon">📖</span> Core Content <span class="phase-time">15 min</span>
+  </button>
+  <button class="phase-btn" onclick="showPhase('dualcode')">
+    <span class="phase-icon">✏️</span> Dual Coding <span class="phase-time">8 min</span>
+  </button>
+  <button class="phase-btn" onclick="showPhase('progress')">
+    <span class="phase-icon">✅</span> Progress Checks <span class="phase-time">12 min</span>
+  </button>
+  <button class="phase-btn" onclick="showPhase('checkpoint')">
+    <span class="phase-icon">🎯</span> Checkpoint <span class="phase-time">5 min</span>
+  </button>
+</nav>
+
+<main class="main">
+
+  <!-- ═══════════ PHASE 1: RETRIEVAL STARTER ═══════════ -->
+  <div id="phase-starter" class="phase-panel active">
+    <div class="phase-heading">
+      <h2>Retrieval Starter</h2>
+      <span class="phase-label">Rosenshine Principle 1 · Prior knowledge activation</span>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><div class="icon">🧠</div> Think Back — Click each card to reveal the answer</div>
+      <div class="retrieval-grid">
+        <div class="retrieval-q" onclick="this.classList.toggle('revealed')">
+          <div class="q-num">Q01</div>
+          <div class="q-text">What is the name of the tissue that transports water from roots to leaves?</div>
+          <div class="q-answer">The <strong>xylem</strong>. It transports water and dissolved mineral ions from roots up through the plant via mass flow driven by transpiration.</div>
+          <div class="reveal-hint">tap to reveal</div>
+        </div>
+        <div class="retrieval-q" onclick="this.classList.toggle('revealed')">
+          <div class="q-num">Q02</div>
+          <div class="q-text">What tissue transports sugars made in photosynthesis around the plant?</div>
+          <div class="q-answer">The <strong>phloem</strong>. It transports sucrose and other assimilates via active transport throughout the plant to all cells.</div>
+          <div class="reveal-hint">tap to reveal</div>
+        </div>
+        <div class="retrieval-q" onclick="this.classList.toggle('revealed')">
+          <div class="q-num">Q03</div>
+          <div class="q-text">What is osmosis? What causes water to move into plant vacuoles?</div>
+          <div class="q-answer">Osmosis is the movement of water molecules from a region of lower solute concentration to higher solute concentration across a partially permeable membrane. Solutes in the vacuole draw water in, building <strong>turgor pressure</strong>.</div>
+          <div class="reveal-hint">tap to reveal</div>
+        </div>
+        <div class="retrieval-q" onclick="this.classList.toggle('revealed')">
+          <div class="q-num">Q04</div>
+          <div class="q-text">What are the raw materials needed for photosynthesis?</div>
+          <div class="q-answer"><strong>Carbon dioxide</strong> (from air via stomata) and <strong>water</strong> (from soil via xylem), using <strong>light energy</strong> trapped by chlorophyll.</div>
+          <div class="reveal-hint">tap to reveal</div>
+        </div>
+        <div class="retrieval-q" onclick="this.classList.toggle('revealed')">
+          <div class="q-num">Q05</div>
+          <div class="q-text">What is transpiration and where does it mainly occur? <span class="interleaved-badge">↔ Interleaved</span></div>
+          <div class="q-answer">Transpiration is the evaporation of water from the surfaces of leaf cells and its diffusion out through open stomata. It mainly occurs from the <strong>spongy mesophyll</strong> and through stomata.</div>
+          <div class="reveal-hint">tap to reveal</div>
+        </div>
+        <div class="retrieval-q" onclick="this.classList.toggle('revealed')">
+          <div class="q-num">Q06</div>
+          <div class="q-text">What is active transport? Why do plants need it for mineral uptake? <span class="interleaved-badge">↔ Interleaved</span></div>
+          <div class="q-answer"><strong>Active transport</strong> moves particles against a concentration gradient using energy from ATP. Mineral ions in soil are at lower concentrations than in root cells, so the plant must use active transport to absorb them.</div>
+          <div class="reveal-hint">tap to reveal</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="exam-hint-box">
+      <div class="hint-icon">💡</div>
+      <div>
+        <div class="hint-label">Exam Hint</div>
+        <p>You may be asked to complete a table about the roles of minerals in plants. You may also need to write about the roles of minerals as part of a longer question about plant growth or plant physiology. Practise linking <em>function → deficiency symptom → reason</em>.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════ PHASE 2: VTR ═══════════ -->
+  <div id="phase-vtr" class="phase-panel">
+    <div class="phase-heading">
+      <h2>See – Think – Wonder</h2>
+      <span class="phase-label">Harvard Project Zero · Visible Thinking Routine</span>
+    </div>
+
+    <div class="vtr-box">
+      <div class="vtr-label">Harvard Project Zero · VTR</div>
+      <h3>Observe the mineral deficiency experiment below. Use the three lenses.</h3>
+      <div class="vtr-prompt-grid">
+        <div class="vtr-prompt">
+          <div class="vtr-prompt-label">👁 I SEE…</div>
+          <div class="vtr-prompt-q">Look carefully at each plant. What differences can you observe between them? Be precise — describe colour, size, shape of leaves and roots.</div>
+        </div>
+        <div class="vtr-prompt">
+          <div class="vtr-prompt-label">💭 I THINK…</div>
+          <div class="vtr-prompt-q">What do you think is causing the differences you can see? Why do some plants look healthy and others don't? What is your evidence?</div>
+        </div>
+        <div class="vtr-prompt">
+          <div class="vtr-prompt-label">❓ I WONDER…</div>
+          <div class="vtr-prompt-q">What questions does this raise for you? What would happen if two minerals were missing? Which mineral do you think is most critical and why?</div>
+        </div>
+      </div>
+
+      <!-- Simplified visual representation of fig A -->
+      <div class="mineral-deficiency-visual">
+        <div class="def-plant">
+          <div class="plant-icon">🌱</div>
+          <div class="plant-label">Distilled water only</div>
+          <div class="plant-status status-poor">Hardly grows</div>
+        </div>
+        <div class="def-plant">
+          <div class="plant-icon">🌿</div>
+          <div class="plant-label">−NO₃⁻ (no nitrate)</div>
+          <div class="plant-status status-poor">Lacking N</div>
+        </div>
+        <div class="def-plant">
+          <div class="plant-icon">🌿</div>
+          <div class="plant-label">−Mg²⁺ (no magnesium)</div>
+          <div class="plant-status status-poor">Lacking Mg</div>
+        </div>
+        <div class="def-plant">
+          <div class="plant-icon">🌿</div>
+          <div class="plant-label">−Ca²⁺ (no calcium)</div>
+          <div class="plant-status status-poor">Lacking Ca</div>
+        </div>
+        <div class="def-plant">
+          <div class="plant-icon">🌳</div>
+          <div class="plant-label">Full nutrients</div>
+          <div class="plant-status status-healthy">Healthy</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top: 20px;">
+      <div class="card-title"><div class="icon">🤔</div> Discuss with a partner — then note your ideas below</div>
+      <p style="font-size:13px; color:var(--slate-light); margin-bottom: 12px;">Consider: plants lacking nitrogen show yellowing of older leaves. Plants lacking magnesium show yellowing between leaf veins. Why might these two deficiencies produce similar-looking but slightly different symptoms?</p>
+      <textarea class="answer-area" placeholder="Your ideas here…" rows="3"></textarea>
+    </div>
+  </div>
+
+  <!-- ═══════════ PHASE 3: CORE CONTENT ═══════════ -->
+  <div id="phase-content" class="phase-panel">
+    <div class="phase-heading">
+      <h2>Core Content</h2>
+      <span class="phase-label">Spec 4.8 · Fully Addresses Learning Objective</span>
+    </div>
+
+    <!-- WHY WATER -->
+    <div class="card">
+      <div class="card-title"><div class="icon">💧</div> Why Do Plants Need Water?</div>
+      <p style="font-size:13.5px; color:var(--slate-light); line-height:1.6; margin-bottom: 18px;">Plants are approximately <strong>90% water</strong> (compared to ~65% in humans). Water is fundamental to nearly every process in a plant.</p>
+      <div class="two-col">
+        <div class="water-role-card">
+          <div class="water-icon">🌿</div>
+          <div>
+            <h4>Photosynthesis</h4>
+            <p>Water is a raw material — CO₂ + H₂O → glucose + O₂. Water molecules are split during the light-dependent reactions to release hydrogen ions and oxygen.</p>
+          </div>
+        </div>
+        <div class="water-role-card">
+          <div class="water-icon">💪</div>
+          <div>
+            <h4>Structural Support (Turgor)</h4>
+            <p>Water moves into vacuoles by osmosis, pushing the cytoplasm against the cell wall and making cells rigid (turgid). Non-woody plants wilt when water is lost.</p>
+          </div>
+        </div>
+        <div class="water-role-card">
+          <div class="water-icon">🔄</div>
+          <div>
+            <h4>Transport Medium</h4>
+            <p>Mineral ions are carried dissolved in water through the xylem. Sugars are dissolved in water and transported in the phloem. Water drives the transpiration stream.</p>
+          </div>
+        </div>
+        <div class="water-role-card">
+          <div class="water-icon">🌡️</div>
+          <div>
+            <h4>Thermoregulation (Cooling)</h4>
+            <p>Evaporation of water from leaf surfaces requires energy (latent heat). This removes heat from the plant, preventing overheating in direct sunlight.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- WHY MINERALS -->
+    <div class="card">
+      <div class="card-title"><div class="icon">⚗️</div> Why Do Plants Need Minerals?</div>
+      <p style="font-size:13.5px; color:var(--slate-light); line-height:1.6; margin-bottom: 18px;">Although plants synthesise carbohydrates through photosynthesis, they cannot make proteins, DNA or chlorophyll without inorganic mineral ions absorbed from the soil via active transport.</p>
+      <div class="three-col">
+
+        <div class="mineral-card mineral-nitrate">
+          <h4>🔵 NITRATES (NO₃⁻)</h4>
+          <div class="function">
+            <strong>Used to make:</strong><br>
+            • Amino acids → proteins (including enzymes)<br>
+            • DNA and many plant hormones<br>
+            • A range of other nitrogen-containing compounds
+          </div>
+          <div class="deficiency">
+            <div class="deficiency-label">⚠ DEFICIENCY SYMPTOMS</div>
+            Older leaves turn yellow and die. Growth is stunted. Eventually the plant dies. (Older leaves affected first — nitrogen is remobilised from old to new growth.)
+          </div>
+        </div>
+
+        <div class="mineral-card mineral-calcium">
+          <h4>🟡 CALCIUM (Ca²⁺)</h4>
+          <div class="function">
+            <strong>Used to make:</strong><br>
+            • Calcium pectate in the middle lamella — holds plant cells together<br>
+            • Important for membrane permeability and stability
+          </div>
+          <div class="deficiency">
+            <div class="deficiency-label">⚠ DEFICIENCY SYMPTOMS</div>
+            Growing points die back. Young leaves are yellow and crinkly. (New tissue is most affected — calcium is not remobilised from old leaves.)
+          </div>
+        </div>
+
+        <div class="mineral-card mineral-magnesium">
+          <h4>🟢 MAGNESIUM (Mg²⁺)</h4>
+          <div class="function">
+            <strong>Used to make:</strong><br>
+            • Chlorophyll — the green pigment that traps light energy<br>
+            • Activates several plant enzymes<br>
+            • Involved in the synthesis of nucleic acids (DNA/RNA)
+          </div>
+          <div class="deficiency">
+            <div class="deficiency-label">⚠ DEFICIENCY SYMPTOMS</div>
+            Yellow areas develop on older leaves (interveinal chlorosis). Growth slows. Without chlorophyll, photosynthesis fails.
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- SUMMARY TABLE -->
+    <div class="card">
+      <div class="card-title"><div class="icon">📋</div> Summary: Minerals at a Glance</div>
+      <table>
+        <thead>
+          <tr>
+            <th>Mineral Ion</th>
+            <th>Key Functions</th>
+            <th>Deficiency Symptom</th>
+            <th>Why That Symptom?</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="ion-badge badge-blue">NO₃⁻ Nitrate</span></td>
+            <td>Makes amino acids, proteins, enzymes, DNA, hormones</td>
+            <td>Yellowing of <em>older</em> leaves; stunted growth; eventual death</td>
+            <td>Nitrogen remobilised from older leaves to newer growing tissues</td>
+          </tr>
+          <tr>
+            <td><span class="ion-badge badge-yellow">Ca²⁺ Calcium</span></td>
+            <td>Forms calcium pectate in middle lamella; membrane stability</td>
+            <td>Growing points die back; young leaves yellow and crinkly</td>
+            <td>Not remobilised — new growing tissue suffers most</td>
+          </tr>
+          <tr>
+            <td><span class="ion-badge badge-green">Mg²⁺ Magnesium</span></td>
+            <td>Core of chlorophyll molecule; enzyme activation; nucleic acids</td>
+            <td>Interveinal chlorosis on older leaves; slower growth</td>
+            <td>Magnesium remobilised from older leaves to newer growth</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="exam-hint-box">
+      <div class="hint-icon">⭐</div>
+      <div>
+        <div class="hint-label">Exam Strategy — Function → Deficiency → Reason</div>
+        <p>Always link the <em>role</em> of the mineral to its <em>deficiency symptom</em>. For example: "Magnesium is needed for chlorophyll synthesis. Without it, the plant cannot produce enough chlorophyll, so leaves turn yellow — particularly in older leaves from which magnesium is remobilised."</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════ PHASE 4: DUAL CODING ═══════════ -->
+  <div id="phase-dualcode" class="phase-panel">
+    <div class="phase-heading">
+      <h2>Dual Coding Tasks</h2>
+      <span class="phase-label">Cognitive Science · Paivio's Dual-Coding Theory</span>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><div class="icon">✏️</div> Draw · Label · Annotate</div>
+      <p style="font-size:13px; color:var(--slate-light); line-height:1.6; margin-bottom:20px;">Research shows that combining visual representations with words strengthens memory encoding by activating two cognitive channels simultaneously. Complete these tasks in your exercise book.</p>
+
+      <div class="two-col">
+        <div class="diagram-task">
+          <div class="task-icon">🌿</div>
+          <h4>Task A — Water in a Non-Woody Plant</h4>
+          <p>Draw a simple plant and annotate it with <strong>four</strong> arrows showing where water is used: photosynthesis (leaf), turgor support (stem cell), transport (xylem vessel), evaporation/cooling (stomata). Label each with the biological process.</p>
+        </div>
+        <div class="diagram-task">
+          <div class="task-icon">🔬</div>
+          <h4>Task B — Mineral Function Flow</h4>
+          <p>Create a <strong>concept map</strong> with "Mineral Ions" at the centre. Branch out to NO₃⁻, Ca²⁺, and Mg²⁺. For each, draw a box for its function and a separate box (in red) for its deficiency symptom. Draw an arrow labelled "leads to" connecting them.</p>
+        </div>
+        <div class="diagram-task">
+          <div class="task-icon">📊</div>
+          <h4>Task C — The 5-Plant Experiment</h4>
+          <p>Re-draw Figure A from the textbook (the 5 beakers). Label each solution and the condition of the plant. Then add an explanation sentence beneath each: <em>"This plant lacks __ which is needed for __ and therefore…"</em></p>
+        </div>
+        <div class="diagram-task">
+          <div class="task-icon">🍃</div>
+          <h4>Task D — Deficiency Leaf Diagrams</h4>
+          <p>Draw two leaf outlines. On one, shade the yellowing pattern for <strong>nitrate deficiency</strong> (whole leaf yellowing). On the other, shade the yellowing pattern for <strong>magnesium deficiency</strong> (interveinal — between the veins). Label and explain the difference.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="background:var(--green-deep); color:white;">
+      <div class="card-title" style="color:var(--gold-light);">
+        <div class="icon" style="background:rgba(255,255,255,0.1);">🌍</div>
+        Extension: Phytoremediation — Real-World Application
+      </div>
+      <p style="font-size:13.5px; line-height:1.65; color:rgba(255,255,255,0.85);">
+        Some plants hyperaccumulate metal ions — they absorb far more than usual. <em>Alyssum</em> species can absorb toxic heavy metals (thallium, lead) from contaminated soil in a process called <strong>phytoremediation</strong>. In California, <em>Streptanthus polygaloides</em> absorbs nickel from soil, making up to 1% of its dry mass. The plants are harvested and smelted, extracting the metal commercially.
+      </p>
+      <p style="font-size:13px; color:rgba(255,255,255,0.6); margin-top:12px;">
+        ❓ <em>Consider:</em> How does the active transport mechanism that plants use to absorb minerals from the soil make phytoremediation possible? What would you expect to happen to these plants if you grew them in a mineral-free solution?
+      </p>
+    </div>
+  </div>
+
+  <!-- ═══════════ PHASE 5: PROGRESS CHECKS ═══════════ -->
+  <div id="phase-progress" class="phase-panel">
+    <div class="phase-heading">
+      <h2>Tiered Progress Checks</h2>
+      <span class="phase-label">Scaffolded · Foundation → Core → Challenge + Struggle</span>
+    </div>
+
+    <div class="tier-tabs">
+      <button class="tier-tab active-foundation" onclick="showTier('foundation')">🟢 Foundation</button>
+      <button class="tier-tab" onclick="showTier('core')">🔵 Core</button>
+      <button class="tier-tab" onclick="showTier('challenge')">🟡 Challenge</button>
+    </div>
+
+    <!-- FOUNDATION -->
+    <div id="tier-foundation" class="tier-panel active">
+      <div class="progress-q">
+        <div class="q-header">
+          <span class="q-label foundation-label">Foundation</span>
+          <span class="marks-label">[1 mark]</span>
+        </div>
+        <div class="question-text">State <strong>one</strong> reason why plants need water.</div>
+        <textarea class="answer-area" placeholder="Your answer…" rows="2"></textarea>
+        <button class="mark-scheme-btn" onclick="toggleMS(this)">📋 Show mark scheme</button>
+        <div class="mark-scheme">
+          <strong>Accept any one of:</strong>
+          <ul>
+            <li>For photosynthesis / as a raw material for photosynthesis</li>
+            <li>For support / to maintain turgor pressure in cells</li>
+            <li>As a transport medium / to carry mineral ions in the xylem</li>
+            <li>For cooling / evaporation of water cools the plant</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="progress-q">
+        <div class="q-header">
+          <span class="q-label foundation-label">Foundation</span>
+          <span class="marks-label">[3 marks]</span>
+        </div>
+        <div class="question-text">Complete the table below by writing the correct mineral ion and deficiency symptom.<br><br>
+          <em>[Imagine a table: Row 1: Nitrate — function = make amino acids → deficiency = __; Row 2: __ ion — function = make chlorophyll → deficiency = yellow older leaves; Row 3: Calcium — function = __ → deficiency = growing points die back]</em>
+        </div>
+        <textarea class="answer-area" placeholder="Nitrate deficiency = …  |  Missing ion = …  |  Calcium function = …" rows="3"></textarea>
+        <button class="mark-scheme-btn" onclick="toggleMS(this)">📋 Show mark scheme</button>
+        <div class="mark-scheme">
+          <ul>
+            <li>Nitrate deficiency → older leaves yellow and die / stunted growth (1)</li>
+            <li>Missing ion = Magnesium (Mg²⁺) (1)</li>
+            <li>Calcium function = forms calcium pectate in middle lamella / holds cells together (1)</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- CORE -->
+    <div id="tier-core" class="tier-panel">
+      <div class="progress-q">
+        <div class="q-header">
+          <span class="q-label core-label">Core</span>
+          <span class="marks-label">[4 marks]</span>
+        </div>
+        <div class="question-text">Describe <strong>three</strong> ways in which water is important to a plant. For each one, explain the consequence if that water function fails.</div>
+        <textarea class="answer-area" placeholder="Your answer…" rows="5"></textarea>
+        <button class="mark-scheme-btn" onclick="toggleMS(this)">📋 Show mark scheme</button>
+        <div class="mark-scheme">
+          <strong>Mark as 1 mark per described role, up to 3 roles, plus 1 mark for a well-developed consequence:</strong>
+          <ul>
+            <li>Photosynthesis — without water, no glucose produced, growth stops (1)</li>
+            <li>Turgor support — without water, vacuoles lose pressure, plant wilts (1)</li>
+            <li>Transport — mineral ions cannot reach cells, enzyme function impaired (1)</li>
+            <li>Cooling — plant overheats, enzymes denature, metabolic reactions fail (1)</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="progress-q">
+        <div class="q-header">
+          <span class="q-label core-label">Core</span>
+          <span class="marks-label">[3 marks]</span>
+        </div>
+        <div class="question-text">Explain why a plant deficient in nitrate ions would show <em>yellowing of older leaves</em> rather than younger leaves first.</div>
+        <textarea class="answer-area" placeholder="Your answer…" rows="4"></textarea>
+        <button class="mark-scheme-btn" onclick="toggleMS(this)">📋 Show mark scheme</button>
+        <div class="mark-scheme">
+          <ul>
+            <li>Nitrate is needed to make amino acids and therefore proteins/chlorophyll (1)</li>
+            <li>Nitrate is remobilised by the plant — moved from older leaves to newer growing tissue (1)</li>
+            <li>Therefore older leaves are depleted of nitrate first, lose chlorophyll, and turn yellow (1)</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- CHALLENGE -->
+    <div id="tier-challenge" class="tier-panel">
+      <div class="progress-q">
+        <div class="q-header">
+          <span class="q-label challenge-label">Challenge</span>
+          <span class="marks-label">[5 marks]</span>
+        </div>
+        <div class="question-text">A student set up five beakers, each containing a plant grown in a different nutrient solution: distilled water, −NO₃⁻, −Mg²⁺, −Ca²⁺, and full nutrients. After four weeks, the plant in distilled water showed almost no growth, while the plant in full nutrients was healthy.<br><br>
+          <strong>(a)</strong> Predict and explain the appearance of the plant grown in −Mg²⁺ solution. [3]<br>
+          <strong>(b)</strong> Suggest why the distilled-water plant showed <em>some</em> growth initially but then stopped. [2]
+        </div>
+        <textarea class="answer-area" placeholder="Your answer…" rows="6"></textarea>
+        <button class="mark-scheme-btn" onclick="toggleMS(this)">📋 Show mark scheme</button>
+        <div class="mark-scheme">
+          <strong>(a)</strong>
+          <ul>
+            <li>Leaves would show yellowing / interveinal chlorosis — particularly on older leaves (1)</li>
+            <li>Because Mg²⁺ is needed to make chlorophyll (1)</li>
+            <li>Without chlorophyll, the plant cannot photosynthesise effectively, so growth slows (1)</li>
+          </ul>
+          <strong>(b)</strong>
+          <ul>
+            <li>The seed contained stored minerals / food reserves (e.g. starch, proteins) which could be used initially (1)</li>
+            <li>Once seed reserves were exhausted and no minerals available from solution, the plant could no longer synthesise essential molecules and growth stopped (1)</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="progress-q">
+        <div class="q-header">
+          <span class="q-label challenge-label">Challenge — Evaluate</span>
+          <span class="marks-label">[4 marks]</span>
+        </div>
+        <div class="question-text">Calcium deficiency symptoms appear in <em>young</em> leaves and growing points, while both nitrate and magnesium deficiencies appear in <em>older</em> leaves first. Using your knowledge of plant physiology, evaluate the reason for this difference. <span class="interleaved-badge">↔ Interleaved: Transport</span></div>
+        <textarea class="answer-area" placeholder="Your answer…" rows="5"></textarea>
+        <button class="mark-scheme-btn" onclick="toggleMS(this)">📋 Show mark scheme</button>
+        <div class="mark-scheme">
+          <ul>
+            <li>Nitrate and magnesium are mobile in the phloem — the plant can remobilise them from older leaves to younger, actively growing tissues (1)</li>
+            <li>Calcium is immobile — once deposited in cell walls as calcium pectate, it cannot be remobilised and moved via the phloem (1)</li>
+            <li>Therefore calcium deficiency always affects new growth / growing points, which rely on incoming Ca²⁺ from the xylem (1)</li>
+            <li>Whereas nitrate and magnesium deficiency depletes older leaves first, as supply is redirected to new growth (1)</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- STRUGGLE QUESTION -->
+    <div class="struggle-box">
+      <div class="struggle-badge">🔥 STRUGGLE QUESTION</div>
+      <h4>The Phytoremediation Problem</h4>
+      <p>A scientist wants to use <em>Alyssum</em> plants to clean up a field contaminated with lead (Pb²⁺) ions. She hypothesises that the plants will absorb the lead via the same active transport mechanism used for mineral ion uptake in roots.<br><br>
+      <strong>Design a controlled investigation</strong> to test whether lead concentration in the soil affects the rate at which <em>Alyssum</em> plants absorb lead. In your answer, identify the independent variable, dependent variable, three controlled variables, and explain how you would measure the dependent variable.</p>
+      <textarea class="struggle-area" placeholder="Your experimental design…" rows="5"></textarea>
+    </div>
+  </div>
+
+  <!-- ═══════════ PHASE 6: CHECKPOINT ═══════════ -->
+  <div id="phase-checkpoint" class="phase-panel">
+    <div class="phase-heading">
+      <h2>Lesson Checkpoint</h2>
+      <span class="phase-label">Textbook Spec 4.8 · Self-Assessment</span>
+    </div>
+
+    <div style="margin-bottom: 20px;">
+      <div class="checkpoint-header">
+        <span>📌</span>
+        <h3>Can you now answer these? — The Spec's Three Questions</h3>
+      </div>
+      <div class="checkpoint-body">
+        <div class="checkpoint-q">
+          <div class="q-num-badge">1</div>
+          <div class="q-content">
+            <div class="q-text">Describe <strong>three</strong> ways in which water is important to a plant.</div>
+            <div class="q-hint">Photosynthesis · Turgor support · Transport · Cooling — pick any three with explanation.</div>
+          </div>
+        </div>
+        <div class="checkpoint-q">
+          <div class="q-num-badge">2</div>
+          <div class="q-content">
+            <div class="q-text">Why are minerals important in a plant?</div>
+            <div class="q-hint">Plants synthesise carbohydrates but cannot make proteins, DNA or chlorophyll without mineral ions from soil. Link each ion to its specific function.</div>
+          </div>
+        </div>
+        <div class="checkpoint-q">
+          <div class="q-num-badge">3</div>
+          <div class="q-content">
+            <div class="q-text">What would you need to consider when investigating mineral uptake by plants in the lab?</div>
+            <div class="q-hint">Control variables: light intensity, temperature, volume/concentration of solution, plant species, age. Dependent variable: plant growth / dry mass / mineral concentration in tissue.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><div class="icon">🎯</div> Learning Objective — Self-Assessment</div>
+      <p style="font-size:13.5px; line-height:1.6; margin-bottom:16px;">Rate your confidence against today's learning objective:</p>
+      <div style="background:var(--green-pale); border-radius:8px; padding:14px 18px; font-size:13.5px; font-weight:500; color:var(--green-deep); margin-bottom:16px;">
+        "Understand the importance of water and inorganic ions (nitrate, calcium and magnesium) to plants."
+      </div>
+      <div style="display:flex; gap:10px; flex-wrap:wrap;">
+        <button onclick="setConfidence(this,'red')" style="flex:1; min-width:140px; padding:10px; border-radius:8px; border:2px solid #fca5a5; background:#fef2f2; color:#b91c1c; font-family:'DM Sans',sans-serif; cursor:pointer; font-weight:500; font-size:13px;">🔴 Not yet — need to revisit</button>
+        <button onclick="setConfidence(this,'amber')" style="flex:1; min-width:140px; padding:10px; border-radius:8px; border:2px solid #fcd34d; background:#fffbeb; color:#92400e; font-family:'DM Sans',sans-serif; cursor:pointer; font-weight:500; font-size:13px;">🟡 Getting there — need more practice</button>
+        <button onclick="setConfidence(this,'green')" style="flex:1; min-width:140px; padding:10px; border-radius:8px; border:2px solid var(--green-bright); background:#f0fdf4; color:var(--green-deep); font-family:'DM Sans',sans-serif; cursor:pointer; font-weight:500; font-size:13px;">🟢 Confident — I can explain this</button>
+      </div>
+      <div id="confidence-msg" style="display:none; margin-top:14px; font-size:13px; padding:12px 16px; border-radius:6px;"></div>
+    </div>
+
+    <div class="card" style="border-color:var(--gold);">
+      <div class="card-title"><div class="icon" style="background:#fef9c3;">🔗</div> Links to Other Spec Topics</div>
+      <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:12px; font-size:13px;">
+        <div style="background:#f9fafb; border-radius:8px; padding:12px;">
+          <div style="font-family:'DM Mono',monospace; font-size:10px; color:var(--green-bright); margin-bottom:4px;">BOOK 2 CH.5A</div>
+          <strong>Photosynthesis</strong> — water as raw material; light reactions
+        </div>
+        <div style="background:#f9fafb; border-radius:8px; padding:12px;">
+          <div style="font-family:'DM Mono',monospace; font-size:10px; color:var(--green-bright); margin-bottom:4px;">TRANSPORT</div>
+          <strong>Xylem &amp; Phloem</strong> — how water and minerals are moved; transpiration stream
+        </div>
+        <div style="background:#f9fafb; border-radius:8px; padding:12px;">
+          <div style="font-family:'DM Mono',monospace; font-size:10px; color:var(--green-bright); margin-bottom:4px;">CELL BIOLOGY</div>
+          <strong>Active Transport</strong> — how mineral ions enter root hair cells against gradient
+        </div>
+        <div style="background:#f9fafb; border-radius:8px; padding:12px;">
+          <div style="font-family:'DM Mono',monospace; font-size:10px; color:var(--green-bright); margin-bottom:4px;">GENETICS</div>
+          <strong>DNA Structure</strong> — nitrogen in bases; why nitrate is essential for nucleic acid synthesis
+        </div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<script>
+  function showPhase(id) {
+    document.querySelectorAll('.phase-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.phase-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('phase-' + id).classList.add('active');
+    event.currentTarget.classList.add('active');
+  }
+
+  function showTier(tier) {
+    document.querySelectorAll('.tier-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tier-tab').forEach(t => {
+      t.classList.remove('active-foundation','active-core','active-challenge');
+    });
+    document.getElementById('tier-' + tier).classList.add('active');
+    event.currentTarget.classList.add('active-' + tier);
+  }
+
+  function toggleMS(btn) {
+    const ms = btn.nextElementSibling;
+    ms.classList.toggle('visible');
+    btn.textContent = ms.classList.contains('visible') ? '🔼 Hide mark scheme' : '📋 Show mark scheme';
+  }
+
+  function setConfidence(btn, level) {
+    document.querySelectorAll('[onclick^="setConfidence"]').forEach(b => b.style.opacity = '0.5');
+    btn.style.opacity = '1';
+    btn.style.fontWeight = '700';
+    const msg = document.getElementById('confidence-msg');
+    const messages = {
+      red: { text: "No problem — this is a knowledge-heavy topic. Go back to the Core Content tab and use the summary table to re-read the function and deficiency for each mineral. Try writing them out from memory.", bg:'#fef2f2', color:'#b91c1c' },
+      amber: { text: "Good work getting this far. Focus on the Challenge tier questions and practice the 'function → deficiency → reason' chain for all three minerals. Can you explain why symptoms appear in old vs new leaves?", bg:'#fffbeb', color:'#92400e' },
+      green: { text: "Excellent! You've met today's learning objective. Challenge yourself with the Struggle Question and make sure you can link this topic to Photosynthesis, Xylem/Phloem Transport, and Active Transport.", bg:'#f0fdf4', color:'#14532d' }
+    };
+    msg.style.display = 'block';
+    msg.style.background = messages[level].bg;
+    msg.style.color = messages[level].color;
+    msg.textContent = messages[level].text;
+  }
+</script>
+</body>
+</html>
