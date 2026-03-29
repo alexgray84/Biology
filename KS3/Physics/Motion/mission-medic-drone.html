@@ -1,0 +1,1646 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mission: Medic-Drone — Y9 Physics</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:        #070b14;
+    --bg2:       #0d1422;
+    --bg3:       #111827;
+    --panel:     #0f1d30;
+    --border:    rgba(0,180,255,0.15);
+    --border2:   rgba(0,180,255,0.08);
+    --teal:      #00d4aa;
+    --amber:     #f5a623;
+    --red:       #ff5a5a;
+    --blue:      #3b9eff;
+    --text:      #e2eaf5;
+    --muted:     #6b7fa3;
+    --dim:       #2d3f5a;
+    --font-head: 'Bebas Neue', sans-serif;
+    --font-body: 'DM Sans', sans-serif;
+    --font-mono: 'DM Mono', monospace;
+  }
+
+  html, body {
+    height: 100%;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.6;
+    overflow: hidden;
+  }
+
+  /* ── SCAN-LINE OVERLAY ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0,0,0,0.08) 2px,
+      rgba(0,0,0,0.08) 4px
+    );
+    pointer-events: none;
+    z-index: 9999;
+  }
+
+  /* ── CORNER DECORATION ── */
+  .corner { position: fixed; width: 32px; height: 32px; z-index: 200; }
+  .corner--tl { top: 16px; left: 16px; border-top: 2px solid var(--teal); border-left: 2px solid var(--teal); }
+  .corner--tr { top: 16px; right: 16px; border-top: 2px solid var(--teal); border-right: 2px solid var(--teal); }
+  .corner--bl { bottom: 16px; left: 16px; border-bottom: 2px solid var(--teal); border-left: 2px solid var(--teal); }
+  .corner--br { bottom: 16px; right: 16px; border-bottom: 2px solid var(--teal); border-right: 2px solid var(--teal); }
+
+  /* ── TOP HUD BAR ── */
+  .hud-bar {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: 52px;
+    background: rgba(7,11,20,0.95);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    padding: 0 56px;
+    justify-content: space-between;
+    z-index: 100;
+    backdrop-filter: blur(8px);
+  }
+  .hud-mission {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--teal);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+  .hud-mission span { color: var(--muted); margin: 0 8px; }
+  .hud-progress {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .hud-pip {
+    width: 28px;
+    height: 4px;
+    background: var(--dim);
+    border-radius: 2px;
+    transition: background 0.3s;
+    cursor: pointer;
+  }
+  .hud-pip.active { background: var(--teal); }
+  .hud-pip.done { background: rgba(0,212,170,0.35); }
+  .hud-slide-label {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+    min-width: 60px;
+    text-align: right;
+  }
+
+  /* ── SLIDE CONTAINER ── */
+  #slides {
+    position: fixed;
+    inset: 0;
+    padding-top: 52px;
+    padding-bottom: 64px;
+  }
+
+  .slide {
+    position: absolute;
+    inset: 52px 0 64px 0;
+    padding: 40px 60px;
+    overflow-y: auto;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateX(40px);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+  }
+  .slide.active {
+    opacity: 1;
+    pointer-events: all;
+    transform: translateX(0);
+  }
+  .slide.exit {
+    opacity: 0;
+    transform: translateX(-40px);
+    pointer-events: none;
+  }
+
+  /* ── BOTTOM NAV ── */
+  .nav-bar {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    height: 64px;
+    background: rgba(7,11,20,0.95);
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    z-index: 100;
+    backdrop-filter: blur(8px);
+  }
+  .nav-btn {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    padding: 8px 24px;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: all 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+  .nav-btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--teal);
+    transform: translateX(-100%);
+    transition: transform 0.2s;
+    z-index: -1;
+  }
+  .nav-btn:hover::before { transform: translateX(0); }
+  .nav-btn:hover { color: var(--bg); border-color: var(--teal); }
+  .nav-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+  .nav-btn:disabled::before { display: none; }
+  .nav-btn.primary {
+    border-color: var(--teal);
+    color: var(--teal);
+  }
+  .nav-phase-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    min-width: 180px;
+    text-align: center;
+  }
+
+  /* ── TYPOGRAPHY ── */
+  .slide-eyebrow {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--teal);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .slide-title {
+    font-family: var(--font-head);
+    font-size: clamp(36px, 5vw, 64px);
+    line-height: 1;
+    letter-spacing: 0.03em;
+    color: var(--text);
+    margin-bottom: 6px;
+  }
+  .slide-subtitle {
+    font-size: 15px;
+    color: var(--muted);
+    margin-bottom: 32px;
+    font-weight: 300;
+  }
+
+  /* ── MISSION BRIEF BOX ── */
+  .brief-box {
+    background: linear-gradient(135deg, rgba(0,212,170,0.06), rgba(0,180,255,0.04));
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--teal);
+    padding: 20px 24px;
+    margin-bottom: 28px;
+    position: relative;
+  }
+  .brief-box::before {
+    content: 'MISSION BRIEF';
+    position: absolute;
+    top: -9px; left: 16px;
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    color: var(--teal);
+    background: var(--bg);
+    padding: 0 6px;
+  }
+  .brief-box p { font-size: 14px; line-height: 1.7; }
+
+  /* ── WARNING BOX ── */
+  .warn-box {
+    background: rgba(255,90,90,0.06);
+    border: 1px solid rgba(255,90,90,0.25);
+    border-left: 3px solid var(--red);
+    padding: 16px 20px;
+    margin-bottom: 20px;
+    font-size: 14px;
+  }
+  .warn-box strong { color: var(--red); }
+
+  /* ── STRETCH BOX ── */
+  .stretch-box {
+    background: rgba(245,166,35,0.06);
+    border: 1px solid rgba(245,166,35,0.25);
+    border-left: 3px solid var(--amber);
+    padding: 16px 20px;
+    margin-top: 20px;
+    font-size: 14px;
+  }
+  .stretch-box::before {
+    display: block;
+    content: '⚡ STRETCH CHALLENGE';
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    color: var(--amber);
+    margin-bottom: 8px;
+  }
+
+  /* ── SUPPORT BOX ── */
+  .support-box {
+    background: rgba(59,158,255,0.05);
+    border: 1px solid rgba(59,158,255,0.2);
+    border-left: 3px solid var(--blue);
+    padding: 14px 18px;
+    margin-top: 16px;
+    font-size: 13px;
+  }
+  .support-box::before {
+    display: block;
+    content: '🔵 SUPPORT SCAFFOLD';
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    color: var(--blue);
+    margin-bottom: 6px;
+  }
+
+  /* ── GRID LAYOUTS ── */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 24px; }
+  .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-bottom: 24px; }
+  @media (max-width: 760px) {
+    .two-col, .three-col { grid-template-columns: 1fr; }
+    .slide { padding: 24px 24px; }
+    .hud-bar { padding: 0 24px; }
+  }
+
+  /* ── PANELS ── */
+  .panel {
+    background: var(--panel);
+    border: 1px solid var(--border2);
+    padding: 20px;
+  }
+  .panel-label {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border2);
+  }
+
+  /* ── FORMULA DISPLAY ── */
+  .formula-big {
+    font-family: var(--font-head);
+    font-size: 38px;
+    letter-spacing: 0.05em;
+    color: var(--teal);
+    text-align: center;
+    padding: 20px;
+    background: rgba(0,212,170,0.05);
+    border: 1px solid rgba(0,212,170,0.2);
+    margin: 16px 0;
+  }
+
+  /* ── FORMULA TRIANGLE ── */
+  .triangle-wrap { text-align: center; margin: 16px 0; }
+  .triangle-svg { max-width: 220px; }
+
+  /* ── TABLE ── */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0;
+    font-size: 13px;
+  }
+  th {
+    background: rgba(0,212,170,0.1);
+    color: var(--teal);
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 10px 14px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+  }
+  td {
+    padding: 9px 14px;
+    border-bottom: 1px solid var(--border2);
+    vertical-align: middle;
+  }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: rgba(255,255,255,0.02); }
+
+  /* ── STEP LIST ── */
+  .steps { list-style: none; margin: 16px 0; }
+  .steps li {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    margin-bottom: 12px;
+    font-size: 14px;
+  }
+  .step-num {
+    flex-shrink: 0;
+    width: 26px; height: 26px;
+    background: rgba(0,212,170,0.1);
+    border: 1px solid rgba(0,212,170,0.3);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--teal);
+    margin-top: 1px;
+  }
+
+  /* ── UNSCRAMBLE INPUTS ── */
+  .unscramble-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 12px;
+    margin: 20px 0;
+  }
+  .unscramble-item {
+    background: var(--panel);
+    border: 1px solid var(--border2);
+    padding: 14px 16px;
+  }
+  .scrambled {
+    font-family: var(--font-mono);
+    font-size: 18px;
+    color: var(--amber);
+    letter-spacing: 0.15em;
+    display: block;
+    margin-bottom: 8px;
+  }
+  .unscramble-item input {
+    width: 100%;
+    background: rgba(0,0,0,0.3);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: var(--font-mono);
+    font-size: 13px;
+    padding: 7px 10px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .unscramble-item input:focus { border-color: var(--teal); }
+  .unscramble-item input.correct { border-color: var(--teal); background: rgba(0,212,170,0.07); color: var(--teal); }
+  .unscramble-item input.wrong { border-color: var(--red); background: rgba(255,90,90,0.06); }
+  .hint-letter {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--muted);
+    margin-top: 4px;
+  }
+  .check-btn {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--teal);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    padding: 10px 28px;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: all 0.2s;
+    margin-top: 12px;
+  }
+  .check-btn:hover { background: rgba(0,212,170,0.1); border-color: var(--teal); }
+  .check-result {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    margin-top: 10px;
+    min-height: 20px;
+  }
+
+  /* ── SORT TABLE (Scalar/Vector) ── */
+  .sort-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin: 20px 0;
+  }
+  .sort-column {
+    background: var(--panel);
+    border: 1px solid var(--border2);
+    min-height: 140px;
+    padding: 14px;
+  }
+  .sort-column-title {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+    border-bottom: 1px solid var(--border2);
+  }
+  .sort-column-title.scalar { color: var(--blue); }
+  .sort-column-title.vector { color: var(--amber); }
+  .sort-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 16px 0;
+  }
+  .chip {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--border);
+    padding: 6px 14px;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s;
+    user-select: none;
+  }
+  .chip:hover { background: rgba(0,180,255,0.1); border-color: var(--blue); }
+  .chip.placed-scalar { background: rgba(59,158,255,0.12); border-color: var(--blue); color: var(--blue); cursor: default; }
+  .chip.placed-vector { background: rgba(245,166,35,0.12); border-color: var(--amber); color: var(--amber); cursor: default; }
+  .reveal-btn {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    padding: 8px 18px;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: all 0.2s;
+  }
+  .reveal-btn:hover { border-color: var(--muted); color: var(--text); }
+
+  /* ── CALCULATION STEPS ── */
+  .calc-block {
+    background: var(--panel);
+    border: 1px solid var(--border2);
+    padding: 18px 22px;
+    margin: 12px 0;
+  }
+  .calc-block .calc-q {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--amber);
+    margin-bottom: 8px;
+  }
+  .calc-block .calc-space {
+    min-height: 36px;
+    border-bottom: 1px dashed var(--border);
+    margin-bottom: 4px;
+  }
+
+  /* ── GRAPH EMBED ── */
+  .graph-wrap {
+    width: 100%;
+    max-width: 680px;
+    margin: 16px auto;
+  }
+  .graph-wrap svg {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  /* ── ANSWER REVEAL ── */
+  .answer-block {
+    background: rgba(0,212,170,0.04);
+    border: 1px solid rgba(0,212,170,0.15);
+    padding: 16px 20px;
+    margin-top: 12px;
+    display: none;
+  }
+  .answer-block.shown { display: block; }
+  .answer-block .ans-label {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    color: var(--teal);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  .answer-block p, .answer-block li { font-size: 13px; margin-bottom: 6px; }
+  .answer-block strong { color: var(--teal); }
+  .answer-block ul { padding-left: 18px; }
+
+  /* ── OBJECTIVES LIST ── */
+  .obj-list { list-style: none; margin: 12px 0; }
+  .obj-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border2);
+    font-size: 14px;
+  }
+  .obj-list li:last-child { border-bottom: none; }
+  .obj-icon { color: var(--teal); flex-shrink: 0; margin-top: 2px; }
+
+  /* ── TITLE SLIDE HERO ── */
+  .hero-wrap {
+    min-height: calc(100vh - 52px - 64px);
+    display: flex;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-bg-grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,212,170,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,212,170,0.04) 1px, transparent 1px);
+    background-size: 48px 48px;
+    mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 40%, transparent 100%);
+  }
+  .hero-glow {
+    position: absolute;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(0,212,170,0.07) 0%, transparent 70%);
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+  }
+  .hero-content { position: relative; z-index: 2; max-width: 760px; }
+  .hero-kicker {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--teal);
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .hero-kicker::before {
+    content: '';
+    display: block;
+    width: 40px; height: 1px;
+    background: var(--teal);
+  }
+  .hero-title {
+    font-family: var(--font-head);
+    font-size: clamp(56px, 9vw, 110px);
+    line-height: 0.9;
+    letter-spacing: 0.02em;
+    color: var(--text);
+    margin-bottom: 4px;
+  }
+  .hero-title em {
+    color: var(--teal);
+    font-style: normal;
+  }
+  .hero-subtitle {
+    font-size: 15px;
+    color: var(--muted);
+    margin: 20px 0 32px;
+    max-width: 560px;
+    font-weight: 300;
+    line-height: 1.7;
+  }
+  .hero-meta {
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+  .hero-tag {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 5px 12px;
+    border: 1px solid var(--border);
+  }
+
+  /* ── DEBRIEF CARDS ── */
+  .debrief-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 14px;
+    margin: 20px 0;
+  }
+  .debrief-card {
+    background: var(--panel);
+    border: 1px solid var(--border2);
+    padding: 18px;
+    position: relative;
+    overflow: hidden;
+  }
+  .debrief-card::before {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--teal);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s;
+  }
+  .debrief-card:hover::before { transform: scaleX(1); }
+  .debrief-card .dc-icon { font-size: 22px; margin-bottom: 10px; }
+  .debrief-card .dc-title {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--teal);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .debrief-card .dc-body { font-size: 13px; color: var(--muted); line-height: 1.5; }
+
+  /* ── ANSWER SLIDES ── */
+  .ans-section { margin-bottom: 28px; }
+  .ans-section-title {
+    font-family: var(--font-head);
+    font-size: 28px;
+    color: var(--teal);
+    letter-spacing: 0.05em;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+  }
+  .ans-row {
+    display: flex;
+    gap: 12px;
+    align-items: baseline;
+    margin-bottom: 8px;
+    font-size: 14px;
+  }
+  .ans-q { color: var(--muted); min-width: 220px; flex-shrink: 0; }
+  .ans-a { color: var(--teal); font-family: var(--font-mono); font-size: 13px; }
+  .ans-note { color: var(--text); font-size: 13px; }
+
+  /* ── SCROLLBAR ── */
+  .slide::-webkit-scrollbar { width: 4px; }
+  .slide::-webkit-scrollbar-track { background: transparent; }
+  .slide::-webkit-scrollbar-thumb { background: var(--dim); border-radius: 2px; }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .slide.active > * {
+    animation: fadeUp 0.4s ease both;
+  }
+  .slide.active > *:nth-child(1) { animation-delay: 0.05s; }
+  .slide.active > *:nth-child(2) { animation-delay: 0.10s; }
+  .slide.active > *:nth-child(3) { animation-delay: 0.15s; }
+  .slide.active > *:nth-child(4) { animation-delay: 0.20s; }
+  .slide.active > *:nth-child(5) { animation-delay: 0.25s; }
+
+  /* status dot */
+  .status-dot {
+    display: inline-block;
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--teal);
+    margin-right: 6px;
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+  code {
+    font-family: var(--font-mono);
+    font-size: 0.9em;
+    background: rgba(0,212,170,0.08);
+    color: var(--teal);
+    padding: 1px 6px;
+    border-radius: 2px;
+  }
+  p + p { margin-top: 10px; }
+  ul, ol { padding-left: 20px; }
+  li { margin-bottom: 6px; font-size: 14px; }
+  strong { font-weight: 600; }
+</style>
+</head>
+<body>
+
+<!-- Corner decorations -->
+<div class="corner corner--tl"></div>
+<div class="corner corner--tr"></div>
+<div class="corner corner--bl"></div>
+<div class="corner corner--br"></div>
+
+<!-- HUD bar -->
+<div class="hud-bar">
+  <div class="hud-mission">
+    <span class="status-dot"></span>
+    Mission: Medic-Drone
+    <span>|</span>
+    KS3 Physics — Motion
+    <span>|</span>
+    Y9 Distance Learning
+  </div>
+  <div style="display:flex;align-items:center;gap:10px;">
+    <div class="hud-progress" id="pips"></div>
+    <div class="hud-slide-label" id="slideLabel">01 / 10</div>
+  </div>
+</div>
+
+<!-- SLIDES -->
+<div id="slides">
+
+  <!-- ═══════════════════════════════════════
+       SLIDE 1 — TITLE
+  ════════════════════════════════════════ -->
+  <div class="slide active" id="slide-0">
+    <div class="hero-wrap">
+      <div class="hero-bg-grid"></div>
+      <div class="hero-glow"></div>
+      <div class="hero-content">
+        <div class="hero-kicker">KS3 Physics · Motion</div>
+        <div class="hero-title">MISSION:<br><em>MEDIC-DRONE</em></div>
+        <p class="hero-subtitle">A severe storm has cut off a remote island medical clinic. You are the Flight Controller. You must program a delivery drone to transport life-saving medicine. If your calculations are wrong — the drone crashes.</p>
+        <div class="hero-meta">
+          <span class="hero-tag">Y9 · Mixed Ability</span>
+          <span class="hero-tag">Distance Learning</span>
+          <span class="hero-tag">50 Minutes</span>
+          <span class="hero-tag">4 Phases</span>
+        </div>
+        <div style="margin-top:32px;">
+          <div class="slide-eyebrow" style="margin-bottom:12px;">Mission Objectives</div>
+          <ul class="obj-list">
+            <li><span class="obj-icon">◈</span> Recall the difference between scalar and vector quantities</li>
+            <li><span class="obj-icon">◈</span> Calculate speed, distance and time using <code>v = s ÷ t</code></li>
+            <li><span class="obj-icon">◈</span> Interpret Distance-Time graphs to describe a journey</li>
+            <li><span class="obj-icon">◈</span> Interpret Velocity-Time graphs and calculate acceleration</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════
+       SLIDE 2 — DO NOW / PRE-FLIGHT CHECK
+  ════════════════════════════════════════ -->
+  <div class="slide" id="slide-1">
+    <div class="slide-eyebrow">Pre-Flight Check</div>
+    <h1 class="slide-title">UNLOCK THE DRONE OS</h1>
+    <p class="slide-subtitle">The drone's operating system is encrypted. Unscramble these navigation terms to gain access.</p>
+
+    <div class="warn-box">
+      <strong>SYSTEM LOCKED</strong> — Six key terms must be identified before the drone can be programmed. Write your answers before checking.
+    </div>
+
+    <div class="unscramble-grid" id="unscrambleGrid">
+      <div class="unscramble-item">
+        <span class="scrambled">E E D P S</span>
+        <input type="text" placeholder="Type your answer..." data-answer="SPEED" id="us0">
+        <div class="hint-letter">First letter: S</div>
+      </div>
+      <div class="unscramble-item">
+        <span class="scrambled">I T Y O C L E V</span>
+        <input type="text" placeholder="Type your answer..." data-answer="VELOCITY" id="us1">
+        <div class="hint-letter">First letter: V</div>
+      </div>
+      <div class="unscramble-item">
+        <span class="scrambled">R A C E L A T I O N E C A</span>
+        <input type="text" placeholder="Type your answer..." data-answer="ACCELERATION" id="us2">
+        <div class="hint-letter">First letter: A</div>
+      </div>
+      <div class="unscramble-item">
+        <span class="scrambled">A R C L A S</span>
+        <input type="text" placeholder="Type your answer..." data-answer="SCALAR" id="us3">
+        <div class="hint-letter">First letter: S</div>
+      </div>
+      <div class="unscramble-item">
+        <span class="scrambled">R O T C E V</span>
+        <input type="text" placeholder="Type your answer..." data-answer="VECTOR" id="us4">
+        <div class="hint-letter">First letter: V</div>
+      </div>
+      <div class="unscramble-item">
+        <span class="scrambled">N A E E S D T I C</span>
+        <input type="text" placeholder="Type your answer..." data-answer="DISTANCE" id="us5">
+        <div class="hint-letter">First letter: D</div>
+      </div>
+    </div>
+
+    <button class="check-btn" onclick="checkUnscramble()">Check Answers</button>
+    <div class="check-result" id="unscrambleResult"></div>
+  </div>
+
+  <!-- ═══════════════════════════════════════
+       SLIDE 3 — PHASE 1: SCALAR vs VECTOR
+  ════════════════════════════════════════ -->
+  <div class="slide" id="slide-2">
+    <div class="slide-eyebrow">Phase 1 — The Flight Path</div>
+    <h1 class="slide-title">SCALAR vs VECTOR</h1>
+    <p class="slide-subtitle">The drone has two navigation modes. You need to understand the difference.</p>
+
+    <div class="two-col">
+      <div class="panel">
+        <div class="panel-label">Scalar</div>
+        <p style="font-size:14px;">Has <strong>magnitude (size) only</strong>. No direction needed.</p>
+        <p style="font-size:13px;color:var(--muted);margin-top:8px;">Examples: speed, distance, mass, temperature</p>
+      </div>
+      <div class="panel">
+        <div class="panel-label">Vector</div>
+        <p style="font-size:14px;">Has <strong>magnitude AND direction</strong>. Both are needed.</p>
+        <p style="font-size:13px;color:var(--muted);margin-top:8px;">Examples: velocity, displacement, force, acceleration</p>
+      </div>
+    </div>
+
+    <div class="brief-box">
+      <p>The drone's data feed is showing mixed sensor readings. <strong>Sort each reading into the correct column.</strong> Click a reading to assign it — first click = Scalar, second click = Vector, third click = unassign.</p>
+    </div>
+
+    <div class="sort-chips" id="sortChips">
+      <div class="chip" data-item="15 m/s" data-correct="scalar" onclick="cycleChip(this)">15 m/s</div>
+      <div class="chip" data-item="15 m/s North" data-correct="vector" onclick="cycleChip(this)">15 m/s North</div>
+      <div class="chip" data-item="500 m" data-correct="scalar" onclick="cycleChip(this)">500 m</div>
+      <div class="chip" data-item="500 m East" data-correct="vector" onclick="cycleChip(this)">500 m East</div>
+      <div class="chip" data-item="20°C battery temp" data-correct="scalar" onclick="cycleChip(this)">20°C (battery temp)</div>
+      <div class="chip" data-item="50 N wind force" data-correct="vector" onclick="cycleChip(this)">50 N (wind force)</div>
+    </div>
+
+    <div style="margin-top:4px;margin-bottom:16px;display:flex;gap:10px;font-family:var(--font-mono);font-size:10px;color:var(--muted);">
+      <span>Click once → <span style="color:var(--blue)">Scalar</span></span>
+      <span>Click again → <span style="color:var(--amber)">Vector</span></span>
+      <span>Click again → unassign</span>
+    </div>
+
+    <button class="reveal-btn" onclick="revealSort()">Check Answers</button>
+    <div id="sortResult" style="font-family:var(--font-mono);font-size:12px;margin-top:10px;min-height:20px;"></div>
+
+    <div class="stretch-box">
+      <p>The drone flies 500 m East, then 500 m North. Its total <em>distance</em> travelled is 1,000 m (scalar — just the path length). But its <em>displacement</em> — the straight-line distance back to the start — is different. Can you calculate it? (Hint: Pythagoras)</p>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════
+       SLIDE 4 — PHASE 2: SPEED FORMULA + TYPICAL SPEEDS
+  ════════════════════════════════════════ -->
+  <div class="slide" id="slide-3">
+    <div class="slide-eyebrow">Phase 2 — Cruising Speed</div>
+    <h1 class="slide-title">THE SPEED EQUATION</h1>
+    <p class="slide-subtitle">Before you can programme the drone, you need this relationship locked in.</p>
+
+    <div class="two-col">
+      <div>
+        <div class="formula-big">v = s ÷ t</div>
+        <p style="font-size:13px;color:var(--muted);text-align:center;margin-top:8px;">
+          v = speed (m/s) &nbsp;·&nbsp; s = distance (m) &nbsp;·&nbsp; t = time (s)
+        </p>
+
+        <div class="triangle-wrap">
+          <svg class="triangle-svg" viewBox="0 0 220 160" xmlns="http://www.w3.org/2000/svg">
+            <polygon points="110,16 206,150 14,150" fill="rgba(0,212,170,0.06)" stroke="rgba(0,212,170,0.4)" stroke-width="1.5"/>
+            <line x1="110" y1="16" x2="110" y2="150" stroke="rgba(0,212,170,0.25)" stroke-width="1" stroke-dasharray="4,4"/>
+            <text x="110" y="60" text-anchor="middle" fill="#e2eaf5" font-size="22" font-family="'Bebas Neue',sans-serif" letter-spacing="2">s</text>
+            <text x="62" y="148" text-anchor="middle" fill="#00d4aa" font-size="18" font-family="'Bebas Neue',sans-serif" letter-spacing="1">v</text>
+            <text x="158" y="148" text-anchor="middle" fill="#00d4aa" font-size="18" font-family="'Bebas Neue',sans-serif" letter-spacing="1">t</text>
+            <text x="110" y="175" text-anchor="middle" fill="#6b7fa3" font-size="9" font-family="'DM Mono',monospace" letter-spacing="1">cover what you want to find</text>
+          </svg>
+        </div>
+        <ul style="font-size:13px;color:var(--muted);margin-top:4px;">
+          <li>Cover <code>s</code> → speed × time</li>
+          <li>Cover <code>v</code> → distance ÷ time</li>
+          <li>Cover <code>t</code> → distance ÷ speed</li>
+        </ul>
+      </div>
+
+      <div>
+        <div class="panel-label" style="font-family:var(--font-mono);font-size:9px;letter-spacing:0.2em;color:var(--muted);text-transform:uppercase;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--border2);">Typical Speeds Reference</div>
+        <table>
+          <thead><tr><th>Object</th><th>m/s</th><th>km/h</th></tr></thead>
+          <tbody>
+            <tr><td>🚶 Walking</td><td>≈ 1.5</td><td>≈ 5</td></tr>
+            <tr><td>🏃 Running</td><td>≈ 3</td><td>≈ 11</td></tr>
+            <tr><td>🚲 Cycling</td><td>≈ 6</td><td>≈ 22</td></tr>
+            <tr><td>🚗 Car (urban)</td><td>≈ 13</td><td>≈ 50</td></tr>
+            <tr><td>🚗 Car (motorway)</td><td>≈ 30</td><td>≈ 110</td></tr>
+            <tr><td>✈️ Aeroplane</td><td>≈ 250</td><td>≈ 900</td></tr>
+            <tr><td>🔊 Speed of Sound</td><td>330</td><td>≈ 1,200</td></tr>
+          </tbody>
+        </table>
+        <p style="font-size:12px;color:var(--muted);margin-top:8px;">The drone's cruising speed is set to <strong style="color:var(--text)">13 m/s</strong> — equivalent to a car in a city.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════
+       SLIDE 5 — PHASE 2: THE CALCULATION
+  ════════════════════════════════════════ -->
+  <div class="slide" id="slide-4">
+    <div class="slide-eyebrow">Phase 2 — Cruising Speed</div>
+    <h1 class="slide-title">CAN THE DRONE MAKE IT?</h1>
+    <p class="slide-subtitle">Your calculations determine whether the medicine reaches the clinic.</p>
+
+    <div class="brief-box">
+      <p><strong>The situation:</strong> The clinic is <strong>4,500 m</strong> away. The drone's battery lasts <strong>6 minutes</strong>. The drone flies at <strong>13 m/s</strong>. Does it arrive before the battery dies?</p>
+    </div>
+
+    <div class="two-col">
+      <div>
+        <ul class="steps">
+          <li>
+            <span class="step-num">1</span>
+            <div>
+              <div style="font-size:14px;margin-bottom:4px;"><strong>Convert battery life to seconds</strong></div>
+              <div class="calc-block">
+                <div class="calc-q">6 minutes = ? seconds</div>
+                <div class="calc-space"></div>
+              </div>
+            </div>
+          </li>
+          <li>
+            <span class="step-num">2</span>
+            <div>
+              <div style="font-size:14px;margin-bottom:4px;"><strong>Calculate time needed at 13 m/s</strong></div>
+              <div class="calc-block">
+                <div class="calc-q">t = s ÷ v = 4,500 ÷ 13 = ?</div>
+                <div class="calc-space"></div>
+              </div>
+            </div>
+          </li>
+          <li>
+            <span class="step-num">3</span>
+            <div>
+              <div style="font-size:14px;margin-bottom:4px;"><strong>Mission decision</strong></div>
+              <p style="font-size:13px;color:var(--muted);">Compare your answer with the battery life in seconds. Does the drone make it? By how many seconds?</p>
+            </div>
+          </li>
+        </ul>
+        <button class="reveal-btn" onclick="toggleAnswer('ans-phase2')">Reveal Answers</button>
+        <div class="answer-block" id="ans-phase2">
+          <div class="ans-label">Worked Solution</div>
+          <p>Step 1: 6 × 60 = <strong>360 seconds</strong></p>
+          <p>Step 2: t = 4,500 ÷ 13 = <strong>346 seconds</strong> (2 d.p.)</p>
+          <p>Step 3: 346 s &lt; 360 s ✅ — The drone makes it, with <strong>14 seconds to spare.</strong></p>
+        </div>
+      </div>
+
+      <div>
+        <div class="stretch-box" style="margin-top:0;">
+          <p><strong>Headwind scenario:</strong> A 3 m/s headwind reduces the drone's effective speed.</p>
+          <ul style="margin-top:8px;">
+            <li>New speed = 13 − 3 = <strong>10 m/s</strong></li>
+            <li>Recalculate time needed: <code>t = 4,500 ÷ 10 = ?</code></li>
+            <li>Does it make it now?</li>
+            <li>If not — what <em>minimum speed</em> does the drone need?<br><code>v = s ÷ t = 4,500 ÷ 360 = ?</code></li>
+          </ul>
+          <button class="reveal-btn" style="margin-top:12px;" onclick="toggleAnswer('ans-stretch2')">Reveal Stretch Answers</button>
+          <div class="answer-block" id="ans-stretch2">
+            <div class="ans-label">Stretch Answers</div>
+            <p>t = 4,500 ÷ 10 = <strong>450 s</strong> — battery lasts 360 s ❌ Drone doesn't make it.</p>
+            <p>Minimum speed: v = 4,500 ÷ 360 = <strong>12.5 m/s</strong></p>
+          </div>
+        </div>
+
+        <div class="support-box">
+          Write down what you know first: s = 4,500 m, v = 13 m/s, t = ?<br>
+          Then pick the right rearrangement from the formula triangle.<br>
+          Remember: always include the unit in your answer.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════
+       SLIDE 6 — PHASE 3: D-T GRAPH READING
+  ════════════════════════════════════════ -->
+  <div class="slide" id="slide-5">
+    <div class="slide-eyebrow">Phase 3 — The Flight Log</div>
+    <h1 class="slide-title">ANALYSE THE DATA</h1>
+    <p class="slide-subtitle">The drone's recorder transmitted this Distance-Time graph. The Rescue Council need a full report.</p>
+
+    <div class="two-col">
+      <div>
+        <div class="graph-wrap">
+          <!-- INLINE SVG: D-T Graph -->
+          <svg viewBox="0 0 700 480" xmlns="http://www.w3.org/2000/svg" font-family="'DM Sans',system-ui,sans-serif">
+            <rect width="700" height="480" fill="#0f0f14"/>
+            <text x="350" y="36" text-anchor="middle" fill="#e2eaf5" font-size="13" font-weight="700" letter-spacing="2" font-family="Georgia,serif">FLIGHT LOG — DISTANCE-TIME GRAPH</text>
+            <text x="350" y="54" text-anchor="middle" fill="#6b7fa3" font-size="10" letter-spacing="1">Mission: Medic-Drone · Outbound Journey</text>
+            <!-- grid verticals -->
+            <line x1="80" y1="80" x2="80" y2="420" stroke="#1e1e2e" stroke-width="1"/>
+            <line x1="134" y1="80" x2="134" y2="420" stroke="#1e1e2e" stroke-width="1"/>
+            <line x1="188" y1="80" x2="188" y2="420" stroke="#1e1e2e" stroke-width="1"/>
+            <line x1="242" y1="80" x2="242" y2="420" stroke="#1e1e2e" stroke-width="1"/>
+            <line x1="296" y1="80" x2="296" y2="420" stroke="#1e1e2e" stroke-width="1"/>
+            <line x1="350" y1="80" x2="350" y2="420" stroke="#1e1e2e" stroke-width="1"/>
+            <line x1="404" y1="80" x2="404" y2="420" stroke="#1e1e2e" stroke-width="1"/>
+            <line x1="458" y1="80" x2="458" y2="420" stroke="#1e1e2e" stroke-width="1"/>
+            <line x1="512" y1="80" x2="512" y2="420" stroke="#1e1e2e" stroke-width="1"/>
+            <line x1="566" y1="80" x2="566" y2="420" stroke="#1e1e2e" stroke-width="1"/>
+            <line x1="620" y1="80" x2="620" y2="420" stroke="#1e1e2e" stroke-width="1"/>
+            <!-- grid horizontals -->
+            <line x1="80" y1="420" x2="620" y2="420" stroke="#1e1e2e" stroke-width="1"/>
+            <line x1="80" y1="382" x2="620" y2="382" stroke="#1e1e2e" stroke-width="1"/>
+            <line x1="80" y1="344" x2="620" y2="344" stroke="#1e1e2e" stroke-width="1"/>
+            <line x1="80" y1="306" x2="620" y2="306" stroke="#1e1e2e" stroke-width="1"/>
+            <line x1="80" y1="268" x2="620" y2="268" stroke="#1e1e2e" stroke-width="1"/>
+            <line x1="80" y1="230" x2="620" y2="230" stroke="#1e1e2e" stroke-width="1"/>
+            <line x1="80" y1="192" x2="620" y2="192" stroke="#1e1e2e" stroke-width="1"/>
+            <line x1="80" y1="154" x2="620" y2="154" stroke="#1e1e2e" stroke-width="1"/>
+            <line x1="80" y1="116" x2="620" y2="116" stroke="#1e1e2e" stroke-width="1"/>
+            <line x1="80" y1="80" x2="620" y2="80" stroke="#1e1e2e" stroke-width="1"/>
+            <!-- axes -->
+            <line x1="80" y1="420" x2="628" y2="420" stroke="#4a4a6a" stroke-width="2"/>
+            <line x1="80" y1="80" x2="80" y2="428" stroke="#4a4a6a" stroke-width="2"/>
+            <!-- x labels: 0–300s every 50s; scale 540/300=1.8px/s; x=80+t*1.8 -->
+            <text x="80"  y="438" text-anchor="middle" fill="#6b7fa3" font-size="10">0</text>
+            <text x="170" y="438" text-anchor="middle" fill="#6b7fa3" font-size="10">50</text>
+            <text x="260" y="438" text-anchor="middle" fill="#6b7fa3" font-size="10">100</text>
+            <text x="350" y="438" text-anchor="middle" fill="#6b7fa3" font-size="10">150</text>
+            <text x="440" y="438" text-anchor="middle" fill="#6b7fa3" font-size="10">200</text>
+            <text x="530" y="438" text-anchor="middle" fill="#6b7fa3" font-size="10">250</text>
+            <text x="620" y="438" text-anchor="middle" fill="#6b7fa3" font-size="10">300</text>
+            <text x="350" y="460" text-anchor="middle" fill="#a0a0b8" font-size="11" font-weight="500">Time (s)</text>
+            <!-- y labels: 0–900m every 100m; scale 340/900=0.378px/m; y=420-d*0.378 -->
+            <!-- 0→420, 100→382, 200→344, 300→306, 400→268, 500→230, 600→193, 700→155, 800→117, 900→80 -->
+            <text x="68" y="423" text-anchor="end" fill="#6b7fa3" font-size="10">0</text>
+            <text x="68" y="385" text-anchor="end" fill="#6b7fa3" font-size="10">100</text>
+            <text x="68" y="347" text-anchor="end" fill="#6b7fa3" font-size="10">200</text>
+            <text x="68" y="309" text-anchor="end" fill="#6b7fa3" font-size="10">300</text>
+            <text x="68" y="271" text-anchor="end" fill="#6b7fa3" font-size="10">400</text>
+            <text x="68" y="233" text-anchor="end" fill="#6b7fa3" font-size="10">500</text>
+            <text x="68" y="196" text-anchor="end" fill="#6b7fa3" font-size="10">600</text>
+            <text x="68" y="158" text-anchor="end" fill="#6b7fa3" font-size="10">700</text>
+            <text x="68" y="120" text-anchor="end" fill="#6b7fa3" font-size="10">800</text>
+            <text x="68" y="84" text-anchor="end" fill="#6b7fa3" font-size="10">900</text>
+            <text x="18" y="250" text-anchor="middle" fill="#a0a0b8" font-size="11" font-weight="500" transform="rotate(-90 18 250)">Distance (m)</text>
+            <!-- DATA -->
+            <!-- t=0,d=0 → (80,420) -->
+            <!-- t=100,d=600 → (260,193) -->
+            <!-- t=150,d=600 → (350,193) -->
+            <!-- t=300,d=900 → (620,80) -->
+            <line x1="80" y1="420" x2="260" y2="193" stroke="#00d4aa" stroke-width="2.5" stroke-linecap="round"/>
+            <line x1="260" y1="193" x2="350" y2="193" stroke="#ff5a5a" stroke-width="2.5" stroke-linecap="round"/>
+            <line x1="350" y1="193" x2="620" y2="80" stroke="#00d4aa" stroke-width="2.5" stroke-linecap="round"/>
+            <circle cx="80" cy="420" r="4" fill="#00d4aa"/>
+            <circle cx="260" cy="193" r="4" fill="#ffffff"/>
+            <circle cx="350" cy="193" r="4" fill="#ff5a5a"/>
+            <circle cx="620" cy="80" r="4" fill="#00d4aa"/>
+            <!-- labels -->
+            <rect x="96" y="288" width="96" height="28" rx="3" fill="#0f0f14" fill-opacity="0.9"/>
+            <text x="144" y="300" text-anchor="middle" fill="#00d4aa" font-size="9" font-weight="700">FAST CRUISE</text>
+            <text x="144" y="312" text-anchor="middle" fill="#6b7fa3" font-size="9">v = 6 m/s</text>
+            <rect x="263" y="166" width="78" height="28" rx="3" fill="#0f0f14" fill-opacity="0.9"/>
+            <text x="302" y="178" text-anchor="middle" fill="#ff5a5a" font-size="9" font-weight="700">STATIONARY</text>
+            <text x="302" y="190" text-anchor="middle" fill="#6b7fa3" font-size="9">sensor check</text>
+            <rect x="430" y="110" width="112" height="28" rx="3" fill="#0f0f14" fill-opacity="0.9"/>
+            <text x="486" y="122" text-anchor="middle" fill="#00d4aa" font-size="9" font-weight="700">SLOWER CRUISE</text>
+            <text x="486" y="134" text-anchor="middle" fill="#6b7fa3" font-size="9">v = 2 m/s</text>
+            <rect x="1" y="1" width="698" height="478" fill="none" stroke="#2a2a3e" stroke-width="1" rx="3"/>
+          </svg>
+        </div>
+      </div>
+
+      <div>
+        <div class="panel-label" style="font-family:var(--font-mono);font-size:9px;letter-spacing:0.2em;color:var(--muted);text-transform:uppercase;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--border2);">Analysis Questions</div>
+
+        <ul class="steps">
+          <li>
+            <span class="step-num">1</span>
+            <div style="font-size:14px;">Between which two times was the drone <strong>stationary</strong>? How can you tell from the graph?</div>
+          </li>
+          <li>
+            <span class="step-num">2</span>
+            <div>
+              <div style="font-size:14px;margin-bottom:4px;">Calculate the drone's speed during <strong>Segment 1</strong> (0–100 s).</div>
+              <div style="font-family:var(--font-mono);font-size:12px;color:var(--muted);">Speed = change in distance ÷ change in time</div>
+            </div>
+          </li>
+          <li>
+            <span class="step-num">3</span>
+            <div style="font-size:14px;">Calculate the drone's speed during <strong>Segment 3</strong> (150–300 s).</div>
+          </li>
+          <li>
+            <span class="step-num">4</span>
+            <div style="font-size:14px;">Suggest one <strong>realistic reason</strong> why the drone stopped mid-flight.</div>
+          </li>
+        </ul>
+
+        <button class="reveal-btn" onclick="toggleAnswer('ans-phase3')">Reveal Answers</button>
+        <div class="answer-block" id="ans-phase3">
+          <div class="ans-label">Worked Answers</div>
+          <p>1. Stationary from <strong>100 s to 150 s</strong> — the line is horizontal (distance not changing).</p>
+          <p>2. Speed = 600 ÷ 100 = <strong>6 m/s</strong></p>
+          <p>3. Speed = 300 ÷ 150 = <strong>2 m/s</strong></p>
+          <p>4. Sensor recalibration, obstacle avoidance, GPS lock, battery check, etc.</p>
+        </div>
+
+        <div class="stretch-box">
+          The gradient of a D-T graph gives the speed. Which segment has the steeper gradient? What does a steeper gradient tell you about the motion?
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════
+       SLIDE 7 — SKETCH YOUR OWN GRAPH
+  ════════════════════════════════════════ -->
+  <div class="slide" id="slide-6">
+    <div class="slide-eyebrow">Phase 3 — The Flight Log</div>
+    <h1 class="slide-title">SKETCH THE GRAPH</h1>
+    <p class="slide-subtitle">Now draw the Flight Log yourself. Use the data from the drone's journey.</p>
+
+    <div class="two-col">
+      <div>
+        <div class="brief-box">
+          <p><strong>Journey data to plot:</strong></p>
+          <ul style="margin-top:8px;">
+            <li><strong>0–100 s:</strong> drone travels from 0 to 600 m</li>
+            <li><strong>100–150 s:</strong> drone is stationary at 600 m</li>
+            <li><strong>150–300 s:</strong> drone travels from 600 m to 900 m</li>
+          </ul>
+        </div>
+        <div class="support-box" style="margin-top:0;">
+          <strong>How to draw it:</strong> Use a ruler. Plot each point first, then join them. Label your axes — x-axis is Time (s), y-axis is Distance (m). Label each segment of your graph.
+        </div>
+        <div class="support-box">
+          <strong>Axis scales:</strong> x-axis: 0 to 300 s (every 50 s). y-axis: 0 to 900 m (every 100 m).
+        </div>
+      </div>
+      <div>
+        <div class="graph-wrap">
+          <!-- INLINE SVG: Blank axes -->
+          <svg viewBox="0 0 700 480" xmlns="http://www.w3.org/2000/svg" font-family="'DM Sans',system-ui,sans-serif">
+            <rect width="700" height="480" fill="#0f0f14"/>
+            <text x="350" y="36" text-anchor="middle" fill="#e2eaf5" font-size="13" font-weight="700" letter-spacing="2" font-family="Georgia,serif">YOUR FLIGHT LOG</text>
+            <text x="350" y="54" text-anchor="middle" fill="#6b7fa3" font-size="10" letter-spacing="1">Sketch your Distance-Time Graph here (on paper)</text>
+            <!-- dashed grid -->
+            <line x1="80" y1="80" x2="80" y2="420" stroke="#1e1e2e" stroke-width="1"/>
+            <line x1="134" y1="80" x2="134" y2="420" stroke="#1e1e2e" stroke-width="1" stroke-dasharray="2,5"/>
+            <line x1="188" y1="80" x2="188" y2="420" stroke="#1e1e2e" stroke-width="1" stroke-dasharray="2,5"/>
+            <line x1="242" y1="80" x2="242" y2="420" stroke="#1e1e2e" stroke-width="1" stroke-dasharray="2,5"/>
+            <line x1="296" y1="80" x2="296" y2="420" stroke="#1e1e2e" stroke-width="1" stroke-dasharray="2,5"/>
+            <line x1="350" y1="80" x2="350" y2="420" stroke="#1e1e2e" stroke-width="1" stroke-dasharray="2,5"/>
+            <line x1="404" y1="80" x2="404" y2="420" stroke="#1e1e2e" stroke-width="1" stroke-dasharray="2,5"/>
+            <line x1="458" y1="80" x2="458" y2="420" stroke="#1e1e2e" stroke-width="1" stroke-dasharray="2,5"/>
+            <line x1="512" y1="80" x2="512" y2="420" stroke="#1e1e2e" stroke-width="1" stroke-dasharray="2,5"/>
+            <line x1="566" y1="80" x2="566" y2="420" stroke="#1e1e2e" stroke-width="1" stroke-dasharray="2,5"/>
+            <line x1="620" y1="80" x2="620" y2="420" stroke="#1e1e2e" stroke-width="1"/>
+            <line x1="80" y1="420" x2="620" y2="420" stroke="#1e1e2e" stroke-width="1"/>
+            <line x1="80" y1="382" x2="620" y2="382" stroke="#1e1e2e" stroke-width="1" stroke-dasharray="2,5"/>
+            <line x1="80" y1="344" x2="620" y2="344" stroke="#1e1e2e" stroke-width="1" stroke-dasharray="2,5"/>
+            <line x1="80" y1="306" x2="620" y2="306" stroke="#1e1e2e" stroke-width="1" stroke-dasharray="2,5"/>
+            <line x1="80" y1="268" x2="620" y2="268" stroke="#1e1e2e" stroke-width="1" stroke-dasharray="2,5"/>
+            <line x1="80" y1="230" x2="620" y2="230" stroke="#1e1e2e" stroke-width="1" stroke-dasharray="2,5"/>
+            <line x1="80" y1="192" x2="620" y2="192" stroke="#1e1e2e" stroke-width="1" stroke-dasharray="2,5"/>
+            <line x1="80" y1="154" x2="620" y2="154" stroke="#1e1e2e" stroke-width="1" stroke-dasharray="2,5"/>
+            <line x1="80" y1="116" x2="620" y2="116" stroke="#1e1e2e" stroke-width="1" stroke-dasharray="2,5"/>
+            <line x1="80" y1="80" x2="620" y2="80" stroke="#1e1e2e" stroke-width="1"/>
+            <!-- axes -->
+            <line x1="80" y1="420" x2="628" y2="420" stroke="#4a4a6a" stroke-width="2.5"/>
+            <line x1="80" y1="75" x2="80" y2="428" stroke="#4a4a6a" stroke-width="2.5"/>
+            <polygon points="628,420 616,415 616,425" fill="#4a4a6a"/>
+            <polygon points="80,75 75,87 85,87" fill="#4a4a6a"/>
+            <!-- tick marks x -->
+            <line x1="134" y1="418" x2="134" y2="422" stroke="#4a4a6a" stroke-width="1.5"/>
+            <line x1="188" y1="418" x2="188" y2="422" stroke="#4a4a6a" stroke-width="1.5"/>
+            <line x1="242" y1="418" x2="242" y2="422" stroke="#4a4a6a" stroke-width="1.5"/>
+            <line x1="296" y1="418" x2="296" y2="422" stroke="#4a4a6a" stroke-width="1.5"/>
+            <line x1="350" y1="418" x2="350" y2="422" stroke="#4a4a6a" stroke-width="1.5"/>
+            <line x1="404" y1="418" x2="404" y2="422" stroke="#4a4a6a" stroke-width="1.5"/>
+            <line x1="458" y1="418" x2="458" y2="422" stroke="#4a4a6a" stroke-width="1.5"/>
+            <line x1="512" y1="418" x2="512" y2="422" stroke="#4a4a6a" stroke-width="1.5"/>
+            <line x1="566" y1="418" x2="566" y2="422" stroke="#4a4a6a" stroke-width="1.5"/>
+            <line x1="620" y1="418" x2="620" y2="422" stroke="#4a4a6a" stroke-width="1.5"/>
+            <!-- tick marks y -->
+            <line x1="78" y1="382" x2="82" y2="382" stroke="#4a4a6a" stroke-width="1.5"/>
+            <line x1="78" y1="344" x2="82" y2="344" stroke="#4a4a6a" stroke-width="1.5"/>
+            <line x1="78" y1="306" x2="82" y2="306" stroke="#4a4a6a" stroke-width="1.5"/>
+            <line x1="78" y1="268" x2="82" y2="268" stroke="#4a4a6a" stroke-width="1.5"/>
+            <line x1="78" y1="230" x2="82" y2="230" stroke="#4a4a6a" stroke-width="1.5"/>
+            <line x1="78" y1="192" x2="82" y2="192" stroke="#4a4a6a" stroke-width="1.5"/>
+            <line x1="78" y1="154" x2="82" y2="154" stroke="#4a4a6a" stroke-width="1.5"/>
+            <line x1="78" y1="116" x2="82" y2="116" stroke="#4a4a6a" stroke-width="1.5"/>
+            <!-- watermark -->
+            <text x="350" y="265" text-anchor="middle" fill="#1e2a3a" font-size="24" font-weight="900" letter-spacing="3" font-family="'Bebas Neue',sans-serif">DRAW YOUR GRAPH</text>
+            <rect x="1" y="1" width="698" height="478" fill="none" stroke="#2a2a3e" stroke-width="1" rx="3"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════
+       SLIDE 8 — ACCELERATION
+  ════════════════════════════════════════ -->
+  <div class="slide" id="slide-7">
+    <div class="slide-eyebrow">Phase 4 — Emergency Landing</div>
+    <h1 class="slide-title">ACCELERATION</h1>
+    <p class="slide-subtitle">The drone must slow down fast. Understand the equation before you tackle the landing.</p>
+
+    <div class="two-col">
+      <div>
+        <div class="formula-big">a = (v − u) ÷ t</div>
+        <p style="font-size:12px;color:var(--muted);text-align:center;margin-top:6px;margin-bottom:16px;">
+          a = acceleration (m/s²) &nbsp;·&nbsp; v = final velocity &nbsp;·&nbsp; u = initial velocity &nbsp;·&nbsp; t = time (s)
+        </p>
+
+        <div class="panel">
+          <div class="panel-label">What does each symbol mean?</div>
+          <table>
+            <thead><tr><th>Symbol</th><th>Meaning</th><th>Unit</th></tr></thead>
+            <tbody>
+              <tr><td><code>a</code></td><td>Acceleration</td><td>m/s²</td></tr>
+              <tr><td><code>v</code></td><td>Final velocity (end speed)</td><td>m/s</td></tr>
+              <tr><td><code>u</code></td><td>Initial velocity (start speed)</td><td>m/s</td></tr>
+              <tr><td><code>t</code></td><td>Time taken</td><td>s</td></tr>
+              <tr><td><code>v − u</code></td><td>Change in velocity</td><td>m/s</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div>
+        <div class="brief-box">
+          <p><strong>Deceleration</strong> is negative acceleration — the object is slowing down. You get a negative value when <em>v</em> is smaller than <em>u</em>. Just state the magnitude and say "deceleration".</p>
+        </div>
+
+        <div class="panel" style="margin-top:16px;">
+          <div class="panel-label">Worked Example</div>
+          <p style="font-size:13px;margin-bottom:10px;">A cyclist accelerates from 0 to 10 m/s in 5 seconds. Find the acceleration.</p>
+          <ul class="steps" style="margin:0;">
+            <li><span class="step-num">1</span><div style="font-size:13px;">u = 0 m/s, v = 10 m/s, t = 5 s</div></li>
+            <li><span class="step-num">2</span><div style="font-size:13px;">v − u = 10 − 0 = 10 m/s</div></li>
+            <li><span class="step-num">3</span><div style="font-size:13px;">a = 10 ÷ 5 = <strong style="color:var(--teal)">2 m/s²</strong></div></li>
+          </ul>
+        </div>
+
+        <div class="stretch-box">
+          A ball decelerates from 15 m/s to rest in 3 s. Calculate the deceleration. Why is your answer negative?
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════
+       SLIDE 9 — PHASE 4: EMERGENCY LANDING TASK
+  ════════════════════════════════════════ -->
+  <div class="slide" id="slide-8">
+    <div class="slide-eyebrow">Phase 4 — Emergency Landing</div>
+    <h1 class="slide-title">DOES IT FIT THE LANDING PAD?</h1>
+    <p class="slide-subtitle">The clinic's landing pad is only 40 m long. Will the drone stop in time?</p>
+
+    <div class="warn-box">
+      <strong>ALERT:</strong> Drone approaching at 20 m/s. Landing pad length: 40 m. Time to decelerate to stop: 5 seconds. Calculate whether the drone can land safely.
+    </div>
+
+    <div class="two-col">
+      <div>
+        <ul class="steps">
+          <li>
+            <span class="step-num">1</span>
+            <div>
+              <div style="font-size:14px;margin-bottom:6px;"><strong>Calculate the deceleration</strong></div>
+              <div class="calc-block">
+                <div class="calc-q">a = (v − u) ÷ t = (0 − 20) ÷ 5 = ?</div>
+                <div class="calc-space"></div>
+              </div>
+              <div class="support-box" style="margin-top:8px;">
+                u = 20 m/s (start speed) &nbsp;·&nbsp; v = 0 m/s (touchdown) &nbsp;·&nbsp; t = 5 s
+              </div>
+            </div>
+          </li>
+          <li>
+            <span class="step-num">2</span>
+            <div>
+              <div style="font-size:14px;margin-bottom:6px;"><strong>Find the landing distance from the V-T graph</strong></div>
+              <p style="font-size:13px;color:var(--muted);">Area under a V-T graph = distance travelled. The shape is a triangle.</p>
+              <div class="calc-block" style="margin-top:8px;">
+                <div class="calc-q">Area = ½ × base × height = ½ × 5 × 20 = ?</div>
+                <div class="calc-space"></div>
+              </div>
+            </div>
+          </li>
+          <li>
+            <span class="step-num">3</span>
+            <div>
+              <div style="font-size:14px;"><strong>Mission critical decision</strong></div>
+              <p style="font-size:13px;color:var(--muted);margin-top:4px;">Landing pad = 40 m. Landing distance = your answer. Does the drone stop in time? What do you recommend?</p>
+            </div>
+          </li>
+        </ul>
+
+        <button class="reveal-btn" onclick="toggleAnswer('ans-phase4')">Reveal Answers</button>
+        <div class="answer-block" id="ans-phase4">
+          <div class="ans-label">Worked Solution</div>
+          <p>Step 1: a = (0 − 20) ÷ 5 = −20 ÷ 5 = <strong>−4 m/s²</strong> (deceleration of 4 m/s²)</p>
+          <p>Step 2: Distance = ½ × 5 × 20 = <strong>50 m</strong></p>
+          <p>Step 3: Pad = 40 m, but drone needs 50 m ❌ — <strong>The drone does not stop in time.</strong> Recommend reducing approach speed before final descent.</p>
+        </div>
+
+        <div class="stretch-box">
+          <p>If the drone only has <strong>3 seconds</strong> to stop, what deceleration is now required?</p>
+          <p style="margin-top:6px;"><code>a = (0 − 20) ÷ 3 = ?</code></p>
+          <button class="reveal-btn" style="margin-top:10px;" onclick="toggleAnswer('ans-stretch4')">Reveal</button>
+          <div class="answer-block" id="ans-stretch4">
+            <div class="ans-label">Stretch Answer</div>
+            <p>a = −20 ÷ 3 = <strong>−6.67 m/s²</strong> — a much greater deceleration. For a delivery drone this may cause it to tip or damage the cargo.</p>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="graph-wrap">
+          <!-- INLINE SVG: V-T Graph -->
+          <svg viewBox="0 0 700 480" xmlns="http://www.w3.org/2000/svg" font-family="'DM Sans',system-ui,sans-serif">
+            <rect width="700" height="480" fill="#0f0f14"/>
+            <text x="350" y="36" text-anchor="middle" fill="#e2eaf5" font-size="13" font-weight="700" letter-spacing="2" font-family="Georgia,serif">EMERGENCY LANDING — V-T GRAPH</text>
+            <text x="350" y="54" text-anchor="middle" fill="#6b7fa3" font-size="10" letter-spacing="1">Final Approach · Medic-Drone</text>
+            <!-- grid verticals: 0–5s, 108px/s, x=80+t*108 -->
+            <line x1="80"  y1="80" x2="80"  y2="420" stroke="#1e1e2e" stroke-width="1"/>
+            <line x1="188" y1="80" x2="188" y2="420" stroke="#1e1e2e" stroke-width="1"/>
+            <line x1="296" y1="80" x2="296" y2="420" stroke="#1e1e2e" stroke-width="1"/>
+            <line x1="404" y1="80" x2="404" y2="420" stroke="#1e1e2e" stroke-width="1"/>
+            <line x1="512" y1="80" x2="512" y2="420" stroke="#1e1e2e" stroke-width="1"/>
+            <line x1="620" y1="80" x2="620" y2="420" stroke="#1e1e2e" stroke-width="1"/>
+            <!-- grid horizontals: 0–20m/s, 17px/ms, y=420-v*17 -->
+            <line x1="80" y1="420" x2="620" y2="420" stroke="#1e1e2e" stroke-width="1"/>
+            <line x1="80" y1="335" x2="620" y2="335" stroke="#1e1e2e" stroke-width="1"/>
+            <line x1="80" y1="250" x2="620" y2="250" stroke="#1e1e2e" stroke-width="1"/>
+            <line x1="80" y1="165" x2="620" y2="165" stroke="#1e1e2e" stroke-width="1"/>
+            <line x1="80" y1="80"  x2="620" y2="80"  stroke="#1e1e2e" stroke-width="1"/>
+            <!-- axes -->
+            <line x1="80" y1="420" x2="628" y2="420" stroke="#4a4a6a" stroke-width="2"/>
+            <line x1="80" y1="80"  x2="80"  y2="428" stroke="#4a4a6a" stroke-width="2"/>
+            <!-- x labels -->
+            <text x="80"  y="438" text-anchor="middle" fill="#6b7fa3" font-size="11">0</text>
+            <text x="188" y="438" text-anchor="middle" fill="#6b7fa3" font-size="11">1</text>
+            <text x="296" y="438" text-anchor="middle" fill="#6b7fa3" font-size="11">2</text>
+            <text x="404" y="438" text-anchor="middle" fill="#6b7fa3" font-size="11">3</text>
+            <text x="512" y="438" text-anchor="middle" fill="#6b7fa3" font-size="11">4</text>
+            <text x="620" y="438" text-anchor="middle" fill="#6b7fa3" font-size="11">5</text>
+            <text x="350" y="460" text-anchor="middle" fill="#a0a0b8" font-size="11" font-weight="500">Time (s)</text>
+            <!-- y labels -->
+            <text x="68" y="423" text-anchor="end" fill="#6b7fa3" font-size="11">0</text>
+            <text x="68" y="338" text-anchor="end" fill="#6b7fa3" font-size="11">5</text>
+            <text x="68" y="253" text-anchor="end" fill="#6b7fa3" font-size="11">10</text>
+            <text x="68" y="168" text-anchor="end" fill="#6b7fa3" font-size="11">15</text>
+            <text x="68" y="84"  text-anchor="end" fill="#6b7fa3" font-size="11">20</text>
+            <text x="18" y="250" text-anchor="middle" fill="#a0a0b8" font-size="11" font-weight="500" transform="rotate(-90 18 250)">Velocity (m/s)</text>
+            <!-- shaded area -->
+            <polygon points="80,80 620,420 80,420" fill="#f5a623" fill-opacity="0.10"/>
+            <!-- deceleration line: (80,80)=20m/s t=0 → (620,420)=0m/s t=5 -->
+            <line x1="80" y1="80" x2="620" y2="420" stroke="#f5a623" stroke-width="3" stroke-linecap="round"/>
+            <circle cx="80"  cy="80"  r="5" fill="#f5a623"/>
+            <circle cx="620" cy="420" r="5" fill="#f5a623"/>
+            <!-- area label -->
+            <text x="260" y="350" text-anchor="middle" fill="#f5a623" font-size="11" font-weight="700">Area = landing distance</text>
+            <text x="260" y="366" text-anchor="middle" fill="#f5a623" font-size="11">= ½ × 5 × 20 = 50 m</text>
+            <!-- annotation box -->
+            <rect x="365" y="128" width="222" height="52" rx="4" fill="#0f0f14" fill-opacity="0.92" stroke="#f5a623" stroke-width="1" stroke-opacity="0.35"/>
+            <text x="476" y="148" text-anchor="middle" fill="#f5a623" font-size="10" font-weight="700">EMERGENCY DECELERATION</text>
+            <text x="476" y="164" text-anchor="middle" fill="#c8c0b0" font-size="10">a = (0 − 20) ÷ 5 = −4 m/s²</text>
+            <text x="476" y="178" text-anchor="middle" fill="#c8c0b0" font-size="10">deceleration = 4 m/s²</text>
+            <!-- endpoint labels -->
+            <text x="90"  y="74"  fill="#e2eaf5" font-size="10" font-weight="600">20 m/s</text>
+            <text x="530" y="415" fill="#e2eaf5" font-size="10" font-weight="600">0 m/s</text>
+            <rect x="1" y="1" width="698" height="478" fill="none" stroke="#2a2a3e" stroke-width="1" rx="3"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════
+       SLIDE 10 — MISSION DEBRIEF
+  ════════════════════════════════════════ -->
+  <div class="slide" id="slide-9">
+    <div class="slide-eyebrow">Mission Debrief</div>
+    <h1 class="slide-title">KEY CONCEPTS</h1>
+    <p class="slide-subtitle">Everything you needed to complete the mission — locked in for good.</p>
+
+    <div class="debrief-grid">
+      <div class="debrief-card">
+        <div class="dc-icon">⬡</div>
+        <div class="dc-title">Scalar vs Vector</div>
+        <div class="dc-body">Scalar = size only (speed, distance). Vector = size + direction (velocity, displacement). The drone needs both.</div>
+      </div>
+      <div class="debrief-card">
+        <div class="dc-icon">◈</div>
+        <div class="dc-title">Speed Equation</div>
+        <div class="dc-body"><code>v = s ÷ t</code> — always write your known values first. Rearrange using the triangle. Always include units.</div>
+      </div>
+      <div class="debrief-card">
+        <div class="dc-icon">◉</div>
+        <div class="dc-title">D-T Graphs</div>
+        <div class="dc-body">Gradient = speed. Flat line = stationary. Steeper gradient = faster. Downward slope = moving back.</div>
+      </div>
+      <div class="debrief-card">
+        <div class="dc-icon">△</div>
+        <div class="dc-title">Acceleration</div>
+        <div class="dc-body"><code>a = (v − u) ÷ t</code> — negative answer = deceleration (slowing down). State the magnitude and direction.</div>
+      </div>
+      <div class="debrief-card">
+        <div class="dc-icon">▣</div>
+        <div class="dc-title">V-T Graphs</div>
+        <div class="dc-body">Gradient = acceleration. Area under the graph = distance travelled. Break into triangles + rectangles.</div>
+      </div>
+      <div class="debrief-card" style="border-color:rgba(0,212,170,0.2);background:rgba(0,212,170,0.04);">
+        <div class="dc-icon">🔗</div>
+        <div class="dc-title">Final Quiz</div>
+        <div class="dc-body">Complete the Final Quiz on the revision site to confirm your knowledge.<br><a href="https://alexgray84.github.io/Biology/KS3/Physics/Motion/motion-revision.html" target="_blank" style="color:var(--teal);font-family:var(--font-mono);font-size:11px;word-break:break-all;">alexgray84.github.io →</a></div>
+      </div>
+    </div>
+
+    <div style="margin-top:24px;padding:18px 22px;background:rgba(0,212,170,0.04);border:1px solid rgba(0,212,170,0.15);">
+      <div style="font-family:var(--font-mono);font-size:9px;color:var(--teal);letter-spacing:0.2em;margin-bottom:12px;">QUICK ANSWERS REFERENCE</div>
+      <div class="two-col" style="gap:20px;margin:0;">
+        <div>
+          <p style="font-family:var(--font-mono);font-size:11px;color:var(--muted);margin-bottom:6px;">PHASE 2</p>
+          <p style="font-size:13px;">Battery life = 360 s &nbsp;·&nbsp; Time needed = 346 s &nbsp;·&nbsp; ✅ Makes it by 14 s</p>
+          <p style="font-size:13px;margin-top:4px;">Headwind: needs 450 s ❌ &nbsp;·&nbsp; Min speed = 12.5 m/s</p>
+        </div>
+        <div>
+          <p style="font-family:var(--font-mono);font-size:11px;color:var(--muted);margin-bottom:6px;">PHASES 3 & 4</p>
+          <p style="font-size:13px;">Seg 1 speed = 6 m/s &nbsp;·&nbsp; Seg 3 speed = 2 m/s &nbsp;·&nbsp; Stationary 100–150 s</p>
+          <p style="font-size:13px;margin-top:4px;">Deceleration = 4 m/s² &nbsp;·&nbsp; Landing distance = 50 m ❌ (pad = 40 m)</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /slides -->
+
+<!-- Bottom nav -->
+<div class="nav-bar">
+  <button class="nav-btn" id="prevBtn" onclick="changeSlide(-1)" disabled>← Prev</button>
+  <div class="nav-phase-label" id="phaseLabel">Mission Briefing</div>
+  <button class="nav-btn primary" id="nextBtn" onclick="changeSlide(1)">Next →</button>
+</div>
+
+<script>
+  const SLIDES = document.querySelectorAll('.slide');
+  const PIPS_CONTAINER = document.getElementById('pips');
+  const SLIDE_LABEL = document.getElementById('slideLabel');
+  const PHASE_LABEL = document.getElementById('phaseLabel');
+  const PREV_BTN = document.getElementById('prevBtn');
+  const NEXT_BTN = document.getElementById('nextBtn');
+
+  const PHASE_NAMES = [
+    'Mission Briefing',
+    'Pre-Flight Check',
+    'Phase 1 — Scalar vs Vector',
+    'Phase 2 — Speed Equation',
+    'Phase 2 — Mission Calculation',
+    'Phase 3 — D-T Graph Analysis',
+    'Phase 3 — Sketch Task',
+    'Phase 4 — Acceleration',
+    'Phase 4 — Emergency Landing',
+    'Mission Debrief'
+  ];
+
+  let current = 0;
+
+  // Build pips
+  for (let i = 0; i < SLIDES.length; i++) {
+    const pip = document.createElement('div');
+    pip.className = 'hud-pip' + (i === 0 ? ' active' : '');
+    pip.addEventListener('click', () => goTo(i));
+    pip.title = PHASE_NAMES[i];
+    PIPS_CONTAINER.appendChild(pip);
+  }
+
+  function goTo(n) {
+    if (n < 0 || n >= SLIDES.length) return;
+    SLIDES[current].classList.remove('active');
+    SLIDES[current].classList.add('exit');
+    setTimeout(() => SLIDES[current < n ? current : n + 1]?.classList.remove('exit'), 400);
+    const old = current;
+    current = n;
+    SLIDES[current].classList.add('active');
+    setTimeout(() => SLIDES[old].classList.remove('exit'), 400);
+    updateUI();
+    SLIDES[current].scrollTop = 0;
+  }
+
+  function changeSlide(dir) {
+    goTo(current + dir);
+  }
+
+  function updateUI() {
+    const pips = PIPS_CONTAINER.querySelectorAll('.hud-pip');
+    pips.forEach((pip, i) => {
+      pip.classList.remove('active', 'done');
+      if (i === current) pip.classList.add('active');
+      else if (i < current) pip.classList.add('done');
+    });
+    SLIDE_LABEL.textContent = String(current + 1).padStart(2, '0') + ' / ' + String(SLIDES.length).padStart(2, '0');
+    PHASE_LABEL.textContent = PHASE_NAMES[current];
+    PREV_BTN.disabled = current === 0;
+    NEXT_BTN.disabled = current === SLIDES.length - 1;
+    NEXT_BTN.textContent = current === SLIDES.length - 1 ? 'End' : 'Next →';
+  }
+
+  // Keyboard navigation
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') changeSlide(1);
+    if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')   changeSlide(-1);
+  });
+
+  // ── UNSCRAMBLE CHECK ──
+  function checkUnscramble() {
+    const inputs = document.querySelectorAll('#unscrambleGrid input');
+    let correct = 0;
+    inputs.forEach(input => {
+      const val = input.value.trim().toUpperCase();
+      const ans = input.dataset.answer.toUpperCase();
+      input.classList.remove('correct', 'wrong');
+      if (val === ans) { input.classList.add('correct'); correct++; }
+      else if (val !== '') { input.classList.add('wrong'); }
+    });
+    const result = document.getElementById('unscrambleResult');
+    if (correct === 6) {
+      result.style.color = 'var(--teal)';
+      result.textContent = '✓ ACCESS GRANTED — All 6 terms correct. Proceed to Phase 1.';
+    } else {
+      result.style.color = 'var(--amber)';
+      result.textContent = correct + ' / 6 correct — check the red boxes and try again.';
+    }
+  }
+
+  // Allow Enter key in unscramble inputs
+  document.querySelectorAll('#unscrambleGrid input').forEach(input => {
+    input.addEventListener('keydown', e => { if (e.key === 'Enter') checkUnscramble(); });
+  });
+
+  // ── SCALAR / VECTOR SORT ──
+  const chipStates = {};
+  function cycleChip(el) {
+    const item = el.dataset.item;
+    const state = chipStates[item] || 'none';
+    el.classList.remove('placed-scalar', 'placed-vector');
+    if (state === 'none') {
+      chipStates[item] = 'scalar';
+      el.classList.add('placed-scalar');
+    } else if (state === 'scalar') {
+      chipStates[item] = 'vector';
+      el.classList.add('placed-vector');
+    } else {
+      chipStates[item] = 'none';
+    }
+  }
+
+  function revealSort() {
+    const chips = document.querySelectorAll('#sortChips .chip');
+    let correct = 0;
+    chips.forEach(chip => {
+      const correct_ans = chip.dataset.correct;
+      const current_state = chipStates[chip.dataset.item] || 'none';
+      chip.classList.remove('placed-scalar', 'placed-vector');
+      if (current_state === correct_ans) {
+        correct++;
+        chip.classList.add(correct_ans === 'scalar' ? 'placed-scalar' : 'placed-vector');
+      } else {
+        chip.style.border = '1px solid var(--red)';
+        chip.style.color = 'var(--red)';
+        chip.classList.add(correct_ans === 'scalar' ? 'placed-scalar' : 'placed-vector');
+        chip.style.opacity = '0.6';
+      }
+    });
+    const result = document.getElementById('sortResult');
+    if (correct === 6) {
+      result.style.color = 'var(--teal)';
+      result.textContent = '✓ All 6 correct — navigation systems online.';
+    } else {
+      result.style.color = 'var(--amber)';
+      result.textContent = correct + ' / 6 correct — answers shown above.';
+    }
+  }
+
+  // ── ANSWER TOGGLES ──
+  function toggleAnswer(id) {
+    const el = document.getElementById(id);
+    el.classList.toggle('shown');
+    const btn = el.previousElementSibling;
+    btn.textContent = el.classList.contains('shown') ? 'Hide Answers' : (btn.textContent.includes('Stretch') ? 'Reveal Stretch Answers' : 'Reveal Answers');
+  }
+
+  updateUI();
+</script>
+</body>
+</html>
