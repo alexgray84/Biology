@@ -1,0 +1,1702 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lesson 1 — How Big Is Space?</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Source+Sans+3:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg-deep: #070b1a;
+  --bg-card: rgba(15, 22, 50, 0.85);
+  --bg-card-hover: rgba(20, 30, 65, 0.95);
+  --border-glow: rgba(100, 160, 255, 0.2);
+  --border-glow-active: rgba(100, 160, 255, 0.5);
+  --accent-gold: #f5c542;
+  --accent-blue: #4a9eff;
+  --accent-cyan: #38d9c4;
+  --accent-pink: #e84393;
+  --accent-green: #00e676;
+  --accent-red: #ff5252;
+  --text-primary: #e8eaf6;
+  --text-secondary: rgba(200, 210, 240, 0.7);
+  --text-dim: rgba(200, 210, 240, 0.4);
+  --section-padding: 3rem 0;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Source Sans 3', sans-serif;
+  background: var(--bg-deep);
+  color: var(--text-primary);
+  line-height: 1.7;
+  overflow-x: hidden;
+  font-size: 17px;
+}
+
+/* ── STAR FIELD ── */
+.starfield {
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  pointer-events: none; z-index: 0;
+}
+.starfield .layer {
+  position: absolute; top: 0; left: 0; width: 200%; height: 200%;
+  background-repeat: repeat;
+}
+.starfield .layer-1 {
+  background-image:
+    radial-gradient(1px 1px at 50px 80px, rgba(255,255,255,0.8), transparent),
+    radial-gradient(1px 1px at 180px 200px, rgba(255,255,255,0.6), transparent),
+    radial-gradient(1.5px 1.5px at 300px 50px, rgba(255,255,255,0.9), transparent),
+    radial-gradient(1px 1px at 420px 320px, rgba(255,255,255,0.5), transparent),
+    radial-gradient(1px 1px at 100px 400px, rgba(255,255,255,0.7), transparent),
+    radial-gradient(1.2px 1.2px at 550px 150px, rgba(255,255,255,0.6), transparent),
+    radial-gradient(1px 1px at 650px 380px, rgba(255,255,255,0.8), transparent),
+    radial-gradient(1px 1px at 750px 100px, rgba(255,255,255,0.5), transparent);
+  background-size: 800px 500px;
+  animation: drift 120s linear infinite;
+}
+.starfield .layer-2 {
+  background-image:
+    radial-gradient(1.5px 1.5px at 120px 150px, rgba(200,220,255,0.7), transparent),
+    radial-gradient(2px 2px at 400px 300px, rgba(200,200,255,0.6), transparent),
+    radial-gradient(1.5px 1.5px at 600px 50px, rgba(255,230,200,0.8), transparent),
+    radial-gradient(1px 1px at 250px 450px, rgba(200,220,255,0.5), transparent),
+    radial-gradient(2px 2px at 700px 250px, rgba(255,220,180,0.6), transparent);
+  background-size: 900px 600px;
+  animation: drift 200s linear infinite reverse;
+}
+@keyframes drift {
+  from { transform: translate(0, 0); }
+  to { transform: translate(-50%, -50%); }
+}
+
+/* ── PROGRESS BAR ── */
+.progress-bar-container {
+  position: fixed; top: 0; left: 0; width: 100%; z-index: 1000;
+  background: rgba(7, 11, 26, 0.9); backdrop-filter: blur(10px);
+  padding: 0; border-bottom: 1px solid var(--border-glow);
+}
+.progress-track {
+  width: 100%; height: 4px; background: rgba(255,255,255,0.08);
+}
+.progress-fill {
+  height: 100%; width: 0%; background: linear-gradient(90deg, var(--accent-blue), var(--accent-cyan), var(--accent-gold));
+  transition: width 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  border-radius: 0 2px 2px 0;
+  box-shadow: 0 0 12px rgba(74, 158, 255, 0.4);
+}
+.progress-labels {
+  display: flex; justify-content: space-between; padding: 6px 2% 8px;
+  font-family: 'Outfit', sans-serif; font-size: 11px; font-weight: 500;
+  letter-spacing: 0.5px; text-transform: uppercase;
+}
+.progress-labels span {
+  color: var(--text-dim); cursor: pointer; transition: all 0.3s;
+  position: relative; padding: 2px 8px; border-radius: 10px;
+}
+.progress-labels span.active {
+  color: var(--accent-gold);
+  background: rgba(245, 197, 66, 0.1);
+}
+.progress-labels span.completed {
+  color: var(--accent-cyan);
+}
+
+/* ── LAYOUT ── */
+.page-wrapper {
+  position: relative; z-index: 1;
+  max-width: 100%; padding: 0;
+}
+section {
+  min-height: 80vh;
+  padding: 80px 4% 60px;
+  display: none;
+  animation: fadeInSection 0.6s ease-out;
+}
+section.active { display: block; }
+
+@keyframes fadeInSection {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.section-inner {
+  max-width: 1400px; margin: 0 auto; width: 100%;
+}
+
+/* ── TYPOGRAPHY ── */
+h1 {
+  font-family: 'Outfit', sans-serif;
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
+  font-weight: 900;
+  letter-spacing: -1px;
+  line-height: 1.1;
+  margin-bottom: 0.5em;
+}
+h1 .thin { font-weight: 300; color: var(--text-secondary); }
+h1 .gold { color: var(--accent-gold); }
+
+h2 {
+  font-family: 'Outfit', sans-serif;
+  font-size: clamp(1.5rem, 3.5vw, 2.2rem);
+  font-weight: 700;
+  margin-bottom: 0.3em;
+  letter-spacing: -0.5px;
+}
+h3 {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--accent-gold);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 0.8em;
+  font-size: 0.85rem;
+}
+
+p { max-width: 720px; color: var(--text-secondary); margin-bottom: 1em; }
+p.wide { max-width: 100%; }
+
+/* ── CARDS ── */
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-glow);
+  border-radius: 16px;
+  padding: 2rem;
+  backdrop-filter: blur(8px);
+  transition: all 0.35s ease;
+}
+.card:hover {
+  border-color: var(--border-glow-active);
+  background: var(--bg-card-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 40px rgba(74, 158, 255, 0.08);
+}
+
+/* ── BUTTONS ── */
+.btn {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 600;
+  padding: 12px 28px;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  font-size: 0.95rem;
+  transition: all 0.25s ease;
+  letter-spacing: 0.3px;
+  display: inline-flex; align-items: center; gap: 8px;
+}
+.btn-primary {
+  background: linear-gradient(135deg, var(--accent-blue), #3575d4);
+  color: white;
+  box-shadow: 0 4px 20px rgba(74, 158, 255, 0.3);
+}
+.btn-primary:hover {
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: 0 8px 30px rgba(74, 158, 255, 0.45);
+}
+.btn-gold {
+  background: linear-gradient(135deg, var(--accent-gold), #e0a800);
+  color: #1a1200;
+  box-shadow: 0 4px 20px rgba(245, 197, 66, 0.25);
+}
+.btn-gold:hover {
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: 0 8px 30px rgba(245, 197, 66, 0.4);
+}
+.btn-outline {
+  background: transparent;
+  border: 1.5px solid var(--border-glow-active);
+  color: var(--text-primary);
+}
+.btn-outline:hover {
+  background: rgba(74, 158, 255, 0.1);
+  border-color: var(--accent-blue);
+}
+.btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+/* ── NAV BUTTONS ── */
+.nav-buttons {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-top: 3rem; padding-top: 2rem;
+  border-top: 1px solid var(--border-glow);
+}
+
+/* ── HERO ── */
+#hero {
+  display: flex !important;
+  min-height: 100vh;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding-top: 40px;
+}
+#hero p { max-width: 540px; margin: 0 auto; font-size: 1.15rem; }
+.hero-badge {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--accent-cyan);
+  background: rgba(56, 217, 196, 0.08);
+  padding: 6px 18px;
+  border-radius: 20px;
+  border: 1px solid rgba(56, 217, 196, 0.2);
+  display: inline-block;
+}
+.hero-objectives {
+  display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center;
+  margin-top: 0.5rem;
+}
+.hero-objectives .obj {
+  background: var(--bg-card);
+  border: 1px solid var(--border-glow);
+  border-radius: 10px;
+  padding: 10px 18px;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  display: flex; align-items: center; gap: 6px;
+}
+.hero-objectives .obj::before {
+  content: '🎯';
+  font-size: 0.8rem;
+}
+.scroll-hint {
+  margin-top: 1rem;
+  animation: bob 2s ease-in-out infinite;
+  color: var(--text-dim);
+  font-size: 0.85rem;
+}
+@keyframes bob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(8px); }
+}
+
+/* ── QUIZ (RETRIEVAL) ── */
+.quiz-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.2rem;
+  margin: 1.5rem 0;
+}
+.quiz-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-glow);
+  border-radius: 14px;
+  padding: 1.5rem;
+  transition: all 0.3s;
+}
+.quiz-card .q-number {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 800;
+  font-size: 0.7rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--accent-blue);
+  margin-bottom: 0.6rem;
+}
+.quiz-card .q-text {
+  font-weight: 500;
+  margin-bottom: 1rem;
+  font-size: 1rem;
+  color: var(--text-primary);
+}
+.quiz-options {
+  display: flex; flex-direction: column; gap: 0.5rem;
+}
+.quiz-option {
+  padding: 10px 14px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.25s;
+  font-size: 0.92rem;
+  color: var(--text-secondary);
+}
+.quiz-option:hover:not(.locked) {
+  background: rgba(74, 158, 255, 0.08);
+  border-color: var(--accent-blue);
+  color: var(--text-primary);
+}
+.quiz-option.correct {
+  background: rgba(0, 230, 118, 0.12);
+  border-color: var(--accent-green);
+  color: var(--accent-green);
+}
+.quiz-option.incorrect {
+  background: rgba(255, 82, 82, 0.1);
+  border-color: var(--accent-red);
+  color: var(--accent-red);
+}
+.quiz-option.locked { cursor: default; opacity: 0.5; }
+.quiz-option.correct.locked { opacity: 1; }
+.quiz-feedback {
+  margin-top: 0.8rem;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  display: none;
+}
+.quiz-feedback.show { display: block; }
+.quiz-feedback.correct-fb {
+  background: rgba(0, 230, 118, 0.08);
+  color: var(--accent-green);
+}
+.quiz-feedback.incorrect-fb {
+  background: rgba(255, 82, 82, 0.06);
+  color: var(--accent-red);
+}
+
+.quiz-score-bar {
+  display: flex; align-items: center; gap: 1rem;
+  margin-top: 1.5rem;
+  padding: 1rem 1.5rem;
+  background: var(--bg-card);
+  border-radius: 12px;
+  border: 1px solid var(--border-glow);
+}
+.quiz-score-bar .score-text {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 700;
+  font-size: 1.3rem;
+}
+.quiz-score-bar .score-text .num { color: var(--accent-gold); }
+.score-dots { display: flex; gap: 6px; }
+.score-dot {
+  width: 12px; height: 12px; border-radius: 50%;
+  background: rgba(255,255,255,0.1);
+  transition: all 0.4s;
+}
+.score-dot.hit { background: var(--accent-green); box-shadow: 0 0 8px rgba(0,230,118,0.4); }
+.score-dot.miss { background: var(--accent-red); box-shadow: 0 0 8px rgba(255,82,82,0.3); }
+
+/* ── SEE THINK WONDER ── */
+.stw-comparison {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin: 1.5rem 0;
+}
+@media (max-width: 768px) {
+  .stw-comparison { grid-template-columns: 1fr; }
+}
+
+.stw-diagram {
+  background: var(--bg-card);
+  border: 1px solid var(--border-glow);
+  border-radius: 16px;
+  padding: 1.5rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.stw-diagram .label {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 700;
+  font-size: 0.75rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 6px;
+}
+.stw-diagram .label.textbook {
+  color: var(--accent-pink);
+  background: rgba(232, 67, 147, 0.1);
+}
+.stw-diagram .label.reality {
+  color: var(--accent-cyan);
+  background: rgba(56, 217, 196, 0.1);
+}
+
+.solar-display {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 2rem 1rem;
+  min-height: 200px;
+  flex-wrap: wrap;
+}
+.solar-display.textbook-ver .planet-dot {
+  width: 24px; height: 24px; border-radius: 50%;
+  transition: transform 0.3s;
+}
+.solar-display.textbook-ver .planet-dot:hover { transform: scale(1.3); }
+.solar-display.textbook-ver .planet-dot.sun { width: 50px; height: 50px; background: #f5c542; box-shadow: 0 0 20px rgba(245,197,66,0.5); }
+.solar-display.textbook-ver .planet-dot.mercury { width: 12px; height: 12px; background: #b0b0b0; }
+.solar-display.textbook-ver .planet-dot.venus { width: 22px; height: 22px; background: #e8a95b; }
+.solar-display.textbook-ver .planet-dot.earth { width: 24px; height: 24px; background: #4a9eff; }
+.solar-display.textbook-ver .planet-dot.mars { width: 18px; height: 18px; background: #d4553a; }
+.solar-display.textbook-ver .planet-dot.jupiter { width: 38px; height: 38px; background: #c4956a; }
+.solar-display.textbook-ver .planet-dot.saturn { width: 34px; height: 34px; background: #e8d08c; }
+.solar-display.textbook-ver .planet-dot.uranus { width: 28px; height: 28px; background: #7ecfc0; }
+.solar-display.textbook-ver .planet-dot.neptune { width: 26px; height: 26px; background: #4a6bbd; }
+
+.reality-message {
+  color: var(--text-dim);
+  font-size: 0.95rem;
+  line-height: 1.8;
+  padding: 1.5rem;
+}
+.reality-message strong { color: var(--accent-cyan); }
+.reality-sun {
+  width: 100%;
+  max-width: 300px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(circle at 40% 40%, #fff5c0, #f5c542, #e0920a);
+  box-shadow: 0 0 60px rgba(245, 197, 66, 0.4), 0 0 120px rgba(245, 150, 10, 0.15);
+  margin: 1rem auto;
+  position: relative;
+  animation: sunPulse 4s ease-in-out infinite;
+}
+.reality-earth {
+  width: 3px; height: 3px; border-radius: 50%;
+  background: var(--accent-blue);
+  box-shadow: 0 0 4px var(--accent-blue);
+  position: absolute; bottom: -20px; right: 20%;
+  animation: earthBlink 2s ease-in-out infinite;
+}
+.reality-earth-label {
+  font-size: 0.65rem;
+  color: var(--accent-blue);
+  position: absolute;
+  bottom: -38px; right: calc(20% - 12px);
+  font-family: 'Outfit', sans-serif;
+  font-weight: 600;
+  letter-spacing: 1px;
+}
+@keyframes sunPulse {
+  0%, 100% { box-shadow: 0 0 60px rgba(245,197,66,0.4), 0 0 120px rgba(245,150,10,0.15); }
+  50% { box-shadow: 0 0 80px rgba(245,197,66,0.5), 0 0 160px rgba(245,150,10,0.2); }
+}
+@keyframes earthBlink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+.stw-inputs {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.2rem;
+  margin-top: 2rem;
+}
+@media (max-width: 768px) {
+  .stw-inputs { grid-template-columns: 1fr; }
+}
+.stw-box {
+  background: var(--bg-card);
+  border: 1px solid var(--border-glow);
+  border-radius: 14px;
+  padding: 1.2rem;
+}
+.stw-box .stw-label {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 700;
+  font-size: 0.95rem;
+  margin-bottom: 0.3rem;
+}
+.stw-box .stw-label.see { color: var(--accent-blue); }
+.stw-box .stw-label.think { color: var(--accent-gold); }
+.stw-box .stw-label.wonder { color: var(--accent-cyan); }
+.stw-box .stw-prompt {
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  margin-bottom: 0.6rem;
+}
+.stw-box textarea {
+  width: 100%;
+  min-height: 80px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 10px;
+  padding: 10px 12px;
+  color: var(--text-primary);
+  font-family: 'Source Sans 3', sans-serif;
+  font-size: 0.9rem;
+  resize: vertical;
+  transition: border-color 0.3s;
+}
+.stw-box textarea:focus {
+  outline: none;
+  border-color: var(--accent-blue);
+}
+
+/* ── PLANET RANKING ── */
+.rank-container {
+  margin: 1.5rem 0;
+}
+.rank-instruction {
+  background: rgba(245, 197, 66, 0.06);
+  border: 1px solid rgba(245, 197, 66, 0.15);
+  border-radius: 12px;
+  padding: 1rem 1.2rem;
+  margin-bottom: 1.5rem;
+  font-size: 0.95rem;
+  color: var(--accent-gold);
+  display: flex; align-items: center; gap: 10px;
+}
+.rank-planets {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 1rem;
+}
+.rank-planet {
+  background: var(--bg-card);
+  border: 2px solid var(--border-glow);
+  border-radius: 14px;
+  padding: 1.2rem 1rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s;
+  user-select: none;
+  position: relative;
+}
+.rank-planet:hover {
+  border-color: var(--accent-blue);
+  transform: translateY(-3px);
+}
+.rank-planet.selected {
+  border-color: var(--accent-gold);
+  background: rgba(245, 197, 66, 0.06);
+}
+.rank-planet .planet-visual {
+  width: 50px; height: 50px; border-radius: 50%;
+  margin: 0 auto 0.6rem;
+  position: relative;
+}
+.rank-planet .planet-name {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+.rank-planet .rank-badge {
+  position: absolute;
+  top: -6px; right: -6px;
+  width: 24px; height: 24px;
+  background: var(--accent-gold);
+  color: #1a1200;
+  border-radius: 50%;
+  font-family: 'Outfit', sans-serif;
+  font-weight: 800;
+  font-size: 0.7rem;
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0;
+  transform: scale(0);
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.rank-planet.selected .rank-badge {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.rank-result {
+  margin-top: 1.5rem;
+  display: none;
+}
+.rank-result.show { display: block; }
+.rank-result-bar {
+  display: flex; align-items: center; gap: 1rem;
+  padding: 0.8rem 1.2rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border-glow);
+  border-radius: 10px;
+  margin-bottom: 0.6rem;
+  transition: all 0.4s;
+}
+.rank-result-bar .rank-num {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 800;
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  min-width: 20px;
+}
+.rank-result-bar .result-planet-dot {
+  width: 20px; height: 20px; border-radius: 50%; flex-shrink: 0;
+}
+.rank-result-bar .result-name {
+  font-weight: 600; min-width: 80px;
+}
+.rank-result-bar .result-size {
+  color: var(--text-dim); font-size: 0.85rem;
+}
+.rank-result-bar .result-bar-fill {
+  flex: 1; height: 8px; background: rgba(255,255,255,0.05);
+  border-radius: 4px; overflow: hidden; margin-left: 0.5rem;
+}
+.rank-result-bar .result-bar-fill span {
+  display: block; height: 100%; border-radius: 4px;
+  background: linear-gradient(90deg, var(--accent-blue), var(--accent-cyan));
+  transition: width 1s cubic-bezier(0.22, 1, 0.36, 1);
+  width: 0%;
+}
+.rank-result-bar.correct-pos { border-color: rgba(0,230,118,0.3); }
+.rank-result-bar.wrong-pos { border-color: rgba(255,82,82,0.2); }
+
+.key-concept {
+  margin-top: 2rem;
+  padding: 1.5rem 2rem;
+  background: rgba(74, 158, 255, 0.05);
+  border-left: 4px solid var(--accent-blue);
+  border-radius: 0 14px 14px 0;
+  display: none;
+}
+.key-concept.show { display: block; animation: fadeInSection 0.5s ease-out; }
+.key-concept h4 {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 700;
+  color: var(--accent-blue);
+  margin-bottom: 0.4rem;
+}
+
+/* ── SCALE CALCULATOR ── */
+.calc-container {
+  margin: 1.5rem 0;
+}
+.round-tabs {
+  display: flex; gap: 0.5rem; margin-bottom: 1.5rem;
+}
+.round-tab {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 600;
+  font-size: 0.8rem;
+  letter-spacing: 1px;
+  padding: 8px 20px;
+  border-radius: 10px;
+  border: 1px solid var(--border-glow);
+  background: transparent;
+  color: var(--text-dim);
+  cursor: pointer;
+  transition: all 0.3s;
+}
+.round-tab.active {
+  background: rgba(74, 158, 255, 0.1);
+  border-color: var(--accent-blue);
+  color: var(--accent-blue);
+}
+.round-tab:disabled { opacity: 0.3; cursor: not-allowed; }
+
+.calc-round { display: none; }
+.calc-round.active { display: block; animation: fadeInSection 0.4s ease-out; }
+
+.calc-step {
+  background: var(--bg-card);
+  border: 1px solid var(--border-glow);
+  border-radius: 14px;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+}
+.calc-step .step-label {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 700;
+  font-size: 0.75rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--accent-cyan);
+  margin-bottom: 0.5rem;
+}
+.calc-step .formula {
+  background: rgba(0,0,0,0.3);
+  border-radius: 10px;
+  padding: 1rem;
+  font-family: 'Source Sans 3', monospace;
+  font-size: 1rem;
+  color: var(--accent-gold);
+  margin: 0.8rem 0;
+  text-align: center;
+  letter-spacing: 0.5px;
+}
+
+.object-selector {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 0.8rem;
+  margin: 1rem 0;
+}
+.object-option {
+  padding: 1rem;
+  background: rgba(255,255,255,0.03);
+  border: 1.5px solid rgba(255,255,255,0.08);
+  border-radius: 12px;
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.3s;
+}
+.object-option:hover {
+  border-color: var(--accent-blue);
+  background: rgba(74, 158, 255, 0.05);
+}
+.object-option.selected {
+  border-color: var(--accent-gold);
+  background: rgba(245, 197, 66, 0.08);
+}
+.object-option .obj-emoji { font-size: 2rem; margin-bottom: 0.4rem; }
+.object-option .obj-name {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+.object-option .obj-size {
+  font-size: 0.75rem;
+  color: var(--text-dim);
+}
+
+.calc-input-row {
+  display: flex; align-items: center; gap: 0.8rem;
+  flex-wrap: wrap;
+  margin: 0.5rem 0;
+}
+.calc-input-row label {
+  color: var(--text-secondary);
+  font-weight: 500;
+  min-width: 150px;
+}
+.calc-input-row input[type="number"] {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 8px;
+  padding: 8px 12px;
+  color: var(--text-primary);
+  font-family: 'Source Sans 3', sans-serif;
+  font-size: 0.95rem;
+  width: 140px;
+  transition: border-color 0.3s;
+}
+.calc-input-row input[type="number"]:focus {
+  outline: none;
+  border-color: var(--accent-blue);
+}
+.calc-input-row .unit {
+  color: var(--text-dim);
+  font-size: 0.85rem;
+}
+.calc-given {
+  color: var(--accent-gold);
+  font-weight: 600;
+  font-size: 1.05rem;
+}
+
+.results-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 4px;
+  margin: 1rem 0;
+}
+.results-table th {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 600;
+  font-size: 0.75rem;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  text-align: left;
+  padding: 8px 12px;
+}
+.results-table td {
+  padding: 10px 12px;
+  background: rgba(255,255,255,0.02);
+  font-size: 0.9rem;
+}
+.results-table tr td:first-child { border-radius: 8px 0 0 8px; }
+.results-table tr td:last-child { border-radius: 0 8px 8px 0; }
+.results-table .planet-color {
+  width: 12px; height: 12px; border-radius: 50%; display: inline-block;
+  margin-right: 6px; vertical-align: middle;
+}
+.results-table .scaled {
+  color: var(--accent-cyan);
+  font-weight: 600;
+}
+.results-table .household {
+  color: var(--text-dim);
+  font-style: italic;
+  font-size: 0.82rem;
+}
+
+/* ── PRACTICAL PREP ── */
+.practical-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin: 1.5rem 0;
+}
+@media (max-width: 768px) {
+  .practical-grid { grid-template-columns: 1fr; }
+}
+.checklist {
+  list-style: none;
+}
+.checklist li {
+  display: flex; align-items: flex-start; gap: 10px;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.checklist li:hover { padding-left: 4px; }
+.check-box {
+  width: 22px; height: 22px; min-width: 22px;
+  border: 2px solid rgba(255,255,255,0.15);
+  border-radius: 6px;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.3s;
+  margin-top: 2px;
+}
+.checklist li.checked .check-box {
+  background: var(--accent-green);
+  border-color: var(--accent-green);
+}
+.checklist li.checked .check-box::after {
+  content: '✓';
+  color: #0a0e27;
+  font-weight: 800;
+  font-size: 0.7rem;
+}
+.checklist li.checked .check-text {
+  text-decoration: line-through;
+  color: var(--text-dim);
+}
+
+.tip-card {
+  background: rgba(245, 197, 66, 0.05);
+  border: 1px solid rgba(245, 197, 66, 0.15);
+  border-radius: 14px;
+  padding: 1.5rem;
+}
+.tip-card h4 {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 700;
+  color: var(--accent-gold);
+  margin-bottom: 0.6rem;
+  display: flex; align-items: center; gap: 8px;
+}
+.size-example {
+  display: flex; align-items: center; gap: 10px;
+  padding: 6px 0;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+.size-example .ex-dot {
+  border-radius: 50%; flex-shrink: 0;
+}
+
+/* ── SUMMARY ── */
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.2rem;
+  margin: 1.5rem 0;
+}
+@media (max-width: 768px) {
+  .summary-grid { grid-template-columns: 1fr; }
+}
+.summary-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-glow);
+  border-radius: 14px;
+  padding: 1.5rem;
+  text-align: center;
+}
+.summary-card .summary-icon {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+.summary-card .summary-title {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 700;
+  margin-bottom: 0.3rem;
+}
+.summary-card .summary-text {
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+}
+
+.next-lesson-teaser {
+  margin-top: 2rem;
+  padding: 2rem;
+  background: linear-gradient(135deg, rgba(74,158,255,0.06), rgba(56,217,196,0.06));
+  border: 1px solid var(--border-glow);
+  border-radius: 16px;
+  text-align: center;
+}
+.next-lesson-teaser .teaser-q {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--accent-gold);
+  margin-top: 0.5rem;
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 480px) {
+  section { padding: 70px 3% 40px; }
+  .quiz-grid { grid-template-columns: 1fr; }
+  .rank-planets { grid-template-columns: repeat(2, 1fr); }
+  .object-selector { grid-template-columns: repeat(2, 1fr); }
+  .summary-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<div class="starfield">
+  <div class="layer layer-1"></div>
+  <div class="layer layer-2"></div>
+</div>
+
+<!-- PROGRESS BAR -->
+<div class="progress-bar-container">
+  <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+  <div class="progress-labels">
+    <span class="active" onclick="goToSection(0)">Start</span>
+    <span onclick="goToSection(1)">Retrieval</span>
+    <span onclick="goToSection(2)">See–Think–Wonder</span>
+    <span onclick="goToSection(3)">Planet Sizes</span>
+    <span onclick="goToSection(4)">Scale Calculator</span>
+    <span onclick="goToSection(5)">Practical Prep</span>
+    <span onclick="goToSection(6)">Summary</span>
+  </div>
+</div>
+
+<div class="page-wrapper">
+
+<!-- ═══════════ HERO ═══════════ -->
+<section id="hero" class="active">
+  <div class="hero-badge">Y7 Science · The Solar System</div>
+  <h1><span class="thin">How Big Is</span><br><span class="gold">Space?</span></h1>
+  <p>Every diagram you've ever seen of the solar system is lying to you. Today we find out the truth — and it's going to blow your mind.</p>
+  <div class="hero-objectives">
+    <div class="obj">Describe the scale of the solar system</div>
+    <div class="obj">Calculate planet sizes for a scale model</div>
+    <div class="obj">Explain why diagrams are misleading</div>
+  </div>
+  <button class="btn btn-gold" onclick="goToSection(1)">Launch Lesson →</button>
+  <div class="scroll-hint">▼</div>
+</section>
+
+<!-- ═══════════ RETRIEVAL STARTER ═══════════ -->
+<section id="retrieval">
+  <div class="section-inner">
+    <h3>⏱ Retrieval Starter · 5 minutes</h3>
+    <h2>What do you already know?</h2>
+    <p>Five quick-fire questions. No peeking — this is about what's already in your brain.</p>
+
+    <div class="quiz-grid" id="quizGrid"></div>
+
+    <div class="quiz-score-bar" id="quizScoreBar" style="display:none;">
+      <div class="score-dots" id="scoreDots"></div>
+      <div class="score-text"><span class="num" id="scoreNum">0</span>/5</div>
+      <span style="color:var(--text-dim); font-size:0.85rem;" id="scoreMsg"></span>
+    </div>
+
+    <div class="nav-buttons">
+      <button class="btn btn-outline" onclick="goToSection(0)">← Back</button>
+      <button class="btn btn-primary" onclick="goToSection(2)">Next: See–Think–Wonder →</button>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ SEE THINK WONDER ═══════════ -->
+<section id="stw">
+  <div class="section-inner">
+    <h3>👁 See–Think–Wonder · 5 minutes</h3>
+    <h2>Textbook vs Reality</h2>
+    <p>Look at these two versions of our solar system. One is how textbooks draw it. The other is closer to reality.</p>
+
+    <div class="stw-comparison">
+      <div class="stw-diagram">
+        <div class="label textbook">Typical Textbook Diagram</div>
+        <div class="solar-display textbook-ver">
+          <div class="planet-dot sun" title="Sun"></div>
+          <div class="planet-dot mercury" title="Mercury"></div>
+          <div class="planet-dot venus" title="Venus"></div>
+          <div class="planet-dot earth" title="Earth"></div>
+          <div class="planet-dot mars" title="Mars"></div>
+          <div class="planet-dot jupiter" title="Jupiter"></div>
+          <div class="planet-dot saturn" title="Saturn"></div>
+          <div class="planet-dot uranus" title="Uranus"></div>
+          <div class="planet-dot neptune" title="Neptune"></div>
+        </div>
+        <p class="wide" style="font-size:0.82rem; text-align:center; margin-top:0.5rem;">Planets look almost the same size, neatly spaced out.</p>
+      </div>
+
+      <div class="stw-diagram">
+        <div class="label reality">Closer to Reality</div>
+        <div class="solar-display" style="flex-direction:column;">
+          <div class="reality-sun">
+            <div class="reality-earth"></div>
+            <div class="reality-earth-label">← Earth</div>
+          </div>
+          <p class="wide" style="font-size:0.82rem; text-align:center; margin-top:2.5rem; max-width:280px;">If the Sun were this size, Earth would be that tiny dot. And it should be <strong>12 metres away</strong> on this scale.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="stw-inputs">
+      <div class="stw-box">
+        <div class="stw-label see">👁 See</div>
+        <div class="stw-prompt">What do you notice? What differences stand out?</div>
+        <textarea placeholder="I notice that..."></textarea>
+      </div>
+      <div class="stw-box">
+        <div class="stw-label think">🧠 Think</div>
+        <div class="stw-prompt">What does this make you think about?</div>
+        <textarea placeholder="This makes me think..."></textarea>
+      </div>
+      <div class="stw-box">
+        <div class="stw-label wonder">✨ Wonder</div>
+        <div class="stw-prompt">What questions does this raise?</div>
+        <textarea placeholder="I wonder..."></textarea>
+      </div>
+    </div>
+
+    <div class="nav-buttons">
+      <button class="btn btn-outline" onclick="goToSection(1)">← Back</button>
+      <button class="btn btn-primary" onclick="goToSection(3)">Next: Planet Sizes →</button>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ PLANET RANKING ═══════════ -->
+<section id="ranking">
+  <div class="section-inner">
+    <h3>🪐 Core Activity · 10 minutes</h3>
+    <h2>Rank the Planets by Size</h2>
+    <p>Click the planets in order from <strong>smallest</strong> (1st) to <strong>largest</strong> (8th). How well do you really know them?</p>
+
+    <div class="rank-instruction">
+      💡 Click each planet in order — smallest first, largest last. Click a selected planet to deselect it.
+    </div>
+
+    <div class="rank-planets" id="rankPlanets"></div>
+
+    <div style="margin-top:1.2rem; display:flex; gap:1rem; flex-wrap:wrap;">
+      <button class="btn btn-outline" onclick="resetRanking()" id="resetRankBtn" style="display:none;">↺ Reset</button>
+      <button class="btn btn-gold" onclick="checkRanking()" id="checkRankBtn" style="display:none;">Check My Order ✓</button>
+    </div>
+
+    <div class="rank-result" id="rankResult"></div>
+
+    <div class="key-concept" id="keyConcept">
+      <h4>💡 Key Concept: Two Kinds of Scale</h4>
+      <p class="wide" style="max-width:100%">There are two ways to scale the solar system: by <strong>size</strong> (how big the planets are) and by <strong>distance</strong> (how far apart they are). The problem? You <strong>can't do both on the same model</strong> — if you make the sizes correct, the distances would stretch across an entire city. If you make the distances correct, most planets would be invisible specks. That's why every textbook diagram is a compromise — and a lie.</p>
+    </div>
+
+    <div class="nav-buttons">
+      <button class="btn btn-outline" onclick="goToSection(2)">← Back</button>
+      <button class="btn btn-primary" onclick="goToSection(4)">Next: Scale Calculator →</button>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ SCALE CALCULATOR ═══════════ -->
+<section id="calculator">
+  <div class="section-inner">
+    <h3>🧮 Guided Calculation · 15 minutes</h3>
+    <h2>Build Your Scale</h2>
+    <p>Choose an object to represent the Sun. We'll calculate how big each planet would be on the same scale — with a little less help each round.</p>
+
+    <div class="round-tabs">
+      <button class="round-tab active" id="roundTab1" onclick="showRound(1)">Round 1 · Full Support</button>
+      <button class="round-tab" id="roundTab2" onclick="showRound(2)" disabled>Round 2 · Some Support</button>
+      <button class="round-tab" id="roundTab3" onclick="showRound(3)" disabled>Round 3 · On Your Own</button>
+    </div>
+
+    <!-- ROUND 1 -->
+    <div class="calc-round active" id="round1">
+      <div class="calc-step">
+        <div class="step-label">Step 1 · Choose Your Sun</div>
+        <p class="wide">Pick an object from your home to represent the Sun. This sets the scale for everything else.</p>
+        <div class="object-selector" id="objectSelector"></div>
+      </div>
+
+      <div class="calc-step" id="r1step2" style="display:none;">
+        <div class="step-label">Step 2 · The Scale Factor</div>
+        <p class="wide">The real Sun is <strong>1,392,700 km</strong> across. Your chosen object is <span id="chosenSize" class="calc-given"></span> cm across.</p>
+        <div class="formula">Scale Factor = Object Size ÷ Real Sun Size</div>
+        <p class="wide">So: <span id="r1ScaleFactor" class="calc-given"></span></p>
+        <p class="wide" style="color:var(--accent-cyan);">This means every 1 km in real life = <span id="r1ScaleHuman" class="calc-given"></span> in your model.</p>
+      </div>
+
+      <div class="calc-step" id="r1step3" style="display:none;">
+        <div class="step-label">Step 3 · Calculate Planet Sizes</div>
+        <p class="wide">We multiply each planet's real diameter by the scale factor. Here are the results:</p>
+        <div style="overflow-x:auto;">
+          <table class="results-table" id="r1ResultsTable"></table>
+        </div>
+        <div style="margin-top:1rem;">
+          <button class="btn btn-primary" onclick="completeRound1()">Got it — let me try Round 2 →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ROUND 2 -->
+    <div class="calc-round" id="round2">
+      <div class="calc-step">
+        <div class="step-label">Step 2 · Partial Support</div>
+        <p class="wide">Same object: <span id="r2Object" class="calc-given"></span>. Now <strong>you</strong> calculate the scale factor.</p>
+        <div class="formula">Scale Factor = Object Size (cm) ÷ Sun Diameter (km)</div>
+        <div class="calc-input-row">
+          <label>Object size:</label>
+          <span class="calc-given" id="r2ObjSize"></span> <span class="unit">cm</span>
+        </div>
+        <div class="calc-input-row">
+          <label>Sun diameter:</label>
+          <span class="calc-given">1,392,700</span> <span class="unit">km</span>
+        </div>
+        <div class="calc-input-row">
+          <label>Your scale factor:</label>
+          <input type="number" id="r2ScaleInput" step="any" placeholder="Calculate this">
+          <button class="btn btn-outline" onclick="checkR2Scale()" style="padding:8px 16px; font-size:0.85rem;">Check</button>
+          <span id="r2ScaleFeedback" style="font-size:0.85rem;"></span>
+        </div>
+      </div>
+
+      <div class="calc-step" id="r2step2" style="display:none;">
+        <div class="step-label">Your Turn — Calculate 3 Planets</div>
+        <p class="wide">Using the formula: <strong>Real Diameter × Scale Factor = Model Size</strong></p>
+        <div id="r2PlanetCalcs"></div>
+        <div style="margin-top:1rem;">
+          <button class="btn btn-primary" onclick="completeRound2()">Done — on to Round 3 →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ROUND 3 -->
+    <div class="calc-round" id="round3">
+      <div class="calc-step">
+        <div class="step-label">Round 3 · Minimal Support</div>
+        <p class="wide">Final challenge: calculate the model sizes for the remaining planets. The formula is at the top for reference — but the rest is up to you.</p>
+        <div class="formula">Model Size = Real Diameter × Scale Factor (<span id="r3SF"></span>)</div>
+        <div id="r3PlanetCalcs"></div>
+        <div style="margin-top:1rem;">
+          <button class="btn btn-gold" onclick="completeRound3()">Check All & See Full Model ✓</button>
+        </div>
+      </div>
+
+      <div id="fullModelReveal" style="display:none;">
+        <div class="calc-step">
+          <div class="step-label">🎉 Your Complete Scale Model</div>
+          <div style="overflow-x:auto;">
+            <table class="results-table" id="fullResultsTable"></table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="nav-buttons">
+      <button class="btn btn-outline" onclick="goToSection(3)">← Back</button>
+      <button class="btn btn-primary" onclick="goToSection(5)">Next: Practical Prep →</button>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ PRACTICAL PREP ═══════════ -->
+<section id="practical">
+  <div class="section-inner">
+    <h3>🏠 Practical Prep · 10 minutes</h3>
+    <h2>Homework: Find Your Planets</h2>
+    <p>Before next lesson, you need to find household objects that match each planet's scaled size. Use the checklist below and take a photo of each one.</p>
+
+    <div class="practical-grid">
+      <div>
+        <h4 style="font-family:'Outfit'; font-weight:700; margin-bottom:1rem; color:var(--accent-blue);">📋 Your Checklist</h4>
+        <ul class="checklist" id="practicalChecklist">
+          <li onclick="toggleCheck(this)">
+            <div class="check-box"></div>
+            <span class="check-text">Find or make a Sun object (your chosen scale object)</span>
+          </li>
+          <li onclick="toggleCheck(this)">
+            <div class="check-box"></div>
+            <span class="check-text">Find objects matching each planet's scaled size</span>
+          </li>
+          <li onclick="toggleCheck(this)">
+            <div class="check-box"></div>
+            <span class="check-text">Take a photo of all your planets together</span>
+          </li>
+          <li onclick="toggleCheck(this)">
+            <div class="check-box"></div>
+            <span class="check-text">Write down which object represents which planet</span>
+          </li>
+          <li onclick="toggleCheck(this)">
+            <div class="check-box"></div>
+            <span class="check-text">Note anything surprising about the sizes</span>
+          </li>
+        </ul>
+      </div>
+
+      <div class="tip-card">
+        <h4>💡 Size Finder Tips</h4>
+        <p style="color:var(--text-secondary); font-size:0.9rem; margin-bottom:1rem;">Not sure what matches? Here are everyday objects for common sizes:</p>
+        <div class="size-example"><span class="ex-dot" style="width:6px;height:6px;background:var(--accent-blue);"></span> <strong>< 1 mm</strong> — grain of sand, pencil tip mark</div>
+        <div class="size-example"><span class="ex-dot" style="width:8px;height:8px;background:var(--accent-cyan);"></span> <strong>1–3 mm</strong> — peppercorn, sesame seed, pin head</div>
+        <div class="size-example"><span class="ex-dot" style="width:10px;height:10px;background:var(--accent-gold);"></span> <strong>3–5 mm</strong> — lentil, small bead, match head</div>
+        <div class="size-example"><span class="ex-dot" style="width:14px;height:14px;background:var(--accent-pink);"></span> <strong>5–10 mm</strong> — pea, blueberry, pencil eraser</div>
+        <div class="size-example"><span class="ex-dot" style="width:18px;height:18px;background:#c4956a;"></span> <strong>1–2 cm</strong> — marble, grape, coin</div>
+        <div class="size-example"><span class="ex-dot" style="width:24px;height:24px;background:#e8d08c;"></span> <strong>2–5 cm</strong> — ping pong ball, walnut, golf ball</div>
+        <div class="size-example"><span class="ex-dot" style="width:30px;height:30px;background:#d4553a;"></span> <strong>5–10 cm</strong> — tennis ball, orange, apple</div>
+      </div>
+    </div>
+
+    <div class="nav-buttons">
+      <button class="btn btn-outline" onclick="goToSection(4)">← Back</button>
+      <button class="btn btn-primary" onclick="goToSection(6)">Next: Summary →</button>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ SUMMARY ═══════════ -->
+<section id="summary">
+  <div class="section-inner">
+    <h3>🚀 Lesson Summary</h3>
+    <h2>What We Learned Today</h2>
+
+    <div class="summary-grid">
+      <div class="summary-card card">
+        <div class="summary-icon">🤯</div>
+        <div class="summary-title">Scale Is Deceptive</div>
+        <div class="summary-text">Textbook diagrams dramatically mislead us about both the sizes and distances in our solar system.</div>
+      </div>
+      <div class="summary-card card">
+        <div class="summary-icon">📐</div>
+        <div class="summary-title">Two Kinds of Scale</div>
+        <div class="summary-text">You can model size OR distance accurately — but never both at once on the same model.</div>
+      </div>
+      <div class="summary-card card">
+        <div class="summary-icon">🧮</div>
+        <div class="summary-title">Scale Factor</div>
+        <div class="summary-text">Dividing your model size by the real size gives a scale factor you can apply to everything in the system.</div>
+      </div>
+    </div>
+
+    <div class="next-lesson-teaser">
+      <h3 style="color:var(--text-dim); letter-spacing:1px; font-size:0.75rem;">COMING NEXT LESSON</h3>
+      <h2>Building Your Scale Solar System</h2>
+      <div class="teaser-q">"If Earth is 1 metre from the Sun… where would Neptune be?"</div>
+      <p style="margin:1rem auto 0; text-align:center; max-width:500px;">Bring your planet objects and get ready to head outside. We're going to discover just how much <em>empty space</em> there really is.</p>
+    </div>
+
+    <div class="nav-buttons">
+      <button class="btn btn-outline" onclick="goToSection(5)">← Back</button>
+      <span style="color:var(--text-dim); font-size:0.85rem;">🎉 Lesson Complete</span>
+    </div>
+  </div>
+</section>
+
+</div><!-- /page-wrapper -->
+
+<script>
+// ═══════════ DATA ═══════════
+const PLANETS = [
+  { name: 'Mercury', diameter: 4879, color: '#b0b0b0', order: 1 },
+  { name: 'Venus', diameter: 12104, color: '#e8a95b', order: 2 },
+  { name: 'Earth', diameter: 12756, color: '#4a9eff', order: 3 },
+  { name: 'Mars', diameter: 6792, color: '#d4553a', order: 4 },
+  { name: 'Jupiter', diameter: 142984, color: '#c4956a', order: 5 },
+  { name: 'Saturn', diameter: 120536, color: '#e8d08c', order: 6 },
+  { name: 'Uranus', diameter: 51118, color: '#7ecfc0', order: 7 },
+  { name: 'Neptune', diameter: 49528, color: '#4a6bbd', order: 8 }
+];
+const SUN_DIAMETER = 1392700;
+const CORRECT_SIZE_ORDER = ['Mercury','Mars','Venus','Earth','Neptune','Uranus','Saturn','Jupiter'];
+
+const SUN_OBJECTS = [
+  { name: 'Beach Ball', size: 60, emoji: '🏐' },
+  { name: 'Football', size: 22, emoji: '⚽' },
+  { name: 'Basketball', size: 24, emoji: '🏀' },
+  { name: 'Yoga Ball', size: 65, emoji: '🔵' },
+  { name: 'Watermelon', size: 30, emoji: '🍉' },
+  { name: 'Balloon', size: 28, emoji: '🎈' }
+];
+
+const QUIZ_QUESTIONS = [
+  { q: 'What is at the centre of our solar system?', options: ['Earth','The Moon','The Sun','Jupiter'], correct: 2 },
+  { q: 'How many planets are in our solar system?', options: ['7','8','9','10'], correct: 1 },
+  { q: 'Which planet is closest to the Sun?', options: ['Venus','Mars','Earth','Mercury'], correct: 3 },
+  { q: 'The Sun is a…', options: ['Planet','Star','Moon','Asteroid'], correct: 1 },
+  { q: 'Which is the largest planet?', options: ['Saturn','Neptune','Jupiter','Uranus'], correct: 2 }
+];
+
+// ═══════════ STATE ═══════════
+let currentSection = 0;
+const sections = ['hero','retrieval','stw','ranking','calculator','practical','summary'];
+let quizAnswered = 0;
+let quizCorrect = 0;
+let rankOrder = [];
+let selectedObject = null;
+let scaleFactor = 0;
+
+// ═══════════ NAVIGATION ═══════════
+function goToSection(idx) {
+  if (idx < 0 || idx >= sections.length) return;
+  document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
+  document.getElementById(sections[idx]).classList.add('active');
+  currentSection = idx;
+  updateProgress();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function updateProgress() {
+  const pct = (currentSection / (sections.length - 1)) * 100;
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.querySelectorAll('.progress-labels span').forEach((s, i) => {
+    s.classList.remove('active','completed');
+    if (i === currentSection) s.classList.add('active');
+    else if (i < currentSection) s.classList.add('completed');
+  });
+}
+
+// ═══════════ QUIZ ═══════════
+function buildQuiz() {
+  const grid = document.getElementById('quizGrid');
+  QUIZ_QUESTIONS.forEach((q, qi) => {
+    const card = document.createElement('div');
+    card.className = 'quiz-card';
+    card.innerHTML = `
+      <div class="q-number">Question ${qi+1}</div>
+      <div class="q-text">${q.q}</div>
+      <div class="quiz-options">
+        ${q.options.map((opt, oi) => `<div class="quiz-option" data-q="${qi}" data-o="${oi}" onclick="answerQuiz(this,${qi},${oi})">${opt}</div>`).join('')}
+      </div>
+      <div class="quiz-feedback" id="qfb${qi}"></div>
+    `;
+    grid.appendChild(card);
+  });
+}
+
+function answerQuiz(el, qi, oi) {
+  const card = el.closest('.quiz-card');
+  if (card.classList.contains('answered')) return;
+  card.classList.add('answered');
+  const correct = QUIZ_QUESTIONS[qi].correct;
+  const options = card.querySelectorAll('.quiz-option');
+  options.forEach(o => o.classList.add('locked'));
+  const fb = document.getElementById('qfb' + qi);
+
+  if (oi === correct) {
+    el.classList.add('correct');
+    fb.className = 'quiz-feedback show correct-fb';
+    fb.textContent = '✓ Correct!';
+    quizCorrect++;
+  } else {
+    el.classList.add('incorrect');
+    options[correct].classList.add('correct');
+    fb.className = 'quiz-feedback show incorrect-fb';
+    fb.textContent = '✗ The answer was: ' + QUIZ_QUESTIONS[qi].options[correct];
+  }
+
+  quizAnswered++;
+  if (quizAnswered === QUIZ_QUESTIONS.length) showQuizScore();
+}
+
+function showQuizScore() {
+  const bar = document.getElementById('quizScoreBar');
+  bar.style.display = 'flex';
+  document.getElementById('scoreNum').textContent = quizCorrect;
+  const dots = document.getElementById('scoreDots');
+  QUIZ_QUESTIONS.forEach((_, i) => {
+    const d = document.createElement('div');
+    d.className = 'score-dot';
+    setTimeout(() => {
+      const card = document.querySelectorAll('.quiz-card')[i];
+      d.classList.add(card.querySelector('.quiz-option.correct:not(.incorrect)') && !card.querySelector('.quiz-option.incorrect') ? 'hit' : (card.querySelector('.quiz-option.incorrect') ? 'miss' : 'hit'));
+    }, i * 150);
+    dots.appendChild(d);
+  });
+  const msgs = ["Keep going — you'll master this!","Solid start!","Nice work!","Great recall!","Perfect score! 🌟"];
+  document.getElementById('scoreMsg').textContent = msgs[quizCorrect] || msgs[2];
+}
+
+// ═══════════ RANKING ═══════════
+function buildRanking() {
+  const container = document.getElementById('rankPlanets');
+  const shuffled = [...PLANETS].sort(() => Math.random() - 0.5);
+  shuffled.forEach(p => {
+    const div = document.createElement('div');
+    div.className = 'rank-planet';
+    div.dataset.name = p.name;
+    div.innerHTML = `
+      <div class="planet-visual" style="background:radial-gradient(circle at 35% 35%, ${lighten(p.color)}, ${p.color});"></div>
+      <div class="planet-name">${p.name}</div>
+      <div class="rank-badge"></div>
+    `;
+    div.onclick = () => toggleRank(div, p.name);
+    container.appendChild(div);
+  });
+}
+
+function lighten(hex) {
+  const r = parseInt(hex.slice(1,3),16), g = parseInt(hex.slice(3,5),16), b = parseInt(hex.slice(5,7),16);
+  return `rgb(${Math.min(255,r+80)},${Math.min(255,g+80)},${Math.min(255,b+80)})`;
+}
+
+function toggleRank(el, name) {
+  if (document.getElementById('rankResult').classList.contains('show')) return;
+  if (el.classList.contains('selected')) {
+    const idx = rankOrder.indexOf(name);
+    rankOrder.splice(idx, 1);
+    el.classList.remove('selected');
+    el.querySelector('.rank-badge').textContent = '';
+    refreshRankBadges();
+  } else {
+    if (rankOrder.length >= 8) return;
+    rankOrder.push(name);
+    el.classList.add('selected');
+    el.querySelector('.rank-badge').textContent = rankOrder.length;
+  }
+  document.getElementById('resetRankBtn').style.display = rankOrder.length > 0 ? 'inline-flex' : 'none';
+  document.getElementById('checkRankBtn').style.display = rankOrder.length === 8 ? 'inline-flex' : 'none';
+}
+
+function refreshRankBadges() {
+  document.querySelectorAll('.rank-planet').forEach(el => {
+    const idx = rankOrder.indexOf(el.dataset.name);
+    if (idx >= 0) {
+      el.querySelector('.rank-badge').textContent = idx + 1;
+      el.classList.add('selected');
+    } else {
+      el.querySelector('.rank-badge').textContent = '';
+      el.classList.remove('selected');
+    }
+  });
+}
+
+function resetRanking() {
+  rankOrder = [];
+  document.querySelectorAll('.rank-planet').forEach(el => {
+    el.classList.remove('selected');
+    el.querySelector('.rank-badge').textContent = '';
+  });
+  document.getElementById('resetRankBtn').style.display = 'none';
+  document.getElementById('checkRankBtn').style.display = 'none';
+  document.getElementById('rankResult').classList.remove('show');
+  document.getElementById('keyConcept').classList.remove('show');
+}
+
+function checkRanking() {
+  const resultDiv = document.getElementById('rankResult');
+  let html = '<h4 style="font-family:\'Outfit\';font-weight:700;margin-bottom:1rem;">Correct Order (smallest → largest):</h4>';
+  const sorted = [...PLANETS].sort((a,b) => a.diameter - b.diameter);
+  sorted.forEach((p, i) => {
+    const userPos = rankOrder.indexOf(p.name);
+    const isCorrect = userPos === i;
+    const pctWidth = (p.diameter / 142984 * 100).toFixed(1);
+    html += `<div class="rank-result-bar ${isCorrect ? 'correct-pos' : 'wrong-pos'}" style="animation-delay:${i*0.08}s">
+      <div class="rank-num">${i+1}</div>
+      <div class="result-planet-dot" style="background:${p.color};"></div>
+      <div class="result-name">${p.name} ${isCorrect ? '✓' : '✗'}</div>
+      <div class="result-size">${p.diameter.toLocaleString()} km</div>
+      <div class="result-bar-fill"><span id="bar${i}"></span></div>
+    </div>`;
+  });
+  resultDiv.innerHTML = html;
+  resultDiv.classList.add('show');
+  setTimeout(() => {
+    sorted.forEach((p, i) => {
+      const pctWidth = (p.diameter / 142984 * 100).toFixed(1);
+      document.getElementById('bar' + i).style.width = pctWidth + '%';
+    });
+  }, 100);
+  setTimeout(() => document.getElementById('keyConcept').classList.add('show'), 600);
+}
+
+// ═══════════ SCALE CALCULATOR ═══════════
+function buildCalculator() {
+  const sel = document.getElementById('objectSelector');
+  SUN_OBJECTS.forEach((obj, i) => {
+    const div = document.createElement('div');
+    div.className = 'object-option';
+    div.innerHTML = `<div class="obj-emoji">${obj.emoji}</div><div class="obj-name">${obj.name}</div><div class="obj-size">${obj.size} cm diameter</div>`;
+    div.onclick = () => selectObject(i);
+    sel.appendChild(div);
+  });
+}
+
+function selectObject(idx) {
+  selectedObject = SUN_OBJECTS[idx];
+  scaleFactor = selectedObject.size / SUN_DIAMETER;
+  document.querySelectorAll('.object-option').forEach((o, i) => o.classList.toggle('selected', i === idx));
+
+  // Show step 2
+  const s2 = document.getElementById('r1step2');
+  s2.style.display = 'block';
+  document.getElementById('chosenSize').textContent = selectedObject.size;
+  document.getElementById('r1ScaleFactor').textContent = scaleFactor.toExponential(4);
+  const scaleHuman = (scaleFactor * 1).toFixed(8);
+  document.getElementById('r1ScaleHuman').textContent = (scaleFactor * 10000000).toFixed(4) + ' millionths of a cm';
+
+  // Show step 3 after short delay
+  setTimeout(() => {
+    document.getElementById('r1step3').style.display = 'block';
+    buildR1Table();
+  }, 400);
+}
+
+function buildR1Table() {
+  const table = document.getElementById('r1ResultsTable');
+  let html = `<thead><tr><th>Planet</th><th>Real Diameter</th><th>Model Size</th><th>Looks Like…</th></tr></thead><tbody>`;
+  PLANETS.forEach(p => {
+    const modelCm = p.diameter * scaleFactor;
+    html += `<tr>
+      <td><span class="planet-color" style="background:${p.color};"></span>${p.name}</td>
+      <td>${p.diameter.toLocaleString()} km</td>
+      <td class="scaled">${formatModelSize(modelCm)}</td>
+      <td class="household">${getHouseholdComparison(modelCm)}</td>
+    </tr>`;
+  });
+  html += '</tbody>';
+  table.innerHTML = html;
+}
+
+function formatModelSize(cm) {
+  if (cm < 0.1) return (cm * 10).toFixed(2) + ' mm';
+  if (cm < 1) return (cm * 10).toFixed(1) + ' mm';
+  return cm.toFixed(2) + ' cm';
+}
+
+function getHouseholdComparison(cm) {
+  if (cm < 0.05) return 'Grain of salt';
+  if (cm < 0.1) return 'Grain of sand';
+  if (cm < 0.2) return 'Pinhead';
+  if (cm < 0.4) return 'Peppercorn';
+  if (cm < 0.7) return 'Small bead';
+  if (cm < 1.0) return 'Pea';
+  if (cm < 1.5) return 'Marble';
+  if (cm < 2.5) return 'Grape / coin';
+  if (cm < 4) return 'Walnut';
+  if (cm < 6) return 'Golf ball';
+  if (cm < 8) return 'Tennis ball';
+  return 'Orange / apple';
+}
+
+function completeRound1() {
+  document.getElementById('roundTab2').disabled = false;
+  showRound(2);
+  document.getElementById('r2Object').textContent = selectedObject.name;
+  document.getElementById('r2ObjSize').textContent = selectedObject.size;
+}
+
+function showRound(n) {
+  document.querySelectorAll('.calc-round').forEach(r => r.classList.remove('active'));
+  document.getElementById('round' + n).classList.add('active');
+  document.querySelectorAll('.round-tab').forEach((t, i) => t.classList.toggle('active', i === n - 1));
+}
+
+function checkR2Scale() {
+  const input = parseFloat(document.getElementById('r2ScaleInput').value);
+  const fb = document.getElementById('r2ScaleFeedback');
+  if (isNaN(input)) { fb.textContent = 'Enter a number'; fb.style.color = 'var(--accent-red)'; return; }
+  const expected = selectedObject.size / SUN_DIAMETER;
+  const ratio = input / expected;
+  if (ratio > 0.8 && ratio < 1.2) {
+    fb.textContent = '✓ Correct!';
+    fb.style.color = 'var(--accent-green)';
+    document.getElementById('r2step2').style.display = 'block';
+    buildR2Planets();
+  } else {
+    fb.textContent = '✗ Try again. Remember: ' + selectedObject.size + ' ÷ 1,392,700';
+    fb.style.color = 'var(--accent-red)';
+  }
+}
+
+function buildR2Planets() {
+  const container = document.getElementById('r2PlanetCalcs');
+  const chosen = [PLANETS[2], PLANETS[4], PLANETS[0]]; // Earth, Jupiter, Mercury
+  chosen.forEach(p => {
+    const expected = p.diameter * scaleFactor;
+    container.innerHTML += `
+      <div class="calc-input-row" style="margin:0.8rem 0; padding:0.8rem; background:rgba(255,255,255,0.02); border-radius:10px;">
+        <span class="planet-color" style="background:${p.color};width:14px;height:14px;border-radius:50;display:inline-block;"></span>
+        <label>${p.name} (${p.diameter.toLocaleString()} km) × scale factor =</label>
+        <input type="number" step="any" id="r2calc_${p.name}" placeholder="?">
+        <span class="unit">cm</span>
+        <button class="btn btn-outline" style="padding:6px 12px;font-size:0.8rem;" onclick="checkR2Planet('${p.name}',${expected},this)">Check</button>
+        <span id="r2fb_${p.name}" style="font-size:0.85rem;"></span>
+      </div>`;
+  });
+}
+
+function checkR2Planet(name, expected, btn) {
+  const input = parseFloat(document.getElementById('r2calc_' + name).value);
+  const fb = document.getElementById('r2fb_' + name);
+  if (isNaN(input)) { fb.textContent = 'Enter a number'; return; }
+  const ratio = input / expected;
+  if (ratio > 0.7 && ratio < 1.3) {
+    fb.textContent = '✓ ' + formatModelSize(expected);
+    fb.style.color = 'var(--accent-green)';
+  } else {
+    fb.textContent = '✗ Expected ≈ ' + formatModelSize(expected);
+    fb.style.color = 'var(--accent-red)';
+  }
+}
+
+function completeRound2() {
+  document.getElementById('roundTab3').disabled = false;
+  showRound(3);
+  document.getElementById('r3SF').textContent = scaleFactor.toExponential(4);
+  buildR3Planets();
+}
+
+function buildR3Planets() {
+  const container = document.getElementById('r3PlanetCalcs');
+  const remaining = [PLANETS[1], PLANETS[3], PLANETS[5], PLANETS[6], PLANETS[7]]; // Venus, Mars, Saturn, Uranus, Neptune
+  remaining.forEach(p => {
+    const expected = p.diameter * scaleFactor;
+    container.innerHTML += `
+      <div class="calc-input-row" style="margin:0.6rem 0; padding:0.8rem; background:rgba(255,255,255,0.02); border-radius:10px;">
+        <span style="background:${p.color};width:14px;height:14px;border-radius:50%;display:inline-block;flex-shrink:0;"></span>
+        <label style="min-width:200px;">${p.name} (${p.diameter.toLocaleString()} km)</label>
+        <input type="number" step="any" id="r3calc_${p.name}" placeholder="Model size">
+        <span class="unit">cm</span>
+      </div>`;
+  });
+}
+
+function completeRound3() {
+  // Show full model
+  document.getElementById('fullModelReveal').style.display = 'block';
+  const table = document.getElementById('fullResultsTable');
+  let html = `<thead><tr><th>Planet</th><th>Real Diameter</th><th>Model Size</th><th>Household Object</th></tr></thead><tbody>`;
+  const sorted = [...PLANETS].sort((a, b) => b.diameter - a.diameter);
+  sorted.forEach(p => {
+    const modelCm = p.diameter * scaleFactor;
+    html += `<tr>
+      <td><span class="planet-color" style="background:${p.color};"></span>${p.name}</td>
+      <td>${p.diameter.toLocaleString()} km</td>
+      <td class="scaled">${formatModelSize(modelCm)}</td>
+      <td class="household">${getHouseholdComparison(modelCm)}</td>
+    </tr>`;
+  });
+  html += '</tbody>';
+  table.innerHTML = html;
+  document.getElementById('fullModelReveal').scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+// ═══════════ CHECKLIST ═══════════
+function toggleCheck(li) {
+  li.classList.toggle('checked');
+}
+
+// ═══════════ INIT ═══════════
+buildQuiz();
+buildRanking();
+buildCalculator();
+updateProgress();
+</script>
+</body>
+</html>
