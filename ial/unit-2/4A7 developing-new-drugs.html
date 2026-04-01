@@ -1,0 +1,1656 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>4A.7 Developing New Drugs | IAL Biology</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f8f7f4;
+  --surface: #ffffff;
+  --surface-alt: #f0efeb;
+  --text: #1a1a1a;
+  --text-muted: #5c5c5c;
+  --accent: #2d6a4f;
+  --accent-light: #d8f3dc;
+  --accent-dark: #1b4332;
+  --orange: #e76f51;
+  --orange-light: #fef0ec;
+  --blue: #457b9d;
+  --blue-light: #e8f0f5;
+  --purple: #6c5ce7;
+  --purple-light: #f0eeff;
+  --gold: #d4a843;
+  --gold-light: #fdf8eb;
+  --border: #e0ddd6;
+  --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+  --radius: 10px;
+  --radius-sm: 6px;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  font-size: 16px;
+}
+
+.lesson-container {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 20px 24px 80px;
+}
+
+/* ── HEADER ── */
+.lesson-header {
+  background: linear-gradient(135deg, var(--accent-dark) 0%, var(--accent) 60%, #40916c 100%);
+  color: white;
+  padding: 48px 40px 40px;
+  border-radius: 16px;
+  margin-bottom: 32px;
+  position: relative;
+  overflow: hidden;
+}
+.lesson-header::before {
+  content: '';
+  position: absolute;
+  top: -40px; right: -40px;
+  width: 200px; height: 200px;
+  background: rgba(255,255,255,0.05);
+  border-radius: 50%;
+}
+.lesson-header::after {
+  content: '';
+  position: absolute;
+  bottom: -60px; left: 30%;
+  width: 300px; height: 300px;
+  background: rgba(255,255,255,0.03);
+  border-radius: 50%;
+}
+.spec-badge {
+  display: inline-block;
+  background: rgba(255,255,255,0.15);
+  backdrop-filter: blur(4px);
+  padding: 4px 14px;
+  border-radius: 20px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  margin-bottom: 16px;
+}
+.lesson-header h1 {
+  font-family: 'Instrument Serif', serif;
+  font-size: 2.6rem;
+  font-weight: 400;
+  line-height: 1.2;
+  margin-bottom: 12px;
+}
+.lesson-header p {
+  font-size: 1rem;
+  opacity: 0.85;
+  max-width: 600px;
+}
+
+/* ── LEARNING OBJECTIVES ── */
+.lo-box {
+  background: var(--surface);
+  border: 2px solid var(--accent);
+  border-radius: var(--radius);
+  padding: 24px 28px;
+  margin-bottom: 28px;
+  box-shadow: var(--shadow);
+}
+.lo-box h3 {
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--accent);
+  margin-bottom: 14px;
+}
+.lo-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+}
+.lo-item:last-child { border-bottom: none; }
+.lo-check {
+  width: 22px; height: 22px;
+  border: 2px solid var(--border);
+  border-radius: 5px;
+  flex-shrink: 0;
+  margin-top: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  font-size: 13px;
+  color: transparent;
+}
+.lo-item.checked .lo-check {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: white;
+}
+.lo-item p { font-size: 0.95rem; }
+
+/* ── NAVIGATION ── */
+.nav-bar {
+  display: flex;
+  gap: 6px;
+  background: var(--surface);
+  padding: 8px;
+  border-radius: var(--radius);
+  margin-bottom: 32px;
+  box-shadow: var(--shadow);
+  overflow-x: auto;
+  flex-wrap: wrap;
+}
+.nav-btn {
+  padding: 8px 16px;
+  border: none;
+  background: transparent;
+  border-radius: var(--radius-sm);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.nav-btn:hover { background: var(--surface-alt); color: var(--text); }
+.nav-btn.active { background: var(--accent); color: white; }
+
+/* ── SECTIONS ── */
+.section {
+  display: none;
+  animation: fadeIn 0.3s ease;
+}
+.section.active { display: block; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+/* ── CARDS ── */
+.card {
+  background: var(--surface);
+  border-radius: var(--radius);
+  padding: 28px;
+  margin-bottom: 20px;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border);
+}
+.card h2 {
+  font-family: 'Instrument Serif', serif;
+  font-size: 1.7rem;
+  font-weight: 400;
+  margin-bottom: 6px;
+  color: var(--accent-dark);
+}
+.card h3 {
+  font-size: 1.15rem;
+  font-weight: 600;
+  margin-bottom: 10px;
+  color: var(--text);
+}
+.card p { margin-bottom: 12px; }
+.card p:last-child { margin-bottom: 0; }
+
+/* ── KEYWORD HIGHLIGHT ── */
+.kw {
+  background: var(--accent-light);
+  color: var(--accent-dark);
+  padding: 1px 7px;
+  border-radius: 4px;
+  font-weight: 600;
+  font-size: 0.94em;
+}
+
+/* ── FEYNMAN ANALOGY BOX ── */
+.feynman-box {
+  background: var(--gold-light);
+  border-left: 4px solid var(--gold);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  padding: 20px 24px;
+  margin: 20px 0;
+}
+.feynman-box .feynman-label {
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--gold);
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+/* ── VTR BOX ── */
+.vtr-box {
+  background: var(--purple-light);
+  border: 2px solid #c8c1f5;
+  border-radius: var(--radius);
+  padding: 24px 28px;
+  margin: 24px 0;
+}
+.vtr-label {
+  display: inline-block;
+  background: var(--purple);
+  color: white;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  padding: 3px 10px;
+  border-radius: 4px;
+  margin-bottom: 12px;
+}
+.vtr-box h4 {
+  font-family: 'Instrument Serif', serif;
+  font-size: 1.25rem;
+  margin-bottom: 10px;
+  color: #4a3eb5;
+}
+.vtr-input {
+  width: 100%;
+  border: 1.5px solid #d5d0f0;
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.95rem;
+  resize: vertical;
+  min-height: 60px;
+  margin-top: 6px;
+  margin-bottom: 10px;
+  background: white;
+  transition: border-color 0.2s;
+}
+.vtr-input:focus { outline: none; border-color: var(--purple); }
+.vtr-section-label {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: #4a3eb5;
+  margin-top: 10px;
+}
+
+/* ── PROGRESS CHECK ── */
+.progress-check {
+  background: var(--orange-light);
+  border: 2px solid #f4a99b;
+  border-radius: var(--radius);
+  padding: 24px 28px;
+  margin: 24px 0;
+}
+.pc-label {
+  display: inline-block;
+  background: var(--orange);
+  color: white;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  padding: 3px 10px;
+  border-radius: 4px;
+  margin-bottom: 12px;
+}
+
+/* ── TIER TABS ── */
+.tier-tabs {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 16px;
+}
+.tier-tab {
+  padding: 6px 16px;
+  border: 2px solid var(--border);
+  background: white;
+  border-radius: 6px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.tier-tab[data-tier="foundation"] { color: #2d6a4f; }
+.tier-tab[data-tier="core"] { color: #457b9d; }
+.tier-tab[data-tier="challenge"] { color: #6c5ce7; }
+.tier-tab.active[data-tier="foundation"] { background: #d8f3dc; border-color: #2d6a4f; }
+.tier-tab.active[data-tier="core"] { background: #e8f0f5; border-color: #457b9d; }
+.tier-tab.active[data-tier="challenge"] { background: #f0eeff; border-color: #6c5ce7; }
+.tier-content { display: none; }
+.tier-content.active { display: block; }
+
+/* ── MCQ ── */
+.mcq-options { display: flex; flex-direction: column; gap: 8px; margin: 12px 0; }
+.mcq-opt {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border: 2px solid var(--border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all 0.2s;
+  background: white;
+  font-size: 0.95rem;
+}
+.mcq-opt:hover { border-color: var(--accent); background: var(--accent-light); }
+.mcq-opt.correct { border-color: #2d6a4f; background: #d8f3dc; }
+.mcq-opt.incorrect { border-color: #e76f51; background: #fef0ec; }
+.mcq-opt .letter {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  background: var(--surface-alt);
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700;
+  font-size: 0.85rem;
+  flex-shrink: 0;
+}
+.mcq-feedback {
+  display: none;
+  padding: 12px 16px;
+  border-radius: var(--radius-sm);
+  margin-top: 8px;
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+.mcq-feedback.show { display: block; }
+.mcq-feedback.correct-fb { background: #d8f3dc; border: 1px solid #95d5b2; }
+.mcq-feedback.incorrect-fb { background: #fef0ec; border: 1px solid #f4a99b; }
+
+/* ── REVEAL BOX ── */
+.reveal-btn {
+  display: inline-block;
+  padding: 8px 20px;
+  background: var(--accent);
+  color: white;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.reveal-btn:hover { background: var(--accent-dark); }
+.reveal-content {
+  display: none;
+  background: var(--accent-light);
+  padding: 16px 20px;
+  border-radius: var(--radius-sm);
+  margin-top: 10px;
+  font-size: 0.93rem;
+  line-height: 1.7;
+}
+.reveal-content.show { display: block; }
+
+/* ── DRAG AND DROP ── */
+.drag-zone {
+  min-height: 50px;
+  border: 2px dashed var(--border);
+  border-radius: var(--radius-sm);
+  padding: 10px;
+  margin: 6px 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+  transition: all 0.2s;
+  background: white;
+}
+.drag-zone.over { border-color: var(--accent); background: var(--accent-light); }
+.drag-item {
+  display: inline-block;
+  padding: 6px 14px;
+  background: var(--blue-light);
+  border: 1.5px solid var(--blue);
+  border-radius: 20px;
+  font-size: 0.88rem;
+  font-weight: 500;
+  cursor: grab;
+  user-select: none;
+  transition: all 0.15s;
+}
+.drag-item:active { cursor: grabbing; transform: scale(1.05); }
+.drag-item.placed { opacity: 0.5; cursor: default; }
+
+/* ── FILL BLANK ── */
+.fill-blank {
+  display: inline-block;
+  border-bottom: 2px solid var(--accent);
+  min-width: 120px;
+  padding: 2px 4px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.9rem;
+  text-align: center;
+  background: transparent;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  color: var(--accent-dark);
+}
+.fill-blank:focus { outline: none; border-bottom-color: var(--purple); }
+.fill-blank.correct-input { border-bottom-color: #2d6a4f; background: #d8f3dc; }
+.fill-blank.incorrect-input { border-bottom-color: #e76f51; background: #fef0ec; }
+
+/* ── TIMELINE ── */
+.timeline { position: relative; padding-left: 28px; margin: 20px 0; }
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 8px; top: 0; bottom: 0;
+  width: 3px;
+  background: linear-gradient(to bottom, var(--accent), var(--blue), var(--purple));
+  border-radius: 2px;
+}
+.timeline-item {
+  position: relative;
+  padding-bottom: 24px;
+}
+.timeline-item::before {
+  content: '';
+  position: absolute;
+  left: -24px;
+  top: 6px;
+  width: 14px; height: 14px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: 3px solid white;
+  box-shadow: 0 0 0 2px var(--accent);
+}
+.timeline-item:nth-child(2)::before { background: var(--blue); box-shadow: 0 0 0 2px var(--blue); }
+.timeline-item:nth-child(3)::before { background: #e9c46a; box-shadow: 0 0 0 2px #e9c46a; }
+.timeline-item:nth-child(4)::before { background: var(--orange); box-shadow: 0 0 0 2px var(--orange); }
+.timeline-item:nth-child(5)::before { background: var(--purple); box-shadow: 0 0 0 2px var(--purple); }
+.timeline-item:nth-child(6)::before { background: #264653; box-shadow: 0 0 0 2px #264653; }
+.tl-title { font-weight: 700; font-size: 1rem; margin-bottom: 4px; }
+.tl-time { font-size: 0.82rem; color: var(--text-muted); font-weight: 500; }
+.tl-desc { font-size: 0.93rem; margin-top: 4px; }
+
+/* ── EXAM Q ── */
+.exam-box {
+  background: var(--surface);
+  border: 2px solid var(--text);
+  border-radius: var(--radius);
+  padding: 24px 28px;
+  margin: 20px 0;
+}
+.exam-marks {
+  display: inline-block;
+  background: var(--text);
+  color: white;
+  padding: 2px 10px;
+  border-radius: 4px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  float: right;
+}
+.exam-box textarea {
+  width: 100%;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.95rem;
+  resize: vertical;
+  min-height: 80px;
+  margin-top: 12px;
+  background: white;
+}
+.exam-box textarea:focus { outline: none; border-color: var(--accent); }
+
+/* ── MARK SCHEME ── */
+.mark-scheme {
+  display: none;
+  background: #fdf8eb;
+  border: 1.5px solid var(--gold);
+  border-radius: var(--radius-sm);
+  padding: 16px 20px;
+  margin-top: 12px;
+}
+.mark-scheme.show { display: block; }
+.mark-scheme h5 {
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--gold);
+  margin-bottom: 8px;
+}
+.mark-scheme ul { padding-left: 18px; font-size: 0.9rem; }
+.mark-scheme li { margin-bottom: 4px; }
+
+/* ── CONFIDENCE METER ── */
+.confidence-row {
+  display: flex;
+  gap: 8px;
+  margin: 10px 0;
+}
+.conf-btn {
+  flex: 1;
+  padding: 8px 4px;
+  border: 2px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: white;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: center;
+}
+.conf-btn:nth-child(1):hover, .conf-btn:nth-child(1).active { background: #fef0ec; border-color: var(--orange); color: var(--orange); }
+.conf-btn:nth-child(2):hover, .conf-btn:nth-child(2).active { background: #fdf8eb; border-color: var(--gold); color: #b8860b; }
+.conf-btn:nth-child(3):hover, .conf-btn:nth-child(3).active { background: #e8f0f5; border-color: var(--blue); color: var(--blue); }
+.conf-btn:nth-child(4):hover, .conf-btn:nth-child(4).active { background: #d8f3dc; border-color: var(--accent); color: var(--accent); }
+
+/* ── SCORE TRACKER ── */
+.score-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0; right: 0;
+  background: white;
+  border-top: 1px solid var(--border);
+  padding: 10px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  z-index: 100;
+  box-shadow: 0 -2px 8px rgba(0,0,0,0.06);
+}
+.score-item { display: flex; align-items: center; gap: 6px; }
+.score-dot {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+}
+.score-dot.green { background: var(--accent); }
+.score-dot.red { background: var(--orange); }
+.score-dot.blue { background: var(--blue); }
+
+/* ── WORD BANK ── */
+.word-bank {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 14px;
+  background: var(--surface-alt);
+  border-radius: var(--radius-sm);
+  margin: 10px 0;
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 640px) {
+  .lesson-container { padding: 12px 14px 80px; }
+  .lesson-header { padding: 32px 24px; }
+  .lesson-header h1 { font-size: 1.9rem; }
+  .card { padding: 20px; }
+  .nav-bar { gap: 4px; }
+  .nav-btn { font-size: 0.78rem; padding: 6px 10px; }
+  .tier-tabs { flex-wrap: wrap; }
+}
+</style>
+</head>
+<body>
+
+<div class="lesson-container">
+
+  <!-- ══════════════════════════════════════════ HEADER ══════════════════════════════════════════ -->
+  <header class="lesson-header">
+    <div class="spec-badge">SPEC REF 4.13 &nbsp;|&nbsp; UNIT 4A</div>
+    <h1>Developing New Drugs</h1>
+    <p>From William Withering's digitalis soup to modern three-phase clinical trials — how medicines are discovered, tested and approved.</p>
+  </header>
+
+  <!-- ══════════════════════════════════════════ LEARNING OBJECTIVES ══════════════════════════════════════════ -->
+  <div class="lo-box">
+    <h3>Learning Objectives — Tick as you master each one</h3>
+    <div class="lo-item" onclick="this.classList.toggle('checked')">
+      <div class="lo-check">✓</div>
+      <p>Understand the development of drug testing from historic to contemporary protocols</p>
+    </div>
+    <div class="lo-item" onclick="this.classList.toggle('checked')">
+      <div class="lo-check">✓</div>
+      <p>Describe William Withering's discovery of digitalis and its significance</p>
+    </div>
+    <div class="lo-item" onclick="this.classList.toggle('checked')">
+      <div class="lo-check">✓</div>
+      <p>Explain the purpose and use of placebos in drug trials</p>
+    </div>
+    <div class="lo-item" onclick="this.classList.toggle('checked')">
+      <div class="lo-check">✓</div>
+      <p>Describe the three phases of clinical trials and double-blind methodology</p>
+    </div>
+    <div class="lo-item" onclick="this.classList.toggle('checked')">
+      <div class="lo-check">✓</div>
+      <p>Explain why drugs must be effective, safe, stable, easily administered and manufacturable</p>
+    </div>
+    <div class="lo-item" onclick="this.classList.toggle('checked')">
+      <div class="lo-check">✓</div>
+      <p>Discuss the ethical issues surrounding animal testing and clinical trials</p>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════ NAVIGATION ══════════════════════════════════════════ -->
+  <nav class="nav-bar">
+    <button class="nav-btn active" onclick="showSection('diagnostic')">Diagnostic</button>
+    <button class="nav-btn" onclick="showSection('history')">Withering's Story</button>
+    <button class="nav-btn" onclick="showSection('criteria')">Drug Criteria</button>
+    <button class="nav-btn" onclick="showSection('development')">Development Pipeline</button>
+    <button class="nav-btn" onclick="showSection('trials')">Clinical Trials</button>
+    <button class="nav-btn" onclick="showSection('ethics')">Ethics & Debate</button>
+    <button class="nav-btn" onclick="showSection('exam')">Exam Practice</button>
+    <button class="nav-btn" onclick="showSection('exit')">Exit Ticket</button>
+  </nav>
+
+  <!-- ══════════════════════════════════════════════════════════════════════════════════════════════ -->
+  <!-- SECTION 1: DIAGNOSTIC RETRIEVAL QUIZ -->
+  <!-- ══════════════════════════════════════════════════════════════════════════════════════════════ -->
+  <div class="section active" id="sec-diagnostic">
+    <div class="card">
+      <h2>Diagnostic Quiz</h2>
+      <p style="color:var(--text-muted); margin-bottom:20px;">Test what you already know before we begin. Don't worry about getting these wrong — that's the point. Attempting to retrieve answers, even incorrectly, primes your brain to learn the material more deeply.</p>
+
+      <!-- Q1 -->
+      <div class="mcq-block" data-correct="B">
+        <p><strong>1.</strong> William Withering discovered that an extract from which plant could treat dropsy (oedema)?</p>
+        <div class="mcq-options">
+          <div class="mcq-opt" onclick="selectMCQ(this, 'A')"><span class="letter">A</span> Willow bark</div>
+          <div class="mcq-opt" onclick="selectMCQ(this, 'B')"><span class="letter">B</span> Foxglove</div>
+          <div class="mcq-opt" onclick="selectMCQ(this, 'C')"><span class="letter">C</span> Poppy</div>
+          <div class="mcq-opt" onclick="selectMCQ(this, 'D')"><span class="letter">D</span> Cinchona tree</div>
+        </div>
+        <div class="mcq-feedback correct-fb">Correct! Foxgloves contain digitalis, which Withering identified as the active ingredient. Today the drug is called digoxin.</div>
+        <div class="mcq-feedback incorrect-fb">Not quite. Willow bark gives us aspirin, poppies give morphine, and cinchona gives quinine. Foxglove was the source of digitalis for treating heart failure.</div>
+      </div>
+
+      <!-- Q2 -->
+      <div class="mcq-block" data-correct="C" style="margin-top:20px">
+        <p><strong>2.</strong> What is a placebo?</p>
+        <div class="mcq-options">
+          <div class="mcq-opt" onclick="selectMCQ(this, 'A')"><span class="letter">A</span> A drug given at a higher dose than normal</div>
+          <div class="mcq-opt" onclick="selectMCQ(this, 'B')"><span class="letter">B</span> The best currently available treatment</div>
+          <div class="mcq-opt" onclick="selectMCQ(this, 'C')"><span class="letter">C</span> An inactive substance that looks like the drug being tested</div>
+          <div class="mcq-opt" onclick="selectMCQ(this, 'D')"><span class="letter">D</span> A drug tested only on animals</div>
+        </div>
+        <div class="mcq-feedback correct-fb">Correct! A placebo has no active ingredient but looks identical to the real drug. It controls for the psychological effect of believing you're receiving treatment.</div>
+        <div class="mcq-feedback incorrect-fb">A placebo is an inactive substance designed to look like the real drug. It's used as a control to eliminate the psychological effect of simply receiving "treatment."</div>
+      </div>
+
+      <!-- Q3 -->
+      <div class="mcq-block" data-correct="D" style="margin-top:20px">
+        <p><strong>3.</strong> In a double-blind trial, who knows which patients receive the real drug?</p>
+        <div class="mcq-options">
+          <div class="mcq-opt" onclick="selectMCQ(this, 'A')"><span class="letter">A</span> The patient only</div>
+          <div class="mcq-opt" onclick="selectMCQ(this, 'B')"><span class="letter">B</span> The doctor only</div>
+          <div class="mcq-opt" onclick="selectMCQ(this, 'C')"><span class="letter">C</span> Both the patient and the doctor</div>
+          <div class="mcq-opt" onclick="selectMCQ(this, 'D')"><span class="letter">D</span> Neither the patient nor the doctor</div>
+        </div>
+        <div class="mcq-feedback correct-fb">Correct! "Double-blind" means neither the patient nor the doctor/scientist knows who gets the drug and who gets the placebo. This removes unconscious bias from both sides.</div>
+        <div class="mcq-feedback incorrect-fb">In a double-blind trial, neither the patient nor the doctor knows who receives the drug or the placebo. This prevents bias from either party influencing the results.</div>
+      </div>
+
+      <!-- Q4 -->
+      <div class="mcq-block" data-correct="A" style="margin-top:20px">
+        <p><strong>4.</strong> Approximately how long does it take and how much does it cost to develop a new drug?</p>
+        <div class="mcq-options">
+          <div class="mcq-opt" onclick="selectMCQ(this, 'A')"><span class="letter">A</span> ~10 years & ~US$2.6 billion</div>
+          <div class="mcq-opt" onclick="selectMCQ(this, 'B')"><span class="letter">B</span> ~5 years & ~US$500 million</div>
+          <div class="mcq-opt" onclick="selectMCQ(this, 'C')"><span class="letter">C</span> ~2 years & ~US$100 million</div>
+          <div class="mcq-opt" onclick="selectMCQ(this, 'D')"><span class="letter">D</span> ~20 years & ~US$10 billion</div>
+        </div>
+        <div class="mcq-feedback correct-fb">Correct! It takes about 10 years and around US$2.6 billion to bring a new medicine to market.</div>
+        <div class="mcq-feedback incorrect-fb">It typically takes about 10 years and approximately US$2.6 billion to develop a new drug and get it approved.</div>
+      </div>
+
+      <!-- Q5 -->
+      <div class="mcq-block" data-correct="B" style="margin-top:20px">
+        <p><strong>5.</strong> Which phase of clinical trials involves the largest number of patients?</p>
+        <div class="mcq-options">
+          <div class="mcq-opt" onclick="selectMCQ(this, 'A')"><span class="letter">A</span> Phase 1</div>
+          <div class="mcq-opt" onclick="selectMCQ(this, 'B')"><span class="letter">B</span> Phase 3</div>
+          <div class="mcq-opt" onclick="selectMCQ(this, 'C')"><span class="letter">C</span> Phase 2</div>
+          <div class="mcq-opt" onclick="selectMCQ(this, 'D')"><span class="letter">D</span> Pre-clinical</div>
+        </div>
+        <div class="mcq-feedback correct-fb">Correct! Phase 3 trials use thousands of patients (5,000+) and are the final step before regulatory approval.</div>
+        <div class="mcq-feedback incorrect-fb">Phase 3 involves the largest numbers — over 5,000 volunteer patients. Phase 1 uses a small number of healthy volunteers, and Phase 2 uses 100–500 patients with the target disease.</div>
+      </div>
+
+      <p style="margin-top:24px; color: var(--text-muted); font-size:0.9rem;"><em>Your score is tracked at the bottom of the page. Don't worry about mistakes — they help you learn.</em></p>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════════════════════════════════════════ -->
+  <!-- SECTION 2: WILLIAM WITHERING'S STORY -->
+  <!-- ══════════════════════════════════════════════════════════════════════════════════════════════ -->
+  <div class="section" id="sec-history">
+    <div class="card">
+      <h2>William Withering & Digitalis Soup</h2>
+      <p>Throughout history, almost every culture has used plants to treat diseases. In the 21st century, modern pharmaceutical companies still recognise the value of plant-based medicines — but the way drugs are developed and tested has changed dramatically.</p>
+      
+      <div class="feynman-box">
+        <div class="feynman-label">🧠 Feynman Analogy — Think of it like this</div>
+        <p>Imagine you're a detective in the 1700s. You hear that a local "wise woman" has a secret soup recipe that cures a mysterious illness. You don't know <em>which</em> ingredient in the soup is doing the work — it has 20 different herbs! So you spend 10 years testing each ingredient one by one on different patients to figure out which one is the magic bullet. That's exactly what William Withering did.</p>
+      </div>
+
+      <h3>The Story</h3>
+      <p><span class="kw">William Withering</span> (1741–99) was a British doctor and keen botanist. In 1775, a patient with severe heart failure came to him. Withering had no effective treatment, so his patient visited a local "wise woman" who used herbal remedies. After drinking her soup, the patient recovered.</p>
+      
+      <p>Withering was fascinated. He bought the recipe — it contained about <strong>20 different herbs</strong>. He guessed that <span class="kw">foxglove</span> contained the active ingredient. This plant contains a chemical called <span class="kw">digitalis</span>, which had been known as a poison for centuries but was also linked to reports of curing <span class="kw">oedema</span> (dropsy) — swelling caused by fluid retention when the heart and kidneys fail.</p>
+
+      <p>Over the next <strong>10 years</strong>, Withering tested a variety of foxglove preparations on <strong>163 patients</strong> at Birmingham General Hospital. He discovered that:</p>
+      <ul style="padding-left: 20px; margin: 10px 0;">
+        <li style="margin-bottom:6px;">Many patients improved, though some almost died of digitalis poisoning</li>
+        <li style="margin-bottom:6px;">Side effects included nausea, vomiting and worse</li>
+        <li style="margin-bottom:6px;">Getting the dose right was critical — too much was lethal</li>
+        <li style="margin-bottom:6px;">Dried and powdered leaves worked best (boiling reduced effectiveness)</li>
+        <li>The patient's heartbeat became stronger and more regular, kidneys recovered, excess fluid was expelled</li>
+      </ul>
+
+      <p>The drug based on foxglove chemicals is now called <span class="kw">digoxin</span>, and it's still prescribed by doctors today — about 230 years after Withering's work.</p>
+    </div>
+
+    <!-- VTR: SEE–THINK–WONDER -->
+    <div class="vtr-box">
+      <div class="vtr-label">Visible Thinking Routine</div>
+      <h4>See — Think — Wonder</h4>
+      <p style="font-size:0.9rem; color: var(--text-muted); margin-bottom:12px;">Consider Withering's approach to drug discovery. Think carefully about what you notice, what it makes you think, and what questions it raises.</p>
+      
+      <div class="vtr-section-label">What do you SEE in Withering's method?</div>
+      <textarea class="vtr-input" rows="2" placeholder="I see that he tested on 163 patients over 10 years..."></textarea>
+      
+      <div class="vtr-section-label">What does it make you THINK?</div>
+      <textarea class="vtr-input" rows="2" placeholder="I think his approach was... because..."></textarea>
+      
+      <div class="vtr-section-label">What does it make you WONDER?</div>
+      <textarea class="vtr-input" rows="2" placeholder="I wonder whether... / What would happen if..."></textarea>
+      
+      <button class="reveal-btn" onclick="toggleReveal(this)" style="margin-top:12px">See thinking prompts</button>
+      <div class="reveal-content">
+        <strong>Thinking prompts to consider:</strong><br>
+        • Withering had no control group, no placebo, no blinding — how reliable were his results?<br>
+        • Some patients nearly died — would this be acceptable today?<br>
+        • He tested on real, sick patients from the start — today we start with lab tests and animals first. Why?<br>
+        • Despite the limitations, his work led to a medicine still used 230+ years later. What does this tell us about the relationship between scientific rigour and useful outcomes?
+      </div>
+    </div>
+
+    <!-- PROGRESS CHECK 1 -->
+    <div class="progress-check">
+      <div class="pc-label">Progress Check 1</div>
+      <div class="tier-tabs">
+        <button class="tier-tab active" data-tier="foundation" data-group="pc1" onclick="switchTier(this)">Foundation</button>
+        <button class="tier-tab" data-tier="core" data-group="pc1" onclick="switchTier(this)">Core</button>
+        <button class="tier-tab" data-tier="challenge" data-group="pc1" onclick="switchTier(this)">Challenge</button>
+      </div>
+
+      <!-- FOUNDATION -->
+      <div class="tier-content active" data-group="pc1" data-tier="foundation">
+        <p><strong>Fill in the blanks using the word bank:</strong></p>
+        <div class="word-bank">
+          <span class="drag-item" draggable="true" ondragstart="dragStart(event)">foxglove</span>
+          <span class="drag-item" draggable="true" ondragstart="dragStart(event)">digitalis</span>
+          <span class="drag-item" draggable="true" ondragstart="dragStart(event)">163</span>
+          <span class="drag-item" draggable="true" ondragstart="dragStart(event)">oedema</span>
+          <span class="drag-item" draggable="true" ondragstart="dragStart(event)">digoxin</span>
+          <span class="drag-item" draggable="true" ondragstart="dragStart(event)">10</span>
+        </div>
+        <p style="line-height:2.4">
+          William Withering discovered that the <input type="text" class="fill-blank" data-answer="foxglove" placeholder="______"> plant contained a chemical called <input type="text" class="fill-blank" data-answer="digitalis" placeholder="______"> that could treat the condition known as <input type="text" class="fill-blank" data-answer="oedema" placeholder="______">. He tested his treatments on <input type="text" class="fill-blank" data-answer="163" placeholder="______"> patients over <input type="text" class="fill-blank" data-answer="10" placeholder="______"> years. The modern drug based on this work is called <input type="text" class="fill-blank" data-answer="digoxin" placeholder="______">.
+        </p>
+        <button class="reveal-btn" onclick="checkBlanks(this)" style="margin-top:10px">Check answers</button>
+      </div>
+
+      <!-- CORE -->
+      <div class="tier-content" data-group="pc1" data-tier="core">
+        <p><strong>Explain the following in your own words:</strong></p>
+        <p style="margin-top:10px">a) Why was Withering's method considered both groundbreaking and risky?</p>
+        <textarea class="vtr-input" rows="3" placeholder="His method was groundbreaking because... but risky because..."></textarea>
+        <p>b) Why did boiling the foxglove leaves reduce the drug's effectiveness?</p>
+        <textarea class="vtr-input" rows="3" placeholder="Think about what heat does to chemicals/proteins..."></textarea>
+        <button class="reveal-btn" onclick="toggleReveal(this)" style="margin-top:10px">Check model answers</button>
+        <div class="reveal-content">
+          <strong>a)</strong> Groundbreaking: He was systematic — testing on many patients over 10 years, refining the dose, recording side effects. This was early evidence-based medicine. Risky: He had no control group, some patients nearly died from poisoning, and there were no ethical review boards.<br><br>
+          <strong>b)</strong> Heat can denature or break down organic molecules. Boiling likely degraded the active digitalis compounds, reducing their concentration and therefore their therapeutic effect. Drying and powdering preserved the chemical structure better.
+        </div>
+      </div>
+
+      <!-- CHALLENGE -->
+      <div class="tier-content" data-group="pc1" data-tier="challenge">
+        <p><strong>Compare & Evaluate:</strong></p>
+        <p style="margin-top:10px">William Withering tested his foxglove preparations directly on sick patients at Birmingham General Hospital. Today, drugs must pass through pre-clinical testing, animal testing, and three phases of clinical trials before they can be prescribed.</p>
+        <p style="margin-top:10px"><strong>Evaluate</strong> the strengths and limitations of Withering's approach compared to modern drug testing protocols. Consider: reliability of results, patient safety, and the pace of discovery. <em>[6 marks]</em></p>
+        <textarea class="vtr-input" rows="6" placeholder="Write your extended answer here..."></textarea>
+        <button class="reveal-btn" onclick="toggleReveal(this)" style="margin-top:10px">See mark scheme guidance</button>
+        <div class="reveal-content">
+          <strong>Mark scheme guidance (6 marks):</strong><br>
+          <em>Strengths of Withering's approach:</em> tested on real patients with the condition, refined dosage through observation over 10 years, led to a medicine still in use today, pragmatic approach in an era with no alternatives.<br><br>
+          <em>Limitations:</em> no control group or placebo, no blinding (both patient and doctor knew treatment was given), risk of poisoning/death, no statistical analysis, small/biased sample from one hospital, no ethical oversight.<br><br>
+          <em>Modern advantages:</em> controlled variables, statistical significance, patient safety protections, ethical review boards, phased approach reduces risk, placebos and double-blinding remove bias.<br><br>
+          <em>Evaluation point:</em> Modern protocols are more reliable and safer but are extremely slow (~10 years) and expensive (~$2.6 billion). Withering's faster approach was essential in his era but would be unacceptable today due to the uncontrolled risks to patients.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════════════════════════════════════════ -->
+  <!-- SECTION 3: DRUG CRITERIA -->
+  <!-- ══════════════════════════════════════════════════════════════════════════════════════════════ -->
+  <div class="section" id="sec-criteria">
+    <div class="card">
+      <h2>What Makes a Good Drug?</h2>
+      <p>Every medicine that comes onto the market today is the result of years of research and development (R&D). It takes about <strong>10 years</strong> and around <strong>US$2.6 billion</strong> to develop a new drug. A new medicine must meet all five of the following criteria:</p>
+    </div>
+
+    <div class="card" style="border-left: 4px solid var(--accent);">
+      <h3>The Five Drug Criteria</h3>
+      
+      <div style="margin: 16px 0;">
+        <p><strong>1. Effective</strong> — It must cure, prevent, or relieve the symptoms of the disease it is designed for.</p>
+      </div>
+      <div style="margin: 16px 0;">
+        <p><strong>2. Safe</strong> — It must be non-toxic and without unacceptable side effects.</p>
+      </div>
+      <div style="margin: 16px 0;">
+        <p><strong>3. Stable</strong> — It must be stored for a reasonable period and used under normal conditions without breaking down.</p>
+      </div>
+      <div style="margin: 16px 0;">
+        <p><strong>4. Easily taken in and removed</strong> — It must reach its target in the body and be excreted (removed) once it has done its job.</p>
+      </div>
+      <div style="margin: 16px 0;">
+        <p><strong>5. Manufacturable</strong> — It must be possible to produce it in a very pure form, in large quantities, and quite cheaply.</p>
+      </div>
+    </div>
+
+    <div class="feynman-box">
+      <div class="feynman-label">🧠 Feynman Analogy — The 5-Star Restaurant Test</div>
+      <p>Think of a new drug like a dish at a 5-star restaurant. It must: <strong>taste great</strong> (be effective), <strong>not make you ill</strong> (be safe), <strong>survive in the fridge overnight</strong> (be stable), <strong>be digestible</strong> (easily absorbed and removed), and <strong>be replicable by any trained chef</strong> (manufacturable at scale). If it fails even one of these tests, it doesn't make the menu.</p>
+    </div>
+
+    <!-- How Scientists Find New Drugs -->
+    <div class="card">
+      <h3>How Scientists Discover Potential New Drugs</h3>
+      <p>In the past, herbal remedies were a common source of new medicines. Today, scientists use more targeted approaches:</p>
+      <p>One method is to investigate chemicals that bind to our <span class="kw">protein receptors</span> or to the <span class="kw">active sites</span> of our enzymes. Researchers often use <strong>computer models</strong> to fit new molecular structures into the active site of enzymes or receptors that are important in disease processes. This can identify useful starting points for further work.</p>
+      <p>When scientists find a promising compound, they may <strong>patent</strong> it. A patent gives the inventor the exclusive right to make and sell the invention for the next <strong>20 years</strong>. However, much of those 20 years will be consumed by the testing process.</p>
+    </div>
+
+    <!-- PROGRESS CHECK 2 -->
+    <div class="progress-check">
+      <div class="pc-label">Progress Check 2</div>
+      <div class="tier-tabs">
+        <button class="tier-tab active" data-tier="foundation" data-group="pc2" onclick="switchTier(this)">Foundation</button>
+        <button class="tier-tab" data-tier="core" data-group="pc2" onclick="switchTier(this)">Core</button>
+        <button class="tier-tab" data-tier="challenge" data-group="pc2" onclick="switchTier(this)">Challenge</button>
+      </div>
+
+      <div class="tier-content active" data-group="pc2" data-tier="foundation">
+        <p><strong>Match each drug criterion to its description:</strong></p>
+        <div class="mcq-block" data-correct="B" style="margin-top:12px">
+          <p>"It must not break down during normal storage"</p>
+          <div class="mcq-options">
+            <div class="mcq-opt" onclick="selectMCQ(this, 'A')"><span class="letter">A</span> Effective</div>
+            <div class="mcq-opt" onclick="selectMCQ(this, 'B')"><span class="letter">B</span> Stable</div>
+            <div class="mcq-opt" onclick="selectMCQ(this, 'C')"><span class="letter">C</span> Safe</div>
+            <div class="mcq-opt" onclick="selectMCQ(this, 'D')"><span class="letter">D</span> Manufacturable</div>
+          </div>
+          <div class="mcq-feedback correct-fb">Correct! Stability means the drug can be stored for some time and used under normal conditions.</div>
+          <div class="mcq-feedback incorrect-fb">This describes stability — the drug must not degrade during storage.</div>
+        </div>
+
+        <div class="mcq-block" data-correct="C" style="margin-top:16px">
+          <p>"It must reach its target in the body and be removed once it has done its job"</p>
+          <div class="mcq-options">
+            <div class="mcq-opt" onclick="selectMCQ(this, 'A')"><span class="letter">A</span> Safe</div>
+            <div class="mcq-opt" onclick="selectMCQ(this, 'B')"><span class="letter">B</span> Effective</div>
+            <div class="mcq-opt" onclick="selectMCQ(this, 'C')"><span class="letter">C</span> Easily taken in and removed</div>
+            <div class="mcq-opt" onclick="selectMCQ(this, 'D')"><span class="letter">D</span> Stable</div>
+          </div>
+          <div class="mcq-feedback correct-fb">Correct! The drug must be able to reach its target and be excreted afterwards.</div>
+          <div class="mcq-feedback incorrect-fb">This describes the requirement for the drug to be easily absorbed and then removed (excreted) from the body.</div>
+        </div>
+      </div>
+
+      <div class="tier-content" data-group="pc2" data-tier="core">
+        <p><strong>Explain why</strong> a drug that is highly effective but impossible to manufacture cheaply might never reach patients.</p>
+        <textarea class="vtr-input" rows="4" placeholder="Consider the economics and accessibility of drug development..."></textarea>
+        <button class="reveal-btn" onclick="toggleReveal(this)" style="margin-top:10px">See model answer</button>
+        <div class="reveal-content">
+          Even if a drug works perfectly, pharmaceutical companies need to produce it in large quantities at a reasonable cost to make it accessible to patients and commercially viable. If the manufacturing process requires rare materials or extremely complex synthesis, the drug may be too expensive for healthcare systems to afford, meaning patients who need it cannot access it. A drug that costs millions per dose helps nobody in practice.
+        </div>
+      </div>
+
+      <div class="tier-content" data-group="pc2" data-tier="challenge">
+        <p><strong>Application question:</strong></p>
+        <p>A researcher discovers a chemical compound that binds strongly to a receptor involved in Alzheimer's disease. In lab tests on cell cultures, it reduces toxic protein build-up by 85%. However, when given orally to mice, less than 2% of the compound reaches the brain.</p>
+        <p style="margin-top:8px">Using your knowledge of drug criteria, explain which requirement this compound fails and suggest how scientists might try to overcome this problem. <em>[4 marks]</em></p>
+        <textarea class="vtr-input" rows="5" placeholder="Identify the criterion and suggest solutions..."></textarea>
+        <button class="reveal-btn" onclick="toggleReveal(this)" style="margin-top:10px">See mark scheme</button>
+        <div class="reveal-content">
+          <strong>Mark scheme (4 marks):</strong><br>
+          1. The compound fails the "easily taken in" criterion — it cannot effectively reach its target site (the brain) when administered orally [1 mark].<br>
+          2. This may be because the compound is broken down in the digestive system / cannot cross the blood-brain barrier [1 mark].<br>
+          3. Scientists could try: modifying the chemical structure to improve absorption / changing the delivery method (e.g. injection, nasal spray, nanoparticle delivery) [1 mark].<br>
+          4. They could use computer modelling to redesign the molecule so it can cross the blood-brain barrier while retaining its ability to bind to the target receptor [1 mark].
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════════════════════════════════════════ -->
+  <!-- SECTION 4: DEVELOPMENT PIPELINE -->
+  <!-- ══════════════════════════════════════════════════════════════════════════════════════════════ -->
+  <div class="section" id="sec-development">
+    <div class="card">
+      <h2>The Drug Development Pipeline</h2>
+      <p>From initial discovery to a medicine on the pharmacy shelf, there is a long and rigorous process. Thousands of compounds are screened, but very few ever make it to market.</p>
+
+      <div class="feynman-box">
+        <div class="feynman-label">🧠 Feynman Analogy — The X-Factor for Molecules</div>
+        <p>Imagine 10,000 people audition for a singing competition. In the first round (lab tests), most are eliminated because they can't hold a tune (the compound doesn't work in cell cultures). A handful proceed to bootcamp (animal testing), where many more are cut because they can't handle the pressure of performing live (the drug causes harmful effects in a whole organism). Only about 5 make it to the live shows (human clinical trials), and often just 1 wins the competition (gets approved). That one winner then has to prove they can sustain a career (post-market surveillance).</p>
+      </div>
+
+      <h3>The Development Timeline</h3>
+      <div class="timeline">
+        <div class="timeline-item">
+          <div class="tl-title">1. Early Phase Research</div>
+          <div class="tl-time">4–6 years</div>
+          <div class="tl-desc">Scientists identify 5,000–10,000 potential compounds through screening chemicals that bind to protein receptors or enzyme active sites. Computer models help fit new structures into target molecules. Most compounds are eliminated at this stage.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="tl-title">2. Pre-clinical Testing</div>
+          <div class="tl-time">~1 year</div>
+          <div class="tl-desc">The new compound is tested on cell cultures, tissue cultures, and whole organs in the lab. These tests check whether it does what scientists predicted. Many chemicals fail here because they don't work in living tissue or have harmful effects. Compounds that pass move into development.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="tl-title">3. Animal Testing</div>
+          <div class="tl-time">Part of pre-clinical phase</div>
+          <div class="tl-desc">Before testing on humans, the drug must be tested on animals — the law requires it. A good delivery system must be found (tablets, injections, nasal spray). Tests show how the drug works in a whole organism: is it taken into cells? Is it chemically changed? Is it safely excreted? Tests must be carried out on at least two species — a rodent and a non-rodent. Mice and rats are the most commonly used.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="tl-title">4. Clinical Trials (Phases 1–3)</div>
+          <div class="tl-time">6–7 years</div>
+          <div class="tl-desc">Human testing in three phases (detailed in next section). Approximately 250 compounds enter trials, but only about 5 make it through all three phases successfully.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="tl-title">5. Regulatory Review</div>
+          <div class="tl-time">0.5–2 years</div>
+          <div class="tl-desc">A regulatory authority reviews all the data — beneficial effects vs. harmful effects — before deciding whether to grant a licence. The drug cannot be sold without this licence.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="tl-title">6. Post-market Surveillance</div>
+          <div class="tl-time">Continuous</div>
+          <div class="tl-desc">Even after approval, the medicine is monitored for safety and effectiveness for as long as it is prescribed. Any adverse reactions are reported and recorded. The benefits must always outweigh the risks.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- VTR: CONNECT–EXTEND–CHALLENGE -->
+    <div class="vtr-box">
+      <div class="vtr-label">Visible Thinking Routine</div>
+      <h4>Connect — Extend — Challenge</h4>
+      
+      <div class="vtr-section-label">CONNECT: How does the drug development pipeline connect to what you already know about Withering?</div>
+      <textarea class="vtr-input" rows="2" placeholder="This connects to Withering's work because..."></textarea>
+      
+      <div class="vtr-section-label">EXTEND: What new ideas or understanding does this extend for you?</div>
+      <textarea class="vtr-input" rows="2" placeholder="This extends my thinking because I now understand that..."></textarea>
+      
+      <div class="vtr-section-label">CHALLENGE: What is still challenging or confusing?</div>
+      <textarea class="vtr-input" rows="2" placeholder="I'm still wondering about... / I find it hard to understand why..."></textarea>
+    </div>
+
+    <!-- PROGRESS CHECK 3 — Sequencing activity -->
+    <div class="progress-check">
+      <div class="pc-label">Progress Check 3 — Sequence the Drug Development Pipeline</div>
+      <p style="margin-bottom:12px;">Drag the stages into the correct order from first to last:</p>
+      <div class="word-bank" id="seq-bank">
+        <span class="drag-item" draggable="true" ondragstart="dragStart(event)" data-order="3">Animal testing</span>
+        <span class="drag-item" draggable="true" ondragstart="dragStart(event)" data-order="6">Post-market surveillance</span>
+        <span class="drag-item" draggable="true" ondragstart="dragStart(event)" data-order="1">Early phase research</span>
+        <span class="drag-item" draggable="true" ondragstart="dragStart(event)" data-order="4">Clinical trials</span>
+        <span class="drag-item" draggable="true" ondragstart="dragStart(event)" data-order="5">Regulatory review</span>
+        <span class="drag-item" draggable="true" ondragstart="dragStart(event)" data-order="2">Pre-clinical testing</span>
+      </div>
+      <div style="margin-top:12px;">
+        <p style="font-size:0.88rem; font-weight:600;">Drop stages here in order (1st → 6th):</p>
+        <div class="drag-zone" ondragover="dragOver(event)" ondrop="dropItem(event)" ondragenter="dragEnter(event)" ondragleave="dragLeave(event)" id="seq-drop" style="min-height:60px;"></div>
+      </div>
+      <button class="reveal-btn" onclick="checkSequence()" style="margin-top:12px">Check order</button>
+      <div id="seq-feedback" style="display:none; margin-top:10px; padding:12px; border-radius:6px;"></div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════════════════════════════════════════ -->
+  <!-- SECTION 5: CLINICAL TRIALS -->
+  <!-- ══════════════════════════════════════════════════════════════════════════════════════════════ -->
+  <div class="section" id="sec-trials">
+    <div class="card">
+      <h2>Clinical Trials</h2>
+      <p>If animal testing is successful, a regulatory authority will take decisions about whether the drug can be trialled on people. The testing varies from country to country, but internationally it must follow strict criteria.</p>
+    </div>
+
+    <!-- PHASE 1 -->
+    <div class="card" style="border-left: 4px solid var(--accent);">
+      <h3>Phase 1 — Safety Testing</h3>
+      <p>The new drug (or in some cases, a placebo) is given to a <strong>small number of healthy volunteers</strong>. The goal is to check that the drug works as expected in the human body and doesn't cause any unexpected side effects.</p>
+      <p>At the same time, scientists continue looking at the effects of longer-term use of the drug in animal trials.</p>
+      <div class="feynman-box">
+        <div class="feynman-label">🧠 Feynman Simplification</div>
+        <p>Phase 1 asks a simple question: "Is this safe for humans at all?" It's like dipping your toe in the pool before jumping in. Small group, healthy people, cautious doses.</p>
+      </div>
+    </div>
+
+    <!-- PHASE 2 -->
+    <div class="card" style="border-left: 4px solid var(--blue);">
+      <h3>Phase 2 — Does it Work?</h3>
+      <p>If Phase 1 is successful, the drug moves to Phase 2 trials. This is when the new drug is used with <strong>patients who actually have the target disease</strong>. Between <strong>100 and 500</strong> patient volunteers are recruited.</p>
+      <p>Patients are given either the new drug or a similar number receive the best current treatment (or sometimes a <span class="kw">placebo</span>). This is the first chance for scientists and doctors to see how the new medicine affects the disease in a real patient.</p>
+      <p>Volunteers are closely monitored to find out more about the ideal dose, the effectiveness of the drug, and any side effects. Success at this stage means the compound has a good chance of becoming a useful medicine.</p>
+    </div>
+
+    <!-- PLACEBO EXPLANATION -->
+    <div class="card" style="background: var(--blue-light); border: 2px solid var(--blue);">
+      <h3>Understanding Placebos</h3>
+      <p>A <span class="kw">placebo</span> is a substance that looks like the drug being tested but has <strong>no active ingredient</strong>. It serves as a <strong>control</strong> in the experiment.</p>
+      <p><strong>Why use a placebo?</strong> Patients often appear to respond to a treatment simply because they <em>believe</em> it will help them — not because of any chemical effect. This is called the <span class="kw">placebo effect</span>. Using a placebo eliminates this possibility, so scientists can be sure any improvement is caused by the actual drug.</p>
+      <div class="feynman-box" style="background: white;">
+        <div class="feynman-label">🧠 Feynman Analogy</div>
+        <p>Imagine two students both think they've drunk an energy drink before an exam. One actually drank an energy drink; the other drank coloured water (the placebo). If both students perform equally well, the energy drink doesn't actually work — the improvement was just in their heads. The placebo is what lets you tell the difference.</p>
+      </div>
+    </div>
+
+    <!-- PHASE 3 -->
+    <div class="card" style="border-left: 4px solid var(--purple);">
+      <h3>Phase 3 — Large-Scale Confirmation</h3>
+      <p>Phase 3 trials confirm the effectiveness and safety of the new drug. The numbers of patients involved are large — typically <strong>over 5,000 volunteer patients</strong> — so the trials have a better chance of showing up any unexpected adverse side effects.</p>
+      <p>Patients are <strong>randomly allocated</strong> to receive either the new medicine or the control/placebo. Data on effectiveness, side effects and other information are collected and assessed to see if there are any <strong>statistically significant differences</strong> between the new medicine and the placebo or currently available drug.</p>
+      <p>It is difficult to achieve a complete set of results because many patients stop taking the medicine for various reasons — some don't take it regularly.</p>
+      <p>In some trials, the drug is so successful that the trial is <strong>halted early</strong> — it becomes unethical to deny the new treatment to patients receiving the old treatment or placebo.</p>
+    </div>
+
+    <!-- DOUBLE-BLIND TRIALS -->
+    <div class="card" style="background: var(--purple-light); border: 2px solid #c8c1f5;">
+      <h3>Double-Blind Trials</h3>
+      <p>Phase 2 and 3 trials are normally carried out as <span class="kw">double-blind trials</span>. This means <strong>neither the doctor/scientist nor the patient</strong> knows whether the patient is receiving the new medicine, a control medicine, or a placebo.</p>
+      <p><strong>Why double-blind?</strong></p>
+      <p>Patients often appear to respond to a treatment because they <em>believe</em> it will do them good — this is the placebo effect. But doctors can also unconsciously influence results. If a doctor <em>knows</em> a patient is receiving the new drug, they might interpret symptoms more favourably. Double-blinding removes bias from <strong>both sides</strong>.</p>
+      <p>Instead of a placebo, a <strong>control medicine</strong> (the best-performing available treatment) is sometimes used to avoid denying any patient treatment entirely.</p>
+      <div class="feynman-box" style="background: white;">
+        <div class="feynman-label">🧠 Feynman Analogy</div>
+        <p>Think of a blind taste test for Coca-Cola vs. Pepsi, but <em>the person pouring the drinks doesn't know which is which either</em>. This way, neither the taster's preference nor the server's body language can influence the result. That's double-blinding.</p>
+      </div>
+    </div>
+
+    <!-- PROGRESS CHECK 4 -->
+    <div class="progress-check">
+      <div class="pc-label">Progress Check 4</div>
+      <div class="tier-tabs">
+        <button class="tier-tab active" data-tier="foundation" data-group="pc4" onclick="switchTier(this)">Foundation</button>
+        <button class="tier-tab" data-tier="core" data-group="pc4" onclick="switchTier(this)">Core</button>
+        <button class="tier-tab" data-tier="challenge" data-group="pc4" onclick="switchTier(this)">Challenge</button>
+      </div>
+
+      <!-- FOUNDATION -->
+      <div class="tier-content active" data-group="pc4" data-tier="foundation">
+        <div class="mcq-block" data-correct="C">
+          <p><strong>1.</strong> How many patient volunteers are typically involved in Phase 2 trials?</p>
+          <div class="mcq-options">
+            <div class="mcq-opt" onclick="selectMCQ(this, 'A')"><span class="letter">A</span> 5–10 healthy volunteers</div>
+            <div class="mcq-opt" onclick="selectMCQ(this, 'B')"><span class="letter">B</span> 50–100 healthy volunteers</div>
+            <div class="mcq-opt" onclick="selectMCQ(this, 'C')"><span class="letter">C</span> 100–500 patients with the disease</div>
+            <div class="mcq-opt" onclick="selectMCQ(this, 'D')"><span class="letter">D</span> 5,000+ patients with the disease</div>
+          </div>
+          <div class="mcq-feedback correct-fb">Correct! Phase 2 involves 100–500 patients who have the target disease.</div>
+          <div class="mcq-feedback incorrect-fb">Phase 2 trials involve 100–500 patients with the target disease (not healthy volunteers — that's Phase 1). 5,000+ is Phase 3.</div>
+        </div>
+
+        <div class="mcq-block" data-correct="B" style="margin-top:16px">
+          <p><strong>2.</strong> Why might a clinical trial be halted early?</p>
+          <div class="mcq-options">
+            <div class="mcq-opt" onclick="selectMCQ(this, 'A')"><span class="letter">A</span> The company runs out of funding</div>
+            <div class="mcq-opt" onclick="selectMCQ(this, 'B')"><span class="letter">B</span> The drug is so effective that it's unethical to withhold it</div>
+            <div class="mcq-opt" onclick="selectMCQ(this, 'C')"><span class="letter">C</span> All patients have recovered</div>
+            <div class="mcq-opt" onclick="selectMCQ(this, 'D')"><span class="letter">D</span> The trial has been running for over 10 years</div>
+          </div>
+          <div class="mcq-feedback correct-fb">Correct! If the evidence shows the new treatment is dramatically better, it becomes unethical to deny it to patients in the control group.</div>
+          <div class="mcq-feedback incorrect-fb">A trial may be halted early when the drug proves so successful that continuing to give some patients a placebo or inferior treatment would be unethical.</div>
+        </div>
+      </div>
+
+      <!-- CORE -->
+      <div class="tier-content" data-group="pc4" data-tier="core">
+        <p><strong>Complete the comparison table — fill in each cell:</strong></p>
+        <table style="width:100%; border-collapse:collapse; margin:12px 0; font-size:0.9rem;">
+          <thead>
+            <tr style="background:var(--surface-alt);">
+              <th style="padding:10px; border:1px solid var(--border); text-align:left;">Feature</th>
+              <th style="padding:10px; border:1px solid var(--border); text-align:left;">Phase 1</th>
+              <th style="padding:10px; border:1px solid var(--border); text-align:left;">Phase 2</th>
+              <th style="padding:10px; border:1px solid var(--border); text-align:left;">Phase 3</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="padding:10px; border:1px solid var(--border); font-weight:600;">Participants</td>
+              <td style="padding:10px; border:1px solid var(--border);"><input type="text" class="fill-blank" style="min-width:80px" data-answer="healthy volunteers" placeholder="______"></td>
+              <td style="padding:10px; border:1px solid var(--border);"><input type="text" class="fill-blank" style="min-width:80px" data-answer="100-500 patients" placeholder="______"></td>
+              <td style="padding:10px; border:1px solid var(--border);"><input type="text" class="fill-blank" style="min-width:80px" data-answer="5000+ patients" placeholder="______"></td>
+            </tr>
+            <tr>
+              <td style="padding:10px; border:1px solid var(--border); font-weight:600;">Main purpose</td>
+              <td style="padding:10px; border:1px solid var(--border);"><input type="text" class="fill-blank" style="min-width:80px" data-answer="safety" placeholder="______"></td>
+              <td style="padding:10px; border:1px solid var(--border);"><input type="text" class="fill-blank" style="min-width:80px" data-answer="effectiveness" placeholder="______"></td>
+              <td style="padding:10px; border:1px solid var(--border);"><input type="text" class="fill-blank" style="min-width:80px" data-answer="confirm safety and effectiveness" placeholder="______"></td>
+            </tr>
+          </tbody>
+        </table>
+        <button class="reveal-btn" onclick="toggleReveal(this)">See completed table</button>
+        <div class="reveal-content">
+          <strong>Phase 1:</strong> Small number of healthy volunteers | Purpose: Check safety, dose, side effects<br>
+          <strong>Phase 2:</strong> 100–500 patients with the target disease | Purpose: Test effectiveness, find ideal dose<br>
+          <strong>Phase 3:</strong> 5,000+ patients | Purpose: Confirm effectiveness and safety at large scale, detect rare side effects
+        </div>
+      </div>
+
+      <!-- CHALLENGE -->
+      <div class="tier-content" data-group="pc4" data-tier="challenge">
+        <p><strong>Evaluate this claim:</strong></p>
+        <p style="font-style:italic; padding:12px; background:white; border-radius:6px; margin:10px 0;">"Double-blind trials are the gold standard, so single-blind or unblinded trials should never be used."</p>
+        <p>Do you agree or disagree? Justify your answer with reference to specific scenarios. <em>[4 marks]</em></p>
+        <textarea class="vtr-input" rows="5" placeholder="I agree/disagree because..."></textarea>
+        <button class="reveal-btn" onclick="toggleReveal(this)" style="margin-top:10px">See model answer</button>
+        <div class="reveal-content">
+          <strong>Disagree (with nuance):</strong><br>
+          While double-blind trials are indeed the gold standard for reducing bias, they are not always practical or ethical:<br><br>
+          • <strong>Surgical trials:</strong> It's impossible to blind a surgeon to whether they are performing the real procedure.<br>
+          • <strong>Life-threatening conditions:</strong> If no treatment exists, using a placebo may be unethical — all patients should receive the experimental drug.<br>
+          • <strong>Distinctive side effects:</strong> If the drug causes obvious side effects (e.g. a rash), patients and doctors can guess who is in the treatment group, breaking the blind.<br>
+          • <strong>Rare diseases:</strong> With very few patients available, a randomised controlled trial may not be feasible.<br><br>
+          Double-blind trials minimise bias and are preferred whenever possible, but good science adapts to ethical and practical constraints.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════════════════════════════════════════ -->
+  <!-- SECTION 6: ETHICS & DEBATE -->
+  <!-- ══════════════════════════════════════════════════════════════════════════════════════════════ -->
+  <div class="section" id="sec-ethics">
+    <div class="card">
+      <h2>Ethics of Drug Testing</h2>
+      <p>Drug development raises important ethical questions at every stage — from animal testing to the use of placebos in human trials.</p>
+    </div>
+
+    <!-- ANIMAL TESTING -->
+    <div class="card">
+      <h3>Animal Testing — The Debate</h3>
+      <p>Some people have strong ethical objections to the use of animals in drug testing. However, the law currently states that animal testing must be carried out before drugs can be tested on people.</p>
+      <p>Key considerations:</p>
+      <ul style="padding-left:20px; margin:10px 0;">
+        <li style="margin-bottom:8px;">Mice and rats are the most widely used animals. Their use is perceived as less emotive than dogs, cats, or monkeys.</li>
+        <li style="margin-bottom:8px;">Rodents provide valid models because their genetic make-up and strains are well known. They are small and easy to keep in humane conditions.</li>
+        <li style="margin-bottom:8px;">Scientists try to replace animals with tissue cultures and computer models wherever possible.</li>
+        <li style="margin-bottom:8px;">The numbers of animals used are kept to a minimum, and tests are designed to cause the minimum of distress.</li>
+        <li>However, information from computer models or tissue cultures alone is not yet sufficient to move directly to human testing.</li>
+      </ul>
+    </div>
+
+    <!-- VTR: CLAIM–SUPPORT–QUESTION -->
+    <div class="vtr-box">
+      <div class="vtr-label">Visible Thinking Routine</div>
+      <h4>Claim — Support — Question</h4>
+      <p style="font-size:0.9rem; color:var(--text-muted); margin-bottom:14px;">Consider this statement: <strong>"Animal testing is a necessary evil — without it, we cannot guarantee the safety of new medicines for humans."</strong></p>
+      
+      <div class="vtr-section-label">Make a CLAIM — do you agree, disagree, or partially agree?</div>
+      <textarea class="vtr-input" rows="2" placeholder="I claim that..."></textarea>
+      
+      <div class="vtr-section-label">Provide SUPPORT — what evidence or reasoning supports your claim?</div>
+      <textarea class="vtr-input" rows="3" placeholder="Evidence that supports my position includes..."></textarea>
+      
+      <div class="vtr-section-label">Raise a QUESTION — what challenge or uncertainty remains?</div>
+      <textarea class="vtr-input" rows="2" placeholder="A question this raises is..."></textarea>
+
+      <button class="reveal-btn" onclick="toggleReveal(this)" style="margin-top:12px">See balanced arguments</button>
+      <div class="reveal-content">
+        <strong>Arguments FOR animal testing:</strong><br>
+        • The law requires it before human trials can begin<br>
+        • Animals (especially mammals) share similar biological systems with humans<br>
+        • It has contributed to life-saving treatments (insulin, antibiotics, vaccines)<br>
+        • There is currently no complete alternative that replicates a whole living organism<br><br>
+        <strong>Arguments AGAINST animal testing:</strong><br>
+        • Animals suffer pain and distress — this is ethically wrong<br>
+        • Animal responses don't always predict human responses accurately<br>
+        • Computer modelling and tissue cultures are improving and may replace animal testing<br>
+        • The "3Rs" principle (Replace, Reduce, Refine) should be more aggressively pursued<br><br>
+        <strong>Exam tip:</strong> Whatever your personal view, always present a balanced argument with points from both sides. Use specific examples and scientific reasoning.
+      </div>
+    </div>
+
+    <!-- Ethical scenario about prescribing before full trials -->
+    <div class="card">
+      <h3>Ethical Dilemma: Prescribing Before Full Approval</h3>
+      <p>Sometimes a doctor may want to prescribe a drug before it has completed full human trials — for example, for a terminally ill patient with no other options.</p>
+      
+      <div class="progress-check" style="margin-top:16px">
+        <div class="pc-label">Progress Check 5 — Extended Writing</div>
+        <p><strong>Suggest two arguments FOR and two arguments AGAINST prescribing a drug before it has completed all stages of testing.</strong> <em>[4 marks]</em></p>
+        <textarea class="vtr-input" rows="6" placeholder="FOR: 1. ... 2. ...&#10;AGAINST: 1. ... 2. ..."></textarea>
+        <button class="reveal-btn" onclick="toggleReveal(this)" style="margin-top:10px">See mark scheme</button>
+        <div class="reveal-content">
+          <strong>FOR (1 mark each):</strong><br>
+          • The patient may be terminally ill with no other treatment options — the potential benefit outweighs the unknown risk<br>
+          • Early-phase results may already show the drug is effective, and waiting years could cost the patient's life<br><br>
+          <strong>AGAINST (1 mark each):</strong><br>
+          • The drug may have unknown long-term side effects that haven't been identified in the limited testing<br>
+          • If the drug harms the patient, it could damage public trust in the pharmaceutical industry and the approval process<br>
+          • Without Phase 3 data, the ideal dose may be unknown — too much could be toxic, too little could be ineffective
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════════════════════════════════════════ -->
+  <!-- SECTION 7: EXAM PRACTICE -->
+  <!-- ══════════════════════════════════════════════════════════════════════════════════════════════ -->
+  <div class="section" id="sec-exam">
+    <div class="card">
+      <h2>Exam Practice Questions</h2>
+      <p style="color:var(--text-muted);">These are structured like IAL Biology exam questions. Attempt each one before checking the mark scheme. Writing out your answers by hand is the most effective retrieval practice.</p>
+    </div>
+
+    <!-- EXAM Q1 -->
+    <div class="exam-box">
+      <div class="exam-marks">2 marks</div>
+      <p><strong>Question 1</strong></p>
+      <p>State two properties that a new medicine must have before it can be sold to patients.</p>
+      <textarea placeholder="1. ...&#10;2. ..."></textarea>
+      <button class="reveal-btn" onclick="toggleReveal(this)" style="margin-top:10px">Show mark scheme</button>
+      <div class="reveal-content mark-scheme show" style="display:none">
+        <h5>Mark Scheme</h5>
+        <ul>
+          <li>Any two from: effective / safe (non-toxic, no unacceptable side effects) / stable / easily taken into and removed from the body / can be manufactured on a large scale in pure form cheaply [2 marks — 1 each]</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- EXAM Q2 -->
+    <div class="exam-box">
+      <div class="exam-marks">3 marks</div>
+      <p><strong>Question 2</strong></p>
+      <p>Describe the role of William Withering in the development of the drug digoxin.</p>
+      <textarea placeholder="Your answer..."></textarea>
+      <button class="reveal-btn" onclick="toggleReveal(this)" style="margin-top:10px">Show mark scheme</button>
+      <div class="reveal-content mark-scheme show" style="display:none">
+        <h5>Mark Scheme</h5>
+        <ul>
+          <li>Withering discovered that foxglove / digitalis could be used to treat dropsy / oedema / heart failure [1]</li>
+          <li>He tested preparations of foxglove on patients over 10 years / tested on 163 patients at Birmingham General Hospital [1]</li>
+          <li>He identified that dried/powdered leaves were most effective / refined the dosage / discovered that boiling reduced effectiveness [1]</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- EXAM Q3 -->
+    <div class="exam-box">
+      <div class="exam-marks">4 marks</div>
+      <p><strong>Question 3</strong></p>
+      <p>Explain why double-blind trials are used in the testing of new drugs.</p>
+      <textarea placeholder="Your answer..."></textarea>
+      <button class="reveal-btn" onclick="toggleReveal(this)" style="margin-top:10px">Show mark scheme</button>
+      <div class="reveal-content mark-scheme show" style="display:none">
+        <h5>Mark Scheme</h5>
+        <ul>
+          <li>Neither the patient nor the doctor knows who receives the drug or the placebo [1]</li>
+          <li>Patients may respond to treatment because they believe it will work / placebo effect [1]</li>
+          <li>Doctors may unconsciously interpret results more favourably if they know the patient is receiving the drug / doctor bias [1]</li>
+          <li>Double-blinding removes bias from both sides, making results more reliable / valid [1]</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- EXAM Q4 -->
+    <div class="exam-box">
+      <div class="exam-marks">6 marks</div>
+      <p><strong>Question 4</strong></p>
+      <p>Compare William Withering's methods of discovering digoxin with modern drug testing protocols. In your answer, you should consider the methods used, the reliability of results, and patient safety.</p>
+      <textarea rows="8" placeholder="Your answer..."></textarea>
+      <button class="reveal-btn" onclick="toggleReveal(this)" style="margin-top:10px">Show mark scheme</button>
+      <div class="reveal-content mark-scheme show" style="display:none">
+        <h5>Mark Scheme</h5>
+        <ul>
+          <li><strong>Methods — Withering:</strong> tested directly on patients / used observation over 10 years / refined dose by trial and error / no control group or placebo [max 2]</li>
+          <li><strong>Methods — Modern:</strong> pre-clinical testing on cells and animals first / three-phase clinical trials / use of placebos and double-blinding / statistical analysis of results / regulatory review required [max 2]</li>
+          <li><strong>Reliability:</strong> Withering had no control — could not rule out natural recovery or placebo effect / modern trials use controls, random allocation, and large sample sizes to ensure statistical significance [1]</li>
+          <li><strong>Safety:</strong> Withering's patients were at risk — some nearly died of digitalis poisoning / modern approach tests safety at each stage before progressing, with ethical oversight and informed consent [1]</li>
+        </ul>
+        <p style="margin-top:8px; font-style:italic;">For full marks: comparison must be explicit (not just two separate descriptions), reference to both methods, and include evaluation of which approach is more reliable/safer and why.</p>
+      </div>
+    </div>
+
+    <!-- EXAM Q5 — Interleaved from previous topics -->
+    <div class="exam-box" style="border-color: var(--purple);">
+      <div class="exam-marks">3 marks</div>
+      <p><strong>Question 5 — Interleaved Retrieval</strong></p>
+      <p style="font-size:0.82rem; color:var(--purple); font-weight:600; margin-bottom:8px;">FROM EARLIER TOPICS: Biological Molecules & Transport</p>
+      <p>Digoxin must travel through the blood to reach the heart muscle cells. Explain how substances are transported in the blood and describe how digoxin might enter a heart muscle cell.</p>
+      <textarea placeholder="Your answer..."></textarea>
+      <button class="reveal-btn" onclick="toggleReveal(this)" style="margin-top:10px">Show mark scheme</button>
+      <div class="reveal-content mark-scheme show" style="display:none">
+        <h5>Mark Scheme</h5>
+        <ul>
+          <li>Digoxin is dissolved in / carried by the blood plasma [1]</li>
+          <li>Blood is pumped to the heart muscle through the coronary arteries [1]</li>
+          <li>Digoxin could enter heart cells by diffusion (moving down its concentration gradient across the cell membrane) / could involve facilitated diffusion if using a carrier or channel protein [1]</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- EXAM Q6 — Interleaved -->
+    <div class="exam-box" style="border-color: var(--purple);">
+      <div class="exam-marks">2 marks</div>
+      <p><strong>Question 6 — Interleaved Retrieval</strong></p>
+      <p style="font-size:0.82rem; color:var(--purple); font-weight:600; margin-bottom:8px;">FROM EARLIER TOPICS: Enzymes</p>
+      <p>Scientists use computer models to fit new molecular structures into the active site of enzymes. Explain what is meant by the "active site" of an enzyme and why its shape is important.</p>
+      <textarea placeholder="Your answer..."></textarea>
+      <button class="reveal-btn" onclick="toggleReveal(this)" style="margin-top:10px">Show mark scheme</button>
+      <div class="reveal-content mark-scheme show" style="display:none">
+        <h5>Mark Scheme</h5>
+        <ul>
+          <li>The active site is a specific region on the enzyme where the substrate binds [1]</li>
+          <li>The shape of the active site is complementary to the substrate (lock and key / induced fit model) — if the shape doesn't match, the substrate cannot bind and the reaction won't be catalysed [1]</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════════════════════════════════════════ -->
+  <!-- SECTION 8: EXIT TICKET -->
+  <!-- ══════════════════════════════════════════════════════════════════════════════════════════════ -->
+  <div class="section" id="sec-exit">
+    <div class="card">
+      <h2>Exit Ticket</h2>
+      <p style="color:var(--text-muted); margin-bottom:24px;">Rate your confidence on each learning objective, then complete the final retrieval challenge.</p>
+
+      <h3 style="margin-bottom:16px;">Confidence Self-Assessment</h3>
+
+      <div style="margin-bottom:20px;">
+        <p style="font-weight:600; margin-bottom:8px;">1. I can describe Withering's discovery of digitalis</p>
+        <div class="confidence-row">
+          <button class="conf-btn" onclick="selectConf(this)">😟 Not yet</button>
+          <button class="conf-btn" onclick="selectConf(this)">🤔 Getting there</button>
+          <button class="conf-btn" onclick="selectConf(this)">😊 Confident</button>
+          <button class="conf-btn" onclick="selectConf(this)">🔥 Mastered</button>
+        </div>
+      </div>
+
+      <div style="margin-bottom:20px;">
+        <p style="font-weight:600; margin-bottom:8px;">2. I can explain the five criteria for a new drug</p>
+        <div class="confidence-row">
+          <button class="conf-btn" onclick="selectConf(this)">😟 Not yet</button>
+          <button class="conf-btn" onclick="selectConf(this)">🤔 Getting there</button>
+          <button class="conf-btn" onclick="selectConf(this)">😊 Confident</button>
+          <button class="conf-btn" onclick="selectConf(this)">🔥 Mastered</button>
+        </div>
+      </div>
+
+      <div style="margin-bottom:20px;">
+        <p style="font-weight:600; margin-bottom:8px;">3. I can describe the three phases of clinical trials</p>
+        <div class="confidence-row">
+          <button class="conf-btn" onclick="selectConf(this)">😟 Not yet</button>
+          <button class="conf-btn" onclick="selectConf(this)">🤔 Getting there</button>
+          <button class="conf-btn" onclick="selectConf(this)">😊 Confident</button>
+          <button class="conf-btn" onclick="selectConf(this)">🔥 Mastered</button>
+        </div>
+      </div>
+
+      <div style="margin-bottom:20px;">
+        <p style="font-weight:600; margin-bottom:8px;">4. I can explain placebos and double-blind methodology</p>
+        <div class="confidence-row">
+          <button class="conf-btn" onclick="selectConf(this)">😟 Not yet</button>
+          <button class="conf-btn" onclick="selectConf(this)">🤔 Getting there</button>
+          <button class="conf-btn" onclick="selectConf(this)">😊 Confident</button>
+          <button class="conf-btn" onclick="selectConf(this)">🔥 Mastered</button>
+        </div>
+      </div>
+
+      <div style="margin-bottom:20px;">
+        <p style="font-weight:600; margin-bottom:8px;">5. I can discuss ethical issues around animal testing and clinical trials</p>
+        <div class="confidence-row">
+          <button class="conf-btn" onclick="selectConf(this)">😟 Not yet</button>
+          <button class="conf-btn" onclick="selectConf(this)">🤔 Getting there</button>
+          <button class="conf-btn" onclick="selectConf(this)">😊 Confident</button>
+          <button class="conf-btn" onclick="selectConf(this)">🔥 Mastered</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- VTR: I USED TO THINK... NOW I THINK -->
+    <div class="vtr-box">
+      <div class="vtr-label">Visible Thinking Routine</div>
+      <h4>I Used to Think… Now I Think…</h4>
+      <p style="font-size:0.9rem; color:var(--text-muted); margin-bottom:12px;">Reflect on how your understanding has changed during this lesson.</p>
+
+      <div class="vtr-section-label">I USED TO THINK…</div>
+      <textarea class="vtr-input" rows="2" placeholder="Before this lesson, I used to think that drug development..."></textarea>
+
+      <div class="vtr-section-label">NOW I THINK…</div>
+      <textarea class="vtr-input" rows="2" placeholder="Now I understand that..."></textarea>
+
+      <div class="vtr-section-label">What is ONE thing you want to find out more about?</div>
+      <textarea class="vtr-input" rows="2" placeholder="I want to know more about..."></textarea>
+    </div>
+
+    <!-- FINAL BRAIN DUMP -->
+    <div class="card">
+      <h3>Final Retrieval Challenge — Brain Dump</h3>
+      <p style="color:var(--text-muted); margin-bottom:12px;">Without looking back at any of the lesson content, write everything you can remember about drug development. Try to include key terms, names, numbers, and processes. This is the <strong>most powerful</strong> form of retrieval practice.</p>
+      <textarea class="vtr-input" rows="10" placeholder="Start writing everything you remember..."></textarea>
+      <button class="reveal-btn" onclick="toggleReveal(this)" style="margin-top:12px">See the key points you should have included</button>
+      <div class="reveal-content">
+        <strong>Key facts to check your brain dump against:</strong><br><br>
+        <strong>Withering:</strong> British doctor (1741–99), foxglove, digitalis, 163 patients, 10 years, Birmingham General Hospital, oedema/dropsy, digoxin still used today, dried/powdered leaves best, boiling reduces effectiveness.<br><br>
+        <strong>Drug criteria:</strong> effective, safe, stable, easily taken in and removed, manufacturable at scale.<br><br>
+        <strong>Development pipeline:</strong> ~10 years, ~US$2.6 billion, 5,000–10,000 compounds screened, early research → pre-clinical testing → animal testing → clinical trials → regulatory review → post-market surveillance.<br><br>
+        <strong>Clinical trials:</strong> Phase 1 (small, healthy volunteers, safety), Phase 2 (100–500 patients, effectiveness), Phase 3 (5,000+, confirm at scale). Placebo = inactive substance used as control. Placebo effect = patients improve because they believe they're being treated. Double-blind = neither doctor nor patient knows who gets drug vs. placebo.<br><br>
+        <strong>Ethics:</strong> Animal testing required by law, 3Rs (replace, reduce, refine), mice/rats most common, ethical debate around both animal testing and early access to drugs before full trials.
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ══════════════════════════════════════════ SCORE BAR ══════════════════════════════════════════ -->
+<div class="score-bar">
+  <div class="score-item"><div class="score-dot green"></div> Correct: <span id="score-correct">0</span></div>
+  <div class="score-item"><div class="score-dot red"></div> Incorrect: <span id="score-incorrect">0</span></div>
+  <div class="score-item"><div class="score-dot blue"></div> Total: <span id="score-total">0</span></div>
+</div>
+
+<!-- ══════════════════════════════════════════ JAVASCRIPT ══════════════════════════════════════════ -->
+<script>
+// ── Score tracking ──
+let correct = 0, incorrect = 0;
+function updateScore() {
+  document.getElementById('score-correct').textContent = correct;
+  document.getElementById('score-incorrect').textContent = incorrect;
+  document.getElementById('score-total').textContent = correct + incorrect;
+}
+
+// ── Section navigation ──
+function showSection(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.getElementById('sec-' + id).classList.add('active');
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  event.currentTarget.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ── MCQ selection ──
+function selectMCQ(el, letter) {
+  const block = el.closest('.mcq-block');
+  if (block.dataset.answered) return;
+  block.dataset.answered = 'true';
+  
+  const correctAnswer = block.dataset.correct;
+  const opts = block.querySelectorAll('.mcq-opt');
+  const feedbacks = block.querySelectorAll('.mcq-feedback');
+  
+  if (letter === correctAnswer) {
+    el.classList.add('correct');
+    feedbacks[0].classList.add('show');
+    correct++;
+  } else {
+    el.classList.add('incorrect');
+    opts.forEach(o => {
+      const optLetter = o.querySelector('.letter').textContent;
+      if (optLetter === correctAnswer) o.classList.add('correct');
+    });
+    feedbacks[1].classList.add('show');
+    incorrect++;
+  }
+  updateScore();
+}
+
+// ── Reveal toggle ──
+function toggleReveal(btn) {
+  const content = btn.nextElementSibling;
+  if (!content) return;
+  const isMS = content.classList.contains('mark-scheme');
+  if (content.style.display === 'none' || !content.classList.contains('show')) {
+    content.classList.add('show');
+    content.style.display = 'block';
+    btn.textContent = btn.textContent.replace('See', 'Hide').replace('Show', 'Hide').replace('Check', 'Hide');
+  } else {
+    content.classList.remove('show');
+    content.style.display = 'none';
+    btn.textContent = btn.textContent.replace('Hide', 'See');
+  }
+}
+
+// ── Tier switching ──
+function switchTier(btn) {
+  const group = btn.dataset.group;
+  const tier = btn.dataset.tier;
+  
+  document.querySelectorAll(`.tier-tab[data-group="${group}"]`).forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  
+  document.querySelectorAll(`.tier-content[data-group="${group}"]`).forEach(c => c.classList.remove('active'));
+  document.querySelector(`.tier-content[data-group="${group}"][data-tier="${tier}"]`).classList.add('active');
+}
+
+// ── Fill-in-the-blank checking ──
+function checkBlanks(btn) {
+  const container = btn.closest('.tier-content') || btn.closest('.progress-check');
+  const blanks = container.querySelectorAll('.fill-blank');
+  blanks.forEach(b => {
+    const answer = b.dataset.answer.toLowerCase().trim();
+    const value = b.value.toLowerCase().trim();
+    if (value === answer) {
+      b.classList.add('correct-input');
+      b.classList.remove('incorrect-input');
+    } else {
+      b.classList.add('incorrect-input');
+      b.classList.remove('correct-input');
+    }
+  });
+}
+
+// ── Confidence buttons ──
+function selectConf(btn) {
+  const row = btn.closest('.confidence-row');
+  row.querySelectorAll('.conf-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+// ── Drag and Drop ──
+let draggedItem = null;
+
+function dragStart(e) {
+  draggedItem = e.target;
+  e.dataTransfer.effectAllowed = 'move';
+  setTimeout(() => e.target.style.opacity = '0.4', 0);
+}
+
+function dragOver(e) {
+  e.preventDefault();
+  e.dataTransfer.dropEffect = 'move';
+}
+
+function dragEnter(e) {
+  e.preventDefault();
+  e.currentTarget.classList.add('over');
+}
+
+function dragLeave(e) {
+  e.currentTarget.classList.remove('over');
+}
+
+function dropItem(e) {
+  e.preventDefault();
+  e.currentTarget.classList.remove('over');
+  if (draggedItem) {
+    const clone = draggedItem.cloneNode(true);
+    clone.style.opacity = '1';
+    clone.draggable = false;
+    clone.style.cursor = 'default';
+    clone.onclick = function() { 
+      this.remove(); 
+      draggedItem.style.opacity = '1';
+      draggedItem.classList.remove('placed');
+    };
+    e.currentTarget.appendChild(clone);
+    draggedItem.classList.add('placed');
+    draggedItem.style.opacity = '0.4';
+    draggedItem = null;
+  }
+}
+
+function checkSequence() {
+  const drop = document.getElementById('seq-drop');
+  const items = drop.querySelectorAll('.drag-item');
+  const fb = document.getElementById('seq-feedback');
+  
+  if (items.length < 6) {
+    fb.style.display = 'block';
+    fb.style.background = '#fdf8eb';
+    fb.style.border = '1px solid #d4a843';
+    fb.textContent = 'Please place all 6 stages in the drop zone before checking.';
+    return;
+  }
+
+  const correctOrder = [1, 2, 3, 4, 5, 6];
+  const studentOrder = Array.from(items).map(i => parseInt(i.dataset.order));
+  const isCorrect = studentOrder.every((v, i) => v === correctOrder[i]);
+
+  fb.style.display = 'block';
+  if (isCorrect) {
+    fb.style.background = '#d8f3dc';
+    fb.style.border = '1px solid #95d5b2';
+    fb.innerHTML = '<strong>Correct!</strong> The order is: Early phase research → Pre-clinical testing → Animal testing → Clinical trials → Regulatory review → Post-market surveillance.';
+    correct++;
+  } else {
+    fb.style.background = '#fef0ec';
+    fb.style.border = '1px solid #f4a99b';
+    fb.innerHTML = '<strong>Not quite.</strong> The correct order is: Early phase research → Pre-clinical testing → Animal testing → Clinical trials (Phases 1–3) → Regulatory review → Post-market surveillance.';
+    incorrect++;
+  }
+  updateScore();
+}
+
+// ── LO checkbox styling ──
+document.querySelectorAll('.lo-item').forEach(item => {
+  item.style.transition = 'background 0.2s';
+  item.addEventListener('mouseenter', () => item.style.background = 'var(--surface-alt)');
+  item.addEventListener('mouseleave', () => item.style.background = 'transparent');
+});
+</script>
+
+</body>
+</html>
