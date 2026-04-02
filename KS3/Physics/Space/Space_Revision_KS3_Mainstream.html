@@ -1,0 +1,1347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Space Revision - KS3</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+  :root {
+    --bg: #1a1a2e;
+    --card-bg: #16213e;
+    --accent-solar: #e94560;
+    --accent-earth: #3a86ff;
+    --accent-seasons: #ff6900;
+    --text: #f0f0f0;
+    --text-muted: #a0a0b0;
+    --success: #4ecca3;
+    --warning: #ffc93c;
+    --wrong: #e94560;
+    --font: 'Inter', sans-serif;
+    --foundation: #4ecca3;
+    --core: #3a86ff;
+    --stretch: #ffc93c;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: var(--font);
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.75;
+    font-size: 17px;
+  }
+
+  /* ===== HERO ===== */
+  .hero {
+    text-align: center;
+    padding: 50px 20px 35px;
+    background: linear-gradient(135deg, #0d1117 0%, #1a1a2e 50%, #16213e 100%);
+    position: relative;
+    overflow: hidden;
+  }
+  .hero h1 {
+    font-size: clamp(2rem, 5vw, 3rem);
+    font-weight: 700;
+    margin-bottom: 10px;
+    background: linear-gradient(90deg, #e94560, #ffc93c, #4ecca3);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .hero p {
+    font-size: 1.05rem;
+    color: var(--text-muted);
+    max-width: 620px;
+    margin: 0 auto;
+  }
+
+  /* Floating stars */
+  .star-field {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+  .star-field span {
+    position: absolute;
+    width: 3px;
+    height: 3px;
+    background: #fff;
+    border-radius: 50%;
+    animation: twinkle 3s infinite alternate;
+  }
+  @keyframes twinkle {
+    0% { opacity: 0.2; }
+    100% { opacity: 1; }
+  }
+
+  /* ===== PROGRESS BAR ===== */
+  .progress-container {
+    padding: 10px 30px;
+    background: #0d1117;
+  }
+  .progress-bar {
+    height: 10px;
+    background: #2a2a4a;
+    border-radius: 5px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, var(--accent-solar), var(--warning), var(--success));
+    border-radius: 5px;
+    transition: width 0.5s ease;
+  }
+  .progress-text {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-top: 4px;
+    text-align: center;
+  }
+
+  /* ===== NAV TABS ===== */
+  .nav-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    padding: 18px;
+    background: var(--bg);
+    position: sticky;
+    top: 0;
+    z-index: 999;
+  }
+  .nav-tab {
+    padding: 11px 22px;
+    border: none;
+    border-radius: 10px;
+    font-family: var(--font);
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: 0.3s;
+    color: var(--text);
+  }
+  .nav-tab[data-section="solar"] { background: #e9456030; border: 2px solid var(--accent-solar); }
+  .nav-tab[data-section="earth"] { background: #3a86ff30; border: 2px solid var(--accent-earth); }
+  .nav-tab[data-section="seasons"] { background: #ff690030; border: 2px solid var(--accent-seasons); }
+  .nav-tab[data-section="quiz"] { background: #4ecca330; border: 2px solid var(--success); }
+  .nav-tab.active, .nav-tab:hover {
+    transform: scale(1.05);
+    filter: brightness(1.3);
+  }
+  .nav-tab:focus {
+    outline: 3px solid var(--warning);
+    outline-offset: 2px;
+  }
+
+  /* ===== SECTIONS ===== */
+  .section { display: none; padding: 20px; max-width: 880px; margin: 0 auto; }
+  .section.active { display: block; }
+
+  /* ===== CONTENT CARDS ===== */
+  .card {
+    background: var(--card-bg);
+    border-radius: 14px;
+    padding: 26px;
+    margin-bottom: 22px;
+    border-left: 5px solid var(--accent-solar);
+    box-shadow: 0 4px 18px rgba(0,0,0,0.3);
+  }
+  .card.earth-card { border-left-color: var(--accent-earth); }
+  .card.seasons-card { border-left-color: var(--accent-seasons); }
+
+  .card h2 {
+    font-size: 1.4rem;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .card h3 {
+    font-size: 1.1rem;
+    margin: 14px 0 8px;
+    color: var(--warning);
+  }
+  .card p, .card li {
+    font-size: 0.97rem;
+    line-height: 1.8;
+    color: #d0d0e0;
+  }
+  .card ul { padding-left: 20px; margin: 8px 0; }
+  .card li { margin-bottom: 6px; }
+
+  /* ===== DIFFICULTY BADGES ===== */
+  .badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 6px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+  }
+  .badge-foundation { background: #4ecca333; color: var(--foundation); border: 1px solid var(--foundation); }
+  .badge-core { background: #3a86ff33; color: var(--core); border: 1px solid var(--core); }
+  .badge-stretch { background: #ffc93c33; color: var(--stretch); border: 1px solid var(--stretch); }
+
+  /* ===== KEY WORD BOX ===== */
+  .keyword-box {
+    background: #0d1117;
+    border: 2px dashed var(--warning);
+    border-radius: 12px;
+    padding: 14px 18px;
+    margin: 14px 0;
+  }
+  .keyword-box h4 {
+    color: var(--warning);
+    font-size: 0.9rem;
+    margin-bottom: 8px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  .keyword {
+    display: inline-block;
+    background: #ffc93c22;
+    border: 1px solid var(--warning);
+    border-radius: 8px;
+    padding: 4px 12px;
+    margin: 4px;
+    font-size: 0.88rem;
+    cursor: help;
+    position: relative;
+    transition: 0.2s;
+  }
+  .keyword:hover, .keyword:focus {
+    background: #ffc93c44;
+    transform: scale(1.05);
+  }
+  .keyword .tooltip {
+    display: none;
+    position: absolute;
+    bottom: 110%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #0d1117;
+    border: 1px solid var(--warning);
+    border-radius: 8px;
+    padding: 8px 14px;
+    font-size: 0.82rem;
+    color: var(--text);
+    width: 220px;
+    text-align: center;
+    z-index: 10;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+  }
+  .keyword:hover .tooltip, .keyword:focus .tooltip { display: block; }
+
+  /* ===== FEATURED VIDEO LINK ===== */
+  .video-featured {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 18px 22px;
+    background: linear-gradient(135deg, #e9456018, #ffc93c10);
+    border: 2px solid var(--accent-solar);
+    border-radius: 12px;
+    margin: 14px 0;
+    text-decoration: none;
+    color: var(--text);
+    transition: 0.3s;
+  }
+  .video-featured:hover {
+    background: linear-gradient(135deg, #e9456030, #ffc93c20);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(233,69,96,0.2);
+  }
+  .video-featured .vf-play {
+    flex-shrink: 0;
+    width: 54px;
+    height: 54px;
+    background: var(--accent-solar);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .video-featured .vf-play svg {
+    width: 22px;
+    height: 22px;
+    fill: #fff;
+    margin-left: 3px;
+  }
+  .video-featured .vf-info { flex: 1; }
+  .video-featured .vf-title { font-size: 1.05rem; font-weight: 600; margin-bottom: 3px; }
+  .video-featured .vf-sub { font-size: 0.82rem; color: var(--text-muted); }
+
+  .video-featured.earth-feat { border-color: var(--accent-earth); }
+  .video-featured.earth-feat .vf-play { background: var(--accent-earth); }
+  .video-featured.earth-feat:hover { box-shadow: 0 6px 20px rgba(58,134,255,0.2); }
+
+  .video-featured.seasons-feat { border-color: var(--accent-seasons); }
+  .video-featured.seasons-feat .vf-play { background: var(--accent-seasons); }
+  .video-featured.seasons-feat:hover { box-shadow: 0 6px 20px rgba(255,105,0,0.2); }
+
+  .video-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 16px;
+    background: #e9456022;
+    border: 2px solid var(--accent-solar);
+    border-radius: 10px;
+    color: var(--text);
+    text-decoration: none;
+    font-size: 0.92rem;
+    margin: 6px 4px;
+    transition: 0.2s;
+  }
+  .video-link:hover { background: #e9456044; transform: translateY(-2px); }
+
+  /* ===== MINI QUIZ ===== */
+  .mini-quiz {
+    background: #0d111788;
+    border: 2px solid var(--success);
+    border-radius: 12px;
+    padding: 18px;
+    margin: 18px 0;
+  }
+  .mini-quiz h4 {
+    color: var(--success);
+    margin-bottom: 12px;
+    font-size: 0.95rem;
+  }
+  .mini-quiz .mq-question { margin-bottom: 14px; }
+  .mini-quiz .mq-question p { margin-bottom: 8px; font-weight: 500; }
+  .mq-options { display: flex; flex-wrap: wrap; gap: 8px; }
+  .mq-opt {
+    padding: 8px 16px;
+    border: 2px solid #4a4a6a;
+    border-radius: 10px;
+    background: transparent;
+    color: var(--text);
+    font-family: var(--font);
+    font-size: 0.92rem;
+    cursor: pointer;
+    transition: 0.2s;
+    min-width: 110px;
+    text-align: center;
+  }
+  .mq-opt:hover { border-color: var(--success); background: #4ecca322; }
+  .mq-opt.correct { background: #4ecca344; border-color: var(--success); color: #fff; }
+  .mq-opt.wrong { background: #e9456044; border-color: var(--wrong); color: #fff; }
+  .mq-opt:disabled { cursor: default; opacity: 0.7; }
+  .mq-feedback { margin-top: 8px; font-size: 0.88rem; font-weight: 500; min-height: 22px; }
+
+  /* ===== ORDERING GAME ===== */
+  .sort-game {
+    background: #0d111788;
+    border: 2px solid #533483;
+    border-radius: 12px;
+    padding: 18px;
+    margin: 18px 0;
+  }
+  .sort-items { display: flex; flex-wrap: wrap; gap: 10px; margin: 12px 0; }
+  .sort-item {
+    padding: 10px 16px;
+    background: #53348344;
+    border: 2px solid #533483;
+    border-radius: 10px;
+    cursor: grab;
+    font-size: 0.92rem;
+    user-select: none;
+    transition: 0.2s;
+  }
+  .sort-item:active { cursor: grabbing; transform: scale(1.05); }
+  .sort-slots { display: flex; flex-direction: column; gap: 8px; margin: 12px 0; }
+  .sort-slot {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 16px;
+    background: #16213e;
+    border: 2px dashed #4a4a6a;
+    border-radius: 10px;
+    min-height: 46px;
+    transition: 0.2s;
+  }
+  .sort-slot .slot-label { font-size: 0.82rem; color: var(--text-muted); min-width: 30px; }
+  .sort-slot .slot-content { flex: 1; font-weight: 500; }
+
+  /* ===== FILL-IN BLANKS ===== */
+  .fill-blank {
+    display: inline-block;
+    border: none;
+    border-bottom: 2px dashed var(--warning);
+    min-width: 100px;
+    padding: 2px 8px;
+    margin: 0 4px;
+    font-family: var(--font);
+    font-size: 0.95rem;
+    color: var(--warning);
+    background: transparent;
+    outline: none;
+    text-align: center;
+  }
+  .fill-blank.correct-input { border-color: var(--success); color: var(--success); }
+  .fill-blank.wrong-input { border-color: var(--wrong); color: var(--wrong); }
+
+  /* ===== WORD BANK ===== */
+  .word-bank {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 12px 0;
+    padding: 12px;
+    background: #0d1117;
+    border-radius: 10px;
+  }
+  .word-bank span {
+    padding: 6px 14px;
+    background: #ffc93c22;
+    border: 1px solid var(--warning);
+    border-radius: 8px;
+    font-size: 0.88rem;
+  }
+
+  /* ===== FINAL QUIZ ===== */
+  .quiz-question {
+    background: var(--card-bg);
+    border-radius: 12px;
+    padding: 22px;
+    margin-bottom: 18px;
+    border-left: 5px solid var(--success);
+  }
+  .quiz-question h3 { color: var(--text); margin-bottom: 12px; font-size: 1rem; }
+  .quiz-options { display: flex; flex-direction: column; gap: 8px; }
+  .quiz-opt {
+    display: block;
+    width: 100%;
+    text-align: left;
+    padding: 11px 16px;
+    border: 2px solid #3a3a5a;
+    border-radius: 10px;
+    background: transparent;
+    color: var(--text);
+    font-family: var(--font);
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: 0.2s;
+  }
+  .quiz-opt:hover { border-color: var(--success); background: #4ecca315; }
+  .quiz-opt.q-correct { background: #4ecca344; border-color: var(--success); }
+  .quiz-opt.q-wrong { background: #e9456044; border-color: var(--wrong); }
+  .quiz-opt:disabled { cursor: default; }
+  .quiz-feedback {
+    margin-top: 10px;
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-size: 0.88rem;
+    display: none;
+  }
+  .quiz-feedback.show { display: block; }
+  .quiz-feedback.correct-fb { background: #4ecca322; color: var(--success); }
+  .quiz-feedback.wrong-fb { background: #e9456022; color: var(--wrong); }
+
+  .quiz-score {
+    text-align: center;
+    padding: 28px;
+    background: var(--card-bg);
+    border-radius: 14px;
+    margin-top: 20px;
+    display: none;
+  }
+  .quiz-score h2 { font-size: 1.8rem; margin-bottom: 10px; }
+  .quiz-score .score-num { font-size: 2.8rem; font-weight: 700; }
+  .quiz-score .score-msg { font-size: 1.05rem; color: var(--text-muted); margin-top: 10px; }
+
+  /* ===== BOXES ===== */
+  .fun-fact {
+    background: linear-gradient(135deg, #e9456015, #ffc93c15);
+    border: 1px solid #e9456050;
+    border-radius: 10px;
+    padding: 13px 16px;
+    margin: 12px 0;
+    font-size: 0.92rem;
+  }
+  .fun-fact strong { color: var(--accent-solar); }
+
+  .mnemonic {
+    background: #4ecca315;
+    border: 2px solid var(--success);
+    border-radius: 10px;
+    padding: 14px 18px;
+    margin: 12px 0;
+    text-align: center;
+  }
+  .mnemonic .mem-title { color: var(--success); font-weight: 600; font-size: 0.82rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+  .mnemonic .mem-text { font-size: 1.15rem; font-weight: 600; letter-spacing: 1px; }
+  .mnemonic .mem-text span { color: var(--warning); font-size: 1.3rem; }
+
+  .strategy-box {
+    background: #3a86ff15;
+    border: 1px solid #3a86ff50;
+    border-radius: 10px;
+    padding: 13px 16px;
+    margin: 12px 0;
+    font-size: 0.88rem;
+    color: #a0c4ff;
+  }
+  .strategy-box strong { color: #3a86ff; }
+
+  /* ===== BUTTONS ===== */
+  .action-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 11px 22px;
+    border: none;
+    border-radius: 10px;
+    font-family: var(--font);
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s;
+    color: #fff;
+  }
+  .action-btn:hover { transform: translateY(-2px); filter: brightness(1.15); }
+  .btn-primary { background: var(--success); }
+  .btn-secondary { background: #533483; }
+  .btn-danger { background: var(--wrong); }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 600px) {
+    .nav-tab { font-size: 13px; padding: 9px 14px; }
+    .card { padding: 16px; }
+  }
+
+  /* ===== PRINT ===== */
+  @media print {
+    .nav-tabs, .progress-container { display: none; }
+    .section { display: block !important; }
+    body { background: #fff; color: #000; font-size: 13px; }
+    .card { box-shadow: none; border: 1px solid #ccc; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="star-field" id="starField"></div>
+  <h1>Space Revision — KS3</h1>
+  <p>Work through each section, watch the videos, and test yourself with quizzes and activities. Tasks are colour-coded by difficulty.</p>
+  <div style="display:flex; justify-content:center; gap:14px; margin-top:14px; flex-wrap:wrap;">
+    <span class="badge badge-foundation" style="font-size:0.8rem; padding:5px 14px;">Foundation</span>
+    <span class="badge badge-core" style="font-size:0.8rem; padding:5px 14px;">Core</span>
+    <span class="badge badge-stretch" style="font-size:0.8rem; padding:5px 14px;">Stretch</span>
+  </div>
+</header>
+
+<!-- PROGRESS -->
+<div class="progress-container">
+  <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+  <div class="progress-text" id="progressText">Sections completed: 0 / 4</div>
+</div>
+
+<!-- NAV TABS -->
+<nav class="nav-tabs" role="tablist">
+  <button class="nav-tab active" data-section="solar" role="tab" onclick="showSection('solar')">The Solar System</button>
+  <button class="nav-tab" data-section="earth" role="tab" onclick="showSection('earth')">Earth &amp; Space</button>
+  <button class="nav-tab" data-section="seasons" role="tab" onclick="showSection('seasons')">Seasons &amp; Tilt</button>
+  <button class="nav-tab" data-section="quiz" role="tab" onclick="showSection('quiz')">Final Quiz</button>
+</nav>
+
+<!-- ========================================== -->
+<!-- SECTION 1: THE SOLAR SYSTEM                -->
+<!-- ========================================== -->
+<div class="section active" id="sec-solar">
+
+  <div class="card">
+    <h2>Our Solar System</h2>
+
+    <p>Our solar system is made up of the <strong>Sun</strong> and everything that orbits around it. This includes <strong>8 planets</strong>, their moons, dwarf planets (like Pluto), asteroids, and comets.</p>
+
+    <p>The Sun sits at the centre. It is a <strong>star</strong> — a massive ball of hot gas that gives off light and heat through <strong>nuclear fusion</strong>. The Sun's <strong>gravity</strong> keeps everything orbiting around it.</p>
+
+    <div class="mnemonic">
+      <div class="mem-title">Memory Trick — Planet Order</div>
+      <div class="mem-text">
+        <span>M</span>y <span>V</span>ery <span>E</span>asy <span>M</span>ethod <span>J</span>ust <span>S</span>peeds <span>U</span>p <span>N</span>aming
+      </div>
+      <p style="margin-top:6px; font-size:0.82rem; color:var(--text-muted);">Mercury, Venus, Earth, Mars, Jupiter, Saturn, Uranus, Neptune</p>
+    </div>
+
+    <h3>The Planets</h3>
+    <p>The 4 planets closest to the Sun are called the <strong>rocky (terrestrial) planets</strong>: Mercury, Venus, Earth, and Mars. They are small and made of rock and metal.</p>
+    <p>The 4 outer planets are called the <strong>gas giants</strong>: Jupiter, Saturn, Uranus, and Neptune. They are much larger and made mostly of gas and ice.</p>
+
+    <div class="fun-fact">
+      <strong>Fun Fact:</strong> Jupiter is so big that over 1,300 Earths could fit inside it. If Jupiter were a football, Earth would be smaller than a marble!
+    </div>
+
+    <h3>Other Objects</h3>
+    <p><strong>Asteroids</strong> are chunks of rock and metal that orbit the Sun, mostly found in the <strong>asteroid belt</strong> between Mars and Jupiter.</p>
+    <p><strong>Comets</strong> are balls of ice, rock and dust. When they get close to the Sun, they heat up and form a bright tail.</p>
+    <p><strong>Dwarf planets</strong> like Pluto are too small to be called full planets but still orbit the Sun.</p>
+
+    <div class="keyword-box">
+      <h4>Key Words</h4>
+      <span class="keyword" tabindex="0">Orbit<span class="tooltip">The curved path an object takes around another object due to gravity.</span></span>
+      <span class="keyword" tabindex="0">Gravity<span class="tooltip">A force of attraction between all objects with mass. It keeps planets orbiting the Sun.</span></span>
+      <span class="keyword" tabindex="0">Nuclear Fusion<span class="tooltip">A reaction where small atoms join together to make bigger ones, releasing huge amounts of energy. This is how the Sun produces heat and light.</span></span>
+      <span class="keyword" tabindex="0">Asteroid<span class="tooltip">A small rocky body orbiting the Sun, mostly found between Mars and Jupiter.</span></span>
+      <span class="keyword" tabindex="0">Comet<span class="tooltip">A ball of ice, rock and dust that develops a bright tail when near the Sun.</span></span>
+      <span class="keyword" tabindex="0">Terrestrial<span class="tooltip">Means "Earth-like" — rocky planets close to the Sun.</span></span>
+    </div>
+  </div>
+
+  <!-- VIDEOS -->
+  <div class="card">
+    <h2>Watch &amp; Learn</h2>
+    <p>These short videos explain the Solar System visually — great for revision.</p>
+
+    <a href="https://www.youtube.com/watch?v=TKM0P3XlMNA" target="_blank" rel="noopener" class="video-featured">
+      <div class="vf-play"><svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg></div>
+      <div class="vf-info">
+        <div class="vf-title">Crash Course Astronomy #9 — Introduction to the Solar System</div>
+        <div class="vf-sub">12 mins · Click to watch on YouTube</div>
+      </div>
+    </a>
+
+    <a href="https://www.youtube.com/watch?v=libKVRa01L8" target="_blank" rel="noopener" class="video-link">National Geographic — Solar System 101</a>
+    <a href="https://www.youtube.com/watch?v=Qd6nLM2QlWw" target="_blank" rel="noopener" class="video-link">FreeSchool — Exploring Our Solar System</a>
+  </div>
+
+  <!-- FOUNDATION: MINI QUIZ -->
+  <div class="card">
+    <span class="badge badge-foundation">Foundation</span>
+    <h2>Quick Check — Solar System Basics</h2>
+    <div class="mini-quiz">
+      <div class="mq-question">
+        <p>1. How many planets are in our solar system?</p>
+        <div class="mq-options">
+          <button class="mq-opt" onclick="checkMini(this, false)">7</button>
+          <button class="mq-opt" onclick="checkMini(this, true)">8</button>
+          <button class="mq-opt" onclick="checkMini(this, false)">9</button>
+          <button class="mq-opt" onclick="checkMini(this, false)">10</button>
+        </div>
+        <div class="mq-feedback"></div>
+      </div>
+
+      <div class="mq-question">
+        <p>2. What keeps the planets orbiting the Sun?</p>
+        <div class="mq-options">
+          <button class="mq-opt" onclick="checkMini(this, false)">Magnetism</button>
+          <button class="mq-opt" onclick="checkMini(this, true)">Gravity</button>
+          <button class="mq-opt" onclick="checkMini(this, false)">Wind</button>
+          <button class="mq-opt" onclick="checkMini(this, false)">Electricity</button>
+        </div>
+        <div class="mq-feedback"></div>
+      </div>
+
+      <div class="mq-question">
+        <p>3. Which are the 4 rocky planets?</p>
+        <div class="mq-options">
+          <button class="mq-opt" onclick="checkMini(this, true)" style="min-width:200px;">Mercury, Venus, Earth, Mars</button>
+          <button class="mq-opt" onclick="checkMini(this, false)" style="min-width:200px;">Jupiter, Saturn, Uranus, Neptune</button>
+        </div>
+        <div class="mq-feedback"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CORE: FILL IN THE BLANKS -->
+  <div class="card">
+    <span class="badge badge-core">Core</span>
+    <h2>Fill in the Blanks</h2>
+    <p style="margin-bottom:8px;">Use the word bank to complete the sentences.</p>
+
+    <div class="word-bank">
+      <span>gravity</span>
+      <span>nuclear fusion</span>
+      <span>asteroid belt</span>
+      <span>gas giants</span>
+      <span>comets</span>
+    </div>
+
+    <p>The Sun produces energy through <input class="fill-blank" data-answer="nuclear fusion" placeholder="___________">.</p>
+    <p>The Sun's <input class="fill-blank" data-answer="gravity" placeholder="___________"> keeps the planets in orbit.</p>
+    <p>Most asteroids are found in the <input class="fill-blank" data-answer="asteroid belt" placeholder="___________"> between Mars and Jupiter.</p>
+    <p>Jupiter, Saturn, Uranus and Neptune are known as <input class="fill-blank" data-answer="gas giants" placeholder="___________">.</p>
+    <p>Balls of ice, rock and dust that develop tails near the Sun are called <input class="fill-blank" data-answer="comets" placeholder="___________">.</p>
+
+    <button class="action-btn btn-primary" onclick="checkBlanks(this)" style="margin-top:14px;">Check My Answers</button>
+  </div>
+
+  <!-- STRETCH: EXTENDED QUESTIONS -->
+  <div class="card">
+    <span class="badge badge-stretch">Stretch</span>
+    <h2>Stretch Questions</h2>
+    <div class="mini-quiz">
+      <div class="mq-question">
+        <p>1. What process powers the Sun?</p>
+        <div class="mq-options">
+          <button class="mq-opt" onclick="checkMini(this, false)">Burning gas</button>
+          <button class="mq-opt" onclick="checkMini(this, true)">Nuclear fusion</button>
+          <button class="mq-opt" onclick="checkMini(this, false)">Chemical reactions</button>
+          <button class="mq-opt" onclick="checkMini(this, false)">Electricity</button>
+        </div>
+        <div class="mq-feedback"></div>
+      </div>
+
+      <div class="mq-question">
+        <p>2. Why is Pluto no longer classified as a full planet?</p>
+        <div class="mq-options">
+          <button class="mq-opt" onclick="checkMini(this, false)">It's too hot</button>
+          <button class="mq-opt" onclick="checkMini(this, false)">It's too far away</button>
+          <button class="mq-opt" onclick="checkMini(this, true)">It hasn't cleared its orbit of other debris</button>
+          <button class="mq-opt" onclick="checkMini(this, false)">It doesn't orbit the Sun</button>
+        </div>
+        <div class="mq-feedback"></div>
+      </div>
+
+      <div class="mq-question">
+        <p>3. Explain why the inner planets are rocky while the outer planets are gaseous.</p>
+        <div class="mq-options">
+          <button class="mq-opt" onclick="checkMini(this, true)" style="min-width:260px;">Closer to the Sun, heat blew lighter gases away — only rock survived</button>
+          <button class="mq-opt" onclick="checkMini(this, false)" style="min-width:260px;">The outer planets are older so they collected more gas</button>
+        </div>
+        <div class="mq-feedback"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ========================================== -->
+<!-- SECTION 2: EARTH & SPACE                   -->
+<!-- ========================================== -->
+<div class="section" id="sec-earth">
+
+  <div class="card earth-card">
+    <h2>Day, Night &amp; the Moon</h2>
+
+    <h3>Day and Night</h3>
+    <p>The Earth <strong>rotates</strong> (spins) on its <strong>axis</strong> once every <strong>24 hours</strong>. The side facing the Sun gets daylight. The side facing away is in darkness (night).</p>
+
+    <h3>Seasons</h3>
+    <p>The Earth's axis is <strong>tilted at 23.5 degrees</strong>. As Earth orbits the Sun (which takes <strong>365.25 days</strong> — one year), different parts of the Earth are tilted towards or away from the Sun. This causes the seasons.</p>
+    <p>When the UK is tilted towards the Sun, we get <strong>summer</strong> (longer days, Sun higher in the sky). When tilted away, we get <strong>winter</strong> (shorter days, Sun lower in the sky).</p>
+
+    <div class="fun-fact">
+      <strong>Think about it:</strong> In summer the Sun is higher and it stays light much longer — that's because your part of Earth is tilted towards the Sun!
+    </div>
+
+    <h3>The Moon</h3>
+    <p>The Moon <strong>orbits the Earth</strong> roughly every <strong>28 days</strong>. It does not produce its own light — it <strong>reflects</strong> sunlight.</p>
+    <p>As the Moon orbits, we see different amounts of its lit side. These are called <strong>phases</strong>: new moon, crescent, half moon (quarter), gibbous, and full moon.</p>
+
+    <div class="keyword-box">
+      <h4>Key Words</h4>
+      <span class="keyword" tabindex="0">Axis<span class="tooltip">An imaginary line through the centre of Earth from the North Pole to the South Pole. Earth spins on this line.</span></span>
+      <span class="keyword" tabindex="0">Rotate<span class="tooltip">To spin around an axis. Earth rotates once every 24 hours.</span></span>
+      <span class="keyword" tabindex="0">Orbit<span class="tooltip">To move in a curved path around another object. Earth orbits the Sun in 365.25 days.</span></span>
+      <span class="keyword" tabindex="0">Tilt<span class="tooltip">Earth's axis is not straight up — it leans at 23.5 degrees, which causes the seasons.</span></span>
+      <span class="keyword" tabindex="0">Phases<span class="tooltip">The different shapes of the Moon we see as it orbits Earth (new moon, crescent, quarter, gibbous, full).</span></span>
+      <span class="keyword" tabindex="0">Reflect<span class="tooltip">When light bounces off a surface. The Moon reflects the Sun's light.</span></span>
+    </div>
+  </div>
+
+  <!-- VIDEOS -->
+  <div class="card earth-card">
+    <h2>Watch &amp; Learn</h2>
+
+    <a href="https://www.youtube.com/watch?v=l64YwNl1wr0" target="_blank" rel="noopener" class="video-featured earth-feat">
+      <div class="vf-play"><svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg></div>
+      <div class="vf-info">
+        <div class="vf-title">Crash Course Kids — Earth's Rotation &amp; Revolution</div>
+        <div class="vf-sub">4 mins · Click to watch on YouTube</div>
+      </div>
+    </a>
+
+    <a href="https://www.youtube.com/watch?v=IJhgZBn-LHg" target="_blank" rel="noopener" class="video-link">Vsauce — How Earth Moves</a>
+    <a href="https://www.youtube.com/watch?v=BQvo7vyCmuE" target="_blank" rel="noopener" class="video-link">Dr Binocs — Phases of the Moon</a>
+  </div>
+
+  <!-- FOUNDATION: MINI QUIZ -->
+  <div class="card earth-card">
+    <span class="badge badge-foundation">Foundation</span>
+    <h2>Quick Check — Earth &amp; Space</h2>
+    <div class="mini-quiz">
+      <div class="mq-question">
+        <p>1. How long does it take Earth to rotate once?</p>
+        <div class="mq-options">
+          <button class="mq-opt" onclick="checkMini(this, false)">12 hours</button>
+          <button class="mq-opt" onclick="checkMini(this, true)">24 hours</button>
+          <button class="mq-opt" onclick="checkMini(this, false)">7 days</button>
+          <button class="mq-opt" onclick="checkMini(this, false)">365 days</button>
+        </div>
+        <div class="mq-feedback"></div>
+      </div>
+
+      <div class="mq-question">
+        <p>2. What causes the seasons?</p>
+        <div class="mq-options">
+          <button class="mq-opt" onclick="checkMini(this, false)">Distance from the Sun</button>
+          <button class="mq-opt" onclick="checkMini(this, true)">Earth's tilt</button>
+          <button class="mq-opt" onclick="checkMini(this, false)">The Moon</button>
+          <button class="mq-opt" onclick="checkMini(this, false)">Clouds</button>
+        </div>
+        <div class="mq-feedback"></div>
+      </div>
+
+      <div class="mq-question">
+        <p>3. The Moon produces its own light. True or false?</p>
+        <div class="mq-options">
+          <button class="mq-opt" onclick="checkMini(this, false)">True</button>
+          <button class="mq-opt" onclick="checkMini(this, true)">False</button>
+        </div>
+        <div class="mq-feedback"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CORE: ORDERING GAME -->
+  <div class="card earth-card">
+    <span class="badge badge-core">Core</span>
+    <h2>Put in Order — Moon Phases</h2>
+    <p>Click the phases in the correct order, starting from New Moon.</p>
+    <div class="sort-game" id="moonSortGame">
+      <div class="sort-items" id="moonItems">
+        <div class="sort-item" onclick="pickOrder(this, 'moon')" data-order="3">Half Moon</div>
+        <div class="sort-item" onclick="pickOrder(this, 'moon')" data-order="1">New Moon</div>
+        <div class="sort-item" onclick="pickOrder(this, 'moon')" data-order="5">Full Moon</div>
+        <div class="sort-item" onclick="pickOrder(this, 'moon')" data-order="2">Crescent</div>
+        <div class="sort-item" onclick="pickOrder(this, 'moon')" data-order="4">Gibbous</div>
+      </div>
+      <div class="sort-slots" id="moonSlots">
+        <div class="sort-slot"><span class="slot-label">1.</span><span class="slot-content" id="moon-slot-1">—</span></div>
+        <div class="sort-slot"><span class="slot-label">2.</span><span class="slot-content" id="moon-slot-2">—</span></div>
+        <div class="sort-slot"><span class="slot-label">3.</span><span class="slot-content" id="moon-slot-3">—</span></div>
+        <div class="sort-slot"><span class="slot-label">4.</span><span class="slot-content" id="moon-slot-4">—</span></div>
+        <div class="sort-slot"><span class="slot-label">5.</span><span class="slot-content" id="moon-slot-5">—</span></div>
+      </div>
+      <div class="mq-feedback" id="moonFeedback"></div>
+      <button class="action-btn btn-primary" onclick="checkOrder('moon')" style="margin-top:10px;">Check Order</button>
+      <button class="action-btn btn-secondary" onclick="resetOrder('moon')" style="margin-top:10px;">Reset</button>
+    </div>
+  </div>
+
+  <!-- STRETCH: EXTENDED QUESTIONS -->
+  <div class="card earth-card">
+    <span class="badge badge-stretch">Stretch</span>
+    <h2>Stretch Questions — Earth &amp; Space</h2>
+    <div class="mini-quiz">
+      <div class="mq-question">
+        <p>1. Why do we have leap years?</p>
+        <div class="mq-options">
+          <button class="mq-opt" onclick="checkMini(this, false)">The Moon orbits slower some years</button>
+          <button class="mq-opt" onclick="checkMini(this, true)">Earth takes 365.25 days to orbit, so we add a day every 4 years</button>
+        </div>
+        <div class="mq-feedback"></div>
+      </div>
+
+      <div class="mq-question">
+        <p>2. A lunar eclipse occurs when...</p>
+        <div class="mq-options">
+          <button class="mq-opt" onclick="checkMini(this, false)">The Moon blocks the Sun</button>
+          <button class="mq-opt" onclick="checkMini(this, true)">Earth's shadow falls on the Moon</button>
+          <button class="mq-opt" onclick="checkMini(this, false)">The Moon moves behind Jupiter</button>
+        </div>
+        <div class="mq-feedback"></div>
+      </div>
+
+      <div class="mq-question">
+        <p>3. Why do we always see the same side of the Moon?</p>
+        <div class="mq-options">
+          <button class="mq-opt" onclick="checkMini(this, false)">The Moon doesn't rotate</button>
+          <button class="mq-opt" onclick="checkMini(this, true)">It rotates at the same rate as it orbits Earth (tidally locked)</button>
+          <button class="mq-opt" onclick="checkMini(this, false)">Earth's gravity stops it spinning</button>
+        </div>
+        <div class="mq-feedback"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ========================================== -->
+<!-- SECTION 3: SEASONS & TILT                  -->
+<!-- ========================================== -->
+<div class="section" id="sec-seasons">
+
+  <!-- INTRO -->
+  <div class="card seasons-card">
+    <h2>Seasons &amp; Earth's Tilt</h2>
+    <p>Why do we have summer and winter? It's NOT because we're closer to the Sun! It's all about Earth's tilt. This section explores exactly how the 23.5° tilt causes our seasons.</p>
+  </div>
+
+  <!-- KEY FACTS -->
+  <div class="card seasons-card">
+    <h2>Key Facts — Why We Have Seasons</h2>
+    <p>Earth's axis is tilted at <strong>23.5 degrees</strong>. This tilt never changes direction — it always points the same way in space.</p>
+    <p>As Earth orbits the Sun over one year, different parts of Earth are tilted towards or away from the Sun.</p>
+    <ul style="margin:12px 0; padding-left:24px; line-height:2;">
+      <li><strong>Summer</strong> — Your part of Earth is tilted <strong>towards</strong> the Sun. Days are longer, the Sun is higher in the sky, and it's warmer.</li>
+      <li><strong>Winter</strong> — Your part of Earth is tilted <strong>away</strong> from the Sun. Days are shorter, the Sun is lower in the sky, and it's colder.</li>
+      <li><strong>Spring &amp; Autumn</strong> — Earth is side-on, so day and night are roughly equal.</li>
+    </ul>
+    <div class="fun-fact">
+      <strong>Key point:</strong> When it's summer in the UK, it's winter in Australia! The seasons are opposite in the Northern and Southern Hemispheres.
+    </div>
+  </div>
+
+  <!-- VIDEOS -->
+  <div class="card seasons-card">
+    <h2>Watch &amp; Learn — Seasons Videos</h2>
+    <p>These short videos explain exactly how Earth's tilt causes seasons.</p>
+    <a href="https://www.youtube.com/watch?v=6SzjlsuyTdk" target="_blank" rel="noopener" class="video-featured seasons-feat">
+      <div class="vf-play"><svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg></div>
+      <div class="vf-info">
+        <div class="vf-title">Dr Binocs — Earth's Rotation &amp; Revolution: Why Do We Have Seasons?</div>
+        <div class="vf-sub">6 mins · Click to watch on YouTube</div>
+      </div>
+    </a>
+    <a href="https://www.youtube.com/watch?v=kyE3Yd1_zDc" target="_blank" rel="noopener" class="video-featured seasons-feat" style="margin-top:12px;">
+      <div class="vf-play"><svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg></div>
+      <div class="vf-info">
+        <div class="vf-title">How the Movement of the Earth and Sun Cause the Days, Seasons and Years</div>
+        <div class="vf-sub">2 mins · Click to watch on YouTube</div>
+      </div>
+    </a>
+  </div>
+
+  <!-- HOW TILT AFFECTS SUNLIGHT -->
+  <div class="card seasons-card">
+    <h2>How Tilt Affects Sunlight</h2>
+    <p>It's easy to think summer happens because Earth is closer to the Sun — but that's a <strong>common misconception</strong>! Earth's orbit is nearly circular, so distance barely changes.</p>
+    <p>What really matters is the <strong>angle</strong> of sunlight:</p>
+    <ul style="margin:12px 0; padding-left:24px; line-height:2;">
+      <li>In summer, sunlight hits at a <strong>steep angle</strong> (more direct) — concentrating energy on a smaller area.</li>
+      <li>In winter, sunlight hits at a <strong>shallow angle</strong> (spread out) — the same energy covers a larger area, so it feels weaker.</li>
+    </ul>
+  </div>
+
+  <!-- FOUNDATION: MINI QUIZ -->
+  <div class="card seasons-card">
+    <span class="badge badge-foundation">Foundation</span>
+    <h2>Quick Check — Seasons</h2>
+    <div class="mini-quiz">
+      <div class="mq-question">
+        <p>1. What causes the seasons on Earth?</p>
+        <div class="mq-options">
+          <button class="mq-opt" onclick="checkMini(this, false)">Earth getting closer to the Sun</button>
+          <button class="mq-opt" onclick="checkMini(this, true)">The tilt of Earth's axis</button>
+          <button class="mq-opt" onclick="checkMini(this, false)">The Moon's gravity</button>
+        </div>
+        <div class="mq-feedback"></div>
+      </div>
+
+      <div class="mq-question">
+        <p>2. When the UK is tilted towards the Sun, what season is it?</p>
+        <div class="mq-options">
+          <button class="mq-opt" onclick="checkMini(this, false)">Winter</button>
+          <button class="mq-opt" onclick="checkMini(this, true)">Summer</button>
+          <button class="mq-opt" onclick="checkMini(this, false)">Autumn</button>
+        </div>
+        <div class="mq-feedback"></div>
+      </div>
+
+      <div class="mq-question">
+        <p>3. At what angle is Earth's axis tilted?</p>
+        <div class="mq-options">
+          <button class="mq-opt" onclick="checkMini(this, false)">10 degrees</button>
+          <button class="mq-opt" onclick="checkMini(this, false)">45 degrees</button>
+          <button class="mq-opt" onclick="checkMini(this, true)">23.5 degrees</button>
+        </div>
+        <div class="mq-feedback"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CORE: FILL IN THE BLANKS -->
+  <div class="card seasons-card">
+    <span class="badge badge-core">Core</span>
+    <h2>Fill in the Blanks — Seasons &amp; Tilt</h2>
+    <p>Use the word bank to complete the sentences.</p>
+    <div class="word-bank">
+      <span>23.5</span>
+      <span>summer</span>
+      <span>towards</span>
+      <span>shorter</span>
+      <span>orbit</span>
+      <span>winter</span>
+    </div>
+    <div style="line-height:2.4;">
+      <p>Earth's axis is tilted at <input class="fill-blank" data-answer="23.5" placeholder="___" style="width:80px;"> degrees.</p>
+      <p>It takes one year for Earth to <input class="fill-blank" data-answer="orbit" placeholder="___" style="width:80px;"> the Sun.</p>
+      <p>When your hemisphere is tilted <input class="fill-blank" data-answer="towards" placeholder="___" style="width:90px;"> the Sun, you experience <input class="fill-blank" data-answer="summer" placeholder="___" style="width:90px;">.</p>
+      <p>When your hemisphere is tilted away from the Sun, it is <input class="fill-blank" data-answer="winter" placeholder="___" style="width:90px;"> and the days are <input class="fill-blank" data-answer="shorter" placeholder="___" style="width:90px;">.</p>
+    </div>
+    <button class="action-btn btn-primary" onclick="checkBlanks(this)" style="margin-top:10px;">Check Answers</button>
+  </div>
+
+  <!-- CORE: ORDERING GAME -->
+  <div class="card seasons-card">
+    <span class="badge badge-core">Core</span>
+    <h2>Put in Order — Seasons in the UK</h2>
+    <p>Click the seasons in the correct order, starting from the beginning of the year.</p>
+    <div class="sort-game" id="seasonsSortGame">
+      <div class="sort-items" id="seasonsItems">
+        <div class="sort-item" onclick="pickOrder(this, 'seasons')" data-order="3">Summer (June–August)</div>
+        <div class="sort-item" onclick="pickOrder(this, 'seasons')" data-order="1">Winter (December–February)</div>
+        <div class="sort-item" onclick="pickOrder(this, 'seasons')" data-order="4">Autumn (September–November)</div>
+        <div class="sort-item" onclick="pickOrder(this, 'seasons')" data-order="2">Spring (March–May)</div>
+      </div>
+      <div class="sort-slots" id="seasonsSlots">
+        <div class="sort-slot"><span class="slot-label">1.</span><span class="slot-content" id="seasons-slot-1">—</span></div>
+        <div class="sort-slot"><span class="slot-label">2.</span><span class="slot-content" id="seasons-slot-2">—</span></div>
+        <div class="sort-slot"><span class="slot-label">3.</span><span class="slot-content" id="seasons-slot-3">—</span></div>
+        <div class="sort-slot"><span class="slot-label">4.</span><span class="slot-content" id="seasons-slot-4">—</span></div>
+      </div>
+      <div class="mq-feedback" id="seasonsFeedback"></div>
+      <button class="action-btn btn-primary" onclick="checkOrder('seasons')" style="margin-top:10px;">Check Order</button>
+      <button class="action-btn btn-secondary" onclick="resetOrder('seasons')" style="margin-top:10px;">Reset</button>
+    </div>
+  </div>
+
+  <!-- STRETCH: EXTENDED QUESTIONS -->
+  <div class="card seasons-card">
+    <span class="badge badge-stretch">Stretch</span>
+    <h2>Stretch Questions — Seasons</h2>
+    <div class="mini-quiz">
+      <div class="mq-question">
+        <p>1. Why is the common explanation "Earth is closer to the Sun in summer" incorrect?</p>
+        <div class="mq-options">
+          <button class="mq-opt" onclick="checkMini(this, true)" style="min-width:260px;">Earth's orbit is nearly circular — distance barely changes</button>
+          <button class="mq-opt" onclick="checkMini(this, false)" style="min-width:260px;">Earth is actually closer in winter (for the Northern Hemisphere)</button>
+        </div>
+        <div class="mq-feedback"></div>
+      </div>
+
+      <div class="mq-question">
+        <p>2. Why are days longer in summer?</p>
+        <div class="mq-options">
+          <button class="mq-opt" onclick="checkMini(this, false)">Earth rotates faster in summer</button>
+          <button class="mq-opt" onclick="checkMini(this, true)">The tilted hemisphere faces the Sun for more of each rotation</button>
+          <button class="mq-opt" onclick="checkMini(this, false)">The Sun is brighter in summer</button>
+        </div>
+        <div class="mq-feedback"></div>
+      </div>
+
+      <div class="mq-question">
+        <p>3. What would happen to the seasons if Earth's axis had no tilt (0°)?</p>
+        <div class="mq-options">
+          <button class="mq-opt" onclick="checkMini(this, false)">We'd only have summer</button>
+          <button class="mq-opt" onclick="checkMini(this, false)">Seasons would last longer</button>
+          <button class="mq-opt" onclick="checkMini(this, true)">There would be no seasons — every day would be roughly the same</button>
+        </div>
+        <div class="mq-feedback"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ========================================== -->
+<!-- SECTION 4: FINAL QUIZ                      -->
+<!-- ========================================== -->
+<div class="section" id="sec-quiz">
+
+  <div class="card" style="border-left-color:var(--success);">
+    <h2>Final Quiz — Test Everything!</h2>
+    <p>10 questions covering the Solar System, Earth's tilt, seasons, and the Moon. You get instant feedback on each one.</p>
+    <div class="strategy-box">
+      <strong>Tip:</strong> Read each question carefully. If you're not sure, eliminate the answers you know are wrong first.
+    </div>
+  </div>
+
+  <div id="finalQuizContainer"></div>
+
+  <div style="text-align:center; margin: 20px 0;">
+    <button class="action-btn btn-primary" onclick="showQuizScore()" id="showScoreBtn" style="display:none;">Show My Score</button>
+    <button class="action-btn btn-danger" onclick="resetQuiz()" id="resetQuizBtn" style="display:none;">Try Again</button>
+  </div>
+
+  <div class="quiz-score" id="quizScore">
+    <h2>Your Score</h2>
+    <div class="score-num" id="scoreNum">0/10</div>
+    <div class="score-msg" id="scoreMsg"></div>
+  </div>
+</div>
+
+<!-- ========================================== -->
+<!-- JAVASCRIPT                                 -->
+<!-- ========================================== -->
+<script>
+// ===== SECTION NAVIGATION =====
+const sectionVisited = { solar: true, earth: false, seasons: false, quiz: false };
+
+function showSection(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('sec-' + id).classList.add('active');
+  document.querySelector(`.nav-tab[data-section="${id}"]`).classList.add('active');
+  sectionVisited[id] = true;
+  updateProgress();
+  window.scrollTo({ top: 200, behavior: 'smooth' });
+}
+
+function updateProgress() {
+  const visited = Object.values(sectionVisited).filter(Boolean).length;
+  const pct = (visited / 4) * 100;
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressText').textContent = `Sections completed: ${visited} / 4`;
+}
+
+// ===== MINI QUIZ =====
+function checkMini(btn, isCorrect) {
+  const opts = btn.parentElement.querySelectorAll('.mq-opt');
+  const feedback = btn.parentElement.nextElementSibling;
+  opts.forEach(o => {
+    o.disabled = true;
+    if (o === btn) o.classList.add(isCorrect ? 'correct' : 'wrong');
+    if (o.getAttribute('onclick').includes('true')) o.classList.add('correct');
+  });
+  feedback.textContent = isCorrect ? 'Correct! Well done!' : 'Not quite — the correct answer is highlighted in green.';
+  feedback.style.color = isCorrect ? 'var(--success)' : 'var(--wrong)';
+}
+
+// ===== FILL IN BLANKS =====
+function checkBlanks(btn) {
+  const card = btn.closest('.card');
+  const blanks = card.querySelectorAll('.fill-blank');
+  blanks.forEach(b => {
+    const userVal = b.value.trim().toLowerCase();
+    const answer = b.dataset.answer.toLowerCase();
+    if (userVal === answer) {
+      b.classList.remove('wrong-input');
+      b.classList.add('correct-input');
+    } else {
+      b.classList.remove('correct-input');
+      b.classList.add('wrong-input');
+      b.placeholder = b.dataset.answer;
+    }
+  });
+}
+
+// ===== ORDERING GAME =====
+const orderState = { moon: [], seasons: [] };
+const orderMax = { moon: 5, seasons: 4 };
+
+function pickOrder(item, game) {
+  if (item.style.opacity === '0.4') return;
+  const idx = orderState[game].length + 1;
+  if (idx > orderMax[game]) return;
+  orderState[game].push({ text: item.textContent, expected: parseInt(item.dataset.order) });
+  document.getElementById(`${game}-slot-${idx}`).textContent = item.textContent;
+  item.style.opacity = '0.4';
+  item.style.pointerEvents = 'none';
+}
+
+function checkOrder(game) {
+  const fb = document.getElementById(`${game}Feedback`);
+  if (orderState[game].length < orderMax[game]) {
+    fb.textContent = 'Click all items first!';
+    fb.style.color = 'var(--warning)';
+    return;
+  }
+  let allCorrect = true;
+  orderState[game].forEach((item, i) => {
+    const slot = document.getElementById(`${game}-slot-${i+1}`);
+    if (item.expected === i + 1) {
+      slot.parentElement.style.borderColor = 'var(--success)';
+      slot.parentElement.style.background = '#4ecca315';
+    } else {
+      slot.parentElement.style.borderColor = 'var(--wrong)';
+      slot.parentElement.style.background = '#e9456015';
+      allCorrect = false;
+    }
+  });
+  fb.textContent = allCorrect ? 'Perfect order! Well done!' : 'Some are in the wrong place. Try resetting and having another go!';
+  fb.style.color = allCorrect ? 'var(--success)' : 'var(--wrong)';
+}
+
+function resetOrder(game) {
+  orderState[game] = [];
+  for (let i = 1; i <= orderMax[game]; i++) {
+    const slot = document.getElementById(`${game}-slot-${i}`);
+    slot.textContent = '—';
+    slot.parentElement.style.borderColor = '#4a4a6a';
+    slot.parentElement.style.background = '#16213e';
+  }
+  const items = document.getElementById(`${game}Items`).children;
+  Array.from(items).forEach(it => { it.style.opacity = '1'; it.style.pointerEvents = 'auto'; });
+  document.getElementById(`${game}Feedback`).textContent = '';
+}
+
+// ===== FINAL QUIZ =====
+const quizData = [
+  {
+    q: "What is at the centre of our solar system?",
+    opts: ["The Moon", "Earth", "The Sun", "Jupiter"],
+    correct: 2,
+    explain: "The Sun is the star at the centre. Its gravity holds everything in orbit.",
+    badge: "foundation"
+  },
+  {
+    q: "Which planet is closest to the Sun?",
+    opts: ["Venus", "Mercury", "Mars", "Earth"],
+    correct: 1,
+    explain: "Mercury is the closest planet to the Sun and also the smallest.",
+    badge: "foundation"
+  },
+  {
+    q: "What causes day and night on Earth?",
+    opts: ["Earth orbiting the Sun", "Earth rotating on its axis", "The Moon blocking the Sun", "Clouds moving"],
+    correct: 1,
+    explain: "Earth spins (rotates) on its axis every 24 hours, giving us day and night.",
+    badge: "core"
+  },
+  {
+    q: "How long does it take Earth to orbit the Sun?",
+    opts: ["24 hours", "28 days", "365.25 days", "100 days"],
+    correct: 2,
+    explain: "One full orbit takes 365.25 days — one year! The extra 0.25 is why we have a leap year.",
+    badge: "core"
+  },
+  {
+    q: "What causes the seasons?",
+    opts: ["Distance from the Sun", "The tilt of Earth's axis", "The Moon's gravity", "Solar flares"],
+    correct: 1,
+    explain: "Earth's axis is tilted at 23.5°. As Earth orbits, different parts face the Sun more directly.",
+    badge: "core"
+  },
+  {
+    q: "What process powers the Sun?",
+    opts: ["Burning gas", "Nuclear fusion", "Chemical reactions", "Electricity"],
+    correct: 1,
+    explain: "Nuclear fusion joins hydrogen atoms into helium, releasing massive energy. It's NOT burning!",
+    badge: "stretch"
+  },
+  {
+    q: "At what angle is the Earth's axis tilted?",
+    opts: ["10 degrees", "23.5 degrees", "45 degrees", "90 degrees"],
+    correct: 1,
+    explain: "Earth's axis is tilted at 23.5 degrees. This tilt is the reason we have seasons.",
+    badge: "stretch"
+  },
+  {
+    q: "In the UK, when we are tilted TOWARDS the Sun, which season is it?",
+    opts: ["Winter", "Autumn", "Summer", "Spring"],
+    correct: 2,
+    explain: "When your part of Earth is tilted towards the Sun, the days are longer and the Sun is higher — that's summer!",
+    badge: "stretch"
+  },
+  {
+    q: "Where are most asteroids in our solar system found?",
+    opts: ["Between Earth and Mars", "Between Mars and Jupiter", "Beyond Neptune", "Between the Sun and Mercury"],
+    correct: 1,
+    explain: "The asteroid belt sits between Mars and Jupiter. It contains millions of rocky objects.",
+    badge: "core"
+  },
+  {
+    q: "The Moon takes roughly how long to orbit the Earth?",
+    opts: ["24 hours", "7 days", "28 days", "365 days"],
+    correct: 2,
+    explain: "The Moon orbits Earth roughly every 28 days. This is why we see a full cycle of Moon phases each month.",
+    badge: "core"
+  }
+];
+
+let quizAnswered = 0;
+let quizCorrect = 0;
+
+function buildQuiz() {
+  const container = document.getElementById('finalQuizContainer');
+  container.innerHTML = '';
+  quizAnswered = 0;
+  quizCorrect = 0;
+  document.getElementById('showScoreBtn').style.display = 'none';
+  document.getElementById('resetQuizBtn').style.display = 'none';
+  document.getElementById('quizScore').style.display = 'none';
+
+  quizData.forEach((item, idx) => {
+    const badgeClass = `badge-${item.badge}`;
+    const badgeLabel = item.badge.charAt(0).toUpperCase() + item.badge.slice(1);
+    let html = `<div class="quiz-question" id="qq-${idx}">
+      <span class="badge ${badgeClass}">${badgeLabel}</span>
+      <h3>${idx + 1}. ${item.q}</h3>
+      <div class="quiz-options">`;
+    item.opts.forEach((opt, oi) => {
+      html += `<button class="quiz-opt" onclick="answerQuiz(${idx}, ${oi})">${opt}</button>`;
+    });
+    html += `</div><div class="quiz-feedback" id="qfb-${idx}"></div></div>`;
+    container.innerHTML += html;
+  });
+}
+
+function answerQuiz(qIdx, optIdx) {
+  const qEl = document.getElementById(`qq-${qIdx}`);
+  const btns = qEl.querySelectorAll('.quiz-opt');
+  const fb = document.getElementById(`qfb-${qIdx}`);
+  const item = quizData[qIdx];
+
+  if (btns[0].disabled) return;
+
+  btns.forEach((b, i) => {
+    b.disabled = true;
+    if (i === item.correct) b.classList.add('q-correct');
+    if (i === optIdx && i !== item.correct) b.classList.add('q-wrong');
+  });
+
+  const isCorrect = optIdx === item.correct;
+  if (isCorrect) quizCorrect++;
+  quizAnswered++;
+
+  fb.textContent = (isCorrect ? 'Correct! ' : 'Not quite. ') + item.explain;
+  fb.classList.add('show', isCorrect ? 'correct-fb' : 'wrong-fb');
+
+  if (quizAnswered === quizData.length) {
+    document.getElementById('showScoreBtn').style.display = 'inline-flex';
+  }
+}
+
+function showQuizScore() {
+  const scoreEl = document.getElementById('quizScore');
+  scoreEl.style.display = 'block';
+  document.getElementById('scoreNum').textContent = `${quizCorrect} / ${quizData.length}`;
+  const pct = (quizCorrect / quizData.length) * 100;
+  let msg = '';
+  if (pct === 100) msg = 'INCREDIBLE! Full marks — outstanding work!';
+  else if (pct >= 80) msg = 'Brilliant work! Nearly perfect — keep it up!';
+  else if (pct >= 60) msg = 'Good effort! Review the ones you missed and try again.';
+  else if (pct >= 40) msg = 'Nice try! Watch the videos again and have another go.';
+  else msg = 'Keep going! Go back through each section and use the quizzes to build up.';
+  document.getElementById('scoreMsg').textContent = msg;
+  document.getElementById('scoreNum').style.color = pct >= 60 ? 'var(--success)' : 'var(--warning)';
+  document.getElementById('resetQuizBtn').style.display = 'inline-flex';
+  scoreEl.scrollIntoView({ behavior: 'smooth' });
+}
+
+function resetQuiz() {
+  buildQuiz();
+  window.scrollTo({ top: document.getElementById('sec-quiz').offsetTop, behavior: 'smooth' });
+}
+
+// Build quiz on load
+buildQuiz();
+
+// ===== STAR FIELD =====
+(function createStars() {
+  const field = document.getElementById('starField');
+  for (let i = 0; i < 50; i++) {
+    const star = document.createElement('span');
+    star.style.left = Math.random() * 100 + '%';
+    star.style.top = Math.random() * 100 + '%';
+    star.style.animationDelay = Math.random() * 3 + 's';
+    star.style.width = star.style.height = (Math.random() * 3 + 1) + 'px';
+    field.appendChild(star);
+  }
+})();
+</script>
+
+</body>
+</html>
