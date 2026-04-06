@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Core Practicals 7, 8 &amp; 9 — Student Worksheet</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #FAF6F0;
+    --paper-warm: #F5EFE6;
+    --paper-edge: #E8DFD1;
+    --ink: #1A1612;
+    --ink-light: #3D362E;
+    --ink-faded: #6B6157;
+    --ink-ghost: #9E9589;
+    --red: #C43B2E;
+    --green: #2D7A4F;
+    --blue: #2B5EA7;
+    --blue-bg: rgba(43, 94, 167, 0.06);
+    --blue-border: rgba(43, 94, 167, 0.15);
+    --amber: #B8860B;
+    --amber-bg: rgba(184, 134, 11, 0.06);
+    --purple: #6B4C9A;
+    --purple-bg: rgba(107, 76, 154, 0.06);
+    --purple-border: rgba(107, 76, 154, 0.15);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: white;
+    color: var(--ink-light);
+    line-height: 1.6;
+    font-size: 13px;
+    max-width: 210mm;
+    margin: 0 auto;
+    padding: 12mm 15mm;
+  }
+
+  /* ── Header ── */
+  .ws-header {
+    border-bottom: 2px solid var(--ink);
+    padding-bottom: 0.6rem;
+    margin-bottom: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+  .ws-header h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--ink);
+  }
+  .ws-header .meta {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--ink-faded);
+    text-align: right;
+  }
+  .name-line {
+    font-size: 0.85rem;
+    margin-bottom: 1rem;
+    color: var(--ink-faded);
+  }
+
+  /* ── Section Headings ── */
+  h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--ink);
+    border-bottom: 1px solid var(--paper-edge);
+    padding-bottom: 0.2rem;
+    margin: 1.2rem 0 0.5rem;
+  }
+  h3 {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--ink);
+    margin: 0.8rem 0 0.3rem;
+  }
+
+  p { margin-bottom: 0.5rem; }
+
+  /* ── Spec Badge ── */
+  .spec {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--blue);
+    background: var(--blue-bg);
+    border: 1px solid var(--blue-border);
+    padding: 0.1rem 0.4rem;
+    border-radius: 100px;
+    display: inline-block;
+  }
+
+  /* ── Question Blocks ── */
+  .question {
+    border-left: 2.5px solid var(--blue);
+    padding: 0.6rem 0.8rem;
+    margin: 0.6rem 0;
+    background: #FAFAFA;
+    page-break-inside: avoid;
+  }
+  .question .q-meta {
+    display: flex;
+    justify-content: space-between;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+    color: var(--ink-faded);
+    margin-bottom: 0.3rem;
+  }
+  .question .q-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.05rem;
+    line-height: 1.5;
+    color: var(--ink);
+  }
+  .question .command-word { font-weight: 700; font-style: italic; }
+
+  /* ── Context Box ── */
+  .context {
+    background: var(--paper-warm);
+    padding: 0.5rem 0.7rem;
+    border-radius: 4px;
+    margin-bottom: 0.5rem;
+    font-size: 0.85rem;
+    line-height: 1.5;
+  }
+
+  /* ── Writing Lines ── */
+  .lines {
+    min-height: 60px;
+    margin: 0.3rem 0 0.5rem;
+    background-image: repeating-linear-gradient(
+      to bottom, transparent, transparent 23px,
+      #ddd 23px, #ddd 24px
+    );
+    background-position: 0 1px;
+  }
+  .lines-short { min-height: 48px; }
+  .lines-medium { min-height: 96px; }
+  .lines-long { min-height: 140px; }
+  .lines-xl { min-height: 200px; }
+
+  /* ── Data Tables ── */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0.5rem 0;
+    font-size: 0.82rem;
+  }
+  th {
+    background: var(--paper-warm);
+    font-weight: 600;
+    text-align: left;
+    padding: 0.35rem 0.5rem;
+    border: 1px solid #ccc;
+    font-size: 0.78rem;
+  }
+  td {
+    padding: 0.3rem 0.5rem;
+    border: 1px solid #ccc;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.78rem;
+  }
+
+  /* ── Stretch Box ── */
+  .stretch {
+    background: var(--purple-bg);
+    border: 1px solid var(--purple-border);
+    border-radius: 5px;
+    padding: 0.6rem 0.8rem;
+    margin: 0.6rem 0;
+    page-break-inside: avoid;
+  }
+  .stretch .label {
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--purple);
+    margin-bottom: 0.2rem;
+  }
+
+  /* ── VTR Box ── */
+  .vtr {
+    background: var(--amber-bg);
+    border: 1px solid rgba(184,134,11,0.2);
+    border-radius: 5px;
+    padding: 0.6rem 0.8rem;
+    margin: 0.6rem 0;
+  }
+  .vtr .label {
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--amber);
+    margin-bottom: 0.2rem;
+  }
+
+  /* ── Page Breaks ── */
+  .page-break { page-break-before: always; }
+
+  /* ── Print Styles ── */
+  @media print {
+    body { padding: 10mm 12mm; font-size: 12px; }
+    .question { break-inside: avoid; }
+  }
+
+  /* ── Score Box ── */
+  .score-box {
+    float: right;
+    border: 2px solid var(--ink);
+    padding: 0.3rem 0.8rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85rem;
+    margin-left: 1rem;
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════ PAGE 1 ═══════════════════════ -->
+<div class="ws-header">
+  <div>
+    <h1>Core Practicals 7, 8 &amp; 9</h1>
+    <div style="font-size: 0.82rem; color: var(--ink-faded);">Paper 3 Practical Skills — Exam Practice Worksheet</div>
+  </div>
+  <div class="meta">
+    Edexcel IAL Biology<br>
+    Unit 3 / WBI13<br>
+    Spec: 4.6, 4.9, 4.12
+  </div>
+</div>
+
+<div class="name-line">Name: __________________________________ &nbsp;&nbsp;&nbsp; Date: ________________</div>
+
+<!-- ── STARTER ── -->
+<h2>Part A — Think Like an Examiner</h2>
+
+<div class="vtr">
+  <div class="label">Visible Thinking Routine</div>
+  <p>For each stimulus below, write <strong>three exam questions</strong> that could be asked. Use a <strong>different command word</strong> for each. Estimate the marks.</p>
+</div>
+
+<h3>Stimulus 1: Transverse Section of a Stem <span class="spec">CP7 — 4.6</span></h3>
+<p style="font-size: 0.85rem;">A student views a TS of a sunflower stem stained with toluidine blue O. They can see: an outer layer of small cells, clusters of thick-walled cells in a ring, large open vessels with spiral thickening, thin-walled cells with sieve plates, and central loosely-packed cells.</p>
+
+<table>
+  <thead><tr><th style="width:55%">Your exam question</th><th style="width:25%">Command word</th><th style="width:20%">Marks?</th></tr></thead>
+  <tbody>
+    <tr><td style="height:28px"></td><td></td><td></td></tr>
+    <tr><td style="height:28px"></td><td></td><td></td></tr>
+    <tr><td style="height:28px"></td><td></td><td></td></tr>
+  </tbody>
+</table>
+
+<h3>Stimulus 2: Tensile Strength Data <span class="spec">CP8 — 4.9</span></h3>
+<table>
+  <thead>
+    <tr><th>Length / cm</th><th>Trial 1 / g</th><th>Trial 2 / g</th><th>Trial 3 / g</th><th>Mean / g</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>10</td><td>340</td><td>310</td><td>360</td><td>337</td></tr>
+    <tr><td>15</td><td>220</td><td>250</td><td>190</td><td>220</td></tr>
+    <tr><td>20</td><td>150</td><td>170</td><td>130</td><td>150</td></tr>
+  </tbody>
+</table>
+<table>
+  <thead><tr><th style="width:55%">Your exam question</th><th style="width:25%">Command word</th><th style="width:20%">Marks?</th></tr></thead>
+  <tbody>
+    <tr><td style="height:28px"></td><td></td><td></td></tr>
+    <tr><td style="height:28px"></td><td></td><td></td></tr>
+    <tr><td style="height:28px"></td><td></td><td></td></tr>
+  </tbody>
+</table>
+
+<h3>Stimulus 3: Agar Plate Results <span class="spec">CP9 — 4.12</span></h3>
+<p style="font-size: 0.85rem;">An agar plate shows: garlic disc (18 mm clear zone), mint disc (12 mm), alcohol-only disc (4 mm), plain disc (0 mm). Plate sealed with two strips of tape, incubated at 25°C for 48 hours.</p>
+<table>
+  <thead><tr><th style="width:55%">Your exam question</th><th style="width:25%">Command word</th><th style="width:20%">Marks?</th></tr></thead>
+  <tbody>
+    <tr><td style="height:28px"></td><td></td><td></td></tr>
+    <tr><td style="height:28px"></td><td></td><td></td></tr>
+    <tr><td style="height:28px"></td><td></td><td></td></tr>
+  </tbody>
+</table>
+
+<!-- ═══════════════════════ PAGE 2 ═══════════════════════ -->
+<div class="page-break"></div>
+
+<h2>Part B — Core Practical 7: Plant Tissue Microscopy</h2>
+
+<div class="question">
+  <div class="q-meta"><span>Q1</span><span>2 marks</span></div>
+  <div class="q-text"><em class="command-word">State</em> why toluidine blue O is described as a metachromatic stain.</div>
+  <div class="lines lines-short"></div>
+</div>
+
+<div class="question">
+  <div class="q-meta"><span>Q2</span><span>4 marks</span></div>
+  <div class="context">A student prepares a TS of a plant stem stained with toluidine blue O. The whole section appears uniformly dark blue with no colour differentiation between tissues.</div>
+  <div class="q-text"><em class="command-word">Explain</em> why the student cannot distinguish between the tissues, and <em class="command-word">suggest</em> how they could improve their preparation.</div>
+  <div class="lines lines-medium"></div>
+</div>
+
+<div class="question">
+  <div class="q-meta"><span>Q3</span><span>6 marks</span></div>
+  <div class="context">A student's plan diagram of a stem TS contains these errors: individual cells drawn in the xylem region, vascular bundles drawn as circles rather than their actual shape, shading used to show sclerenchyma, and no labels present.</div>
+  <div class="q-text"><em class="command-word">Evaluate</em> the student's plan diagram. For each error, <em class="command-word">explain</em> why it is incorrect and state how it should be corrected.</div>
+  <div class="lines lines-long"></div>
+</div>
+
+<h2>Part C — Core Practical 8: Tensile Strength of Plant Fibres</h2>
+
+<div class="question">
+  <div class="q-meta"><span>Q4</span><span>2 marks</span></div>
+  <div class="q-text"><em class="command-word">State</em> the independent variable and the dependent variable in the tensile strength investigation.</div>
+  <div class="lines lines-short"></div>
+</div>
+
+<div class="question">
+  <div class="q-meta"><span>Q5</span><span>4 marks</span></div>
+  <div class="context">Results for 15 cm celery fibres: Trial 1 = 220 g, Trial 2 = 250 g, Trial 3 = 190 g.</div>
+  <div class="q-text">(a) <em class="command-word">Calculate</em> the mean breaking mass. Show your working. (1)<br>
+  (b) <em class="command-word">Calculate</em> the range. (1)<br>
+  (c) <em class="command-word">Suggest</em> one reason for the variation and <em class="command-word">explain</em> how it affects reliability. (2)</div>
+  <div class="lines lines-medium"></div>
+</div>
+
+<div class="question">
+  <div class="q-meta"><span>Q6</span><span>6 marks</span></div>
+  <div class="q-text"><em class="command-word">Evaluate</em> the method for determining tensile strength of plant fibres. Identify <strong>two</strong> limitations and for each suggest an improvement.</div>
+  <div class="lines lines-long"></div>
+</div>
+
+<!-- ═══════════════════════ PAGE 3 ═══════════════════════ -->
+<div class="page-break"></div>
+
+<h2>Part D — Core Practical 9: Antimicrobial Properties of Plants</h2>
+
+<div class="question">
+  <div class="q-meta"><span>Q7</span><span>3 marks</span></div>
+  <div class="q-text"><em class="command-word">Explain</em> why the agar plate is incubated at 25°C rather than 37°C.</div>
+  <div class="lines lines-short"></div>
+</div>
+
+<div class="question">
+  <div class="q-meta"><span>Q8</span><span>5 marks</span></div>
+  <div class="context">
+    <table>
+      <thead><tr><th>Treatment</th><th>Diameter / mm</th><th>Area / mm²</th></tr></thead>
+      <tbody>
+        <tr><td>Garlic</td><td>18</td><td></td></tr>
+        <tr><td>Mint</td><td>12</td><td></td></tr>
+        <tr><td>Alcohol only</td><td>4</td><td></td></tr>
+        <tr><td>Control</td><td>0</td><td></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="q-text">(a) <em class="command-word">Calculate</em> the area of the clear zone for garlic. Show working. Give to 1 d.p. (2)<br>
+  (b) <em class="command-word">Explain</em> what the alcohol-only result tells us about garlic and mint results. (2)<br>
+  (c) <em class="command-word">Suggest</em> why area is better than diameter for comparing zones. (1)</div>
+  <div class="lines lines-medium"></div>
+</div>
+
+<div class="question">
+  <div class="q-meta"><span>Q9</span><span>6 marks</span></div>
+  <div class="q-text"><em class="command-word">Describe</em> the aseptic techniques a student should use when investigating antimicrobial properties and <em class="command-word">explain</em> the reason for each.</div>
+  <div class="lines lines-long"></div>
+</div>
+
+<!-- ═══════════════════════ PAGE 4 ═══════════════════════ -->
+<div class="page-break"></div>
+
+<h2>Part E — Timed Exam Practice</h2>
+<div class="score-box">______ / 12</div>
+<p style="font-size: 0.82rem; color: var(--ink-faded); margin-bottom: 0.8rem;">Time allowed: 20 minutes. Write under exam conditions.</p>
+
+<div class="question">
+  <div class="q-meta"><span>Q10</span><span>12 marks</span></div>
+  <div class="context">A group of students investigated whether plant extracts could be used as natural preservatives for food. They tested extracts from garlic, rosemary, and thyme against bacteria commonly found on food surfaces.<br><br>
+  They prepared their extracts by grinding each plant material with a pestle and mortar, adding 10 cm³ of ethanol, and filtering the mixture. They soaked filter paper discs in each extract for 5 minutes, then placed them on agar plates seeded with bacteria. The plates were incubated at 25°C for 48 hours.</div>
+
+  <div class="q-text">
+    (a) <em class="command-word">Explain</em> two aseptic techniques the students should use when setting up the agar plates, giving a reason for each. (4)<br><br>
+    (b) <em class="command-word">Identify</em> one control variable and <em class="command-word">explain</em> why it must be kept constant. (2)<br><br>
+    (c) The diameter of the clear zone around the garlic disc was 22 mm. <em class="command-word">Calculate</em> the area of the zone of inhibition. Give your answer to the nearest whole number. (2)<br><br>
+    (d) The zones were not perfectly circular. <em class="command-word">Suggest</em> one reason and <em class="command-word">describe</em> how to obtain a more reliable measurement. (2)<br><br>
+    (e) <em class="command-word">Evaluate</em> the conclusion that "garlic is the most effective antimicrobial agent tested." (2)
+  </div>
+  <div class="lines lines-xl"></div>
+  <div class="lines lines-xl"></div>
+</div>
+
+<!-- ═══════════════════════ PAGE 5 ═══════════════════════ -->
+<div class="page-break"></div>
+
+<h2>Part F — Reflect &amp; Target</h2>
+
+<div class="vtr">
+  <div class="label">"I Used to Think… Now I Think…"</div>
+  <p>Complete for <strong>one</strong> of the three practicals:</p>
+</div>
+
+<p><strong>I used to think…</strong></p>
+<div class="lines lines-short"></div>
+
+<p><strong>Now I think…</strong></p>
+<div class="lines lines-short"></div>
+
+<p><strong>I still need to…</strong></p>
+<div class="lines lines-short"></div>
+
+<h3>My Top 3 Paper 3 Targets</h3>
+<div class="lines lines-medium"></div>
+
+<div style="margin-top: 2rem; padding-top: 0.8rem; border-top: 1px solid var(--paper-edge);">
+  <h3>Command Word Quick Reference</h3>
+  <table>
+    <thead><tr><th>Command Word</th><th>What It Means</th><th>Watch Out For</th></tr></thead>
+    <tbody>
+      <tr><td><strong>State</strong></td><td>Brief factual answer. No explanation.</td><td>Writing too much.</td></tr>
+      <tr><td><strong>Describe</strong></td><td>Say what happens. No "because".</td><td>Accidentally explaining.</td></tr>
+      <tr><td><strong>Explain</strong></td><td>What AND why. Use "because".</td><td>Only describing.</td></tr>
+      <tr><td><strong>Suggest</strong></td><td>Apply knowledge to new context.</td><td>Being too vague.</td></tr>
+      <tr><td><strong>Evaluate</strong></td><td>Strengths AND weaknesses. Judgement.</td><td>Only one side.</td></tr>
+      <tr><td><strong>Calculate</strong></td><td>Show working. Include units.</td><td>No working shown.</td></tr>
+    </tbody>
+  </table>
+</div>
+
+</body>
+</html>
