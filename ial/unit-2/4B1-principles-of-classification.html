@@ -1,0 +1,1793 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>4B.1 Principles of Classification | Y12 IAL Biology</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,600;0,700;1,300&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0f1117;
+    --surface: #161b27;
+    --surface-2: #1e2535;
+    --border: #2a3347;
+    --text: #e8ecf4;
+    --text-muted: #8891a8;
+    --text-dim: #5a6480;
+    --green: #4ade80;
+    --green-dim: #166534;
+    --green-surface: #0d2818;
+    --teal: #2dd4bf;
+    --teal-dim: #0f766e;
+    --teal-surface: #042f2e;
+    --amber: #fbbf24;
+    --amber-dim: #92400e;
+    --amber-surface: #1c1207;
+    --blue: #60a5fa;
+    --blue-dim: #1d4ed8;
+    --blue-surface: #0a1628;
+    --purple: #a78bfa;
+    --purple-surface: #150f2a;
+    --red: #f87171;
+    --red-surface: #1a0a0a;
+    --breakout: #f472b6;
+    --breakout-dim: #9d174d;
+    --breakout-surface: #1a0714;
+    --radius: 12px;
+    --radius-sm: 8px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    font-size: 15px;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: linear-gradient(135deg, #0d1f1a 0%, #0f1117 50%, #130d1f 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 2.5rem 2rem 2rem;
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 20% 50%, rgba(45,212,191,0.06) 0%, transparent 60%),
+                radial-gradient(ellipse at 80% 20%, rgba(74,222,128,0.04) 0%, transparent 50%);
+  }
+  .header-inner {
+    max-width: 860px;
+    margin: 0 auto;
+    position: relative;
+  }
+  .header-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+  }
+  .spec-badge {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    padding: 0.3rem 0.7rem;
+    border-radius: 4px;
+    background: var(--teal-surface);
+    color: var(--teal);
+    border: 1px solid var(--teal-dim);
+  }
+  .spec-badge.green {
+    background: var(--green-surface);
+    color: var(--green);
+    border-color: var(--green-dim);
+  }
+  .header-chapter {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--text-dim);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  header h1 {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(2rem, 5vw, 3rem);
+    font-weight: 600;
+    line-height: 1.1;
+    color: var(--text);
+    margin-bottom: 0.5rem;
+  }
+  header h1 span { color: var(--teal); }
+  .header-sub {
+    color: var(--text-muted);
+    font-size: 14px;
+    font-weight: 300;
+  }
+  .progress-bar-wrap {
+    margin-top: 1.5rem;
+    background: var(--border);
+    height: 3px;
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, var(--teal), var(--green));
+    border-radius: 2px;
+    width: 0%;
+    transition: width 0.4s ease;
+  }
+
+  /* ── MAIN LAYOUT ── */
+  main {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 2rem 2rem 5rem;
+  }
+
+  /* ── SECTION TITLES ── */
+  .section-heading {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin: 2.5rem 0 1rem;
+  }
+  .section-heading .icon {
+    width: 32px; height: 32px;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 15px;
+    flex-shrink: 0;
+  }
+  .section-heading h2 {
+    font-family: 'Fraunces', serif;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text);
+    letter-spacing: -0.01em;
+  }
+  .section-heading .label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+
+  /* ── OBJECTIVE CARD ── */
+  .objective-card {
+    background: var(--teal-surface);
+    border: 1px solid var(--teal-dim);
+    border-radius: var(--radius);
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 0.75rem;
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+  }
+  .objective-card .dot {
+    width: 8px; height: 8px;
+    background: var(--teal);
+    border-radius: 50%;
+    flex-shrink: 0;
+    margin-top: 0.4rem;
+  }
+  .objective-card p { color: var(--text); font-weight: 300; font-size: 14px; }
+  .objective-card strong { font-weight: 600; color: var(--teal); }
+
+  /* ── CONTENT CARD ── */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+  }
+  .card p { color: var(--text-muted); font-size: 14px; line-height: 1.75; margin-bottom: 0.75rem; }
+  .card p:last-child { margin-bottom: 0; }
+  .card p strong { color: var(--text); font-weight: 600; }
+  .card p em { color: var(--teal); font-style: italic; }
+
+  /* ── VTR CARD ── */
+  .vtr-card {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin-bottom: 1rem;
+  }
+  .vtr-header {
+    padding: 0.75rem 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .vtr-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+  }
+  .vtr-tag.purple { background: var(--purple-surface); color: var(--purple); border: 1px solid #3d2d6b; }
+  .vtr-tag.blue { background: var(--blue-surface); color: var(--blue); border: 1px solid var(--blue-dim); }
+  .vtr-header h3 { font-size: 13px; font-weight: 600; color: var(--text); }
+  .vtr-body { padding: 1.25rem; }
+  .vtr-prompt {
+    font-family: 'Fraunces', serif;
+    font-size: 1.05rem;
+    font-style: italic;
+    font-weight: 300;
+    color: var(--text);
+    margin-bottom: 1rem;
+    line-height: 1.5;
+  }
+  .vtr-input-wrap { position: relative; }
+  .vtr-input-wrap textarea {
+    width: 100%;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    padding: 0.875rem 1rem;
+    resize: vertical;
+    min-height: 90px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .vtr-input-wrap textarea:focus { border-color: var(--purple); }
+  .vtr-input-wrap textarea::placeholder { color: var(--text-dim); }
+
+  /* ── KEY CONCEPT ── */
+  .key-concept {
+    background: var(--green-surface);
+    border: 1px solid var(--green-dim);
+    border-radius: var(--radius);
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 0.75rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .key-concept::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 3px;
+    background: var(--green);
+  }
+  .key-concept-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--green);
+    font-weight: 500;
+    margin-bottom: 0.4rem;
+  }
+  .key-concept h4 { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 0.3rem; }
+  .key-concept p { font-size: 13px; color: var(--text-muted); }
+
+  /* ── TAXONOMY HIERARCHY ── */
+  .taxonomy-tree {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+  }
+  .tax-level {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.6rem 0.75rem;
+    border-radius: var(--radius-sm);
+    margin-bottom: 0.3rem;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .tax-level:hover { background: var(--surface-2); }
+  .tax-level .rank-badge {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    min-width: 110px;
+    padding: 0.25rem 0.6rem;
+    border-radius: 4px;
+    text-align: center;
+  }
+  .tax-level .example { font-size: 13px; color: var(--text-muted); flex: 1; }
+  .tax-level .example em { color: var(--text); font-style: italic; }
+  .tax-level .example strong { color: var(--teal); font-style: normal; }
+  .tax-detail {
+    display: none;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 0.875rem 1rem;
+    margin-bottom: 0.5rem;
+    font-size: 13px;
+    color: var(--text-muted);
+    animation: fadeIn 0.2s ease;
+  }
+  .tax-detail.open { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
+
+  .r-domain { background: #1a0a1a; color: #e879f9; border: 1px solid #701a75; }
+  .r-kingdom { background: #0a1a0a; color: var(--green); border: 1px solid var(--green-dim); }
+  .r-phylum { background: var(--teal-surface); color: var(--teal); border: 1px solid var(--teal-dim); }
+  .r-class { background: var(--blue-surface); color: var(--blue); border: 1px solid var(--blue-dim); }
+  .r-order { background: #1a0f00; color: var(--amber); border: 1px solid var(--amber-dim); }
+  .r-family { background: #1a0a14; color: var(--red); border: 1px solid #7f1d1d; }
+  .r-genus { background: #0f0a1a; color: var(--purple); border: 1px solid #4c1d95; }
+  .r-species { background: var(--surface-2); color: var(--text); border: 1px solid var(--border); }
+
+  /* ── DOMAINS TABLE ── */
+  .domains-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+  }
+  .domain-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.1rem;
+    text-align: center;
+  }
+  .domain-card .d-name {
+    font-family: 'Fraunces', serif;
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+  }
+  .domain-card .d-kingdoms {
+    font-size: 12px;
+    color: var(--text-dim);
+    margin-bottom: 0.5rem;
+    font-family: 'DM Mono', monospace;
+  }
+  .domain-card .d-desc { font-size: 12px; color: var(--text-muted); line-height: 1.5; }
+  .domain-card.archaea { border-color: #4c1d95; }
+  .domain-card.archaea .d-name { color: var(--purple); }
+  .domain-card.bacteria { border-color: var(--green-dim); }
+  .domain-card.bacteria .d-name { color: var(--green); }
+  .domain-card.eukaryota { border-color: var(--teal-dim); }
+  .domain-card.eukaryota .d-name { color: var(--teal); }
+
+  /* ── KINGDOMS TABLE ── */
+  .kingdoms-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    margin-bottom: 1rem;
+  }
+  .kingdoms-table th {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    padding: 0.6rem 0.75rem;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+  }
+  .kingdoms-table td {
+    padding: 0.7rem 0.75rem;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-muted);
+    vertical-align: top;
+  }
+  .kingdoms-table td:first-child { font-weight: 600; color: var(--text); }
+  .kingdoms-table tr:last-child td { border-bottom: none; }
+  .kingdoms-table tr:hover td { background: var(--surface-2); }
+
+  /* ── BINOMIAL CARD ── */
+  .binomial-demo {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    text-align: center;
+    margin-bottom: 1rem;
+  }
+  .binomial-demo .example-name {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 2rem;
+    font-weight: 300;
+    margin-bottom: 0.75rem;
+  }
+  .binomial-parts {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    font-size: 13px;
+  }
+  .binomial-part {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+  }
+  .binomial-part .word {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 1.1rem;
+    font-weight: 600;
+  }
+  .binomial-part .desc {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    color: var(--text-dim);
+    text-transform: uppercase;
+  }
+  .part-genus .word { color: var(--teal); }
+  .part-species .word { color: var(--green); }
+  .binomial-rules {
+    list-style: none;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+  }
+  .binomial-rules li {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 0.6rem 0.875rem;
+    font-size: 13px;
+    color: var(--text-muted);
+    display: flex;
+    gap: 0.5rem;
+    align-items: flex-start;
+  }
+  .binomial-rules li::before {
+    content: '→';
+    color: var(--teal);
+    font-family: 'DM Mono', monospace;
+    flex-shrink: 0;
+  }
+
+  /* ── BREAKOUT ROOM ── */
+  .breakout-card {
+    background: var(--breakout-surface);
+    border: 1px solid var(--breakout-dim);
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin-bottom: 1rem;
+    position: relative;
+  }
+  .breakout-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 100% 0%, rgba(244,114,182,0.06) 0%, transparent 60%);
+    pointer-events: none;
+  }
+  .breakout-header {
+    background: rgba(157,23,77,0.2);
+    border-bottom: 1px solid var(--breakout-dim);
+    padding: 0.875rem 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .breakout-icon {
+    width: 34px; height: 34px;
+    background: rgba(244,114,182,0.15);
+    border: 1px solid var(--breakout-dim);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+  .breakout-meta { flex: 1; }
+  .breakout-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--breakout);
+    font-weight: 500;
+  }
+  .breakout-header h3 { font-size: 14px; font-weight: 600; color: var(--text); }
+  .breakout-timing {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.2rem;
+  }
+  .breakout-timer {
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--breakout);
+  }
+  .breakout-size {
+    font-size: 11px;
+    color: var(--text-dim);
+  }
+  .breakout-body { padding: 1.25rem; }
+  .breakout-scenario {
+    background: rgba(244,114,182,0.05);
+    border: 1px solid rgba(244,114,182,0.15);
+    border-radius: var(--radius-sm);
+    padding: 1rem;
+    margin-bottom: 1rem;
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 0.95rem;
+    font-weight: 300;
+    color: var(--text);
+    line-height: 1.6;
+  }
+  .breakout-tasks {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+  }
+  .breakout-tasks li {
+    display: flex;
+    gap: 0.75rem;
+    align-items: flex-start;
+    font-size: 13px;
+    color: var(--text-muted);
+  }
+  .breakout-tasks li .task-num {
+    min-width: 22px; height: 22px;
+    background: rgba(244,114,182,0.1);
+    border: 1px solid rgba(244,114,182,0.25);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    font-weight: 500;
+    color: var(--breakout);
+    flex-shrink: 0;
+  }
+  .breakout-reporter {
+    background: rgba(244,114,182,0.05);
+    border: 1px solid rgba(244,114,182,0.12);
+    border-radius: var(--radius-sm);
+    padding: 0.75rem 1rem;
+    font-size: 12px;
+    color: var(--text-dim);
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+  }
+  .breakout-reporter span:first-child { color: var(--breakout); font-size: 14px; }
+
+  /* ── FEYNMAN ── */
+  .feynman-card {
+    background: var(--amber-surface);
+    border: 1px solid var(--amber-dim);
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin-bottom: 1rem;
+  }
+  .feynman-header {
+    padding: 0.875rem 1.25rem;
+    border-bottom: 1px solid var(--amber-dim);
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+  .feynman-header h3 { font-size: 13px; font-weight: 600; color: var(--text); }
+  .feynman-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    background: var(--amber-surface);
+    color: var(--amber);
+    border: 1px solid var(--amber-dim);
+  }
+  .feynman-body { padding: 1.25rem; }
+  .feynman-prompt {
+    font-family: 'Fraunces', serif;
+    font-size: 0.95rem;
+    font-weight: 300;
+    font-style: italic;
+    color: var(--text);
+    margin-bottom: 1rem;
+    line-height: 1.6;
+  }
+
+  /* ── PROGRESS CHECK ── */
+  .progress-check {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin-bottom: 1rem;
+  }
+  .pc-header {
+    padding: 0.875rem 1.25rem;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .pc-header h3 { font-size: 13px; font-weight: 600; color: var(--text); flex: 1; }
+  .tier-badges { display: flex; gap: 0.4rem; }
+  .tier-badge {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    font-weight: 500;
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    letter-spacing: 0.08em;
+  }
+  .t1 { background: var(--green-surface); color: var(--green); border: 1px solid var(--green-dim); }
+  .t2 { background: var(--amber-surface); color: var(--amber); border: 1px solid var(--amber-dim); }
+  .t3 { background: var(--red-surface); color: var(--red); border: 1px solid #7f1d1d; }
+  .pc-body { padding: 1.25rem; }
+  .question-set { margin-bottom: 1.25rem; }
+  .question-set-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+  }
+  .question-set-label span { font-size: 12px; color: var(--text-muted); }
+  .question-item {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 0.875rem 1rem;
+    margin-bottom: 0.5rem;
+    font-size: 13px;
+    color: var(--text-muted);
+  }
+  .question-item .q-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    font-weight: 500;
+    margin-bottom: 0.3rem;
+    color: var(--text-dim);
+  }
+  .question-item .q-text { color: var(--text); margin-bottom: 0.5rem; }
+  .question-item textarea {
+    width: 100%;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    padding: 0.625rem 0.75rem;
+    resize: vertical;
+    min-height: 65px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .question-item textarea:focus { border-color: var(--green); }
+  .question-item textarea::placeholder { color: var(--text-dim); }
+  .reveal-btn {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text-muted);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    padding: 0.4rem 0.875rem;
+    cursor: pointer;
+    margin-top: 0.4rem;
+    transition: all 0.15s;
+  }
+  .reveal-btn:hover { background: var(--border); color: var(--text); }
+  .model-answer {
+    display: none;
+    background: var(--green-surface);
+    border: 1px solid var(--green-dim);
+    border-radius: 6px;
+    padding: 0.625rem 0.75rem;
+    font-size: 12px;
+    color: #86efac;
+    margin-top: 0.4rem;
+    animation: fadeIn 0.2s ease;
+  }
+  .model-answer.visible { display: block; }
+
+  /* ── VOCAB ── */
+  .vocab-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+  }
+  .vocab-item {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 0.75rem;
+    cursor: pointer;
+    transition: border-color 0.15s;
+  }
+  .vocab-item:hover { border-color: var(--teal-dim); }
+  .vocab-item .v-term {
+    font-weight: 600;
+    color: var(--teal);
+    font-size: 13px;
+    margin-bottom: 0.2rem;
+  }
+  .vocab-item .v-def {
+    font-size: 12px;
+    color: var(--text-muted);
+    line-height: 1.5;
+  }
+
+  /* ── RETRIEVAL QUIZ ── */
+  .quiz-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin-bottom: 1rem;
+  }
+  .quiz-question {
+    padding: 1.25rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .quiz-question:last-child { border-bottom: none; }
+  .quiz-q-text {
+    font-size: 14px;
+    color: var(--text);
+    margin-bottom: 0.75rem;
+    font-weight: 500;
+  }
+  .quiz-options {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+  .quiz-option {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 0.625rem 0.875rem;
+    font-size: 13px;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all 0.15s;
+    text-align: left;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .quiz-option:hover { border-color: var(--teal-dim); color: var(--text); }
+  .quiz-option.correct { background: var(--green-surface); border-color: var(--green); color: #86efac; }
+  .quiz-option.incorrect { background: var(--red-surface); border-color: #7f1d1d; color: #fca5a5; }
+  .quiz-feedback {
+    font-size: 12px;
+    margin-top: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    border-radius: 6px;
+    display: none;
+    animation: fadeIn 0.2s ease;
+  }
+  .quiz-feedback.show { display: block; }
+  .quiz-feedback.correct-fb { background: var(--green-surface); color: #86efac; }
+  .quiz-feedback.incorrect-fb { background: var(--red-surface); color: #fca5a5; }
+
+  /* ── INFO CALLOUT ── */
+  .info-box {
+    background: var(--blue-surface);
+    border: 1px solid var(--blue-dim);
+    border-radius: var(--radius-sm);
+    padding: 0.875rem 1rem;
+    display: flex;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+    font-size: 13px;
+  }
+  .info-box .icon { font-size: 16px; flex-shrink: 0; }
+  .info-box p { color: var(--text-muted); }
+  .info-box p strong { color: var(--blue); }
+
+  /* ── EXAM HINT ── */
+  .exam-hint {
+    background: var(--amber-surface);
+    border: 1px solid var(--amber-dim);
+    border-left: 3px solid var(--amber);
+    border-radius: var(--radius-sm);
+    padding: 0.875rem 1rem;
+    margin-bottom: 0.75rem;
+    font-size: 13px;
+  }
+  .exam-hint .hint-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--amber);
+    font-weight: 500;
+    margin-bottom: 0.3rem;
+  }
+  .exam-hint p { color: var(--text-muted); }
+  .exam-hint strong { color: var(--amber); }
+
+  /* ── STICKY NAV ── */
+  .lesson-nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    padding: 0.75rem 2rem;
+    background: rgba(15, 17, 23, 0.92);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    align-items: center;
+  }
+  .nav-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-right: 0.25rem;
+    white-space: nowrap;
+  }
+  .nav-btn {
+    font-size: 12px;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 500;
+    padding: 0.35rem 0.75rem;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: var(--surface-2);
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+  .nav-btn:hover {
+    background: var(--surface);
+    color: var(--text);
+  }
+  .nav-btn.active {
+    background: var(--teal-surface);
+    border-color: var(--teal-dim);
+    color: var(--teal);
+  }
+
+  /* ── SECTION SHOW/HIDE ── */
+  section { display: none; }
+  section.active { display: block; }
+  .section-enter {
+    animation: sectionIn 0.25s ease forwards;
+  }
+  @keyframes sectionIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── TABS ── */
+  .tab-system { margin-bottom: 1rem; }
+  .tab-buttons {
+    display: flex;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 0;
+  }
+  .tab-btn {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 0.625rem 1rem;
+    background: none;
+    border: none;
+    color: var(--text-dim);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    transition: all 0.15s;
+  }
+  .tab-btn.active { color: var(--teal); border-bottom-color: var(--teal); }
+  .tab-content { display: none; padding-top: 1rem; }
+  .tab-content.active { display: block; }
+
+  /* ── DIVIDER ── */
+  .divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 2rem 0;
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 600px) {
+    .domains-grid { grid-template-columns: 1fr; }
+    .vocab-grid { grid-template-columns: 1fr; }
+    .binomial-rules { grid-template-columns: 1fr; }
+    .binomial-parts { flex-direction: column; gap: 0.75rem; }
+  }
+
+  /* ── ANIMATIONS ── */
+  .fade-up {
+    opacity: 0;
+    transform: translateY(12px);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+  }
+  .fade-up.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ── MNEMONIC ── */
+  .mnemonic-row {
+    display: flex;
+    gap: 0.4rem;
+    flex-wrap: wrap;
+    margin-top: 0.75rem;
+  }
+  .mnemonic-word {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0.4rem 0.75rem;
+    font-size: 13px;
+  }
+  .mnemonic-word .initial {
+    font-weight: 700;
+    font-size: 14px;
+    margin-right: 1px;
+  }
+  .d-i { color: #e879f9; } .k-i { color: var(--green); } .p-i { color: var(--teal); }
+  .c-i { color: var(--blue); } .o-i { color: var(--amber); } .f-i { color: var(--red); }
+  .g-i { color: var(--purple); } .s-i { color: var(--text-muted); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="header-meta">
+      <span class="spec-badge">4.14(i)</span>
+      <span class="spec-badge green">4.15</span>
+      <span class="header-chapter">IAL Biology · Unit 4B · Classification</span>
+    </div>
+    <h1><span>4B.1</span> Principles of Classification</h1>
+    <p class="header-sub">Biodiversity, taxonomy, and the binomial system</p>
+    <div class="progress-bar-wrap">
+      <div class="progress-bar" id="progressBar"></div>
+    </div>
+  </div>
+</header>
+
+<nav class="lesson-nav">
+  <span class="nav-label">Jump to:</span>
+  <button class="nav-btn active" onclick="showSection('objectives', this)">Learning Objectives</button>
+  <button class="nav-btn" onclick="showSection('starter', this)">Starter</button>
+  <button class="nav-btn" onclick="showSection('biodiversity', this)">Biodiversity</button>
+  <button class="nav-btn" onclick="showSection('taxonomy', this)">Taxonomy</button>
+  <button class="nav-btn" onclick="showSection('domains', this)">Domains &amp; Kingdoms</button>
+  <button class="nav-btn" onclick="showSection('binomial', this)">Binomial System</button>
+  <button class="nav-btn" onclick="showSection('check', this)">Progress Check</button>
+  <button class="nav-btn" onclick="showSection('retrieval', this)">Retrieval</button>
+  <button class="nav-btn" onclick="showSection('vocab', this)">Vocabulary</button>
+</nav>
+
+<main>
+
+  <!-- ── OBJECTIVES ── -->
+  <section id="objectives" class="active">
+    <div class="section-heading">
+      <div class="icon" style="background:#0a2040; border:1px solid var(--blue-dim);">🎯</div>
+      <div>
+        <div class="label" style="color:var(--blue); font-family:'DM Mono',monospace; font-size:9px; letter-spacing:0.12em; text-transform:uppercase; font-weight:500; margin-bottom:0.2rem;">What you will learn</div>
+        <h2>Learning Objective</h2>
+      </div>
+    </div>
+    <div class="objective-card fade-up">
+      <div class="dot"></div>
+      <p>Understand that classification is a means of organising the variety of life based on relationships between organisms using differences and similarities in <strong>phenotypes</strong> and in <strong>genotypes</strong>, and is built around the <strong>species concept</strong>.</p>
+    </div>
+    <div class="info-box fade-up">
+      <span class="icon">💡</span>
+      <p><strong>Prior knowledge:</strong> This topic builds on your understanding of evolution and natural selection from Unit 2. You'll also encounter biodiversity again in Chapter 4C.</p>
+    </div>
+  </section>
+
+  <!-- ── STARTER ── -->
+  <section id="starter">
+    <div class="section-heading">
+      <div class="icon" style="background:var(--purple-surface); border:1px solid #4c1d95;">👁</div>
+      <div>
+        <div class="label" style="color:var(--purple); font-family:'DM Mono',monospace; font-size:9px; letter-spacing:0.12em; text-transform:uppercase; font-weight:500; margin-bottom:0.2rem;">Harvard Project Zero · See Think Wonder</div>
+        <h2>Starter: The Problem of Naming</h2>
+      </div>
+    </div>
+
+    <div class="vtr-card fade-up">
+      <div class="vtr-header">
+        <span class="vtr-tag purple">SEE</span>
+        <h3>What do you notice?</h3>
+      </div>
+      <div class="vtr-body">
+        <p class="vtr-prompt">"A rose is called <em>rosa</em> in Spanish, <em>die Rosen</em> in German, <em>ورد</em> in Arabic, and <em>ρόδο</em> in Greek. Two biologists from different countries are discussing a plant specimen. What problem might arise — and why does that matter for science?"</p>
+        <div class="vtr-input-wrap">
+          <textarea placeholder="Write what you see happening here — the problem, the implications..."></textarea>
+        </div>
+      </div>
+    </div>
+
+    <div class="vtr-card fade-up">
+      <div class="vtr-header">
+        <span class="vtr-tag blue">THINK</span>
+        <h3>What do you think is needed?</h3>
+      </div>
+      <div class="vtr-body">
+        <p class="vtr-prompt">"What would a reliable international system for naming organisms need to achieve? What rules might it need?"</p>
+        <div class="vtr-input-wrap">
+          <textarea placeholder="Think about: universality, precision, consistency, biological meaning..."></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- BREAKOUT 1 -->
+    <div class="breakout-card fade-up">
+      <div class="breakout-header">
+        <div class="breakout-icon">🎙️</div>
+        <div class="breakout-meta">
+          <div class="breakout-tag">Google Meet · Breakout Room Activity</div>
+          <h3>The Naming Problem — Group Discussion</h3>
+        </div>
+        <div class="breakout-timing">
+          <div class="breakout-timer">⏱ 6 min</div>
+          <div class="breakout-size">👥 3–4 students</div>
+        </div>
+      </div>
+      <div class="breakout-body">
+        <div class="breakout-scenario">
+          "You're a team of international scientists who have just discovered a new insect species in the Amazon rainforest. Your team includes researchers from Brazil, Japan, France, and Kenya. The insect has wings like a dragonfly but legs like a cricket. How are you going to name it — and agree on that name across four different languages?"
+        </div>
+        <ul class="breakout-tasks">
+          <li>
+            <span class="task-num">1</span>
+            <span>Discuss: why can't you just use your local language name for the organism?</span>
+          </li>
+          <li>
+            <span class="task-num">2</span>
+            <span>What information should a scientific name communicate about an organism?</span>
+          </li>
+          <li>
+            <span class="task-num">3</span>
+            <span>Draft a set of three rules you'd all agree on for naming organisms scientifically.</span>
+          </li>
+        </ul>
+        <div class="breakout-reporter">
+          <span>📋</span>
+          <span>Nominate one person to report back your three rules to the class. Be ready to defend them!</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── BIODIVERSITY ── -->
+  <section id="biodiversity">
+    <div class="section-heading">
+      <div class="icon" style="background:var(--green-surface); border:1px solid var(--green-dim);">🌿</div>
+      <div>
+        <div class="label" style="color:var(--green); font-family:'DM Mono',monospace; font-size:9px; letter-spacing:0.12em; text-transform:uppercase; font-weight:500; margin-bottom:0.2rem;">Core Content</div>
+        <h2>The Background to Biodiversity</h2>
+      </div>
+    </div>
+
+    <div class="card fade-up">
+      <p><strong>Biodiversity</strong> is a measure of the variety of living organisms and their genetic differences. It is a critical concept right now: the Earth's biodiversity is reducing rapidly, and many scientists think this may affect the future health of the planet.</p>
+      <p>To understand biodiversity, we need a way of <strong>identifying and organising the different groups of organisms</strong>. We classify the living world by putting organisms in groups based on their similarities and differences.</p>
+    </div>
+
+    <div class="key-concept fade-up">
+      <div class="key-concept-label">Why classification matters</div>
+      <h4>Three reasons scientists need to classify organisms:</h4>
+      <p>① Monitor population changes in different types of organism &nbsp;|&nbsp; ② Understand how different types of living organism are related to each other &nbsp;|&nbsp; ③ Communicate about organisms accurately across different countries and languages</p>
+    </div>
+
+    <div class="feynman-card fade-up">
+      <div class="feynman-header">
+        <span class="feynman-tag">Feynman Check</span>
+        <h3>Explain it simply</h3>
+      </div>
+      <div class="feynman-body">
+        <p class="feynman-prompt">"Imagine you're explaining biodiversity to a 10-year-old who's just been told that their local forest might be cut down. In 2–3 sentences, why does biodiversity matter — and why would losing the forest be a problem beyond just losing the trees?"</p>
+        <textarea style="width:100%; background:var(--bg); border:1px solid var(--border); border-radius:var(--radius-sm); color:var(--text); font-family:'DM Sans',sans-serif; font-size:14px; padding:0.875rem 1rem; resize:vertical; min-height:90px; outline:none; transition:border-color 0.2s;" placeholder="Write your plain-language explanation..." onfocus="this.style.borderColor='var(--amber)'" onblur="this.style.borderColor='var(--border)'"></textarea>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── TAXONOMY ── -->
+  <section id="taxonomy">
+    <div class="section-heading">
+      <div class="icon" style="background:var(--teal-surface); border:1px solid var(--teal-dim);">🔬</div>
+      <div>
+        <div class="label" style="color:var(--teal); font-family:'DM Mono',monospace; font-size:9px; letter-spacing:0.12em; text-transform:uppercase; font-weight:500; margin-bottom:0.2rem;">Core Content</div>
+        <h2>The History of Taxonomy</h2>
+      </div>
+    </div>
+
+    <div class="card fade-up">
+      <p><strong>Taxonomy</strong> is the science of describing, classifying and naming living organisms. From the time of Aristotle onwards, people grouped organisms by <strong>morphology</strong> — their physical appearance.</p>
+      <p>Early biologists used <strong>analogous features</strong> (features that look similar but don't share biological origin). The problem? You could end up grouping bats, birds, and flying insects together, simply because they all fly.</p>
+      <p>A valid classification system must use <strong>homologous structures</strong> — structures that genuinely show common ancestry, regardless of current function.</p>
+    </div>
+
+    <div class="card fade-up">
+      <p>In the 18th century, the Swedish botanist <strong>Carolus Linnaeus (1707–78)</strong> developed the first scientifically devised classification system. We still use many of his principles today. Modern techniques allow us to go beyond observation — we now use molecular and genetic data to confirm evolutionary relationships.</p>
+    </div>
+
+    <!-- BREAKOUT 2 -->
+    <div class="breakout-card fade-up">
+      <div class="breakout-header">
+        <div class="breakout-icon">🎙️</div>
+        <div class="breakout-meta">
+          <div class="breakout-tag">Google Meet · Breakout Room Activity</div>
+          <h3>Analogous vs Homologous — Sorting Challenge</h3>
+        </div>
+        <div class="breakout-timing">
+          <div class="breakout-timer">⏱ 8 min</div>
+          <div class="breakout-size">👥 2–3 students</div>
+        </div>
+      </div>
+      <div class="breakout-body">
+        <div class="breakout-scenario">
+          "Below are six pairs of features from different organisms. Your job: decide whether each pair represents analogous features (similar function, different origin) or homologous structures (common ancestry). Justify each decision — and identify which would be useful for classification."
+        </div>
+        <ul class="breakout-tasks">
+          <li><span class="task-num">1</span><span>The wing of a bat and the wing of a butterfly — analogous or homologous? Why?</span></li>
+          <li><span class="task-num">2</span><span>The arm of a human and the flipper of a dolphin — analogous or homologous? Why?</span></li>
+          <li><span class="task-num">3</span><span>The eye of an octopus and the eye of a human — this one is debated! What's your group's verdict?</span></li>
+          <li><span class="task-num">4</span><span>Which type — analogous or homologous — should be used in classification, and why?</span></li>
+        </ul>
+        <div class="breakout-reporter">
+          <span>📋</span>
+          <span>Prepare a one-sentence verdict on Question 3 — we'll debate it as a class when you return.</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="exam-hint fade-up">
+      <div class="hint-label">⚡ Exam Hint</div>
+      <p><strong>Analogous vs Homologous:</strong> A common error is to confuse these. Remember — analogous features look similar but evolved independently (convergent evolution). Homologous structures share a common ancestor. In the exam, always link homologous structures to <strong>common ancestry</strong>, not just similar appearance.</p>
+    </div>
+  </section>
+
+  <!-- ── TAXONOMIC HIERARCHY ── -->
+  <section id="domains">
+    <div class="section-heading">
+      <div class="icon" style="background:#1a0a1a; border:1px solid #701a75;">🌳</div>
+      <div>
+        <div class="label" style="color:#e879f9; font-family:'DM Mono',monospace; font-size:9px; letter-spacing:0.12em; text-transform:uppercase; font-weight:500; margin-bottom:0.2rem;">Core Content</div>
+        <h2>The Main Taxonomic Groups</h2>
+      </div>
+    </div>
+
+    <div class="card fade-up">
+      <p>The largest groupings are the three <strong>domains</strong>. From largest to smallest, the main taxonomic ranks are:</p>
+    </div>
+
+    <!-- Mnemonic -->
+    <div class="card fade-up">
+      <p style="font-size:12px; color:var(--text-dim); text-transform:uppercase; letter-spacing:0.08em; font-family:'DM Mono',monospace; margin-bottom:0.5rem;">Mnemonic — Desperate King Philip Came Over For Great Spaghetti</p>
+      <div class="mnemonic-row">
+        <div class="mnemonic-word"><span class="initial d-i">D</span>omain</div>
+        <div class="mnemonic-word"><span class="initial k-i">K</span>ingdom</div>
+        <div class="mnemonic-word"><span class="initial p-i">P</span>hylum</div>
+        <div class="mnemonic-word"><span class="initial c-i">C</span>lass</div>
+        <div class="mnemonic-word"><span class="initial o-i">O</span>rder</div>
+        <div class="mnemonic-word"><span class="initial f-i">F</span>amily</div>
+        <div class="mnemonic-word"><span class="initial g-i">G</span>enus</div>
+        <div class="mnemonic-word"><span class="initial s-i">S</span>pecies</div>
+      </div>
+    </div>
+
+    <!-- Interactive Taxonomy Tree -->
+    <div class="taxonomy-tree fade-up">
+      <p style="font-size:12px; color:var(--text-dim); margin-bottom:1rem; font-family:'DM Mono',monospace; letter-spacing:0.06em;">CLICK ANY RANK TO SEE THE DEFINITION — Example organism: <em style="color:var(--teal);">Equus caballus</em> (domestic horse)</p>
+      
+      <div class="tax-level" onclick="toggleTax(this, 'Domain — the three largest groups: Archaea, Bacteria, Eukaryota. A grouping developed more recently than the others.')">
+        <span class="rank-badge r-domain">Domain</span>
+        <span class="example"><strong>Eukaryota</strong></span>
+        <span style="font-size:11px; color:var(--text-dim); font-family:'DM Mono',monospace;">▾</span>
+      </div>
+      <div class="tax-detail"></div>
+
+      <div class="tax-level" onclick="toggleTax(this, 'Kingdom — classification category smaller than domains. There are six kingdoms: Archaeabacteria, Eubacteria, Protista, Fungi, Plantae and Animalia.')">
+        <span class="rank-badge r-kingdom">Kingdom</span>
+        <span class="example"><strong>Animalia</strong> — multicellular heterotrophs</span>
+        <span style="font-size:11px; color:var(--text-dim); font-family:'DM Mono',monospace;">▾</span>
+      </div>
+      <div class="tax-detail"></div>
+
+      <div class="tax-level" onclick="toggleTax(this, 'Phylum — a group of classes that all share common characteristics. Animals with a vertebral column belong to Chordata.')">
+        <span class="rank-badge r-phylum">Phylum</span>
+        <span class="example"><strong>Chordata</strong> — has a notochord at some stage</span>
+        <span style="font-size:11px; color:var(--text-dim); font-family:'DM Mono',monospace;">▾</span>
+      </div>
+      <div class="tax-detail"></div>
+
+      <div class="tax-level" onclick="toggleTax(this, 'Class — a group of orders that all share common characteristics. Mammalia = warm-blooded, hair/fur, live young, mammary glands.')">
+        <span class="rank-badge r-class">Class</span>
+        <span class="example"><strong>Mammalia</strong> — warm-blooded, hair, mammary glands</span>
+        <span style="font-size:11px; color:var(--text-dim); font-family:'DM Mono',monospace;">▾</span>
+      </div>
+      <div class="tax-detail"></div>
+
+      <div class="tax-level" onclick="toggleTax(this, 'Order — a group of families that all share common characteristics.')">
+        <span class="rank-badge r-order">Order</span>
+        <span class="example"><strong>Perissodactyla</strong> — odd-toed ungulates</span>
+        <span style="font-size:11px; color:var(--text-dim); font-family:'DM Mono',monospace;">▾</span>
+      </div>
+      <div class="tax-detail"></div>
+
+      <div class="tax-level" onclick="toggleTax(this, 'Family — a group of genera that all share common characteristics.')">
+        <span class="rank-badge r-family">Family</span>
+        <span class="example"><strong>Equidae</strong> — horses, zebras, donkeys</span>
+        <span style="font-size:11px; color:var(--text-dim); font-family:'DM Mono',monospace;">▾</span>
+      </div>
+      <div class="tax-detail"></div>
+
+      <div class="tax-level" onclick="toggleTax(this, 'Genus — a group of species that all share common characteristics. All members of the same genus have the same first name in the binomial system.')">
+        <span class="rank-badge r-genus">Genus</span>
+        <span class="example"><em>Equus</em> — horses, donkeys, zebras</span>
+        <span style="font-size:11px; color:var(--text-dim); font-family:'DM Mono',monospace;">▾</span>
+      </div>
+      <div class="tax-detail"></div>
+
+      <div class="tax-level" onclick="toggleTax(this, 'Species — a group of closely related organisms that are all potentially capable of interbreeding to produce fertile offspring.')">
+        <span class="rank-badge r-species">Species</span>
+        <span class="example"><em>Equus caballus</em> — domestic horse</span>
+        <span style="font-size:11px; color:var(--text-dim); font-family:'DM Mono',monospace;">▾</span>
+      </div>
+      <div class="tax-detail"></div>
+    </div>
+
+    <!-- Three Domains -->
+    <h3 style="font-family:'Fraunces',serif; font-size:1.05rem; font-weight:600; margin-bottom:0.75rem; color:var(--text);">The Three Domains</h3>
+    <div class="domains-grid fade-up">
+      <div class="domain-card archaea">
+        <div class="d-name">Archaea</div>
+        <div class="d-kingdoms">1 kingdom</div>
+        <div class="d-desc"><strong style="color:var(--purple);">Archaeabacteria</strong> — ancient bacteria found in extreme environments (and increasingly in soil). Thought to be early relatives of eukaryotes.</div>
+      </div>
+      <div class="domain-card bacteria">
+        <div class="d-name">Bacteria</div>
+        <div class="d-kingdoms">1 kingdom</div>
+        <div class="d-desc"><strong style="color:var(--green);">Eubacteria</strong> — the "true" bacteria. Cause disease, aid digestion, recycle nutrients. Prokaryotic organisms.</div>
+      </div>
+      <div class="domain-card eukaryota">
+        <div class="d-name">Eukaryota</div>
+        <div class="d-kingdoms">4 kingdoms</div>
+        <div class="d-desc"><strong style="color:var(--teal);">Protista · Fungi · Plantae · Animalia</strong> — all have membrane-bound nuclei and complex organelles.</div>
+      </div>
+    </div>
+
+    <!-- Kingdoms -->
+    <h3 style="font-family:'Fraunces',serif; font-size:1.05rem; font-weight:600; margin-bottom:0.75rem; margin-top:1.5rem; color:var(--text);">The Six Kingdoms — Key Features</h3>
+
+    <div class="tab-system fade-up">
+      <div class="tab-buttons">
+        <button class="tab-btn active" onclick="switchTab(this, 'tab-kingdoms')">Feature Table</button>
+        <button class="tab-btn" onclick="switchTab(this, 'tab-examples')">Full Classification Examples</button>
+      </div>
+      <div class="tab-content active" id="tab-kingdoms">
+        <table class="kingdoms-table">
+          <thead>
+            <tr>
+              <th>Kingdom</th>
+              <th>Cell type</th>
+              <th>Nutrition</th>
+              <th>Key features</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Archaeabacteria</td>
+              <td>Prokaryotic</td>
+              <td>Varied</td>
+              <td>Extreme environments; unique cell membranes</td>
+            </tr>
+            <tr>
+              <td>Eubacteria</td>
+              <td>Prokaryotic</td>
+              <td>Varied</td>
+              <td>True bacteria; no membrane-bound nucleus</td>
+            </tr>
+            <tr>
+              <td>Protista</td>
+              <td>Eukaryotic</td>
+              <td>Both</td>
+              <td>Diverse; unicellular, algae, slime moulds. Eg. <em>Amoeba</em>, <em>Chlamydomonas</em></td>
+            </tr>
+            <tr>
+              <td>Fungi</td>
+              <td>Eukaryotic</td>
+              <td>Heterotrophs</td>
+              <td>Chitin in cell walls (not cellulose); mostly saprophytic</td>
+            </tr>
+            <tr>
+              <td>Plantae</td>
+              <td>Eukaryotic</td>
+              <td>Autotrophs</td>
+              <td>Chlorophyll; cellulose cell walls. Mosses to angiosperms</td>
+            </tr>
+            <tr>
+              <td>Animalia</td>
+              <td>Eukaryotic</td>
+              <td>Heterotrophs</td>
+              <td>Mobile; no cell walls. Invertebrates and vertebrates</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="exam-hint">
+          <div class="hint-label">⚡ Exam Hint</div>
+          <p>Make sure you can distinguish kingdoms by <strong>cell wall composition</strong>: Fungi = chitin, Plants = cellulose, Animals and Protista = no cell wall. This is a common exam question.</p>
+        </div>
+      </div>
+      <div class="tab-content" id="tab-examples">
+        <table class="kingdoms-table">
+          <thead>
+            <tr>
+              <th></th>
+              <th><em>E. coli</em></th>
+              <th>Domestic horse</th>
+              <th>Fly agaric</th>
+              <th>Rice</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>Domain</strong></td><td>Bacteria</td><td>Eukaryota</td><td>Eukaryota</td><td>Eukaryota</td></tr>
+            <tr><td><strong>Kingdom</strong></td><td>Eubacteria</td><td>Animalia</td><td>Fungi</td><td>Plantae</td></tr>
+            <tr><td><strong>Phylum</strong></td><td>Proteobacteria</td><td>Chordata</td><td>Basidiomycota</td><td>Magnoliophyta</td></tr>
+            <tr><td><strong>Class</strong></td><td>Gammaproteobacteria</td><td>Mammalia</td><td>Agaricomycetes</td><td>Liliopsida</td></tr>
+            <tr><td><strong>Order</strong></td><td>Enterobacteriales</td><td>Perissodactyla</td><td>Agaricales</td><td>Poales</td></tr>
+            <tr><td><strong>Family</strong></td><td>Enterobacteriaceae</td><td>Equidae</td><td>Amanitaceae</td><td>Poaceae</td></tr>
+            <tr><td><strong>Genus</strong></td><td><em>Escherichia</em></td><td><em>Equus</em></td><td><em>Amanita</em></td><td><em>Oryza</em></td></tr>
+            <tr><td><strong>Species</strong></td><td><em>E. coli</em></td><td><em>E. caballus</em></td><td><em>A. muscaria</em></td><td><em>O. sativa</em></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- BREAKOUT 3 -->
+    <div class="breakout-card fade-up">
+      <div class="breakout-header">
+        <div class="breakout-icon">🎙️</div>
+        <div class="breakout-meta">
+          <div class="breakout-tag">Google Meet · Breakout Room Activity</div>
+          <h3>Mystery Organism — Which Kingdom?</h3>
+        </div>
+        <div class="breakout-timing">
+          <div class="breakout-timer">⏱ 10 min</div>
+          <div class="breakout-size">👥 3–4 students</div>
+        </div>
+      </div>
+      <div class="breakout-body">
+        <div class="breakout-scenario">
+          "You've been sent three mystery organism descriptions by a field researcher. Using only the features in your kingdoms table, determine which kingdom each organism belongs to — and explain the reasoning to your group before writing your answer."
+        </div>
+        <ul class="breakout-tasks">
+          <li><span class="task-num">A</span><span><strong>Mystery Organism A:</strong> Multicellular. Cannot move. Obtains nutrients by secreting enzymes onto dead wood and absorbing the products. Cell walls present. No chlorophyll.</span></li>
+          <li><span class="task-num">B</span><span><strong>Mystery Organism B:</strong> Unicellular. Has a membrane-bound nucleus. Contains chloroplasts and can photosynthesise, but also engulfs small food particles when light is scarce.</span></li>
+          <li><span class="task-num">C</span><span><strong>Mystery Organism C:</strong> Multicellular. Moves freely throughout its life. No cell walls. Obtains food by surrounding and digesting other organisms. Found in the deep ocean.</span></li>
+          <li><span class="task-num">4</span><span>Discuss: which was hardest to classify and why? What does this tell us about how we define kingdoms?</span></li>
+        </ul>
+        <div class="breakout-reporter">
+          <span>📋</span>
+          <span>One person records your kingdom verdict for each organism + one sentence justification. Share on return.</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── BINOMIAL SYSTEM ── -->
+  <section id="binomial">
+    <div class="section-heading">
+      <div class="icon" style="background:var(--teal-surface); border:1px solid var(--teal-dim);">🔤</div>
+      <div>
+        <div class="label" style="color:var(--teal); font-family:'DM Mono',monospace; font-size:9px; letter-spacing:0.12em; text-transform:uppercase; font-weight:500; margin-bottom:0.2rem;">Core Content</div>
+        <h2>The Binomial System</h2>
+      </div>
+    </div>
+
+    <div class="card fade-up">
+      <p>Devised by Linnaeus, the <strong>binomial system</strong> gives every organism two Latin names. <em>Binomial</em> means "two names". The system is used universally by biologists — and updated constantly as new data emerges.</p>
+    </div>
+
+    <div class="binomial-demo fade-up">
+      <div class="example-name">Homo sapiens</div>
+      <div class="binomial-parts">
+        <div class="binomial-part part-genus">
+          <div class="word">Homo</div>
+          <div class="desc">Genus name · Upper case</div>
+        </div>
+        <div style="color:var(--border); font-size:1.5rem; align-self:center;">+</div>
+        <div class="binomial-part part-species">
+          <div class="word">sapiens</div>
+          <div class="desc">Species name · Lower case</div>
+        </div>
+      </div>
+    </div>
+
+    <h4 style="font-size:13px; font-weight:600; color:var(--text); margin-bottom:0.75rem; font-family:'DM Mono',monospace; letter-spacing:0.06em; text-transform:uppercase;">Rules for writing binomial names:</h4>
+    <ul class="binomial-rules fade-up">
+      <li>Always written in <em>italics</em></li>
+      <li>Genus name has an <strong>upper-case</strong> first letter; species name is all lower-case</li>
+      <li>After first use, genus can be abbreviated to initial: <em>H. sapiens</em></li>
+      <li>Both names are always in Latin (or Latinised)</li>
+    </ul>
+
+    <div class="info-box" style="margin-top:1rem;">
+      <span class="icon">💡</span>
+      <p><strong>Same genus ≠ same species:</strong> The genus <em>Vanessa</em> contains the Painted Lady (<em>Vanessa cardui</em>), Red Admiral (<em>Vanessa atalanta</em>), and Indian Red Admiral (<em>Vanessa indica</em>). They share enough characteristics to be in the same genus — but are clearly distinct species. Two species with the same second name in different genera are completely unrelated.</p>
+    </div>
+
+    <div class="feynman-card fade-up">
+      <div class="feynman-header">
+        <span class="feynman-tag">Feynman Check</span>
+        <h3>Apply the rules</h3>
+      </div>
+      <div class="feynman-body">
+        <p class="feynman-prompt">"Write the correct binomial name for the common daisy (<em>Bellis perennis</em>) in three different formats: ① full formal name in a scientific journal ② abbreviated form after first mention ③ the same name written incorrectly in three different ways (so a student could spot the errors)."</p>
+        <textarea style="width:100%; background:var(--bg); border:1px solid var(--border); border-radius:var(--radius-sm); color:var(--text); font-family:'DM Sans',sans-serif; font-size:14px; padding:0.875rem 1rem; resize:vertical; min-height:110px; outline:none; transition:border-color 0.2s;" placeholder="Write your three versions here..." onfocus="this.style.borderColor='var(--amber)'" onblur="this.style.borderColor='var(--border)'"></textarea>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── PROGRESS CHECK ── -->
+  <section id="check">
+    <div class="section-heading">
+      <div class="icon" style="background:var(--green-surface); border:1px solid var(--green-dim);">✅</div>
+      <div>
+        <div class="label" style="color:var(--green); font-family:'DM Mono',monospace; font-size:9px; letter-spacing:0.12em; text-transform:uppercase; font-weight:500; margin-bottom:0.2rem;">Tiered Progress Check</div>
+        <h2>Check Your Understanding</h2>
+      </div>
+    </div>
+
+    <div class="progress-check fade-up">
+      <div class="pc-header">
+        <h3>Written Response Questions</h3>
+        <div class="tier-badges">
+          <span class="tier-badge t1">T1 · Recall</span>
+          <span class="tier-badge t2">T2 · Apply</span>
+          <span class="tier-badge t3">T3 · Evaluate</span>
+        </div>
+      </div>
+      <div class="pc-body">
+
+        <div class="question-set">
+          <div class="question-set-label">
+            <span class="tier-badge t1">T1 · Recall</span>
+            <span>Answer from memory before checking your notes</span>
+          </div>
+          <div class="question-item">
+            <div class="q-num">Q1.1</div>
+            <div class="q-text">Define <em>biodiversity</em> as used in biology. (2 marks)</div>
+            <textarea placeholder="Your answer..."></textarea>
+            <button class="reveal-btn" onclick="revealAnswer(this)">Show model answer</button>
+            <div class="model-answer">A measure of the variety of living organisms (1) and their genetic differences (1).</div>
+          </div>
+          <div class="question-item">
+            <div class="q-num">Q1.2</div>
+            <div class="q-text">State the correct order of the eight main taxonomic groups from largest to smallest. (1 mark)</div>
+            <textarea placeholder="Your answer..."></textarea>
+            <button class="reveal-btn" onclick="revealAnswer(this)">Show model answer</button>
+            <div class="model-answer">Domain → Kingdom → Phylum/Division → Class → Order → Family → Genus → Species</div>
+          </div>
+          <div class="question-item">
+            <div class="q-num">Q1.3</div>
+            <div class="q-text">Name the three domains and state how many kingdoms each contains. (3 marks)</div>
+            <textarea placeholder="Your answer..."></textarea>
+            <button class="reveal-btn" onclick="revealAnswer(this)">Show model answer</button>
+            <div class="model-answer">Archaea (1 kingdom: Archaeabacteria) · Bacteria (1 kingdom: Eubacteria) · Eukaryota (4 kingdoms: Protista, Fungi, Plantae, Animalia) — 1 mark per domain with correct kingdom count.</div>
+          </div>
+        </div>
+
+        <div class="question-set">
+          <div class="question-set-label">
+            <span class="tier-badge t2">T2 · Apply</span>
+            <span>Use your understanding in a new context</span>
+          </div>
+          <div class="question-item">
+            <div class="q-num">Q2.1</div>
+            <div class="q-text">An organism is described as: eukaryotic, multicellular, heterotrophic, and has chitin in its cell walls. Identify the kingdom it belongs to and justify your answer. (3 marks)</div>
+            <textarea placeholder="Your answer..."></textarea>
+            <button class="reveal-btn" onclick="revealAnswer(this)">Show model answer</button>
+            <div class="model-answer">Fungi (1). Justification: eukaryotic and multicellular rules out bacteria (1); chitin in cell walls (not cellulose) distinguishes Fungi from Plantae (1). Heterotrophic rules out Plantae which is autotrophic.</div>
+          </div>
+          <div class="question-item">
+            <div class="q-num">Q2.2</div>
+            <div class="q-text">A student writes the binomial name for the wolf as <em>canis lupus</em>. Identify two errors in this name and rewrite it correctly. (3 marks)</div>
+            <textarea placeholder="Your answer..."></textarea>
+            <button class="reveal-btn" onclick="revealAnswer(this)">Show model answer</button>
+            <div class="model-answer">Error 1: genus name should have an upper-case first letter — <em>Canis</em>, not <em>canis</em> (1). Error 2: must be written in italics (1). Correct form: <em>Canis lupus</em> (1).</div>
+          </div>
+        </div>
+
+        <div class="question-set" style="margin-bottom:0;">
+          <div class="question-set-label">
+            <span class="tier-badge t3">T3 · Evaluate</span>
+            <span>Longer response — structure your argument</span>
+          </div>
+          <div class="question-item">
+            <div class="q-num">Q3.1</div>
+            <div class="q-text">Explain why using analogous features to classify organisms can lead to errors in classification systems, using an appropriate example. (4 marks)</div>
+            <textarea placeholder="Your answer — aim for 4 distinct points..." style="min-height:120px;"></textarea>
+            <button class="reveal-btn" onclick="revealAnswer(this)">Show model answer</button>
+            <div class="model-answer">Analogous features look similar or have similar function but are NOT from the same biological origin (1). This means they evolved independently — they do not indicate common ancestry (1). Example: wings of bats (mammals) and wings of insects — both used for flight but evolved completely differently (1). Using such features would incorrectly group bats and insects together, masking their true evolutionary relationships — a valid classification must use homologous structures that show common ancestry (1).</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ── RETRIEVAL QUIZ ── -->
+  <section id="retrieval">
+    <div class="section-heading">
+      <div class="icon" style="background:var(--blue-surface); border:1px solid var(--blue-dim);">🧠</div>
+      <div>
+        <div class="label" style="color:var(--blue); font-family:'DM Mono',monospace; font-size:9px; letter-spacing:0.12em; text-transform:uppercase; font-weight:500; margin-bottom:0.2rem;">Retrieval Practice</div>
+        <h2>Quick-Fire Quiz</h2>
+      </div>
+    </div>
+    <p style="font-size:13px; color:var(--text-muted); margin-bottom:1rem;">Select the correct answer for each question. No going back!</p>
+
+    <div class="quiz-card fade-up">
+
+      <div class="quiz-question" data-correct="b">
+        <div class="quiz-q-text">1. Which feature BEST distinguishes the Fungi kingdom from the Plantae kingdom?</div>
+        <div class="quiz-options">
+          <button class="quiz-option" onclick="answerQuiz(this)">A. Fungi are heterotrophs; plants are autotrophs</button>
+          <button class="quiz-option" onclick="answerQuiz(this)" data-key="b">B. Fungi have chitin in cell walls; plants have cellulose</button>
+          <button class="quiz-option" onclick="answerQuiz(this)">C. Fungi are prokaryotic; plants are eukaryotic</button>
+          <button class="quiz-option" onclick="answerQuiz(this)">D. Fungi reproduce sexually; plants do not</button>
+        </div>
+        <div class="quiz-feedback"></div>
+      </div>
+
+      <div class="quiz-question" data-correct="c">
+        <div class="quiz-q-text">2. The taxonomic hierarchy from largest to smallest group is:</div>
+        <div class="quiz-options">
+          <button class="quiz-option" onclick="answerQuiz(this)">A. Kingdom → Domain → Phylum → Class → Order → Family → Genus → Species</button>
+          <button class="quiz-option" onclick="answerQuiz(this)">B. Domain → Kingdom → Class → Phylum → Order → Family → Genus → Species</button>
+          <button class="quiz-option" onclick="answerQuiz(this)" data-key="c">C. Domain → Kingdom → Phylum → Class → Order → Family → Genus → Species</button>
+          <button class="quiz-option" onclick="answerQuiz(this)">D. Domain → Phylum → Kingdom → Class → Order → Genus → Family → Species</button>
+        </div>
+        <div class="quiz-feedback"></div>
+      </div>
+
+      <div class="quiz-question" data-correct="a">
+        <div class="quiz-q-text">3. Two organisms belong to the same genus. What can you conclude?</div>
+        <div class="quiz-options">
+          <button class="quiz-option" onclick="answerQuiz(this)" data-key="a">A. They share common characteristics and likely share a common ancestor</button>
+          <button class="quiz-option" onclick="answerQuiz(this)">B. They are the same species and can interbreed</button>
+          <button class="quiz-option" onclick="answerQuiz(this)">C. They have the same species name in the binomial system</button>
+          <button class="quiz-option" onclick="answerQuiz(this)">D. They must be found in the same habitat</button>
+        </div>
+        <div class="quiz-feedback"></div>
+      </div>
+
+      <div class="quiz-question" data-correct="d">
+        <div class="quiz-q-text">4. Which of the following is a correctly written binomial name?</div>
+        <div class="quiz-options">
+          <button class="quiz-option" onclick="answerQuiz(this)">A. homo sapiens</button>
+          <button class="quiz-option" onclick="answerQuiz(this)">B. Homo Sapiens</button>
+          <button class="quiz-option" onclick="answerQuiz(this)">C. HOMO SAPIENS</button>
+          <button class="quiz-option" onclick="answerQuiz(this)" data-key="d">D. <em>Homo sapiens</em> (italicised, genus upper case, species lower case)</button>
+        </div>
+        <div class="quiz-feedback"></div>
+      </div>
+
+      <div class="quiz-question" data-correct="b">
+        <div class="quiz-q-text">5. Homologous structures are used in classification (rather than analogous features) because they:</div>
+        <div class="quiz-options">
+          <button class="quiz-option" onclick="answerQuiz(this)">A. Look more similar to each other than analogous features do</button>
+          <button class="quiz-option" onclick="answerQuiz(this)" data-key="b">B. Reflect true common ancestry rather than just similar function</button>
+          <button class="quiz-option" onclick="answerQuiz(this)">C. Are easier to observe without laboratory equipment</button>
+          <button class="quiz-option" onclick="answerQuiz(this)">D. Are only found in animals, making classification simpler</button>
+        </div>
+        <div class="quiz-feedback"></div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── VOCAB ── -->
+  <section id="vocab">
+    <div class="section-heading">
+      <div class="icon" style="background:var(--surface-2); border:1px solid var(--border);">📖</div>
+      <div>
+        <div class="label" style="color:var(--text-dim); font-family:'DM Mono',monospace; font-size:9px; letter-spacing:0.12em; text-transform:uppercase; font-weight:500; margin-bottom:0.2rem;">Subject Vocabulary</div>
+        <h2>Key Terms</h2>
+      </div>
+    </div>
+    <p style="font-size:13px; color:var(--text-muted); margin-bottom:1rem;">Click any term to see the definition.</p>
+
+    <div class="vocab-grid fade-up">
+      <div class="vocab-item" onclick="toggleVocab(this)">
+        <div class="v-term">biodiversity</div>
+        <div class="v-def" style="display:none;">A measure of the variety of living organisms and their genetic differences.</div>
+      </div>
+      <div class="vocab-item" onclick="toggleVocab(this)">
+        <div class="v-term">taxonomy</div>
+        <div class="v-def" style="display:none;">The science of describing, classifying and naming living organisms.</div>
+      </div>
+      <div class="vocab-item" onclick="toggleVocab(this)">
+        <div class="v-term">morphology</div>
+        <div class="v-def" style="display:none;">The study of the form and structure of organisms.</div>
+      </div>
+      <div class="vocab-item" onclick="toggleVocab(this)">
+        <div class="v-term">analogous features</div>
+        <div class="v-def" style="display:none;">Features that look similar or have a similar function, but are not from the same biological origin.</div>
+      </div>
+      <div class="vocab-item" onclick="toggleVocab(this)">
+        <div class="v-term">homologous structures</div>
+        <div class="v-def" style="display:none;">Structures that genuinely show common ancestry — they may have different current functions but share evolutionary origin.</div>
+      </div>
+      <div class="vocab-item" onclick="toggleVocab(this)">
+        <div class="v-term">domain</div>
+        <div class="v-def" style="display:none;">One of the three largest classification categories: Eukaryota, Bacteria, and Archaea.</div>
+      </div>
+      <div class="vocab-item" onclick="toggleVocab(this)">
+        <div class="v-term">kingdom</div>
+        <div class="v-def" style="display:none;">The classification category smaller than domains. There are six kingdoms: Archaeabacteria, Eubacteria, Protista, Fungi, Plantae and Animalia.</div>
+      </div>
+      <div class="vocab-item" onclick="toggleVocab(this)">
+        <div class="v-term">phylum (division for plants)</div>
+        <div class="v-def" style="display:none;">A group of classes that all share common characteristics.</div>
+      </div>
+      <div class="vocab-item" onclick="toggleVocab(this)">
+        <div class="v-term">genus</div>
+        <div class="v-def" style="display:none;">A group of species that all share common characteristics. All members share the same first (genus) name in the binomial system.</div>
+      </div>
+      <div class="vocab-item" onclick="toggleVocab(this)">
+        <div class="v-term">species</div>
+        <div class="v-def" style="display:none;">A group of closely related organisms that are all potentially capable of interbreeding to produce fertile offspring.</div>
+      </div>
+      <div class="vocab-item" onclick="toggleVocab(this)">
+        <div class="v-term">Archaea</div>
+        <div class="v-def" style="display:none;">Domain made up of bacteria-like prokaryotic organisms found in extreme conditions and soil; thought to be early relatives of eukaryotes.</div>
+      </div>
+      <div class="vocab-item" onclick="toggleVocab(this)">
+        <div class="v-term">Eubacteria</div>
+        <div class="v-def" style="display:none;">True bacteria — prokaryotic organisms.</div>
+      </div>
+      <div class="vocab-item" onclick="toggleVocab(this)">
+        <div class="v-term">Protista</div>
+        <div class="v-def" style="display:none;">A kingdom containing all single-celled organisms, green and brown algae and slime moulds.</div>
+      </div>
+      <div class="vocab-item" onclick="toggleVocab(this)">
+        <div class="v-term">evolution</div>
+        <div class="v-def" style="display:none;">The process by which natural selection acts on variation to bring about adaptations and eventually speciation.</div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<script>
+// ── SECTION SWITCHER ──
+function showSection(id, btn) {
+  // Hide all sections
+  document.querySelectorAll('main section').forEach(s => {
+    s.classList.remove('active', 'section-enter');
+  });
+  // Update nav buttons
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  // Show target section with animation
+  const target = document.getElementById(id);
+  target.classList.add('active', 'section-enter');
+  // Scroll to top of content
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  // Trigger fade-up animations for newly visible section
+  target.querySelectorAll('.fade-up').forEach(el => {
+    el.classList.remove('visible');
+    // Small delay so the animation fires fresh each time
+    setTimeout(() => el.classList.add('visible'), 60);
+  });
+  // Update progress bar based on section index
+  const sections = ['objectives','starter','biodiversity','taxonomy','domains','binomial','check','retrieval','vocab'];
+  const pct = ((sections.indexOf(id) + 1) / sections.length) * 100;
+  document.getElementById('progressBar').style.width = pct + '%';
+}
+
+// ── INIT: trigger fade-ups on first section ──
+window.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('#objectives .fade-up').forEach((el, i) => {
+    setTimeout(() => el.classList.add('visible'), 80 + i * 60);
+  });
+  document.getElementById('progressBar').style.width = (1/9*100) + '%';
+});
+
+// ── TAXONOMY TOGGLE ──
+function toggleTax(el, text) {
+  const detail = el.nextElementSibling;
+  const isOpen = detail.classList.contains('open');
+  document.querySelectorAll('.tax-detail').forEach(d => d.classList.remove('open'));
+  if (!isOpen) {
+    detail.textContent = text;
+    detail.classList.add('open');
+  }
+}
+
+// ── TAB SYSTEM ──
+function switchTab(btn, tabId) {
+  btn.closest('.tab-system').querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  btn.closest('.tab-system').querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+  document.getElementById(tabId).classList.add('active');
+}
+
+// ── REVEAL ANSWER ──
+function revealAnswer(btn) {
+  const answer = btn.nextElementSibling;
+  answer.classList.toggle('visible');
+  btn.textContent = answer.classList.contains('visible') ? 'Hide answer' : 'Show model answer';
+}
+
+// ── VOCAB TOGGLE ──
+function toggleVocab(el) {
+  const def = el.querySelector('.v-def');
+  const isShown = def.style.display !== 'none';
+  def.style.display = isShown ? 'none' : 'block';
+  el.style.borderColor = isShown ? 'var(--border)' : 'var(--teal-dim)';
+}
+
+// ── QUIZ ──
+function answerQuiz(btn) {
+  const question = btn.closest('.quiz-question');
+  if (question.dataset.answered) return;
+  question.dataset.answered = 'true';
+  const correctKey = question.dataset.correct;
+  const isCorrect = btn.hasAttribute('data-key') && btn.getAttribute('data-key') === correctKey;
+  const feedback = question.querySelector('.quiz-feedback');
+  question.querySelectorAll('.quiz-option').forEach(opt => {
+    opt.disabled = true;
+    if (opt.getAttribute('data-key') === correctKey) opt.classList.add('correct');
+  });
+  if (isCorrect) {
+    btn.classList.add('correct');
+    feedback.textContent = '✓ Correct! ' + getQuizExplanation(question);
+    feedback.className = 'quiz-feedback show correct-fb';
+  } else {
+    btn.classList.add('incorrect');
+    feedback.textContent = '✗ Not quite. ' + getQuizExplanation(question);
+    feedback.className = 'quiz-feedback show incorrect-fb';
+  }
+}
+
+function getQuizExplanation(q) {
+  const explanations = [
+    'Both kingdoms are eukaryotic and heterotrophic — it is the chitin (Fungi) vs cellulose (Plantae) cell wall that is the key distinguishing feature for classification.',
+    'Remember the mnemonic: Desperate King Philip Came Over For Great Spaghetti — Domain, Kingdom, Phylum, Class, Order, Family, Genus, Species.',
+    'The same genus indicates shared common characteristics and common ancestry. Same genus does NOT mean they can interbreed — that is the definition of species.',
+    'Binomial names must be in italics, with genus capitalised and species in lower case. This is a firm convention in all scientific writing.',
+    'Analogous features may look similar but evolved independently (convergent evolution). Only homologous structures reflect true common ancestry and are therefore valid for classification.'
+  ];
+  const index = [...q.parentElement.children].indexOf(q);
+  return explanations[index] || '';
+}
+</script>
+</body>
+</html>
