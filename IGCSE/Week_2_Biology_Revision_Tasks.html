@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Week 2 — Movement of Substances, Nutrition &amp; Respiration | IGCSE Biology Revision</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy: #1B3A5C;
+  --navy-deep: #0F2640;
+  --teal: #2A9D8F;
+  --teal-light: #3DBCAD;
+  --coral: #E76F51;
+  --gold: #E9C46A;
+  --sand: #F4F1EB;
+  --white: #FFFFFF;
+  --off-white: #FAFAF8;
+  --grey-100: #F5F5F3;
+  --grey-200: #E8E6E1;
+  --grey-300: #D4D1CC;
+  --grey-600: #7A7670;
+  --grey-800: #3D3A36;
+  --text: #2C2925;
+  --radius: 12px;
+  --radius-sm: 8px;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.08), 0 2px 4px rgba(0,0,0,0.04);
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'DM Sans', sans-serif; background: var(--sand); color: var(--text); line-height: 1.65; -webkit-font-smoothing: antialiased; }
+
+.hero { background: linear-gradient(135deg, var(--navy-deep) 0%, var(--navy) 60%, #264D73 100%); color: var(--white); padding: 3.5rem 2rem 3rem; position: relative; overflow: hidden; }
+.hero::before { content:''; position:absolute; top:-40%; right:-10%; width:500px; height:500px; background:radial-gradient(circle, rgba(42,157,143,0.15) 0%, transparent 70%); border-radius:50%; }
+.hero::after { content:''; position:absolute; bottom:-30%; left:-5%; width:400px; height:400px; background:radial-gradient(circle, rgba(233,196,106,0.1) 0%, transparent 70%); border-radius:50%; }
+.hero-inner { max-width:900px; margin:0 auto; position:relative; z-index:1; }
+.hero-label { display:inline-block; background:rgba(42,157,143,0.2); border:1px solid rgba(42,157,143,0.4); color:var(--teal-light); font-size:0.75rem; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; padding:0.3rem 0.8rem; border-radius:100px; margin-bottom:1rem; }
+.hero h1 { font-family:'DM Serif Display',serif; font-size:clamp(2rem,5vw,2.8rem); font-weight:400; line-height:1.2; margin-bottom:0.75rem; }
+.hero h1 span { color:var(--teal-light); }
+.hero-sub { font-size:1.05rem; color:rgba(255,255,255,0.75); max-width:600px; line-height:1.6; }
+.hero-meta { display:flex; gap:1.5rem; margin-top:1.5rem; flex-wrap:wrap; }
+.hero-meta-item { display:flex; align-items:center; gap:0.4rem; font-size:0.85rem; color:rgba(255,255,255,0.6); }
+.hero-meta-item svg { opacity:0.5; }
+
+.container { max-width:900px; margin:0 auto; padding:2rem 1.5rem 4rem; }
+
+.spec-box { background:var(--white); border:1px solid var(--grey-200); border-radius:var(--radius); padding:1.5rem; margin-bottom:2.5rem; box-shadow:var(--shadow-sm); }
+.spec-box h2 { font-family:'DM Serif Display',serif; font-size:1.15rem; color:var(--navy); margin-bottom:0.75rem; font-weight:400; }
+.spec-tags { display:flex; flex-wrap:wrap; gap:0.4rem; }
+.spec-tag { display:inline-block; background:var(--grey-100); color:var(--grey-800); font-size:0.78rem; font-weight:500; padding:0.25rem 0.6rem; border-radius:100px; border:1px solid var(--grey-200); }
+
+.day-card { background:var(--white); border:1px solid var(--grey-200); border-radius:var(--radius); margin-bottom:1.5rem; box-shadow:var(--shadow-sm); overflow:hidden; transition:box-shadow 0.25s ease; }
+.day-card:hover { box-shadow:var(--shadow-md); }
+.day-header { display:flex; align-items:stretch; cursor:pointer; user-select:none; }
+.day-num { min-width:72px; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:1rem 0.5rem; color:var(--white); font-weight:700; font-size:0.8rem; letter-spacing:0.05em; text-transform:uppercase; }
+.day-num .num { font-family:'DM Serif Display',serif; font-size:1.6rem; font-weight:400; line-height:1; margin-bottom:0.15rem; }
+.day1 .day-num { background:var(--navy); }
+.day2 .day-num { background:var(--teal); }
+.day3 .day-num { background:#457B9D; }
+.day4 .day-num { background:var(--coral); }
+.day5 .day-num { background:#6D597A; }
+.day6 .day-num { background:var(--gold); color:var(--navy-deep); }
+.day-title-area { flex:1; padding:1rem 1.25rem; display:flex; align-items:center; justify-content:space-between; gap:1rem; }
+.day-title-area h3 { font-size:1rem; font-weight:600; color:var(--navy); line-height:1.35; }
+.day-title-area .strategy-badge { flex-shrink:0; background:var(--grey-100); color:var(--teal); font-size:0.72rem; font-weight:600; padding:0.25rem 0.65rem; border-radius:100px; border:1px solid rgba(42,157,143,0.2); white-space:nowrap; }
+.chevron { width:20px; height:20px; flex-shrink:0; transition:transform 0.3s ease; color:var(--grey-300); }
+.day-card.open .chevron { transform:rotate(180deg); }
+.day-body { display:none; padding:0 1.25rem 1.5rem; padding-left:calc(72px + 1.25rem); border-top:1px solid var(--grey-100); }
+.day-card.open .day-body { display:block; }
+
+.task-section { margin-top:1.25rem; }
+.task-section:first-child { margin-top:1rem; }
+.task-label { font-size:0.7rem; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:var(--grey-600); margin-bottom:0.4rem; }
+.task-section p, .task-section li { font-size:0.92rem; color:var(--text); line-height:1.7; }
+.task-section ol, .task-section ul { padding-left:1.3rem; margin-top:0.3rem; }
+.task-section li { margin-bottom:0.35rem; }
+.task-section li::marker { color:var(--teal); }
+
+.callout { background:var(--grey-100); border-left:3px solid var(--teal); border-radius:0 var(--radius-sm) var(--radius-sm) 0; padding:0.85rem 1rem; margin-top:0.75rem; font-size:0.88rem; }
+.callout.tip { border-left-color:var(--gold); }
+.callout.warn { border-left-color:var(--coral); }
+.callout strong { color:var(--navy); }
+
+.resource-links { margin-top:0.75rem; display:flex; flex-direction:column; gap:0.4rem; }
+.resource-links a { display:inline-flex; align-items:center; gap:0.4rem; font-size:0.85rem; font-weight:500; color:var(--teal); text-decoration:none; transition:color 0.2s; }
+.resource-links a:hover { color:var(--navy); text-decoration:underline; }
+.resource-links a svg { width:14px; height:14px; flex-shrink:0; }
+.link-icon { display:inline-block; }
+
+.checklist { list-style:none; padding:0; margin-top:0.5rem; }
+.checklist li { display:flex; align-items:flex-start; gap:0.6rem; padding:0.4rem 0; font-size:0.9rem; }
+.checklist input[type="checkbox"] { margin-top:0.25rem; accent-color:var(--teal); width:16px; height:16px; flex-shrink:0; }
+
+.footer { text-align:center; padding:2rem; color:var(--grey-600); font-size:0.8rem; border-top:1px solid var(--grey-200); }
+
+@media (max-width:640px) {
+  .day-body { padding-left:1.25rem; }
+  .day-num { min-width:56px; }
+  .hero { padding:2.5rem 1.25rem 2rem; }
+  .hero-meta { gap:0.75rem; }
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="hero-inner">
+    <div class="hero-label">6-Week Revision Plan</div>
+    <h1>Week 2: <span>Movement of Substances, Nutrition &amp; Respiration</span></h1>
+    <p class="hero-sub">Topic 2d (Diffusion, Osmosis, Active Transport), Topic 2e (Plant &amp; Human Nutrition), Topic 2f (Respiration)</p>
+    <div class="hero-meta">
+      <div class="hero-meta-item">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        6 sessions · ~50 min each
+      </div>
+      <div class="hero-meta-item">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>
+        Spec refs: 2.15–2.39
+      </div>
+      <div class="hero-meta-item">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        Paper 1B · 4SD0 / 4BI1
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="container">
+
+  <div class="spec-box">
+    <h2>Specification Points Covered This Week</h2>
+    <div class="spec-tags">
+      <span class="spec-tag">2.15 Diffusion, osmosis &amp; active transport</span>
+      <span class="spec-tag">2.16 Factors affecting rate of movement</span>
+      <span class="spec-tag">2.17 Practical: diffusion &amp; osmosis</span>
+      <span class="spec-tag">2.18–2.19 Photosynthesis &amp; equations</span>
+      <span class="spec-tag">2.20 Limiting factors</span>
+      <span class="spec-tag">2.21 Leaf structure</span>
+      <span class="spec-tag">2.22 Mineral ions</span>
+      <span class="spec-tag">2.23 Practical: investigating photosynthesis</span>
+      <span class="spec-tag">2.24–2.26 Balanced diet &amp; energy</span>
+      <span class="spec-tag">2.27–2.32 Alimentary canal, enzymes, bile &amp; absorption</span>
+      <span class="spec-tag">2.34–2.39 Aerobic &amp; anaerobic respiration</span>
+    </div>
+  </div>
+
+  <!-- ═══ DAY 1 ═══ -->
+  <div class="day-card day1 open" id="day1">
+    <div class="day-header" onclick="toggle('day1')">
+      <div class="day-num"><span class="num">01</span>Mon</div>
+      <div class="day-title-area">
+        <h3>Diffusion, Osmosis &amp; Active Transport</h3>
+        <span class="strategy-badge">Comparison / Contrast</span>
+        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+    </div>
+    <div class="day-body">
+      <div class="task-section">
+        <div class="task-label">What you need to know</div>
+        <p>Substances move into and out of cells by three processes. <strong>Diffusion</strong> is the net movement of particles from a region of higher concentration to a region of lower concentration (down a concentration gradient). <strong>Osmosis</strong> is a special case of diffusion: the movement of water molecules from a dilute solution (high water concentration) to a more concentrated solution (low water concentration) through a <strong>partially permeable membrane</strong>. <strong>Active transport</strong> moves substances <em>against</em> the concentration gradient (low to high) and requires energy from respiration. You also need to understand four factors that affect the rate of movement: surface area to volume ratio, distance, temperature, and concentration gradient.</p>
+      </div>
+      <div class="task-section">
+        <div class="task-label">Tasks</div>
+        <ol>
+          <li><strong>Venn diagram (10 min):</strong> Draw a three-circle Venn diagram for diffusion, osmosis and active transport. In each unique section, write features specific to that process. In overlapping sections, write shared features. Key distinctions:
+            <ul>
+              <li>Diffusion and osmosis are <em>passive</em> (no energy required). Active transport requires <em>energy from respiration</em>.</li>
+              <li>Osmosis involves water only and requires a <em>partially permeable membrane</em>.</li>
+              <li>Active transport moves substances from low to high concentration (against the gradient).</li>
+            </ul>
+          </li>
+          <li><strong>Annotated diagrams (15 min):</strong> Draw three labelled diagrams showing each process in a biological context:
+            <ul>
+              <li><strong>Diffusion:</strong> Oxygen moving from alveoli into blood capillaries (high O<sub>2</sub> in alveoli → low O<sub>2</sub> in blood)</li>
+              <li><strong>Osmosis:</strong> Water moving into a root hair cell from soil water (dilute soil water → more concentrated cell sap)</li>
+              <li><strong>Active transport:</strong> Mineral ions being absorbed by root hair cells against the concentration gradient</li>
+            </ul>
+          </li>
+          <li><strong>Factors table (10 min):</strong> Create a table with four rows (SA:V ratio, distance, temperature, concentration gradient) and two columns (How it affects rate / Why). Fill in from memory, e.g.: "Larger SA:V ratio → faster rate → more surface available for particles to cross."</li>
+          <li><strong>Osmosis in cells (10 min):</strong> Draw and annotate what happens to an animal cell and a plant cell when placed in: (a) distilled water, (b) concentrated sugar solution. Use the terms: turgid, flaccid, plasmolysed, crenated, lysis. Explain each outcome.</li>
+          <li><strong>Spaced retrieval from Week 1 (5 min):</strong> Without notes, write the function of: ribosomes, mitochondria, chloroplasts. Name two named pathogens and their diseases.</li>
+        </ol>
+      </div>
+      <div class="callout warn">
+        <strong>Common mistake:</strong> When defining osmosis, students often write "movement of water from high concentration to low concentration." This is ambiguous. You must specify: "from a region of higher <em>water</em> concentration (dilute solution) to a region of lower <em>water</em> concentration (concentrated solution) through a <em>partially permeable membrane</em>." Without mentioning the membrane, you lose a mark.
+      </div>
+      <div class="task-section">
+        <div class="task-label">Resources</div>
+        <div class="resource-links">
+          <a href="https://www.savemyexams.com/igcse/biology/edexcel/19/revision-notes/2-structure-and-function-in-living-organisms/movement-of-substances-into-and-out-of-cells/diffusion-osmosis-and-active-transport/" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>Save My Exams — Diffusion, Osmosis &amp; Active Transport</a>
+          <a href="https://www.savemyexams.com/igcse/biology/edexcel/19/revision-notes/2-structure-and-function-in-living-organisms/movement-of-substances-into-and-out-of-cells/practical-investigating-diffusion-and-osmosis/" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>Save My Exams — Practical: Investigating Diffusion &amp; Osmosis</a>
+          <a href="https://www.physicsandmathstutor.com/biology-revision/igcse-edexcel/" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>PMT — Edexcel IGCSE Biology (select Topic 2)</a>
+          <a href="https://www.youtube.com/results?search_query=edexcel+igcse+biology+diffusion+osmosis+active+transport" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>YouTube — Edexcel IGCSE Diffusion, Osmosis &amp; Active Transport</a>
+        </div>
+      </div>
+      <div class="task-section">
+        <div class="task-label">Self-check</div>
+        <ul class="checklist">
+          <li><input type="checkbox"> I can define diffusion, osmosis and active transport precisely</li>
+          <li><input type="checkbox"> I can explain why osmosis requires a partially permeable membrane</li>
+          <li><input type="checkbox"> I can describe what happens to plant and animal cells in different solutions</li>
+          <li><input type="checkbox"> I can list 4 factors affecting rate of substance movement and explain each</li>
+          <li><input type="checkbox"> I can explain why active transport requires energy from respiration</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ DAY 2 ═══ -->
+  <div class="day-card day2" id="day2">
+    <div class="day-header" onclick="toggle('day2')">
+      <div class="day-num"><span class="num">02</span>Tue</div>
+      <div class="day-title-area">
+        <h3>Photosynthesis — Equations, Leaf Structure &amp; Limiting Factors</h3>
+        <span class="strategy-badge">Dual Coding</span>
+        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+    </div>
+    <div class="day-body">
+      <div class="task-section">
+        <div class="task-label">What you need to know</div>
+        <p>Photosynthesis converts <strong>light energy</strong> into <strong>chemical energy</strong> stored in glucose. You need the word equation and the balanced symbol equation: 6CO<sub>2</sub> + 6H<sub>2</sub>O → C<sub>6</sub>H<sub>12</sub>O<sub>6</sub> + 6O<sub>2</sub>. Three factors limit the rate: <strong>carbon dioxide concentration</strong>, <strong>light intensity</strong>, and <strong>temperature</strong>. You also need to describe the structure of a leaf and explain how it is adapted for photosynthesis, and know that plants need <strong>magnesium</strong> (for chlorophyll) and <strong>nitrate</strong> (for amino acids).</p>
+      </div>
+      <div class="task-section">
+        <div class="task-label">Tasks</div>
+        <ol>
+          <li><strong>Equations practice (5 min):</strong> Write the word equation and balanced symbol equation for photosynthesis from memory three times. Check each time. This must become automatic.</li>
+          <li><strong>Leaf cross-section diagram (15 min):</strong> Draw a labelled cross-section of a leaf from memory. Include: upper epidermis, palisade mesophyll, spongy mesophyll, lower epidermis, stomata, guard cells, air spaces, cuticle, vascular bundle (xylem and phloem). Then annotate <em>how each feature is adapted for photosynthesis</em>:
+            <ul>
+              <li>Palisade cells packed with chloroplasts, near upper surface for maximum light absorption</li>
+              <li>Thin leaf = short diffusion distance for gases</li>
+              <li>Air spaces in spongy mesophyll allow CO<sub>2</sub> to diffuse to cells</li>
+              <li>Stomata allow gas exchange (CO<sub>2</sub> in, O<sub>2</sub> out)</li>
+              <li>Xylem brings water; phloem transports glucose away</li>
+              <li>Waxy cuticle reduces water loss</li>
+            </ul>
+          </li>
+          <li><strong>Limiting factor graphs (15 min):</strong> Sketch three separate graphs from memory:
+            <ul>
+              <li><strong>Rate of photosynthesis vs light intensity:</strong> Rate increases linearly, then plateaus (another factor becomes limiting)</li>
+              <li><strong>Rate vs CO<sub>2</sub> concentration:</strong> Same shape — increases then plateaus</li>
+              <li><strong>Rate vs temperature:</strong> Increases to an optimum, then falls sharply (enzymes denature)</li>
+            </ul>
+            For each graph, annotate the plateau section to explain <em>what</em> is now the limiting factor. For example, on the light intensity graph at the plateau: "CO<sub>2</sub> concentration or temperature is now limiting."
+          </li>
+          <li><strong>Mineral ions (5 min):</strong> Write from memory: Why do plants need magnesium? Why do plants need nitrate ions? What symptoms would a plant show if deficient in magnesium?</li>
+          <li><strong>Quick retrieval from yesterday (5 min):</strong> Define osmosis. What happens to a plant cell in distilled water? Name the process that requires energy from respiration.</li>
+        </ol>
+      </div>
+      <div class="callout tip">
+        <strong>Exam tip:</strong> When interpreting limiting factor graphs, remember: where the line is rising, the x-axis factor is limiting. Where the line levels off, <em>something else</em> is limiting. The exam often asks you to "suggest what factor is limiting at point X" — always name a different factor from the one on the x-axis.
+      </div>
+      <div class="task-section">
+        <div class="task-label">Resources</div>
+        <div class="resource-links">
+          <a href="https://www.savemyexams.com/igcse/biology/edexcel/19/revision-notes/2-structure-and-function-in-living-organisms/nutrition/the-process-of-photosynthesis/" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>Save My Exams — The Process of Photosynthesis</a>
+          <a href="https://www.savemyexams.com/igcse/biology/edexcel/19/revision-notes/2-structure-and-function-in-living-organisms/nutrition/factors-affecting-the-rate-of-photosynthesis/" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>Save My Exams — Factors Affecting Rate of Photosynthesis</a>
+          <a href="https://www.savemyexams.com/igcse/biology/edexcel/19/revision-notes/2-structure-and-function-in-living-organisms/nutrition/plants-and-mineral-ions/" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>Save My Exams — Plants &amp; Mineral Ions</a>
+          <a href="https://www.savemyexams.com/igcse/biology/edexcel/19/revision-notes/2-structure-and-function-in-living-organisms/nutrition/practical-investigating-photosynthesis/" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>Save My Exams — Practical: Investigating Photosynthesis</a>
+          <a href="https://www.youtube.com/results?search_query=edexcel+igcse+biology+photosynthesis+limiting+factors" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>YouTube — IGCSE Biology Photosynthesis &amp; Limiting Factors</a>
+        </div>
+      </div>
+      <div class="task-section">
+        <div class="task-label">Self-check</div>
+        <ul class="checklist">
+          <li><input type="checkbox"> I can write the word and balanced symbol equation for photosynthesis</li>
+          <li><input type="checkbox"> I can draw and label a leaf cross-section with adaptations annotated</li>
+          <li><input type="checkbox"> I can sketch and interpret graphs for all three limiting factors</li>
+          <li><input type="checkbox"> I can explain why magnesium and nitrate ions are needed</li>
+          <li><input type="checkbox"> I can describe the Elodea pondweed practical for oxygen evolution</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ DAY 3 ═══ -->
+  <div class="day-card day3" id="day3">
+    <div class="day-header" onclick="toggle('day3')">
+      <div class="day-num"><span class="num">03</span>Wed</div>
+      <div class="day-title-area">
+        <h3>Photosynthesis Practicals &amp; Mineral Ions</h3>
+        <span class="strategy-badge">Elaborative Interrogation</span>
+        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+    </div>
+    <div class="day-body">
+      <div class="task-section">
+        <div class="task-label">What you need to know</div>
+        <p>You must be able to describe practical investigations that demonstrate: (1) oxygen evolution from a water plant (Elodea/pondweed), (2) the production of starch in leaves, and (3) the requirements for light, carbon dioxide, and chlorophyll. The starch test involves decolourising the leaf in boiling ethanol, then testing with iodine. You should also be able to explain results from variegated leaf experiments and experiments where leaves are covered with foil.</p>
+      </div>
+      <div class="task-section">
+        <div class="task-label">Tasks</div>
+        <ol>
+          <li><strong>Pondweed practical description (10 min):</strong> Write a full method for the Elodea oxygen evolution practical from memory. Include: what you measure (number of bubbles or volume of gas), what you change (e.g. light intensity using lamp distance), what you keep the same (temperature, CO<sub>2</sub> concentration, length of pondweed). Then check against your notes.</li>
+          <li><strong>Starch test in leaves (10 min):</strong> Write the step-by-step method for testing a leaf for starch:
+            <ul>
+              <li>Kill the leaf by placing in boiling water (stops reactions, softens leaf)</li>
+              <li>Place in boiling ethanol to remove chlorophyll (decolourise) — <em>turn off the Bunsen first: ethanol is flammable</em></li>
+              <li>Dip in hot water to soften the leaf</li>
+              <li>Spread on a white tile and add iodine solution</li>
+              <li>Positive result: iodine turns from brown to <strong>blue-black</strong></li>
+            </ul>
+          </li>
+          <li><strong>Elaborative interrogation (15 min):</strong> For each of the following, ask yourself "Why?" and write a full explanation:
+            <ul>
+              <li>Why do we test for starch rather than glucose? (Glucose is soluble and is quickly converted to starch for storage, so we test for the storage product)</li>
+              <li>Why must a plant be destarched (kept in the dark for 48 hours) before the experiment? (To ensure any starch found is produced during the experiment, not before)</li>
+              <li>Why does a variegated leaf only turn blue-black in the green areas? (Only green areas contain chloroplasts/chlorophyll, so only these areas photosynthesise and produce starch)</li>
+              <li>Why does covering part of a leaf with foil prevent starch production? (Light is blocked, and light is essential for photosynthesis)</li>
+            </ul>
+          </li>
+          <li><strong>Past paper practice (10 min):</strong> Complete at least 2 photosynthesis practical questions from the resources below.</li>
+          <li><strong>Spaced retrieval (5 min):</strong> From Week 1, without notes: state three differences between prokaryotic and eukaryotic cells. Name the four food tests and their positive results.</li>
+        </ol>
+      </div>
+      <div class="callout">
+        <strong>Spec precision:</strong> When describing the starch test, always state that ethanol is <em>heated using a water bath</em>, not directly with a Bunsen flame. Ethanol is highly flammable. This safety point is specifically assessed.
+      </div>
+      <div class="task-section">
+        <div class="task-label">Resources</div>
+        <div class="resource-links">
+          <a href="https://www.savemyexams.com/igcse/biology/edexcel/19/revision-notes/2-structure-and-function-in-living-organisms/nutrition/practical-investigating-photosynthesis/" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>Save My Exams — Practical: Investigating Photosynthesis</a>
+          <a href="https://www.physicsandmathstutor.com/biology-revision/igcse-edexcel/" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>PMT — Edexcel IGCSE Biology Topic 2</a>
+          <a href="https://www.youtube.com/results?search_query=edexcel+igcse+biology+starch+test+leaf+practical" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>YouTube — IGCSE Biology Starch Test Leaf Practical</a>
+        </div>
+      </div>
+      <div class="task-section">
+        <div class="task-label">Self-check</div>
+        <ul class="checklist">
+          <li><input type="checkbox"> I can describe the Elodea practical including variables</li>
+          <li><input type="checkbox"> I can write the step-by-step method for testing a leaf for starch</li>
+          <li><input type="checkbox"> I can explain why we destarch a plant before the experiment</li>
+          <li><input type="checkbox"> I can explain variegated leaf and foil-covered leaf results</li>
+          <li><input type="checkbox"> I know the safety precaution for heating ethanol</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ DAY 4 ═══ -->
+  <div class="day-card day4" id="day4">
+    <div class="day-header" onclick="toggle('day4')">
+      <div class="day-num"><span class="num">04</span>Thu</div>
+      <div class="day-title-area">
+        <h3>Human Nutrition — Balanced Diet, Sources &amp; Functions</h3>
+        <span class="strategy-badge">Self-Testing with Flashcards</span>
+        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+    </div>
+    <div class="day-body">
+      <div class="task-section">
+        <div class="task-label">What you need to know</div>
+        <p>A balanced diet includes: carbohydrate, protein, lipid, vitamins (A, C, D), minerals (calcium, iron), water and dietary fibre in appropriate proportions. You need to know the <strong>sources</strong> and <strong>functions</strong> of each component. Energy requirements vary with <strong>activity level</strong>, <strong>age</strong>, and <strong>pregnancy</strong>. You do not need to memorise calorie values, but you must understand why different groups need different amounts of energy.</p>
+      </div>
+      <div class="task-section">
+        <div class="task-label">Tasks</div>
+        <ol>
+          <li><strong>Nutrient summary table (20 min):</strong> Build a comprehensive table from memory with columns: Nutrient | Source(s) | Function(s). Fill in for all the spec-required nutrients:
+            <ul>
+              <li><strong>Carbohydrate:</strong> Bread, pasta, rice, potatoes → provides energy</li>
+              <li><strong>Protein:</strong> Meat, fish, eggs, beans → growth and repair of cells/tissues</li>
+              <li><strong>Lipid:</strong> Butter, oil, nuts → energy store, insulation, protection of organs</li>
+              <li><strong>Vitamin A:</strong> Carrots, liver → good vision / healthy skin</li>
+              <li><strong>Vitamin C:</strong> Citrus fruits, peppers → prevents scurvy / needed for immune function</li>
+              <li><strong>Vitamin D:</strong> Oily fish, sunlight on skin → calcium absorption / strong bones</li>
+              <li><strong>Calcium:</strong> Milk, cheese → strong bones and teeth</li>
+              <li><strong>Iron:</strong> Red meat, spinach → making haemoglobin in red blood cells</li>
+              <li><strong>Water:</strong> Drinks, food → solvent for reactions, transport medium</li>
+              <li><strong>Dietary fibre:</strong> Wholegrain foods, vegetables → stimulates peristalsis, prevents constipation</li>
+            </ul>
+          </li>
+          <li><strong>Flashcard creation and test (15 min):</strong> Make flashcards: front = nutrient name, back = source + function + deficiency symptom (where relevant). Test yourself immediately after making them, then shuffle and test again.</li>
+          <li><strong>Energy requirements (10 min):</strong> Answer these in full sentences:
+            <ul>
+              <li>Why does a teenager need more energy than an elderly person? (Growth + generally higher activity levels)</li>
+              <li>Why does a pregnant woman need more energy? (Growing fetus requires energy for cell division and development)</li>
+              <li>Why does a builder need more energy than an office worker? (More physical activity = more muscle contraction = more respiration needed)</li>
+            </ul>
+          </li>
+          <li><strong>Spaced retrieval (5 min):</strong> Write the balanced symbol equation for photosynthesis. Name two adaptations of a leaf for photosynthesis.</li>
+        </ol>
+      </div>
+      <div class="callout tip">
+        <strong>Exam tip:</strong> Questions about balanced diet often ask for the function of a <em>specific</em> vitamin or mineral. "Vitamin C prevents scurvy" scores a mark — but "Vitamin C is good for you" does not. Be precise.
+      </div>
+      <div class="task-section">
+        <div class="task-label">Resources</div>
+        <div class="resource-links">
+          <a href="https://www.savemyexams.com/igcse/biology/edexcel/19/revision-notes/" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>Save My Exams — Edexcel IGCSE Biology Revision Notes (navigate to Nutrition)</a>
+          <a href="https://www.physicsandmathstutor.com/biology-revision/igcse-edexcel/" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>PMT — Edexcel IGCSE Biology Topic 2</a>
+          <a href="https://www.youtube.com/results?search_query=edexcel+igcse+biology+balanced+diet+nutrients" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>YouTube — IGCSE Biology Balanced Diet &amp; Nutrients</a>
+        </div>
+      </div>
+      <div class="task-section">
+        <div class="task-label">Self-check</div>
+        <ul class="checklist">
+          <li><input type="checkbox"> I can name the 7 components of a balanced diet</li>
+          <li><input type="checkbox"> I can give a source and function for every nutrient in the spec</li>
+          <li><input type="checkbox"> I know the specific functions of vitamins A, C and D</li>
+          <li><input type="checkbox"> I can explain why energy needs vary with activity, age and pregnancy</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ DAY 5 ═══ -->
+  <div class="day-card day5" id="day5">
+    <div class="day-header" onclick="toggle('day5')">
+      <div class="day-num"><span class="num">05</span>Fri</div>
+      <div class="day-title-area">
+        <h3>Alimentary Canal, Digestive Enzymes, Bile &amp; Villus Absorption</h3>
+        <span class="strategy-badge">Retrieval Practice</span>
+        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+    </div>
+    <div class="day-body">
+      <div class="task-section">
+        <div class="task-label">What you need to know</div>
+        <p>You must know the structure and function of each part of the <strong>alimentary canal</strong>: mouth, oesophagus, stomach, small intestine (duodenum and ileum), large intestine (colon and rectum), and pancreas. Food is moved by <strong>peristalsis</strong>. You need the specific digestive enzymes: <strong>amylase</strong> (starch → maltose), <strong>maltase</strong> (maltose → glucose), <strong>proteases</strong> (proteins → amino acids), <strong>lipases</strong> (lipids → fatty acids + glycerol). <strong>Bile</strong> is made in the liver, stored in the gall bladder, and it neutralises stomach acid and emulsifies lipids. The small intestine is adapted for absorption via <strong>villi</strong>.</p>
+      </div>
+      <div class="task-section">
+        <div class="task-label">Tasks</div>
+        <ol>
+          <li><strong>Alimentary canal diagram (15 min):</strong> Draw the entire digestive system from memory — mouth to rectum, including the liver, gall bladder, and pancreas. Label every part. Then, next to each label, write its function in a few words. Check and correct.</li>
+          <li><strong>Enzyme summary table (15 min):</strong> Create a table with columns: Enzyme | Produced where | Substrate | Product(s) | Optimal conditions. Fill in from memory:
+            <ul>
+              <li><strong>Amylase:</strong> Salivary glands &amp; pancreas | Starch | Maltose | pH 7</li>
+              <li><strong>Maltase:</strong> Small intestine wall | Maltose | Glucose | pH 7</li>
+              <li><strong>Proteases (e.g. pepsin):</strong> Stomach &amp; pancreas | Proteins | Amino acids | Pepsin: pH 2 (stomach); pancreatic protease: pH 7</li>
+              <li><strong>Lipase:</strong> Pancreas | Lipids | Fatty acids + glycerol | pH 7</li>
+            </ul>
+          </li>
+          <li><strong>Bile explanation (5 min):</strong> Write from memory: Where is bile produced? Where is it stored? State its two functions (neutralises stomach acid to provide alkaline conditions for intestinal enzymes; emulsifies lipids to increase surface area for lipase).</li>
+          <li><strong>Villus diagram (10 min):</strong> Draw and annotate a single villus. Include: thin walls (one cell thick for short diffusion distance), extensive network of blood capillaries (to carry absorbed nutrients away, maintaining a concentration gradient), large surface area (many villi and microvilli). Explain how each adaptation increases the rate of absorption.</li>
+          <li><strong>Peristalsis (5 min):</strong> Draw two simple diagrams showing how circular muscles contract behind the food bolus and relax in front, pushing food along the oesophagus/gut.</li>
+        </ol>
+      </div>
+      <div class="callout warn">
+        <strong>Common mistake:</strong> Students often confuse the <em>duodenum</em> (first part of small intestine, where bile and pancreatic juice enter) with the <em>ileum</em> (main site of absorption). Learn both names and their specific roles.
+      </div>
+      <div class="callout">
+        <strong>Spec precision:</strong> The spec says bile <em>emulsifies</em> lipids. Emulsification is not digestion — it is the physical breaking up of large fat droplets into smaller droplets to increase the surface area available for lipase to work on. This distinction is frequently tested.
+      </div>
+      <div class="task-section">
+        <div class="task-label">Resources</div>
+        <div class="resource-links">
+          <a href="https://www.savemyexams.com/igcse/biology/edexcel/19/revision-notes/" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>Save My Exams — Edexcel IGCSE Biology Notes (navigate to Nutrition: Humans)</a>
+          <a href="https://www.physicsandmathstutor.com/biology-revision/igcse-edexcel/" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>PMT — Edexcel IGCSE Biology Topic 2</a>
+          <a href="https://www.youtube.com/results?search_query=edexcel+igcse+biology+digestive+system+enzymes+bile" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>YouTube — IGCSE Biology Digestive System, Enzymes &amp; Bile</a>
+        </div>
+      </div>
+      <div class="task-section">
+        <div class="task-label">Self-check</div>
+        <ul class="checklist">
+          <li><input type="checkbox"> I can draw and label the alimentary canal with all named parts</li>
+          <li><input type="checkbox"> I can state the enzyme, substrate and product for each digestive reaction</li>
+          <li><input type="checkbox"> I can explain the two roles of bile (neutralisation + emulsification)</li>
+          <li><input type="checkbox"> I can draw a villus and explain how it is adapted for absorption</li>
+          <li><input type="checkbox"> I can describe peristalsis</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ DAY 6 ═══ -->
+  <div class="day-card day6" id="day6">
+    <div class="day-header" onclick="toggle('day6')">
+      <div class="day-num"><span class="num">06</span>Sat</div>
+      <div class="day-title-area">
+        <h3>Respiration &amp; Weekly Consolidation</h3>
+        <span class="strategy-badge">Practice Testing + Metacognition</span>
+        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+    </div>
+    <div class="day-body">
+      <div class="task-section">
+        <div class="task-label">What you need to know</div>
+        <p>Respiration produces <strong>ATP</strong>, which provides energy for cells. <strong>Aerobic respiration</strong> uses oxygen: glucose + oxygen → carbon dioxide + water (+ ATP). Balanced symbol equation: C<sub>6</sub>H<sub>12</sub>O<sub>6</sub> + 6O<sub>2</sub> → 6CO<sub>2</sub> + 6H<sub>2</sub>O. <strong>Anaerobic respiration</strong> occurs without oxygen: in animals, glucose → lactic acid; in plants/yeast, glucose → ethanol + carbon dioxide. You must know the word equations for both and be able to compare aerobic and anaerobic respiration.</p>
+      </div>
+      <div class="task-section">
+        <div class="task-label">Tasks</div>
+        <ol>
+          <li><strong>Equations and definitions (10 min):</strong> Write from memory:
+            <ul>
+              <li>Definition of respiration (the release of energy from glucose in cells / the process that produces ATP)</li>
+              <li>Word equation for aerobic respiration</li>
+              <li>Balanced symbol equation for aerobic respiration</li>
+              <li>Word equation for anaerobic respiration in animals</li>
+              <li>Word equation for anaerobic respiration in plants/yeast</li>
+            </ul>
+            Check and correct. Note: the aerobic respiration equation is the <em>exact reverse</em> of photosynthesis.
+          </li>
+          <li><strong>Comparison table (10 min):</strong> Draw a table comparing aerobic and anaerobic respiration. Columns: Feature | Aerobic | Anaerobic. Rows: oxygen required?, where it occurs, word equation, products, energy released (more/less), when it is used. Fill in from memory.</li>
+          <li><strong>Traffic-light spec checklist (5 min):</strong> Go through every spec point covered this week (2.15–2.39). Mark each as green (confident), amber (partly recall) or red (cannot recall). Be honest.</li>
+          <li><strong>Re-revise red/amber areas (10 min):</strong> Go back to the specific day's tasks for your weakest topics. Re-read the key facts, then immediately test yourself again.</li>
+          <li><strong>Timed mini-test (20 min):</strong> Answer these under exam conditions — no notes, strict time:
+            <ol>
+              <li>Define the term osmosis. (3 marks)</li>
+              <li>Write the balanced symbol equation for photosynthesis. (2 marks)</li>
+              <li>A student investigated the effect of light intensity on the rate of photosynthesis using Elodea pondweed. At high light intensities, increasing the light further did not increase the rate. Suggest why. (2 marks)</li>
+              <li>Describe the role of bile in digestion. (3 marks)</li>
+              <li>Name the enzyme that breaks down starch into maltose, and state where in the body this enzyme is produced. (2 marks)</li>
+              <li>Explain how the small intestine is adapted for the absorption of digested food. (4 marks)</li>
+              <li>Compare aerobic and anaerobic respiration. (4 marks)</li>
+            </ol>
+          </li>
+          <li><strong>Self-mark (5 min):</strong> Mark your answers using the spec content. Award marks only for precise, correct scientific statements.</li>
+        </ol>
+      </div>
+      <div class="callout tip">
+        <strong>Looking ahead:</strong> Week 3 covers gas exchange, transport in plants and humans, blood, the heart, excretion, the nervous system, hormones and homeostasis. Preview the key terms for Monday: trachea, bronchi, bronchioles, alveoli, diaphragm, intercostal muscles, ventilation.
+      </div>
+      <div class="task-section">
+        <div class="task-label">Resources</div>
+        <div class="resource-links">
+          <a href="https://www.savemyexams.com/igcse/biology/edexcel/19/revision-notes/" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>Save My Exams — Edexcel IGCSE Biology Notes (navigate to Respiration)</a>
+          <a href="https://www.physicsandmathstutor.com/biology-revision/igcse-edexcel/" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>PMT — Edexcel IGCSE Biology (all topics)</a>
+          <a href="https://www.youtube.com/results?search_query=edexcel+igcse+biology+aerobic+anaerobic+respiration" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>YouTube — IGCSE Biology Aerobic &amp; Anaerobic Respiration</a>
+        </div>
+      </div>
+      <div class="task-section">
+        <div class="task-label">End-of-week confidence check</div>
+        <ul class="checklist">
+          <li><input type="checkbox"> I can define diffusion, osmosis and active transport precisely</li>
+          <li><input type="checkbox"> I can describe what happens to cells in different solution concentrations</li>
+          <li><input type="checkbox"> I can write both equations for photosynthesis and explain limiting factors</li>
+          <li><input type="checkbox"> I can draw a leaf cross-section with adaptations for photosynthesis</li>
+          <li><input type="checkbox"> I can describe practical investigations for photosynthesis</li>
+          <li><input type="checkbox"> I know the sources and functions of all spec-required nutrients</li>
+          <li><input type="checkbox"> I can draw and label the alimentary canal and state the function of each part</li>
+          <li><input type="checkbox"> I can state all digestive enzymes with their substrates and products</li>
+          <li><input type="checkbox"> I can explain the two roles of bile</li>
+          <li><input type="checkbox"> I can draw a villus and explain its adaptations for absorption</li>
+          <li><input type="checkbox"> I can write equations for aerobic and anaerobic respiration</li>
+          <li><input type="checkbox"> I can compare aerobic and anaerobic respiration in a table</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<footer class="footer">
+  Arcadia British School Dubai &middot; IGCSE Science (Double Award) Biology &middot; Pearson Edexcel 4SD0 &middot; Mr A. Gray
+</footer>
+
+<script>
+function toggle(id) {
+  document.getElementById(id).classList.toggle('open');
+}
+document.querySelectorAll('.day-card').forEach(c => {
+  if (!c.classList.contains('day1')) c.classList.remove('open');
+});
+</script>
+</body>
+</html>

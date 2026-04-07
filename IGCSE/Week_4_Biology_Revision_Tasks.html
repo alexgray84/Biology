@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Week 4 — Reproduction &amp; Inheritance | IGCSE Biology Revision</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#1B3A5C;--navy-deep:#0F2640;--teal:#2A9D8F;--teal-light:#3DBCAD;--coral:#E76F51;--gold:#E9C46A;--sand:#F4F1EB;--white:#FFFFFF;--grey-100:#F5F5F3;--grey-200:#E8E6E1;--grey-300:#D4D1CC;--grey-600:#7A7670;--grey-800:#3D3A36;--text:#2C2925;--radius:12px;--radius-sm:8px;--shadow-sm:0 1px 3px rgba(0,0,0,0.06),0 1px 2px rgba(0,0,0,0.04);--shadow-md:0 4px 12px rgba(0,0,0,0.08),0 2px 4px rgba(0,0,0,0.04)}
+*{margin:0;padding:0;box-sizing:border-box}body{font-family:'DM Sans',sans-serif;background:var(--sand);color:var(--text);line-height:1.65;-webkit-font-smoothing:antialiased}
+.hero{background:linear-gradient(135deg,var(--navy-deep) 0%,var(--navy) 60%,#264D73 100%);color:var(--white);padding:3.5rem 2rem 3rem;position:relative;overflow:hidden}.hero::before{content:'';position:absolute;top:-40%;right:-10%;width:500px;height:500px;background:radial-gradient(circle,rgba(42,157,143,0.15) 0%,transparent 70%);border-radius:50%}.hero::after{content:'';position:absolute;bottom:-30%;left:-5%;width:400px;height:400px;background:radial-gradient(circle,rgba(233,196,106,0.1) 0%,transparent 70%);border-radius:50%}.hero-inner{max-width:900px;margin:0 auto;position:relative;z-index:1}.hero-label{display:inline-block;background:rgba(42,157,143,0.2);border:1px solid rgba(42,157,143,0.4);color:var(--teal-light);font-size:0.75rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;padding:0.3rem 0.8rem;border-radius:100px;margin-bottom:1rem}.hero h1{font-family:'DM Serif Display',serif;font-size:clamp(2rem,5vw,2.8rem);font-weight:400;line-height:1.2;margin-bottom:0.75rem}.hero h1 span{color:var(--teal-light)}.hero-sub{font-size:1.05rem;color:rgba(255,255,255,0.75);max-width:620px;line-height:1.6}.hero-meta{display:flex;gap:1.5rem;margin-top:1.5rem;flex-wrap:wrap}.hero-meta-item{display:flex;align-items:center;gap:0.4rem;font-size:0.85rem;color:rgba(255,255,255,0.6)}.hero-meta-item svg{opacity:0.5}
+.container{max-width:900px;margin:0 auto;padding:2rem 1.5rem 4rem}
+.spec-box{background:var(--white);border:1px solid var(--grey-200);border-radius:var(--radius);padding:1.5rem;margin-bottom:2.5rem;box-shadow:var(--shadow-sm)}.spec-box h2{font-family:'DM Serif Display',serif;font-size:1.15rem;color:var(--navy);margin-bottom:0.75rem;font-weight:400}.spec-tags{display:flex;flex-wrap:wrap;gap:0.4rem}.spec-tag{display:inline-block;background:var(--grey-100);color:var(--grey-800);font-size:0.78rem;font-weight:500;padding:0.25rem 0.6rem;border-radius:100px;border:1px solid var(--grey-200)}
+.day-card{background:var(--white);border:1px solid var(--grey-200);border-radius:var(--radius);margin-bottom:1.5rem;box-shadow:var(--shadow-sm);overflow:hidden;transition:box-shadow 0.25s ease}.day-card:hover{box-shadow:var(--shadow-md)}.day-header{display:flex;align-items:stretch;cursor:pointer;user-select:none}.day-num{min-width:72px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:1rem 0.5rem;color:var(--white);font-weight:700;font-size:0.8rem;letter-spacing:0.05em;text-transform:uppercase}.day-num .num{font-family:'DM Serif Display',serif;font-size:1.6rem;font-weight:400;line-height:1;margin-bottom:0.15rem}.day1 .day-num{background:var(--navy)}.day2 .day-num{background:var(--teal)}.day3 .day-num{background:#457B9D}.day4 .day-num{background:var(--coral)}.day5 .day-num{background:#6D597A}.day6 .day-num{background:var(--gold);color:var(--navy-deep)}.day-title-area{flex:1;padding:1rem 1.25rem;display:flex;align-items:center;justify-content:space-between;gap:1rem}.day-title-area h3{font-size:1rem;font-weight:600;color:var(--navy);line-height:1.35}.day-title-area .strategy-badge{flex-shrink:0;background:var(--grey-100);color:var(--teal);font-size:0.72rem;font-weight:600;padding:0.25rem 0.65rem;border-radius:100px;border:1px solid rgba(42,157,143,0.2);white-space:nowrap}.chevron{width:20px;height:20px;flex-shrink:0;transition:transform 0.3s ease;color:var(--grey-300)}.day-card.open .chevron{transform:rotate(180deg)}.day-body{display:none;padding:0 1.25rem 1.5rem;padding-left:calc(72px + 1.25rem);border-top:1px solid var(--grey-100)}.day-card.open .day-body{display:block}
+.task-section{margin-top:1.25rem}.task-section:first-child{margin-top:1rem}.task-label{font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--grey-600);margin-bottom:0.4rem}.task-section p,.task-section li{font-size:0.92rem;color:var(--text);line-height:1.7}.task-section ol,.task-section ul{padding-left:1.3rem;margin-top:0.3rem}.task-section li{margin-bottom:0.35rem}.task-section li::marker{color:var(--teal)}
+.callout{background:var(--grey-100);border-left:3px solid var(--teal);border-radius:0 var(--radius-sm) var(--radius-sm) 0;padding:0.85rem 1rem;margin-top:0.75rem;font-size:0.88rem}.callout.tip{border-left-color:var(--gold)}.callout.warn{border-left-color:var(--coral)}.callout strong{color:var(--navy)}
+.resource-links{margin-top:0.75rem;display:flex;flex-direction:column;gap:0.4rem}.resource-links a{display:inline-flex;align-items:center;gap:0.4rem;font-size:0.85rem;font-weight:500;color:var(--teal);text-decoration:none;transition:color 0.2s}.resource-links a:hover{color:var(--navy);text-decoration:underline}.resource-links a svg{width:14px;height:14px;flex-shrink:0}
+.checklist{list-style:none;padding:0;margin-top:0.5rem}.checklist li{display:flex;align-items:flex-start;gap:0.6rem;padding:0.4rem 0;font-size:0.9rem}.checklist input[type="checkbox"]{margin-top:0.25rem;accent-color:var(--teal);width:16px;height:16px;flex-shrink:0}
+.footer{text-align:center;padding:2rem;color:var(--grey-600);font-size:0.8rem;border-top:1px solid var(--grey-200)}
+@media(max-width:640px){.day-body{padding-left:1.25rem}.day-num{min-width:56px}.hero{padding:2.5rem 1.25rem 2rem}.hero-meta{gap:0.75rem}}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="hero-inner">
+    <div class="hero-label">6-Week Revision Plan</div>
+    <h1>Week 4: <span>Reproduction &amp; Inheritance</span></h1>
+    <p class="hero-sub">Topic 3a (Sexual &amp; Asexual Reproduction, Plant &amp; Human Reproduction) and Topic 3b (DNA, Genes, Inheritance, Mitosis, Meiosis, Evolution)</p>
+    <div class="hero-meta">
+      <div class="hero-meta-item"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>6 sessions · ~50 min each</div>
+      <div class="hero-meta-item"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>Spec refs: 3.1–3.39</div>
+      <div class="hero-meta-item"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Paper 1B · 4SD0 / 4BI1</div>
+    </div>
+  </div>
+</header>
+
+<main class="container">
+
+  <div class="spec-box">
+    <h2>Specification Points Covered This Week</h2>
+    <div class="spec-tags">
+      <span class="spec-tag">3.1 Sexual vs asexual reproduction</span>
+      <span class="spec-tag">3.2 Fertilisation &amp; zygote</span>
+      <span class="spec-tag">3.3–3.7 Plant reproduction &amp; germination</span>
+      <span class="spec-tag">3.8–3.13 Human reproduction &amp; development</span>
+      <span class="spec-tag">3.14–3.15 Genome, genes &amp; chromosomes</span>
+      <span class="spec-tag">3.19–3.27 Alleles, inheritance &amp; sex determination</span>
+      <span class="spec-tag">3.28–3.32 Mitosis &amp; meiosis</span>
+      <span class="spec-tag">3.33–3.34 Variation &amp; mutation</span>
+      <span class="spec-tag">3.38–3.39 Natural selection &amp; antibiotic resistance</span>
+    </div>
+  </div>
+
+  <!-- ═══ DAY 1 ═══ -->
+  <div class="day-card day1 open" id="day1">
+    <div class="day-header" onclick="toggle('day1')">
+      <div class="day-num"><span class="num">01</span>Mon</div>
+      <div class="day-title-area">
+        <h3>Reproduction in Plants &amp; Humans</h3>
+        <span class="strategy-badge">Sketch &amp; Annotate Challenge</span>
+        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+    </div>
+    <div class="day-body">
+      <div class="task-section">
+        <div class="task-label">What you need to know</div>
+        <p><strong>Sexual reproduction</strong> involves the fusion of male and female gametes to form a zygote, producing genetically different offspring. <strong>Asexual reproduction</strong> involves one parent, no gametes, and produces genetically identical offspring (clones). In plants, you need insect-pollinated vs wind-pollinated flower structures, pollen tube growth leading to fertilisation, seed/fruit formation, germination conditions, and asexual reproduction by runners and cuttings. In humans, you need the male and female reproductive systems, the menstrual cycle (roles of oestrogen and progesterone), the placenta, amniotic fluid, and secondary sexual characteristics.</p>
+      </div>
+      <div class="task-section">
+        <div class="task-label">Tasks</div>
+        <ol>
+          <li><strong>"Spot the difference" flower challenge (15 min):</strong> On one half of a page, sketch an insect-pollinated flower. On the other half, sketch a wind-pollinated flower. <em>Do not label them yet.</em> Now swap to a different colour pen and label both, writing next to each feature <em>why</em> it is adapted for that pollination method. For example:
+            <ul>
+              <li>Insect-pollinated: large colourful petals (attract insects), sticky pollen (attaches to insect body), nectary (reward for insect), sticky stigma</li>
+              <li>Wind-pollinated: small/no petals (don't need to attract insects), feathery stigma (catches pollen from air), light/smooth pollen (carried by wind), anthers hang outside flower (expose pollen to wind)</li>
+            </ul>
+            Circle any features you initially got wrong or forgot.
+          </li>
+          <li><strong>Seed germination "recipe card" (5 min):</strong> Write a recipe card as if you were giving instructions for growing a plant from seed. State the three conditions needed for germination (water, warmth/suitable temperature, oxygen) and explain why the seed uses its food reserves before it can photosynthesise.</li>
+          <li><strong>Reproductive systems — "voice note" teach-back (15 min):</strong> Using your phone's voice recorder (or just speaking aloud), record yourself explaining the structure and function of both the male and female human reproductive systems as if you were teaching a classmate. Mention: testes (produce sperm + testosterone), ovary (produces eggs + oestrogen/progesterone), uterus (where embryo develops), fallopian tube/oviduct (where fertilisation occurs). Play it back — did you miss anything? Re-record if needed.</li>
+          <li><strong>Menstrual cycle annotation (10 min):</strong> Draw or print a blank 28-day timeline. Mark on it: menstruation (days 1–5), oestrogen rising (thickens uterus lining), ovulation (day 14), progesterone rising (maintains uterus lining). Annotate what happens if the egg is not fertilised (progesterone drops, lining breaks down, menstruation starts again).</li>
+          <li><strong>Placenta and amniotic fluid (5 min):</strong> Write three bullet points on the placenta's role (exchange of nutrients and oxygen from mother's blood to embryo, removal of CO<sub>2</sub> and urea — without the bloods mixing) and one on amniotic fluid (protects the embryo from physical damage/shock).</li>
+        </ol>
+      </div>
+      <div class="callout">
+        <strong>Spec precision:</strong> The placenta allows exchange of substances between mother and fetus, but their blood does <em>not</em> mix. This is a favourite exam trap. Always state: "substances are exchanged across the placenta by diffusion" and "the mother's blood and fetal blood do not come into direct contact."
+      </div>
+      <div class="task-section">
+        <div class="task-label">Resources</div>
+        <div class="resource-links">
+          <a href="https://www.savemyexams.com/igcse/biology/edexcel/19/revision-notes/3-reproduction-and-inheritance/reproduction/sexual-and-asexual-reproduction-differences/" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>Save My Exams — Sexual &amp; Asexual Reproduction</a>
+          <a href="https://www.savemyexams.com/igcse/biology/edexcel/19/revision-notes/3-reproduction-and-inheritance/reproduction/human-reproductive-systems/" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>Save My Exams — Human Reproductive Systems</a>
+          <a href="https://www.physicsandmathstutor.com/biology-revision/igcse-edexcel/" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>PMT — Edexcel IGCSE Biology Topic 3</a>
+          <a href="https://www.youtube.com/results?search_query=edexcel+igcse+biology+plant+reproduction+pollination+human+reproductive+system" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>YouTube — IGCSE Biology Reproduction</a>
+        </div>
+      </div>
+      <div class="task-section">
+        <div class="task-label">Self-check</div>
+        <ul class="checklist">
+          <li><input type="checkbox"> I can state the key differences between sexual and asexual reproduction</li>
+          <li><input type="checkbox"> I can draw and label insect- and wind-pollinated flowers with adaptations</li>
+          <li><input type="checkbox"> I can describe the conditions needed for germination</li>
+          <li><input type="checkbox"> I can describe the structure and function of male and female reproductive systems</li>
+          <li><input type="checkbox"> I can describe the roles of oestrogen and progesterone in the menstrual cycle</li>
+          <li><input type="checkbox"> I can explain the role of the placenta and amniotic fluid</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ DAY 2 ═══ -->
+  <div class="day-card day2" id="day2">
+    <div class="day-header" onclick="toggle('day2')">
+      <div class="day-num"><span class="num">02</span>Tue</div>
+      <div class="day-title-area">
+        <h3>DNA, Genes &amp; Key Genetic Terms</h3>
+        <span class="strategy-badge">Card Sort &amp; Definition Bingo</span>
+        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+    </div>
+    <div class="day-body">
+      <div class="task-section">
+        <div class="task-label">What you need to know</div>
+        <p>The <strong>genome</strong> is the entire DNA of an organism. A <strong>gene</strong> is a section of DNA that codes for a specific protein. Genes are located on <strong>chromosomes</strong> in the nucleus. Genes exist in alternative forms called <strong>alleles</strong>. You must know the meaning of: dominant, recessive, homozygous, heterozygous, phenotype, genotype. Most phenotypic features result from <strong>polygenic inheritance</strong> (many genes), not single genes. <strong>Sex determination:</strong> XX = female, XY = male.</p>
+      </div>
+      <div class="task-section">
+        <div class="task-label">Tasks</div>
+        <ol>
+          <li><strong>Card sort challenge (15 min):</strong> Cut or tear 10 small pieces of paper. On each, write one of these terms: genome, gene, allele, dominant, recessive, homozygous, heterozygous, phenotype, genotype, polygenic. Shuffle them face down. Flip each card one at a time and <em>say the definition aloud before checking</em>. Sort them into two piles: "nailed it" and "need work." Repeat the "need work" pile until all cards are in the "nailed it" pile. Here are the definitions you need:
+            <ul>
+              <li><strong>Genome:</strong> The entire DNA of an organism</li>
+              <li><strong>Gene:</strong> A section of a DNA molecule that codes for a specific protein</li>
+              <li><strong>Allele:</strong> An alternative form of a gene</li>
+              <li><strong>Dominant:</strong> An allele that is expressed when one or two copies are present (capital letter)</li>
+              <li><strong>Recessive:</strong> An allele that is only expressed when two copies are present / when no dominant allele is present (lowercase letter)</li>
+              <li><strong>Homozygous:</strong> Having two identical alleles for a gene (e.g. BB or bb)</li>
+              <li><strong>Heterozygous:</strong> Having two different alleles for a gene (e.g. Bb)</li>
+              <li><strong>Genotype:</strong> The combination of alleles an organism has (e.g. Bb)</li>
+              <li><strong>Phenotype:</strong> The observable characteristics of an organism (e.g. brown eyes)</li>
+              <li><strong>Polygenic:</strong> A characteristic controlled by more than one gene</li>
+            </ul>
+          </li>
+          <li><strong>"Definition bingo" with a partner or solo (10 min):</strong> Write a 3x3 grid. In each square, write a genetic term from the list above. Then read definitions aloud (from your notes) and cross off the matching term. If working alone, cover the definitions column and try to fill in each square from memory first, then check.</li>
+          <li><strong>Chromosome number quick-fire (5 min):</strong> Answer these without notes: How many chromosomes in a human body cell? (46 / 23 pairs.) How many in a human gamete? (23.) What is the diploid number? (46.) What is the haploid number? (23.) Which pair determines sex? (Pair 23 — XX or XY.)</li>
+          <li><strong>Sex determination Punnett square (10 min):</strong> Draw a genetic diagram showing the inheritance of sex. Parents: mother XX, father XY. Show gametes, Punnett square, and state the probability of the offspring being male (50%) or female (50%). Then explain in one sentence: "Sex is determined by the father's gamete, because only the father can contribute either an X or a Y chromosome."</li>
+          <li><strong>Spaced retrieval (5 min):</strong> From Week 3: name the five components of a reflex arc in order. State one adaptation of red blood cells for oxygen transport.</li>
+        </ol>
+      </div>
+      <div class="callout tip">
+        <strong>Exam tip:</strong> When choosing letters for alleles in a Punnett square, pick a letter where the uppercase and lowercase look clearly different. Good choices: B/b, T/t, R/r. Bad choices: C/c, S/s, O/o. The exam will sometimes give you the letters, but if it says "use a suitable letter," pick wisely.
+      </div>
+      <div class="task-section">
+        <div class="task-label">Resources</div>
+        <div class="resource-links">
+          <a href="https://www.savemyexams.com/igcse/biology/edexcel/19/revision-notes/3-reproduction-and-inheritance/inheritance/the-genome-and-genes/" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>Save My Exams — The Genome &amp; Genes</a>
+          <a href="https://www.savemyexams.com/igcse/biology/edexcel/19/revision-notes/3-reproduction-and-inheritance/inheritance/key-terms-in-genetics/" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>Save My Exams — Key Terms in Genetics</a>
+          <a href="https://www.savemyexams.com/igcse/biology/edexcel/19/revision-notes/3-reproduction-and-inheritance/inheritance/polygenic-inheritance/" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>Save My Exams — Polygenic Inheritance</a>
+          <a href="https://www.youtube.com/results?search_query=edexcel+igcse+biology+genes+alleles+genotype+phenotype" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>YouTube — IGCSE Biology Genes, Alleles &amp; Genetic Terms</a>
+        </div>
+      </div>
+      <div class="task-section">
+        <div class="task-label">Self-check</div>
+        <ul class="checklist">
+          <li><input type="checkbox"> I can define all 10 key genetic terms from memory</li>
+          <li><input type="checkbox"> I know the diploid and haploid chromosome numbers in humans</li>
+          <li><input type="checkbox"> I can draw a genetic diagram for sex determination</li>
+          <li><input type="checkbox"> I understand what polygenic inheritance means</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ DAY 3 ═══ -->
+  <div class="day-card day3" id="day3">
+    <div class="day-header" onclick="toggle('day3')">
+      <div class="day-num"><span class="num">03</span>Wed</div>
+      <div class="day-title-area">
+        <h3>Monohybrid Crosses &amp; Family Pedigrees</h3>
+        <span class="strategy-badge">Problem-Solving Drill</span>
+        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+    </div>
+    <div class="day-body">
+      <div class="task-section">
+        <div class="task-label">What you need to know</div>
+        <p>You must be able to describe patterns of monohybrid inheritance using a <strong>genetic diagram</strong> (Punnett square). This includes showing: parental phenotypes and genotypes, gametes, Punnett square, offspring genotypes, offspring phenotypes, and genotypic/phenotypic ratios. You also need to <strong>interpret family pedigree diagrams</strong> (family trees showing how a trait is inherited) and <strong>predict probabilities</strong> of outcomes.</p>
+      </div>
+      <div class="task-section">
+        <div class="task-label">Tasks</div>
+        <ol>
+          <li><strong>Worked example walkthrough (10 min):</strong> Complete this cross step by step, writing every stage neatly as you would in the exam:
+            <p style="margin:0.5rem 0;padding:0.6rem;background:var(--grey-100);border-radius:var(--radius-sm);font-size:0.9rem;">In pea plants, tall (T) is dominant over short (t). Cross a heterozygous tall plant (Tt) with a short plant (tt). Show: parental phenotypes, parental genotypes, gametes, Punnett square, offspring genotypes, offspring phenotypes, phenotypic ratio.</p>
+            Expected answer: offspring = 50% Tt (tall) and 50% tt (short). Ratio = 1 tall : 1 short.
+          </li>
+          <li><strong>Speed round — 4 crosses in 15 minutes (15 min):</strong> Complete these as quickly and accurately as you can. Full Punnett square for each:
+            <ul>
+              <li><strong>Cross 1:</strong> Bb × Bb (B = brown eyes, b = blue eyes). What ratio of offspring phenotypes?</li>
+              <li><strong>Cross 2:</strong> Rr × rr (R = round seeds, r = wrinkled). What is the probability of a wrinkled offspring?</li>
+              <li><strong>Cross 3:</strong> FF × Ff (F = free earlobes, f = attached). What are the possible offspring genotypes?</li>
+              <li><strong>Cross 4:</strong> Aa × Aa (A = no cystic fibrosis, a = cystic fibrosis). What is the probability of a child having cystic fibrosis?</li>
+            </ul>
+            Check your answers: Cross 1 = 3 brown : 1 blue. Cross 2 = 50% (1 in 2). Cross 3 = FF and Ff (all free earlobes). Cross 4 = 1 in 4 (25%).
+          </li>
+          <li><strong>Pedigree detective challenge (10 min):</strong> Draw a simple family pedigree for this scenario: Two parents with brown eyes have a child with blue eyes. Using the pedigree, work out the genotypes of all three individuals. (Both parents must be Bb because they have a bb child.) Then answer: what is the probability that their next child will have blue eyes? (1 in 4 / 25%.)</li>
+          <li><strong>"Explain to a Year 7" challenge (5 min):</strong> In exactly 60 seconds, explain aloud (or write) what a Punnett square is and how you use it, using language simple enough for an 11-year-old to understand. Time yourself. This forces clarity.</li>
+          <li><strong>Spaced retrieval (5 min):</strong> From Week 2: Write the balanced symbol equation for photosynthesis. From Week 3: Name the three types of blood vessel and one feature of each.</li>
+        </ol>
+      </div>
+      <div class="callout warn">
+        <strong>Common exam error:</strong> When drawing a genetic diagram, students lose marks by missing one of the required steps. Always show: (1) parental phenotypes, (2) parental genotypes, (3) gametes in circles, (4) Punnett square, (5) offspring genotypes, (6) offspring phenotypes, (7) ratio. Miss any step and you lose a mark — even if the final answer is correct.
+      </div>
+      <div class="task-section">
+        <div class="task-label">Resources</div>
+        <div class="resource-links">
+          <a href="https://www.savemyexams.com/igcse/biology/edexcel/19/revision-notes/3-reproduction-and-inheritance/inheritance/monohybrid-inheritance-genetic-diagrams/" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>Save My Exams — Monohybrid Inheritance: Genetic Diagrams</a>
+          <a href="https://www.savemyexams.com/igcse/biology/edexcel/19/topic-questions/3-reproduction-and-inheritance/inheritance/exam-questions/" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>Save My Exams — Inheritance Exam Questions</a>
+          <a href="https://www.youtube.com/results?search_query=edexcel+igcse+biology+punnett+square+monohybrid+cross+pedigree" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>YouTube — IGCSE Biology Punnett Squares &amp; Pedigrees</a>
+        </div>
+      </div>
+      <div class="task-section">
+        <div class="task-label">Self-check</div>
+        <ul class="checklist">
+          <li><input type="checkbox"> I can complete a full genetic diagram showing all 7 required steps</li>
+          <li><input type="checkbox"> I can predict the probability of offspring phenotypes from any monohybrid cross</li>
+          <li><input type="checkbox"> I can interpret a family pedigree to determine genotypes</li>
+          <li><input type="checkbox"> I know that Aa × Aa gives a 3:1 ratio and Aa × aa gives a 1:1 ratio</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ DAY 4 ═══ -->
+  <div class="day-card day4" id="day4">
+    <div class="day-header" onclick="toggle('day4')">
+      <div class="day-num"><span class="num">04</span>Thu</div>
+      <div class="day-title-area">
+        <h3>Mitosis vs Meiosis — The Cell Division Showdown</h3>
+        <span class="strategy-badge">Comic Strip &amp; Physical Modelling</span>
+        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+    </div>
+    <div class="day-body">
+      <div class="task-section">
+        <div class="task-label">What you need to know</div>
+        <p><strong>Mitosis</strong> produces two genetically identical daughter cells from one parent cell. Used for: growth, repair, cloning, asexual reproduction. The daughter cells are <strong>diploid</strong> (46 chromosomes in humans). <strong>Meiosis</strong> produces four genetically different daughter cells, each with half the chromosome number (<strong>haploid</strong> — 23 in humans). Used for: forming gametes. Random fertilisation of gametes produces genetic variation.</p>
+      </div>
+      <div class="task-section">
+        <div class="task-label">Tasks</div>
+        <ol>
+          <li><strong>Comic strip: "A day in the life of a dividing cell" (20 min):</strong> Draw a 6-panel comic strip for mitosis and a separate 6-panel comic strip for meiosis. Your "character" is a cell. In each panel, show what happens at each stage using simple circles and lines for chromosomes. Add speech bubbles from the cell, e.g.:
+            <ul>
+              <li>Mitosis panel 1: "I need to grow! Time to copy my DNA..." (chromosomes replicate)</li>
+              <li>Mitosis panel 6: "Now there are TWO of me — and we're identical twins!" (two diploid cells)</li>
+              <li>Meiosis panel 6: "Four of us now, each different, each with half the chromosomes — ready to be gametes!" (four haploid cells)</li>
+            </ul>
+            This sounds silly, but creating a narrative locks the sequence into memory far better than re-reading notes.
+          </li>
+          <li><strong>Pipe cleaner / string model (10 min, optional but powerful):</strong> If you have pipe cleaners, string, or even socks, physically model chromosome behaviour. Use 4 pipe cleaners (representing 2 pairs of homologous chromosomes). Walk through:
+            <ul>
+              <li><strong>Mitosis:</strong> Copy each one (now 8). Line up in the middle. Pull apart into two groups of 4. Each group = one daughter cell (diploid).</li>
+              <li><strong>Meiosis:</strong> Start with 4. Copy (now 8). First division: separate homologous pairs → two groups of 4. Second division: separate copies → four groups of 2 each. Each group = one gamete (haploid).</li>
+            </ul>
+            If you don't have materials, draw this sequence step by step instead.
+          </li>
+          <li><strong>Head-to-head comparison (10 min):</strong> Without looking at any notes, fill in this table from memory:
+            <p style="margin:0.5rem 0;padding:0.6rem;background:var(--grey-100);border-radius:var(--radius-sm);font-size:0.9rem;">Feature | Mitosis | Meiosis<br>Number of daughter cells | ? | ?<br>Genetically identical or different? | ? | ?<br>Diploid or haploid? | ? | ?<br>Number of divisions | ? | ?<br>Where it occurs | ? | ?<br>Purpose | ? | ?</p>
+            Check and correct in a different colour.
+          </li>
+          <li><strong>Spaced retrieval (5 min):</strong> Define osmosis (from Week 2). Name two adaptations of an insect-pollinated flower (from yesterday).</li>
+        </ol>
+      </div>
+      <div class="callout">
+        <strong>Key distinction:</strong> Mitosis = <strong>2</strong> identical diploid cells. Meiosis = <strong>4</strong> different haploid cells. If you remember nothing else, remember "Mitosis Makes Two, Meiosis Makes Four (gametes)."
+      </div>
+      <div class="task-section">
+        <div class="task-label">Resources</div>
+        <div class="resource-links">
+          <a href="https://www.savemyexams.com/igcse/biology/edexcel/19/revision-notes/" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>Save My Exams — Revision Notes (navigate to Inheritance → Mitosis &amp; Meiosis)</a>
+          <a href="https://www.savemyexams.com/igcse/biology/edexcel/19/flashcards/3-reproduction-and-inheritance/inheritance/" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>Save My Exams — Inheritance Flashcards (includes mitosis/meiosis)</a>
+          <a href="https://www.youtube.com/results?search_query=edexcel+igcse+biology+mitosis+vs+meiosis+comparison" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>YouTube — IGCSE Biology Mitosis vs Meiosis</a>
+        </div>
+      </div>
+      <div class="task-section">
+        <div class="task-label">Self-check</div>
+        <ul class="checklist">
+          <li><input type="checkbox"> I can compare mitosis and meiosis across at least 6 features</li>
+          <li><input type="checkbox"> I know that mitosis = 2 identical diploid cells; meiosis = 4 different haploid cells</li>
+          <li><input type="checkbox"> I can state when each type of division occurs and why</li>
+          <li><input type="checkbox"> I can explain how meiosis and random fertilisation produce genetic variation</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ DAY 5 ═══ -->
+  <div class="day-card day5" id="day5">
+    <div class="day-header" onclick="toggle('day5')">
+      <div class="day-num"><span class="num">05</span>Fri</div>
+      <div class="day-title-area">
+        <h3>Variation, Natural Selection &amp; Antibiotic Resistance</h3>
+        <span class="strategy-badge">Storytelling &amp; News Report</span>
+        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+    </div>
+    <div class="day-body">
+      <div class="task-section">
+        <div class="task-label">What you need to know</div>
+        <p>Variation within a species can be <strong>genetic</strong> (caused by genes, e.g. blood type), <strong>environmental</strong> (caused by conditions, e.g. scars), or <strong>both</strong> (e.g. height — genes set the potential, nutrition/environment determines the actual height). <strong>Mutation</strong> is a rare, random change in genetic material that can be inherited. Darwin's theory of <strong>natural selection</strong>: organisms with features best suited to their environment are more likely to survive and reproduce, passing on their advantageous alleles. <strong>Antibiotic resistance</strong> develops when bacteria with a random mutation survive antibiotic treatment, reproduce, and pass on the resistance gene.</p>
+      </div>
+      <div class="task-section">
+        <div class="task-label">Tasks</div>
+        <ol>
+          <li><strong>Variation sorting game (10 min):</strong> Write the following characteristics on scraps of paper: blood type, eye colour, height, weight, scars, skin colour, spoken language, natural hair colour, body mass. Sort them into three piles: "genetic only," "environmental only," "both genetic and environmental." Check your sorting:
+            <ul>
+              <li><strong>Genetic only:</strong> blood type, eye colour, natural hair colour</li>
+              <li><strong>Environmental only:</strong> scars, spoken language</li>
+              <li><strong>Both:</strong> height, weight, skin colour, body mass</li>
+            </ul>
+          </li>
+          <li><strong>"Nature documentary narration" — natural selection (15 min):</strong> Write a short story (150–200 words) narrated in the style of David Attenborough, telling the story of natural selection using a named example. Use this structure:
+            <ol>
+              <li>Within a population, there is <em>variation</em> (due to mutations and sexual reproduction)</li>
+              <li>Some individuals have features better suited to the environment</li>
+              <li>These individuals are more likely to <em>survive</em> and <em>reproduce</em></li>
+              <li>They pass on the advantageous alleles to their offspring</li>
+              <li>Over many generations, the proportion of the population with the advantageous feature increases</li>
+            </ol>
+            Example context: a population of rabbits where some have thicker fur in a cold environment. Reading your story aloud will cement the sequence.
+          </li>
+          <li><strong>"Breaking news" report — antibiotic resistance (10 min):</strong> Write a 100-word mock news bulletin explaining how antibiotic resistance develops. Your bulletin must include these terms: mutation, antibiotic, survive, reproduce, resistant, population. Structure:
+            <ul>
+              <li>A random mutation in a bacterium makes it resistant to an antibiotic</li>
+              <li>When antibiotics are used, non-resistant bacteria are killed, but the resistant bacterium survives</li>
+              <li>The resistant bacterium reproduces rapidly (no competition)</li>
+              <li>The whole population is now resistant</li>
+              <li>The infection is difficult to treat — this is why overuse of antibiotics is dangerous</li>
+            </ul>
+          </li>
+          <li><strong>Past paper blitz (10 min):</strong> Complete 2–3 exam questions on natural selection or antibiotic resistance from the resources below. These are 6-mark extended response favourites.</li>
+          <li><strong>Spaced retrieval (5 min):</strong> Complete a quick Punnett square: Bb × Bb. State the phenotypic ratio. From Week 1: name the four food tests and their positive results.</li>
+        </ol>
+      </div>
+      <div class="callout warn">
+        <strong>Critical exam language:</strong> Never say bacteria "develop" resistance or "become" resistant <em>in response to</em> antibiotics. The mutation is <em>random</em> and happens <em>before</em> the antibiotic is applied. The antibiotic then <em>selects for</em> the resistant individuals by killing the non-resistant ones. Getting this causal direction wrong costs marks every series.
+      </div>
+      <div class="task-section">
+        <div class="task-label">Resources</div>
+        <div class="resource-links">
+          <a href="https://www.savemyexams.com/igcse/biology/edexcel/19/revision-notes/" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>Save My Exams — Revision Notes (navigate to Inheritance → Variation, Natural Selection)</a>
+          <a href="https://www.savemyexams.com/igcse/biology/edexcel/19/topic-questions/3-reproduction-and-inheritance/inheritance/exam-questions/" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>Save My Exams — Inheritance Exam Questions (includes evolution &amp; resistance)</a>
+          <a href="https://www.physicsandmathstutor.com/biology-revision/igcse-edexcel/" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>PMT — Edexcel IGCSE Biology Topic 3</a>
+          <a href="https://www.youtube.com/results?search_query=edexcel+igcse+biology+natural+selection+antibiotic+resistance+evolution" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>YouTube — IGCSE Biology Natural Selection &amp; Antibiotic Resistance</a>
+        </div>
+      </div>
+      <div class="task-section">
+        <div class="task-label">Self-check</div>
+        <ul class="checklist">
+          <li><input type="checkbox"> I can classify examples of variation as genetic, environmental or both</li>
+          <li><input type="checkbox"> I can define mutation and explain why most mutations are harmful</li>
+          <li><input type="checkbox"> I can explain Darwin's theory of natural selection in a clear 5-step sequence</li>
+          <li><input type="checkbox"> I can explain how antibiotic resistance develops — with the correct causal direction</li>
+          <li><input type="checkbox"> I can explain why overuse of antibiotics is a problem</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ DAY 6 ═══ -->
+  <div class="day-card day6" id="day6">
+    <div class="day-header" onclick="toggle('day6')">
+      <div class="day-num"><span class="num">06</span>Sat</div>
+      <div class="day-title-area">
+        <h3>Weekly Consolidation — Genetics Problem Marathon</h3>
+        <span class="strategy-badge">Timed Practice + Error Analysis</span>
+        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+    </div>
+    <div class="day-body">
+      <div class="task-section">
+        <div class="task-label">What this session is for</div>
+        <p>Saturday is your consolidation day. Genetics is a high-mark topic with very predictable question styles. Today you'll drill Punnett squares under time pressure, tackle a full mixed mini-test, and do honest error analysis.</p>
+      </div>
+      <div class="task-section">
+        <div class="task-label">Tasks</div>
+        <ol>
+          <li><strong>"Beat the clock" Punnett square relay (10 min):</strong> Set a 10-minute timer. Complete as many of these crosses as you can, with full working (parental phenotypes, genotypes, gametes, Punnett square, offspring phenotypes, ratio):
+            <ul>
+              <li>Dd × Dd</li>
+              <li>Hh × hh</li>
+              <li>NN × Nn</li>
+              <li>Pp × Pp</li>
+              <li>XX × XY (sex determination)</li>
+            </ul>
+            Award yourself 2 points for each fully correct cross. Target: 8+ out of 10.
+          </li>
+          <li><strong>Traffic-light spec checklist (5 min):</strong> Go through every spec point from 3.1–3.39. Mark green/amber/red.</li>
+          <li><strong>Re-revise red/amber (5 min):</strong> Quickly revisit your weakest areas from this week. Re-test yourself immediately.</li>
+          <li><strong>Timed mini-test (20 min):</strong> Under strict exam conditions:
+            <ol>
+              <li>State two differences between sexual and asexual reproduction. (2 marks)</li>
+              <li>Describe two features of an insect-pollinated flower and explain how each feature aids pollination. (4 marks)</li>
+              <li>State the function of the placenta during pregnancy. (2 marks)</li>
+              <li>Define the terms "genotype" and "phenotype." (2 marks)</li>
+              <li>In guinea pigs, black fur (B) is dominant over white fur (b). A black guinea pig (Bb) is crossed with a white guinea pig (bb). Using a genetic diagram, determine the expected ratio of offspring phenotypes. (4 marks)</li>
+              <li>Compare mitosis and meiosis. Give three differences. (3 marks)</li>
+              <li>Explain how a population of bacteria can become resistant to an antibiotic. (4 marks)</li>
+            </ol>
+          </li>
+          <li><strong>Error analysis (5 min):</strong> Mark your test. For each mark lost, write down which category the error falls into:
+            <ul>
+              <li><strong>K</strong> — Knowledge gap (didn't know the fact)</li>
+              <li><strong>R</strong> — Misread the question</li>
+              <li><strong>I</strong> — Incomplete answer (knew it but didn't write enough)</li>
+              <li><strong>P</strong> — Precision (used wrong terminology)</li>
+            </ul>
+            This tells you <em>what type</em> of revision you need — not just which topics.
+          </li>
+        </ol>
+      </div>
+      <div class="callout tip">
+        <strong>Looking ahead:</strong> Week 5 covers ecology (ecosystems, food chains, carbon cycle, pollution, greenhouse effect) and applied biology (food production, selective breeding, genetic modification). Preview for Monday: define population, community, habitat, ecosystem.
+      </div>
+      <div class="task-section">
+        <div class="task-label">Resources</div>
+        <div class="resource-links">
+          <a href="https://www.savemyexams.com/igcse/biology/edexcel/19/topic-questions/3-reproduction-and-inheritance/inheritance/exam-questions/" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>Save My Exams — Inheritance Exam Questions (all difficulties)</a>
+          <a href="https://www.savemyexams.com/igcse/biology/edexcel/19/topic-questions/" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>Save My Exams — All Topic Questions (Reproduction &amp; Inheritance)</a>
+          <a href="https://www.physicsandmathstutor.com/biology-revision/igcse-edexcel/" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>PMT — Edexcel IGCSE Biology Past Papers &amp; Topic Qs</a>
+        </div>
+      </div>
+      <div class="task-section">
+        <div class="task-label">End-of-week confidence check</div>
+        <ul class="checklist">
+          <li><input type="checkbox"> I can compare sexual and asexual reproduction</li>
+          <li><input type="checkbox"> I can draw insect- and wind-pollinated flowers with adaptations</li>
+          <li><input type="checkbox"> I can describe germination conditions and explain food reserve use</li>
+          <li><input type="checkbox"> I can describe male and female reproductive systems</li>
+          <li><input type="checkbox"> I can explain the menstrual cycle including roles of oestrogen and progesterone</li>
+          <li><input type="checkbox"> I can explain the role of the placenta and amniotic fluid</li>
+          <li><input type="checkbox"> I can define all 10 key genetic terms from memory</li>
+          <li><input type="checkbox"> I can complete a full genetic diagram with all required steps</li>
+          <li><input type="checkbox"> I can interpret family pedigree diagrams</li>
+          <li><input type="checkbox"> I can predict offspring ratios and probabilities</li>
+          <li><input type="checkbox"> I can compare mitosis and meiosis across at least 6 features</li>
+          <li><input type="checkbox"> I can classify variation as genetic, environmental or both</li>
+          <li><input type="checkbox"> I can explain natural selection in a clear sequence</li>
+          <li><input type="checkbox"> I can explain antibiotic resistance with correct causal language</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<footer class="footer">
+  Arcadia British School Dubai &middot; IGCSE Science (Double Award) Biology &middot; Pearson Edexcel 4SD0 &middot; Mr A. Gray
+</footer>
+
+<script>
+function toggle(id){document.getElementById(id).classList.toggle('open')}
+document.querySelectorAll('.day-card').forEach(c=>{if(!c.classList.contains('day1'))c.classList.remove('open')});
+</script>
+</body>
+</html>
