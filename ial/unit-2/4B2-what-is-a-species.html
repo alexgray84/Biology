@@ -1,0 +1,1552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>4B.2 What is a Species? | Y12 IAL Biology</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,600;0,700;1,300&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0f1117;
+    --surface: #161b27;
+    --surface-2: #1e2535;
+    --border: #2a3347;
+    --text: #e8ecf4;
+    --text-muted: #8891a8;
+    --text-dim: #5a6480;
+    --green: #4ade80;
+    --green-dim: #166534;
+    --green-surface: #0d2818;
+    --teal: #2dd4bf;
+    --teal-dim: #0f766e;
+    --teal-surface: #042f2e;
+    --amber: #fbbf24;
+    --amber-dim: #92400e;
+    --amber-surface: #1c1207;
+    --blue: #60a5fa;
+    --blue-dim: #1d4ed8;
+    --blue-surface: #0a1628;
+    --purple: #a78bfa;
+    --purple-surface: #150f2a;
+    --red: #f87171;
+    --red-surface: #1a0a0a;
+    --breakout: #f472b6;
+    --breakout-dim: #9d174d;
+    --breakout-surface: #1a0714;
+    --radius: 12px;
+    --radius-sm: 8px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    font-size: 15px;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: linear-gradient(135deg, #0d1a1f 0%, #0f1117 50%, #1a0d12 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 2.5rem 2rem 2rem;
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 20% 50%, rgba(251,191,36,0.05) 0%, transparent 60%),
+                radial-gradient(ellipse at 80% 20%, rgba(244,114,182,0.04) 0%, transparent 50%);
+  }
+  .header-inner {
+    max-width: 860px;
+    margin: 0 auto;
+    position: relative;
+  }
+  .header-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+  }
+  .spec-badge {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    padding: 0.3rem 0.7rem;
+    border-radius: 4px;
+    background: var(--amber-surface);
+    color: var(--amber);
+    border: 1px solid var(--amber-dim);
+  }
+  .spec-badge.teal {
+    background: var(--teal-surface);
+    color: var(--teal);
+    border-color: var(--teal-dim);
+  }
+  .header-chapter {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--text-dim);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  header h1 {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(2rem, 5vw, 3rem);
+    font-weight: 600;
+    line-height: 1.1;
+    color: var(--text);
+    margin-bottom: 0.5rem;
+  }
+  header h1 span { color: var(--amber); }
+  .header-sub {
+    color: var(--text-muted);
+    font-size: 14px;
+    font-weight: 300;
+  }
+  .progress-bar-wrap {
+    margin-top: 1.5rem;
+    background: var(--border);
+    height: 3px;
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, var(--amber), var(--breakout));
+    border-radius: 2px;
+    width: 0%;
+    transition: width 0.4s ease;
+  }
+
+  /* ── STICKY NAV ── */
+  .lesson-nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    padding: 0.75rem 2rem;
+    background: rgba(15, 17, 23, 0.92);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    align-items: center;
+  }
+  .nav-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-right: 0.25rem;
+    white-space: nowrap;
+  }
+  .nav-btn {
+    font-size: 12px;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 500;
+    padding: 0.35rem 0.75rem;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: var(--surface-2);
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+  .nav-btn:hover { background: var(--surface); color: var(--text); }
+  .nav-btn.active {
+    background: var(--amber-surface);
+    border-color: var(--amber-dim);
+    color: var(--amber);
+  }
+
+  /* ── MAIN LAYOUT ── */
+  main {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 2rem 2rem 5rem;
+  }
+
+  /* ── SECTION SHOW/HIDE ── */
+  section { display: none; }
+  section.active { display: block; }
+  @keyframes sectionIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .section-enter { animation: sectionIn 0.25s ease forwards; }
+
+  /* ── SECTION HEADING ── */
+  .section-heading {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin: 0 0 1rem;
+  }
+  .section-heading .icon {
+    width: 32px; height: 32px;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 15px;
+    flex-shrink: 0;
+  }
+  .section-heading h2 {
+    font-family: 'Fraunces', serif;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text);
+    letter-spacing: -0.01em;
+  }
+
+  /* ── CARDS ── */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+  }
+  .card p { color: var(--text-muted); font-size: 14px; line-height: 1.75; margin-bottom: 0.75rem; }
+  .card p:last-child { margin-bottom: 0; }
+  .card p strong { color: var(--text); font-weight: 600; }
+  .card p em { color: var(--teal); font-style: italic; }
+
+  /* ── OBJECTIVE CARD ── */
+  .objective-card {
+    background: var(--amber-surface);
+    border: 1px solid var(--amber-dim);
+    border-radius: var(--radius);
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 0.75rem;
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+  }
+  .objective-card .dot {
+    width: 8px; height: 8px;
+    background: var(--amber);
+    border-radius: 50%;
+    flex-shrink: 0;
+    margin-top: 0.4rem;
+  }
+  .objective-card p { color: var(--text); font-weight: 300; font-size: 14px; }
+  .objective-card strong { font-weight: 600; color: var(--amber); }
+
+  /* ── KEY CONCEPT ── */
+  .key-concept {
+    background: var(--teal-surface);
+    border: 1px solid var(--teal-dim);
+    border-radius: var(--radius);
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 0.75rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .key-concept::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 3px;
+    background: var(--teal);
+  }
+  .key-concept-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--teal);
+    font-weight: 500;
+    margin-bottom: 0.4rem;
+  }
+  .key-concept h4 { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 0.3rem; }
+  .key-concept p { font-size: 13px; color: var(--text-muted); }
+
+  /* ── VTR CARD ── */
+  .vtr-card {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin-bottom: 1rem;
+  }
+  .vtr-header {
+    padding: 0.75rem 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .vtr-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+  }
+  .vtr-tag.purple { background: var(--purple-surface); color: var(--purple); border: 1px solid #3d2d6b; }
+  .vtr-tag.amber { background: var(--amber-surface); color: var(--amber); border: 1px solid var(--amber-dim); }
+  .vtr-tag.teal { background: var(--teal-surface); color: var(--teal); border: 1px solid var(--teal-dim); }
+  .vtr-header h3 { font-size: 13px; font-weight: 600; color: var(--text); }
+  .vtr-body { padding: 1.25rem; }
+  .vtr-prompt {
+    font-family: 'Fraunces', serif;
+    font-size: 1.05rem;
+    font-style: italic;
+    font-weight: 300;
+    color: var(--text);
+    margin-bottom: 1rem;
+    line-height: 1.5;
+  }
+  .vtr-input-wrap textarea {
+    width: 100%;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    padding: 0.875rem 1rem;
+    resize: vertical;
+    min-height: 90px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .vtr-input-wrap textarea:focus { border-color: var(--purple); }
+  .vtr-input-wrap textarea::placeholder { color: var(--text-dim); }
+
+  /* ── SPECIES MODEL COMPARISON ── */
+  .models-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+  }
+  .model-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.1rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .model-card::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 3px;
+  }
+  .model-card.morphological::before { background: var(--blue); }
+  .model-card.biological::before { background: var(--green); }
+  .model-card.ecological::before { background: var(--teal); }
+  .model-card.mate-recognition::before { background: var(--purple); }
+  .model-card.genetic::before { background: var(--amber); }
+  .model-name {
+    font-weight: 600;
+    font-size: 13px;
+    margin-bottom: 0.4rem;
+  }
+  .model-card.morphological .model-name { color: var(--blue); }
+  .model-card.biological .model-name { color: var(--green); }
+  .model-card.ecological .model-name { color: var(--teal); }
+  .model-card.mate-recognition .model-name { color: var(--purple); }
+  .model-card.genetic .model-name { color: var(--amber); }
+  .model-def { font-size: 13px; color: var(--text-muted); margin-bottom: 0.75rem; line-height: 1.5; }
+  .model-pros-cons { display: flex; flex-direction: column; gap: 0.35rem; }
+  .pro, .con {
+    font-size: 12px;
+    padding: 0.3rem 0.5rem;
+    border-radius: 4px;
+    display: flex;
+    gap: 0.4rem;
+    align-items: flex-start;
+  }
+  .pro { background: var(--green-surface); color: #86efac; }
+  .con { background: var(--red-surface); color: #fca5a5; }
+  .pro::before { content: '✓'; color: var(--green); font-size: 11px; flex-shrink: 0; margin-top: 1px; }
+  .con::before { content: '✗'; color: var(--red); font-size: 11px; flex-shrink: 0; margin-top: 1px; }
+
+  /* ── COMPARISON TABLE ── */
+  .compare-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    margin-bottom: 1rem;
+  }
+  .compare-table th {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    padding: 0.6rem 0.75rem;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface-2);
+  }
+  .compare-table td {
+    padding: 0.7rem 0.75rem;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-muted);
+    vertical-align: top;
+    line-height: 1.5;
+  }
+  .compare-table td:first-child { font-weight: 600; color: var(--text); white-space: nowrap; }
+  .compare-table tr:last-child td { border-bottom: none; }
+  .compare-table tr:hover td { background: var(--surface-2); }
+  .tick { color: var(--green); }
+  .cross { color: var(--red); }
+  .partial { color: var(--amber); }
+
+  /* ── FEYNMAN ── */
+  .feynman-card {
+    background: var(--amber-surface);
+    border: 1px solid var(--amber-dim);
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin-bottom: 1rem;
+  }
+  .feynman-header {
+    padding: 0.875rem 1.25rem;
+    border-bottom: 1px solid var(--amber-dim);
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+  .feynman-header h3 { font-size: 13px; font-weight: 600; color: var(--text); }
+  .feynman-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    background: rgba(251,191,36,0.1);
+    color: var(--amber);
+    border: 1px solid var(--amber-dim);
+  }
+  .feynman-body { padding: 1.25rem; }
+  .feynman-prompt {
+    font-family: 'Fraunces', serif;
+    font-size: 0.95rem;
+    font-weight: 300;
+    font-style: italic;
+    color: var(--text);
+    margin-bottom: 1rem;
+    line-height: 1.6;
+  }
+  .feynman-body textarea {
+    width: 100%;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    padding: 0.875rem 1rem;
+    resize: vertical;
+    min-height: 90px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .feynman-body textarea:focus { border-color: var(--amber); }
+  .feynman-body textarea::placeholder { color: var(--text-dim); }
+
+  /* ── BREAKOUT ROOM ── */
+  .breakout-card {
+    background: var(--breakout-surface);
+    border: 1px solid var(--breakout-dim);
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin-bottom: 1rem;
+    position: relative;
+  }
+  .breakout-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 100% 0%, rgba(244,114,182,0.06) 0%, transparent 60%);
+    pointer-events: none;
+  }
+  .breakout-header {
+    background: rgba(157,23,77,0.2);
+    border-bottom: 1px solid var(--breakout-dim);
+    padding: 0.875rem 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .breakout-icon {
+    width: 34px; height: 34px;
+    background: rgba(244,114,182,0.15);
+    border: 1px solid var(--breakout-dim);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+  .breakout-meta { flex: 1; }
+  .breakout-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--breakout);
+    font-weight: 500;
+  }
+  .breakout-header h3 { font-size: 14px; font-weight: 600; color: var(--text); }
+  .breakout-timing { display: flex; flex-direction: column; align-items: flex-end; gap: 0.2rem; }
+  .breakout-timer { font-family: 'DM Mono', monospace; font-size: 13px; font-weight: 500; color: var(--breakout); }
+  .breakout-size { font-size: 11px; color: var(--text-dim); }
+  .breakout-body { padding: 1.25rem; }
+  .breakout-scenario {
+    background: rgba(244,114,182,0.05);
+    border: 1px solid rgba(244,114,182,0.15);
+    border-radius: var(--radius-sm);
+    padding: 1rem;
+    margin-bottom: 1rem;
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 0.95rem;
+    font-weight: 300;
+    color: var(--text);
+    line-height: 1.6;
+  }
+  .breakout-tasks { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem; }
+  .breakout-tasks li { display: flex; gap: 0.75rem; align-items: flex-start; font-size: 13px; color: var(--text-muted); }
+  .breakout-tasks li .task-num {
+    min-width: 22px; height: 22px;
+    background: rgba(244,114,182,0.1);
+    border: 1px solid rgba(244,114,182,0.25);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    font-weight: 500;
+    color: var(--breakout);
+    flex-shrink: 0;
+  }
+  .breakout-reporter {
+    background: rgba(244,114,182,0.05);
+    border: 1px solid rgba(244,114,182,0.12);
+    border-radius: var(--radius-sm);
+    padding: 0.75rem 1rem;
+    font-size: 12px;
+    color: var(--text-dim);
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+  }
+  .breakout-reporter span:first-child { color: var(--breakout); font-size: 14px; }
+
+  /* ── PROGRESS CHECK ── */
+  .progress-check {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin-bottom: 1rem;
+  }
+  .pc-header {
+    padding: 0.875rem 1.25rem;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+  }
+  .pc-header h3 { font-size: 13px; font-weight: 600; color: var(--text); flex: 1; }
+  .tier-badges { display: flex; gap: 0.4rem; }
+  .tier-badge {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    font-weight: 500;
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    letter-spacing: 0.08em;
+  }
+  .t1 { background: var(--green-surface); color: var(--green); border: 1px solid var(--green-dim); }
+  .t2 { background: var(--amber-surface); color: var(--amber); border: 1px solid var(--amber-dim); }
+  .t3 { background: var(--red-surface); color: var(--red); border: 1px solid #7f1d1d; }
+  .pc-body { padding: 1.25rem; }
+  .question-set { margin-bottom: 1.25rem; }
+  .question-set-label { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem; flex-wrap: wrap; }
+  .question-set-label span { font-size: 12px; color: var(--text-muted); }
+  .question-item {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 0.875rem 1rem;
+    margin-bottom: 0.5rem;
+    font-size: 13px;
+  }
+  .question-item .q-num { font-family: 'DM Mono', monospace; font-size: 10px; font-weight: 500; margin-bottom: 0.3rem; color: var(--text-dim); }
+  .question-item .q-text { color: var(--text); margin-bottom: 0.5rem; }
+  .question-item textarea {
+    width: 100%;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    padding: 0.625rem 0.75rem;
+    resize: vertical;
+    min-height: 65px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .question-item textarea:focus { border-color: var(--amber); }
+  .question-item textarea::placeholder { color: var(--text-dim); }
+  .reveal-btn {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text-muted);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    padding: 0.4rem 0.875rem;
+    cursor: pointer;
+    margin-top: 0.4rem;
+    transition: all 0.15s;
+  }
+  .reveal-btn:hover { background: var(--border); color: var(--text); }
+  .model-answer {
+    display: none;
+    background: var(--green-surface);
+    border: 1px solid var(--green-dim);
+    border-radius: 6px;
+    padding: 0.625rem 0.75rem;
+    font-size: 12px;
+    color: #86efac;
+    margin-top: 0.4rem;
+    animation: fadeIn 0.2s ease;
+  }
+  .model-answer.visible { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* ── EXAM HINT ── */
+  .exam-hint {
+    background: var(--amber-surface);
+    border: 1px solid var(--amber-dim);
+    border-left: 3px solid var(--amber);
+    border-radius: var(--radius-sm);
+    padding: 0.875rem 1rem;
+    margin-bottom: 0.75rem;
+    font-size: 13px;
+  }
+  .exam-hint .hint-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--amber);
+    font-weight: 500;
+    margin-bottom: 0.3rem;
+  }
+  .exam-hint p { color: var(--text-muted); }
+  .exam-hint strong { color: var(--amber); }
+
+  /* ── INFO BOX ── */
+  .info-box {
+    background: var(--blue-surface);
+    border: 1px solid var(--blue-dim);
+    border-radius: var(--radius-sm);
+    padding: 0.875rem 1rem;
+    display: flex;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+    font-size: 13px;
+  }
+  .info-box .icon { font-size: 16px; flex-shrink: 0; }
+  .info-box p { color: var(--text-muted); }
+  .info-box p strong { color: var(--blue); }
+
+  /* ── QUIZ ── */
+  .quiz-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin-bottom: 1rem;
+  }
+  .quiz-question { padding: 1.25rem; border-bottom: 1px solid var(--border); }
+  .quiz-question:last-child { border-bottom: none; }
+  .quiz-q-text { font-size: 14px; color: var(--text); margin-bottom: 0.75rem; font-weight: 500; }
+  .quiz-options { display: flex; flex-direction: column; gap: 0.4rem; }
+  .quiz-option {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 0.625rem 0.875rem;
+    font-size: 13px;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all 0.15s;
+    text-align: left;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .quiz-option:hover { border-color: var(--amber-dim); color: var(--text); }
+  .quiz-option.correct { background: var(--green-surface); border-color: var(--green); color: #86efac; }
+  .quiz-option.incorrect { background: var(--red-surface); border-color: #7f1d1d; color: #fca5a5; }
+  .quiz-feedback { font-size: 12px; margin-top: 0.5rem; padding: 0.5rem 0.75rem; border-radius: 6px; display: none; animation: fadeIn 0.2s ease; }
+  .quiz-feedback.show { display: block; }
+  .quiz-feedback.correct-fb { background: var(--green-surface); color: #86efac; }
+  .quiz-feedback.incorrect-fb { background: var(--red-surface); color: #fca5a5; }
+
+  /* ── VOCAB ── */
+  .vocab-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+  }
+  .vocab-item {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 0.75rem;
+    cursor: pointer;
+    transition: border-color 0.15s;
+  }
+  .vocab-item:hover { border-color: var(--amber-dim); }
+  .vocab-item .v-term { font-weight: 600; color: var(--amber); font-size: 13px; margin-bottom: 0.2rem; }
+  .vocab-item .v-def { font-size: 12px; color: var(--text-muted); line-height: 1.5; }
+
+  /* ── LIMITATIONS LIST ── */
+  .limitations-list { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem; }
+  .limitation-item {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 0.875rem 1rem;
+    display: flex;
+    gap: 0.875rem;
+    align-items: flex-start;
+  }
+  .lim-num {
+    min-width: 26px; height: 26px;
+    background: var(--red-surface);
+    border: 1px solid #7f1d1d;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--red);
+    flex-shrink: 0;
+  }
+  .limitation-item p { font-size: 13px; color: var(--text-muted); line-height: 1.6; }
+  .limitation-item p strong { color: var(--text); }
+
+  /* ── FADE UP ── */
+  .fade-up {
+    opacity: 0;
+    transform: translateY(12px);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+  }
+  .fade-up.visible { opacity: 1; transform: translateY(0); }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 600px) {
+    .models-grid { grid-template-columns: 1fr; }
+    .vocab-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="header-meta">
+      <span class="spec-badge">4.14(ii)</span>
+      <span class="spec-badge teal">4.15</span>
+      <span class="header-chapter">IAL Biology · Unit 4B · Classification</span>
+    </div>
+    <h1><span>4B.2</span> What is a Species?</h1>
+    <p class="header-sub">Species concepts, models, limitations, and the role of DNA</p>
+    <div class="progress-bar-wrap">
+      <div class="progress-bar" id="progressBar"></div>
+    </div>
+  </div>
+</header>
+
+<nav class="lesson-nav">
+  <span class="nav-label">Jump to:</span>
+  <button class="nav-btn active" onclick="showSection('objectives', this)">Objectives</button>
+  <button class="nav-btn" onclick="showSection('starter', this)">Starter</button>
+  <button class="nav-btn" onclick="showSection('morphological', this)">Morphological</button>
+  <button class="nav-btn" onclick="showSection('biological', this)">Biological</button>
+  <button class="nav-btn" onclick="showSection('other-models', this)">Other Models</button>
+  <button class="nav-btn" onclick="showSection('limitations', this)">Limitations</button>
+  <button class="nav-btn" onclick="showSection('dna', this)">DNA &amp; Classification</button>
+  <button class="nav-btn" onclick="showSection('check', this)">Progress Check</button>
+  <button class="nav-btn" onclick="showSection('retrieval', this)">Retrieval</button>
+  <button class="nav-btn" onclick="showSection('vocab', this)">Vocabulary</button>
+</nav>
+
+<main>
+
+  <!-- ── OBJECTIVES ── -->
+  <section id="objectives" class="active">
+    <div class="section-heading">
+      <div class="icon" style="background:#0a2040; border:1px solid var(--blue-dim);">🎯</div>
+      <div>
+        <div style="color:var(--blue); font-family:'DM Mono',monospace; font-size:9px; letter-spacing:0.12em; text-transform:uppercase; font-weight:500; margin-bottom:0.2rem;">What you will learn</div>
+        <h2>Learning Objectives</h2>
+      </div>
+    </div>
+    <div class="objective-card fade-up">
+      <div class="dot"></div>
+      <p>Understand the <strong>concept of species</strong> and why it is difficult to define — including the morphological, biological, ecological, mate-recognition and genetic species models.</p>
+    </div>
+    <div class="objective-card fade-up">
+      <div class="dot"></div>
+      <p>Explain the <strong>limitations of each species model</strong>, and understand why no single definition works for all organisms in all situations.</p>
+    </div>
+    <div class="objective-card fade-up">
+      <div class="dot"></div>
+      <p>Understand how <strong>DNA sequencing and DNA profiling</strong> are used to identify species and clarify evolutionary relationships.</p>
+    </div>
+    <div class="info-box fade-up">
+      <span class="icon">🔗</span>
+      <p><strong>Links to 4B.1:</strong> You already know that classification is built around the species concept — now we examine what "species" actually means and why it's harder to pin down than it sounds. Also links to Chapter 4C (biodiversity) and Chapter 2B (DNA structure).</p>
+    </div>
+  </section>
+
+  <!-- ── STARTER ── -->
+  <section id="starter">
+    <div class="section-heading">
+      <div class="icon" style="background:var(--purple-surface); border:1px solid #4c1d95;">👁</div>
+      <div>
+        <div style="color:var(--purple); font-family:'DM Mono',monospace; font-size:9px; letter-spacing:0.12em; text-transform:uppercase; font-weight:500; margin-bottom:0.2rem;">Harvard Project Zero · Think Puzzle Explore</div>
+        <h2>Starter: What Makes a Species?</h2>
+      </div>
+    </div>
+
+    <div class="vtr-card fade-up">
+      <div class="vtr-header">
+        <span class="vtr-tag purple">THINK</span>
+        <h3>What do you already think?</h3>
+      </div>
+      <div class="vtr-body">
+        <p class="vtr-prompt">"A peacock and a peahen look so different that most people wouldn't identify them as the same species at first glance. A horse and a donkey look similar and can mate — but produce a sterile mule. Are they the same species or not? What does your gut say — and what's the rule you're using?"</p>
+        <div class="vtr-input-wrap">
+          <textarea placeholder="Write your initial thinking — what rule are you using to decide? Don't worry about being 'right' yet..."></textarea>
+        </div>
+      </div>
+    </div>
+
+    <div class="vtr-card fade-up">
+      <div class="vtr-header">
+        <span class="vtr-tag amber">PUZZLE</span>
+        <h3>What puzzles you?</h3>
+      </div>
+      <div class="vtr-body">
+        <p class="vtr-prompt">"If scientists can't agree on a single definition of 'species' — what problems might that cause for biology? Think about conservation, medicine, agriculture, and evolution."</p>
+        <div class="vtr-input-wrap">
+          <textarea placeholder="What genuine questions does this raise for you?"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- BREAKOUT 1 -->
+    <div class="breakout-card fade-up">
+      <div class="breakout-header">
+        <div class="breakout-icon">🎙️</div>
+        <div class="breakout-meta">
+          <div class="breakout-tag">Google Meet · Breakout Room Activity</div>
+          <h3>Are These the Same Species? — Classification Debate</h3>
+        </div>
+        <div class="breakout-timing">
+          <div class="breakout-timer">⏱ 7 min</div>
+          <div class="breakout-size">👥 3–4 students</div>
+        </div>
+      </div>
+      <div class="breakout-body">
+        <div class="breakout-scenario">
+          "Your group is given three cases. For each one, decide: same species or different species? You must agree on a verdict AND give a reason. The catch — you can only use one rule across all three cases. If your rule breaks down on any of the three, you need to revise it."
+        </div>
+        <ul class="breakout-tasks">
+          <li><span class="task-num">A</span><span>A peacock and a peahen — they look completely different but mate and produce fertile offspring.</span></li>
+          <li><span class="task-num">B</span><span>A horse and a donkey — they look similar, can mate, but produce a sterile mule.</span></li>
+          <li><span class="task-num">C</span><span>Two populations of red deer separated by a mountain range for 10,000 years — they've never met, but DNA shows they're 98% identical. If brought together, they would likely interbreed.</span></li>
+          <li><span class="task-num">4</span><span>Try to write one rule that correctly classifies all three. Is it possible?</span></li>
+        </ul>
+        <div class="breakout-reporter">
+          <span>📋</span>
+          <span>Share your rule — and which case broke it. We'll collect everyone's rules on the board when you return.</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── MORPHOLOGICAL ── -->
+  <section id="morphological">
+    <div class="section-heading">
+      <div class="icon" style="background:var(--blue-surface); border:1px solid var(--blue-dim);">🔭</div>
+      <div>
+        <div style="color:var(--blue); font-family:'DM Mono',monospace; font-size:9px; letter-spacing:0.12em; text-transform:uppercase; font-weight:500; margin-bottom:0.2rem;">Core Content · Species Model 1</div>
+        <h2>The Morphological Species Concept</h2>
+      </div>
+    </div>
+
+    <div class="key-concept fade-up">
+      <div class="key-concept-label">Definition</div>
+      <h4>Morphological species model</h4>
+      <p>A species defined solely on the <strong>appearance</strong> of organisms observed — their external and sometimes internal morphology. Developed by Linnaeus.</p>
+    </div>
+
+    <div class="card fade-up">
+      <p>The concept of species is vital for biologists. We use species numbers to measure biodiversity, monitor environmental change, and study adaptations. The problem is that species are defined in many different ways, and the best model changes with the circumstances and type of organism.</p>
+      <p>The <strong>morphological species model</strong> was the original approach — scientists would look closely at the outer (and sometimes inner) morphology and group organisms based on similarity of physical characteristics. Much of modern classification is still based on morphology. You would never mistake a lion for a domestic cat — so in many cases it still works well.</p>
+      <p>However, appearance can be affected by many different things, and there can be huge variation within a closely related group. The clearest problem is <strong>sexual dimorphism</strong> — where males and females look so different they could be classified as separate species. A peacock and a peahen are a famous example.</p>
+    </div>
+
+    <div class="card fade-up">
+      <p>A further problem: plants that look identical (like agaves and aloes) may be unrelated — they evolved similar forms in similar environments through <strong>convergent evolution</strong>. The morphological model would incorrectly group them together.</p>
+    </div>
+
+    <div class="exam-hint fade-up">
+      <div class="hint-label">⚡ Exam Hint</div>
+      <p><strong>Sexual dimorphism</strong> is the most commonly tested limitation of the morphological model. Make sure you can name it, define it, and give an example. The peacock/peahen pairing is perfect — they're the same species but look so different they could be mistaken for two.</p>
+    </div>
+
+    <div class="feynman-card fade-up">
+      <div class="feynman-header">
+        <span class="feynman-tag">Feynman Check</span>
+        <h3>Explain the problem simply</h3>
+      </div>
+      <div class="feynman-body">
+        <p class="feynman-prompt">"Explain to a friend who's never studied biology why classifying organisms purely on appearance is risky. Use the peacock/peahen example — and then think of one from everyday life where two very different-looking things are actually the same 'kind'."</p>
+        <textarea placeholder="Write your plain-language explanation here..."></textarea>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── BIOLOGICAL ── -->
+  <section id="biological">
+    <div class="section-heading">
+      <div class="icon" style="background:var(--green-surface); border:1px solid var(--green-dim);">🧬</div>
+      <div>
+        <div style="color:var(--green); font-family:'DM Mono',monospace; font-size:9px; letter-spacing:0.12em; text-transform:uppercase; font-weight:500; margin-bottom:0.2rem;">Core Content · Species Model 2</div>
+        <h2>The Biological (Reproductive) Species Concept</h2>
+      </div>
+    </div>
+
+    <div class="key-concept fade-up">
+      <div class="key-concept-label">Definition</div>
+      <h4>Biological species model</h4>
+      <p>A group of organisms with similar characteristics that <strong>interbreed to produce fertile offspring</strong>. Sometimes refined as: a group in which <strong>genes can flow between individuals</strong>.</p>
+    </div>
+
+    <div class="card fade-up">
+      <p>Over time, biologists moved towards defining species based on <strong>reproductive behaviour</strong>. This overcomes the problem of sexual dimorphism — a peacock and peahen clearly belong together because they interbreed and produce fertile offspring.</p>
+      <p>In this model, if two individuals from different populations mate and produce fertile offspring, genes can "flow" between them — so they're the same species. This is why a very large horse and a very small pony are the same species: they produce fertile foals. But a horse and donkey produce a <strong>mule</strong> — which is sterile. Genes cannot flow to the next generation, so they are different species.</p>
+    </div>
+
+    <div class="card fade-up">
+      <p><strong>The limitations:</strong> Lions and tigers are clearly different species — but they can occasionally produce fertile offspring (ligers/tigons). The reproductive model struggles here. It also fails entirely for organisms that <strong>don't reproduce sexually</strong>: bacteria, many protists, and fungi reproduce asexually. And populations in different geographic locations <strong>may not interbreed</strong> simply because they never meet — not because they're different species.</p>
+    </div>
+
+    <!-- BREAKOUT 2 -->
+    <div class="breakout-card fade-up">
+      <div class="breakout-header">
+        <div class="breakout-icon">🎙️</div>
+        <div class="breakout-meta">
+          <div class="breakout-tag">Google Meet · Breakout Room Activity</div>
+          <h3>The Horse, Donkey and Mule Problem</h3>
+        </div>
+        <div class="breakout-timing">
+          <div class="breakout-timer">⏱ 8 min</div>
+          <div class="breakout-size">👥 2–3 students</div>
+        </div>
+      </div>
+      <div class="breakout-body">
+        <div class="breakout-scenario">
+          "You're a biologist advising a conservation charity. They're trying to decide whether two island populations of birds should be treated as the same species or different species for legal protection purposes. One population is slightly larger with a longer beak. They've been separated for 5,000 years. In the lab, they can be made to mate and produce fertile offspring — but in the wild, they never do."
+        </div>
+        <ul class="breakout-tasks">
+          <li><span class="task-num">1</span><span>Under the <strong>morphological model</strong>: are they the same species? What's your verdict and why?</span></li>
+          <li><span class="task-num">2</span><span>Under the <strong>biological model</strong>: are they the same species? Does "could breed" or "do breed" matter more?</span></li>
+          <li><span class="task-num">3</span><span>The charity needs one answer for the legal form. What do you advise — and why does it matter which model you use?</span></li>
+          <li><span class="task-num">4</span><span>What extra information would make this easier to decide?</span></li>
+        </ul>
+        <div class="breakout-reporter">
+          <span>📋</span>
+          <span>One person shares your final verdict and the extra information you'd want. Be specific about why the model choice matters legally.</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="exam-hint fade-up">
+      <div class="hint-label">⚡ Exam Hint</div>
+      <p>The exam may ask you to compare advantages and limitations of classification methods. <strong>A table is the best format</strong> for this type of question — it lets you make direct comparisons clearly and efficiently. Practise building one for morphological vs biological vs genetic.</p>
+    </div>
+  </section>
+
+  <!-- ── OTHER MODELS ── -->
+  <section id="other-models">
+    <div class="section-heading">
+      <div class="icon" style="background:#1a0a1a; border:1px solid #701a75;">🔬</div>
+      <div>
+        <div style="color:#e879f9; font-family:'DM Mono',monospace; font-size:9px; letter-spacing:0.12em; text-transform:uppercase; font-weight:500; margin-bottom:0.2rem;">Core Content · Species Models 3–5</div>
+        <h2>Other Species Models</h2>
+      </div>
+    </div>
+
+    <div class="card fade-up">
+      <p>The definition of species is constantly evolving. Scientists now use <strong>molecular phylogeny</strong> — the analysis of DNA, RNA, and proteins — to build new models of species and their relationships. Some of these are more sophisticated than simple observation, though some are no better than the morphological model.</p>
+    </div>
+
+    <div class="models-grid fade-up">
+      <div class="model-card ecological">
+        <div class="model-name">Ecological Species Model</div>
+        <div class="model-def">A species defined by the ecological niche it occupies — its role in the environment.</div>
+        <div class="model-pros-cons">
+          <div class="pro">Works when reproductive data is unavailable</div>
+          <div class="con">Niche definitions vary widely between ecologists</div>
+          <div class="con">Many species occupy more than one niche</div>
+          <div class="con">Not a robust method</div>
+        </div>
+      </div>
+      <div class="model-card mate-recognition">
+        <div class="model-name">Mate-Recognition Model</div>
+        <div class="model-def">A concept based on unique fertilisation systems, including mating behaviour and signals.</div>
+        <div class="model-pros-cons">
+          <div class="pro">Accounts for behavioural differences between species</div>
+          <div class="con">Many species will mate with or cross-pollinate others</div>
+          <div class="con">May produce fertile offspring yet still be different species</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="models-grid fade-up">
+      <div class="model-card genetic" style="grid-column: 1 / -1;">
+        <div class="model-name">Genetic Species Model</div>
+        <div class="model-def">A species model based on DNA evidence — how much genetic difference is needed to be a different species?</div>
+        <div class="model-pros-cons">
+          <div class="pro">Potentially the most objective and reliable method</div>
+          <div class="pro">DNA analysis is getting faster and cheaper</div>
+          <div class="pro">Will likely become the main classification method in future</div>
+          <div class="con">Scientists still have to decide how much genetic difference = different species</div>
+          <div class="con">Historically expensive and time-consuming to analyse</div>
+          <div class="con">Cannot be used for fossils (usually no accessible DNA)</div>
+        </div>
+      </div>
+    </div>
+
+    <h3 style="font-family:'Fraunces',serif; font-size:1.05rem; font-weight:600; margin-bottom:0.75rem; color:var(--text);">All five models at a glance</h3>
+    <div style="background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); overflow:hidden; margin-bottom:1rem;" class="fade-up">
+      <table class="compare-table">
+        <thead>
+          <tr>
+            <th>Model</th>
+            <th>Basis</th>
+            <th>Sexual dimorphism</th>
+            <th>Asexual organisms</th>
+            <th>Fossils</th>
+            <th>Plants</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Morphological</td>
+            <td>Appearance</td>
+            <td><span class="cross">✗ Fails</span></td>
+            <td><span class="tick">✓ Works</span></td>
+            <td><span class="tick">✓ Works</span></td>
+            <td><span class="partial">~ Partial</span></td>
+          </tr>
+          <tr>
+            <td>Biological</td>
+            <td>Interbreeding</td>
+            <td><span class="tick">✓ Works</span></td>
+            <td><span class="cross">✗ Fails</span></td>
+            <td><span class="cross">✗ Fails</span></td>
+            <td><span class="cross">✗ Fails</span></td>
+          </tr>
+          <tr>
+            <td>Ecological</td>
+            <td>Niche</td>
+            <td><span class="tick">✓ Works</span></td>
+            <td><span class="tick">✓ Works</span></td>
+            <td><span class="partial">~ Partial</span></td>
+            <td><span class="tick">✓ Works</span></td>
+          </tr>
+          <tr>
+            <td>Mate-recognition</td>
+            <td>Mating behaviour</td>
+            <td><span class="tick">✓ Works</span></td>
+            <td><span class="cross">✗ Fails</span></td>
+            <td><span class="cross">✗ Fails</span></td>
+            <td><span class="partial">~ Partial</span></td>
+          </tr>
+          <tr>
+            <td>Genetic</td>
+            <td>DNA evidence</td>
+            <td><span class="tick">✓ Works</span></td>
+            <td><span class="tick">✓ Works</span></td>
+            <td><span class="cross">✗ Usually fails</span></td>
+            <td><span class="tick">✓ Works</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="exam-hint fade-up">
+      <div class="hint-label">⚡ Exam Hint</div>
+      <p>You need to understand all five models well enough to <strong>compare them and give advantages and limitations of each</strong>. A table format is explicitly recommended by the specification. Build your own version of the table above from memory as a retrieval task.</p>
+    </div>
+  </section>
+
+  <!-- ── LIMITATIONS ── -->
+  <section id="limitations">
+    <div class="section-heading">
+      <div class="icon" style="background:var(--red-surface); border:1px solid #7f1d1d;">⚠️</div>
+      <div>
+        <div style="color:var(--red); font-family:'DM Mono',monospace; font-size:9px; letter-spacing:0.12em; text-transform:uppercase; font-weight:500; margin-bottom:0.2rem;">Core Content</div>
+        <h2>Limitations of All Species Models</h2>
+      </div>
+    </div>
+
+    <div class="card fade-up">
+      <p>All ways of defining species have significant limitations. No single model solves the species problem for all organisms in all situations. Biologists currently use a combination of the biological definition with basic morphology — but this is imperfect and being refined by molecular techniques.</p>
+    </div>
+
+    <ul class="limitations-list fade-up">
+      <li class="limitation-item">
+        <span class="lim-num">1</span>
+        <p><strong>Finding the evidence:</strong> Many living species have never been observed mating. Setting up a breeding programme is time-consuming, expensive, and may not prove anything definitive.</p>
+      </li>
+      <li class="limitation-item">
+        <span class="lim-num">2</span>
+        <p><strong>Fertile hybrids in plants:</strong> Plants of different but closely related species frequently interbreed and produce fertile hybrids. When should the hybrid itself be regarded as a new separate species?</p>
+      </li>
+      <li class="limitation-item">
+        <span class="lim-num">3</span>
+        <p><strong>Asexual reproduction:</strong> Many organisms — bacteria, many protists, fungi — reproduce mainly or entirely asexually. Any definition involving reproductive behaviour is simply irrelevant for these.</p>
+      </li>
+      <li class="limitation-item">
+        <span class="lim-num">4</span>
+        <p><strong>Fossil organisms:</strong> Fossils cannot reproduce and usually don't have accessible DNA. They still need to be classified — but the most useful modern methods don't work on them.</p>
+      </li>
+    </ul>
+
+    <!-- BREAKOUT 3 -->
+    <div class="breakout-card fade-up">
+      <div class="breakout-header">
+        <div class="breakout-icon">🎙️</div>
+        <div class="breakout-meta">
+          <div class="breakout-tag">Google Meet · Breakout Room Activity</div>
+          <h3>Design a Better Species Definition</h3>
+        </div>
+        <div class="breakout-timing">
+          <div class="breakout-timer">⏱ 10 min</div>
+          <div class="breakout-size">👥 3–4 students</div>
+        </div>
+      </div>
+      <div class="breakout-body">
+        <div class="breakout-scenario">
+          "You've been hired by the International Union for Conservation of Nature (IUCN) to draft a new working definition of 'species' that their field scientists can actually use. It has to work for: animals (including sexually dimorphic ones), bacteria, fossil species, plants that hybridise freely, and organisms no one has ever seen reproduce. Good luck."
+        </div>
+        <ul class="breakout-tasks">
+          <li><span class="task-num">1</span><span>List the four limitations above — which two are hardest to solve in a single definition?</span></li>
+          <li><span class="task-num">2</span><span>Draft your definition. You can use multiple criteria — but you must prioritise them. Which criterion wins if two conflict?</span></li>
+          <li><span class="task-num">3</span><span>Test your definition: does it correctly classify a peacock and peahen as the same species? A horse and donkey as different species? A bacterium?</span></li>
+          <li><span class="task-num">4</span><span>What does this exercise suggest about the idea of 'species' as a real, natural category?</span></li>
+        </ul>
+        <div class="breakout-reporter">
+          <span>📋</span>
+          <span>Share your definition and which case broke it — or if you think a single definition is genuinely impossible.</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="feynman-card fade-up">
+      <div class="feynman-header">
+        <span class="feynman-tag">Feynman Check</span>
+        <h3>Why does this matter beyond biology?</h3>
+      </div>
+      <div class="feynman-body">
+        <p class="feynman-prompt">"Conservation law protects 'species'. If two groups of animals look different and live separately but could technically interbreed, are they one species or two — and does it matter for whether each group gets legal protection? Write 3–4 sentences explaining the real-world stakes of how we define 'species'."</p>
+        <textarea placeholder="Write your response here..."></textarea>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── DNA & CLASSIFICATION ── -->
+  <section id="dna">
+    <div class="section-heading">
+      <div class="icon" style="background:var(--teal-surface); border:1px solid var(--teal-dim);">🧪</div>
+      <div>
+        <div style="color:var(--teal); font-family:'DM Mono',monospace; font-size:9px; letter-spacing:0.12em; text-transform:uppercase; font-weight:500; margin-bottom:0.2rem;">Core Content</div>
+        <h2>The Importance of DNA in Classification</h2>
+      </div>
+    </div>
+
+    <div class="card fade-up">
+      <p>In recent years scientists have developed techniques that allow them to analyse the DNA and proteins of different organisms. Two key techniques are especially important for classification:</p>
+    </div>
+
+    <div class="models-grid fade-up">
+      <div class="model-card" style="border-color:var(--teal-dim);">
+        <div style="position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--teal);"></div>
+        <div class="model-name" style="color:var(--teal);">DNA Sequencing</div>
+        <div class="model-def">The base sequences of all or part of the genome of an organism are revealed. Gives the complete genetic 'fingerprint' of the organism.</div>
+        <div class="model-pros-cons">
+          <div class="pro">Reveals precise evolutionary relationships</div>
+          <div class="pro">Getting faster and cheaper rapidly</div>
+          <div class="con">Requires accessible DNA (fails for most fossils)</div>
+        </div>
+      </div>
+      <div class="model-card" style="border-color:#e879f9;">
+        <div style="position:absolute;left:0;top:0;bottom:0;width:3px;background:#e879f9;"></div>
+        <div class="model-name" style="color:#e879f9;">DNA Profiling</div>
+        <div class="model-def">Looks at the non-coding areas of DNA to identify patterns. These patterns are unique to individuals, but similarity of patterns reveals relationships between individuals and species.</div>
+        <div class="model-pros-cons">
+          <div class="pro">Can identify individuals within a species</div>
+          <div class="pro">Shows relatedness between species</div>
+          <div class="con">Generates enormous volumes of data</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card fade-up">
+      <p>DNA sequencing and profiling generates so much data that it would be impossible for individual scientists to manually analyse it all. This has given rise to <strong>bioinformatics</strong> — the development of software and computing tools needed to organise and analyse enormous quantities of raw biological data. Bioinformatics allows us to make sense of DNA sequencing results to identify species and their evolutionary relationships.</p>
+    </div>
+
+    <div class="key-concept fade-up">
+      <div class="key-concept-label">Case Study: Fusarium — The Same But Different</div>
+      <h4>When DNA revealed eight species where one was assumed</h4>
+      <p>The plant disease <em>scab</em> destroys wheat and barley crops. For many years it was thought to be caused by a single fungus, <em>Fusarium graminearum</em>. DNA evidence shows there are at least <strong>eight different species</strong> of <em>Fusarium</em> pathogens — based on divergence of six different genes. Morphologically they look identical. This has major implications for disease control worldwide.</p>
+    </div>
+
+    <div class="key-concept fade-up" style="background:var(--green-surface); border-color:var(--green-dim);">
+      <div class="key-concept-label" style="color:var(--green);">Case Study: Red Deer — Different But the Same</div>
+      <h4 style="color:var(--text);">When DNA revealed one species where two were assumed</h4>
+      <p>Red deer stags that live in woods have much longer and broader antlers than stags on highland mountainsides — they look different enough to be mistaken for different species. But <strong>DNA evidence confirms they are the same species</strong>. Phenotype alone was misleading; environment was causing the difference.</p>
+    </div>
+
+    <div class="exam-hint fade-up">
+      <div class="hint-label">⚡ Exam Hint</div>
+      <p>Questions testing your knowledge of <strong>DNA structure (Chapter 2B) may include questions about the use of DNA in classification</strong>. Make sure you can connect DNA sequencing → species identification → bioinformatics as a logical chain. Know the definitions of both DNA sequencing and DNA profiling precisely.</p>
+    </div>
+  </section>
+
+  <!-- ── PROGRESS CHECK ── -->
+  <section id="check">
+    <div class="section-heading">
+      <div class="icon" style="background:var(--green-surface); border:1px solid var(--green-dim);">✅</div>
+      <div>
+        <div style="color:var(--green); font-family:'DM Mono',monospace; font-size:9px; letter-spacing:0.12em; text-transform:uppercase; font-weight:500; margin-bottom:0.2rem;">Tiered Progress Check</div>
+        <h2>Check Your Understanding</h2>
+      </div>
+    </div>
+
+    <div class="progress-check fade-up">
+      <div class="pc-header">
+        <h3>Written Response Questions</h3>
+        <div class="tier-badges">
+          <span class="tier-badge t1">T1 · Recall</span>
+          <span class="tier-badge t2">T2 · Apply</span>
+          <span class="tier-badge t3">T3 · Evaluate</span>
+        </div>
+      </div>
+      <div class="pc-body">
+
+        <div class="question-set">
+          <div class="question-set-label">
+            <span class="tier-badge t1">T1 · Recall</span>
+            <span>Answer from memory before checking notes</span>
+          </div>
+          <div class="question-item">
+            <div class="q-num">Q1.1</div>
+            <div class="q-text">State the biological (reproductive) species definition. (2 marks)</div>
+            <textarea placeholder="Your answer..."></textarea>
+            <button class="reveal-btn" onclick="revealAnswer(this)">Show model answer</button>
+            <div class="model-answer">A group of organisms with similar characteristics that are all potentially capable of breeding to produce fertile offspring (1) / a group of organisms in which genes can flow between individuals (1). Either definition accepted — both are valid phrasings.</div>
+          </div>
+          <div class="question-item">
+            <div class="q-num">Q1.2</div>
+            <div class="q-text">Define sexual dimorphism and explain why it is a problem for the morphological species model. (3 marks)</div>
+            <textarea placeholder="Your answer..."></textarea>
+            <button class="reveal-btn" onclick="revealAnswer(this)">Show model answer</button>
+            <div class="model-answer">Sexual dimorphism = where there is a great deal of difference between the appearance of the male and female of a species (1). Problem: morphological model classifies based on appearance alone (1); so males and females of the same species with very different appearances could be incorrectly classified as different species (1). Example: peacock and peahen.</div>
+          </div>
+          <div class="question-item">
+            <div class="q-num">Q1.3</div>
+            <div class="q-text">Name the process by which the base sequences of all or part of an organism's genome are revealed. (1 mark)</div>
+            <textarea placeholder="Your answer..."></textarea>
+            <button class="reveal-btn" onclick="revealAnswer(this)">Show model answer</button>
+            <div class="model-answer">DNA sequencing.</div>
+          </div>
+        </div>
+
+        <div class="question-set">
+          <div class="question-set-label">
+            <span class="tier-badge t2">T2 · Apply</span>
+            <span>Use your understanding in a new context</span>
+          </div>
+          <div class="question-item">
+            <div class="q-num">Q2.1</div>
+            <div class="q-text">A lion and a tiger mate in captivity and produce a liger. The liger is fertile. Explain whether this means lions and tigers are the same species, using the biological species concept. (3 marks)</div>
+            <textarea placeholder="Your answer..."></textarea>
+            <button class="reveal-btn" onclick="revealAnswer(this)">Show model answer</button>
+            <div class="model-answer">The biological species concept defines a species as organisms that interbreed to produce fertile offspring (1). If the liger is fertile, this would suggest they could be the same species under this definition (1). However, this is a limitation of the model — lions and tigers are widely accepted as different species and would not mate in the wild; the biological model breaks down in this case (1).</div>
+          </div>
+          <div class="question-item">
+            <div class="q-num">Q2.2</div>
+            <div class="q-text">Explain why the biological species model cannot be used to classify bacteria. (2 marks)</div>
+            <textarea placeholder="Your answer..."></textarea>
+            <button class="reveal-btn" onclick="revealAnswer(this)">Show model answer</button>
+            <div class="model-answer">Bacteria reproduce asexually (1); any definition based on reproductive behaviour or interbreeding is irrelevant / cannot be applied to organisms that don't reproduce sexually (1).</div>
+          </div>
+        </div>
+
+        <div class="question-set" style="margin-bottom:0;">
+          <div class="question-set-label">
+            <span class="tier-badge t3">T3 · Evaluate</span>
+            <span>Longer response — structure your argument clearly</span>
+          </div>
+          <div class="question-item">
+            <div class="q-num">Q3.1</div>
+            <div class="q-text">Compare the advantages and limitations of using morphological features, reproductive capability, and DNA analysis to decide if an organism belongs to a particular species. (6 marks)</div>
+            <textarea placeholder="Aim for 6 distinct points. Consider using a structured approach: each method, one advantage, one limitation..." style="min-height:140px;"></textarea>
+            <button class="reveal-btn" onclick="revealAnswer(this)">Show model answer</button>
+            <div class="model-answer">Morphological — advantage: can be applied to any organism including fossils and asexual species (1); limitation: sexual dimorphism and convergent evolution can lead to incorrect classification (1). Reproductive — advantage: overcomes sexual dimorphism problem; genes can flow between members of the same species (1); limitation: cannot be applied to asexually reproducing organisms or fossils; populations may not interbreed simply due to geography (1). DNA analysis — advantage: most objective and precise method; can be used for any organism with accessible DNA including asexual reproducers (1); limitation: historically expensive; cannot usually be applied to fossils; scientists still must decide how much genetic difference = different species (1).</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ── RETRIEVAL ── -->
+  <section id="retrieval">
+    <div class="section-heading">
+      <div class="icon" style="background:var(--blue-surface); border:1px solid var(--blue-dim);">🧠</div>
+      <div>
+        <div style="color:var(--blue); font-family:'DM Mono',monospace; font-size:9px; letter-spacing:0.12em; text-transform:uppercase; font-weight:500; margin-bottom:0.2rem;">Retrieval Practice</div>
+        <h2>Quick-Fire Quiz</h2>
+      </div>
+    </div>
+    <p style="font-size:13px; color:var(--text-muted); margin-bottom:1rem;">Select the correct answer. No going back once you click!</p>
+
+    <div class="quiz-card fade-up">
+
+      <div class="quiz-question" data-correct="c">
+        <div class="quiz-q-text">1. A horse and a donkey produce a sterile mule when they mate. What does this tell us under the biological species concept?</div>
+        <div class="quiz-options">
+          <button class="quiz-option" onclick="answerQuiz(this)">A. They are the same species because they can physically mate</button>
+          <button class="quiz-option" onclick="answerQuiz(this)">B. They are the same species because they produce offspring</button>
+          <button class="quiz-option" onclick="answerQuiz(this)" data-key="c">C. They are different species because genes cannot flow to the next generation</button>
+          <button class="quiz-option" onclick="answerQuiz(this)">D. They are different species because they look different</button>
+        </div>
+        <div class="quiz-feedback"></div>
+      </div>
+
+      <div class="quiz-question" data-correct="b">
+        <div class="quiz-q-text">2. Which species model is MOST limited when classifying bacteria?</div>
+        <div class="quiz-options">
+          <button class="quiz-option" onclick="answerQuiz(this)">A. Morphological — because bacteria all look the same</button>
+          <button class="quiz-option" onclick="answerQuiz(this)" data-key="b">B. Biological — because bacteria reproduce asexually</button>
+          <button class="quiz-option" onclick="answerQuiz(this)">C. Genetic — because bacteria have no DNA</button>
+          <button class="quiz-option" onclick="answerQuiz(this)">D. Ecological — because bacteria have no niche</button>
+        </div>
+        <div class="quiz-feedback"></div>
+      </div>
+
+      <div class="quiz-question" data-correct="a">
+        <div class="quiz-q-text">3. DNA profiling looks at:</div>
+        <div class="quiz-options">
+          <button class="quiz-option" onclick="answerQuiz(this)" data-key="a">A. Non-coding areas of DNA to identify patterns of relatedness</button>
+          <button class="quiz-option" onclick="answerQuiz(this)">B. The full base sequence of the entire genome</button>
+          <button class="quiz-option" onclick="answerQuiz(this)">C. The proteins coded for by a specific gene</button>
+          <button class="quiz-option" onclick="answerQuiz(this)">D. Chromosomes visible under a light microscope</button>
+        </div>
+        <div class="quiz-feedback"></div>
+      </div>
+
+      <div class="quiz-question" data-correct="d">
+        <div class="quiz-q-text">4. Which of the following is the BEST argument for why the genetic species model will likely become the primary classification method?</div>
+        <div class="quiz-options">
+          <button class="quiz-option" onclick="answerQuiz(this)">A. It is cheaper than all other methods right now</button>
+          <button class="quiz-option" onclick="answerQuiz(this)">B. It can be used on fossil specimens reliably</button>
+          <button class="quiz-option" onclick="answerQuiz(this)">C. It eliminates the need for any subjective judgement</button>
+          <button class="quiz-option" onclick="answerQuiz(this)" data-key="d">D. DNA analysis is becoming faster and cheaper, and works for sexually and asexually reproducing organisms</button>
+        </div>
+        <div class="quiz-feedback"></div>
+      </div>
+
+      <div class="quiz-question" data-correct="b">
+        <div class="quiz-q-text">5. The science of developing software and tools to organise and analyse large quantities of biological data is called:</div>
+        <div class="quiz-options">
+          <button class="quiz-option" onclick="answerQuiz(this)">A. Molecular phylogeny</button>
+          <button class="quiz-option" onclick="answerQuiz(this)" data-key="b">B. Bioinformatics</button>
+          <button class="quiz-option" onclick="answerQuiz(this)">C. DNA profiling</button>
+          <button class="quiz-option" onclick="answerQuiz(this)">D. Genomics</button>
+        </div>
+        <div class="quiz-feedback"></div>
+      </div>
+
+      <div class="quiz-question" data-correct="c">
+        <div class="quiz-q-text">6. The case of Fusarium graminearum demonstrates that:</div>
+        <div class="quiz-options">
+          <button class="quiz-option" onclick="answerQuiz(this)">A. Morphological classification is more reliable than DNA analysis</button>
+          <button class="quiz-option" onclick="answerQuiz(this)">B. Fungi cannot be classified using the biological model</button>
+          <button class="quiz-option" onclick="answerQuiz(this)" data-key="c">C. DNA evidence can reveal multiple distinct species that appear morphologically identical</button>
+          <button class="quiz-option" onclick="answerQuiz(this)">D. Plant pathogens always belong to the same species</button>
+        </div>
+        <div class="quiz-feedback"></div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── VOCAB ── -->
+  <section id="vocab">
+    <div class="section-heading">
+      <div class="icon" style="background:var(--surface-2); border:1px solid var(--border);">📖</div>
+      <div>
+        <div style="color:var(--text-dim); font-family:'DM Mono',monospace; font-size:9px; letter-spacing:0.12em; text-transform:uppercase; font-weight:500; margin-bottom:0.2rem;">Subject Vocabulary</div>
+        <h2>Key Terms</h2>
+      </div>
+    </div>
+    <p style="font-size:13px; color:var(--text-muted); margin-bottom:1rem;">Click any term to reveal its definition.</p>
+
+    <div class="vocab-grid fade-up">
+      <div class="vocab-item" onclick="toggleVocab(this)">
+        <div class="v-term">morphological species model</div>
+        <div class="v-def" style="display:none;">A species definition based solely on the appearance of the organisms observed.</div>
+      </div>
+      <div class="vocab-item" onclick="toggleVocab(this)">
+        <div class="v-term">sexual dimorphism</div>
+        <div class="v-def" style="display:none;">Describes species where there is a great deal of difference between the appearance of the male and female.</div>
+      </div>
+      <div class="vocab-item" onclick="toggleVocab(this)">
+        <div class="v-term">biological species model</div>
+        <div class="v-def" style="display:none;">A group of organisms with similar characteristics that are all potentially capable of breeding to produce fertile offspring — or in which genes can flow between individuals.</div>
+      </div>
+      <div class="vocab-item" onclick="toggleVocab(this)">
+        <div class="v-term">molecular phylogeny</div>
+        <div class="v-def" style="display:none;">The analysis of the genetic material of organisms to establish their evolutionary relationships.</div>
+      </div>
+      <div class="vocab-item" onclick="toggleVocab(this)">
+        <div class="v-term">ecological species model</div>
+        <div class="v-def" style="display:none;">A species definition based on the ecological niche occupied by an organism.</div>
+      </div>
+      <div class="vocab-item" onclick="toggleVocab(this)">
+        <div class="v-term">mate-recognition species model</div>
+        <div class="v-def" style="display:none;">A species definition based on unique fertilisation systems, including mating behaviour.</div>
+      </div>
+      <div class="vocab-item" onclick="toggleVocab(this)">
+        <div class="v-term">genetic species model</div>
+        <div class="v-def" style="display:none;">A species model based on DNA evidence — the degree of genetic similarity or difference between organisms.</div>
+      </div>
+      <div class="vocab-item" onclick="toggleVocab(this)">
+        <div class="v-term">DNA sequencing</div>
+        <div class="v-def" style="display:none;">The process by which the base sequences of all or part of the genome of an organism are worked out.</div>
+      </div>
+      <div class="vocab-item" onclick="toggleVocab(this)">
+        <div class="v-term">DNA profiling</div>
+        <div class="v-def" style="display:none;">The process by which the non-coding areas of DNA are analysed to identify patterns — unique to individuals, but similarity reveals relationships.</div>
+      </div>
+      <div class="vocab-item" onclick="toggleVocab(this)">
+        <div class="v-term">bioinformatics</div>
+        <div class="v-def" style="display:none;">The development of software and computing tools needed to organise and analyse enormous quantities of raw biological data generated by DNA sequencing.</div>
+      </div>
+      <div class="vocab-item" onclick="toggleVocab(this)">
+        <div class="v-term">convergent evolution</div>
+        <div class="v-def" style="display:none;">When unrelated organisms evolve similar features due to similar environmental pressures — e.g. agaves and aloes both adapted to desert conditions but are not closely related.</div>
+      </div>
+      <div class="vocab-item" onclick="toggleVocab(this)">
+        <div class="v-term">gene flow</div>
+        <div class="v-def" style="display:none;">The movement of alleles between populations through interbreeding. In the biological species model, species are groups in which genes can flow between individuals.</div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<script>
+const SECTIONS = ['objectives','starter','morphological','biological','other-models','limitations','dna','check','retrieval','vocab'];
+
+function showSection(id, btn) {
+  document.querySelectorAll('main section').forEach(s => s.classList.remove('active', 'section-enter'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const target = document.getElementById(id);
+  target.classList.add('active', 'section-enter');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  target.querySelectorAll('.fade-up').forEach((el, i) => {
+    el.classList.remove('visible');
+    setTimeout(() => el.classList.add('visible'), 60 + i * 50);
+  });
+  const pct = ((SECTIONS.indexOf(id) + 1) / SECTIONS.length) * 100;
+  document.getElementById('progressBar').style.width = pct + '%';
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('#objectives .fade-up').forEach((el, i) => {
+    setTimeout(() => el.classList.add('visible'), 80 + i * 60);
+  });
+  document.getElementById('progressBar').style.width = (1 / SECTIONS.length * 100) + '%';
+});
+
+function revealAnswer(btn) {
+  const answer = btn.nextElementSibling;
+  answer.classList.toggle('visible');
+  btn.textContent = answer.classList.contains('visible') ? 'Hide answer' : 'Show model answer';
+}
+
+function toggleVocab(el) {
+  const def = el.querySelector('.v-def');
+  const isShown = def.style.display !== 'none';
+  def.style.display = isShown ? 'none' : 'block';
+  el.style.borderColor = isShown ? 'var(--border)' : 'var(--amber-dim)';
+}
+
+function answerQuiz(btn) {
+  const question = btn.closest('.quiz-question');
+  if (question.dataset.answered) return;
+  question.dataset.answered = 'true';
+  const correctKey = question.dataset.correct;
+  const isCorrect = btn.hasAttribute('data-key') && btn.getAttribute('data-key') === correctKey;
+  const feedback = question.querySelector('.quiz-feedback');
+  question.querySelectorAll('.quiz-option').forEach(opt => {
+    opt.disabled = true;
+    if (opt.getAttribute('data-key') === correctKey) opt.classList.add('correct');
+  });
+  const explanations = [
+    'The biological species model defines species by whether genes can flow to the next generation. A sterile mule cannot pass on genes — so horses and donkeys are classified as different species.',
+    'Bacteria reproduce asexually. The biological species concept is built around reproductive behaviour and interbreeding, which is irrelevant for asexual organisms.',
+    'DNA profiling analyses non-coding (non-gene) regions of DNA. The patterns are unique to individuals but similarity between patterns reveals evolutionary relationships. DNA sequencing is the technique that reveals the full base sequence.',
+    'The genetic model is limited by cost and the inability to sequence most fossils, but the key advantage is its applicability to any organism with DNA — sexual or asexual — and it is becoming faster and more affordable.',
+    'Bioinformatics is the field that uses computing to handle the enormous datasets produced by DNA sequencing and profiling.',
+    'The Fusarium case is a clear example of DNA revealing cryptic species — organisms that look identical under morphological analysis but are genetically distinct species.'
+  ];
+  const index = [...question.parentElement.children].indexOf(question);
+  if (isCorrect) {
+    btn.classList.add('correct');
+    feedback.textContent = '✓ Correct! ' + (explanations[index] || '');
+    feedback.className = 'quiz-feedback show correct-fb';
+  } else {
+    btn.classList.add('incorrect');
+    feedback.textContent = '✗ Not quite. ' + (explanations[index] || '');
+    feedback.className = 'quiz-feedback show incorrect-fb';
+  }
+}
+</script>
+</body>
+</html>
