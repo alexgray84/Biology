@@ -1,0 +1,1368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>4C.2 Measuring Biodiversity | IAL Biology Y12</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;0,9..144,700;1,9..144,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #FAF7F2;
+    --bg-warm: #F3EDE3;
+    --card: #FFFFFF;
+    --card-alt: #EEF2E8;
+    --green-dark: #2D5016;
+    --green-mid: #4A7C2F;
+    --green-light: #7AAD52;
+    --green-pale: #E0EBD0;
+    --green-ultra: #F0F5E8;
+    --text: #2C2C2C;
+    --text-mid: #4A4A4A;
+    --text-light: #7A7A7A;
+    --amber: #C17D2A;
+    --amber-pale: #FDF3E3;
+    --red-pale: #FDECEA;
+    --red: #C0392B;
+    --border: #D8D0C4;
+    --border-green: #B0C898;
+    --shadow: 0 2px 12px rgba(45,80,22,0.08);
+    --shadow-hover: 0 6px 24px rgba(45,80,22,0.15);
+    --radius: 10px;
+    --nav-h: 64px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Lato', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; padding-top: var(--nav-h); }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0;
+    height: var(--nav-h);
+    background: rgba(250,247,242,0.96);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--border);
+    z-index: 100;
+    display: flex; align-items: center; padding: 0 24px; gap: 0;
+  }
+  .nav-brand { font-family:'Fraunces',serif; font-size:14px; font-weight:600; color:var(--green-dark); white-space:nowrap; margin-right:24px; padding-right:24px; border-right:1px solid var(--border); }
+  .nav-brand span { display:block; font-family:'Lato',sans-serif; font-weight:300; font-size:11px; color:var(--text-light); letter-spacing:0.05em; text-transform:uppercase; }
+  .nav-stations { display:flex; gap:4px; flex:1; overflow-x:auto; scrollbar-width:none; }
+  .nav-stations::-webkit-scrollbar { display:none; }
+  .nav-btn { display:flex; flex-direction:column; align-items:center; gap:2px; padding:6px 10px; border:none; background:transparent; cursor:pointer; border-radius:6px; transition:all 0.2s; white-space:nowrap; position:relative; }
+  .nav-btn:hover { background:var(--green-ultra); }
+  .nav-btn .nav-label { font-family:'Lato',sans-serif; font-size:11px; font-weight:700; letter-spacing:0.06em; text-transform:uppercase; color:var(--text-light); transition:color 0.2s; }
+  .nav-btn .nav-title { font-size:10px; color:var(--text-light); transition:color 0.2s; }
+  .nav-btn.active .nav-label, .nav-btn.active .nav-title { color:var(--green-dark); }
+  .nav-btn::after { content:''; position:absolute; bottom:0; left:10px; right:10px; height:2px; background:var(--green-mid); border-radius:2px; transform:scaleX(0); transition:transform 0.2s; }
+  .nav-btn.active::after { transform:scaleX(1); }
+  .nav-progress { margin-left:auto; display:flex; align-items:center; gap:8px; padding-left:16px; border-left:1px solid var(--border); }
+  .progress-dots { display:flex; gap:4px; }
+  .progress-dot { width:8px; height:8px; border-radius:50%; background:var(--border); transition:background 0.3s; }
+  .progress-dot.done { background:var(--green-mid); }
+  .progress-dot.active { background:var(--green-dark); }
+
+  /* SECTIONS */
+  section { display:none; max-width:880px; margin:0 auto; padding:48px 24px 80px; animation:fadeUp 0.4s ease both; }
+  section.active { display:block; }
+  @keyframes fadeUp { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
+
+  /* TYPOGRAPHY */
+  h1 { font-family:'Fraunces',serif; font-size:42px; font-weight:700; color:var(--green-dark); line-height:1.1; margin-bottom:8px; }
+  h2 { font-family:'Fraunces',serif; font-size:26px; font-weight:600; color:var(--green-dark); margin-bottom:16px; }
+  h3 { font-family:'Fraunces',serif; font-size:18px; font-weight:600; color:var(--green-dark); margin-bottom:10px; }
+  p { line-height:1.75; color:var(--text-mid); margin-bottom:12px; }
+  .lesson-meta { font-size:12px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--green-mid); margin-bottom:6px; }
+  .lesson-subtitle { font-size:16px; color:var(--text-light); margin-bottom:32px; font-weight:300; }
+
+  /* CARDS */
+  .card { background:var(--card); border:1px solid var(--border); border-radius:var(--radius); padding:24px; margin-bottom:20px; box-shadow:var(--shadow); }
+  .card-green { background:var(--green-ultra); border:1px solid var(--border-green); border-left:4px solid var(--green-mid); border-radius:var(--radius); padding:20px 24px; margin-bottom:20px; }
+  .card-amber { background:var(--amber-pale); border:1px solid #E8C88A; border-left:4px solid var(--amber); border-radius:var(--radius); padding:20px 24px; margin-bottom:20px; }
+
+  /* OBJECTIVES */
+  .objectives-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:32px; }
+  .objective-item { background:var(--green-ultra); border:1px solid var(--border-green); border-radius:8px; padding:14px 16px; font-size:14px; color:var(--text-mid); display:flex; gap:10px; align-items:flex-start; }
+  .objective-item::before { content:'◆'; color:var(--green-mid); font-size:10px; margin-top:4px; flex-shrink:0; }
+
+  /* RETRIEVAL */
+  .retrieval-q { background:var(--card); border:1px solid var(--border); border-left:4px solid var(--green-mid); border-radius:var(--radius); padding:20px 24px; margin-bottom:16px; }
+  .q-label { font-size:11px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:var(--green-mid); margin-bottom:8px; }
+  .q-text { font-size:15px; color:var(--text); margin-bottom:14px; line-height:1.6; }
+  textarea { width:100%; min-height:80px; border:1px solid var(--border); border-radius:6px; padding:10px 14px; font-family:'Lato',sans-serif; font-size:14px; color:var(--text); background:var(--bg); resize:vertical; transition:border-color 0.2s; line-height:1.6; }
+  textarea:focus { outline:none; border-color:var(--green-mid); background:#FDFFFE; }
+
+  /* BUTTONS */
+  .btn { display:inline-flex; align-items:center; gap:8px; padding:10px 22px; border-radius:6px; font-family:'Lato',sans-serif; font-size:13px; font-weight:700; letter-spacing:0.04em; cursor:pointer; transition:all 0.2s; border:none; }
+  .btn-primary { background:var(--green-dark); color:white; }
+  .btn-primary:hover { background:var(--green-mid); transform:translateY(-1px); box-shadow:var(--shadow-hover); }
+  .btn-outline { background:transparent; color:var(--green-dark); border:1.5px solid var(--green-dark); }
+  .btn-outline:hover { background:var(--green-ultra); }
+  .btn-reveal { background:var(--bg-warm); color:var(--text-mid); border:1px solid var(--border); font-size:12px; padding:8px 16px; }
+  .btn-reveal:hover { background:var(--green-pale); border-color:var(--border-green); }
+  .reveal-box { display:none; background:var(--green-ultra); border:1px solid var(--border-green); border-radius:6px; padding:14px 16px; margin-top:10px; font-size:14px; color:var(--text-mid); line-height:1.7; animation:fadeUp 0.3s ease; }
+  .reveal-box.show { display:block; }
+
+  /* FORMULA */
+  .formula-box {
+    background: white;
+    border: 2px solid var(--green-dark);
+    border-radius: var(--radius);
+    padding: 24px;
+    text-align: center;
+    margin: 20px 0;
+    font-size: 20px;
+    font-family: 'Fraunces', serif;
+  }
+  .formula-fraction {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    font-size: 18px;
+  }
+  .formula-numerator { border-bottom: 2px solid var(--text); padding: 0 8px 4px; }
+  .formula-denominator { padding: 4px 8px 0; }
+  .formula-label { font-family: 'Lato', sans-serif; font-size: 12px; color: var(--text-light); margin-top: 12px; }
+
+  /* CALCULATION TABLE */
+  .calc-table { width:100%; border-collapse:collapse; margin:16px 0; font-size:14px; }
+  .calc-table th { background:var(--green-dark); color:white; padding:10px 14px; text-align:left; font-weight:700; font-size:12px; letter-spacing:0.05em; text-transform:uppercase; }
+  .calc-table td { padding:10px 14px; border-bottom:1px solid var(--border); color:var(--text-mid); vertical-align:middle; }
+  .calc-table tr:nth-child(even) td { background:var(--bg-warm); }
+  .calc-table .total-row td { background:var(--green-pale); font-weight:700; color:var(--green-dark); border-top:2px solid var(--border-green); }
+
+  .calc-input {
+    width: 100%;
+    border: 1.5px solid var(--border);
+    border-radius: 4px;
+    padding: 6px 10px;
+    font-family: 'Lato', sans-serif;
+    font-size: 14px;
+    color: var(--text);
+    background: white;
+    text-align: center;
+    transition: border-color 0.2s;
+  }
+  .calc-input:focus { outline: none; border-color: var(--green-mid); }
+  .calc-input.correct { border-color: var(--green-mid); background: var(--green-ultra); color: var(--green-dark); }
+  .calc-input.incorrect { border-color: var(--red); background: var(--red-pale); color: var(--red); }
+
+  /* STEP BOX */
+  .step-box {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 12px;
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+  }
+  .step-num {
+    width: 28px; height: 28px;
+    background: var(--green-dark);
+    color: white;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 13px;
+    flex-shrink: 0;
+  }
+  .step-content { flex: 1; }
+  .step-content p { margin-bottom: 0; font-size: 14px; }
+
+  /* MCQ */
+  .micro-check { background:var(--bg-warm); border:1px solid var(--border); border-top:3px solid var(--green-dark); border-radius:var(--radius); padding:24px; margin-top:32px; }
+  .micro-check-label { font-size:11px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--green-mid); margin-bottom:4px; }
+  .mcq-options { display:flex; flex-direction:column; gap:8px; margin-bottom:14px; }
+  .mcq-option { background:white; border:1.5px solid var(--border); border-radius:6px; padding:11px 16px; font-size:14px; color:var(--text-mid); cursor:pointer; transition:all 0.2s; text-align:left; display:flex; align-items:center; gap:10px; }
+  .mcq-option::before { content:attr(data-letter); width:22px; height:22px; border-radius:50%; background:var(--bg-warm); border:1px solid var(--border); display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700; flex-shrink:0; transition:all 0.2s; }
+  .mcq-option:hover { border-color:var(--green-mid); background:var(--green-ultra); }
+  .mcq-option:hover::before { background:var(--green-pale); border-color:var(--green-mid); }
+  .mcq-option.correct { border-color:var(--green-mid); background:var(--green-ultra); color:var(--green-dark); }
+  .mcq-option.correct::before { background:var(--green-mid); border-color:var(--green-mid); color:white; }
+  .mcq-option.incorrect { border-color:var(--red); background:var(--red-pale); color:var(--red); }
+  .mcq-option.incorrect::before { background:var(--red); border-color:var(--red); color:white; }
+  .mcq-option.disabled { cursor:default; pointer-events:none; opacity:0.6; }
+  .feedback-msg { display:none; padding:10px 14px; border-radius:6px; font-size:13px; font-weight:700; margin-top:8px; }
+  .feedback-msg.correct { display:block; background:var(--green-ultra); color:var(--green-dark); border:1px solid var(--border-green); }
+  .feedback-msg.incorrect { display:block; background:var(--red-pale); color:var(--red); border:1px solid #E8BABA; }
+
+  /* STATION HEADER */
+  .station-header { display:flex; align-items:center; gap:16px; margin-bottom:32px; padding-bottom:24px; border-bottom:1px solid var(--border); }
+  .station-num { width:52px; height:52px; border-radius:50%; background:var(--green-dark); color:white; display:flex; align-items:center; justify-content:center; font-family:'Fraunces',serif; font-size:22px; font-weight:700; flex-shrink:0; }
+  .station-header-text h2 { margin-bottom:2px; }
+  .station-header-text p { margin-bottom:0; font-size:14px; color:var(--text-light); }
+
+  /* NAV FOOTER */
+  .lesson-nav { display:flex; justify-content:space-between; align-items:center; margin-top:48px; padding-top:24px; border-top:1px solid var(--border); }
+  .divider { height:1px; background:var(--border); margin:28px 0; }
+  .instruction { display:inline-flex; align-items:center; gap:6px; background:var(--bg-warm); border:1px solid var(--border); border-radius:20px; padding:5px 12px; font-size:12px; color:var(--text-light); margin-bottom:16px; }
+
+  /* MARK POINT */
+  .mark-point { display:flex; gap:8px; margin-bottom:6px; font-size:13px; color:var(--text-mid); }
+  .mark-point::before { content:'✓'; color:var(--green-mid); font-weight:700; flex-shrink:0; }
+
+  /* WORKED CALC */
+  .worked-step {
+    background: var(--green-ultra);
+    border: 1px solid var(--border-green);
+    border-radius: 8px;
+    padding: 14px 18px;
+    margin-bottom: 10px;
+    font-size: 14px;
+    color: var(--text-mid);
+    line-height: 1.7;
+  }
+  .worked-step strong { color: var(--green-dark); }
+
+  /* PRACTICE LEVEL */
+  .practice-level {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .level-guided { background: var(--green-pale); color: var(--green-dark); }
+  .level-partial { background: var(--amber-pale); color: var(--amber); }
+  .level-independent { background: var(--red-pale); color: var(--red); }
+
+  /* COMMAND WORD */
+  .command-word { background:white; border:1px solid var(--border); border-left:4px solid var(--amber); border-radius:var(--radius); padding:16px 20px; margin-bottom:12px; }
+  .command-word h4 { font-size:14px; font-weight:700; color:var(--amber); margin-bottom:4px; }
+  .command-word p { font-size:13px; margin-bottom:0; }
+
+  /* VOCAB */
+  .vocab-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin:16px 0; }
+  .vocab-item { background:white; border:1px solid var(--border); border-radius:8px; padding:12px 16px; }
+  .vocab-term { font-weight:700; color:var(--green-dark); font-size:14px; margin-bottom:4px; }
+  .vocab-def { font-size:13px; color:var(--text-mid); line-height:1.5; }
+
+  /* RESULT BOX */
+  .result-box {
+    background: var(--green-dark);
+    color: white;
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin: 16px 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .result-box .result-label { font-size: 13px; opacity: 0.8; }
+  .result-box .result-value { font-family: 'Fraunces', serif; font-size: 28px; font-weight: 700; }
+
+  /* TABS */
+  .tab-nav { display: flex; gap: 0; border-bottom: 2px solid var(--border); margin-bottom: 24px; }
+  .tab-btn { padding: 10px 20px; font-size: 13px; font-weight: 700; color: var(--text-light); background: transparent; border: none; cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -2px; transition: all 0.2s; letter-spacing: 0.04em; }
+  .tab-btn.active { color: var(--green-dark); border-bottom-color: var(--green-dark); }
+  .tab-btn:hover { color: var(--green-dark); background: var(--green-ultra); }
+  .tab-pane { display: none; }
+  .tab-pane.active { display: block; animation: fadeUp 0.3s ease; }
+
+  @media (max-width:640px) {
+    h1 { font-size:28px; }
+    .objectives-grid { grid-template-columns:1fr; }
+    .vocab-grid { grid-template-columns:1fr; }
+    nav { padding:0 12px; }
+    .nav-brand { display:none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-brand">4C.2 <span>IAL Biology · Y12</span></div>
+  <div class="nav-stations">
+    <button class="nav-btn active" onclick="goTo('opener')" id="nav-opener">
+      <span class="nav-label">Opener</span><span class="nav-title">Retrieval</span>
+    </button>
+    <button class="nav-btn" onclick="goTo('s1')" id="nav-s1">
+      <span class="nav-label">Station 1</span><span class="nav-title">The Formula</span>
+    </button>
+    <button class="nav-btn" onclick="goTo('s2')" id="nav-s2">
+      <span class="nav-label">Station 2</span><span class="nav-title">D Calculations</span>
+    </button>
+    <button class="nav-btn" onclick="goTo('s3')" id="nav-s3">
+      <span class="nav-label">Station 3</span><span class="nav-title">How it varies</span>
+    </button>
+    <button class="nav-btn" onclick="goTo('s4')" id="nav-s4">
+      <span class="nav-label">Station 4</span><span class="nav-title">Heterozygosity</span>
+    </button>
+    <button class="nav-btn" onclick="goTo('progress')" id="nav-progress">
+      <span class="nav-label">Check</span><span class="nav-title">Progress</span>
+    </button>
+    <button class="nav-btn" onclick="goTo('exam')" id="nav-exam">
+      <span class="nav-label">Exam</span><span class="nav-title">Support</span>
+    </button>
+  </div>
+  <div class="nav-progress">
+    <div class="progress-dots" id="progress-dots"></div>
+  </div>
+</nav>
+
+<!-- ══════════ OPENER ══════════ -->
+<section id="opener" class="active">
+  <div class="lesson-meta">Biodiversity and Conservation · 4C</div>
+  <h1>Measuring<br>Biodiversity</h1>
+  <p class="lesson-subtitle">Specification reference: 4.17 · 4.18 · 4.20(ii) · Station-based lesson</p>
+
+  <div class="objectives-grid">
+    <div class="objective-item">Calculate a diversity index (D) using the formula D = N(N−1) / Σn(n−1)</div>
+    <div class="objective-item">Measure biodiversity within a species using the heterozygosity index</div>
+    <div class="objective-item">Understand how and why biodiversity varies within and between habitats</div>
+    <div class="objective-item">Explain how allele frequency changes through mutation and natural selection</div>
+  </div>
+
+  <h2>Retrieval Warm-Up</h2>
+  <p style="margin-bottom:24px;">Activate knowledge from 4C.1 and earlier chapters. Attempt each question before revealing the answer.</p>
+
+  <div class="retrieval-q">
+    <div class="q-label">Question 1 · From 4C.1</div>
+    <div class="q-text">Distinguish between species richness and relative species abundance. Which one alone gives an incomplete picture of biodiversity?</div>
+    <textarea placeholder="Write your answer here..."></textarea><br><br>
+    <button class="btn btn-reveal" onclick="toggleReveal(this)">Reveal answer</button>
+    <div class="reveal-box">
+      <strong>Species richness</strong> = the number of different species in an area. <strong>Relative species abundance</strong> = how evenly the different species are distributed. Species richness <em>alone</em> gives an incomplete picture — two areas can have identical richness but very different biodiversity if one is dominated by a single species. Both measures are needed together.
+    </div>
+  </div>
+
+  <div class="retrieval-q">
+    <div class="q-label">Question 2 · From 4C.1</div>
+    <div class="q-text">Define the term "endemic species" and give one example of a location with high endemism. Explain why that location has so many endemic species.</div>
+    <textarea placeholder="Write your answer here..."></textarea><br><br>
+    <button class="btn btn-reveal" onclick="toggleReveal(this)">Reveal answer</button>
+    <div class="reveal-box">
+      An <strong>endemic species</strong> evolves in geographical isolation and is found in only one place. Example: <strong>Madagascar</strong> — almost all its species are endemic because it is an island, so ocean barriers prevent gene flow with mainland Africa. Isolated populations evolve independently over time, eventually becoming distinct species found nowhere else.
+    </div>
+  </div>
+
+  <div class="retrieval-q">
+    <div class="q-label">Question 3 · From 2C</div>
+    <div class="q-text">What is an allele? What is the difference between a homozygote and a heterozygote?</div>
+    <textarea placeholder="Write your answer here..."></textarea><br><br>
+    <button class="btn btn-reveal" onclick="toggleReveal(this)">Reveal answer</button>
+    <div class="reveal-box">
+      An <strong>allele</strong> is a different version of the same gene (different base sequence at the same locus). A <strong>homozygote</strong> has two identical alleles for a gene (e.g. AA or aa) — when DNA is analysed, only one band appears per allele. A <strong>heterozygote</strong> has two different alleles (e.g. Aa) — two bands appear on DNA analysis, one for each allele.
+    </div>
+  </div>
+
+  <div class="retrieval-q">
+    <div class="q-label">Question 4 · From 3B/2C</div>
+    <div class="q-text">What is allele frequency? How can a mutation increase the allele frequency of a particular allele in a population?</div>
+    <textarea placeholder="Write your answer here..."></textarea><br><br>
+    <button class="btn btn-reveal" onclick="toggleReveal(this)">Reveal answer</button>
+    <div class="reveal-box">
+      <strong>Allele frequency</strong> = the relative frequency with which a particular allele appears within a population. A mutation creates a new allele. If that allele confers an <strong>advantage</strong>, natural selection favours organisms carrying it — they survive and reproduce more successfully, passing the allele to offspring. Over generations, the allele becomes more common in the gene pool, increasing its frequency.
+    </div>
+  </div>
+
+  <div class="retrieval-q">
+    <div class="q-label">Question 5 · Thinking ahead</div>
+    <div class="q-text">If you wanted to compare the biodiversity of two ponds, what information would you need to collect? How might you turn that into a single number?</div>
+    <textarea placeholder="Write your answer here..."></textarea><br><br>
+    <button class="btn btn-reveal" onclick="toggleReveal(this)">Reveal answer</button>
+    <div class="reveal-box">
+      You would need: the total number of organisms (all species combined) and the number of organisms of each individual species. To generate a single number, a mathematical formula can combine both species richness and abundance into a <strong>diversity index</strong> — higher values indicate greater biodiversity. This is exactly what you will calculate in Station 1.
+    </div>
+  </div>
+
+  <div class="lesson-nav">
+    <div></div>
+    <button class="btn btn-primary" onclick="goTo('s1')">Begin Station 1 →</button>
+  </div>
+</section>
+
+<!-- ══════════ STATION 1 ══════════ -->
+<section id="s1">
+  <div class="station-header">
+    <div class="station-num">1</div>
+    <div class="station-header-text">
+      <h2>The Diversity Index: Understanding the Formula</h2>
+      <p>Decode each component, then work through the calculation step by step</p>
+    </div>
+  </div>
+
+  <div class="card-green">
+    <h3 style="margin-bottom:6px;">Why do we need a formula?</h3>
+    <p style="margin-bottom:0;">Species richness and relative abundance together capture biodiversity — but comparing two habitats is difficult when both measures vary. The <strong>diversity index (D)</strong> combines both into a single comparable number. The higher the value, the greater the biodiversity. Big is always better.</p>
+  </div>
+
+  <h3 style="margin-bottom:12px;">The Formula</h3>
+  <div class="formula-box">
+    <div style="display:flex; align-items:center; justify-content:center; gap:12px; flex-wrap:wrap;">
+      <span style="font-size:22px;">D =</span>
+      <div class="formula-fraction">
+        <div class="formula-numerator">N(N − 1)</div>
+        <div class="formula-denominator">Σn(n − 1)</div>
+      </div>
+    </div>
+    <div class="formula-label">where D = diversity index · N = total number of all organisms · n = number of organisms of each species · Σ = sum of all values</div>
+  </div>
+
+  <h3 style="margin-bottom:16px;">Decode the components</h3>
+  <p style="margin-bottom:16px;">Before calculating, make sure you understand each part. Match each term to its meaning by clicking the reveal:</p>
+
+  <div class="step-box">
+    <div class="step-num">N</div>
+    <div class="step-content">
+      <p><strong>Total number of organisms of all species combined</strong> — you count every individual organism in your sample, regardless of species. This goes in the numerator.</p>
+    </div>
+  </div>
+
+  <div class="step-box">
+    <div class="step-num">n</div>
+    <div class="step-content">
+      <p><strong>Number of organisms of each individual species</strong> — you calculate n(n−1) for <em>each</em> species separately, then add all those values together using Σ.</p>
+    </div>
+  </div>
+
+  <div class="step-box">
+    <div class="step-num">Σ</div>
+    <div class="step-content">
+      <p><strong>Sum (add together)</strong> — Σn(n−1) means: calculate n(n−1) for species 1, then species 2, then species 3... and add all the results together. This gives you the denominator.</p>
+    </div>
+  </div>
+
+  <div class="step-box">
+    <div class="step-num">D</div>
+    <div class="step-content">
+      <p><strong>The diversity index</strong> — the final answer. A higher D means greater biodiversity. D has no units. When comparing two habitats, the one with the higher D is more biodiverse.</p>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <h3 style="margin-bottom:8px;">Worked Example: The Pond</h3>
+  <p style="margin-bottom:16px;">Follow each step carefully. This is the full calculation you need to be able to reproduce in an exam.</p>
+
+  <p style="font-weight:700; font-size:15px; color:var(--text); margin-bottom:12px;">Step 1 — Complete the table (n − 1 and n(n−1) for each species)</p>
+
+  <table class="calc-table">
+    <thead>
+      <tr><th>Species</th><th>n (organisms collected)</th><th>(n − 1)</th><th>n(n − 1)</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Dragonfly larvae</td><td>4</td><td>3</td><td>4 × 3 = 12</td></tr>
+      <tr><td>Mosquito larvae</td><td>12</td><td>11</td><td>12 × 11 = 132</td></tr>
+      <tr><td>Water boatman</td><td>3</td><td>2</td><td>3 × 2 = 6</td></tr>
+      <tr><td>Tadpole shrimp</td><td>4</td><td>3</td><td>4 × 3 = 12</td></tr>
+      <tr><td>Copepods</td><td>17</td><td>16</td><td>17 × 16 = 272</td></tr>
+      <tr class="total-row"><td>Total (N)</td><td><strong>40</strong></td><td>—</td><td>Σn(n−1) = <strong>434</strong></td></tr>
+    </tbody>
+  </table>
+
+  <p style="font-weight:700; font-size:15px; color:var(--text); margin-top:20px; margin-bottom:12px;">Step 2 — Apply the formula</p>
+
+  <div class="worked-step">
+    <strong>D = N(N−1) / Σn(n−1)</strong><br>
+    D = 40 × 39 / 434<br>
+    D = 1560 / 434<br>
+    <strong>D = 3.60</strong>
+  </div>
+
+  <div class="card-amber" style="margin-top:16px;">
+    <h3 style="color:var(--amber); margin-bottom:6px;">What does D = 3.60 tell us?</h3>
+    <p style="margin-bottom:0;">On its own, a single D value is hard to interpret. Its power comes from comparison — if you calculated D = 1.20 for a nearby polluted pond, you could conclude the natural pond (D = 3.60) has nearly three times the biodiversity. Higher D always means more biodiverse. There is no fixed scale — D values are only meaningful relative to each other.</p>
+  </div>
+
+  <div class="card-green">
+    <h3 style="margin-bottom:6px;">Learning Tip</h3>
+    <p style="margin-bottom:0;"><strong>Big is better</strong> — a higher D value always indicates greater biodiversity. If a habitat becomes polluted or degraded, D will decrease as fewer species survive and/or one species comes to dominate. Tracking D over time is a useful conservation monitoring tool.</p>
+  </div>
+
+  <!-- MICRO CHECK 1 -->
+  <div class="micro-check">
+    <div class="micro-check-label">Station 1 · Micro-check</div>
+    <h3 style="margin-bottom:20px;">Check your understanding of the formula before moving to practice</h3>
+
+    <p style="font-size:14px; font-weight:700; color:var(--text); margin-bottom:10px;">Q1. In the diversity index formula, what does <em>n</em> represent?</p>
+    <div class="mcq-options">
+      <button class="mcq-option" data-letter="A" onclick="checkMCQ(this, false, 'mc1a')">The total number of all organisms in the sample</button>
+      <button class="mcq-option" data-letter="B" onclick="checkMCQ(this, true, 'mc1a')">The number of organisms of one particular species</button>
+      <button class="mcq-option" data-letter="C" onclick="checkMCQ(this, false, 'mc1a')">The number of different species present</button>
+      <button class="mcq-option" data-letter="D" onclick="checkMCQ(this, false, 'mc1a')">The sum of all n(n−1) values</button>
+    </div>
+    <div id="fb-mc1a-correct" class="feedback-msg correct">Correct. N (capital) = total for all species. n (lower case) = total for each individual species. Keep these distinct — confusing them is the most common calculation error.</div>
+    <div id="fb-mc1a-incorrect" class="feedback-msg incorrect">Careful — the formula uses two different letters. N (capital) is the total of all organisms. n (lower case) is the number of organisms per species.</div>
+
+    <div class="divider"></div>
+
+    <p style="font-size:14px; font-weight:700; color:var(--text); margin-bottom:10px;">Q2. A student calculates D = 1.08 for habitat X and D = 4.72 for habitat Y. What can they correctly conclude?</p>
+    <div class="mcq-options">
+      <button class="mcq-option" data-letter="A" onclick="checkMCQ(this, false, 'mc1b')">Habitat X has more species than habitat Y</button>
+      <button class="mcq-option" data-letter="B" onclick="checkMCQ(this, false, 'mc1b')">Habitat Y has fewer organisms overall</button>
+      <button class="mcq-option" data-letter="C" onclick="checkMCQ(this, true, 'mc1b')">Habitat Y has greater biodiversity than habitat X</button>
+      <button class="mcq-option" data-letter="D" onclick="checkMCQ(this, false, 'mc1b')">The habitats cannot be compared because D has no units</button>
+    </div>
+    <div id="fb-mc1b-correct" class="feedback-msg correct">Correct. D values are directly comparable — higher always means more biodiverse. Having no units doesn't prevent comparison; it just means the scale is relative.</div>
+    <div id="fb-mc1b-incorrect" class="feedback-msg incorrect">The whole point of calculating D is comparison. Higher D = greater biodiversity, regardless of units. D = 4.72 is clearly greater than D = 1.08.</div>
+
+    <div class="divider"></div>
+
+    <p style="font-size:14px; font-weight:700; color:var(--text); margin-bottom:10px;">Q3. Explain why D would decrease if a habitat became heavily polluted and only one species survived. (2 marks)</p>
+    <textarea placeholder="Write your answer here..."></textarea><br><br>
+    <button class="btn btn-reveal" onclick="toggleReveal(this)">Reveal mark scheme</button>
+    <div class="reveal-box">
+      <div class="mark-point">If only one species remains, n for that species = N (the total), making n(n−1) very large relative to N(N−1) / so the denominator approaches the numerator (1)</div>
+      <div class="mark-point">This gives a D value close to 1 / a lower D reflects reduced species richness and skewed species abundance — both hallmarks of low biodiversity (1)</div>
+    </div>
+  </div>
+
+  <div class="lesson-nav">
+    <button class="btn btn-outline" onclick="goTo('opener')">← Back</button>
+    <button class="btn btn-primary" onclick="goTo('s2')">Station 2 →</button>
+  </div>
+</section>
+
+<!-- ══════════ STATION 2 ══════════ -->
+<section id="s2">
+  <div class="station-header">
+    <div class="station-num">2</div>
+    <div class="station-header-text">
+      <h2>Diversity Index: Practice Calculations</h2>
+      <p>Three datasets — guided, partial, then fully independent</p>
+    </div>
+  </div>
+
+  <div class="card-green">
+    <h3 style="margin-bottom:6px;">How this station works</h3>
+    <p style="margin-bottom:0;">You have three practice calculations. Each one reduces the scaffolding. By the third, you work entirely independently before revealing the answer. Use the formula: D = N(N−1) / Σn(n−1)</p>
+  </div>
+
+  <div class="tab-nav">
+    <button class="tab-btn active" onclick="switchTab('calc1', this)">Practice 1 — Guided</button>
+    <button class="tab-btn" onclick="switchTab('calc2', this)">Practice 2 — Partial</button>
+    <button class="tab-btn" onclick="switchTab('calc3', this)">Practice 3 — Independent</button>
+  </div>
+
+  <!-- CALC 1 — GUIDED (Woodland from textbook) -->
+  <div class="tab-pane active" id="calc1">
+    <span class="practice-level level-guided">Guided — table cells provided, you fill in the calculations</span>
+    <p style="margin-bottom:16px; font-size:15px; font-weight:700; color:var(--text);">European Woodland</p>
+    <p style="margin-bottom:16px;">A group of students counted plant species in a measured area of European woodland. Calculate the diversity index.</p>
+
+    <table class="calc-table">
+      <thead>
+        <tr><th>Species</th><th>n</th><th>(n − 1)</th><th>n(n − 1)</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Holly</td><td>9</td><td><input class="calc-input" id="c1r1a" placeholder="?" type="number"></td><td><input class="calc-input" id="c1r1b" placeholder="?" type="number"></td></tr>
+        <tr><td>Bramble</td><td>3</td><td><input class="calc-input" id="c1r2a" placeholder="?" type="number"></td><td><input class="calc-input" id="c1r2b" placeholder="?" type="number"></td></tr>
+        <tr><td>Oak</td><td>3</td><td><input class="calc-input" id="c1r3a" placeholder="?" type="number"></td><td><input class="calc-input" id="c1r3b" placeholder="?" type="number"></td></tr>
+        <tr><td>Butcher's broom</td><td>5</td><td><input class="calc-input" id="c1r4a" placeholder="?" type="number"></td><td><input class="calc-input" id="c1r4b" placeholder="?" type="number"></td></tr>
+        <tr><td>Ivy</td><td>3</td><td><input class="calc-input" id="c1r5a" placeholder="?" type="number"></td><td><input class="calc-input" id="c1r5b" placeholder="?" type="number"></td></tr>
+        <tr><td>Yew</td><td>1</td><td><input class="calc-input" id="c1r6a" placeholder="?" type="number"></td><td><input class="calc-input" id="c1r6b" placeholder="?" type="number"></td></tr>
+        <tr class="total-row"><td>Total (N)</td><td>24</td><td>—</td><td>Σn(n−1) = <input class="calc-input" id="c1total" placeholder="?" type="number" style="width:80px;"></td></tr>
+      </tbody>
+    </table>
+
+    <div style="margin:20px 0;">
+      <p style="font-weight:700; margin-bottom:8px;">Now calculate D:</p>
+      <p style="font-size:14px; color:var(--text-mid); margin-bottom:8px;">D = N(N−1) / Σn(n−1) = 24 × 23 / Σn(n−1) = 552 / ___</p>
+      <div style="display:flex; gap:12px; align-items:center; flex-wrap:wrap;">
+        <span style="font-size:15px; font-weight:700;">D =</span>
+        <input class="calc-input" id="c1d" placeholder="Enter your D value" style="width:180px;" type="number" step="0.01">
+      </div>
+    </div>
+
+    <button class="btn btn-primary" onclick="checkCalc1()">Check my answers</button>
+    <div id="calc1-feedback" style="margin-top:16px;"></div>
+
+    <div class="divider"></div>
+    <button class="btn btn-reveal" onclick="toggleReveal(this)">Show full worked answer</button>
+    <div class="reveal-box">
+      <strong>Table answers:</strong><br>
+      Holly: (n−1) = 8, n(n−1) = 72 | Bramble: 2, 6 | Oak: 2, 6 | Butcher's broom: 4, 20 | Ivy: 2, 6 | Yew: 0, 0<br>
+      <strong>Σn(n−1) = 72 + 6 + 6 + 20 + 6 + 0 = 110</strong><br><br>
+      D = 552 / 110 = <strong>D = 5.02</strong><br><br>
+      This is a relatively high diversity index — the woodland has reasonable species diversity, though holly (9 individuals) is the most abundant. The yew (n=1) contributes nothing to the denominator (1×0 = 0), showing how rare species have minimal effect on D.
+    </div>
+  </div>
+
+  <!-- CALC 2 — PARTIAL -->
+  <div class="tab-pane" id="calc2">
+    <span class="practice-level level-partial">Partial scaffold — complete the table, then calculate D without guidance</span>
+    <p style="margin-bottom:16px; font-size:15px; font-weight:700; color:var(--text);">Rockpool Community</p>
+    <p style="margin-bottom:16px;">A marine biologist samples a rockpool on the Cornish coast. Complete the full calculation.</p>
+
+    <table class="calc-table">
+      <thead>
+        <tr><th>Species</th><th>n</th><th>(n − 1)</th><th>n(n − 1)</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Periwinkles</td><td>14</td><td><input class="calc-input" id="c2r1a" placeholder="?" type="number"></td><td><input class="calc-input" id="c2r1b" placeholder="?" type="number"></td></tr>
+        <tr><td>Shore crabs</td><td>6</td><td><input class="calc-input" id="c2r2a" placeholder="?" type="number"></td><td><input class="calc-input" id="c2r2b" placeholder="?" type="number"></td></tr>
+        <tr><td>Limpets</td><td>22</td><td><input class="calc-input" id="c2r3a" placeholder="?" type="number"></td><td><input class="calc-input" id="c2r3b" placeholder="?" type="number"></td></tr>
+        <tr><td>Blennies</td><td>3</td><td><input class="calc-input" id="c2r4a" placeholder="?" type="number"></td><td><input class="calc-input" id="c2r4b" placeholder="?" type="number"></td></tr>
+        <tr><td>Starfish</td><td>5</td><td><input class="calc-input" id="c2r5a" placeholder="?" type="number"></td><td><input class="calc-input" id="c2r5b" placeholder="?" type="number"></td></tr>
+        <tr class="total-row"><td>Total (N)</td><td><input class="calc-input" id="c2N" placeholder="N?" type="number" style="width:70px;"></td><td>—</td><td>Σn(n−1) = <input class="calc-input" id="c2total" placeholder="?" type="number" style="width:80px;"></td></tr>
+      </tbody>
+    </table>
+
+    <div style="margin:20px 0;">
+      <p style="font-weight:700; margin-bottom:8px;">Calculate D:</p>
+      <input class="calc-input" id="c2d" placeholder="Enter your D value (2 decimal places)" style="width:280px; margin-bottom:8px;" type="number" step="0.01"><br>
+      <textarea id="c2interp" placeholder="Is this high or low biodiversity? Compare to the pond (D=3.60) and explain what this tells us about the rockpool." style="min-height:70px; margin-top:8px;"></textarea>
+    </div>
+
+    <button class="btn btn-primary" onclick="checkCalc2()">Check my answers</button>
+    <div id="calc2-feedback" style="margin-top:16px;"></div>
+
+    <div class="divider"></div>
+    <button class="btn btn-reveal" onclick="toggleReveal(this)">Show full worked answer</button>
+    <div class="reveal-box">
+      Periwinkles: 13, 182 | Shore crabs: 5, 30 | Limpets: 21, 462 | Blennies: 2, 6 | Starfish: 4, 20<br>
+      <strong>N = 50</strong>, Σn(n−1) = 182 + 30 + 462 + 6 + 20 = <strong>700</strong><br>
+      D = 50 × 49 / 700 = 2450 / 700 = <strong>D = 3.50</strong><br><br>
+      This is slightly lower than the pond (D = 3.60). The rockpool has moderate biodiversity but limpets (22) dominate, reducing D. If limpet numbers fell and other species increased, D would rise.
+    </div>
+  </div>
+
+  <!-- CALC 3 — INDEPENDENT -->
+  <div class="tab-pane" id="calc3">
+    <span class="practice-level level-independent">Independent — no scaffold, full exam conditions</span>
+    <p style="margin-bottom:16px; font-size:15px; font-weight:700; color:var(--text);">Urban Garden vs Nature Reserve</p>
+    <p style="margin-bottom:16px;">An ecologist surveys invertebrates in two habitats. Calculate D for both and compare them.</p>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-bottom:24px;">
+      <div>
+        <p style="font-weight:700; font-size:13px; letter-spacing:0.05em; text-transform:uppercase; color:var(--green-dark); margin-bottom:8px;">Habitat A — Urban Garden</p>
+        <table class="calc-table">
+          <thead><tr><th>Species</th><th>n</th></tr></thead>
+          <tbody>
+            <tr><td>House sparrow</td><td>18</td></tr>
+            <tr><td>Garden snail</td><td>11</td></tr>
+            <tr><td>Earthworm</td><td>7</td></tr>
+            <tr><td>Woodlouse</td><td>4</td></tr>
+            <tr><td>Blackbird</td><td>2</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div>
+        <p style="font-weight:700; font-size:13px; letter-spacing:0.05em; text-transform:uppercase; color:var(--green-dark); margin-bottom:8px;">Habitat B — Nature Reserve</p>
+        <table class="calc-table">
+          <thead><tr><th>Species</th><th>n</th></tr></thead>
+          <tbody>
+            <tr><td>Meadow brown butterfly</td><td>9</td></tr>
+            <tr><td>Common blue butterfly</td><td>8</td></tr>
+            <tr><td>Grasshopper</td><td>11</td></tr>
+            <tr><td>Field vole</td><td>6</td></tr>
+            <tr><td>Skylark</td><td>8</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-bottom:20px;">
+      <div>
+        <p style="font-weight:700; margin-bottom:8px;">Habitat A — show all working:</p>
+        <textarea id="c3workA" placeholder="Show your working here: table values, Σn(n−1), N, then D" style="min-height:160px;"></textarea>
+        <div style="display:flex; gap:8px; align-items:center; margin-top:8px;">
+          <span style="font-weight:700;">D =</span>
+          <input class="calc-input" id="c3dA" placeholder="?" type="number" step="0.01" style="width:120px;">
+        </div>
+      </div>
+      <div>
+        <p style="font-weight:700; margin-bottom:8px;">Habitat B — show all working:</p>
+        <textarea id="c3workB" placeholder="Show your working here: table values, Σn(n−1), N, then D" style="min-height:160px;"></textarea>
+        <div style="display:flex; gap:8px; align-items:center; margin-top:8px;">
+          <span style="font-weight:700;">D =</span>
+          <input class="calc-input" id="c3dB" placeholder="?" type="number" step="0.01" style="width:120px;">
+        </div>
+      </div>
+    </div>
+
+    <textarea id="c3compare" placeholder="Compare the two D values — which habitat is more biodiverse and why might this be?" style="min-height:80px; margin-bottom:16px;"></textarea>
+
+    <button class="btn btn-primary" onclick="checkCalc3()">Check my D values</button>
+    <div id="calc3-feedback" style="margin-top:16px;"></div>
+
+    <div class="divider"></div>
+    <button class="btn btn-reveal" onclick="toggleReveal(this)">Show full worked answer</button>
+    <div class="reveal-box">
+      <strong>Habitat A:</strong> N = 42 | n(n−1): 18×17=306, 11×10=110, 7×6=42, 4×3=12, 2×1=2 | Σ = 472<br>
+      D = 42×41 / 472 = 1722 / 472 = <strong>D = 3.65</strong><br><br>
+      <strong>Habitat B:</strong> N = 42 | n(n−1): 9×8=72, 8×7=56, 11×10=110, 6×5=30, 8×7=56 | Σ = 324<br>
+      D = 42×41 / 324 = 1722 / 324 = <strong>D = 5.31</strong><br><br>
+      <strong>Comparison:</strong> Both habitats have the same N (42 organisms) and the same number of species (5), but Habitat B (D=5.31) is significantly more biodiverse than Habitat A (D=3.65). The reason is species abundance: in Habitat A, house sparrows (18) dominate, skewing the distribution. In Habitat B, organisms are spread more evenly, giving a higher D. This illustrates why counting species is not enough — distribution matters too.
+    </div>
+  </div>
+
+  <!-- MICRO CHECK 2 -->
+  <div class="micro-check">
+    <div class="micro-check-label">Station 2 · Micro-check</div>
+    <h3 style="margin-bottom:20px;">Interpretation questions — go beyond the calculation</h3>
+
+    <p style="font-size:14px; font-weight:700; color:var(--text); margin-bottom:10px;">Q1. Two ponds are sampled. Pond A has D = 2.1 and Pond B has D = 6.8. A new pollution event kills all but one species in Pond A. What would happen to D for Pond A?</p>
+    <div class="mcq-options">
+      <button class="mcq-option" data-letter="A" onclick="checkMCQ(this, false, 'mc2a')">D would increase because fewer species compete</button>
+      <button class="mcq-option" data-letter="B" onclick="checkMCQ(this, false, 'mc2a')">D would stay the same because N is unchanged</button>
+      <button class="mcq-option" data-letter="C" onclick="checkMCQ(this, true, 'mc2a')">D would approach 1 as one species comes to dominate the entire sample</button>
+      <button class="mcq-option" data-letter="D" onclick="checkMCQ(this, false, 'mc2a')">D would become negative</button>
+    </div>
+    <div id="fb-mc2a-correct" class="feedback-msg correct">Correct. If n = N (one species = all individuals), then n(n−1) = N(N−1), so D = N(N−1)/N(N−1) = 1. The minimum possible value of D is 1.</div>
+    <div id="fb-mc2a-incorrect" class="feedback-msg incorrect">Think about what happens to the formula when only one species remains — n would equal N. Work through D = N(N−1)/Σn(n−1) in that scenario.</div>
+
+    <div class="divider"></div>
+
+    <p style="font-size:14px; font-weight:700; color:var(--text); margin-bottom:10px;">Q2. A conservation team wants to prioritise one of two heathland sites for funding. Site X: D = 4.2. Site Y: D = 8.7. Give one limitation of using D alone to make this decision. (2 marks)</p>
+    <textarea placeholder="Write your answer here..."></textarea><br><br>
+    <button class="btn btn-reveal" onclick="toggleReveal(this)">Reveal mark scheme</button>
+    <div class="reveal-box">
+      <div class="mark-point">D only measures species-level biodiversity — it does not capture genetic diversity within species / a site with high D could still have genetically uniform populations that are vulnerable to disease (1)</div>
+      <div class="mark-point">D is a snapshot — it does not show trends over time / a site with moderate D that is declining rapidly may need more urgent intervention than a stable high-D site (1) (accept other valid limitations e.g. D doesn't account for endemic species, rare species get same weight as common ones)</div>
+    </div>
+  </div>
+
+  <div class="lesson-nav">
+    <button class="btn btn-outline" onclick="goTo('s1')">← Station 1</button>
+    <button class="btn btn-primary" onclick="goTo('s3')">Station 3 →</button>
+  </div>
+</section>
+
+<!-- ══════════ STATION 3 ══════════ -->
+<section id="s3">
+  <div class="station-header">
+    <div class="station-num">3</div>
+    <div class="station-header-text">
+      <h2>How Biodiversity Varies</h2>
+      <p>Why biodiversity isn't constant — and what drives the differences</p>
+    </div>
+  </div>
+
+  <div class="card-green">
+    <h3 style="margin-bottom:6px;">Biodiversity is not fixed</h3>
+    <p style="margin-bottom:0;">The D value for a habitat will change depending on when you measure it, the condition of the environment, and the stability of the ecosystem. Understanding <em>why</em> biodiversity varies helps us decide how to protect it.</p>
+  </div>
+
+  <h3 style="margin-bottom:16px;">Three key ideas</h3>
+
+  <div class="card">
+    <h3>1. Biodiversity varies with time</h3>
+    <p>Animal species in an area vary with time of day — bats at dusk, birds at dawn. Seasonality changes everything: wetland feeding sites for migratory birds are packed in some months and empty in others. Plant species on a meadow floor are different in spring vs autumn. This means <strong>when you measure matters</strong> — a single survey may not capture true biodiversity.</p>
+    <button class="btn btn-reveal" onclick="toggleReveal(this)">Why does this matter for conservation decisions?</button>
+    <div class="reveal-box">
+      A single survey of a coastal wetland in July might count 50 wading bird species. The same survey in January might count 5. If conservation funding is allocated on the basis of a winter survey, the site's importance as a summer feeding ground may be missed entirely. Biodiversity assessment should ideally use repeated surveys across seasons.
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>2. Extreme environments = lower biodiversity</h3>
+    <p>In extreme environments (desert, deep ocean vents, Arctic tundra), biodiversity is typically low because few species can tolerate the conditions. The species that do survive are highly specialised. Any change — a severe frost, a flood, a new pathogen — has a disproportionate impact because there are so few species to absorb the shock.</p>
+    <button class="btn btn-reveal" onclick="toggleReveal(this)">How does this connect to the diversity index?</button>
+    <div class="reveal-box">
+      In extreme environments, you would expect a low D value. Few species means low species richness (numerator N is small relative to what it could be). And often one or two species dominate the few survivors — so Σn(n−1) is large relative to N(N−1), pushing D down further. This mathematical relationship mirrors the ecological reality.
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>3. Stable ecosystems = higher biodiversity</h3>
+    <p>In stable, less hostile environments — tropical rainforests, temperate woodland, coral reefs — biodiversity can be very high. A stable ecosystem allows complex food webs and ecological relationships to develop. A new species moving in or out will have almost no effect on overall function because there are many alternative species filling similar roles.</p>
+    <button class="btn btn-reveal" onclick="toggleReveal(this)">What conditions produce maximum biodiversity?</button>
+    <div class="reveal-box">
+      The current best-supported model suggests three factors: (1) very stable ecosystems with many complex relationships between species; (2) areas with high levels of productivity — when photosynthesis rates are very high, more energy is available to support more species at each trophic level; (3) areas where organisms can grow and reproduce rapidly, increasing mutation rates and the chance of adaptations that allow exploitation of new niches.
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <h3 style="margin-bottom:16px;">Apply your understanding</h3>
+
+  <div class="retrieval-q">
+    <div class="q-label">Question 1 · Analysis</div>
+    <div class="q-text">A scientist measures D in a woodland in March and again in August. She gets D = 2.3 in March and D = 5.8 in August. Suggest two reasons for this difference, other than measurement error.</div>
+    <textarea placeholder="Write your answer here..."></textarea><br><br>
+    <button class="btn btn-reveal" onclick="toggleReveal(this)">Reveal</button>
+    <div class="reveal-box">
+      <div class="mark-point">More animal species are active / visible in August — insects, birds, and reptiles that hibernate or migrate in winter will be present and countable in summer, increasing species richness (1)</div>
+      <div class="mark-point">More plant species are in bloom / above ground in summer — many woodland floor plants are annuals or only visible above ground seasonally, adding to species count and altering relative abundance (1)</div>
+      <div class="mark-point">Summer supports greater food availability, allowing higher numbers of animals — this affects abundance and therefore the distribution of n values in the calculation (1) [any two]</div>
+    </div>
+  </div>
+
+  <div class="retrieval-q">
+    <div class="q-label">Question 2 · Suggest</div>
+    <div class="q-text">Explain why small, isolated ecosystems such as islands and wetlands are particularly vulnerable to biodiversity loss.</div>
+    <textarea placeholder="Write your answer here..."></textarea><br><br>
+    <button class="btn btn-reveal" onclick="toggleReveal(this)">Reveal</button>
+    <div class="reveal-box">
+      <div class="mark-point">Small ecosystems have fewer individuals of each species, so populations are more vulnerable to random events (genetic drift, disease, natural disaster) that could cause local extinction (1)</div>
+      <div class="mark-point">Isolation limits immigration from other populations — if a species is lost, there is no reservoir nearby from which it can be naturally recolonised (1)</div>
+      <div class="mark-point">Many small isolated ecosystems are also biodiversity hotspots with many endemic species found nowhere else — if the habitat is lost, those species are permanently extinct, not just locally lost (1)</div>
+    </div>
+  </div>
+
+  <!-- MICRO CHECK 3 -->
+  <div class="micro-check">
+    <div class="micro-check-label">Station 3 · Micro-check</div>
+    <h3 style="margin-bottom:20px;">Check your conceptual understanding</h3>
+
+    <p style="font-size:14px; font-weight:700; color:var(--text); margin-bottom:10px;">Q1. Which statement best explains why tropical rainforests have higher biodiversity than Arctic tundra?</p>
+    <div class="mcq-options">
+      <button class="mcq-option" data-letter="A" onclick="checkMCQ(this, false, 'mc3a')">Arctic tundra is colder, so organisms die before reproducing</button>
+      <button class="mcq-option" data-letter="B" onclick="checkMCQ(this, true, 'mc3a')">Tropical rainforests have greater ecosystem stability and higher productivity, supporting more complex food webs and more species</button>
+      <button class="mcq-option" data-letter="C" onclick="checkMCQ(this, false, 'mc3a')">Tropical rainforests have been studied for longer so more species have been discovered</button>
+      <button class="mcq-option" data-letter="D" onclick="checkMCQ(this, false, 'mc3a')">Arctic species are all migratory so they cannot be counted properly</button>
+    </div>
+    <div id="fb-mc3a-correct" class="feedback-msg correct">Correct. Stability and productivity are the two key drivers — they allow complex relationships to develop and support a greater diversity of ecological niches.</div>
+    <div id="fb-mc3a-incorrect" class="feedback-msg incorrect">Think about the conditions that enable complex ecosystems to develop — stability, energy availability, and reproductive rate are all factors.</div>
+
+    <div class="divider"></div>
+
+    <p style="font-size:14px; font-weight:700; color:var(--text); margin-bottom:10px;">Q2. Explain why a new pathogen introduced to an extreme environment (such as a desert) could have a greater impact on biodiversity than the same pathogen introduced to a tropical forest. (2 marks)</p>
+    <textarea placeholder="Write your answer here..."></textarea><br><br>
+    <button class="btn btn-reveal" onclick="toggleReveal(this)">Reveal mark scheme</button>
+    <div class="reveal-box">
+      <div class="mark-point">Extreme environments have low species richness — fewer species means less ecological redundancy, so losing even one species to disease significantly reduces overall biodiversity (1)</div>
+      <div class="mark-point">In a tropical forest, other species can fill the ecological role of the lost species / the complex food web buffers against single-species loss; this buffering is absent in a low-biodiversity extreme environment (1)</div>
+    </div>
+  </div>
+
+  <div class="lesson-nav">
+    <button class="btn btn-outline" onclick="goTo('s2')">← Station 2</button>
+    <button class="btn btn-primary" onclick="goTo('s4')">Station 4 →</button>
+  </div>
+</section>
+
+<!-- ══════════ STATION 4 ══════════ -->
+<section id="s4">
+  <div class="station-header">
+    <div class="station-num">4</div>
+    <div class="station-header-text">
+      <h2>Genetic Biodiversity and the Heterozygosity Index</h2>
+      <p>Measuring biodiversity within a species using allele frequency</p>
+    </div>
+  </div>
+
+  <div class="card-green">
+    <h3 style="margin-bottom:6px;">A different scale of measurement</h3>
+    <p style="margin-bottom:0;">The diversity index D measures biodiversity at the species level within a habitat. But biodiversity also exists <em>within</em> a species — in the genetic variation between individuals. The <strong>heterozygosity index</strong> measures this. Without genetic variation, a population is vulnerable to disease, climate change, and environmental shifts.</p>
+  </div>
+
+  <h3 style="margin-bottom:12px;">The Formula</h3>
+  <div class="formula-box">
+    <div style="display:flex; align-items:center; justify-content:center; gap:12px; flex-wrap:wrap;">
+      <span style="font-size:18px;">Heterozygosity index =</span>
+      <div class="formula-fraction">
+        <div class="formula-numerator">number of heterozygotes</div>
+        <div class="formula-denominator">number of individuals in the population</div>
+      </div>
+    </div>
+    <div class="formula-label">A higher index = greater genetic diversity = healthier, more resilient population</div>
+  </div>
+
+  <div class="step-box">
+    <div class="step-num">?</div>
+    <div class="step-content">
+      <p><strong>How do we identify heterozygotes?</strong> Modern DNA analysis — when the DNA of an organism is analysed for a particular gene, homozygotes show <em>one band</em> (both alleles identical), while heterozygotes show <em>two bands</em> (two different alleles). Scientists use this to count heterozygotes across a sample population.</p>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <h3 style="margin-bottom:12px;">Worked Example: European Toad</h3>
+  <p style="margin-bottom:16px;">DNA analysis of 23 European toads for a single gene shows: 5 individuals are heterozygous, 18 are homozygous.</p>
+
+  <div class="worked-step">
+    Heterozygosity index = number of heterozygotes / total individuals<br>
+    = 5 / 23<br>
+    <strong>= 0.217</strong>
+  </div>
+
+  <div class="card-amber">
+    <h3 style="color:var(--amber); margin-bottom:8px;">Interpreting 0.217</h3>
+    <p>For comparison, healthy populations of Siberian apricot trees in China have heterozygosity indices of 0.639 and 0.774. The toad's 0.217 is considerably lower, suggesting limited genetic diversity — the population may be vulnerable. However, interpretation requires context: what is the species' typical range? Has the population recently declined? Single-locus measurements may not represent genome-wide diversity.</p>
+  </div>
+
+  <div class="divider"></div>
+
+  <h3 style="margin-bottom:16px;">Practice Calculations</h3>
+
+  <div class="retrieval-q" style="border-left-color:var(--green-dark);">
+    <div class="q-label" style="color:var(--green-dark);">Practice 1 — Guided</div>
+    <div class="q-text">A conservation team analyses DNA from 50 individuals of a rare bat species. They find that 32 individuals are heterozygous for a key immune-response gene. Calculate the heterozygosity index and interpret the result.</div>
+    <textarea placeholder="Show your calculation and interpretation here..."></textarea><br><br>
+    <button class="btn btn-reveal" onclick="toggleReveal(this)">Reveal answer</button>
+    <div class="reveal-box">
+      Heterozygosity index = 32 / 50 = <strong>0.64</strong><br><br>
+      This is a relatively high heterozygosity index, suggesting good genetic diversity in this population for the immune-response gene. The population has a reasonable level of variation, which should provide some resilience to disease — a healthy sign for a rare species. However, a single gene does not represent total genome diversity; further analysis across multiple loci would be needed for a full picture.
+    </div>
+  </div>
+
+  <div class="retrieval-q" style="border-left-color:var(--amber);">
+    <div class="q-label" style="color:var(--amber);">Practice 2 — Independent</div>
+    <div class="q-text">A researcher studies two isolated populations of mountain gorillas. In Population A (n=40), 6 individuals are heterozygous. In Population B (n=35), 4 individuals are heterozygous.<br><br>Calculate the heterozygosity index for each population and state which is more genetically diverse. Then explain what the lower index suggests about conservation risk.</div>
+    <textarea placeholder="Show all working and your interpretation..." style="min-height:120px;"></textarea><br><br>
+    <button class="btn btn-reveal" onclick="toggleReveal(this)">Reveal answer</button>
+    <div class="reveal-box">
+      Population A: 6/40 = <strong>0.15</strong><br>
+      Population B: 4/35 = <strong>0.114</strong><br><br>
+      Population A (0.15) has slightly greater genetic diversity than Population B (0.114), though both values are very low.<br><br>
+      The low heterozygosity in both populations suggests limited genetic variation. This means: (1) both populations are potentially vulnerable to a single pathogen — if one allele confers resistance and few individuals have it, disease could devastate the population; (2) the populations may have experienced a bottleneck event — a dramatic reduction in numbers that eliminated most genetic variation; (3) conservation priority should be considered for both, but Population B's lower index makes it particularly at risk.
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="card-amber">
+    <h3 style="color:var(--amber); margin-bottom:8px;">Case Study: Cheetahs and Dangerously Low Genetic Diversity</h3>
+    <p>Cheetahs are the fastest land animals on Earth. They are also among the most genetically uniform large mammals alive. The heterozygosity index for different cheetah populations ranges from just 0.0004 to 0.014 — extraordinarily low values. Scientists believe this is because the species was reduced to a tiny surviving group approximately 10,000–20,000 years ago — a severe population bottleneck. Modern cheetahs are so genetically similar that unrelated individuals can accept skin grafts from each other without rejection. The conservation implications are serious: a single epidemic could potentially destroy the entire species. Habitat destruction is accelerating the decline.</p>
+    <button class="btn btn-reveal" onclick="toggleReveal(this)">Why is a bottleneck so damaging to genetic diversity?</button>
+    <div class="reveal-box">
+      A population bottleneck dramatically reduces the number of individuals — and therefore the number of different alleles in the gene pool. Many alleles are simply lost by chance when most individuals die. The surviving individuals — and all their descendants — carry only the alleles that happened to be present in that tiny founding population. Even if the population later recovers in number, it cannot recover the alleles it lost. This is why cheetahs look superficially healthy in numbers but remain genetically fragile.
+    </div>
+  </div>
+
+  <!-- MICRO CHECK 4 -->
+  <div class="micro-check">
+    <div class="micro-check-label">Station 4 · Micro-check</div>
+    <h3 style="margin-bottom:20px;">Test your understanding</h3>
+
+    <p style="font-size:14px; font-weight:700; color:var(--text); margin-bottom:10px;">Q1. A population of 80 salamanders is analysed for a specific gene. 24 are heterozygous. What is the heterozygosity index?</p>
+    <div class="mcq-options">
+      <button class="mcq-option" data-letter="A" onclick="checkMCQ(this, false, 'mc4a')">0.80</button>
+      <button class="mcq-option" data-letter="B" onclick="checkMCQ(this, false, 'mc4a')">0.24</button>
+      <button class="mcq-option" data-letter="C" onclick="checkMCQ(this, true, 'mc4a')">0.30</button>
+      <button class="mcq-option" data-letter="D" onclick="checkMCQ(this, false, 'mc4a')">3.33</button>
+    </div>
+    <div id="fb-mc4a-correct" class="feedback-msg correct">Correct. 24/80 = 0.30. Always divide heterozygotes by total population size.</div>
+    <div id="fb-mc4a-incorrect" class="feedback-msg incorrect">Heterozygosity index = heterozygotes ÷ total. 24 ÷ 80 = 0.30.</div>
+
+    <div class="divider"></div>
+
+    <p style="font-size:14px; font-weight:700; color:var(--text); margin-bottom:10px;">Q2. Explain why a low heterozygosity index indicates that a population is at greater risk of being devastated by a new disease. (3 marks)</p>
+    <textarea placeholder="Write your answer here..."></textarea><br><br>
+    <button class="btn btn-reveal" onclick="toggleReveal(this)">Reveal mark scheme</button>
+    <div class="reveal-box">
+      <div class="mark-point">A low heterozygosity index indicates that most individuals in the population are homozygous / there are few different alleles in the gene pool (1)</div>
+      <div class="mark-point">Resistance to a new disease typically depends on having the correct alleles — if most individuals carry the same alleles, few or none may have the resistance allele (1)</div>
+      <div class="mark-point">A single pathogen could therefore affect the whole population uniformly / there is no reservoir of resistant individuals to survive and repopulate, risking extinction (1)</div>
+    </div>
+  </div>
+
+  <div class="lesson-nav">
+    <button class="btn btn-outline" onclick="goTo('s3')">← Station 3</button>
+    <button class="btn btn-primary" onclick="goTo('progress')">Progress Check →</button>
+  </div>
+</section>
+
+<!-- ══════════ PROGRESS CHECK ══════════ -->
+<section id="progress">
+  <div class="station-header">
+    <div class="station-num" style="background:var(--amber);">✓</div>
+    <div class="station-header-text">
+      <h2>Overall Progress Check</h2>
+      <p>Drawing across all four stations — attempt all questions before revealing</p>
+    </div>
+  </div>
+
+  <div class="card-green" style="margin-bottom:28px;">
+    <p style="margin-bottom:0;">This section tests your ability to calculate, interpret, and apply. Complete every question before revealing any mark schemes. Six questions — mix of calculation, MCQ, and short answer.</p>
+  </div>
+
+  <!-- PC1 — Full calculation -->
+  <div class="card" style="margin-bottom:16px;">
+    <div class="q-label">Progress Check · Q1 · Calculation (5 marks)</div>
+    <p style="font-size:15px; font-weight:700; color:var(--text); margin-bottom:12px;">A researcher samples invertebrates from a chalk stream. Calculate the diversity index and state whether this represents high or low biodiversity. Show all working.</p>
+    <table class="calc-table" style="margin-bottom:16px;">
+      <thead><tr><th>Species</th><th>n</th></tr></thead>
+      <tbody>
+        <tr><td>Mayfly larvae</td><td>11</td></tr>
+        <tr><td>Caddisfly larvae</td><td>8</td></tr>
+        <tr><td>Stonefly larvae</td><td>9</td></tr>
+        <tr><td>Water shrimp</td><td>14</td></tr>
+        <tr><td>Flatworm</td><td>3</td></tr>
+        <tr><td>Freshwater snail</td><td>5</td></tr>
+      </tbody>
+    </table>
+    <textarea placeholder="Show all your working: n(n−1) for each species, Σn(n−1), N, then D. State your interpretation." style="min-height:160px;"></textarea>
+    <br><br>
+    <button class="btn btn-reveal" onclick="toggleReveal(this)">Reveal mark scheme</button>
+    <div class="reveal-box">
+      n(n−1): 11×10=110, 8×7=56, 9×8=72, 14×13=182, 3×2=6, 5×4=20 (1 mark for correct method)<br>
+      Σn(n−1) = 110+56+72+182+6+20 = <strong>446</strong> (1 mark)<br>
+      N = 50, N(N−1) = 50×49 = 2450 (1 mark)<br>
+      D = 2450 / 446 = <strong>D = 5.49</strong> (1 mark, accept 5.4–5.5)<br>
+      This is relatively high biodiversity — chalk streams are known for diverse invertebrate communities; the relatively even distribution of species contributes to the high D. (1 mark for valid interpretation)
+    </div>
+  </div>
+
+  <!-- PC2 — Heterozygosity -->
+  <div class="card" style="margin-bottom:16px;">
+    <div class="q-label">Progress Check · Q2 · Calculation (3 marks)</div>
+    <p style="font-size:15px; font-weight:700; color:var(--text); margin-bottom:12px;">In a population of 120 red squirrels, 18 individuals are found to be heterozygous for a gene associated with disease resistance. Calculate the heterozygosity index and explain what this value suggests about the population's resilience to disease.</p>
+    <textarea placeholder="Show your calculation and write your explanation." style="min-height:100px;"></textarea>
+    <br><br>
+    <button class="btn btn-reveal" onclick="toggleReveal(this)">Reveal mark scheme</button>
+    <div class="reveal-box">
+      <div class="mark-point">Heterozygosity index = 18/120 = <strong>0.15</strong> (1)</div>
+      <div class="mark-point">This is a relatively low heterozygosity index — most individuals are homozygous for this disease-resistance gene (1)</div>
+      <div class="mark-point">The population has limited genetic diversity for this trait — a new pathogen could affect most individuals similarly, with few resistant individuals to survive and repopulate (1)</div>
+    </div>
+  </div>
+
+  <!-- PC3 MCQ -->
+  <div class="card" style="margin-bottom:16px;">
+    <div class="q-label">Progress Check · Q3</div>
+    <p style="font-size:15px; font-weight:700; color:var(--text); margin-bottom:12px;">In the formula D = N(N−1) / Σn(n−1), what would happen to D if two species had exactly equal abundance while all other species had very low abundance?</p>
+    <div class="mcq-options">
+      <button class="mcq-option" data-letter="A" onclick="checkMCQ(this, false, 'pc3')">D would be minimised because two species dominate</button>
+      <button class="mcq-option" data-letter="B" onclick="checkMCQ(this, true, 'pc3')">D would be lower than if all species had equal abundance, but higher than if one species dominated alone</button>
+      <button class="mcq-option" data-letter="C" onclick="checkMCQ(this, false, 'pc3')">D would be maximised because two species have high n values</button>
+      <button class="mcq-option" data-letter="D" onclick="checkMCQ(this, false, 'pc3')">D would equal 1</button>
+    </div>
+    <div id="fb-pc3-correct" class="feedback-msg correct">Correct. D is maximised when abundance is spread as evenly as possible across all species. Two dominant species is better than one, but worse than full evenness.</div>
+    <div id="fb-pc3-incorrect" class="feedback-msg incorrect">Think about what makes Σn(n−1) large or small. The more species share abundance equally, the smaller Σn(n−1) becomes relative to N(N−1), pushing D up.</div>
+  </div>
+
+  <!-- PC4 -->
+  <div class="card" style="margin-bottom:16px;">
+    <div class="q-label">Progress Check · Q4 · 3 marks</div>
+    <p style="font-size:15px; font-weight:700; color:var(--text); margin-bottom:12px;">Explain how a mutation in a gene can lead to a change in allele frequency in a population over time.</p>
+    <textarea placeholder="Write your answer here..."></textarea>
+    <br><br>
+    <button class="btn btn-reveal" onclick="toggleReveal(this)">Reveal mark scheme</button>
+    <div class="reveal-box">
+      <div class="mark-point">A mutation is a change in the base sequence of DNA that creates a new allele (1)</div>
+      <div class="mark-point">If the new allele is advantageous, natural selection favours individuals carrying it — they are more likely to survive, reproduce, and pass the allele on (1)</div>
+      <div class="mark-point">Over successive generations, the frequency of the advantageous allele increases in the gene pool / the original allele may become less common or disappear (1)</div>
+    </div>
+  </div>
+
+  <!-- PC5 -->
+  <div class="card" style="margin-bottom:16px;">
+    <div class="q-label">Progress Check · Q5 · 2 marks</div>
+    <p style="font-size:15px; font-weight:700; color:var(--text); margin-bottom:12px;">A student argues that the diversity index D is sufficient to fully measure the biodiversity of a habitat. Evaluate this argument.</p>
+    <textarea placeholder="Write your answer here..."></textarea>
+    <br><br>
+    <button class="btn btn-reveal" onclick="toggleReveal(this)">Reveal mark scheme</button>
+    <div class="reveal-box">
+      <div class="mark-point">The student is partially correct — D captures both species richness and relative species abundance in a single comparable value, making it more useful than species richness alone (1)</div>
+      <div class="mark-point">However, D does not measure genetic diversity within species / does not indicate whether species are endemic / does not show trends over time / a high D could mask very low heterozygosity — so D alone gives an incomplete picture (1)</div>
+    </div>
+  </div>
+
+  <!-- PC6 -->
+  <div class="card" style="margin-bottom:16px;">
+    <div class="q-label">Progress Check · Q6 · 2 marks</div>
+    <p style="font-size:15px; font-weight:700; color:var(--text); margin-bottom:12px;">Suggest why areas with many endemic species, such as the Hawaiian Islands, often show low genetic diversity despite high species diversity.</p>
+    <textarea placeholder="Write your answer here..."></textarea>
+    <br><br>
+    <button class="btn btn-reveal" onclick="toggleReveal(this)">Reveal mark scheme</button>
+    <div class="reveal-box">
+      <div class="mark-point">Many endemic species arose from small founding populations — only the alleles present in that small founding group were passed on, giving a limited gene pool (founder effect) (1)</div>
+      <div class="mark-point">Continued isolation prevents new alleles from entering via gene flow / small isolated populations experience genetic drift, further reducing allelic diversity over time (1)</div>
+    </div>
+  </div>
+
+  <div class="lesson-nav">
+    <button class="btn btn-outline" onclick="goTo('s4')">← Station 4</button>
+    <button class="btn btn-primary" onclick="goTo('exam')">Exam Support →</button>
+  </div>
+</section>
+
+<!-- ══════════ EXAM SUPPORT ══════════ -->
+<section id="exam">
+  <div class="station-header">
+    <div class="station-num" style="background:var(--amber);">★</div>
+    <div class="station-header-text">
+      <h2>Exam Support</h2>
+      <p>Command words · Common calculation mistakes · Worked answer · Have a go</p>
+    </div>
+  </div>
+
+  <h3 style="margin-bottom:16px;">Command Words for this Topic</h3>
+
+  <div class="command-word">
+    <h4>CALCULATE</h4>
+    <p>Work through the formula step by step and show all working. Always present your table of n(n−1) values before giving D. Include units if asked (D has none). Round to 2 decimal places unless told otherwise. Do not just write the final answer — method marks are available for each step.</p>
+  </div>
+
+  <div class="command-word">
+    <h4>INTERPRET</h4>
+    <p>Go beyond the number — explain what it means. For D: is it high or low relative to a comparison? What does this suggest about the habitat condition? For heterozygosity index: is the population genetically diverse or uniform? What does that mean for resilience?</p>
+  </div>
+
+  <div class="command-word">
+    <h4>EXPLAIN</h4>
+    <p>For allele frequency questions: state the mechanism clearly — mutation creates the allele, natural selection determines whether it increases or decreases in frequency, and the chain of reasoning must link to survival and reproduction. Each link needs to be stated.</p>
+  </div>
+
+  <div class="command-word">
+    <h4>EVALUATE</h4>
+    <p>For evaluation questions about D or the heterozygosity index, you need both sides — what the measure does capture AND what it misses. "D is useful because... however, it is limited because..." is the structure. Avoid evaluating only one side.</p>
+  </div>
+
+  <div class="divider"></div>
+
+  <h3 style="margin-bottom:16px;">Common Calculation Mistakes</h3>
+
+  <div class="card" style="margin-bottom:12px;">
+    <div style="display:flex; gap:12px;">
+      <div style="color:var(--red); font-size:18px; flex-shrink:0;">✗</div>
+      <div>
+        <p style="font-weight:700; margin-bottom:4px;">Confusing N and n in the formula</p>
+        <p style="font-size:13px; margin-bottom:0;">N (capital) = total of ALL organisms. n (lower case) = total for ONE species. The numerator uses N. The denominator uses n (one per species, then summed). Getting these mixed up is the most common error — the table structure helps you keep them separate.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:12px;">
+    <div style="display:flex; gap:12px;">
+      <div style="color:var(--red); font-size:18px; flex-shrink:0;">✗</div>
+      <div>
+        <p style="font-weight:700; margin-bottom:4px;">Forgetting the Σ (sum) step</p>
+        <p style="font-size:13px; margin-bottom:0;">You must calculate n(n−1) for every species and then add all those values together. Students frequently calculate only one or two n(n−1) values and use those in the denominator. The denominator is the sum of ALL species' n(n−1) values.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:12px;">
+    <div style="display:flex; gap:12px;">
+      <div style="color:var(--red); font-size:18px; flex-shrink:0;">✗</div>
+      <div>
+        <p style="font-weight:700; margin-bottom:4px;">Not applying the (n−1) correctly for n=1</p>
+        <p style="font-size:13px; margin-bottom:0;">If a species has only 1 individual, n(n−1) = 1×0 = 0. That species contributes nothing to the denominator. Students sometimes write n(n−1) = 1 for this case — always subtract 1 from n before multiplying.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:12px;">
+    <div style="display:flex; gap:12px;">
+      <div style="color:var(--red); font-size:18px; flex-shrink:0;">✗</div>
+      <div>
+        <p style="font-weight:700; margin-bottom:4px;">Heterozygosity index inverted</p>
+        <p style="font-size:13px; margin-bottom:0;">The formula is heterozygotes ÷ total. Students sometimes invert this (total ÷ heterozygotes). The index must be between 0 and 1. If you get a number greater than 1, you have inverted the fraction — check immediately.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:24px;">
+    <div style="display:flex; gap:12px;">
+      <div style="color:var(--red); font-size:18px; flex-shrink:0;">✗</div>
+      <div>
+        <p style="font-weight:700; margin-bottom:4px;">Saying "higher D = more species"</p>
+        <p style="font-size:13px; margin-bottom:0;">A higher D means greater biodiversity, which combines species richness AND evenness. Two habitats with the same species richness can have very different D values. Never conflate D with species count alone.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <h3 style="margin-bottom:16px;">Worked Example Answer</h3>
+
+  <div class="card-amber">
+    <p style="font-size:13px; font-weight:700; color:var(--amber); margin-bottom:8px;">EXAM QUESTION (6 marks)</p>
+    <p style="font-size:15px; font-weight:700; color:var(--text); margin-bottom:0;">A river ecologist surveys invertebrates at two sites — Site 1 (upstream, unpolluted) and Site 2 (downstream, affected by agricultural runoff). Site 1 has D = 6.4. At Site 2, the following organisms were collected: bloodworms (n=34), tubifex worms (n=29), rat-tailed maggots (n=18). Calculate D for Site 2, compare the two sites, and suggest what the data indicate about the effect of pollution on biodiversity.</p>
+  </div>
+
+  <div class="card" style="border-top:3px solid var(--green-mid); margin-top:0;">
+    <p style="font-size:12px; font-weight:700; letter-spacing:0.06em; text-transform:uppercase; color:var(--green-mid); margin-bottom:12px;">Model Answer (6/6)</p>
+    <p style="font-size:14px; line-height:1.9; color:var(--text-mid);">
+      <strong>Step 1 — Complete the table:</strong><br>
+      Bloodworms: n=34, n(n−1) = 34×33 = 1122<br>
+      Tubifex worms: n=29, n(n−1) = 29×28 = 812<br>
+      Rat-tailed maggots: n=18, n(n−1) = 18×17 = 306<br>
+      N = 81 · Σn(n−1) = 1122 + 812 + 306 = <strong>2240</strong><br><br>
+      <strong>Step 2 — Apply the formula:</strong><br>
+      D = N(N−1) / Σn(n−1) = 81 × 80 / 2240 = 6480 / 2240 = <strong>D = 2.89</strong><br><br>
+      <strong>Step 3 — Compare and interpret:</strong><br>
+      Site 2 (D = 2.89) has substantially lower biodiversity than Site 1 (D = 6.4). Only three species were recorded at Site 2 compared with presumably more at Site 1. Agricultural runoff typically introduces excess nitrates and phosphates, causing algal blooms that deplete oxygen levels. Most invertebrate species cannot survive in low-oxygen conditions, so only pollution-tolerant species (bloodworms, tubifex worms, rat-tailed maggots — all of which can survive very low dissolved oxygen) persist. The data suggest that pollution has significantly reduced both species richness and — since three species are still relatively abundant — also reduced the evenness of distribution compared to the unpolluted site.
+    </p>
+    <div style="margin-top:12px; padding-top:12px; border-top:1px solid var(--border);">
+      <p style="font-size:12px; font-weight:700; color:var(--green-dark);">Why this scores full marks:</p>
+      <p style="font-size:13px; color:var(--text-mid);">✓ All n(n−1) values calculated correctly ✓ Σn(n−1) correct ✓ D correct ✓ Valid comparison with D values ✓ Mechanistic explanation of pollution effect ✓ Identifies indicator species concept implicitly</p>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <h3 style="margin-bottom:8px;">Have a Go</h3>
+  <p style="margin-bottom:20px; color:var(--text-mid);">Full exam conditions — write your answer, then reveal the mark scheme to self-assess.</p>
+
+  <div class="card-amber">
+    <p style="font-size:13px; font-weight:700; color:var(--amber); margin-bottom:8px;">EXAM QUESTION (5 marks)</p>
+    <p style="font-size:15px; font-weight:700; color:var(--text); margin-bottom:0;">Scientists are concerned about the genetic health of a small, isolated population of Scottish wildcats. They analyse DNA from 30 individuals and find that only 3 are heterozygous for a key immune-gene locus. Calculate the heterozygosity index. Explain what this value indicates about the population's genetic health and suggest why a small, isolated population is likely to have low heterozygosity.</p>
+  </div>
+
+  <textarea style="width:100%; min-height:200px; border:1px solid var(--border); border-radius:6px; padding:14px; font-family:'Lato',sans-serif; font-size:14px; color:var(--text); background:var(--bg); resize:vertical; line-height:1.7; margin-bottom:16px;" placeholder="Write your full exam answer here — include the calculation, interpretation, and explanation."></textarea>
+
+  <button class="btn btn-reveal" onclick="toggleReveal(this)">Reveal mark scheme</button>
+  <div class="reveal-box">
+    <div class="mark-point">Heterozygosity index = 3/30 = <strong>0.10</strong> (1)</div>
+    <div class="mark-point">This is a very low heterozygosity index — most individuals are homozygous / there is very limited genetic variation at this locus (1)</div>
+    <div class="mark-point">The population has low genetic diversity — it is vulnerable to disease as few individuals may carry resistance alleles / a single pathogen could potentially devastate the entire population (1)</div>
+    <div class="mark-point">Small populations have limited numbers of alleles present — genetic drift (random changes in allele frequency) removes alleles more rapidly in small populations (1)</div>
+    <div class="mark-point">Isolation prevents new alleles entering via gene flow / inbreeding increases homozygosity over generations / the founder effect may have established a low-diversity gene pool if the population was founded by few individuals (1)</div>
+  </div>
+
+  <div class="card-green" style="margin-top:32px;">
+    <h3 style="margin-bottom:8px;">Lesson complete 🌿</h3>
+    <p style="margin-bottom:0;">You have calculated D multiple times with decreasing scaffold, worked with the heterozygosity index, and practised exam-standard interpretation. The next lesson in 4C covers the Hardy-Weinberg equation — which builds directly on your understanding of allele frequency from this lesson.</p>
+  </div>
+
+  <div class="lesson-nav">
+    <button class="btn btn-outline" onclick="goTo('progress')">← Progress Check</button>
+    <button class="btn btn-primary" onclick="goTo('opener')">↺ Back to start</button>
+  </div>
+</section>
+
+<script>
+// ── NAVIGATION ──
+const sections = ['opener','s1','s2','s3','s4','progress','exam'];
+const navIds   = ['nav-opener','nav-s1','nav-s2','nav-s3','nav-s4','nav-progress','nav-exam'];
+
+function buildDots() {
+  const c = document.getElementById('progress-dots');
+  c.innerHTML = '';
+  sections.forEach((_,i) => {
+    const d = document.createElement('div');
+    d.className = 'progress-dot' + (i===0?' active':'');
+    d.id = 'dot-'+i;
+    c.appendChild(d);
+  });
+}
+
+function goTo(id) {
+  sections.forEach(s => { const el=document.getElementById(s); if(el) el.classList.remove('active'); });
+  navIds.forEach(n => { const el=document.getElementById(n); if(el) el.classList.remove('active'); });
+  const target = document.getElementById(id);
+  if(target) target.classList.add('active');
+  const idx = sections.indexOf(id);
+  if(idx>=0) {
+    const navEl = document.getElementById(navIds[idx]);
+    if(navEl) navEl.classList.add('active');
+    sections.forEach((_,i) => {
+      const dot=document.getElementById('dot-'+i);
+      if(!dot) return;
+      dot.className='progress-dot';
+      if(i<idx) dot.classList.add('done');
+      else if(i===idx) dot.classList.add('active');
+    });
+  }
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+buildDots();
+
+// ── REVEAL ──
+function toggleReveal(btn) {
+  const box = btn.nextElementSibling;
+  if(!box) return;
+  const showing = box.classList.contains('show');
+  box.classList.toggle('show', !showing);
+  btn.textContent = showing ? 'Reveal answer' : 'Hide answer';
+}
+
+// ── MCQ ──
+function checkMCQ(btn, correct, id) {
+  const group = btn.closest('.mcq-options');
+  if(!group) return;
+  group.querySelectorAll('.mcq-option').forEach(b => b.classList.add('disabled'));
+  const correctEl = document.getElementById('fb-'+id+'-correct');
+  const incorrectEl = document.getElementById('fb-'+id+'-incorrect');
+  if(correct) {
+    btn.classList.add('correct');
+    if(correctEl) correctEl.style.display='block';
+  } else {
+    btn.classList.add('incorrect');
+    if(incorrectEl) incorrectEl.style.display='block';
+    group.querySelectorAll('.mcq-option').forEach(b => {
+      if(b.getAttribute('onclick') && b.getAttribute('onclick').includes('true')) b.classList.add('correct');
+    });
+  }
+}
+
+// ── TABS ──
+function switchTab(tabId, btn) {
+  document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  const pane = document.getElementById(tabId);
+  if(pane) pane.classList.add('active');
+  if(btn) btn.classList.add('active');
+}
+
+// ── CALC 1 CHECK ──
+const c1answers = {
+  c1r1a:8, c1r1b:72,
+  c1r2a:2, c1r2b:6,
+  c1r3a:2, c1r3b:6,
+  c1r4a:4, c1r4b:20,
+  c1r5a:2, c1r5b:6,
+  c1r6a:0, c1r6b:0,
+  c1total:110
+};
+
+function checkCalc1() {
+  let correct = 0; let total = Object.keys(c1answers).length + 1;
+  Object.entries(c1answers).forEach(([id, val]) => {
+    const el = document.getElementById(id);
+    if(!el) return;
+    const v = parseFloat(el.value);
+    if(v === val) { el.classList.add('correct'); el.classList.remove('incorrect'); correct++; }
+    else { el.classList.add('incorrect'); el.classList.remove('correct'); }
+  });
+  const dEl = document.getElementById('c1d');
+  const dVal = parseFloat(dEl.value);
+  if(dVal >= 5.0 && dVal <= 5.1) { dEl.classList.add('correct'); dEl.classList.remove('incorrect'); correct++; }
+  else { dEl.classList.add('incorrect'); dEl.classList.remove('correct'); }
+
+  const fb = document.getElementById('calc1-feedback');
+  fb.innerHTML = correct === total
+    ? '<div style="padding:12px;background:var(--green-ultra);border:1px solid var(--border-green);border-radius:6px;color:var(--green-dark);font-weight:700;">✓ All correct! D ≈ 5.02</div>'
+    : `<div style="padding:12px;background:var(--amber-pale);border:1px solid #E8C88A;border-radius:6px;color:var(--amber);font-weight:700;">${correct}/${total} correct. Red cells need checking — reveal the full answer for support.</div>`;
+}
+
+function checkCalc2() {
+  const c2answers = {
+    c2r1a:13, c2r1b:182,
+    c2r2a:5,  c2r2b:30,
+    c2r3a:21, c2r3b:462,
+    c2r4a:2,  c2r4b:6,
+    c2r5a:4,  c2r5b:20,
+    c2N:50, c2total:700
+  };
+  let correct=0; let total=Object.keys(c2answers).length+1;
+  Object.entries(c2answers).forEach(([id,val]) => {
+    const el=document.getElementById(id); if(!el) return;
+    const v=parseFloat(el.value);
+    if(v===val){el.classList.add('correct');el.classList.remove('incorrect');correct++;}
+    else{el.classList.add('incorrect');el.classList.remove('correct');}
+  });
+  const dEl=document.getElementById('c2d');
+  const dVal=parseFloat(dEl.value);
+  if(dVal>=3.45&&dVal<=3.55){dEl.classList.add('correct');dEl.classList.remove('incorrect');correct++;}
+  else{dEl.classList.add('incorrect');dEl.classList.remove('correct');}
+
+  const fb=document.getElementById('calc2-feedback');
+  fb.innerHTML = correct===total
+    ? '<div style="padding:12px;background:var(--green-ultra);border:1px solid var(--border-green);border-radius:6px;color:var(--green-dark);font-weight:700;">✓ All correct! D = 3.50</div>'
+    : `<div style="padding:12px;background:var(--amber-pale);border:1px solid #E8C88A;border-radius:6px;color:var(--amber);font-weight:700;">${correct}/${total} correct — red cells need checking.</div>`;
+}
+
+function checkCalc3() {
+  const dAEl = document.getElementById('c3dA');
+  const dBEl = document.getElementById('c3dB');
+  const dA = parseFloat(dAEl.value);
+  const dB = parseFloat(dBEl.value);
+  let msg = '';
+  let aOk = dA>=3.6 && dA<=3.7;
+  let bOk = dB>=5.25 && dB<=5.35;
+
+  if(aOk){dAEl.classList.add('correct');dAEl.classList.remove('incorrect');}
+  else{dAEl.classList.add('incorrect');dAEl.classList.remove('correct');}
+  if(bOk){dBEl.classList.add('correct');dBEl.classList.remove('incorrect');}
+  else{dBEl.classList.add('incorrect');dBEl.classList.remove('correct');}
+
+  if(aOk&&bOk) msg='<div style="padding:12px;background:var(--green-ultra);border:1px solid var(--border-green);border-radius:6px;color:var(--green-dark);font-weight:700;">✓ Both D values correct! A=3.65, B=5.31</div>';
+  else msg=`<div style="padding:12px;background:var(--amber-pale);border:1px solid #E8C88A;border-radius:6px;color:var(--amber);font-weight:700;">Check your working — Habitat A: D≈3.65 | Habitat B: D≈5.31. Reveal the full answer for support.</div>`;
+  document.getElementById('calc3-feedback').innerHTML = msg;
+}
+</script>
+</body>
+</html>
