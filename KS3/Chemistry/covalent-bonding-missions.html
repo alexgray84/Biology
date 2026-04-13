@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Covalent Bonding — Mission Folders</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0f14;
+    --surface: #13161e;
+    --surface-2: #1b1f2b;
+    --border: rgba(255,255,255,0.07);
+    --text: #e8eaf0;
+    --muted: #7a7f96;
+    --accent-1: #f4c842;  /* gold — Mission 1 */
+    --accent-2: #5ecfb1;  /* teal — Mission 2 */
+    --accent-3: #c084fc;  /* violet — Mission 3 */
+    --accent-4: #f97060;  /* red-orange — Mission 4 */
+    --tag-bg: rgba(255,255,255,0.06);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    line-height: 1.65;
+    min-height: 100vh;
+    padding: 48px 24px 80px;
+  }
+
+  /* ── Header ── */
+  .page-header {
+    max-width: 780px;
+    margin: 0 auto 56px;
+    text-align: center;
+  }
+
+  .eyebrow {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    padding: 5px 14px;
+    margin-bottom: 20px;
+  }
+
+  .page-title {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(36px, 6vw, 58px);
+    font-weight: 900;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    color: #fff;
+    margin-bottom: 16px;
+  }
+
+  .page-title span {
+    font-style: italic;
+    font-weight: 300;
+    color: var(--muted);
+  }
+
+  .page-subtitle {
+    color: var(--muted);
+    font-size: 15px;
+    max-width: 520px;
+    margin: 0 auto;
+  }
+
+  /* ── Grid ── */
+  .missions-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 24px;
+    max-width: 1120px;
+    margin: 0 auto 48px;
+  }
+
+  /* ── Mission Card ── */
+  .mission-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .mission-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 16px 48px rgba(0,0,0,0.4);
+  }
+
+  /* Colour accent bar at top */
+  .card-stripe {
+    height: 4px;
+    width: 100%;
+  }
+
+  .mission-card[data-mission="1"] .card-stripe { background: var(--accent-1); }
+  .mission-card[data-mission="2"] .card-stripe { background: var(--accent-2); }
+  .mission-card[data-mission="3"] .card-stripe { background: var(--accent-3); }
+  .mission-card[data-mission="4"] .card-stripe { background: var(--accent-4); }
+
+  .card-header {
+    padding: 24px 24px 0;
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+  }
+
+  .mission-badge {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+
+  .mission-card[data-mission="1"] .mission-badge { background: rgba(244,200,66,0.12); }
+  .mission-card[data-mission="2"] .mission-badge { background: rgba(94,207,177,0.12); }
+  .mission-card[data-mission="3"] .mission-badge { background: rgba(192,132,252,0.12); }
+  .mission-card[data-mission="4"] .mission-badge { background: rgba(249,112,96,0.12); }
+
+  .mission-meta {
+    flex: 1;
+  }
+
+  .mission-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 4px;
+  }
+
+  .mission-title {
+    font-family: 'Fraunces', serif;
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 1.2;
+    color: #fff;
+  }
+
+  .card-body {
+    padding: 20px 24px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  /* Scenario box */
+  .scenario {
+    background: var(--surface-2);
+    border-radius: 10px;
+    padding: 14px 16px;
+    border-left: 3px solid;
+    font-size: 13.5px;
+    color: #bcc0d0;
+  }
+
+  .mission-card[data-mission="1"] .scenario { border-color: var(--accent-1); }
+  .mission-card[data-mission="2"] .scenario { border-color: var(--accent-2); }
+  .mission-card[data-mission="3"] .scenario { border-color: var(--accent-3); }
+  .mission-card[data-mission="4"] .scenario { border-color: var(--accent-4); }
+
+  .scenario-label {
+    font-size: 9.5px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  .mission-card[data-mission="1"] .scenario-label { color: var(--accent-1); }
+  .mission-card[data-mission="2"] .scenario-label { color: var(--accent-2); }
+  .mission-card[data-mission="3"] .scenario-label { color: var(--accent-3); }
+  .mission-card[data-mission="4"] .scenario-label { color: var(--accent-4); }
+
+  /* Task section */
+  .section-heading {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 10px;
+  }
+
+  .task-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .task-item {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    font-size: 13.5px;
+    color: #ccd0e0;
+  }
+
+  .step-num {
+    min-width: 24px;
+    height: 24px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--bg);
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .mission-card[data-mission="1"] .step-num { background: var(--accent-1); }
+  .mission-card[data-mission="2"] .step-num { background: var(--accent-2); }
+  .mission-card[data-mission="3"] .step-num { background: var(--accent-3); }
+  .mission-card[data-mission="4"] .step-num { background: var(--accent-4); }
+
+  /* Powerplay / Big Think */
+  .powerplay {
+    margin-top: auto;
+    border-radius: 12px;
+    padding: 16px;
+    font-size: 13px;
+    line-height: 1.6;
+  }
+
+  .mission-card[data-mission="1"] .powerplay { background: rgba(244,200,66,0.08); border: 1px solid rgba(244,200,66,0.18); }
+  .mission-card[data-mission="2"] .powerplay { background: rgba(94,207,177,0.08); border: 1px solid rgba(94,207,177,0.18); }
+  .mission-card[data-mission="3"] .powerplay { background: rgba(192,132,252,0.08); border: 1px solid rgba(192,132,252,0.18); }
+  .mission-card[data-mission="4"] .powerplay { background: rgba(249,112,96,0.08); border: 1px solid rgba(249,112,96,0.18); }
+
+  .powerplay-label {
+    font-size: 9.5px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .mission-card[data-mission="1"] .powerplay-label { color: var(--accent-1); }
+  .mission-card[data-mission="2"] .powerplay-label { color: var(--accent-2); }
+  .mission-card[data-mission="3"] .powerplay-label { color: var(--accent-3); }
+  .mission-card[data-mission="4"] .powerplay-label { color: var(--accent-4); }
+
+  .powerplay p { color: #c8ccdd; }
+
+  /* ── Submission Panel ── */
+  .submit-panel {
+    max-width: 780px;
+    margin: 0 auto;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 32px 36px;
+    display: flex;
+    gap: 32px;
+    align-items: flex-start;
+  }
+
+  .submit-icon {
+    font-size: 36px;
+    flex-shrink: 0;
+    line-height: 1;
+    margin-top: 4px;
+  }
+
+  .submit-content h2 {
+    font-family: 'Fraunces', serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 8px;
+  }
+
+  .submit-content p {
+    color: var(--muted);
+    font-size: 14px;
+    margin-bottom: 16px;
+  }
+
+  .submit-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .submit-tag {
+    background: var(--tag-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 6px 12px;
+    font-size: 13px;
+    color: #a0a6be;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  /* divider between sections */
+  .divider {
+    max-width: 780px;
+    margin: 0 auto 20px;
+    border: none;
+    border-top: 1px solid var(--border);
+  }
+
+  /* math rendering */
+  .math { font-style: italic; }
+
+  @media (max-width: 640px) {
+    .submit-panel { flex-direction: column; gap: 16px; }
+    .missions-grid { grid-template-columns: 1fr; }
+  }
+
+  @media print {
+    body { background: #fff; color: #111; padding: 20px; }
+    .mission-card { break-inside: avoid; border: 1px solid #ddd; background: #fff; }
+    .page-header { color: #111; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ── Page Header ── -->
+<header class="page-header">
+  <span class="eyebrow">Chemistry · Covalent Bonding</span>
+  <h1 class="page-title">Mission <span>Folders</span></h1>
+  <p class="page-subtitle">Four tasks. Four roles. One goal — build your understanding of covalent bonding from the ground up.</p>
+</header>
+
+<!-- ── Mission Cards ── -->
+<div class="missions-grid">
+
+  <!-- Mission 1 -->
+  <div class="mission-card" data-mission="1">
+    <div class="card-stripe"></div>
+    <div class="card-header">
+      <div class="mission-badge">🏗️</div>
+      <div class="mission-meta">
+        <div class="mission-label">Mission 01</div>
+        <div class="mission-title">The Shared Pair Challenge</div>
+      </div>
+    </div>
+    <div class="card-body">
+
+      <div class="scenario">
+        <div class="scenario-label">Your Role</div>
+        You are a <strong>Molecular Matchmaker</strong>. Atoms are only "happy" when their outer shells are full. Since non-metals can't steal electrons from each other, they move in together — and share.
+      </div>
+
+      <div>
+        <div class="section-heading">The Task</div>
+        <ul class="task-list">
+          <li class="task-item">
+            <span class="step-num">1</span>
+            <span>Find your <strong>"electrons"</strong> — grab two types of small items (pennies &amp; paperclips, or two LEGO colours).</span>
+          </li>
+          <li class="task-item">
+            <span class="step-num">2</span>
+            <span><strong>Dot &amp; Cross build:</strong> Draw the overlapping outer shells for <span class="math">H₂O</span> and <span class="math">CH₄</span> on paper.</span>
+          </li>
+          <li class="task-item">
+            <span class="step-num">3</span>
+            <span><strong>Place your items:</strong> Use one type for "dots," the other for "crosses."</span>
+          </li>
+          <li class="task-item">
+            <span class="step-num">4</span>
+            <span><strong>Photo op:</strong> Take a bird's-eye photo of your completed models.</span>
+          </li>
+        </ul>
+      </div>
+
+      <div class="powerplay">
+        <div class="powerplay-label">⚡ The Powerplay</div>
+        <p>Look at where the shared pair sits — in the overlap. The centre of atoms is positive (+) and electrons are negative (−). In your caption, explain: why does this shared pair act like glue holding the atoms together?</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mission 2 -->
+  <div class="mission-card" data-mission="2">
+    <div class="card-stripe"></div>
+    <div class="card-header">
+      <div class="mission-badge">🧊</div>
+      <div class="mission-meta">
+        <div class="mission-label">Mission 02</div>
+        <div class="mission-title">Superglue vs. Velcro</div>
+      </div>
+    </div>
+    <div class="card-body">
+
+      <div class="scenario">
+        <div class="scenario-label">Your Role</div>
+        You are a <strong>Materials Scientist</strong>. Mystery: why does water turn to steam at 100°C, but the bonds <em>inside</em> water don't break until thousands of degrees?
+      </div>
+
+      <div>
+        <div class="section-heading">The Task</div>
+        <ul class="task-list">
+          <li class="task-item">
+            <span class="step-num">1</span>
+            <span>Draw two <span class="math">H–O–H</span> molecules next to each other on paper.</span>
+          </li>
+          <li class="task-item">
+            <span class="step-num">2</span>
+            <span><strong>Label the Superglue:</strong> Draw a thick solid line for the covalent bonds <em>inside</em> each molecule.</span>
+          </li>
+          <li class="task-item">
+            <span class="step-num">3</span>
+            <span><strong>Label the Velcro:</strong> Draw a faint dotted line <em>between</em> the two molecules. Label these <em>Intermolecular Forces</em>.</span>
+          </li>
+          <li class="task-item">
+            <span class="step-num">4</span>
+            <span><strong>Stop motion:</strong> Create a 15-second sketch sequence showing what happens as water boils. Do molecules break into atoms, or do the Velcro lines just snap?</span>
+          </li>
+        </ul>
+      </div>
+
+      <div class="powerplay">
+        <div class="powerplay-label">⚡ The Powerplay</div>
+        <p>A bigger, heavier molecule has more "Velcro hooks." Would it be easier or harder to boil — and why?</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mission 3 -->
+  <div class="mission-card" data-mission="3">
+    <div class="card-stripe"></div>
+    <div class="card-header">
+      <div class="mission-badge">💎</div>
+      <div class="mission-meta">
+        <div class="mission-label">Mission 03</div>
+        <div class="mission-title">The Carbon Architect</div>
+      </div>
+    </div>
+    <div class="card-body">
+
+      <div class="scenario">
+        <div class="scenario-label">Your Role</div>
+        You have been hired by <strong>DEEP Mining Corp</strong>. They need a material that can drill through any rock (Diamond) and one that can grease the heaviest gears (Graphite). Both are pure carbon — but built very differently.
+      </div>
+
+      <div>
+        <div class="section-heading">The Task</div>
+        <ul class="task-list">
+          <li class="task-item">
+            <span class="step-num">1</span>
+            <span><strong>Sketch Diamond:</strong> Every carbon is "handcuffed" to 4 others in a 3D cage structure.</span>
+          </li>
+          <li class="task-item">
+            <span class="step-num">2</span>
+            <span><strong>Sketch Graphite:</strong> Every carbon is "handcuffed" to 3 others, forming flat sheets like stacked paper.</span>
+          </li>
+          <li class="task-item">
+            <span class="step-num">3</span>
+            <span><strong>The Solve:</strong> Draw an arrow on your Graphite sketch showing where the "slippery" part is. Why can the layers slide?</span>
+          </li>
+        </ul>
+      </div>
+
+      <div class="powerplay">
+        <div class="powerplay-label">⚡ The Powerplay</div>
+        <p>In Graphite, each carbon has one spare <em>delocalised</em> electron — not used in any bond, free to move. If these electrons can flow, what can Graphite do that Diamond (where every electron is busy) cannot?</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mission 4 -->
+  <div class="mission-card" data-mission="4">
+    <div class="card-stripe"></div>
+    <div class="card-header">
+      <div class="mission-badge">⚡</div>
+      <div class="mission-meta">
+        <div class="mission-label">Mission 04</div>
+        <div class="mission-title">The Case of the Frozen Runners</div>
+      </div>
+    </div>
+    <div class="card-body">
+
+      <div class="scenario">
+        <div class="scenario-label">Your Role</div>
+        You are a <strong>Forensic Investigator</strong>. A circuit has failed. The "Electricity Runners" — charged particles — cannot get through a block of covalent plastic. Find out why.
+      </div>
+
+      <div>
+        <div class="section-heading">The Task</div>
+        <ul class="task-list">
+          <li class="task-item">
+            <span class="step-num">1</span>
+            <span><strong>Wanted Poster:</strong> Design a poster for an Electricity Runner — a free-moving charged particle.</span>
+          </li>
+          <li class="task-item">
+            <span class="step-num">2</span>
+            <span><strong>The Evidence:</strong> Draw a simple covalent molecule (<span class="math">Cl₂</span>). Show that the electrons are "locked" in a handshake between atoms.</span>
+          </li>
+          <li class="task-item">
+            <span class="step-num">3</span>
+            <span><strong>The Verdict:</strong> Write two sentences explaining why electricity cannot flow through this material.</span>
+          </li>
+        </ul>
+      </div>
+
+      <div class="powerplay">
+        <div class="powerplay-label">⚡ The Powerplay</div>
+        <p><em>"If a particle can't move, the charge can't groove."</em> Based on your Wanted Poster — and Mission 3 — why does Graphite get a special Get Out of Jail Free card for conducting electricity?</p>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ── Submission Panel ── -->
+<hr class="divider">
+<div class="submit-panel">
+  <div class="submit-icon">📤</div>
+  <div class="submit-content">
+    <h2>Your Science Portfolio</h2>
+    <p>Combine your photos, sketches, and Powerplay answers from all four missions into one submission. Choose whichever format works best for you at home.</p>
+    <div class="submit-options">
+      <span class="submit-tag">📊 Google Slides or PowerPoint</span>
+      <span class="submit-tag">📱 Short phone video tour</span>
+      <span class="submit-tag">🎨 Digital collage (Canva etc.)</span>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
