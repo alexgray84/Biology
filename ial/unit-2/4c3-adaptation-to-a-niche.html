@@ -1,0 +1,1283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>4C.3 Adaptation to a Niche | IAL Biology Y12</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;0,9..144,700;1,9..144,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #FAF7F2;
+    --bg-warm: #F3EDE3;
+    --card: #FFFFFF;
+    --green-dark: #2D5016;
+    --green-mid: #4A7C2F;
+    --green-light: #7AAD52;
+    --green-pale: #E0EBD0;
+    --green-ultra: #F0F5E8;
+    --text: #2C2C2C;
+    --text-mid: #4A4A4A;
+    --text-light: #7A7A7A;
+    --amber: #C17D2A;
+    --amber-pale: #FDF3E3;
+    --red-pale: #FDECEA;
+    --red: #C0392B;
+    --border: #D8D0C4;
+    --border-green: #B0C898;
+    --shadow: 0 2px 12px rgba(45,80,22,0.08);
+    --shadow-hover: 0 6px 24px rgba(45,80,22,0.15);
+    --radius: 10px;
+    --nav-h: 64px;
+
+    /* DOK colours */
+    --dok1: #4A7C2F;
+    --dok1-pale: #F0F5E8;
+    --dok2: #2A6B9B;
+    --dok2-pale: #EDF4FA;
+    --dok3: #7B3FA0;
+    --dok3-pale: #F5EEF8;
+    --dok4: #B5460F;
+    --dok4-pale: #FDF0EA;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Lato', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; padding-top: var(--nav-h); }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0;
+    height: var(--nav-h);
+    background: rgba(250,247,242,0.96);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--border);
+    z-index: 100;
+    display: flex; align-items: center; padding: 0 24px; gap: 0;
+  }
+  .nav-brand { font-family:'Fraunces',serif; font-size:14px; font-weight:600; color:var(--green-dark); white-space:nowrap; margin-right:20px; padding-right:20px; border-right:1px solid var(--border); }
+  .nav-brand span { display:block; font-family:'Lato',sans-serif; font-weight:300; font-size:11px; color:var(--text-light); letter-spacing:0.05em; text-transform:uppercase; }
+  .nav-stations { display:flex; gap:2px; flex:1; overflow-x:auto; scrollbar-width:none; }
+  .nav-stations::-webkit-scrollbar { display:none; }
+  .nav-btn { display:flex; flex-direction:column; align-items:center; gap:2px; padding:6px 10px; border:none; background:transparent; cursor:pointer; border-radius:6px; transition:all 0.2s; white-space:nowrap; position:relative; }
+  .nav-btn:hover { background:var(--green-ultra); }
+  .nav-btn .nav-label { font-size:10px; font-weight:700; letter-spacing:0.06em; text-transform:uppercase; color:var(--text-light); transition:color 0.2s; }
+  .nav-btn .nav-title { font-size:10px; color:var(--text-light); transition:color 0.2s; }
+  .nav-btn.active .nav-label, .nav-btn.active .nav-title { color:var(--green-dark); }
+  .nav-btn::after { content:''; position:absolute; bottom:0; left:10px; right:10px; height:2px; background:var(--green-mid); border-radius:2px; transform:scaleX(0); transition:transform 0.2s; }
+  .nav-btn.active::after { transform:scaleX(1); }
+  .nav-progress { margin-left:auto; display:flex; align-items:center; padding-left:16px; border-left:1px solid var(--border); }
+  .progress-dots { display:flex; gap:4px; }
+  .progress-dot { width:8px; height:8px; border-radius:50%; background:var(--border); transition:background 0.3s; }
+  .progress-dot.done { background:var(--green-mid); }
+  .progress-dot.active { background:var(--green-dark); }
+
+  /* ── SECTIONS ── */
+  section { display:none; max-width:880px; margin:0 auto; padding:48px 24px 80px; animation:fadeUp 0.4s ease both; }
+  section.active { display:block; }
+  @keyframes fadeUp { from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);} }
+
+  /* ── TYPE ── */
+  h1 { font-family:'Fraunces',serif; font-size:42px; font-weight:700; color:var(--green-dark); line-height:1.1; margin-bottom:8px; }
+  h2 { font-family:'Fraunces',serif; font-size:26px; font-weight:600; color:var(--green-dark); margin-bottom:16px; }
+  h3 { font-family:'Fraunces',serif; font-size:18px; font-weight:600; color:var(--green-dark); margin-bottom:10px; }
+  p { line-height:1.75; color:var(--text-mid); margin-bottom:12px; }
+  .lesson-meta { font-size:12px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--green-mid); margin-bottom:6px; }
+  .lesson-subtitle { font-size:16px; color:var(--text-light); margin-bottom:32px; font-weight:300; }
+
+  /* ── DOK BADGE ── */
+  .dok-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 16px;
+    border-radius: 24px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+  .dok-badge .dok-num {
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px;
+    font-weight: 700;
+  }
+  .dok1 { background: var(--dok1-pale); color: var(--dok1); border: 1.5px solid #B0C898; }
+  .dok1 .dok-num { background: var(--dok1); color: white; }
+  .dok2 { background: var(--dok2-pale); color: var(--dok2); border: 1.5px solid #A8CCEA; }
+  .dok2 .dok-num { background: var(--dok2); color: white; }
+  .dok3 { background: var(--dok3-pale); color: var(--dok3); border: 1.5px solid #C9A8E0; }
+  .dok3 .dok-num { background: var(--dok3); color: white; }
+  .dok4 { background: var(--dok4-pale); color: var(--dok4); border: 1.5px solid #E0B898; }
+  .dok4 .dok-num { background: var(--dok4); color: white; }
+
+  /* ── DOK SECTION HEADER ── */
+  .dok-section-header {
+    border-radius: var(--radius);
+    padding: 20px 24px;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+  }
+  .dok-section-header.dok1-bg { background: var(--dok1-pale); border: 1px solid #B0C898; }
+  .dok-section-header.dok2-bg { background: var(--dok2-pale); border: 1px solid #A8CCEA; }
+  .dok-section-header.dok3-bg { background: var(--dok3-pale); border: 1px solid #C9A8E0; }
+  .dok-section-header.dok4-bg { background: var(--dok4-pale); border: 1px solid #E0B898; }
+
+  .dok-icon {
+    width: 48px; height: 48px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+  .dok-icon.d1 { background: var(--dok1); }
+  .dok-icon.d2 { background: var(--dok2); }
+  .dok-icon.d3 { background: var(--dok3); }
+  .dok-icon.d4 { background: var(--dok4); }
+
+  .dok-header-text h3 { margin-bottom: 2px; font-size: 20px; }
+  .dok-header-text p { margin-bottom: 0; font-size: 13px; }
+  .dok-header-text.d1 h3 { color: var(--dok1); }
+  .dok-header-text.d2 h3 { color: var(--dok2); }
+  .dok-header-text.d3 h3 { color: var(--dok3); }
+  .dok-header-text.d4 h3 { color: var(--dok4); }
+
+  /* ── CARDS ── */
+  .card { background:var(--card); border:1px solid var(--border); border-radius:var(--radius); padding:24px; margin-bottom:20px; box-shadow:var(--shadow); }
+  .card-green { background:var(--green-ultra); border:1px solid var(--border-green); border-left:4px solid var(--green-mid); border-radius:var(--radius); padding:20px 24px; margin-bottom:20px; }
+  .card-amber { background:var(--amber-pale); border:1px solid #E8C88A; border-left:4px solid var(--amber); border-radius:var(--radius); padding:20px 24px; margin-bottom:20px; }
+
+  /* ── OBJECTIVES ── */
+  .objectives-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:32px; }
+  .objective-item { background:var(--green-ultra); border:1px solid var(--border-green); border-radius:8px; padding:14px 16px; font-size:14px; color:var(--text-mid); display:flex; gap:10px; align-items:flex-start; }
+  .objective-item::before { content:'◆'; color:var(--green-mid); font-size:10px; margin-top:4px; flex-shrink:0; }
+
+  /* ── RETRIEVAL ── */
+  .retrieval-q { background:var(--card); border:1px solid var(--border); border-left:4px solid var(--green-mid); border-radius:var(--radius); padding:20px 24px; margin-bottom:16px; }
+  .q-label { font-size:11px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:var(--green-mid); margin-bottom:8px; }
+  .q-text { font-size:15px; color:var(--text); margin-bottom:14px; line-height:1.6; }
+  textarea { width:100%; min-height:80px; border:1px solid var(--border); border-radius:6px; padding:10px 14px; font-family:'Lato',sans-serif; font-size:14px; color:var(--text); background:var(--bg); resize:vertical; transition:border-color 0.2s; line-height:1.6; }
+  textarea:focus { outline:none; border-color:var(--green-mid); background:#FDFFFE; }
+
+  /* ── BUTTONS ── */
+  .btn { display:inline-flex; align-items:center; gap:8px; padding:10px 22px; border-radius:6px; font-family:'Lato',sans-serif; font-size:13px; font-weight:700; letter-spacing:0.04em; cursor:pointer; transition:all 0.2s; border:none; }
+  .btn-primary { background:var(--green-dark); color:white; }
+  .btn-primary:hover { background:var(--green-mid); transform:translateY(-1px); box-shadow:var(--shadow-hover); }
+  .btn-outline { background:transparent; color:var(--green-dark); border:1.5px solid var(--green-dark); }
+  .btn-outline:hover { background:var(--green-ultra); }
+  .btn-reveal { background:var(--bg-warm); color:var(--text-mid); border:1px solid var(--border); font-size:12px; padding:8px 16px; }
+  .btn-reveal:hover { background:var(--green-pale); border-color:var(--border-green); }
+  .reveal-box { display:none; background:var(--green-ultra); border:1px solid var(--border-green); border-radius:6px; padding:14px 16px; margin-top:10px; font-size:14px; color:var(--text-mid); line-height:1.7; animation:fadeUp 0.3s ease; }
+  .reveal-box.show { display:block; }
+
+  /* ── MCQ ── */
+  .mcq-options { display:flex; flex-direction:column; gap:8px; margin-bottom:14px; }
+  .mcq-option { background:white; border:1.5px solid var(--border); border-radius:6px; padding:11px 16px; font-size:14px; color:var(--text-mid); cursor:pointer; transition:all 0.2s; text-align:left; display:flex; align-items:center; gap:10px; }
+  .mcq-option::before { content:attr(data-letter); width:22px; height:22px; border-radius:50%; background:var(--bg-warm); border:1px solid var(--border); display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700; flex-shrink:0; transition:all 0.2s; }
+  .mcq-option:hover { border-color:var(--green-mid); background:var(--green-ultra); }
+  .mcq-option.correct { border-color:var(--green-mid); background:var(--green-ultra); color:var(--green-dark); }
+  .mcq-option.correct::before { background:var(--green-mid); border-color:var(--green-mid); color:white; }
+  .mcq-option.incorrect { border-color:var(--red); background:var(--red-pale); color:var(--red); }
+  .mcq-option.incorrect::before { background:var(--red); border-color:var(--red); color:white; }
+  .mcq-option.disabled { cursor:default; pointer-events:none; opacity:0.6; }
+  .feedback-msg { display:none; padding:10px 14px; border-radius:6px; font-size:13px; font-weight:700; margin-top:8px; }
+  .feedback-msg.correct { display:block; background:var(--green-ultra); color:var(--green-dark); border:1px solid var(--border-green); }
+  .feedback-msg.incorrect { display:block; background:var(--red-pale); color:var(--red); border:1px solid #E8BABA; }
+
+  /* ── SORT ── */
+  .sort-bank { display:flex; gap:10px; flex-wrap:wrap; margin-bottom:20px; }
+  .sort-item { background:white; border:1.5px solid var(--border); border-radius:6px; padding:10px 14px; font-size:13px; color:var(--text-mid); cursor:grab; transition:all 0.2s; user-select:none; box-shadow:0 1px 4px rgba(0,0,0,0.06); }
+  .sort-item:hover { border-color:var(--green-mid); transform:translateY(-1px); box-shadow:var(--shadow); }
+  .sort-item:active { cursor:grabbing; opacity:0.8; }
+  .sort-item.dragging { opacity:0.4; }
+  .sort-item.correct { border-color:var(--green-mid); background:var(--green-ultra); color:var(--green-dark); }
+  .sort-item.incorrect { border-color:var(--red); background:var(--red-pale); color:var(--red); }
+
+  .sort-cols { display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px; margin:16px 0; }
+  .sort-col { background:var(--bg-warm); border:2px dashed var(--border); border-radius:var(--radius); padding:16px; min-height:160px; transition:all 0.2s; }
+  .sort-col.drag-over { border-color:var(--green-mid); background:var(--green-ultra); }
+  .sort-col h4 { font-size:12px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; margin-bottom:10px; padding-bottom:8px; border-bottom:1px solid var(--border-green); }
+  .sort-col.anat h4 { color:var(--dok1); }
+  .sort-col.phys h4 { color:var(--dok2); }
+  .sort-col.behav h4 { color:var(--dok3); }
+  .sort-items-drop { display:flex; flex-direction:column; gap:8px; min-height:80px; }
+
+  /* ── CASE STUDY GRID ── */
+  .adaptation-table { width:100%; border-collapse:collapse; font-size:13px; margin:16px 0; }
+  .adaptation-table th { background:var(--green-dark); color:white; padding:10px 14px; text-align:left; font-size:12px; font-weight:700; letter-spacing:0.05em; text-transform:uppercase; }
+  .adaptation-table td { padding:10px 14px; border-bottom:1px solid var(--border); color:var(--text-mid); vertical-align:top; line-height:1.6; }
+  .adaptation-table tr:nth-child(even) td { background:var(--bg-warm); }
+  .type-pill { display:inline-block; padding:2px 10px; border-radius:12px; font-size:11px; font-weight:700; }
+  .pill-anat { background:var(--dok1-pale); color:var(--dok1); }
+  .pill-phys { background:var(--dok2-pale); color:var(--dok2); }
+  .pill-behav { background:var(--dok3-pale); color:var(--dok3); }
+
+  /* ── CHART ── */
+  .chart-wrap { background:white; border:1px solid var(--border); border-radius:var(--radius); padding:24px; margin:16px 0; }
+  canvas { width:100% !important; }
+
+  /* ── MARK POINT ── */
+  .mark-point { display:flex; gap:8px; margin-bottom:6px; font-size:13px; color:var(--text-mid); }
+  .mark-point::before { content:'✓'; color:var(--green-mid); font-weight:700; flex-shrink:0; }
+
+  /* ── DOK3 COMPARISON ── */
+  .compare-grid { display:grid; grid-template-columns:1fr 1fr; gap:20px; margin:16px 0; }
+  .compare-card { background:white; border:1px solid var(--border); border-top:3px solid var(--dok3); border-radius:var(--radius); padding:18px; }
+  .compare-card h4 { font-family:'Fraunces',serif; font-size:15px; color:var(--dok3); margin-bottom:8px; }
+  .compare-card p { font-size:13px; }
+
+  /* ── DOK4 TEMPLATE ── */
+  .design-template { background:white; border:1px solid var(--border); border-radius:var(--radius); padding:0; overflow:hidden; margin:16px 0; }
+  .design-template-header { background:var(--dok4); color:white; padding:14px 20px; }
+  .design-template-header h4 { font-family:'Fraunces',serif; font-size:16px; font-weight:600; margin-bottom:2px; }
+  .design-template-header p { font-size:12px; opacity:0.85; margin-bottom:0; color:white; }
+  .design-row { border-bottom:1px solid var(--border); padding:16px 20px; display:grid; grid-template-columns:160px 1fr; gap:16px; align-items:start; }
+  .design-row:last-child { border-bottom:none; }
+  .design-row-label { font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:0.06em; }
+  .design-row-label.anat { color:var(--dok1); }
+  .design-row-label.phys { color:var(--dok2); }
+  .design-row-label.behav { color:var(--dok3); }
+  .design-row-label .label-sub { font-size:11px; color:var(--text-light); font-weight:400; text-transform:none; letter-spacing:0; display:block; margin-top:2px; }
+  .design-row textarea { min-height:70px; }
+
+  /* ── ARGUMENT BUILDER ── */
+  .argument-builder { background:white; border:1px solid var(--border); border-radius:var(--radius); overflow:hidden; margin:16px 0; }
+  .argument-header { background:var(--dok4-pale); padding:16px 20px; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:12px; }
+  .argument-header h4 { font-family:'Fraunces',serif; font-size:16px; color:var(--dok4); margin-bottom:2px; }
+  .argument-header p { font-size:12px; color:var(--text-light); margin-bottom:0; }
+  .argument-body { padding:20px; }
+  .argument-field { margin-bottom:16px; }
+  .argument-field label { display:block; font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:0.06em; color:var(--text-mid); margin-bottom:6px; }
+  .argument-field textarea { min-height:65px; }
+
+  /* ── VOCAB GRID ── */
+  .vocab-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin:16px 0; }
+  .vocab-item { background:white; border:1px solid var(--border); border-radius:8px; padding:12px 16px; }
+  .vocab-term { font-weight:700; color:var(--green-dark); font-size:14px; margin-bottom:4px; }
+  .vocab-def { font-size:13px; color:var(--text-mid); line-height:1.5; }
+
+  /* ── COMMAND WORD ── */
+  .command-word { background:white; border:1px solid var(--border); border-left:4px solid var(--amber); border-radius:var(--radius); padding:16px 20px; margin-bottom:12px; }
+  .command-word h4 { font-size:14px; font-weight:700; color:var(--amber); margin-bottom:4px; }
+  .command-word p { font-size:13px; margin-bottom:0; }
+
+  /* ── STEP BOX ── */
+  .step-box { background:white; border:1px solid var(--border); border-radius:8px; padding:16px 20px; margin-bottom:12px; display:flex; gap:16px; align-items:flex-start; }
+  .step-num { width:28px; height:28px; background:var(--green-dark); color:white; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:13px; flex-shrink:0; }
+
+  /* ── NAV FOOTER ── */
+  .lesson-nav { display:flex; justify-content:space-between; align-items:center; margin-top:48px; padding-top:24px; border-top:1px solid var(--border); }
+  .divider { height:1px; background:var(--border); margin:28px 0; }
+  .instruction { display:inline-flex; align-items:center; gap:6px; background:var(--bg-warm); border:1px solid var(--border); border-radius:20px; padding:5px 12px; font-size:12px; color:var(--text-light); margin-bottom:16px; }
+
+  /* ── DOK LADDER NAV ── */
+  .dok-ladder { display:flex; align-items:center; gap:0; margin-bottom:32px; }
+  .ladder-step { flex:1; padding:10px 8px; text-align:center; font-size:11px; font-weight:700; letter-spacing:0.05em; text-transform:uppercase; }
+  .ladder-step.l1 { background:var(--dok1-pale); color:var(--dok1); border-radius:6px 0 0 6px; border:1px solid #B0C898; }
+  .ladder-step.l2 { background:var(--dok2-pale); color:var(--dok2); border:1px solid #A8CCEA; border-left:none; }
+  .ladder-step.l3 { background:var(--dok3-pale); color:var(--dok3); border:1px solid #C9A8E0; border-left:none; }
+  .ladder-step.l4 { background:var(--dok4-pale); color:var(--dok4); border-radius:0 6px 6px 0; border:1px solid #E0B898; border-left:none; }
+  .ladder-arrow { font-size:16px; color:var(--text-light); flex-shrink:0; }
+
+  @media (max-width:640px) {
+    h1 { font-size:28px; }
+    .sort-cols { grid-template-columns:1fr; }
+    .compare-grid { grid-template-columns:1fr; }
+    .design-row { grid-template-columns:1fr; }
+    .vocab-grid { grid-template-columns:1fr; }
+    .objectives-grid { grid-template-columns:1fr; }
+    nav { padding:0 12px; }
+    .nav-brand { display:none; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-brand">4C.3 <span>IAL Biology · Y12</span></div>
+  <div class="nav-stations">
+    <button class="nav-btn active" onclick="goTo('opener')" id="nav-opener">
+      <span class="nav-label">Opener</span><span class="nav-title">Retrieval</span>
+    </button>
+    <button class="nav-btn" onclick="goTo('dok1')" id="nav-dok1">
+      <span class="nav-label">DOK 1</span><span class="nav-title">Know It</span>
+    </button>
+    <button class="nav-btn" onclick="goTo('dok2')" id="nav-dok2">
+      <span class="nav-label">DOK 2</span><span class="nav-title">Use It</span>
+    </button>
+    <button class="nav-btn" onclick="goTo('dok3')" id="nav-dok3">
+      <span class="nav-label">DOK 3</span><span class="nav-title">Think with It</span>
+    </button>
+    <button class="nav-btn" onclick="goTo('dok4')" id="nav-dok4">
+      <span class="nav-label">DOK 4</span><span class="nav-title">Argue & Create</span>
+    </button>
+    <button class="nav-btn" onclick="goTo('progress')" id="nav-progress">
+      <span class="nav-label">Check</span><span class="nav-title">Progress</span>
+    </button>
+    <button class="nav-btn" onclick="goTo('exam')" id="nav-exam">
+      <span class="nav-label">Exam</span><span class="nav-title">Support</span>
+    </button>
+  </div>
+  <div class="nav-progress">
+    <div class="progress-dots" id="progress-dots"></div>
+  </div>
+</nav>
+
+<!-- ══════════════════════════════════════════
+     OPENER
+══════════════════════════════════════════ -->
+<section id="opener" class="active">
+  <div class="lesson-meta">Biodiversity and Conservation · 4C</div>
+  <h1>Adaptation<br>to a Niche</h1>
+  <p class="lesson-subtitle">Specification reference: 4.19 · DOK-structured lesson</p>
+
+  <div class="dok-ladder">
+    <div class="ladder-step l1">DOK 1<br>Know It</div>
+    <div class="ladder-step l2">DOK 2<br>Use It</div>
+    <div class="ladder-step l3">DOK 3<br>Think with It</div>
+    <div class="ladder-step l4">DOK 4<br>Argue & Create</div>
+  </div>
+
+  <div class="objectives-grid">
+    <div class="objective-item">Understand the concept of niche and its role in ecology</div>
+    <div class="objective-item">Distinguish between anatomical, physiological, and behavioural adaptations</div>
+    <div class="objective-item">Analyse how specific adaptations help organisms survive in their niche</div>
+    <div class="objective-item">Evaluate which adaptations are most critical to survival in extreme environments</div>
+  </div>
+
+  <h2>Retrieval Warm-Up</h2>
+  <p style="margin-bottom:24px;">Before we begin, activate prior knowledge from 4C.1, 4C.2, and earlier chapters. Attempt before revealing.</p>
+
+  <div class="retrieval-q">
+    <div class="q-label">Question 1 · From 4C.1</div>
+    <div class="q-text">What is biodiversity and at which three scales can it be assessed?</div>
+    <textarea placeholder="Write your answer here..."></textarea><br><br>
+    <button class="btn btn-reveal" onclick="toggleReveal(this)">Reveal answer</button>
+    <div class="reveal-box">
+      <strong>Biodiversity</strong> is the variety of living organisms and their genetic differences. It can be assessed at three scales: <strong>genetic diversity</strong> (variation between individuals within a species), <strong>species diversity</strong> (variety of different species within an area), and <strong>ecosystem diversity</strong> (variety of different habitat types and ecological communities).
+    </div>
+  </div>
+
+  <div class="retrieval-q">
+    <div class="q-label">Question 2 · Prior knowledge</div>
+    <div class="q-text">In biology, what is natural selection? State the four conditions required for it to occur.</div>
+    <textarea placeholder="Write your answer here..."></textarea><br><br>
+    <button class="btn btn-reveal" onclick="toggleReveal(this)">Reveal answer</button>
+    <div class="reveal-box">
+      <strong>Natural selection</strong>: the process by which individuals with advantageous heritable characteristics are more likely to survive, reproduce, and pass those characteristics on. Four conditions: (1) <strong>variation</strong> exists between individuals; (2) some variation is <strong>heritable</strong>; (3) there is <strong>competition</strong> (struggle for survival); (4) individuals with advantageous traits have greater <strong>reproductive success</strong>.
+    </div>
+  </div>
+
+  <div class="retrieval-q">
+    <div class="q-label">Question 3 · From 3B / 2C</div>
+    <div class="q-text">What is the difference between an organism's genotype and its phenotype? How do both contribute to an organism's ability to survive?</div>
+    <textarea placeholder="Write your answer here..."></textarea><br><br>
+    <button class="btn btn-reveal" onclick="toggleReveal(this)">Reveal answer</button>
+    <div class="reveal-box">
+      <strong>Genotype</strong>: the genetic makeup of an organism — the specific alleles it carries. <strong>Phenotype</strong>: the observable characteristics of an organism, produced by the interaction of genotype and environment. Genotype provides the inherited blueprint; phenotype is the expressed form that natural selection acts on. An organism with a phenotype well-matched to its environment (e.g. thick blubber in cold water) has a survival advantage.
+    </div>
+  </div>
+
+  <div class="retrieval-q">
+    <div class="q-label">Question 4 · Thinking ahead</div>
+    <div class="q-text">A camel can survive for up to 10 days in the desert without water. What types of biological adaptation (physical structure, body chemistry, or behaviour) might allow this? Have a go before the lesson covers it.</div>
+    <textarea placeholder="Write your ideas here..."></textarea><br><br>
+    <button class="btn btn-reveal" onclick="toggleReveal(this)">Reveal answer</button>
+    <div class="reveal-box">
+      No single answer expected here. The lesson will cover three categories: <strong>anatomical</strong> (physical features — e.g. hump stores fat, slit-shaped nostrils), <strong>physiological</strong> (internal body processes — e.g. producing very concentrated urine, tolerating large water loss without osmotic damage) and <strong>behavioural</strong> (actions — e.g. sitting with legs tucked to minimise ground heat absorption, grouping together). The most remarkable adaptations are physiological.
+    </div>
+  </div>
+
+  <div class="lesson-nav">
+    <div></div>
+    <button class="btn btn-primary" onclick="goTo('dok1')">Begin DOK 1 →</button>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     DOK 1 — KNOW IT
+══════════════════════════════════════════ -->
+<section id="dok1">
+  <div class="dok-section-header dok1-bg">
+    <div class="dok-icon d1"><span style="font-size:22px;">📖</span></div>
+    <div class="dok-header-text d1">
+      <h3>DOK 1 — Know It</h3>
+      <p>Recall and define. Identify and sort. This is your foundation — get it solid before moving on.</p>
+    </div>
+  </div>
+
+  <!-- TASK 1A: Vocabulary -->
+  <div class="dok-badge dok1"><div class="dok-num">1</div>Task A — Key Vocabulary</div>
+
+  <p style="margin-bottom:16px;">Complete each definition in your own words, then reveal the precise scientific version to check.</p>
+
+  <div class="retrieval-q" style="border-left-color:var(--dok1);">
+    <div class="q-label" style="color:var(--dok1);">Term: Ecology</div>
+    <textarea placeholder="Define ecology in your own words..."></textarea><br><br>
+    <button class="btn btn-reveal" onclick="toggleReveal(this)">Reveal definition</button>
+    <div class="reveal-box"><strong>Ecology</strong>: the study of the relationships of organisms to one another and to their physical environment. It examines how living things interact with each other and with abiotic factors such as temperature, light, and water availability.</div>
+  </div>
+
+  <div class="retrieval-q" style="border-left-color:var(--dok1);">
+    <div class="q-label" style="color:var(--dok1);">Term: Niche</div>
+    <textarea placeholder="Define niche in your own words..."></textarea><br><br>
+    <button class="btn btn-reveal" onclick="toggleReveal(this)">Reveal definition</button>
+    <div class="reveal-box"><strong>Niche</strong>: the role of an organism within the habitat in which it lives. It describes not just where an organism lives but how it feeds, when it is active, how it reproduces, and how it interacts with other species — rather like a job description. Niches can be broad (eating grass) or very narrow (cleaning the teeth of larger animals).</div>
+  </div>
+
+  <div class="retrieval-q" style="border-left-color:var(--dok1);">
+    <div class="q-label" style="color:var(--dok1);">Term: Anatomical adaptation</div>
+    <textarea placeholder="Define anatomical adaptation in your own words..."></textarea><br><br>
+    <button class="btn btn-reveal" onclick="toggleReveal(this)">Reveal definition</button>
+    <div class="reveal-box"><strong>Anatomical adaptation</strong>: an adaptation involving the form and structure of an organism — its physical shape, body parts, or surface features. Examples: thick blubber in seals, sticky hairs on a sundew leaf, large flat feet on a camel.</div>
+  </div>
+
+  <div class="retrieval-q" style="border-left-color:var(--dok1);">
+    <div class="q-label" style="color:var(--dok1);">Term: Physiological adaptation</div>
+    <textarea placeholder="Define physiological adaptation in your own words..."></textarea><br><br>
+    <button class="btn btn-reveal" onclick="toggleReveal(this)">Reveal definition</button>
+    <div class="reveal-box"><strong>Physiological adaptation</strong>: an adaptation involving the way the body works, including differences in biochemical pathways or enzymes. These are internal processes that cannot be seen directly. Examples: the mammalian diving response (bradycardia), production of highly concentrated urine in camels, anaerobic respiration in diving mammals' muscles.</div>
+  </div>
+
+  <div class="retrieval-q" style="border-left-color:var(--dok1);">
+    <div class="q-label" style="color:var(--dok1);">Term: Behavioural adaptation</div>
+    <textarea placeholder="Define behavioural adaptation in your own words..."></textarea><br><br>
+    <button class="btn btn-reveal" onclick="toggleReveal(this)">Reveal definition</button>
+    <div class="reveal-box"><strong>Behavioural adaptation</strong>: an adaptation involving programmed or instinctive behaviour making organisms better adapted for survival. Examples: lizards orientating towards sunlight in the morning, camels sitting with legs tucked to minimise heat absorption, birds migrating to avoid harsh conditions, social hunting in predators.</div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- TASK 1B: Sort -->
+  <div class="dok-badge dok1"><div class="dok-num">1</div>Task B — Sort the Adaptations</div>
+  <p style="margin-bottom:16px;">Drag each adaptation into the correct column. Every organism's adaptation listed is from the textbook content for this lesson.</p>
+
+  <div class="instruction">✦ Drag each card into the correct column</div>
+
+  <div class="sort-bank" id="sort-bank-dok1">
+    <div class="sort-item" draggable="true" data-cat="anat">Thick layer of blubber in seals and whales</div>
+    <div class="sort-item" draggable="true" data-cat="phys">Heart rate drops dramatically when a seal dives (bradycardia)</div>
+    <div class="sort-item" draggable="true" data-cat="behav">Lizards orientate towards the sun when cold</div>
+    <div class="sort-item" draggable="true" data-cat="anat">Sticky hairs on a sundew leaf to trap insects</div>
+    <div class="sort-item" draggable="true" data-cat="phys">Camel muscles work effectively using anaerobic respiration</div>
+    <div class="sort-item" draggable="true" data-cat="behav">Camels sitting down with legs tucked under them in the morning</div>
+    <div class="sort-item" draggable="true" data-cat="anat">Large flat feet on a camel to spread weight on sand</div>
+    <div class="sort-item" draggable="true" data-cat="phys">Camels produce highly concentrated urine to minimise water loss</div>
+    <div class="sort-item" draggable="true" data-cat="behav">Groups of camels lying together to minimise sun exposure</div>
+    <div class="sort-item" draggable="true" data-cat="anat">Arthrobotrys anchonia fungus has constriction rings to trap nematodes</div>
+    <div class="sort-item" draggable="true" data-cat="phys">Camel body tissues withstand loss of up to 30% of body water without damage</div>
+    <div class="sort-item" draggable="true" data-cat="behav">Birds migrating to avoid harsh seasonal conditions</div>
+  </div>
+
+  <div class="sort-cols">
+    <div class="sort-col anat" data-accepts="anat">
+      <h4>Anatomical</h4>
+      <div class="sort-items-drop" id="drop-anat"></div>
+    </div>
+    <div class="sort-col phys" data-accepts="phys">
+      <h4>Physiological</h4>
+      <div class="sort-items-drop" id="drop-phys"></div>
+    </div>
+    <div class="sort-col behav" data-accepts="behav">
+      <h4>Behavioural</h4>
+      <div class="sort-items-drop" id="drop-behav"></div>
+    </div>
+  </div>
+
+  <div style="display:flex; gap:10px; margin-bottom:16px;">
+    <button class="btn btn-primary" onclick="checkSort1()">Check my sorting</button>
+    <button class="btn btn-outline" onclick="resetSort1()">Reset</button>
+  </div>
+  <div id="sort1-feedback" class="feedback-msg"></div>
+
+  <!-- DOK1 MICRO CHECK -->
+  <div style="background:var(--bg-warm); border:1px solid var(--border); border-top:3px solid var(--dok1); border-radius:var(--radius); padding:24px; margin-top:28px;">
+    <div class="q-label" style="color:var(--dok1);">DOK 1 · Quick Check</div>
+    <p style="font-size:14px; font-weight:700; color:var(--text); margin-bottom:12px;">Which of the following is a physiological adaptation?</p>
+    <div class="mcq-options">
+      <button class="mcq-option" data-letter="A" onclick="checkMCQ(this,false,'d1q1')">The long eyelashes of a camel protecting against sand</button>
+      <button class="mcq-option" data-letter="B" onclick="checkMCQ(this,false,'d1q1')">A camel sitting down in the early morning to absorb ground heat</button>
+      <button class="mcq-option" data-letter="C" onclick="checkMCQ(this,true,'d1q1')">The ability of camel blood cells to expand to 240% of their normal volume without bursting</button>
+      <button class="mcq-option" data-letter="D" onclick="checkMCQ(this,false,'d1q1')">The large, flat feet of a camel spreading its weight on sand</button>
+    </div>
+    <div id="fb-d1q1-correct" class="feedback-msg correct">Correct. This is a physiological adaptation — it involves how the body works internally (a biochemical/cellular property of the blood cells) rather than a visible structure or behaviour.</div>
+    <div id="fb-d1q1-incorrect" class="feedback-msg incorrect">Think about the definition — physiological adaptations involve how the body works internally, not visible structures (anatomical) or actions (behavioural).</div>
+  </div>
+
+  <div class="lesson-nav">
+    <button class="btn btn-outline" onclick="goTo('opener')">← Back</button>
+    <button class="btn btn-primary" onclick="goTo('dok2')">DOK 2 →</button>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     DOK 2 — USE IT
+══════════════════════════════════════════ -->
+<section id="dok2">
+  <div class="dok-section-header dok2-bg">
+    <div class="dok-icon d2"><span style="font-size:22px;">🔬</span></div>
+    <div class="dok-header-text d2">
+      <h3>DOK 2 — Use It</h3>
+      <p>Apply your knowledge to specific organisms. Explain mechanisms, not just names. Read data from a graph.</p>
+    </div>
+  </div>
+
+  <!-- TASK 2A: Camel case study -->
+  <div class="dok-badge dok2"><div class="dok-num">2</div>Task A — The Camel: Categorise and Explain</div>
+  <p style="margin-bottom:4px;">Below are key camel adaptations. For each one, the type is given. Your task is to explain <em>how</em> each adaptation helps the camel survive in its desert niche. Write in the explanation column.</p>
+  <p style="margin-bottom:16px; font-size:13px; color:var(--text-light);">Tip: use the phrase "this helps survival because..." to force yourself to explain the mechanism, not just describe the feature.</p>
+
+  <table class="adaptation-table">
+    <thead>
+      <tr><th style="width:35%;">Adaptation</th><th style="width:15%;">Type</th><th>How does it help survival? Write your explanation here</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Large eyes with long lashes; slit-shaped nostrils that can close</td>
+        <td><span class="type-pill pill-anat">Anatomical</span></td>
+        <td><textarea placeholder="This helps survival because..." style="min-height:60px; background:var(--bg);"></textarea></td>
+      </tr>
+      <tr>
+        <td>The hump stores fat (not water)</td>
+        <td><span class="type-pill pill-anat">Anatomical</span></td>
+        <td><textarea placeholder="This helps survival because..." style="min-height:60px; background:var(--bg);"></textarea></td>
+      </tr>
+      <tr>
+        <td>Supple skin covered in fine hairs that can be erected</td>
+        <td><span class="type-pill pill-phys">Physiological</span></td>
+        <td><textarea placeholder="This helps survival because..." style="min-height:60px; background:var(--bg);"></textarea></td>
+      </tr>
+      <tr>
+        <td>Can allow body temperature to vary over 6°C</td>
+        <td><span class="type-pill pill-phys">Physiological</span></td>
+        <td><textarea placeholder="This helps survival because..." style="min-height:60px; background:var(--bg);"></textarea></td>
+      </tr>
+      <tr>
+        <td>Kidneys adapted to produce very concentrated urine</td>
+        <td><span class="type-pill pill-phys">Physiological</span></td>
+        <td><textarea placeholder="This helps survival because..." style="min-height:60px; background:var(--bg);"></textarea></td>
+      </tr>
+      <tr>
+        <td>Dromedary red blood cells can expand to 240% normal volume without bursting</td>
+        <td><span class="type-pill pill-phys">Physiological</span></td>
+        <td><textarea placeholder="This helps survival because..." style="min-height:60px; background:var(--bg);"></textarea></td>
+      </tr>
+      <tr>
+        <td>Sitting down early in morning with legs tucked under; groups lying together</td>
+        <td><span class="type-pill pill-behav">Behavioural</span></td>
+        <td><textarea placeholder="This helps survival because..." style="min-height:60px; background:var(--bg);"></textarea></td>
+      </tr>
+      <tr>
+        <td>Camels are browsers — eating a wide variety of shrubs and trees</td>
+        <td><span class="type-pill pill-behav">Behavioural</span></td>
+        <td><textarea placeholder="This helps survival because..." style="min-height:60px; background:var(--bg);"></textarea></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <button class="btn btn-reveal" onclick="toggleReveal(this)">Reveal model explanations</button>
+  <div class="reveal-box">
+    <strong>Large eyes / lashes / nostrils:</strong> protect against sand and wind — sand in eyes or airways could impair vision and breathing, compromising survival in sandstorms.<br><br>
+    <strong>Hump (fat store):</strong> fat is broken down by aerobic respiration, releasing metabolic water as a by-product — this allows the camel to survive without drinking for long periods. 20kg of fat yields ~21 litres of metabolic water.<br><br>
+    <strong>Fine hairs + erectable:</strong> trap an insulating layer of air during cold desert nights, retaining body heat without using metabolic energy.<br><br>
+    <strong>Variable body temperature (±6°C):</strong> avoids sweating during the cooler part of the day — sweating costs water. In a dehydrated camel, the body can allow temperature to rise before sweating begins, conserving water.<br><br>
+    <strong>Concentrated urine:</strong> reduces water loss through excretion — every drop of water saved extends survival in the desert.<br><br>
+    <strong>Expandable red blood cells:</strong> allows the camel to drink up to 180 litres in 24 hours without osmotic damage to cells — most mammals' cells would burst. This rapid rehydration is critical to recovery after dehydration.<br><br>
+    <strong>Sitting / grouping:</strong> minimises body surface area exposed to solar radiation, reducing heat gain and therefore reducing water loss through sweating.<br><br>
+    <strong>Browsing widely:</strong> access vegetation other animals cannot reach, exploiting a broader food niche and reducing competition.
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- TASK 2B: Seal graph -->
+  <div class="dok-badge dok2"><div class="dok-num">2</div>Task B — The Seal: Graph Analysis</div>
+  <p style="margin-bottom:16px;">The graph below shows heart rate data for a seal during a dive. Study the data carefully, then answer the structured analysis questions.</p>
+
+  <div class="chart-wrap">
+    <canvas id="sealChart" height="280"></canvas>
+    <p style="font-size:12px; color:var(--text-light); margin-top:12px; margin-bottom:0; text-align:center;">Fig B — Heart rate of a seal before, during, and after a dive. Bradycardia = the slowing of heart rate during the dive.</p>
+  </div>
+
+  <div class="retrieval-q" style="border-left-color:var(--dok2);">
+    <div class="q-label" style="color:var(--dok2);">(a) What do the negative numbers on the x-axis represent?</div>
+    <textarea placeholder="Write your answer here..."></textarea><br><br>
+    <button class="btn btn-reveal" onclick="toggleReveal(this)">Reveal</button>
+    <div class="reveal-box">The negative values on the x-axis represent time <strong>before</strong> the dive began — i.e. the seal is at the surface. The point 0 on the x-axis represents the moment the seal begins to dive. The positive values represent time elapsed during and after the dive.</div>
+  </div>
+
+  <div class="retrieval-q" style="border-left-color:var(--dok2);">
+    <div class="q-label" style="color:var(--dok2);">(b) How long did the recorded dive last?</div>
+    <textarea placeholder="Write your answer here..."></textarea><br><br>
+    <button class="btn btn-reveal" onclick="toggleReveal(this)">Reveal</button>
+    <div class="reveal-box">Reading from the graph, the heart rate returns to its pre-dive level at approximately <strong>3.9–4.5 minutes</strong> after the dive began, suggesting the dive lasted approximately <strong>3.9 minutes</strong>. (Accept answers in range 3.5–4.5 min with justification from graph.)</div>
+  </div>
+
+  <div class="retrieval-q" style="border-left-color:var(--dok2);">
+    <div class="q-label" style="color:var(--dok2);">(c) The pre-dive heart rate is approximately 150 beats/min. During the dive it drops to approximately 20 beats/min. Based on this, how long might the dive have lasted without the bradycardia?</div>
+    <textarea placeholder="Write your answer here..."></textarea><br><br>
+    <button class="btn btn-reveal" onclick="toggleReveal(this)">Reveal</button>
+    <div class="reveal-box">Without bradycardia, the heart would beat at ~150 beats/min, consuming oxygen at a much higher rate. During bradycardia the rate drops to ~20 beats/min — approximately <strong>1/7th</strong> of the normal rate. Oxygen is therefore used ~7× more slowly, so the seal could theoretically sustain <strong>approximately 7× longer</strong> underwater than without this response. This is a rough calculation — the actual extension depends on other factors such as muscle oxygen store (myoglobin) and anaerobic respiration.</div>
+  </div>
+
+  <div class="retrieval-q" style="border-left-color:var(--dok2);">
+    <div class="q-label" style="color:var(--dok2);">(d) State the type of adaptation this response represents and explain why it is so important to the survival of the seal in its ecological niche.</div>
+    <textarea placeholder="Write your answer here..."></textarea><br><br>
+    <button class="btn btn-reveal" onclick="toggleReveal(this)">Reveal</button>
+    <div class="reveal-box">
+      <div class="mark-point">This is a <strong>physiological</strong> adaptation — it involves the way the body works (a change in heart rate controlled by the autonomic nervous system and diving reflex) (1)</div>
+      <div class="mark-point">The seal's niche requires it to dive to catch fish — without the ability to remain submerged for extended periods, it could not feed effectively (1)</div>
+      <div class="mark-point">Bradycardia reduces the rate at which oxygen is consumed by the heart and non-essential organs — oxygen-carrying blood is redirected to the brain and heart only (1)</div>
+      <div class="mark-point">This allows the seal to remain underwater far longer than non-diving mammals, directly enabling its predatory feeding behaviour and survival in its marine niche (1)</div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- TASK 2C: Fungal carnivore -->
+  <div class="dok-badge dok2"><div class="dok-num">2</div>Task C — Fungal Carnivores: Reading for Mechanism</div>
+
+  <div class="card-green">
+    <h3 style="margin-bottom:8px;">Arthrobotrys anchonia — the lasso fungus</h3>
+    <p style="margin-bottom:0; font-size:14px;">Some fungi that usually break down dead matter have evolved to become active carnivores. <em>Arthrobotrys anchonia</em> actively lassos nematode worms as they pass through loops of its hyphae called constriction rings. When a nematode moves into a ring, a combination of wall changes and osmotic potential of the cells result in water moving in fast — within 0.1 seconds the ring inflates and holds the nematode. The fungus then grows hyphae that penetrate and digest the nematode, absorbing nutrients and transporting them within the fungus. These fungi provide an unusual source of nitrates in high-carbon, low-nitrogen environments such as bogs.</p>
+  </div>
+
+  <div class="retrieval-q" style="border-left-color:var(--dok2);">
+    <div class="q-label" style="color:var(--dok2);">Identify one anatomical, one physiological, and one behavioural adaptation in Arthrobotrys anchonia and explain how each helps it survive in its niche.</div>
+    <textarea placeholder="Anatomical: ...&#10;Physiological: ...&#10;Behavioural: ..." style="min-height:140px;"></textarea><br><br>
+    <button class="btn btn-reveal" onclick="toggleReveal(this)">Reveal mark scheme</button>
+    <div class="reveal-box">
+      <strong>Anatomical:</strong> Constriction rings made of hyphal loops — the physical structure of the ring allows it to encircle and trap nematodes, giving the fungus access to a nitrogen source in an otherwise nitrogen-poor environment.<br><br>
+      <strong>Physiological:</strong> Osmotic changes in ring cells causing rapid water uptake — the biochemical change in osmotic potential causes water to move in by osmosis in under 0.1 seconds, inflating the ring faster than the nematode can escape. This is an internal biochemical process.<br><br>
+      <strong>Behavioural:</strong> Actively positioning hyphae in nematode paths / growing hyphae that penetrate the nematode body — the active growth toward and into prey represents a form of programmed biological behaviour enabling nutrient acquisition.
+    </div>
+  </div>
+
+  <div class="lesson-nav">
+    <button class="btn btn-outline" onclick="goTo('dok1')">← DOK 1</button>
+    <button class="btn btn-primary" onclick="goTo('dok3')">DOK 3 →</button>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     DOK 3 — THINK WITH IT
+══════════════════════════════════════════ -->
+<section id="dok3">
+  <div class="dok-section-header dok3-bg">
+    <div class="dok-icon d3"><span style="font-size:22px;">⚖️</span></div>
+    <div class="dok-header-text d3">
+      <h3>DOK 3 — Think with It</h3>
+      <p>Compare, contrast, and reason across organisms. Apply the concept to unfamiliar contexts. No single right answer — your reasoning is what matters.</p>
+    </div>
+  </div>
+
+  <!-- TASK 3A: Compare -->
+  <div class="dok-badge dok3"><div class="dok-num">3</div>Task A — Compare Adaptation Strategies</div>
+  <p style="margin-bottom:16px;">The camel and the lasso fungus occupy very different niches, but both face the challenge of obtaining nutrients in a resource-poor environment. Study the comparison below, then answer the analytical questions.</p>
+
+  <div class="compare-grid">
+    <div class="compare-card">
+      <h4>Camel — Desert Herbivore</h4>
+      <p style="font-size:13px;">Resource challenge: extreme heat, almost no water, sparse vegetation. Survival strategy: physiological conservation (storing water, tolerating dehydration), anatomical insulation, behavioural heat avoidance. Obtains food by browsing widely on diverse desert plants.</p>
+    </div>
+    <div class="compare-card">
+      <h4>Arthrobotrys — Bog Carnivore</h4>
+      <p style="font-size:13px;">Resource challenge: high carbon, almost no nitrogen, saturated anaerobic soil. Survival strategy: evolved carnivory to access nitrogen from nematode bodies. Uses anatomical traps, physiological osmotic response, and active hyphal growth behaviour.</p>
+    </div>
+  </div>
+
+  <div class="retrieval-q" style="border-left-color:var(--dok3);">
+    <div class="q-label" style="color:var(--dok3);">Question 1 · Compare</div>
+    <div class="q-text">Both organisms face extreme resource limitation. Compare how each organism's physiological adaptations solve its specific resource problem. What does this tell us about the relationship between niche and adaptation type?</div>
+    <textarea placeholder="Write your comparison here..." style="min-height:120px;"></textarea><br><br>
+    <button class="btn btn-reveal" onclick="toggleReveal(this)">Reveal model answer</button>
+    <div class="reveal-box">
+      The camel's physiological adaptations are primarily <strong>conservative</strong> — they focus on retaining a scarce resource (water) rather than acquiring a new one. Variable body temperature, concentrated urine, and tolerant blood cells all reduce water loss. In contrast, <em>Arthrobotrys</em>'s physiological adaptation (osmotic ring inflation) is <strong>acquisitive</strong> — it enables the organism to capture a resource (nitrogen) that would otherwise be unavailable. Both strategies are physiological responses to resource scarcity, but they reflect fundamentally different niches: the camel's niche is built around conservation; the fungus's niche is built around predation. This suggests that the <em>type</em> of adaptation that evolves is shaped by the specific nature of the resource limitation — what is scarce and how it can be obtained.
+    </div>
+  </div>
+
+  <div class="retrieval-q" style="border-left-color:var(--dok3);">
+    <div class="q-label" style="color:var(--dok3);">Question 2 · Apply to an unfamiliar organism</div>
+    <div class="q-text">The Arctic fox (<em>Vulpes lagopus</em>) lives in tundra environments where temperatures drop below −50°C and prey is scarce for months. It has white fur in winter (brown in summer), stores food by caching it in frozen ground, has thickly furred paws, and can lower its metabolic rate significantly during cold periods.<br><br>For each of the four features above, state whether it is anatomical, physiological, or behavioural, and explain how it helps survival in the Arctic niche.</div>
+    <textarea placeholder="White fur in winter: [type] — helps survival because...&#10;Caching food: [type] — helps survival because...&#10;Thickly furred paws: [type] — helps survival because...&#10;Lowering metabolic rate: [type] — helps survival because..." style="min-height:180px;"></textarea><br><br>
+    <button class="btn btn-reveal" onclick="toggleReveal(this)">Reveal mark scheme</button>
+    <div class="reveal-box">
+      <div class="mark-point"><strong>White fur in winter:</strong> Anatomical (seasonal colouration) — provides camouflage against snow, reducing detection by prey and predators; improves hunting success and reduces predation risk (1)</div>
+      <div class="mark-point"><strong>Caching food:</strong> Behavioural — storing excess food when prey is available allows the fox to access nutrition during lean winter months when prey is almost absent; extends survival without active hunting (1)</div>
+      <div class="mark-point"><strong>Thickly furred paws:</strong> Anatomical — insulates the extremities from frozen ground, preventing frostbite and maintaining blood circulation to limbs essential for locomotion and hunting (1)</div>
+      <div class="mark-point"><strong>Lowering metabolic rate:</strong> Physiological — reduces the rate of energy expenditure during cold, food-scarce periods; allows the fox to survive on fat reserves for longer without starving (1)</div>
+    </div>
+  </div>
+
+  <div class="retrieval-q" style="border-left-color:var(--dok3);">
+    <div class="q-label" style="color:var(--dok3);">Question 3 · Reason about niches</div>
+    <div class="q-text">The textbook states that niches can be "very large and general" or "very small and specific." Using examples from this lesson, explain why very narrow niches carry a higher extinction risk than broad niches.</div>
+    <textarea placeholder="Write your answer here..." style="min-height:120px;"></textarea><br><br>
+    <button class="btn btn-reveal" onclick="toggleReveal(this)">Reveal model answer</button>
+    <div class="reveal-box">
+      An organism with a narrow niche depends on very specific conditions or resources. If those conditions change — through climate change, habitat loss, or the loss of a key prey species — the organism has no alternative strategy and faces extinction. For example, the lasso fungus occupies a very specific niche (predating nematodes in nitrogen-poor bogs). If nematode populations collapsed, the fungus would have no alternative nitrogen source. A camel, by contrast, is a browser — it eats a wide variety of vegetation and can tolerate a wide range of temperatures and water availability. This broad niche gives it more flexibility. More broadly: endemic species (from 4C.1) often occupy narrow niches on islands — their specificity is exactly why they are so vulnerable to introduced species or environmental change. Broad niches act as a buffer against change; narrow niches provide precision but increase vulnerability.
+    </div>
+  </div>
+
+  <div class="lesson-nav">
+    <button class="btn btn-outline" onclick="goTo('dok2')">← DOK 2</button>
+    <button class="btn btn-primary" onclick="goTo('dok4')">DOK 4 →</button>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     DOK 4 — ARGUE AND CREATE
+══════════════════════════════════════════ -->
+<section id="dok4">
+  <div class="dok-section-header dok4-bg">
+    <div class="dok-icon d4"><span style="font-size:22px;">✍️</span></div>
+    <div class="dok-header-text d4">
+      <h3>DOK 4 — Argue and Create</h3>
+      <p>Extended reasoning and original thinking. Build an evidence-based argument. Design something biologically new. Your thinking is the product.</p>
+    </div>
+  </div>
+
+  <!-- TASK 4A: Argument -->
+  <div class="dok-badge dok4"><div class="dok-num">4</div>Task A — Make the Case</div>
+  <p style="margin-bottom:16px;">A biologist claims: <em>"For the camel, physiological adaptations are more important to survival than either anatomical or behavioural ones."</em> Build a structured argument — agree, disagree, or qualify. Use evidence from this lesson.</p>
+
+  <div class="argument-builder">
+    <div class="argument-header">
+      <div>
+        <h4>Argument Builder</h4>
+        <p>Complete each section. Your position must be supported by specific biological evidence, not general statements.</p>
+      </div>
+    </div>
+    <div class="argument-body">
+      <div class="argument-field">
+        <label>Your position (agree / disagree / partially agree)</label>
+        <textarea placeholder="State your position clearly in one sentence..." style="min-height:50px;"></textarea>
+      </div>
+      <div class="argument-field">
+        <label>Evidence for physiological adaptations being critical</label>
+        <textarea placeholder="Which physiological adaptations are most important, and why? Be specific — name the adaptation and explain the mechanism..." style="min-height:100px;"></textarea>
+      </div>
+      <div class="argument-field">
+        <label>Counter-evidence — where anatomical or behavioural adaptations are also essential</label>
+        <textarea placeholder="Give at least one anatomical and one behavioural adaptation that the camel could not survive without. Explain why..." style="min-height:100px;"></textarea>
+      </div>
+      <div class="argument-field">
+        <label>Conclusion — why the three types work together (or why one dominates)</label>
+        <textarea placeholder="Draw your argument to a conclusion. Does one type of adaptation matter more, or is it the combination that makes the camel so successful? Why?" style="min-height:90px;"></textarea>
+      </div>
+    </div>
+  </div>
+
+  <button class="btn btn-reveal" onclick="toggleReveal(this)">Reveal a model position</button>
+  <div class="reveal-box">
+    <p style="font-weight:700; margin-bottom:8px;">Model position: Partially agree — physiological adaptations are most remarkable, but the combination is what makes the camel the "ultimate survivor."</p>
+    <p style="margin-bottom:8px;"><strong>For:</strong> The physiological adaptations are the most unusual and most directly linked to desert survival. The ability to allow body temperature to vary 6°C before sweating begins, to produce metabolic water from fat oxidation (~21L from 20kg of fat), to produce highly concentrated urine, and to rehydrate rapidly without osmotic damage — none of these could be substituted by behaviour or anatomy. They represent fundamental biochemical differences from most mammals.</p>
+    <p style="margin-bottom:8px;"><strong>Counter:</strong> Anatomical adaptations (flat feet, hump as fat store, protective lashes) provide the physical substrate that makes everything else possible. Without the hump, there is no fat to oxidise; without flat feet, movement on sand is compromised. Behavioural adaptations (grouping together, sitting in the morning, browsing widely) reduce heat load and extend food access — without them, the physiological mechanisms would be working much harder.</p>
+    <p style="margin-bottom:0;"><strong>Conclusion:</strong> The camel is best understood as a system where all three types are interdependent. The physiological adaptations are the most impressive and least common in other mammals — so the biologist's claim has merit — but "most important" is a false distinction. An organism without any one category of adaptation would be less fit for its niche. The power of the camel's survival strategy is the coherence of all three working together.</p>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- TASK 4B: Design challenge -->
+  <div class="dok-badge dok4"><div class="dok-num">4</div>Task B — Design an Organism</div>
+
+  <div class="card-amber">
+    <h3 style="color:var(--amber); margin-bottom:8px;">The Challenge</h3>
+    <p style="margin-bottom:0;">Scientists have discovered a new extreme environment: a hydrothermal vent field at 2,500m depth in the Pacific Ocean. Conditions: <strong>complete darkness</strong>, water temperature fluctuates between <strong>2°C (ambient) and 400°C near vents</strong>, intense <strong>hydrostatic pressure</strong> (250× atmospheric), chemical energy from <strong>hydrogen sulphide</strong> instead of sunlight. No photosynthesis is possible.</p>
+  </div>
+
+  <p style="margin-bottom:16px;">Design a multicellular organism that could occupy this niche. For each adaptation type, describe <strong>what</strong> the adaptation is and <strong>explain biologically</strong> why it helps survival in this specific environment. Be as precise as possible.</p>
+
+  <div class="design-template">
+    <div class="design-template-header">
+      <h4>Organism Design Template — Hydrothermal Vent Organism</h4>
+      <p>Each adaptation must be biologically plausible and linked to the specific challenge it solves</p>
+    </div>
+
+    <div class="design-row">
+      <div class="design-row-label anat">
+        Anatomical<br>Adaptation 1
+        <span class="label-sub">Form or structure</span>
+      </div>
+      <div>
+        <textarea placeholder="Adaptation: [describe the physical feature]&#10;&#10;Helps survival because: [explain the biological mechanism linking this feature to the environment]" style="min-height:90px;"></textarea>
+      </div>
+    </div>
+
+    <div class="design-row">
+      <div class="design-row-label anat">
+        Anatomical<br>Adaptation 2
+        <span class="label-sub">Form or structure</span>
+      </div>
+      <div>
+        <textarea placeholder="Adaptation: [describe the physical feature]&#10;&#10;Helps survival because: [explain the biological mechanism]" style="min-height:90px;"></textarea>
+      </div>
+    </div>
+
+    <div class="design-row">
+      <div class="design-row-label phys">
+        Physiological<br>Adaptation 1
+        <span class="label-sub">How the body works</span>
+      </div>
+      <div>
+        <textarea placeholder="Adaptation: [describe the internal process or biochemical feature]&#10;&#10;Helps survival because: [explain the biological mechanism]" style="min-height:90px;"></textarea>
+      </div>
+    </div>
+
+    <div class="design-row">
+      <div class="design-row-label phys">
+        Physiological<br>Adaptation 2
+        <span class="label-sub">How the body works</span>
+      </div>
+      <div>
+        <textarea placeholder="Adaptation: [describe the internal process or biochemical feature]&#10;&#10;Helps survival because: [explain the biological mechanism]" style="min-height:90px;"></textarea>
+      </div>
+    </div>
+
+    <div class="design-row">
+      <div class="design-row-label behav">
+        Behavioural<br>Adaptation
+        <span class="label-sub">Programmed behaviour</span>
+      </div>
+      <div>
+        <textarea placeholder="Adaptation: [describe the instinctive or programmed behaviour]&#10;&#10;Helps survival because: [explain the biological mechanism]" style="min-height:90px;"></textarea>
+      </div>
+    </div>
+
+    <div class="design-row" style="background:var(--bg-warm);">
+      <div class="design-row-label" style="color:var(--text-mid);">
+        Niche Statement
+        <span class="label-sub">Summarise the organism's role</span>
+      </div>
+      <div>
+        <textarea placeholder="In 2–3 sentences, describe the niche your organism occupies — what it eats, when it is active, how it interacts with other organisms in this environment..." style="min-height:80px;"></textarea>
+      </div>
+    </div>
+  </div>
+
+  <button class="btn btn-reveal" onclick="toggleReveal(this)">Reveal example model organism</button>
+  <div class="reveal-box">
+    <p style="font-weight:700; margin-bottom:8px;">Example: a chemosynthetic vent predator (modelled on real vent fauna)</p>
+    <p style="margin-bottom:6px;"><strong>Anatomical 1:</strong> Thick, mineralised exoskeleton — withstands 250× atmospheric pressure without body cavity collapse, as seen in real vent organisms like the scaly-foot gastropod (iron sulphide shell).</p>
+    <p style="margin-bottom:6px;"><strong>Anatomical 2:</strong> Eyeless, with highly developed chemoreceptors on sensory appendages — in complete darkness, vision is useless; chemoreception allows detection of hydrogen sulphide gradients and prey chemical signatures.</p>
+    <p style="margin-bottom:6px;"><strong>Physiological 1:</strong> Thermostable enzymes with modified tertiary structure (extra disulphide bonds) that remain functional between 2°C and 80°C — standard enzyme configurations denature above ~45°C; thermostable variants allow metabolism near vent openings (similar to thermophilic archaea).</p>
+    <p style="margin-bottom:6px;"><strong>Physiological 2:</strong> Symbiotic chemosynthetic bacteria in gill tissue — these bacteria oxidise hydrogen sulphide to produce organic molecules (similar to tubeworms at real vents), providing the organism with a primary energy source without sunlight.</p>
+    <p style="margin-bottom:6px;"><strong>Behavioural:</strong> Instinctive gradient-following behaviour — moves toward optimal hydrogen sulphide concentration zones (not too hot, not too cold), remaining in the "Goldilocks zone" of the vent where conditions allow enzyme function and bacterial symbiont activity.</p>
+    <p style="margin-bottom:0;"><strong>Niche:</strong> A secondary consumer in the vent community, feeding on primary consumers (e.g. vent shrimp or amphipods that graze on bacterial mats). Active continuously as there is no light cycle. Competes with other predators for access to productive vent zones.</p>
+  </div>
+
+  <div class="lesson-nav">
+    <button class="btn btn-outline" onclick="goTo('dok3')">← DOK 3</button>
+    <button class="btn btn-primary" onclick="goTo('progress')">Progress Check →</button>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     PROGRESS CHECK
+══════════════════════════════════════════ -->
+<section id="progress">
+  <div style="display:flex; align-items:center; gap:16px; margin-bottom:32px; padding-bottom:24px; border-bottom:1px solid var(--border);">
+    <div style="width:52px;height:52px;border-radius:50%;background:var(--amber);color:white;display:flex;align-items:center;justify-content:center;font-family:'Fraunces',serif;font-size:22px;font-weight:700;flex-shrink:0;">✓</div>
+    <div>
+      <h2 style="margin-bottom:2px;">Overall Progress Check</h2>
+      <p style="margin-bottom:0;font-size:14px;color:var(--text-light);">Drawing across all DOK levels — attempt all before revealing</p>
+    </div>
+  </div>
+
+  <div class="card-green" style="margin-bottom:24px;">
+    <p style="margin-bottom:0;">Six questions covering recall, application, analysis, and evaluation. Attempt every question before revealing any mark schemes.</p>
+  </div>
+
+  <div class="card" style="margin-bottom:16px;">
+    <div class="q-label">Q1 · DOK 1 · 1 mark</div>
+    <p style="font-size:15px;font-weight:700;margin-bottom:12px;">Define the term "niche" as used in ecology.</p>
+    <textarea placeholder="Write your answer here..."></textarea><br><br>
+    <button class="btn btn-reveal" onclick="toggleReveal(this)">Reveal mark scheme</button>
+    <div class="reveal-box"><div class="mark-point">The role of an organism within the habitat in which it lives / describes how an organism feeds, interacts with other species, and uses resources — not just where it lives (1)</div></div>
+  </div>
+
+  <div class="card" style="margin-bottom:16px;">
+    <div class="q-label">Q2 · DOK 1 · MCQ</div>
+    <p style="font-size:15px;font-weight:700;margin-bottom:12px;">Which of the following is a behavioural adaptation?</p>
+    <div class="mcq-options">
+      <button class="mcq-option" data-letter="A" onclick="checkMCQ(this,false,'pc2')">The fine hair covering of a camel that can be erected to trap air</button>
+      <button class="mcq-option" data-letter="B" onclick="checkMCQ(this,false,'pc2')">The ability of camel kidneys to produce highly concentrated urine</button>
+      <button class="mcq-option" data-letter="C" onclick="checkMCQ(this,true,'pc2')">Camels orientating their bodies to minimise sun exposure during the hottest part of the day</button>
+      <button class="mcq-option" data-letter="D" onclick="checkMCQ(this,false,'pc2')">The thick, tough pads on a camel's knees</button>
+    </div>
+    <div id="fb-pc2-correct" class="feedback-msg correct">Correct. Orientating the body is a programmed instinctive behaviour — it involves an action, not a physical structure or internal process.</div>
+    <div id="fb-pc2-incorrect" class="feedback-msg incorrect">Behavioural adaptations involve actions or programmed responses. Which option describes what the camel does, rather than what it is or how its body works internally?</div>
+  </div>
+
+  <div class="card" style="margin-bottom:16px;">
+    <div class="q-label">Q3 · DOK 2 · 3 marks</div>
+    <p style="font-size:15px;font-weight:700;margin-bottom:12px;">Explain how the mammalian diving response (bradycardia) enables seals to stay underwater longer than non-diving mammals.</p>
+    <textarea placeholder="Write your answer here..." style="min-height:100px;"></textarea><br><br>
+    <button class="btn btn-reveal" onclick="toggleReveal(this)">Reveal mark scheme</button>
+    <div class="reveal-box">
+      <div class="mark-point">When a seal dives, its heart rate drops significantly (bradycardia) — from approximately 150 to approximately 20 beats per minute (1)</div>
+      <div class="mark-point">This means blood (and therefore oxygen) is pumped around the body less frequently — the main body muscles can work using anaerobic respiration, so they use less oxygen (1)</div>
+      <div class="mark-point">Oxygen-carrying blood is directed primarily to the brain and heart where it is still needed — this conserves oxygen for vital organs and extends the time the seal can remain submerged (1)</div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:16px;">
+    <div class="q-label">Q4 · DOK 2 · 4 marks</div>
+    <p style="font-size:15px;font-weight:700;margin-bottom:12px;">Describe how three different adaptations of the camel help it survive in a hot, dry desert environment. For each, state the type of adaptation.</p>
+    <textarea placeholder="Write your answer here — name each adaptation, state its type, and explain how it helps survival..." style="min-height:140px;"></textarea><br><br>
+    <button class="btn btn-reveal" onclick="toggleReveal(this)">Reveal mark scheme</button>
+    <div class="reveal-box">
+      Award up to 4 marks — one mark per correct adaptation description that includes both type and mechanism. Examples:<br><br>
+      <div class="mark-point">Hump stores fat — <strong>anatomical</strong> — fat is broken down by aerobic respiration, producing metabolic water as a by-product, allowing the camel to survive without drinking (1)</div>
+      <div class="mark-point">Body temperature can vary over 6°C — <strong>physiological</strong> — delays the onset of sweating during the cooler part of the day, conserving water (1)</div>
+      <div class="mark-point">Sitting down in groups to minimise sun exposure — <strong>behavioural</strong> — reduces heat absorption, lowering the need to sweat and therefore conserving water (1)</div>
+      <div class="mark-point">Concentrated urine production — <strong>physiological</strong> — reduces water lost through excretion, extending survival without drinking (1)</div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:16px;">
+    <div class="q-label">Q5 · DOK 3 · 3 marks</div>
+    <p style="font-size:15px;font-weight:700;margin-bottom:12px;">The sundew plant (<em>Drosera</em>) captures and digests insects using sticky glandular hairs. It lives in bogs with very poor nitrogen content in the soil. Explain why carnivory evolved in the sundew's niche and identify one anatomical and one physiological adaptation involved.</p>
+    <textarea placeholder="Write your answer here..." style="min-height:120px;"></textarea><br><br>
+    <button class="btn btn-reveal" onclick="toggleReveal(this)">Reveal mark scheme</button>
+    <div class="reveal-box">
+      <div class="mark-point">Bogs have high water but very low nitrogen availability — plants cannot get sufficient nitrate from the soil for protein synthesis, so natural selection has favoured the ability to supplement nitrogen by digesting insects (1)</div>
+      <div class="mark-point">Anatomical: sticky glandular hairs on the leaf surface — the physical structure traps insects that land on the leaf (1)</div>
+      <div class="mark-point">Physiological: the plant secretes digestive enzymes onto the captured insect — these break down the insect's proteins into amino acids which are absorbed, providing nitrogen (1)</div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:16px;">
+    <div class="q-label">Q6 · DOK 3–4 · 4 marks</div>
+    <p style="font-size:15px;font-weight:700;margin-bottom:12px;">Evaluate the statement: "Successful adaptation to a niche is always a result of all three types of adaptation working together." Use examples to support your evaluation.</p>
+    <textarea placeholder="Write your answer here — you should make a judgement and use specific biological examples to support it..." style="min-height:160px;"></textarea><br><br>
+    <button class="btn btn-reveal" onclick="toggleReveal(this)">Reveal mark scheme</button>
+    <div class="reveal-box">
+      Award 4 marks for a balanced evaluation with evidence. Look for:<br><br>
+      <div class="mark-point">Agreement with evidence — the camel demonstrates all three types working together: fat storage (anatomical) provides the substrate for metabolic water production (physiological) while behavioural grouping reduces heat load — neither alone is sufficient (1)</div>
+      <div class="mark-point">Agreement with evidence — the seal requires anatomical blubber (insulation), physiological bradycardia (oxygen conservation), and behavioural diving patterns — all three contribute to survival in the marine niche (1)</div>
+      <div class="mark-point">Qualification / counter-evidence — some organisms appear to rely primarily on one type: <em>Arthrobotrys</em> fungus is highly dependent on its physiological osmotic response as the critical mechanism; the anatomical ring and behaviour are supportive but the osmotic response is the decisive one (1)</div>
+      <div class="mark-point">Valid conclusion — in complex animals with multiple environmental challenges, all three types are typically required; in simpler organisms occupying very narrow niches, one type of adaptation may be dominant; the statement is broadly true but overly absolute (1)</div>
+    </div>
+  </div>
+
+  <div class="lesson-nav">
+    <button class="btn btn-outline" onclick="goTo('dok4')">← DOK 4</button>
+    <button class="btn btn-primary" onclick="goTo('exam')">Exam Support →</button>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     EXAM SUPPORT
+══════════════════════════════════════════ -->
+<section id="exam">
+  <div style="display:flex;align-items:center;gap:16px;margin-bottom:32px;padding-bottom:24px;border-bottom:1px solid var(--border);">
+    <div style="width:52px;height:52px;border-radius:50%;background:var(--amber);color:white;display:flex;align-items:center;justify-content:center;font-family:'Fraunces',serif;font-size:22px;font-weight:700;flex-shrink:0;">★</div>
+    <div><h2 style="margin-bottom:2px;">Exam Support</h2><p style="margin-bottom:0;font-size:14px;color:var(--text-light);">Command words · Common mistakes · Worked answer · Have a go</p></div>
+  </div>
+
+  <h3 style="margin-bottom:16px;">Command Words for this Topic</h3>
+
+  <div class="command-word">
+    <h4>DESCRIBE</h4>
+    <p>For adaptations: state what the adaptation is (name the feature), state what it does, but do not explain the mechanism. "The camel has slit-shaped nostrils that can be closed" is a description. "This prevents sand entering the airways" crosses into explanation — save that for EXPLAIN questions.</p>
+  </div>
+
+  <div class="command-word">
+    <h4>EXPLAIN</h4>
+    <p>You must give the biological mechanism — the <em>why</em>. For adaptation questions: name the feature → state what it does physiologically/anatomically/behaviourally → link directly to survival advantage in the niche. Every step in the chain must be stated. "The camel allows its body temperature to vary 6°C — this delays sweating — sweating uses water — conserving water extends survival without drinking" is a full explanation chain.</p>
+  </div>
+
+  <div class="command-word">
+    <h4>EVALUATE</h4>
+    <p>State a position. Support it with evidence. Provide a counter-argument with evidence. Draw a conclusion that makes a judgement. For adaptation evaluation questions: use specific named adaptations as evidence — do not make vague generalisations about "lots of different adaptations."</p>
+  </div>
+
+  <div class="command-word">
+    <h4>SUGGEST</h4>
+    <p>Apply your biological understanding to an unfamiliar context. There may be no single right answer — marks go to biologically sound reasoning. State what type of adaptation it is, describe the feature, and link to the specific environmental challenge. Use what you know from the studied examples as a framework.</p>
+  </div>
+
+  <div class="divider"></div>
+
+  <h3 style="margin-bottom:16px;">Common Mistakes on this Topic</h3>
+
+  <div class="card" style="margin-bottom:12px;">
+    <div style="display:flex;gap:12px;">
+      <div style="color:var(--red);font-size:18px;flex-shrink:0;">✗</div>
+      <div>
+        <p style="font-weight:700;margin-bottom:4px;">Classifying physiological adaptations as anatomical</p>
+        <p style="font-size:13px;margin-bottom:0;">The most common error. "The camel can produce concentrated urine" is physiological — it's a biochemical/organ function. Students frequently call this anatomical. Ask yourself: can you see it? If not, it's likely physiological.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:12px;">
+    <div style="display:flex;gap:12px;">
+      <div style="color:var(--red);font-size:18px;flex-shrink:0;">✗</div>
+      <div>
+        <p style="font-weight:700;margin-bottom:4px;">Describing adaptations without explaining how they help survival</p>
+        <p style="font-size:13px;margin-bottom:0;">Exam hint from the textbook is explicit: "If you describe an adaptation be sure you can explain how it helps survival." Saying "camels have a hump" is worth nothing without "the fat in the hump is broken down in aerobic respiration, releasing metabolic water."</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:12px;">
+    <div style="display:flex;gap:12px;">
+      <div style="color:var(--red);font-size:18px;flex-shrink:0;">✗</div>
+      <div>
+        <p style="font-weight:700;margin-bottom:4px;">Saying the camel's hump stores water</p>
+        <p style="font-size:13px;margin-bottom:0;">It does not. The hump stores <strong>fat</strong>. The metabolic water is produced <em>when that fat is broken down</em> by aerobic respiration. This is a very common misconception that will cost marks in any exam.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:24px;">
+    <div style="display:flex;gap:12px;">
+      <div style="color:var(--red);font-size:18px;flex-shrink:0;">✗</div>
+      <div>
+        <p style="font-weight:700;margin-bottom:4px;">Confusing niche with habitat</p>
+        <p style="font-size:13px;margin-bottom:0;">The habitat is <em>where</em> an organism lives (desert, pond, bog). The niche is its <em>role</em> in that habitat — what it eats, when it feeds, how it interacts. Two species can share a habitat but not a niche. Using the words interchangeably will lose marks.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <h3 style="margin-bottom:16px;">Worked Example Answer</h3>
+
+  <div class="card-amber">
+    <p style="font-size:13px;font-weight:700;color:var(--amber);margin-bottom:8px;">EXAM QUESTION (5 marks)</p>
+    <p style="font-size:15px;font-weight:700;color:var(--text);margin-bottom:0;">How do the anatomical and physiological adaptations of camels help them survive in their hot, dry, plant-browsing niche?</p>
+  </div>
+
+  <div class="card" style="border-top:3px solid var(--green-mid);margin-top:0;">
+    <p style="font-size:12px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:var(--green-mid);margin-bottom:12px;">Model Answer (5/5)</p>
+    <p style="font-size:14px;line-height:1.9;color:var(--text-mid);">
+      Camels have several anatomical adaptations for desert survival. Their large, flat feet spread their weight across a greater surface area, preventing them from sinking into sand and allowing efficient movement. The hump is an anatomical fat store — importantly, it stores <strong>fat, not water</strong>. When this fat is broken down by aerobic respiration, metabolic water is released as a by-product, which can sustain the camel for extended periods without drinking. Long eyelashes and slit-shaped closable nostrils protect the eyes and airways from sand — essential for an animal that must keep moving to find food.<br><br>
+      Physiologically, the camel can allow its core body temperature to vary over 6°C. This delays the onset of sweating during the morning and evening, conserving water. When fully dehydrated, a camel can lose up to 30% of its body water without cellular damage — most mammals' cells would experience fatal osmotic disruption at far lower losses. The kidneys produce highly concentrated urine, minimising excretory water loss. Dromedary red blood cells can expand to 240% of their normal volume without bursting, allowing the camel to drink up to 180 litres in 24 hours and rapidly restore blood volume after dehydration without lysing its own cells.
+    </p>
+    <div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border);">
+      <p style="font-size:12px;font-weight:700;color:var(--green-dark);">Why this scores full marks:</p>
+      <p style="font-size:13px;color:var(--text-mid);">✓ Multiple anatomical adaptations named with mechanisms ✓ Hump correctly identified as fat store (not water) ✓ Multiple physiological adaptations with mechanisms ✓ Each adaptation linked to the survival challenge ✓ No confusion between anatomical and physiological</p>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <h3 style="margin-bottom:8px;">Have a Go</h3>
+  <p style="margin-bottom:20px;color:var(--text-mid);">Write a full exam answer, then self-assess against the mark scheme.</p>
+
+  <div class="card-amber">
+    <p style="font-size:13px;font-weight:700;color:var(--amber);margin-bottom:8px;">EXAM QUESTION (4 marks)</p>
+    <p style="font-size:15px;font-weight:700;color:var(--text);margin-bottom:0;">Explain the importance of the niche concept in understanding the adaptations of organisms. Use at least two named organisms as examples in your answer.</p>
+  </div>
+
+  <textarea style="width:100%;min-height:200px;border:1px solid var(--border);border-radius:6px;padding:14px;font-family:'Lato',sans-serif;font-size:14px;color:var(--text);background:var(--bg);resize:vertical;line-height:1.7;margin-bottom:16px;" placeholder="Write your full exam answer here..."></textarea>
+
+  <button class="btn btn-reveal" onclick="toggleReveal(this)">Reveal mark scheme</button>
+  <div class="reveal-box">
+    <div class="mark-point">The niche describes the role of an organism in its community — not just where it lives but how it feeds, when it is active, and how it interacts with other species (1)</div>
+    <div class="mark-point">Understanding the niche allows us to understand <em>why</em> specific adaptations evolved — adaptations are the biological solutions to the challenges posed by the niche (1)</div>
+    <div class="mark-point">Named example 1 with correct adaptation: e.g. the camel's niche (large desert plant-browser with almost no water access) explains why it evolved physiological water conservation — concentrated urine, variable body temperature, metabolic water from fat — that other mammals do not need (1)</div>
+    <div class="mark-point">Named example 2 with correct adaptation: e.g. <em>Arthrobotrys anchonia</em>'s niche in nitrogen-poor bogs explains why it evolved carnivorous adaptations (constriction rings, osmotic inflation, digestive hyphae) — without understanding the nitrogen-poor niche, the evolution of carnivory in a fungus makes no ecological sense (1)</div>
+  </div>
+
+  <div class="card-green" style="margin-top:32px;">
+    <h3 style="margin-bottom:8px;">Lesson complete 🌿</h3>
+    <p style="margin-bottom:0;">You have moved from defining terms at DOK 1 through to building original arguments and designing organisms at DOK 4. The next lesson in 4C moves to the Hardy-Weinberg equation — which connects the allele frequency work from 4C.2 to population genetics and evolutionary change.</p>
+  </div>
+
+  <div class="lesson-nav">
+    <button class="btn btn-outline" onclick="goTo('progress')">← Progress Check</button>
+    <button class="btn btn-primary" onclick="goTo('opener')">↺ Back to start</button>
+  </div>
+</section>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<script>
+// ── NAV ──
+const sections = ['opener','dok1','dok2','dok3','dok4','progress','exam'];
+const navIds   = ['nav-opener','nav-dok1','nav-dok2','nav-dok3','nav-dok4','nav-progress','nav-exam'];
+
+function buildDots(){
+  const c=document.getElementById('progress-dots'); c.innerHTML='';
+  sections.forEach((_,i)=>{
+    const d=document.createElement('div');
+    d.className='progress-dot'+(i===0?' active':'');
+    d.id='dot-'+i; c.appendChild(d);
+  });
+}
+
+function goTo(id){
+  sections.forEach(s=>{const el=document.getElementById(s);if(el)el.classList.remove('active');});
+  navIds.forEach(n=>{const el=document.getElementById(n);if(el)el.classList.remove('active');});
+  const target=document.getElementById(id);
+  if(target)target.classList.add('active');
+  const idx=sections.indexOf(id);
+  if(idx>=0){
+    const navEl=document.getElementById(navIds[idx]);
+    if(navEl)navEl.classList.add('active');
+    sections.forEach((_,i)=>{
+      const dot=document.getElementById('dot-'+i);
+      if(!dot)return;
+      dot.className='progress-dot';
+      if(i<idx)dot.classList.add('done');
+      else if(i===idx)dot.classList.add('active');
+    });
+  }
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+buildDots();
+
+// ── REVEAL ──
+function toggleReveal(btn){
+  const box=btn.nextElementSibling;
+  if(!box)return;
+  const showing=box.classList.contains('show');
+  box.classList.toggle('show',!showing);
+  btn.textContent=showing?'Reveal answer':'Hide answer';
+}
+
+// ── MCQ ──
+function checkMCQ(btn,correct,id){
+  const group=btn.closest('.mcq-options');
+  if(!group)return;
+  group.querySelectorAll('.mcq-option').forEach(b=>b.classList.add('disabled'));
+  const cEl=document.getElementById('fb-'+id+'-correct');
+  const iEl=document.getElementById('fb-'+id+'-incorrect');
+  if(correct){
+    btn.classList.add('correct');
+    if(cEl)cEl.style.display='block';
+  } else {
+    btn.classList.add('incorrect');
+    if(iEl)iEl.style.display='block';
+    group.querySelectorAll('.mcq-option').forEach(b=>{
+      if(b.getAttribute('onclick')&&b.getAttribute('onclick').includes('true'))b.classList.add('correct');
+    });
+  }
+}
+
+// ── DRAG SORT DOK1 ──
+let dragged = null;
+
+function initDrag(){
+  document.querySelectorAll('.sort-item').forEach(item=>{
+    item.addEventListener('dragstart',e=>{dragged=item;item.classList.add('dragging');e.dataTransfer.effectAllowed='move';});
+    item.addEventListener('dragend',()=>{item.classList.remove('dragging');dragged=null;});
+  });
+
+  document.querySelectorAll('.sort-col').forEach(col=>{
+    col.addEventListener('dragover',e=>{e.preventDefault();col.classList.add('drag-over');});
+    col.addEventListener('dragleave',()=>col.classList.remove('drag-over'));
+    col.addEventListener('drop',e=>{
+      e.preventDefault();col.classList.remove('drag-over');
+      if(!dragged)return;
+      const drop=col.querySelector('.sort-items-drop');
+      if(drop)drop.appendChild(dragged);
+    });
+  });
+
+  const bank=document.getElementById('sort-bank-dok1');
+  if(bank){
+    bank.addEventListener('dragover',e=>e.preventDefault());
+    bank.addEventListener('drop',e=>{e.preventDefault();if(dragged)bank.appendChild(dragged);});
+  }
+}
+
+initDrag();
+
+function checkSort1(){
+  const bank=document.getElementById('sort-bank-dok1');
+  if(bank&&bank.querySelectorAll('.sort-item').length>0){
+    const fb=document.getElementById('sort1-feedback');
+    fb.textContent='Place all cards into a column before checking.';
+    fb.className='feedback-msg incorrect';fb.style.display='block';return;
+  }
+  let allOk=true;
+  document.querySelectorAll('.sort-col').forEach(col=>{
+    const accepts=col.dataset.accepts;
+    col.querySelectorAll('.sort-item').forEach(item=>{
+      item.classList.remove('correct','incorrect');
+      const ok=item.dataset.cat===accepts;
+      item.classList.add(ok?'correct':'incorrect');
+      if(!ok)allOk=false;
+    });
+  });
+  const fb=document.getElementById('sort1-feedback');
+  fb.textContent=allOk?'✓ All correct — every adaptation is in the right category.':'Some cards are in the wrong column. Red items need to move — think about whether the adaptation involves physical structure, internal body processes, or behaviour.';
+  fb.className='feedback-msg '+(allOk?'correct':'incorrect');
+  fb.style.display='block';
+}
+
+function resetSort1(){
+  const bank=document.getElementById('sort-bank-dok1');
+  document.querySelectorAll('#dok1 .sort-item').forEach(item=>{
+    item.classList.remove('correct','incorrect','dragging');
+    bank.appendChild(item);
+  });
+  const fb=document.getElementById('sort1-feedback');
+  fb.style.display='none';
+}
+
+// ── SEAL CHART ──
+window.addEventListener('load', () => {
+  const ctx = document.getElementById('sealChart');
+  if(!ctx) return;
+
+  const labels = ['-0.9','-0.3','0.3','0.9','1.5','2.1','2.7','3.3','3.9','4.5','5.1'];
+  const data   = [155, 150, 30, 22, 18, 20, 18, 22, 140, 160, 155];
+
+  new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [{
+        label: 'Heart rate (beats/min)',
+        data,
+        borderColor: '#2D5016',
+        backgroundColor: 'rgba(45,80,22,0.08)',
+        borderWidth: 2.5,
+        pointBackgroundColor: '#4A7C2F',
+        pointRadius: 5,
+        pointHoverRadius: 7,
+        fill: true,
+        tension: 0.35
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: ctx => `Heart rate: ${ctx.parsed.y} beats/min`
+          }
+        },
+        annotation: {}
+      },
+      scales: {
+        x: {
+          title: { display: true, text: 'Time / min', font: { family: 'Lato', size: 13 }, color: '#4A4A4A' },
+          grid: { color: 'rgba(0,0,0,0.06)' },
+          ticks: { font: { family: 'Lato', size: 12 }, color: '#7A7A7A' }
+        },
+        y: {
+          title: { display: true, text: 'Heart rate / beats per minute', font: { family: 'Lato', size: 13 }, color: '#4A4A4A' },
+          min: 0, max: 180,
+          grid: { color: 'rgba(0,0,0,0.06)' },
+          ticks: { font: { family: 'Lato', size: 12 }, color: '#7A7A7A', stepSize: 20 }
+        }
+      }
+    }
+  });
+
+  // Add dive annotation manually via plugin
+  // Drawn as a vertical reference line at x index 2 (time=0.3, ~start of dive)
+});
+</script>
+</body>
+</html>
