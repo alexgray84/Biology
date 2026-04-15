@@ -1,0 +1,1334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>4C.4 Gene Pool and Genetic Diversity | IAL Biology Y12</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;0,9..144,700;1,9..144,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #FAF7F2;
+    --bg-warm: #F3EDE3;
+    --card: #FFFFFF;
+    --green-dark: #2D5016;
+    --green-mid: #4A7C2F;
+    --green-light: #7AAD52;
+    --green-pale: #E0EBD0;
+    --green-ultra: #F0F5E8;
+    --text: #2C2C2C;
+    --text-mid: #4A4A4A;
+    --text-light: #7A7A7A;
+    --amber: #C17D2A;
+    --amber-pale: #FDF3E3;
+    --red-pale: #FDECEA;
+    --red: #C0392B;
+    --border: #D8D0C4;
+    --border-green: #B0C898;
+    --blue: #2A6B9B;
+    --blue-pale: #EDF4FA;
+    --shadow: 0 2px 12px rgba(45,80,22,0.08);
+    --shadow-hover: 0 6px 24px rgba(45,80,22,0.15);
+    --radius: 10px;
+    --nav-h: 64px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Lato', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; padding-top: var(--nav-h); }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; height: var(--nav-h);
+    background: rgba(250,247,242,0.97); backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--border); z-index: 100;
+    display: flex; align-items: center; padding: 0 20px; gap: 0;
+  }
+  .nav-brand { font-family:'Fraunces',serif; font-size:13px; font-weight:600; color:var(--green-dark); white-space:nowrap; margin-right:16px; padding-right:16px; border-right:1px solid var(--border); }
+  .nav-brand span { display:block; font-family:'Lato',sans-serif; font-weight:300; font-size:10px; color:var(--text-light); letter-spacing:0.05em; text-transform:uppercase; }
+  .nav-stations { display:flex; gap:2px; flex:1; overflow-x:auto; scrollbar-width:none; }
+  .nav-stations::-webkit-scrollbar { display:none; }
+  .nav-btn { display:flex; flex-direction:column; align-items:center; gap:1px; padding:5px 9px; border:none; background:transparent; cursor:pointer; border-radius:6px; transition:all 0.2s; white-space:nowrap; position:relative; }
+  .nav-btn:hover { background:var(--green-ultra); }
+  .nav-btn .nl { font-size:10px; font-weight:700; letter-spacing:0.06em; text-transform:uppercase; color:var(--text-light); transition:color 0.2s; }
+  .nav-btn .nt { font-size:10px; color:var(--text-light); transition:color 0.2s; }
+  .nav-btn.active .nl, .nav-btn.active .nt { color:var(--green-dark); }
+  .nav-btn::after { content:''; position:absolute; bottom:0; left:9px; right:9px; height:2px; background:var(--green-mid); border-radius:2px; transform:scaleX(0); transition:transform 0.2s; }
+  .nav-btn.active::after { transform:scaleX(1); }
+  .nav-progress { margin-left:auto; display:flex; align-items:center; padding-left:14px; border-left:1px solid var(--border); }
+  .progress-dots { display:flex; gap:4px; }
+  .progress-dot { width:7px; height:7px; border-radius:50%; background:var(--border); transition:background 0.3s; }
+  .progress-dot.done { background:var(--green-mid); }
+  .progress-dot.active { background:var(--green-dark); }
+
+  /* ── SECTIONS ── */
+  section { display:none; max-width:880px; margin:0 auto; padding:44px 24px 80px; animation:fadeUp 0.35s ease both; }
+  section.active { display:block; }
+  @keyframes fadeUp { from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);} }
+
+  /* ── TYPE ── */
+  h1 { font-family:'Fraunces',serif; font-size:40px; font-weight:700; color:var(--green-dark); line-height:1.1; margin-bottom:8px; }
+  h2 { font-family:'Fraunces',serif; font-size:24px; font-weight:600; color:var(--green-dark); margin-bottom:14px; }
+  h3 { font-family:'Fraunces',serif; font-size:17px; font-weight:600; color:var(--green-dark); margin-bottom:8px; }
+  p { line-height:1.78; color:var(--text-mid); margin-bottom:12px; }
+  strong { color: var(--text); }
+  .meta { font-size:12px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--green-mid); margin-bottom:6px; }
+  .subtitle { font-size:15px; color:var(--text-light); margin-bottom:28px; font-weight:300; }
+  .divider { height:1px; background:var(--border); margin:28px 0; }
+
+  /* ── TIME BADGE ── */
+  .time-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: var(--bg-warm); border: 1px solid var(--border);
+    border-radius: 20px; padding: 4px 12px;
+    font-size: 12px; font-weight: 700; color: var(--text-light);
+    margin-bottom: 20px;
+  }
+  .time-badge::before { content: '⏱'; font-size: 13px; }
+
+  /* ── SECTION TYPE HEADER ── */
+  .sec-header {
+    display: flex; align-items: center; gap: 14px;
+    margin-bottom: 28px; padding-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+  }
+  .sec-icon {
+    width: 48px; height: 48px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px; flex-shrink: 0;
+  }
+  .si-learn { background: var(--blue); }
+  .si-practise { background: var(--green-dark); }
+  .si-apply { background: #7B3FA0; }
+  .si-check { background: var(--amber); }
+  .si-exam { background: var(--amber); }
+  .sec-header-text h2 { margin-bottom: 2px; }
+  .sec-header-text p { margin-bottom:0; font-size:13px; color:var(--text-light); }
+
+  /* ── CONTENT CARDS ── */
+  .card { background:var(--card); border:1px solid var(--border); border-radius:var(--radius); padding:22px; margin-bottom:18px; box-shadow:var(--shadow); }
+  .card-green { background:var(--green-ultra); border:1px solid var(--border-green); border-left:4px solid var(--green-mid); border-radius:var(--radius); padding:18px 22px; margin-bottom:18px; }
+  .card-amber { background:var(--amber-pale); border:1px solid #E8C88A; border-left:4px solid var(--amber); border-radius:var(--radius); padding:18px 22px; margin-bottom:18px; }
+  .card-blue { background:var(--blue-pale); border:1px solid #A8CCEA; border-left:4px solid var(--blue); border-radius:var(--radius); padding:18px 22px; margin-bottom:18px; }
+  .card-red { background:var(--red-pale); border:1px solid #E8BABA; border-left:4px solid var(--red); border-radius:var(--radius); padding:18px 22px; margin-bottom:18px; }
+
+  /* ── LEARN CONTENT ── */
+  .learn-block { background:white; border:1px solid var(--border); border-radius:var(--radius); padding:22px; margin-bottom:16px; }
+  .learn-block h3 { font-size:16px; border-bottom:2px solid var(--green-pale); padding-bottom:8px; margin-bottom:12px; }
+  .key-term { display:inline-block; background:var(--green-pale); color:var(--green-dark); font-weight:700; padding:1px 8px; border-radius:4px; font-size:14px; }
+  .definition-box { background:var(--green-ultra); border:1px solid var(--border-green); border-radius:8px; padding:14px 16px; margin:10px 0; }
+  .definition-box .def-term { font-weight:700; color:var(--green-dark); font-size:14px; margin-bottom:4px; }
+  .definition-box .def-body { font-size:13px; color:var(--text-mid); line-height:1.6; margin-bottom:0; }
+
+  /* ── PAUSE AND CHECK ── */
+  .pause-check {
+    background: var(--bg-warm);
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--blue);
+    border-radius: var(--radius);
+    padding: 16px 20px;
+    margin: 18px 0;
+  }
+  .pause-check .pc-label { font-size:11px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:var(--blue); margin-bottom:6px; }
+  .pause-check .pc-q { font-size:14px; font-weight:700; color:var(--text); margin-bottom:10px; line-height:1.5; }
+
+  /* ── FORMULA ── */
+  .formula-display {
+    background: white; border: 2px solid var(--green-dark);
+    border-radius: var(--radius); padding: 22px; text-align:center; margin: 16px 0;
+  }
+  .formula-large { font-family:'Fraunces',serif; font-size:22px; color:var(--green-dark); margin-bottom:8px; }
+  .formula-fraction { display:inline-flex; flex-direction:column; align-items:center; gap:0; }
+  .formula-num { border-bottom:2px solid var(--text); padding:0 10px 4px; }
+  .formula-den { padding:4px 10px 0; }
+  .formula-note { font-size:12px; color:var(--text-light); margin-top:10px; margin-bottom:0; }
+
+  .eq-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin:16px 0; }
+  .eq-cell { background:white; border:1px solid var(--border); border-radius:8px; padding:14px; text-align:center; }
+  .eq-cell .eq-symbol { font-family:'Fraunces',serif; font-size:28px; color:var(--green-dark); font-weight:700; }
+  .eq-cell .eq-name { font-size:12px; font-weight:700; color:var(--text-mid); margin:4px 0 2px; }
+  .eq-cell .eq-desc { font-size:12px; color:var(--text-light); line-height:1.4; }
+
+  /* ── WORKED EXAMPLE ── */
+  .worked-example { background:white; border:1px solid var(--border); border-top:3px solid var(--green-mid); border-radius:var(--radius); padding:0; overflow:hidden; margin:16px 0; }
+  .we-header { background:var(--green-ultra); padding:14px 20px; border-bottom:1px solid var(--border-green); display:flex; align-items:center; gap:10px; }
+  .we-header .we-title { font-family:'Fraunces',serif; font-size:15px; font-weight:600; color:var(--green-dark); }
+  .we-header .we-tag { font-size:11px; background:var(--green-mid); color:white; padding:2px 8px; border-radius:10px; font-weight:700; letter-spacing:0.04em; }
+  .we-body { padding:20px; }
+  .we-step { display:flex; gap:14px; margin-bottom:14px; align-items:flex-start; }
+  .we-step:last-child { margin-bottom:0; }
+  .we-num { width:26px; height:26px; background:var(--green-dark); color:white; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:12px; flex-shrink:0; margin-top:1px; }
+  .we-content { flex:1; font-size:14px; color:var(--text-mid); line-height:1.7; }
+  .we-content strong { color:var(--green-dark); }
+  .we-calc { background:var(--green-ultra); border:1px solid var(--border-green); border-radius:6px; padding:10px 14px; margin-top:8px; font-size:14px; font-family:'Fraunces',serif; color:var(--green-dark); line-height:1.9; }
+
+  /* ── PRACTICE ── */
+  .practice-block { background:white; border:1px solid var(--border); border-radius:var(--radius); padding:22px; margin-bottom:20px; }
+  .practice-block .pb-label { font-size:11px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; margin-bottom:4px; }
+  .scaffold-guided .pb-label { color:var(--green-mid); }
+  .scaffold-partial .pb-label { color:var(--amber); }
+  .scaffold-independent .pb-label { color:var(--red); }
+
+  .scaffold-bar { height:4px; border-radius:2px; margin-bottom:16px; }
+  .scaffold-guided .scaffold-bar { background:var(--green-mid); width:100%; }
+  .scaffold-partial .scaffold-bar { background:var(--amber); width:66%; }
+  .scaffold-independent .scaffold-bar { background:var(--red); width:33%; }
+
+  textarea { width:100%; min-height:76px; border:1px solid var(--border); border-radius:6px; padding:10px 13px; font-family:'Lato',sans-serif; font-size:14px; color:var(--text); background:var(--bg); resize:vertical; transition:border-color 0.2s; line-height:1.6; }
+  textarea:focus { outline:none; border-color:var(--green-mid); background:#FDFFFE; }
+
+  .calc-input { border:1.5px solid var(--border); border-radius:4px; padding:6px 10px; font-family:'Lato',sans-serif; font-size:14px; color:var(--text); background:white; text-align:center; transition:border-color 0.2s; width:120px; }
+  .calc-input:focus { outline:none; border-color:var(--green-mid); }
+  .calc-input.correct { border-color:var(--green-mid); background:var(--green-ultra); color:var(--green-dark); }
+  .calc-input.incorrect { border-color:var(--red); background:var(--red-pale); color:var(--red); }
+  .calc-row { display:flex; align-items:center; gap:10px; margin-bottom:10px; font-size:14px; color:var(--text-mid); flex-wrap:wrap; }
+  .calc-row label { min-width:220px; font-weight:700; color:var(--text); }
+
+  /* ── STUCK ── */
+  .stuck-btn { display:inline-flex; align-items:center; gap:6px; background:var(--amber-pale); border:1px solid #E8C88A; color:var(--amber); border-radius:6px; padding:7px 14px; font-size:12px; font-weight:700; cursor:pointer; transition:all 0.2s; margin-bottom:10px; }
+  .stuck-btn:hover { background:#FBE8C0; }
+  .stuck-box { display:none; background:var(--amber-pale); border:1px solid #E8C88A; border-radius:6px; padding:12px 16px; margin-bottom:12px; font-size:13px; color:var(--amber); line-height:1.7; }
+  .stuck-box.show { display:block; animation:fadeUp 0.3s ease; }
+
+  /* ── REVEAL ── */
+  .btn-reveal { background:var(--bg-warm); color:var(--text-mid); border:1px solid var(--border); font-size:12px; padding:8px 16px; border-radius:6px; cursor:pointer; transition:all 0.2s; font-family:'Lato',sans-serif; font-weight:700; }
+  .btn-reveal:hover { background:var(--green-pale); border-color:var(--border-green); }
+  .reveal-box { display:none; background:var(--green-ultra); border:1px solid var(--border-green); border-radius:6px; padding:14px 16px; margin-top:10px; font-size:14px; color:var(--text-mid); line-height:1.75; animation:fadeUp 0.3s ease; }
+  .reveal-box.show { display:block; }
+
+  /* ── MCQ ── */
+  .mcq-options { display:flex; flex-direction:column; gap:7px; margin-bottom:12px; }
+  .mcq-option { background:white; border:1.5px solid var(--border); border-radius:6px; padding:10px 15px; font-size:14px; color:var(--text-mid); cursor:pointer; transition:all 0.2s; text-align:left; display:flex; align-items:center; gap:10px; }
+  .mcq-option::before { content:attr(data-letter); width:21px; height:21px; border-radius:50%; background:var(--bg-warm); border:1px solid var(--border); display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700; flex-shrink:0; }
+  .mcq-option:hover { border-color:var(--green-mid); background:var(--green-ultra); }
+  .mcq-option.correct { border-color:var(--green-mid); background:var(--green-ultra); color:var(--green-dark); }
+  .mcq-option.correct::before { background:var(--green-mid); border-color:var(--green-mid); color:white; }
+  .mcq-option.incorrect { border-color:var(--red); background:var(--red-pale); color:var(--red); }
+  .mcq-option.incorrect::before { background:var(--red); border-color:var(--red); color:white; }
+  .mcq-option.disabled { cursor:default; pointer-events:none; opacity:0.6; }
+  .fb { display:none; padding:9px 13px; border-radius:6px; font-size:13px; font-weight:700; margin-top:7px; }
+  .fb.correct { display:block; background:var(--green-ultra); color:var(--green-dark); border:1px solid var(--border-green); }
+  .fb.incorrect { display:block; background:var(--red-pale); color:var(--red); border:1px solid #E8BABA; }
+
+  /* ── MARK POINT ── */
+  .mark-point { display:flex; gap:8px; margin-bottom:6px; font-size:13px; color:var(--text-mid); }
+  .mark-point::before { content:'✓'; color:var(--green-mid); font-weight:700; flex-shrink:0; }
+
+  /* ── CONDITIONS TABLE ── */
+  .conditions-table { width:100%; border-collapse:collapse; font-size:14px; margin:16px 0; }
+  .conditions-table th { background:var(--green-dark); color:white; padding:10px 14px; text-align:left; font-size:12px; font-weight:700; letter-spacing:0.04em; text-transform:uppercase; }
+  .conditions-table td { padding:12px 14px; border-bottom:1px solid var(--border); color:var(--text-mid); vertical-align:top; line-height:1.6; }
+  .conditions-table tr:nth-child(even) td { background:var(--bg-warm); }
+
+  /* ── SELF-DIRECTION GUIDE ── */
+  .guide-step { display:flex; gap:14px; margin-bottom:16px; align-items:flex-start; }
+  .guide-num { width:30px; height:30px; background:var(--green-dark); color:white; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:14px; flex-shrink:0; }
+  .guide-content { flex:1; }
+  .guide-content strong { display:block; font-size:15px; color:var(--text); margin-bottom:2px; }
+  .guide-content p { font-size:13px; margin-bottom:0; }
+
+  .traffic-light { display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; margin:16px 0; }
+  .tl-item { border-radius:8px; padding:14px 16px; text-align:center; }
+  .tl-green { background:#E8F5E3; border:1px solid #B0D8A0; }
+  .tl-amber { background:var(--amber-pale); border:1px solid #E8C88A; }
+  .tl-red { background:var(--red-pale); border:1px solid #E8BABA; }
+  .tl-item .tl-icon { font-size:22px; margin-bottom:6px; }
+  .tl-item .tl-label { font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:4px; }
+  .tl-item .tl-desc { font-size:12px; color:var(--text-mid); line-height:1.4; }
+
+  /* ── COMMAND WORD ── */
+  .command-word { background:white; border:1px solid var(--border); border-left:4px solid var(--amber); border-radius:var(--radius); padding:14px 18px; margin-bottom:10px; }
+  .command-word h4 { font-size:14px; font-weight:700; color:var(--amber); margin-bottom:3px; }
+  .command-word p { font-size:13px; margin-bottom:0; }
+
+  /* ── NAV FOOTER ── */
+  .lesson-nav { display:flex; justify-content:space-between; align-items:center; margin-top:44px; padding-top:22px; border-top:1px solid var(--border); }
+  .btn { display:inline-flex; align-items:center; gap:8px; padding:10px 20px; border-radius:6px; font-family:'Lato',sans-serif; font-size:13px; font-weight:700; letter-spacing:0.04em; cursor:pointer; transition:all 0.2s; border:none; }
+  .btn-primary { background:var(--green-dark); color:white; }
+  .btn-primary:hover { background:var(--green-mid); transform:translateY(-1px); box-shadow:var(--shadow-hover); }
+  .btn-outline { background:transparent; color:var(--green-dark); border:1.5px solid var(--green-dark); }
+  .btn-outline:hover { background:var(--green-ultra); }
+
+  /* ── DATA TABLE ── */
+  .data-table { width:100%; border-collapse:collapse; font-size:14px; margin:14px 0; }
+  .data-table th { background:var(--green-dark); color:white; padding:9px 13px; text-align:left; font-size:12px; font-weight:700; letter-spacing:0.04em; text-transform:uppercase; }
+  .data-table td { padding:9px 13px; border-bottom:1px solid var(--border); color:var(--text-mid); }
+  .data-table tr:nth-child(even) td { background:var(--bg-warm); }
+
+  /* ── VOCAB ── */
+  .vocab-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin:14px 0; }
+  .vocab-item { background:white; border:1px solid var(--border); border-radius:8px; padding:12px 14px; }
+  .vocab-term { font-weight:700; color:var(--green-dark); font-size:14px; margin-bottom:3px; }
+  .vocab-def { font-size:13px; color:var(--text-mid); line-height:1.5; }
+
+  @media(max-width:640px){
+    h1{font-size:28px;} .eq-grid{grid-template-columns:1fr;} .vocab-grid{grid-template-columns:1fr;} .traffic-light{grid-template-columns:1fr;} nav{padding:0 10px;} .nav-brand{display:none;}
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-brand">4C.4 <span>IAL Biology · Y12</span></div>
+  <div class="nav-stations">
+    <button class="nav-btn active" onclick="goTo('cover')" id="nav-cover"><span class="nl">Start</span><span class="nt">Guide</span></button>
+    <button class="nav-btn" onclick="goTo('s1')" id="nav-s1"><span class="nl">Learn 1</span><span class="nt">Gene Pool</span></button>
+    <button class="nav-btn" onclick="goTo('s2')" id="nav-s2"><span class="nl">Learn 2</span><span class="nt">H-W Equation</span></button>
+    <button class="nav-btn" onclick="goTo('s3')" id="nav-s3"><span class="nl">Practise</span><span class="nt">Calculations</span></button>
+    <button class="nav-btn" onclick="goTo('s4')" id="nav-s4"><span class="nl">Learn 3</span><span class="nt">Equilibrium</span></button>
+    <button class="nav-btn" onclick="goTo('s5')" id="nav-s5"><span class="nl">Apply</span><span class="nt">Why it breaks</span></button>
+    <button class="nav-btn" onclick="goTo('progress')" id="nav-progress"><span class="nl">Check</span><span class="nt">Progress</span></button>
+    <button class="nav-btn" onclick="goTo('exam')" id="nav-exam"><span class="nl">Exam</span><span class="nt">Support</span></button>
+  </div>
+  <div class="nav-progress"><div class="progress-dots" id="progress-dots"></div></div>
+</nav>
+
+<!-- ══════════════════════════════
+     COVER — SELF DIRECTION GUIDE
+══════════════════════════════ -->
+<section id="cover" class="active">
+  <div class="meta">Biodiversity and Conservation · 4C</div>
+  <h1>Gene Pool and<br>Genetic Diversity</h1>
+  <p class="subtitle">Specification reference: 4.20(i) · 4.20(ii) · Self-directed lesson</p>
+
+  <div class="card-amber" style="margin-bottom:24px;">
+    <h3 style="color:var(--amber); margin-bottom:8px;">📋 Your teacher is away — read this first</h3>
+    <p style="margin-bottom:0;">This lesson is designed so you can work completely independently. <strong>Everything you need is here</strong> — content, worked examples, practice questions, hints, and answers. Read the guide below before starting. It tells you exactly what to do, how long each section should take, and what to do if you get stuck.</p>
+  </div>
+
+  <h2 style="margin-bottom:20px;">How this lesson works</h2>
+
+  <div class="guide-step">
+    <div class="guide-num">1</div>
+    <div class="guide-content">
+      <strong>Work through each section in order</strong>
+      <p>The nav bar at the top shows all eight sections. Always go left to right — each section builds on the one before. Don't skip to practise before you've read the learn sections.</p>
+    </div>
+  </div>
+  <div class="guide-step">
+    <div class="guide-num">2</div>
+    <div class="guide-content">
+      <strong>Read the content, then answer the embedded questions</strong>
+      <p>The two Learn sections deliver the content you need. They include short "Pause and Check" questions to make sure you've understood before moving on. Answer these before revealing.</p>
+    </div>
+  </div>
+  <div class="guide-step">
+    <div class="guide-num">3</div>
+    <div class="guide-content">
+      <strong>Use the Stuck? button before revealing answers</strong>
+      <p>Every practice question has a <strong>Stuck?</strong> button. Press this first — it gives you a strategy hint without giving away the answer. Only reveal the full answer once you've made an attempt.</p>
+    </div>
+  </div>
+  <div class="guide-step">
+    <div class="guide-num">4</div>
+    <div class="guide-content">
+      <strong>Be honest with yourself on the Progress Check</strong>
+      <p>The progress check at the end is for you, not your teacher. Work through it under exam conditions — attempt everything before revealing. Then mark yourself carefully using the mark scheme.</p>
+    </div>
+  </div>
+  <div class="guide-step">
+    <div class="guide-num">5</div>
+    <div class="guide-content">
+      <strong>Use the Exam Support section before the next lesson</strong>
+      <p>Even if you feel confident, read the common mistakes section. Most students lose marks on Hardy-Weinberg questions for the same predictable reasons.</p>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <h2 style="margin-bottom:16px;">Approximate timing</h2>
+
+  <table class="data-table" style="margin-bottom:24px;">
+    <thead><tr><th>Section</th><th>What you're doing</th><th>Suggested time</th></tr></thead>
+    <tbody>
+      <tr><td>Learn 1 — Gene Pool</td><td>Reading and processing new content</td><td>10 min</td></tr>
+      <tr><td>Learn 2 — Hardy-Weinberg Equation</td><td>Reading content + worked examples</td><td>15 min</td></tr>
+      <tr><td>Practise — Calculations</td><td>Four graded calculations</td><td>20 min</td></tr>
+      <tr><td>Learn 3 — Equilibrium Conditions</td><td>Reading and processing</td><td>8 min</td></tr>
+      <tr><td>Apply — Why Equilibrium Breaks</td><td>Reading + application questions</td><td>12 min</td></tr>
+      <tr><td>Progress Check</td><td>Exam-style questions</td><td>15 min</td></tr>
+      <tr><td>Exam Support</td><td>Reading + have a go question</td><td>10 min</td></tr>
+    </tbody>
+  </table>
+
+  <h2 style="margin-bottom:16px;">What does success look like today?</h2>
+  <div class="traffic-light">
+    <div class="tl-item tl-green">
+      <div class="tl-icon">🟢</div>
+      <div class="tl-label">You're there</div>
+      <div class="tl-desc">Can calculate allele and genotype frequencies from scratch. Can state all five equilibrium conditions. Can explain why equilibrium breaks down.</div>
+    </div>
+    <div class="tl-item tl-amber">
+      <div class="tl-icon">🟡</div>
+      <div class="tl-label">Getting there</div>
+      <div class="tl-desc">Can use the formula with help but lose track of steps. Know most conditions. Need to revisit the worked examples.</div>
+    </div>
+    <div class="tl-item tl-red">
+      <div class="tl-icon">🔴</div>
+      <div class="tl-label">Need support</div>
+      <div class="tl-desc">Confused by p and q. Struggled with the maths. Re-read Learn 1 and 2 fully, then try Practice Q1 again before moving on.</div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <h2 style="margin-bottom:12px;">Learning Objectives</h2>
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:32px;">
+    <div class="definition-box"><div class="def-term">Objective 1</div><div class="def-body">Understand how the Hardy-Weinberg equation can be used to see whether a change in allele frequency is occurring in a population over time</div></div>
+    <div class="definition-box"><div class="def-term">Objective 2</div><div class="def-body">Understand that changes in allele frequency can come about as a result of mutation and natural selection</div></div>
+    <div class="definition-box"><div class="def-term">Objective 3</div><div class="def-body">State the five conditions required for Hardy-Weinberg equilibrium to be maintained</div></div>
+    <div class="definition-box"><div class="def-term">Objective 4</div><div class="def-body">Explain how deviations from H-W equilibrium indicate that evolution is occurring in a population</div></div>
+  </div>
+
+  <div class="lesson-nav">
+    <div></div>
+    <button class="btn btn-primary" onclick="goTo('s1')">Begin Learn 1 →</button>
+  </div>
+</section>
+
+<!-- ══════════════════════════════
+     LEARN 1 — GENE POOL & ALLELE FREQUENCY
+══════════════════════════════ -->
+<section id="s1">
+  <div class="sec-header">
+    <div class="sec-icon si-learn">📖</div>
+    <div class="sec-header-text">
+      <h2>Learn 1 — Gene Pool and Allele Frequency</h2>
+      <p>Read carefully. Answer the Pause and Check questions before moving on.</p>
+    </div>
+  </div>
+  <div class="time-badge">Allow 10 minutes</div>
+
+  <div class="learn-block">
+    <h3>Population and Gene Pool</h3>
+    <p>In biology, a <span class="key-term">population</span> is a group of individuals of the same species occupying a particular habitat and a particular niche. The habitat is the place where an organism lives.</p>
+    <p>In population genetics, we take the gene as the unit of evolution. The sum total of all the alleles in a population at a given time is called the <span class="key-term">gene pool</span>. At any point in time, a population will have a particular gene pool — with different alleles occurring with varying frequencies. Think of it like a massive bag of alleles from every individual in the population. Evolution is a permanent change in those allele frequencies over time.</p>
+    <div class="definition-box">
+      <div class="def-term">Gene pool</div>
+      <div class="def-body">The sum total of all the genes in a population at a given time — it includes every copy of every allele carried by every individual in the population.</div>
+    </div>
+  </div>
+
+  <div class="learn-block">
+    <h3>Allele Frequency</h3>
+    <p>The frequency of alleles in a population is not fixed. As the environment changes, so does the frequency of different alleles through natural selection and adaptation.</p>
+    <p>A classic example: <strong>warfarin</strong> is a rat poison that prevents blood clotting. When first introduced, some rats already carried a mutation giving them resistance. The poison acted as a powerful <span class="key-term">selection pressure</span> — it killed susceptible rats and left resistant ones to reproduce. Over generations, the resistance allele increased in frequency across the entire population until most rats became resistant.</p>
+    <div class="definition-box">
+      <div class="def-term">Allele frequency</div>
+      <div class="def-body">The relative frequency with which a particular allele appears within a population. It is expressed as a decimal fraction between 0 and 1. An allele with a frequency of 0.5 is carried by 50% of individuals in the population.</div>
+    </div>
+    <div class="definition-box">
+      <div class="def-term">Selection pressure</div>
+      <div class="def-body">The effect of one or more environmental factors that determine whether an organism will be more or less successful at surviving and reproducing. Selection pressure drives changes in allele frequency and ultimately speciation.</div>
+    </div>
+  </div>
+
+  <div class="learn-block">
+    <h3>The Foundation: p + q = 1</h3>
+    <p>Imagine a single gene with just two possible alleles: <strong>A</strong> (dominant) and <strong>a</strong> (recessive). In a population, every copy of this gene must be either A or a — there are no other options.</p>
+    <p>We use <strong>p</strong> to represent the frequency of the dominant allele (A) and <strong>q</strong> to represent the frequency of the recessive allele (a). Because every allele must be one or the other:</p>
+    <div class="formula-display">
+      <div class="formula-large">p + q = 1</div>
+      <p class="formula-note">where p = frequency of dominant allele (A) · q = frequency of recessive allele (a)</p>
+    </div>
+    <p>So if you know p, you can always find q: <strong>q = 1 − p</strong>. And if you know q, you can find p: <strong>p = 1 − q</strong>.</p>
+    <p>Example: if 30% of alleles in a population are the recessive allele (q = 0.30), then the dominant allele must make up the remaining 70% (p = 0.70). Check: 0.30 + 0.70 = 1. ✓</p>
+    <div class="card-blue" style="margin-top:12px;">
+      <h3 style="color:var(--blue); margin-bottom:6px;">Important limitation</h3>
+      <p style="margin-bottom:0;">The equation p + q = 1 is not very useful on its own — it is almost impossible to distinguish heterozygotes (Aa) from dominant homozygotes (AA) just by looking at the phenotype. However, we <em>can</em> easily observe and count recessive phenotypes (aa). This is what makes the Hardy-Weinberg equation so powerful, as you will see in Learn 2.</p>
+    </div>
+  </div>
+
+  <!-- PAUSE AND CHECK -->
+  <div class="pause-check">
+    <div class="pc-label">⏸ Pause and Check — answer before revealing</div>
+    <div class="pc-q">Q1. In a population, the frequency of the recessive allele for coat colour is 0.4. What is the frequency of the dominant allele? Show your working.</div>
+    <textarea placeholder="Write your answer here..."></textarea><br><br>
+    <button class="btn-reveal" onclick="toggleReveal(this)">Reveal answer</button>
+    <div class="reveal-box">p + q = 1 → p = 1 − q = 1 − 0.4 = <strong>0.6</strong><br>The dominant allele has a frequency of 0.6 (i.e. 60% of alleles in the population are the dominant form).</div>
+  </div>
+
+  <div class="pause-check">
+    <div class="pc-label">⏸ Pause and Check — answer before revealing</div>
+    <div class="pc-q">Q2. A new pesticide is introduced to a habitat. Suggest, using the concept of selection pressure, how this might change allele frequencies in an insect population over several generations.</div>
+    <textarea placeholder="Write your answer here..."></textarea><br><br>
+    <button class="btn-reveal" onclick="toggleReveal(this)">Reveal answer</button>
+    <div class="reveal-box">
+      <div class="mark-point">The pesticide acts as a selection pressure — insects without resistance alleles die and do not reproduce (1)</div>
+      <div class="mark-point">Insects that by chance already carry a resistance allele survive and reproduce, passing the allele to offspring (1)</div>
+      <div class="mark-point">Over generations, the frequency of the resistance allele increases in the gene pool / the frequency of susceptible alleles decreases (1)</div>
+    </div>
+  </div>
+
+  <div class="lesson-nav">
+    <button class="btn btn-outline" onclick="goTo('cover')">← Back</button>
+    <button class="btn btn-primary" onclick="goTo('s2')">Learn 2 →</button>
+  </div>
+</section>
+
+<!-- ══════════════════════════════
+     LEARN 2 — HARDY-WEINBERG EQUATION
+══════════════════════════════ -->
+<section id="s2">
+  <div class="sec-header">
+    <div class="sec-icon si-learn">📖</div>
+    <div class="sec-header-text">
+      <h2>Learn 2 — The Hardy-Weinberg Equation</h2>
+      <p>Read all content and both worked examples before moving to Practice.</p>
+    </div>
+  </div>
+  <div class="time-badge">Allow 15 minutes</div>
+
+  <div class="learn-block">
+    <h3>Why we need the Hardy-Weinberg equation</h3>
+    <p>In 1908, G.N. Hardy (British mathematician) and W. Weinberg (German physician) independently developed an equation to describe the mathematical relationship between the frequencies of alleles and genotypes within a stable theoretical population. It gives us a powerful tool: if we can <em>observe</em> the frequency of the recessive phenotype (aa), we can <em>calculate</em> all the allele and genotype frequencies in the population.</p>
+    <p>The key insight: recessive phenotypes are easily observable because they can only arise from the genotype aa (two recessive alleles). From that single observable frequency, we can unlock everything else.</p>
+  </div>
+
+  <div class="learn-block">
+    <h3>The Full Equation</h3>
+    <div class="formula-display">
+      <div class="formula-large" style="font-size:26px; letter-spacing:2px;">p² + 2pq + q² = 1</div>
+      <p class="formula-note">This must always equal 1 — because all genotype frequencies in a population must add up to 100%</p>
+    </div>
+
+    <div class="eq-grid">
+      <div class="eq-cell">
+        <div class="eq-symbol">p²</div>
+        <div class="eq-name">Homozygous dominant</div>
+        <div class="eq-desc">Frequency of AA genotype in the population</div>
+      </div>
+      <div class="eq-cell">
+        <div class="eq-symbol">2pq</div>
+        <div class="eq-name">Heterozygous</div>
+        <div class="eq-desc">Frequency of Aa genotype in the population (×2 because Aa and aA are the same)</div>
+      </div>
+      <div class="eq-cell">
+        <div class="eq-symbol">q²</div>
+        <div class="eq-name">Homozygous recessive</div>
+        <div class="eq-desc">Frequency of aa genotype — this is the one we can directly observe from the recessive phenotype</div>
+      </div>
+    </div>
+
+    <div class="card-green" style="margin-top:4px;">
+      <h3 style="margin-bottom:6px;">The key strategy — always start with q²</h3>
+      <p style="margin-bottom:0;">Since recessive phenotypes are easily observable, we always begin by measuring the frequency of the recessive phenotype in the population. This gives us q². From q², we find q (square root). From q, we find p (p = 1 − q). Then we can calculate p², 2pq, and q² for all genotype frequencies. <strong>The order is: q² → q → p → p², 2pq.</strong> Always follow this order.</p>
+    </div>
+  </div>
+
+  <!-- WORKED EXAMPLE 1 -->
+  <div class="worked-example">
+    <div class="we-header">
+      <div class="we-title">Worked Example 1 — Albinism in North Americans</div>
+      <div class="we-tag">Follow every step</div>
+    </div>
+    <div class="we-body">
+      <p style="font-size:14px; color:var(--text-mid); margin-bottom:16px;">Tests on a sample of North Americans showed that the frequency of albinos in the population was 1 in 20,000. Albinism is a recessive phenotype. Calculate the frequencies of all three genotypes.</p>
+
+      <div class="we-step">
+        <div class="we-num">1</div>
+        <div class="we-content">
+          <strong>Identify q²</strong> — the frequency of the recessive phenotype (albinism = aa)
+          <div class="we-calc">Frequency of albinos = 1/20,000 = 0.00005<br>Therefore q² = 0.00005</div>
+        </div>
+      </div>
+
+      <div class="we-step">
+        <div class="we-num">2</div>
+        <div class="we-content">
+          <strong>Find q</strong> — take the square root of q²
+          <div class="we-calc">q = √0.00005 = 0.007</div>
+        </div>
+      </div>
+
+      <div class="we-step">
+        <div class="we-num">3</div>
+        <div class="we-content">
+          <strong>Find p</strong> — using p + q = 1
+          <div class="we-calc">p = 1 − q = 1 − 0.007 = 0.993</div>
+        </div>
+      </div>
+
+      <div class="we-step">
+        <div class="we-num">4</div>
+        <div class="we-content">
+          <strong>Calculate all three genotype frequencies</strong>
+          <div class="we-calc">
+            Frequency of AA (homozygous dominant) = p² = 0.993² = <strong>0.986</strong><br>
+            Frequency of Aa (heterozygous) = 2pq = 2 × 0.993 × 0.007 = <strong>0.014</strong><br>
+            Frequency of aa (homozygous recessive) = q² = <strong>0.00005</strong>
+          </div>
+        </div>
+      </div>
+
+      <div class="we-step">
+        <div class="we-num">5</div>
+        <div class="we-content">
+          <strong>Check your answer</strong> — p² + 2pq + q² must equal 1
+          <div class="we-calc">0.986 + 0.014 + 0.00005 ≈ 1.000 ✓</div>
+        </div>
+      </div>
+
+      <div class="card-green" style="margin-top:8px; margin-bottom:0;">
+        <p style="margin-bottom:0; font-size:13px;"><strong>Interpretation:</strong> 98.6% of the North American population are homozygous for the dominant allele, 1.4% are heterozygous carriers, and only 0.005% are albino. Despite albinism being very rare as a phenotype, the recessive allele is carried by 1.4% of the population — far more than the phenotype suggests.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- WORKED EXAMPLE 2 -->
+  <div class="worked-example">
+    <div class="we-header">
+      <div class="we-title">Worked Example 2 — Cystic Fibrosis in a UK Population</div>
+      <div class="we-tag">Follow every step</div>
+    </div>
+    <div class="we-body">
+      <p style="font-size:14px; color:var(--text-mid); margin-bottom:16px;">In the UK, approximately 1 in 2,500 babies are born with cystic fibrosis (CF), which is caused by a recessive allele. Calculate the expected frequency of carriers (heterozygotes) in the UK population.</p>
+
+      <div class="we-step">
+        <div class="we-num">1</div>
+        <div class="we-content">
+          <strong>Identify q²</strong>
+          <div class="we-calc">Frequency of CF = 1/2500 = 0.0004<br>Therefore q² = 0.0004</div>
+        </div>
+      </div>
+
+      <div class="we-step">
+        <div class="we-num">2</div>
+        <div class="we-content">
+          <strong>Find q</strong>
+          <div class="we-calc">q = √0.0004 = 0.02</div>
+        </div>
+      </div>
+
+      <div class="we-step">
+        <div class="we-num">3</div>
+        <div class="we-content">
+          <strong>Find p</strong>
+          <div class="we-calc">p = 1 − 0.02 = 0.98</div>
+        </div>
+      </div>
+
+      <div class="we-step">
+        <div class="we-num">4</div>
+        <div class="we-content">
+          <strong>Calculate heterozygote (carrier) frequency</strong>
+          <div class="we-calc">
+            Frequency of carriers (Aa) = 2pq = 2 × 0.98 × 0.02 = <strong>0.0392</strong><br>
+            This means approximately <strong>1 in 25</strong> people in the UK is a carrier of the CF allele.
+          </div>
+        </div>
+      </div>
+
+      <div class="we-step">
+        <div class="we-num">5</div>
+        <div class="we-content">
+          <strong>Check</strong>
+          <div class="we-calc">p² = 0.98² = 0.9604 · 2pq = 0.0392 · q² = 0.0004<br>0.9604 + 0.0392 + 0.0004 = 1.000 ✓</div>
+        </div>
+      </div>
+
+      <div class="card-green" style="margin-top:8px; margin-bottom:0;">
+        <p style="margin-bottom:0; font-size:13px;"><strong>Key insight:</strong> CF appears in only 1 in 2,500 births, yet approximately 1 in 25 people carry the allele. The Hardy-Weinberg equation reveals a hidden reservoir of genetic disease in the population that phenotype data alone would massively underestimate.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAUSE AND CHECK -->
+  <div class="pause-check">
+    <div class="pc-label">⏸ Pause and Check — answer before revealing</div>
+    <div class="pc-q">Q1. In a population, 9% of individuals show the homozygous recessive phenotype for a trait. What is the value of q? What is the value of p?</div>
+    <textarea placeholder="Show your working..."></textarea><br><br>
+    <button class="btn-reveal" onclick="toggleReveal(this)">Reveal answer</button>
+    <div class="reveal-box">q² = 9% = 0.09 → q = √0.09 = <strong>0.3</strong><br>p = 1 − 0.3 = <strong>0.7</strong><br>Check: 0.3 + 0.7 = 1 ✓</div>
+  </div>
+
+  <div class="pause-check">
+    <div class="pc-label">⏸ Pause and Check — answer before revealing</div>
+    <div class="pc-q">Q2. Why must we always start with q² (the recessive phenotype frequency) rather than p² when using the Hardy-Weinberg equation?</div>
+    <textarea placeholder="Write your answer here..."></textarea><br><br>
+    <button class="btn-reveal" onclick="toggleReveal(this)">Reveal answer</button>
+    <div class="reveal-box">Because it is almost impossible to distinguish heterozygotes (Aa) from dominant homozygotes (AA) by phenotype alone — both show the dominant phenotype. Only the recessive phenotype (aa) can be directly and reliably counted from observation. Starting with q² gives us a known, measurable value to anchor the entire calculation.</div>
+  </div>
+
+  <div class="lesson-nav">
+    <button class="btn btn-outline" onclick="goTo('s1')">← Learn 1</button>
+    <button class="btn btn-primary" onclick="goTo('s3')">Practise →</button>
+  </div>
+</section>
+
+<!-- ══════════════════════════════
+     PRACTISE — CALCULATIONS
+══════════════════════════════ -->
+<section id="s3">
+  <div class="sec-header">
+    <div class="sec-icon si-practise">🧮</div>
+    <div class="sec-header-text">
+      <h2>Practise — Hardy-Weinberg Calculations</h2>
+      <p>Four questions, decreasing scaffold. Use Stuck? before revealing answers.</p>
+    </div>
+  </div>
+  <div class="time-badge">Allow 20 minutes</div>
+
+  <div class="card-green" style="margin-bottom:24px;">
+    <h3 style="margin-bottom:6px;">The calculation order — always follow this</h3>
+    <p style="margin-bottom:0; font-size:14px;">
+      <strong>Step 1:</strong> Identify q² from the recessive phenotype frequency →
+      <strong>Step 2:</strong> q = √q² →
+      <strong>Step 3:</strong> p = 1 − q →
+      <strong>Step 4:</strong> Calculate p², 2pq, q² →
+      <strong>Step 5:</strong> Check p² + 2pq + q² = 1
+    </p>
+  </div>
+
+  <!-- Q1 FULLY GUIDED -->
+  <div class="practice-block scaffold-guided">
+    <div class="pb-label">Practice 1 — Fully Guided</div>
+    <div class="scaffold-bar"></div>
+    <p style="font-size:15px; font-weight:700; color:var(--text); margin-bottom:12px;">In a population of plants, 95 out of 200 individuals express the homozygous recessive phenotype for hairy leaves. Calculate:</p>
+    <p style="font-size:13px; color:var(--text-light); margin-bottom:16px;">(a) the percentage of the population that is homozygous recessive · (b) the frequency that is heterozygous · (c) the frequency of the dominant allele p</p>
+
+    <button class="stuck-btn" onclick="toggleStuck(this)">💡 Stuck? Strategy hint</button>
+    <div class="stuck-box">Start with (a): q² = number of recessive individuals ÷ total population. Then for (b), find q first using the square root, then p = 1 − q, then 2pq gives you the heterozygote frequency. For (c), p is already found in that chain.</div>
+
+    <div class="divider" style="margin:14px 0;"></div>
+
+    <p style="font-weight:700; font-size:14px; margin-bottom:10px;">(a) What is q² (the frequency of the homozygous recessive genotype)?</p>
+    <div class="calc-row">
+      <label>q² = 95 ÷ 200 =</label>
+      <input class="calc-input" id="p1qa" type="number" step="0.001" placeholder="?">
+    </div>
+    <button class="btn-reveal" style="margin-bottom:12px;" onclick="checkInput('p1qa', 0.475, 0.005, 'q² = 95/200 = <strong>0.475</strong> (47.5% of the population is homozygous recessive)')">Check (a)</button>
+    <div id="p1qa-fb" style="display:none; margin-bottom:12px;"></div>
+
+    <p style="font-weight:700; font-size:14px; margin-bottom:10px;">(b) Find q, then p, then calculate the heterozygote frequency (2pq)</p>
+    <div class="calc-row"><label>q = √0.475 =</label><input class="calc-input" id="p1qb1" type="number" step="0.001" placeholder="?"></div>
+    <div class="calc-row"><label>p = 1 − q =</label><input class="calc-input" id="p1qb2" type="number" step="0.001" placeholder="?"></div>
+    <div class="calc-row"><label>2pq = 2 × p × q =</label><input class="calc-input" id="p1qb3" type="number" step="0.001" placeholder="?"></div>
+    <button class="btn-reveal" style="margin-bottom:12px;" onclick="checkP1b()">Check (b)</button>
+    <div id="p1b-fb" style="display:none; margin-bottom:12px;"></div>
+
+    <p style="font-weight:700; font-size:14px; margin-bottom:10px;">(c) State the frequency of homozygous dominant genotype (p²)</p>
+    <div class="calc-row"><label>p² =</label><input class="calc-input" id="p1qc" type="number" step="0.001" placeholder="?"></div>
+    <button class="btn-reveal" style="margin-bottom:12px;" onclick="checkInput('p1qc', 0.271, 0.02, 'p² = 0.521² ≈ <strong>0.271</strong> (27.1% of the population is homozygous dominant)')">Check (c)</button>
+    <div id="p1qc-fb" style="display:none; margin-bottom:12px;"></div>
+
+    <div class="divider" style="margin:14px 0;"></div>
+    <button class="btn-reveal" onclick="toggleReveal(this)">Show full worked answer</button>
+    <div class="reveal-box">
+      q² = 95/200 = <strong>0.475</strong><br>
+      q = √0.475 = <strong>0.689</strong><br>
+      p = 1 − 0.689 = <strong>0.311</strong> (but use more decimal places: 1 − 0.6892 = 0.3108, use p = 0.521 from q=0.689 — note: re-check: √0.475 = 0.6892, p = 0.3108)<br><br>
+      <em>Careful check: √0.475 = 0.6892 → p = 1 − 0.6892 = 0.3108</em><br><br>
+      2pq = 2 × 0.3108 × 0.6892 = <strong>0.4285</strong> ≈ 0.43 (43% of population are heterozygous)<br>
+      p² = 0.3108² = <strong>0.0966</strong> ≈ 0.097 (9.7% are homozygous dominant)<br><br>
+      Check: 0.097 + 0.4285 + 0.475 = 1.000 ✓
+    </div>
+  </div>
+
+  <!-- Q2 PARTIAL -->
+  <div class="practice-block scaffold-partial">
+    <div class="pb-label">Practice 2 — Partial Scaffold</div>
+    <div class="scaffold-bar"></div>
+    <p style="font-size:15px; font-weight:700; color:var(--text); margin-bottom:12px;">Grey fur in mice is recessive to brown fur. In a population of 150 mice, 126 have brown fur. Give the expected frequency of homozygous recessive, homozygous dominant, and heterozygous individuals. Show all working.</p>
+
+    <button class="stuck-btn" onclick="toggleStuck(this)">💡 Stuck? Strategy hint</button>
+    <div class="stuck-box">First work out how many mice have grey fur (total − brown). That gives you the number of aa individuals. Divide by total to get q². Then follow the standard chain: √q² → q → p → p², 2pq.</div>
+
+    <textarea placeholder="Show all your working here:&#10;&#10;Number with grey fur = 150 − 126 = ?&#10;q² = ? ÷ 150 = ?&#10;q = √? = ?&#10;p = 1 − ? = ?&#10;&#10;Homozygous recessive (q²) = ?&#10;Heterozygous (2pq) = ?&#10;Homozygous dominant (p²) = ?&#10;&#10;Check: p² + 2pq + q² = ?" style="min-height:200px;"></textarea>
+    <br><br>
+    <button class="btn-reveal" onclick="toggleReveal(this)">Reveal full worked answer</button>
+    <div class="reveal-box">
+      Number with grey fur (aa) = 150 − 126 = <strong>24</strong><br>
+      q² = 24/150 = <strong>0.16</strong><br>
+      q = √0.16 = <strong>0.4</strong><br>
+      p = 1 − 0.4 = <strong>0.6</strong><br><br>
+      Homozygous recessive (aa) = q² = <strong>0.16</strong> → 0.16 × 150 = 24 mice<br>
+      Heterozygous (Aa) = 2pq = 2 × 0.6 × 0.4 = <strong>0.48</strong> → 0.48 × 150 = 72 mice<br>
+      Homozygous dominant (AA) = p² = 0.6² = <strong>0.36</strong> → 0.36 × 150 = 54 mice<br><br>
+      Check: 0.36 + 0.48 + 0.16 = 1.000 ✓ / 54 + 72 + 24 = 150 ✓
+    </div>
+  </div>
+
+  <!-- Q3 INDEPENDENT -->
+  <div class="practice-block scaffold-independent">
+    <div class="pb-label">Practice 3 — Independent</div>
+    <div class="scaffold-bar"></div>
+    <p style="font-size:15px; font-weight:700; color:var(--text); margin-bottom:12px;">In a population of 5,000 cattle, the hornless condition (H) is dominant over horned (h). A survey finds that 450 cattle are horned. Calculate the expected number of heterozygous individuals in this population. Show all working.</p>
+
+    <button class="stuck-btn" onclick="toggleStuck(this)">💡 Stuck? Strategy hint</button>
+    <div class="stuck-box">Start from the horned cattle — they are the recessive phenotype (hh = q²). Divide by total for the frequency. Then follow the standard chain to find 2pq. Finally, multiply 2pq by the population size to get the expected number of heterozygotes.</div>
+
+    <textarea placeholder="Show all working here — remember to calculate expected NUMBER at the end, not just frequency..." style="min-height:180px;"></textarea>
+    <br><br>
+    <button class="btn-reveal" onclick="toggleReveal(this)">Reveal full worked answer</button>
+    <div class="reveal-box">
+      q² = 450/5000 = <strong>0.09</strong><br>
+      q = √0.09 = <strong>0.3</strong><br>
+      p = 1 − 0.3 = <strong>0.7</strong><br>
+      2pq = 2 × 0.7 × 0.3 = <strong>0.42</strong><br><br>
+      Expected number of heterozygotes = 0.42 × 5000 = <strong>2,100 cattle</strong><br><br>
+      Check: p² = 0.49, 2pq = 0.42, q² = 0.09 → 0.49 + 0.42 + 0.09 = 1.000 ✓<br>
+      Numbers: 0.49×5000=2450 + 2100 + 450 = 5000 ✓
+    </div>
+  </div>
+
+  <!-- Q4 EXAM STYLE -->
+  <div class="practice-block scaffold-independent">
+    <div class="pb-label">Practice 4 — Exam style (multi-step)</div>
+    <div class="scaffold-bar"></div>
+    <p style="font-size:15px; font-weight:700; color:var(--text); margin-bottom:12px;">A biologist studying a population of field mice over two years collects the following data. Tongue-rolling (T) is dominant over non-rolling (t).</p>
+    <table class="data-table" style="margin-bottom:16px;">
+      <thead><tr><th>Year</th><th>Total population</th><th>Non-rollers (tt)</th></tr></thead>
+      <tbody>
+        <tr><td>Year 1</td><td>400</td><td>64</td></tr>
+        <tr><td>Year 2</td><td>400</td><td>100</td></tr>
+      </tbody>
+    </table>
+    <p style="font-size:14px; color:var(--text-mid); margin-bottom:16px;">(a) Calculate the frequency of the recessive allele (q) in Year 1 and Year 2.<br>(b) Calculate the frequency of heterozygotes in Year 2.<br>(c) The frequency of t changed between years. What does this suggest about the population? Explain your answer.</p>
+
+    <button class="stuck-btn" onclick="toggleStuck(this)">💡 Stuck? Strategy hint</button>
+    <div class="stuck-box">For (a): do two separate q² calculations, then square root each. For (c): compare your two q values — has allele frequency changed? If it has, what does the Hardy-Weinberg theory tell us about what that means for the population?</div>
+
+    <textarea placeholder="(a) Year 1:&#10;q² = ? ÷ ? = ?&#10;q = ?&#10;&#10;Year 2:&#10;q² = ? ÷ ? = ?&#10;q = ?&#10;&#10;(b) Year 2: p = ? , 2pq = ?&#10;&#10;(c) Interpretation..." style="min-height:220px;"></textarea>
+    <br><br>
+    <button class="btn-reveal" onclick="toggleReveal(this)">Reveal full worked answer</button>
+    <div class="reveal-box">
+      <strong>(a)</strong><br>
+      Year 1: q² = 64/400 = 0.16 → q = √0.16 = <strong>0.4</strong><br>
+      Year 2: q² = 100/400 = 0.25 → q = √0.25 = <strong>0.5</strong><br><br>
+      <strong>(b)</strong><br>
+      Year 2: p = 1 − 0.5 = 0.5<br>
+      2pq = 2 × 0.5 × 0.5 = <strong>0.5</strong> (50% of population are heterozygous in Year 2)<br><br>
+      <strong>(c)</strong><br>
+      <div class="mark-point">The frequency of the recessive allele (t) has increased from 0.4 to 0.5 between Year 1 and Year 2 (1)</div>
+      <div class="mark-point">This means the population is NOT in Hardy-Weinberg equilibrium — allele frequencies are changing (1)</div>
+      <div class="mark-point">This suggests evolution is occurring / one of the equilibrium conditions is being violated — for example, there may be a selection pressure favouring the recessive phenotype, or there may be mutations increasing the frequency of t (1)</div>
+    </div>
+  </div>
+
+  <div class="lesson-nav">
+    <button class="btn btn-outline" onclick="goTo('s2')">← Learn 2</button>
+    <button class="btn btn-primary" onclick="goTo('s4')">Learn 3 →</button>
+  </div>
+</section>
+
+<!-- ══════════════════════════════
+     LEARN 3 — EQUILIBRIUM CONDITIONS
+══════════════════════════════ -->
+<section id="s4">
+  <div class="sec-header">
+    <div class="sec-icon si-learn">📖</div>
+    <div class="sec-header-text">
+      <h2>Learn 3 — Conditions for Hardy-Weinberg Equilibrium</h2>
+      <p>Five conditions. Learn them all. Understand what happens when each is broken.</p>
+    </div>
+  </div>
+  <div class="time-badge">Allow 8 minutes</div>
+
+  <div class="learn-block">
+    <h3>What is Hardy-Weinberg Equilibrium?</h3>
+    <p>The Hardy-Weinberg equilibrium theory states that in a population that is <strong>not evolving</strong>, allele frequencies will remain stable from one generation to the next — as long as there are no other evolutionary influences. This describes a theoretical steady state where the gene pool is not changing.</p>
+    <p>If the population <em>is</em> evolving, allele frequencies will change from generation to generation and the population is said to be <strong>not in equilibrium</strong>. This is the normal situation in real populations — the conditions for true equilibrium are almost never fully met in nature.</p>
+  </div>
+
+  <div class="learn-block">
+    <h3>The Five Conditions</h3>
+    <p style="margin-bottom:16px;">For Hardy-Weinberg equilibrium to hold, all five of the following must be true. Learn each condition AND what happens if it is violated.</p>
+
+    <table class="conditions-table">
+      <thead>
+        <tr><th style="width:30%;">Condition</th><th style="width:35%;">What it means</th><th>What happens if it's broken?</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>1. No mutations</strong></td>
+          <td>No new alleles are created and no alleles are lost through mutation</td>
+          <td>New mutations create new alleles or change existing ones, directly altering allele frequencies in the gene pool</td>
+        </tr>
+        <tr>
+          <td><strong>2. Random mating</strong></td>
+          <td>Any individual is equally likely to mate with any other individual — mate choice is not based on genotype</td>
+          <td>Non-random mating (mate selection based on phenotype) means some alleles are preferentially passed on — e.g. sexual selection in peacocks means showy-tail alleles are passed on more</td>
+        </tr>
+        <tr>
+          <td><strong>3. Large population</strong></td>
+          <td>The population must be large enough that random sampling effects do not significantly alter allele frequencies</td>
+          <td>In small populations, genetic drift can cause random changes in allele frequency — alleles can be lost or fixed purely by chance, not by selection</td>
+        </tr>
+        <tr>
+          <td><strong>4. Isolation (no immigration or emigration)</strong></td>
+          <td>No organisms move into or out of the population, bringing or removing alleles</td>
+          <td>Gene flow — migration of organisms or genetic material in or out — changes allele frequencies. Immigration can introduce new alleles; emigration can remove them</td>
+        </tr>
+        <tr>
+          <td><strong>5. No selection pressure</strong></td>
+          <td>All genotypes are equally fit — no genotype has a survival or reproductive advantage over another</td>
+          <td>If some genotypes are more successful, natural selection increases the frequency of advantageous alleles and decreases the frequency of disadvantageous ones — allele frequencies change</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="card-amber" style="margin-top:4px;">
+      <h3 style="color:var(--amber); margin-bottom:6px;">The critical point</h3>
+      <p style="margin-bottom:0;">In the real world, these conditions are <em>almost never all met simultaneously</em>. Mutations occur continuously; mating is rarely truly random; all populations have finite size; gene flow occurs constantly; and selection pressures are always present to some degree. This is why real populations are always changing — always evolving. Hardy-Weinberg equilibrium is a theoretical baseline, not a description of nature. Its value is as a null model: if allele frequencies are changing, something is driving that change.</p>
+    </div>
+  </div>
+
+  <!-- PAUSE AND CHECK -->
+  <div class="pause-check">
+    <div class="pc-label">⏸ Pause and Check — without looking above, list all five conditions</div>
+    <textarea placeholder="List all five conditions for Hardy-Weinberg equilibrium:&#10;1.&#10;2.&#10;3.&#10;4.&#10;5."></textarea><br><br>
+    <button class="btn-reveal" onclick="toggleReveal(this)">Reveal answer</button>
+    <div class="reveal-box">
+      1. No mutations<br>
+      2. Random mating<br>
+      3. Large population<br>
+      4. Isolation — no immigration or emigration (no gene flow)<br>
+      5. No selection pressure (all genotypes equally fertile/successful)
+    </div>
+  </div>
+
+  <div class="pause-check">
+    <div class="pc-label">⏸ Pause and Check</div>
+    <div class="pc-q">A farmer notices that the frequency of a recessive allele for disease susceptibility in his sheep flock has increased significantly over three years. Suggest two conditions of Hardy-Weinberg equilibrium that may have been violated. Explain each.</div>
+    <textarea placeholder="Write your answer here..."></textarea><br><br>
+    <button class="btn-reveal" onclick="toggleReveal(this)">Reveal answer</button>
+    <div class="reveal-box">
+      <div class="mark-point"><strong>Selection pressure:</strong> if a disease recently killed a large proportion of sheep, the surviving individuals (who passed on their alleles) may have been those that happened to carry the susceptibility allele alongside other advantageous alleles — indirect selection could increase the frequency (1)</div>
+      <div class="mark-point"><strong>Non-random mating:</strong> farmers typically select which animals breed — this is artificial selection, not random mating. If rams carrying the susceptibility allele happen to be selected as studs, the allele frequency increases in the next generation (1)</div>
+      <div class="mark-point"><strong>Small population / genetic drift:</strong> farm flocks are often small — random chance could cause the frequency of any allele, including the susceptibility allele, to drift upwards without any selection advantage (1) [any two conditions with valid explanations]</div>
+    </div>
+  </div>
+
+  <div class="lesson-nav">
+    <button class="btn btn-outline" onclick="goTo('s3')">← Practise</button>
+    <button class="btn btn-primary" onclick="goTo('s5')">Apply →</button>
+  </div>
+</section>
+
+<!-- ══════════════════════════════
+     APPLY — WHY EQUILIBRIUM BREAKS DOWN
+══════════════════════════════ -->
+<section id="s5">
+  <div class="sec-header">
+    <div class="sec-icon si-apply">⚖️</div>
+    <div class="sec-header-text">
+      <h2>Apply — Why Equilibrium Breaks Down</h2>
+      <p>Read each mechanism, then answer the application question.</p>
+    </div>
+  </div>
+  <div class="time-badge">Allow 12 minutes</div>
+
+  <!-- MUTATIONS -->
+  <div class="learn-block">
+    <h3>Mutations</h3>
+    <p>Although each gene mutates very rarely (between 1 in 10⁴ and 1 in 10⁹ per generation), across a population of millions and a genome of billions of genes, mutations are occurring continuously. Most mutations are recessive and will never be expressed. Occasionally, a mutation arises that confers a benefit — and this is when natural selection begins to act.</p>
+    <p>In a single generation, mutations alone rarely have a large effect on allele frequencies. But over many generations, they are the ultimate source of all new genetic variation. Without mutation, there would be nothing for natural selection to act on.</p>
+  </div>
+
+  <div class="pause-check">
+    <div class="pc-label">⏸ Apply</div>
+    <div class="pc-q">The textbook mentions ruby red grapefruit — a naturally occurring mutation in growing grapefruit cells produced a new dominant phenotype. Explain why a single dominant mutation can affect allele frequencies in a population more rapidly than a single recessive mutation.</div>
+    <textarea placeholder="Write your answer here..."></textarea><br><br>
+    <button class="btn-reveal" onclick="toggleReveal(this)">Reveal answer</button>
+    <div class="reveal-box">
+      <div class="mark-point">A dominant mutation is expressed in the phenotype immediately, even in heterozygotes — natural selection can therefore act on it in the very first generation it appears (1)</div>
+      <div class="mark-point">A recessive mutation is hidden in heterozygotes (carriers) — it can only be expressed and selected for when an individual is homozygous recessive (aa), which may take many generations to occur at significant frequency (1)</div>
+      <div class="mark-point">Therefore a beneficial dominant mutation increases in frequency much more rapidly under selection than an equally beneficial recessive mutation (1)</div>
+    </div>
+  </div>
+
+  <!-- NON-RANDOM MATING -->
+  <div class="learn-block">
+    <h3>Non-Random Mating</h3>
+    <p>For Hardy-Weinberg equilibrium, any individual must be equally likely to mate with any other. But in almost all real populations, mating is non-random. If a feature of the phenotype affects the probability of mating — this is natural selection in action.</p>
+    <p>Examples: the male peacock with the most impressive tail is preferred by females; the male deer with the largest antlers wins more fights; the butterfly with the brightest wings attracts the most mates. In all these cases, the alleles coding for these attractive features are disproportionately passed on. This is sexual selection — a specific type of natural selection.</p>
+    <p>In human populations, non-random mating is universal. Cultural, social, and family factors all influence mate choice. In the Kuna people of Panama, albinism is considered desirable — the frequency of the albinism allele is approximately 1 in 200, compared to a global average of 1 in 17,000. This striking difference demonstrates the power of non-random mating on allele frequencies across populations.</div>
+
+  <div class="pause-check">
+    <div class="pc-label">⏸ Apply</div>
+    <div class="pc-q">Explain why sexual selection (non-random mating) can cause allele frequencies to change even if the selected alleles confer no survival advantage to the organism.</div>
+    <textarea placeholder="Write your answer here..."></textarea><br><br>
+    <button class="btn-reveal" onclick="toggleReveal(this)">Reveal answer</button>
+    <div class="reveal-box">
+      <div class="mark-point">Sexual selection increases the reproductive success of individuals with certain phenotypic traits — even if those traits do not improve survival (1)</div>
+      <div class="mark-point">Individuals with the preferred phenotype mate more frequently and produce more offspring, passing on the alleles for that phenotype more often (1)</div>
+      <div class="mark-point">Over generations, the alleles coding for the preferred traits increase in frequency in the gene pool — not because they aid survival, but because they increase mating success / the peacock's tail may actually reduce survival by making the bird more conspicuous to predators (1)</div>
+    </div>
+  </div>
+
+  <!-- POPULATION SIZE & ISOLATION -->
+  <div class="learn-block">
+    <h3>Population Size and Isolation</h3>
+    <p>Hardy-Weinberg equilibrium requires a large population. In small populations, <strong>genetic drift</strong> — random fluctuations in allele frequencies — can have a large effect. An allele present in only a few individuals could be lost entirely if those individuals die before reproducing, even if the allele is neutral or beneficial.</p>
+    <p>Isolation is required to prevent <strong>gene flow</strong> — the migration of genetic material into or out of a population. When organisms move between populations, they bring their alleles with them, changing the allele frequencies in both the source and destination populations. Gene flow tends to make geographically separated populations more similar to each other over time, and reduces the likelihood of speciation. When gene flow between two populations stops — through isolation — their allele frequencies can diverge, eventually leading to new species.</p>
+    <div class="definition-box">
+      <div class="def-term">Gene flow</div>
+      <div class="def-body">The migration of either whole organisms or genetic material into or out of a population and into another population, tending to make different populations more alike, but changing the allele frequencies within each individual population all the time.</div>
+    </div>
+  </div>
+
+  <!-- SELECTION PRESSURE -->
+  <div class="learn-block">
+    <h3>Selection Pressure</h3>
+    <p>The most powerful disruptor of Hardy-Weinberg equilibrium is natural selection. Any environmental factor that makes some genotypes more successful than others is a selection pressure — and selection pressures are always present to some degree.</p>
+    <p>When conditions change, alleles that were previously neutral can become advantageous or disadvantageous. The warfarin example from Learn 1 shows this clearly: before warfarin was introduced, the resistance allele was rare and neutral. Once warfarin was applied, it became strongly advantageous — and its frequency increased rapidly through selection.</p>
+    <p>This is evolution in real time. Tracking changes in allele frequency using the Hardy-Weinberg equation allows scientists to detect selection pressure acting on a population — even before the morphological effects are visible.</p>
+  </div>
+
+  <div class="pause-check">
+    <div class="pc-label">⏸ Apply — Synthesis question</div>
+    <div class="pc-q">A scientist monitors allele frequencies in a wild rabbit population over 10 years. She finds that the frequency of a brown coat allele (B) increases from p = 0.6 to p = 0.8 over this period. The population lives in a moorland that has become increasingly overgrown with darker vegetation. Using Hardy-Weinberg theory, explain what these data suggest about the population and identify two conditions of equilibrium that have been violated.</div>
+    <textarea placeholder="Write your full answer here..." style="min-height:130px;"></textarea><br><br>
+    <button class="btn-reveal" onclick="toggleReveal(this)">Reveal answer</button>
+    <div class="reveal-box">
+      <div class="mark-point">The frequency of the brown coat allele has increased significantly over 10 years — allele frequencies are changing, so the population is NOT in Hardy-Weinberg equilibrium (1)</div>
+      <div class="mark-point">This suggests evolution is occurring / that one or more evolutionary forces are acting on the population (1)</div>
+      <div class="mark-point">Condition violated 1 — <strong>selection pressure:</strong> as the vegetation becomes darker, brown rabbits are better camouflaged from predators, have greater survival rates, and pass on the B allele more frequently — natural selection is increasing p (1)</div>
+      <div class="mark-point">Condition violated 2 — <strong>no mutations</strong> (if new variants are arising) / <strong>random mating</strong> (if brown rabbits survive longer and therefore have more mating opportunities, effectively creating non-random differential reproductive success) — accept any second valid condition with explanation (1)</div>
+    </div>
+  </div>
+
+  <div class="lesson-nav">
+    <button class="btn btn-outline" onclick="goTo('s4')">← Learn 3</button>
+    <button class="btn btn-primary" onclick="goTo('progress')">Progress Check →</button>
+  </div>
+</section>
+
+<!-- ══════════════════════════════
+     PROGRESS CHECK
+══════════════════════════════ -->
+<section id="progress">
+  <div class="sec-header">
+    <div class="sec-icon si-check">✓</div>
+    <div class="sec-header-text">
+      <h2>Progress Check</h2>
+      <p>Exam conditions — attempt all questions before revealing any mark schemes</p>
+    </div>
+  </div>
+  <div class="time-badge">Allow 15 minutes</div>
+
+  <div class="card-blue" style="margin-bottom:24px;">
+    <p style="margin-bottom:0;"><strong>Instructions:</strong> Work through all six questions in order. Write your answers in the boxes. Do not reveal any mark scheme until you have attempted every question. Then mark yourself honestly — this is for your benefit, not your grade.</p>
+  </div>
+
+  <!-- PC1 MCQ -->
+  <div class="card" style="margin-bottom:14px;">
+    <div class="meta" style="margin-bottom:8px;">Q1 · 1 mark</div>
+    <p style="font-size:15px;font-weight:700;margin-bottom:12px;">In a Hardy-Weinberg calculation, a student finds q = 0.35. What is the correct value of p²?</p>
+    <div class="mcq-options">
+      <button class="mcq-option" data-letter="A" onclick="checkMCQ(this,false,'pc1')">0.35</button>
+      <button class="mcq-option" data-letter="B" onclick="checkMCQ(this,false,'pc1')">0.65</button>
+      <button class="mcq-option" data-letter="C" onclick="checkMCQ(this,true,'pc1')">0.4225</button>
+      <button class="mcq-option" data-letter="D" onclick="checkMCQ(this,false,'pc1')">0.1225</button>
+    </div>
+    <div id="fb-pc1-correct" class="fb correct">Correct. p = 1 − 0.35 = 0.65. p² = 0.65² = 0.4225.</div>
+    <div id="fb-pc1-incorrect" class="fb incorrect">p = 1 − q = 1 − 0.35 = 0.65. Then p² = 0.65² = 0.4225. Always find p first, then square it.</div>
+  </div>
+
+  <!-- PC2 -->
+  <div class="card" style="margin-bottom:14px;">
+    <div class="meta" style="margin-bottom:8px;">Q2 · 4 marks</div>
+    <p style="font-size:15px;font-weight:700;margin-bottom:12px;">In a population of 5,000 individuals, 80 show the homozygous recessive phenotype for a particular trait. Calculate the expected frequency of heterozygotes and the expected number of homozygous dominant individuals in this population. Show all working.</p>
+    <textarea placeholder="Show all working..." style="min-height:180px;"></textarea><br><br>
+    <button class="btn-reveal" onclick="toggleReveal(this)">Reveal mark scheme</button>
+    <div class="reveal-box">
+      q² = 80/5000 = 0.016 (1)<br>
+      q = √0.016 = 0.1265 (1)<br>
+      p = 1 − 0.1265 = 0.8735<br>
+      2pq = 2 × 0.8735 × 0.1265 = <strong>0.221</strong> → frequency of heterozygotes = 0.221 (22.1%) (1)<br>
+      p² = 0.8735² = 0.763 → expected number of homozygous dominant = 0.763 × 5000 = <strong>3,815</strong> (1)<br>
+      Check: 0.763 + 0.221 + 0.016 = 1.000 ✓
+    </div>
+  </div>
+
+  <!-- PC3 MCQ -->
+  <div class="card" style="margin-bottom:14px;">
+    <div class="meta" style="margin-bottom:8px;">Q3 · 1 mark</div>
+    <p style="font-size:15px;font-weight:700;margin-bottom:12px;">Which of the following would cause a population to deviate from Hardy-Weinberg equilibrium?</p>
+    <div class="mcq-options">
+      <button class="mcq-option" data-letter="A" onclick="checkMCQ(this,false,'pc3')">A very large, isolated population with random mating and no mutations</button>
+      <button class="mcq-option" data-letter="B" onclick="checkMCQ(this,true,'pc3')">The introduction of a new predator that preferentially hunts a particular phenotype</button>
+      <button class="mcq-option" data-letter="C" onclick="checkMCQ(this,false,'pc3')">Equal survival and reproductive success across all genotypes</button>
+      <button class="mcq-option" data-letter="D" onclick="checkMCQ(this,false,'pc3')">No migration into or out of the population over many generations</button>
+    </div>
+    <div id="fb-pc3-correct" class="fb correct">Correct. A new predator that selects based on phenotype creates a selection pressure — this violates the "no selection pressure" condition and will change allele frequencies.</div>
+    <div id="fb-pc3-incorrect" class="fb incorrect">Think about which option introduces a factor that would change allele frequencies. A predator that hunts a specific phenotype creates differential survival — that's selection pressure.</div>
+  </div>
+
+  <!-- PC4 -->
+  <div class="card" style="margin-bottom:14px;">
+    <div class="meta" style="margin-bottom:8px;">Q4 · 3 marks</div>
+    <p style="font-size:15px;font-weight:700;margin-bottom:12px;">State three conditions necessary for a population to be in Hardy-Weinberg equilibrium and, for each, explain what would happen to allele frequencies if that condition were not met.</p>
+    <textarea placeholder="Condition 1: ...&#10;If violated: ...&#10;&#10;Condition 2: ...&#10;If violated: ...&#10;&#10;Condition 3: ...&#10;If violated: ..." style="min-height:160px;"></textarea><br><br>
+    <button class="btn-reveal" onclick="toggleReveal(this)">Reveal mark scheme</button>
+    <div class="reveal-box">
+      Award 1 mark per correct condition + explanation (any three of the five):<br><br>
+      <div class="mark-point">No mutations — if mutations occur, new alleles are added to the gene pool, directly changing allele frequencies (1)</div>
+      <div class="mark-point">Random mating — if mating is non-random, some alleles are preferentially passed on, increasing the frequency of alleles associated with desirable traits (1)</div>
+      <div class="mark-point">Large population — if the population is small, genetic drift causes random changes in allele frequencies unrelated to selection (1)</div>
+      <div class="mark-point">No gene flow (isolation) — if organisms migrate in or out, they bring or remove alleles, changing frequencies in both populations (1)</div>
+      <div class="mark-point">No selection pressure — if some genotypes are more successful, natural selection increases frequencies of advantageous alleles and decreases disadvantageous ones (1)</div>
+    </div>
+  </div>
+
+  <!-- PC5 -->
+  <div class="card" style="margin-bottom:14px;">
+    <div class="meta" style="margin-bottom:8px;">Q5 · 3 marks</div>
+    <p style="font-size:15px;font-weight:700;margin-bottom:12px;">Explain how the Hardy-Weinberg equation can be used to detect whether evolution is occurring in a population over time.</p>
+    <textarea placeholder="Write your answer here..." style="min-height:110px;"></textarea><br><br>
+    <button class="btn-reveal" onclick="toggleReveal(this)">Reveal mark scheme</button>
+    <div class="reveal-box">
+      <div class="mark-point">If a population is in Hardy-Weinberg equilibrium, allele and genotype frequencies will remain constant from one generation to the next (1)</div>
+      <div class="mark-point">By measuring the frequency of the recessive phenotype at two different time points and calculating q (and therefore p), the allele frequencies can be compared (1)</div>
+      <div class="mark-point">If the allele frequencies have changed between measurements, the population is not in equilibrium — this indicates that evolution is occurring and at least one condition is being violated, e.g. natural selection is acting (1)</div>
+    </div>
+  </div>
+
+  <!-- PC6 -->
+  <div class="card" style="margin-bottom:14px;">
+    <div class="meta" style="margin-bottom:8px;">Q6 · 3 marks</div>
+    <p style="font-size:15px;font-weight:700;margin-bottom:12px;">Explain why the Hardy-Weinberg equilibrium is rarely observed in real populations across the generations.</p>
+    <textarea placeholder="Write your answer here..." style="min-height:110px;"></textarea><br><br>
+    <button class="btn-reveal" onclick="toggleReveal(this)">Reveal mark scheme</button>
+    <div class="reveal-box">
+      <div class="mark-point">Mutations occur spontaneously and continuously in all populations — no population truly has zero mutations (1)</div>
+      <div class="mark-point">Random mating is almost never fully random — mate choice, sexual selection, and geographical proximity all make mating non-random (1)</div>
+      <div class="mark-point">Selection pressures are virtually always present — environmental conditions are never perfectly neutral for all genotypes, and gene flow between populations is common in nature (1)</div>
+    </div>
+  </div>
+
+  <div class="lesson-nav">
+    <button class="btn btn-outline" onclick="goTo('s5')">← Apply</button>
+    <button class="btn btn-primary" onclick="goTo('exam')">Exam Support →</button>
+  </div>
+</section>
+
+<!-- ══════════════════════════════
+     EXAM SUPPORT
+══════════════════════════════ -->
+<section id="exam">
+  <div class="sec-header">
+    <div class="sec-icon si-exam">★</div>
+    <div class="sec-header-text">
+      <h2>Exam Support</h2>
+      <p>Command words · Common mistakes · Worked answer · Have a go</p>
+    </div>
+  </div>
+  <div class="time-badge">Allow 10 minutes</div>
+
+  <h3 style="margin-bottom:14px;">Command Words</h3>
+
+  <div class="command-word">
+    <h4>CALCULATE</h4>
+    <p>Always show every step — q² → q → p → p², 2pq, q². Method marks are available at each step. Even if your final answer is wrong, you can score 3 out of 4 marks by showing correct method. Never just write the final answer.</p>
+  </div>
+  <div class="command-word">
+    <h4>EXPLAIN</h4>
+    <p>For H-W questions: state the biological mechanism, not just the outcome. "Selection pressure increases the frequency of the resistance allele" is incomplete. "Organisms with the resistance allele survive the selection pressure, reproduce, and pass the allele to offspring — over generations the frequency increases" is complete.</p>
+  </div>
+  <div class="command-word">
+    <h4>SUGGEST</h4>
+    <p>For "suggest why a population is not in equilibrium" questions: name a specific condition that is likely violated, explain the mechanism, and link to the given context. Multiple valid answers are usually accepted.</p>
+  </div>
+
+  <div class="divider"></div>
+
+  <h3 style="margin-bottom:14px;">Common Mistakes — Read these carefully</h3>
+
+  <div class="card" style="margin-bottom:10px;">
+    <div style="display:flex;gap:12px;">
+      <div style="color:var(--red);font-size:18px;flex-shrink:0;">✗</div>
+      <div><p style="font-weight:700;margin-bottom:3px;">Starting with p instead of q</p><p style="font-size:13px;margin-bottom:0;">Always start with q² (the recessive phenotype frequency) — never start with p. You cannot directly observe AA vs Aa individuals, so p² cannot be measured from the phenotype alone. If you start with p, the whole calculation is invalid.</p></div>
+    </div>
+  </div>
+  <div class="card" style="margin-bottom:10px;">
+    <div style="display:flex;gap:12px;">
+      <div style="color:var(--red);font-size:18px;flex-shrink:0;">✗</div>
+      <div><p style="font-weight:700;margin-bottom:3px;">Using percentage instead of decimal frequency</p><p style="font-size:13px;margin-bottom:0;">If 9% of the population is recessive, q² = 0.09, not 9. All values must be decimals between 0 and 1. If your q² is greater than 1, you have made this error.</p></div>
+    </div>
+  </div>
+  <div class="card" style="margin-bottom:10px;">
+    <div style="display:flex;gap:12px;">
+      <div style="color:var(--red);font-size:18px;flex-shrink:0;">✗</div>
+      <div><p style="font-weight:700;margin-bottom:3px;">Forgetting to square root q² to get q</p><p style="font-size:13px;margin-bottom:0;">q² gives you the genotype frequency. To get the allele frequency q, you must take the square root. A very common error is to use q² as if it were q in subsequent calculations.</p></div>
+    </div>
+  </div>
+  <div class="card" style="margin-bottom:10px;">
+    <div style="display:flex;gap:12px;">
+      <div style="color:var(--red);font-size:18px;flex-shrink:0;">✗</div>
+      <div><p style="font-weight:700;margin-bottom:3px;">Not checking your answer sums to 1</p><p style="font-size:13px;margin-bottom:0;">Always check p² + 2pq + q² = 1 at the end. If it doesn't, you have a rounding error or a calculation mistake — go back and find it. This check takes 10 seconds and can save marks.</p></div>
+    </div>
+  </div>
+  <div class="card" style="margin-bottom:24px;">
+    <div style="display:flex;gap:12px;">
+      <div style="color:var(--red);font-size:18px;flex-shrink:0;">✗</div>
+      <div><p style="font-weight:700;margin-bottom:3px;">Saying "the population is evolving" without saying why</p><p style="font-size:13px;margin-bottom:0;">If asked why allele frequencies are changing, you must identify the specific condition of H-W equilibrium that is being violated and explain the mechanism. "The population is evolving" is a description, not an explanation.</p></div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <h3 style="margin-bottom:14px;">Worked Example Answer</h3>
+
+  <div class="card-amber">
+    <p style="font-size:13px;font-weight:700;color:var(--amber);margin-bottom:6px;">EXAM QUESTION (5 marks)</p>
+    <p style="font-size:15px;font-weight:700;color:var(--text);margin-bottom:0;">In a population of 2,000 field voles, 180 show the homozygous recessive phenotype for a coat colour gene. Calculate the expected frequencies of all three genotypes. Explain whether this population is likely to be in Hardy-Weinberg equilibrium.</p>
+  </div>
+
+  <div class="card" style="border-top:3px solid var(--green-mid);margin-top:0;">
+    <p style="font-size:12px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;color:var(--green-mid);margin-bottom:10px;">Model Answer (5/5)</p>
+    <p style="font-size:14px;line-height:1.9;color:var(--text-mid);">
+      q² = 180/2000 = <strong>0.09</strong><br>
+      q = √0.09 = <strong>0.3</strong><br>
+      p = 1 − 0.3 = <strong>0.7</strong><br><br>
+      Frequency of homozygous recessive (aa) = q² = <strong>0.09</strong><br>
+      Frequency of heterozygous (Aa) = 2pq = 2 × 0.7 × 0.3 = <strong>0.42</strong><br>
+      Frequency of homozygous dominant (AA) = p² = 0.7² = <strong>0.49</strong><br><br>
+      Check: 0.49 + 0.42 + 0.09 = 1.00 ✓<br><br>
+      This population is unlikely to be in true Hardy-Weinberg equilibrium. In the real world, the five conditions required — no mutations, random mating, large population, no gene flow, and no selection pressure — are almost never simultaneously met. Mutations occur continuously, mating is rarely fully random, and some selection pressure will be acting on coat colour (e.g. camouflage from predators). This calculation gives us a theoretical expectation; monitoring allele frequencies over time would reveal whether the population is evolving.
+    </p>
+    <div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border);">
+      <p style="font-size:12px;font-weight:700;color:var(--green-dark);">Why this scores full marks:</p>
+      <p style="font-size:13px;color:var(--text-mid);">✓ Starts with q² ✓ Correct q and p ✓ All three genotype frequencies correct ✓ Check shown ✓ Evaluation references specific H-W conditions with biological reasoning</p>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <h3 style="margin-bottom:8px;">Have a Go</h3>
+  <p style="margin-bottom:18px;color:var(--text-mid);">Write your full answer, then reveal the mark scheme to self-assess.</p>
+
+  <div class="card-amber">
+    <p style="font-size:13px;font-weight:700;color:var(--amber);margin-bottom:6px;">EXAM QUESTION (6 marks)</p>
+    <p style="font-size:15px;font-weight:700;color:var(--text);margin-bottom:0;">In a population of 1,000 Drosophila (fruit flies), vestigial wings (v) are recessive to normal wings (V). A researcher counts 160 flies with vestigial wings.<br><br>(a) Calculate the expected frequency of heterozygous individuals. (3 marks)<br>(b) A new population is established using only 20 flies selected from the original population. The researcher finds that allele frequencies in this new population differ significantly from the original. Suggest two reasons for this difference and explain each. (3 marks)</p>
+  </div>
+
+  <textarea style="width:100%;min-height:220px;border:1px solid var(--border);border-radius:6px;padding:13px;font-family:'Lato',sans-serif;font-size:14px;color:var(--text);background:var(--bg);resize:vertical;line-height:1.7;margin-bottom:14px;" placeholder="(a) Show all working...&#10;&#10;(b) Reason 1: ...&#10;Explanation: ...&#10;&#10;Reason 2: ...&#10;Explanation: ..."></textarea>
+
+  <button class="btn-reveal" onclick="toggleReveal(this)">Reveal mark scheme</button>
+  <div class="reveal-box">
+    <strong>(a)</strong><br>
+    <div class="mark-point">q² = 160/1000 = 0.16 → q = √0.16 = 0.4 (1)</div>
+    <div class="mark-point">p = 1 − 0.4 = 0.6 (1)</div>
+    <div class="mark-point">2pq = 2 × 0.6 × 0.4 = <strong>0.48</strong> — frequency of heterozygotes = 0.48 (48%) (1)</div>
+    <br>
+    <strong>(b)</strong> (any two of the following, each with a full explanation for 1 mark each):<br><br>
+    <div class="mark-point"><strong>Genetic drift / small population:</strong> with only 20 founders, random chance plays a large role — alleles present in the original population may not be represented in the 20 selected individuals, and the random assortment of which flies were chosen causes allele frequencies to differ from the original (1)</div>
+    <div class="mark-point"><strong>Founder effect:</strong> the 20 flies are a non-representative sample of the original population — the allele frequencies in any small sample will naturally vary from the whole population due to chance, establishing a different starting gene pool (1)</div>
+    <div class="mark-point"><strong>No random mating / selection during sampling:</strong> if the researcher's choice of the 20 flies was not entirely random (e.g. vestigial-winged flies are slower and more easily caught), the sample will be biased towards certain genotypes, skewing allele frequencies away from the original population (1)</div>
+  </div>
+
+  <div class="card-green" style="margin-top:28px;">
+    <h3 style="margin-bottom:8px;">Lesson complete 🌿</h3>
+    <p style="margin-bottom:4px;">You have worked through all the content independently. Before the next lesson, make sure you can:</p>
+    <p style="margin-bottom:4px; font-size:14px;">✓ Perform a Hardy-Weinberg calculation from scratch in under 5 minutes</p>
+    <p style="margin-bottom:4px; font-size:14px;">✓ List all five conditions for equilibrium without notes</p>
+    <p style="margin-bottom:0; font-size:14px;">✓ Explain what a change in allele frequency tells us about a population</p>
+  </div>
+
+  <div class="lesson-nav">
+    <button class="btn btn-outline" onclick="goTo('progress')">← Progress Check</button>
+    <button class="btn btn-primary" onclick="goTo('cover')">↺ Back to start</button>
+  </div>
+</section>
+
+<script>
+// ── NAV ──
+const sections=['cover','s1','s2','s3','s4','s5','progress','exam'];
+const navIds=['nav-cover','nav-s1','nav-s2','nav-s3','nav-s4','nav-s5','nav-progress','nav-exam'];
+
+function buildDots(){
+  const c=document.getElementById('progress-dots');c.innerHTML='';
+  sections.forEach((_,i)=>{
+    const d=document.createElement('div');
+    d.className='progress-dot'+(i===0?' active':'');
+    d.id='dot-'+i;c.appendChild(d);
+  });
+}
+
+function goTo(id){
+  sections.forEach(s=>{const el=document.getElementById(s);if(el)el.classList.remove('active');});
+  navIds.forEach(n=>{const el=document.getElementById(n);if(el)el.classList.remove('active');});
+  const t=document.getElementById(id);if(t)t.classList.add('active');
+  const idx=sections.indexOf(id);
+  if(idx>=0){
+    const ne=document.getElementById(navIds[idx]);if(ne)ne.classList.add('active');
+    sections.forEach((_,i)=>{
+      const dot=document.getElementById('dot-'+i);if(!dot)return;
+      dot.className='progress-dot';
+      if(i<idx)dot.classList.add('done');
+      else if(i===idx)dot.classList.add('active');
+    });
+  }
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+buildDots();
+
+// ── REVEAL ──
+function toggleReveal(btn){
+  const box=btn.nextElementSibling;if(!box)return;
+  const s=box.classList.contains('show');
+  box.classList.toggle('show',!s);
+  btn.textContent=s?'Reveal answer':'Hide answer';
+}
+
+// ── STUCK ──
+function toggleStuck(btn){
+  const box=btn.nextElementSibling;if(!box)return;
+  const s=box.classList.contains('show');
+  box.classList.toggle('show',!s);
+  btn.textContent=s?'💡 Stuck? Strategy hint':'Hide hint';
+}
+
+// ── MCQ ──
+function checkMCQ(btn,correct,id){
+  const g=btn.closest('.mcq-options');if(!g)return;
+  g.querySelectorAll('.mcq-option').forEach(b=>b.classList.add('disabled'));
+  const ce=document.getElementById('fb-'+id+'-correct');
+  const ie=document.getElementById('fb-'+id+'-incorrect');
+  if(correct){btn.classList.add('correct');if(ce)ce.style.display='block';}
+  else{btn.classList.add('incorrect');if(ie)ie.style.display='block';
+    g.querySelectorAll('.mcq-option').forEach(b=>{if(b.getAttribute('onclick')&&b.getAttribute('onclick').includes('true'))b.classList.add('correct');});
+  }
+}
+
+// ── CALC INPUT CHECK ──
+function checkInput(id, expected, tolerance, explanation){
+  const el=document.getElementById(id);
+  const fbId=id+'-fb';
+  const fbEl=document.getElementById(fbId);
+  if(!el||!fbEl)return;
+  const val=parseFloat(el.value);
+  const ok=Math.abs(val-expected)<=tolerance;
+  el.classList.toggle('correct',ok);
+  el.classList.toggle('incorrect',!ok);
+  fbEl.innerHTML=ok
+    ?'<div style="padding:8px 12px;background:var(--green-ultra);border:1px solid var(--border-green);border-radius:6px;font-size:13px;font-weight:700;color:var(--green-dark);">✓ Correct — '+explanation+'</div>'
+    :'<div style="padding:8px 12px;background:var(--red-pale);border:1px solid #E8BABA;border-radius:6px;font-size:13px;font-weight:700;color:var(--red);">Not quite — check your working. Expected answer: '+expected+'</div>';
+  fbEl.style.display='block';
+}
+
+function checkP1b(){
+  const q=parseFloat(document.getElementById('p1qb1').value);
+  const p=parseFloat(document.getElementById('p1qb2').value);
+  const pq=parseFloat(document.getElementById('p1qb3').value);
+  const qOk=Math.abs(q-0.689)<=0.01;
+  const pOk=Math.abs(p-0.311)<=0.01;
+  const pqOk=Math.abs(pq-0.429)<=0.02;
+
+  document.getElementById('p1qb1').classList.toggle('correct',qOk);
+  document.getElementById('p1qb1').classList.toggle('incorrect',!qOk);
+  document.getElementById('p1qb2').classList.toggle('correct',pOk);
+  document.getElementById('p1qb2').classList.toggle('incorrect',!pOk);
+  document.getElementById('p1qb3').classList.toggle('correct',pqOk);
+  document.getElementById('p1qb3').classList.toggle('incorrect',!pqOk);
+
+  const fbEl=document.getElementById('p1b-fb');
+  const allOk=qOk&&pOk&&pqOk;
+  fbEl.innerHTML=allOk
+    ?'<div style="padding:8px 12px;background:var(--green-ultra);border:1px solid var(--border-green);border-radius:6px;font-size:13px;font-weight:700;color:var(--green-dark);">✓ All correct — q=0.689, p=0.311, 2pq=0.429 (43% heterozygous)</div>'
+    :'<div style="padding:8px 12px;background:var(--red-pale);border:1px solid #E8BABA;border-radius:6px;font-size:13px;font-weight:700;color:var(--red);">Check your values — q=√0.475=0.689, p=1−0.689=0.311, 2pq=2×0.311×0.689=0.429</div>';
+  fbEl.style.display='block';
+}
+</script>
+</body>
+</html>
