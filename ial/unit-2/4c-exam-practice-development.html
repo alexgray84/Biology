@@ -1,0 +1,1893 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>4C Exam Practice & Development | IAL Biology Y12</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;0,9..144,700;1,9..144,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #FAF7F2;
+    --bg-warm: #F3EDE3;
+    --card: #FFFFFF;
+    --green-dark: #2D5016;
+    --green-mid: #4A7C2F;
+    --green-light: #7AAD52;
+    --green-pale: #E0EBD0;
+    --green-ultra: #F0F5E8;
+    --text: #2C2C2C;
+    --text-mid: #4A4A4A;
+    --text-light: #7A7A7A;
+    --amber: #C17D2A;
+    --amber-pale: #FDF3E3;
+    --red-pale: #FDECEA;
+    --red: #C0392B;
+    --border: #D8D0C4;
+    --border-green: #B0C898;
+    --blue: #2A6B9B;
+    --blue-pale: #EDF4FA;
+    --purple: #7B3FA0;
+    --purple-pale: #F5EEF8;
+    --shadow: 0 2px 12px rgba(45,80,22,0.08);
+    --shadow-hover: 0 6px 24px rgba(45,80,22,0.15);
+    --radius: 10px;
+    --nav-h: 64px;
+
+    --ao1: #4A7C2F;
+    --ao1-pale: #F0F5E8;
+    --ao2: #2A6B9B;
+    --ao2-pale: #EDF4FA;
+    --ao3: #7B3FA0;
+    --ao3-pale: #F5EEF8;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Lato', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; padding-top: var(--nav-h); }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; height: var(--nav-h);
+    background: rgba(250,247,242,0.97); backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--border); z-index: 100;
+    display: flex; align-items: center; padding: 0 20px; gap: 0;
+  }
+  .nav-brand { font-family:'Fraunces',serif; font-size:13px; font-weight:600; color:var(--green-dark); white-space:nowrap; margin-right:16px; padding-right:16px; border-right:1px solid var(--border); }
+  .nav-brand span { display:block; font-family:'Lato',sans-serif; font-weight:300; font-size:10px; color:var(--text-light); letter-spacing:0.05em; text-transform:uppercase; }
+  .nav-stations { display:flex; gap:2px; flex:1; overflow-x:auto; scrollbar-width:none; }
+  .nav-stations::-webkit-scrollbar { display:none; }
+  .nav-btn { display:flex; flex-direction:column; align-items:center; gap:1px; padding:5px 9px; border:none; background:transparent; cursor:pointer; border-radius:6px; transition:all 0.2s; white-space:nowrap; position:relative; }
+  .nav-btn:hover { background:var(--green-ultra); }
+  .nav-btn .nl { font-size:10px; font-weight:700; letter-spacing:0.06em; text-transform:uppercase; color:var(--text-light); transition:color 0.2s; }
+  .nav-btn .nt { font-size:10px; color:var(--text-light); transition:color 0.2s; }
+  .nav-btn.active .nl, .nav-btn.active .nt { color:var(--green-dark); }
+  .nav-btn::after { content:''; position:absolute; bottom:0; left:9px; right:9px; height:2px; background:var(--green-mid); border-radius:2px; transform:scaleX(0); transition:transform 0.2s; }
+  .nav-btn.active::after { transform:scaleX(1); }
+  .nav-progress { margin-left:auto; display:flex; align-items:center; padding-left:14px; border-left:1px solid var(--border); }
+  .progress-dots { display:flex; gap:4px; }
+  .progress-dot { width:7px; height:7px; border-radius:50%; background:var(--border); transition:background 0.3s; }
+  .progress-dot.done { background:var(--green-mid); }
+  .progress-dot.active { background:var(--green-dark); }
+
+  /* SECTIONS */
+  section { display:none; max-width:900px; margin:0 auto; padding:44px 24px 80px; animation:fadeUp 0.35s ease both; }
+  section.active { display:block; }
+  @keyframes fadeUp { from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);} }
+
+  /* TYPE */
+  h1 { font-family:'Fraunces',serif; font-size:40px; font-weight:700; color:var(--green-dark); line-height:1.1; margin-bottom:8px; }
+  h2 { font-family:'Fraunces',serif; font-size:24px; font-weight:600; color:var(--green-dark); margin-bottom:14px; }
+  h3 { font-family:'Fraunces',serif; font-size:17px; font-weight:600; color:var(--green-dark); margin-bottom:8px; }
+  p { line-height:1.78; color:var(--text-mid); margin-bottom:12px; }
+  strong { color: var(--text); }
+  .meta { font-size:12px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--green-mid); margin-bottom:6px; }
+  .subtitle { font-size:15px; color:var(--text-light); margin-bottom:28px; font-weight:300; }
+  .divider { height:1px; background:var(--border); margin:28px 0; }
+
+  /* AO BADGES */
+  .ao-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 5px 14px; border-radius: 20px;
+    font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .ao-badge .ao-num { width:20px; height:20px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700; }
+  .ao1-b { background: var(--ao1-pale); color: var(--ao1); border:1.5px solid #B0C898; }
+  .ao1-b .ao-num { background: var(--ao1); color: white; }
+  .ao2-b { background: var(--ao2-pale); color: var(--ao2); border:1.5px solid #A8CCEA; }
+  .ao2-b .ao-num { background: var(--ao2); color: white; }
+  .ao3-b { background: var(--ao3-pale); color: var(--ao3); border:1.5px solid #C9A8E0; }
+  .ao3-b .ao-num { background: var(--ao3); color: white; }
+
+  /* PART HEADER */
+  .part-header {
+    display: flex; align-items: center; gap: 14px;
+    margin-bottom: 28px; padding-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+  }
+  .part-icon {
+    width: 48px; height: 48px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px; flex-shrink: 0; color: white;
+  }
+  .pi-brief { background: var(--green-dark); }
+  .pi-command { background: var(--amber); }
+  .pi-ao1 { background: var(--ao1); }
+  .pi-ao2 { background: var(--ao2); }
+  .pi-ao3 { background: var(--ao3); }
+  .pi-anti { background: var(--red); }
+  .pi-mock { background: var(--green-dark); }
+  .pi-reflect { background: var(--amber); }
+  .part-header-text h2 { margin-bottom: 2px; }
+  .part-header-text p { margin-bottom:0; font-size:13px; color:var(--text-light); }
+
+  /* CARDS */
+  .card { background:var(--card); border:1px solid var(--border); border-radius:var(--radius); padding:22px; margin-bottom:18px; box-shadow:var(--shadow); }
+  .card-green { background:var(--green-ultra); border:1px solid var(--border-green); border-left:4px solid var(--green-mid); border-radius:var(--radius); padding:18px 22px; margin-bottom:18px; }
+  .card-amber { background:var(--amber-pale); border:1px solid #E8C88A; border-left:4px solid var(--amber); border-radius:var(--radius); padding:18px 22px; margin-bottom:18px; }
+  .card-blue { background:var(--blue-pale); border:1px solid #A8CCEA; border-left:4px solid var(--blue); border-radius:var(--radius); padding:18px 22px; margin-bottom:18px; }
+  .card-red { background:var(--red-pale); border:1px solid #E8BABA; border-left:4px solid var(--red); border-radius:var(--radius); padding:18px 22px; margin-bottom:18px; }
+  .card-purple { background:var(--purple-pale); border:1px solid #C9A8E0; border-left:4px solid var(--purple); border-radius:var(--radius); padding:18px 22px; margin-bottom:18px; }
+
+  /* AO EXPLAINER */
+  .ao-explainer {
+    display: grid; grid-template-columns: 1fr 1fr 1fr;
+    gap: 16px; margin-bottom: 24px;
+  }
+  .ao-box {
+    background: white; border: 1px solid var(--border);
+    border-top: 4px solid;
+    border-radius: var(--radius);
+    padding: 18px;
+  }
+  .ao-box.ao1 { border-top-color: var(--ao1); }
+  .ao-box.ao2 { border-top-color: var(--ao2); }
+  .ao-box.ao3 { border-top-color: var(--ao3); }
+  .ao-box .ao-label { font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 4px; }
+  .ao-box.ao1 .ao-label { color: var(--ao1); }
+  .ao-box.ao2 .ao-label { color: var(--ao2); }
+  .ao-box.ao3 .ao-label { color: var(--ao3); }
+  .ao-box h3 { font-size: 16px; margin-bottom: 6px; }
+  .ao-box p { font-size: 13px; line-height: 1.6; margin-bottom: 8px; }
+  .ao-box .ao-words {
+    font-size: 11px; color: var(--text-light);
+    background: var(--bg-warm); padding: 6px 10px; border-radius: 4px;
+    margin-top: 8px;
+  }
+
+  /* COMMAND WORDS INTERACTIVE */
+  .command-reveal {
+    background: white; border: 1px solid var(--border);
+    border-radius: var(--radius); overflow: hidden; margin-bottom: 12px;
+    transition: all 0.2s;
+  }
+  .command-reveal:hover { box-shadow: var(--shadow-hover); }
+  .command-head {
+    padding: 14px 20px;
+    background: var(--amber-pale);
+    border-left: 4px solid var(--amber);
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: space-between;
+    transition: background 0.2s;
+  }
+  .command-head:hover { background: #FBE8C0; }
+  .command-head .cmd-word { font-family: 'Fraunces', serif; font-size: 18px; font-weight: 700; color: var(--amber); letter-spacing: 0.05em; text-transform: uppercase; }
+  .command-head .cmd-toggle { font-size: 18px; color: var(--amber); transition: transform 0.2s; }
+  .command-reveal.open .cmd-toggle { transform: rotate(45deg); }
+  .command-body { display: none; padding: 18px 20px; border-top: 1px solid var(--border); font-size: 14px; line-height: 1.7; color: var(--text-mid); }
+  .command-reveal.open .command-body { display: block; animation: fadeUp 0.3s ease; }
+  .command-body .cmd-demand { font-weight: 700; color: var(--text); margin-bottom: 8px; font-size: 14px; }
+  .command-body .cmd-example { background: var(--bg-warm); border: 1px solid var(--border); border-radius: 6px; padding: 10px 14px; margin-top: 10px; font-size: 13px; }
+  .command-body .cmd-example strong { color: var(--green-dark); }
+
+  /* QUESTION CARD */
+  .question-card {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 22px;
+    margin-bottom: 20px;
+  }
+  .q-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 14px; padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+    gap: 12px; flex-wrap: wrap;
+  }
+  .q-id { font-size: 12px; font-weight: 700; color: var(--text-light); letter-spacing: 0.08em; text-transform: uppercase; }
+  .q-marks { font-size: 12px; font-weight: 700; color: var(--green-dark); background: var(--green-ultra); padding: 3px 12px; border-radius: 12px; }
+  .q-text { font-size: 15px; color: var(--text); line-height: 1.65; margin-bottom: 14px; font-weight: 500; }
+
+  textarea {
+    width: 100%; min-height: 90px;
+    border: 1px solid var(--border); border-radius: 6px;
+    padding: 10px 13px;
+    font-family: 'Lato', sans-serif; font-size: 14px;
+    color: var(--text); background: var(--bg);
+    resize: vertical; transition: border-color 0.2s;
+    line-height: 1.6;
+  }
+  textarea:focus { outline: none; border-color: var(--green-mid); background: #FDFFFE; }
+
+  /* MCQ */
+  .mcq-options { display:flex; flex-direction:column; gap:7px; margin-bottom:12px; }
+  .mcq-option { background:white; border:1.5px solid var(--border); border-radius:6px; padding:10px 15px; font-size:14px; color:var(--text-mid); cursor:pointer; transition:all 0.2s; text-align:left; display:flex; align-items:center; gap:10px; }
+  .mcq-option::before { content:attr(data-letter); width:21px; height:21px; border-radius:50%; background:var(--bg-warm); border:1px solid var(--border); display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700; flex-shrink:0; }
+  .mcq-option:hover { border-color:var(--green-mid); background:var(--green-ultra); }
+  .mcq-option.correct { border-color:var(--green-mid); background:var(--green-ultra); color:var(--green-dark); }
+  .mcq-option.correct::before { background:var(--green-mid); border-color:var(--green-mid); color:white; }
+  .mcq-option.incorrect { border-color:var(--red); background:var(--red-pale); color:var(--red); }
+  .mcq-option.incorrect::before { background:var(--red); border-color:var(--red); color:white; }
+  .mcq-option.disabled { cursor:default; pointer-events:none; opacity:0.6; }
+  .fb { display:none; padding:9px 13px; border-radius:6px; font-size:13px; font-weight:700; margin-top:7px; }
+  .fb.correct { background:var(--green-ultra); color:var(--green-dark); border:1px solid var(--border-green); }
+  .fb.incorrect { background:var(--red-pale); color:var(--red); border:1px solid #E8BABA; }
+  .fb.show { display:block; }
+
+  /* REVEAL */
+  .btn-reveal { background:var(--bg-warm); color:var(--text-mid); border:1px solid var(--border); font-size:12px; padding:8px 16px; border-radius:6px; cursor:pointer; transition:all 0.2s; font-family:'Lato',sans-serif; font-weight:700; }
+  .btn-reveal:hover { background:var(--green-pale); border-color:var(--border-green); }
+  .reveal-box { display:none; background:var(--green-ultra); border:1px solid var(--border-green); border-radius:6px; padding:14px 16px; margin-top:10px; font-size:14px; color:var(--text-mid); line-height:1.75; animation:fadeUp 0.3s ease; }
+  .reveal-box.show { display:block; }
+
+  /* STRUCTURE TEMPLATE */
+  .structure-template {
+    background: white; border: 1px solid var(--border);
+    border-radius: var(--radius); overflow: hidden; margin: 16px 0;
+  }
+  .structure-head {
+    padding: 14px 20px;
+    background: var(--blue-pale);
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; gap: 10px;
+  }
+  .structure-head h4 { font-family: 'Fraunces', serif; font-size: 15px; font-weight: 600; color: var(--blue); margin-bottom: 0; }
+  .structure-head .st-tag { font-size: 10px; background: var(--blue); color: white; padding: 2px 8px; border-radius: 10px; font-weight: 700; letter-spacing: 0.04em; }
+  .structure-body { padding: 18px 20px; }
+  .structure-row {
+    display: grid; grid-template-columns: 32px 1fr;
+    gap: 14px; align-items: start;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .structure-row:last-child { border-bottom: none; }
+  .structure-letter {
+    width: 30px; height: 30px;
+    background: var(--blue); color: white;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 13px;
+    font-family: 'Fraunces', serif;
+  }
+  .structure-desc strong { display: block; color: var(--blue); font-size: 14px; margin-bottom: 3px; }
+  .structure-desc p { font-size: 13px; margin-bottom: 0; line-height: 1.6; }
+
+  /* MARK SCHEME */
+  .mark-scheme-box {
+    background: var(--green-ultra); border: 1px solid var(--border-green);
+    border-radius: 8px; padding: 16px 20px;
+    margin-top: 10px;
+  }
+  .mark-scheme-box h5 {
+    font-size: 12px; font-weight: 700; color: var(--green-dark);
+    text-transform: uppercase; letter-spacing: 0.06em;
+    margin-bottom: 10px;
+  }
+  .mark-point {
+    display: flex; gap: 10px; margin-bottom: 8px;
+    font-size: 13px; color: var(--text-mid); line-height: 1.65;
+  }
+  .mark-point::before {
+    content: '✓'; color: var(--green-mid); font-weight: 700;
+    flex-shrink: 0; font-size: 14px;
+  }
+  .mark-point-explain {
+    background: white; border-radius: 4px; padding: 6px 10px;
+    font-size: 12px; color: var(--text-light); font-style: italic;
+    margin-top: 4px; margin-left: 24px;
+  }
+
+  /* MODEL ANSWER WITH ANNOTATION */
+  .model-answer {
+    background: white; border: 1px solid var(--border);
+    border-top: 3px solid var(--green-mid);
+    border-radius: var(--radius);
+    padding: 0; overflow: hidden; margin: 16px 0;
+  }
+  .model-answer-head {
+    background: var(--green-ultra);
+    padding: 12px 20px;
+    border-bottom: 1px solid var(--border-green);
+    display: flex; align-items: center; gap: 10px;
+  }
+  .model-answer-head h4 {
+    font-size: 12px; font-weight: 700;
+    letter-spacing: 0.06em; text-transform: uppercase;
+    color: var(--green-dark); margin-bottom: 0;
+  }
+  .model-answer-body { padding: 20px; }
+  .annotated-sentence {
+    display: grid;
+    grid-template-columns: 1fr 240px;
+    gap: 20px;
+    padding: 12px 0;
+    border-bottom: 1px dashed var(--border);
+    align-items: start;
+  }
+  .annotated-sentence:last-child { border-bottom: none; }
+  .annotated-text {
+    font-size: 14px; line-height: 1.75; color: var(--text-mid);
+  }
+  .annotated-text strong { color: var(--text); background: #FFF3B8; padding: 1px 3px; }
+  .annotation {
+    background: var(--green-pale);
+    border-radius: 4px; padding: 8px 12px;
+    font-size: 12px; color: var(--green-dark);
+    line-height: 1.5;
+  }
+  .annotation strong { color: var(--green-dark); display: block; margin-bottom: 2px; }
+
+  /* ANTI-PATTERN */
+  .anti-example {
+    background: white; border: 1px solid var(--border);
+    border-radius: var(--radius); overflow: hidden;
+    margin-bottom: 16px;
+  }
+  .anti-head {
+    padding: 12px 18px;
+    display: flex; align-items: center; justify-content: space-between;
+    font-size: 13px; font-weight: 700;
+    letter-spacing: 0.04em;
+  }
+  .anti-head.weak { background: var(--red-pale); color: var(--red); border-bottom: 1px solid #E8BABA; }
+  .anti-head.strong { background: var(--green-ultra); color: var(--green-dark); border-bottom: 1px solid var(--border-green); }
+  .anti-score { background: white; padding: 3px 10px; border-radius: 12px; font-size: 12px; }
+  .anti-body {
+    padding: 16px 20px;
+    font-size: 14px; color: var(--text-mid);
+    line-height: 1.7; font-style: italic;
+  }
+  .anti-feedback {
+    padding: 12px 20px; background: var(--bg-warm);
+    border-top: 1px solid var(--border);
+    font-size: 13px; color: var(--text-mid);
+  }
+  .anti-feedback strong { color: var(--text); }
+
+  /* TIMER */
+  .timer-wrap {
+    background: white; border: 2px solid var(--green-dark);
+    border-radius: var(--radius); padding: 20px;
+    margin-bottom: 24px;
+    display: grid; grid-template-columns: 1fr auto; gap: 20px;
+    align-items: center;
+  }
+  .timer-display {
+    font-family: 'Fraunces', serif;
+    font-size: 56px; font-weight: 700;
+    color: var(--green-dark); line-height: 1;
+    letter-spacing: -0.02em;
+  }
+  .timer-display.running { color: var(--green-mid); }
+  .timer-display.warning { color: var(--amber); animation: pulse 1s infinite; }
+  .timer-display.done { color: var(--red); }
+  @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.6;} }
+  .timer-label { font-size: 11px; font-weight: 700; color: var(--text-light); letter-spacing: 0.08em; text-transform: uppercase; margin-top: 4px; }
+  .timer-controls { display: flex; gap: 8px; flex-direction: column; }
+
+  /* BUTTONS */
+  .btn { display:inline-flex; align-items:center; gap:8px; padding:10px 20px; border-radius:6px; font-family:'Lato',sans-serif; font-size:13px; font-weight:700; letter-spacing:0.04em; cursor:pointer; transition:all 0.2s; border:none; }
+  .btn-primary { background:var(--green-dark); color:white; }
+  .btn-primary:hover { background:var(--green-mid); transform:translateY(-1px); box-shadow:var(--shadow-hover); }
+  .btn-outline { background:transparent; color:var(--green-dark); border:1.5px solid var(--green-dark); }
+  .btn-outline:hover { background:var(--green-ultra); }
+  .btn-small { padding: 6px 14px; font-size: 11px; }
+  .btn-red { background: var(--red); color: white; }
+  .btn-red:hover { background: #A53322; }
+
+  /* REFLECTION GRID */
+  .reflect-grid {
+    display: grid; grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 0; margin: 16px 0;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+  .reflect-grid > div {
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--border);
+    border-right: 1px solid var(--border);
+    font-size: 13px;
+  }
+  .reflect-grid > div:nth-child(4n) { border-right: none; }
+  .reflect-grid .reflect-head {
+    background: var(--green-dark); color: white;
+    font-weight: 700; font-size: 12px;
+    letter-spacing: 0.04em; text-transform: uppercase;
+    text-align: center;
+  }
+  .reflect-grid .reflect-head:first-child { text-align: left; }
+  .reflect-cell { text-align: center; }
+  .reflect-cell input[type="radio"] { cursor: pointer; width: 18px; height: 18px; }
+  .reflect-topic { color: var(--text); font-weight: 500; }
+
+  /* TRAFFIC LIGHT */
+  .traffic-light { display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; margin:16px 0; }
+  .tl-item { border-radius:8px; padding:14px 16px; text-align:center; }
+  .tl-green { background:#E8F5E3; border:1px solid #B0D8A0; }
+  .tl-amber { background:var(--amber-pale); border:1px solid #E8C88A; }
+  .tl-red { background:var(--red-pale); border:1px solid #E8BABA; }
+  .tl-item .tl-icon { font-size:22px; margin-bottom:6px; }
+  .tl-item .tl-label { font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:4px; }
+  .tl-item .tl-desc { font-size:12px; color:var(--text-mid); line-height:1.4; }
+
+  /* OBJECTIVES */
+  .objectives-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:28px; }
+  .objective-item { background:var(--green-ultra); border:1px solid var(--border-green); border-radius:8px; padding:14px 16px; font-size:14px; color:var(--text-mid); display:flex; gap:10px; align-items:flex-start; }
+  .objective-item::before { content:'◆'; color:var(--green-mid); font-size:10px; margin-top:4px; flex-shrink:0; }
+
+  /* FOOTER */
+  .lesson-nav { display:flex; justify-content:space-between; align-items:center; margin-top:44px; padding-top:22px; border-top:1px solid var(--border); }
+
+  /* MOCK PAPER INTRO */
+  .mock-intro {
+    background: linear-gradient(135deg, var(--green-dark), var(--green-mid));
+    color: white;
+    border-radius: var(--radius);
+    padding: 28px;
+    margin-bottom: 28px;
+  }
+  .mock-intro h3 { color: white; font-size: 22px; margin-bottom: 10px; }
+  .mock-intro p { color: rgba(255,255,255,0.9); margin-bottom: 10px; }
+  .mock-intro ul { color: rgba(255,255,255,0.9); font-size: 14px; line-height: 1.8; padding-left: 20px; }
+
+  /* SCORE DISPLAY */
+  .self-score {
+    background: var(--bg-warm); border: 1px solid var(--border);
+    border-radius: 6px; padding: 10px 14px;
+    margin-top: 10px;
+    display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+    font-size: 13px;
+  }
+  .self-score label { font-weight: 700; color: var(--text); }
+  .self-score select { padding: 5px 10px; border-radius: 4px; border: 1px solid var(--border); font-family: 'Lato', sans-serif; font-size: 13px; }
+
+  @media (max-width: 640px) {
+    h1 { font-size: 28px; }
+    .ao-explainer { grid-template-columns: 1fr; }
+    .annotated-sentence { grid-template-columns: 1fr; gap: 8px; }
+    .reflect-grid { grid-template-columns: 1fr; }
+    .reflect-grid > div { border-right: none; }
+    .timer-wrap { grid-template-columns: 1fr; text-align: center; }
+    nav { padding: 0 10px; }
+    .nav-brand { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-brand">4C Exam Prep <span>IAL Biology · Y12</span></div>
+  <div class="nav-stations">
+    <button class="nav-btn active" onclick="goTo('cover')" id="nav-cover"><span class="nl">Brief</span><span class="nt">Start here</span></button>
+    <button class="nav-btn" onclick="goTo('commands')" id="nav-commands"><span class="nl">Part 1</span><span class="nt">Commands</span></button>
+    <button class="nav-btn" onclick="goTo('ao1')" id="nav-ao1"><span class="nl">Part 2</span><span class="nt">AO1 Recall</span></button>
+    <button class="nav-btn" onclick="goTo('ao2')" id="nav-ao2"><span class="nl">Part 3</span><span class="nt">AO2 Apply</span></button>
+    <button class="nav-btn" onclick="goTo('ao3')" id="nav-ao3"><span class="nl">Part 4</span><span class="nt">AO3 Analyse</span></button>
+    <button class="nav-btn" onclick="goTo('anti')" id="nav-anti"><span class="nl">Part 5</span><span class="nt">Anti-patterns</span></button>
+    <button class="nav-btn" onclick="goTo('mock')" id="nav-mock"><span class="nl">Part 6</span><span class="nt">Mock paper</span></button>
+    <button class="nav-btn" onclick="goTo('reflect')" id="nav-reflect"><span class="nl">Part 7</span><span class="nt">Reflect</span></button>
+  </div>
+  <div class="nav-progress"><div class="progress-dots" id="progress-dots"></div></div>
+</nav>
+
+<!-- ═══════════════════════════════
+     COVER — BRIEFING
+═══════════════════════════════ -->
+<section id="cover" class="active">
+  <div class="meta">4C Biodiversity & Conservation · Exam Practice</div>
+  <h1>Exam Practice<br>& Development</h1>
+  <p class="subtitle">Building exam technique across AO1, AO2 and AO3 · Full unit 4C revision</p>
+
+  <div class="card-green" style="margin-bottom:28px;">
+    <h3 style="margin-bottom:6px;">Read this briefing before starting</h3>
+    <p style="margin-bottom:0;">This lesson is <strong>not</strong> about re-learning content — it is about turning what you know into marks. Exam performance is a skill, and like any skill, it can be trained. Work through the parts in order. Every question has a mark scheme; use them honestly.</p>
+  </div>
+
+  <h2 style="margin-bottom:16px;">What are AO1, AO2, and AO3?</h2>
+  <p style="margin-bottom:16px;">Every exam question targets one or more <strong>Assessment Objectives (AOs)</strong>. Understanding what each demands is the foundation of every mark you earn. The exam is weighted roughly 35% AO1, 45% AO2, 20% AO3 — AO2 is the biggest source of marks.</p>
+
+  <div class="ao-explainer">
+    <div class="ao-box ao1">
+      <div class="ao-label">AO1 — Knowledge</div>
+      <h3>Demonstrate you know it</h3>
+      <p>Recall facts, definitions, and processes. State scientific information accurately. Show understanding through description and explanation of familiar content.</p>
+      <div class="ao-words"><strong>Command words:</strong> State, Define, Describe, Identify, Name</div>
+    </div>
+    <div class="ao-box ao2">
+      <div class="ao-label">AO2 — Application</div>
+      <h3>Apply it to something new</h3>
+      <p>Use your knowledge in unfamiliar contexts. Carry out calculations. Apply principles to novel data or scenarios. Explain biological mechanisms in practical situations.</p>
+      <div class="ao-words"><strong>Command words:</strong> Explain, Calculate, Suggest, Apply, Predict</div>
+    </div>
+    <div class="ao-box ao3">
+      <div class="ao-label">AO3 — Analysis</div>
+      <h3>Analyse, evaluate, synthesise</h3>
+      <p>Interpret data. Evaluate evidence and arguments. Make judgements and support them. Construct extended responses that weigh multiple factors.</p>
+      <div class="ao-words"><strong>Command words:</strong> Analyse, Evaluate, Discuss, Compare, Justify, Assess</div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <h2 style="margin-bottom:16px;">How this lesson works</h2>
+
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:24px;">
+    <div class="card" style="margin-bottom:0;">
+      <h3 style="margin-bottom:4px;">Part 1 — Command Words</h3>
+      <p style="font-size:13px; margin-bottom:0;">Deep dive into what each command word demands. Skipping this costs marks in every exam.</p>
+    </div>
+    <div class="card" style="margin-bottom:0;">
+      <h3 style="margin-bottom:4px;">Parts 2–4 — Graduated Practice</h3>
+      <p style="font-size:13px; margin-bottom:0;">AO1 recall → AO2 application → AO3 analysis. Model answers and mark schemes throughout.</p>
+    </div>
+    <div class="card" style="margin-bottom:0;">
+      <h3 style="margin-bottom:4px;">Part 5 — Anti-Patterns</h3>
+      <p style="font-size:13px; margin-bottom:0;">See weak answers and learn why they fail. Mark scheme literacy is a skill in itself.</p>
+    </div>
+    <div class="card" style="margin-bottom:0;">
+      <h3 style="margin-bottom:4px;">Part 6 — Mock Paper</h3>
+      <p style="font-size:13px; margin-bottom:0;">Eight questions across all AOs with an optional timer. Full exam conditions.</p>
+    </div>
+  </div>
+
+  <div class="card-amber">
+    <h3 style="color:var(--amber); margin-bottom:6px;">The rule of this lesson</h3>
+    <p style="margin-bottom:0;">Attempt every question fully before revealing the mark scheme. Then self-mark honestly. You learn more from attempting and failing than from reading the answer. The reveal is a teacher, not a shortcut.</p>
+  </div>
+
+  <h2 style="margin-bottom:12px;">What success looks like</h2>
+  <div class="traffic-light">
+    <div class="tl-item tl-green">
+      <div class="tl-icon">🟢</div>
+      <div class="tl-label">Exam-ready</div>
+      <div class="tl-desc">Can identify what each command word demands. Comfortable across AO1/2/3. Know where you lose marks and why.</div>
+    </div>
+    <div class="tl-item tl-amber">
+      <div class="tl-icon">🟡</div>
+      <div class="tl-label">Getting there</div>
+      <div class="tl-desc">Confident with AO1/AO2 but AO3 extended responses need more practice. Some command words still unclear.</div>
+    </div>
+    <div class="tl-item tl-red">
+      <div class="tl-icon">🔴</div>
+      <div class="tl-label">Needs work</div>
+      <div class="tl-desc">Losing marks from command word confusion. Revisit the teaching lessons and retry after this exam practice.</div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <h2 style="margin-bottom:12px;">Lesson objectives</h2>
+  <div class="objectives-grid">
+    <div class="objective-item">Unpack what each command word demands and respond with the correct level of detail</div>
+    <div class="objective-item">Apply biological knowledge of 4C confidently across AO1, AO2, and AO3 contexts</div>
+    <div class="objective-item">Use structure templates for calculation and extended response questions</div>
+    <div class="objective-item">Self-assess accurately against mark schemes and identify areas for further revision</div>
+  </div>
+
+  <div class="lesson-nav">
+    <div></div>
+    <button class="btn btn-primary" onclick="goTo('commands')">Begin Part 1 →</button>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════
+     PART 1 — COMMAND WORDS
+═══════════════════════════════ -->
+<section id="commands">
+  <div class="part-header">
+    <div class="part-icon pi-command">⚡</div>
+    <div class="part-header-text">
+      <h2>Part 1 — Command Word Deep Dive</h2>
+      <p>Click each command word to reveal what it actually demands of you</p>
+    </div>
+  </div>
+
+  <div class="card-amber" style="margin-bottom:24px;">
+    <h3 style="color:var(--amber); margin-bottom:6px;">Why this matters more than you think</h3>
+    <p style="margin-bottom:0;">Most dropped marks in exams come from students knowing the biology but answering the wrong command word. Writing a brilliant "describe" answer when asked to "explain" still scores zero on the explanation marks. The command word is the instruction — treat it with precision.</p>
+  </div>
+
+  <h3 style="margin-bottom:16px;">AO1 Command Words</h3>
+
+  <div class="command-reveal" onclick="toggleCommand(this)">
+    <div class="command-head">
+      <span class="cmd-word">State / Name / Identify</span>
+      <span class="cmd-toggle">+</span>
+    </div>
+    <div class="command-body">
+      <div class="cmd-demand">Demand: Give the answer in one or two words. No explanation required.</div>
+      <p>Examples from 4C: "Name the formula for the heterozygosity index." "State three adaptations of the camel that reduce water loss." "Identify the type of adaptation shown in fig A."</p>
+      <div class="cmd-example"><strong>Strong answer:</strong> "Anatomical." <strong>Wasted writing:</strong> "It is anatomical because it involves the physical structure of the hump..." — this is a "state" question. You don't need the explanation.</div>
+    </div>
+  </div>
+
+  <div class="command-reveal" onclick="toggleCommand(this)">
+    <div class="command-head">
+      <span class="cmd-word">Define</span>
+      <span class="cmd-toggle">+</span>
+    </div>
+    <div class="command-body">
+      <div class="cmd-demand">Demand: Give the precise scientific meaning. Include all key qualifying words.</div>
+      <p>For 4C definitions, marks are often lost by omitting one key word. "Endemic" — not just "found in one place" but "evolves in geographical isolation AND is found in only one place." Both halves are required.</p>
+      <div class="cmd-example"><strong>Strong:</strong> "A biodiversity hotspot is an area with a particularly high level of biodiversity." <strong>Weak:</strong> "A place with lots of species." — missing "particularly high" and lacks precision.</div>
+    </div>
+  </div>
+
+  <div class="command-reveal" onclick="toggleCommand(this)">
+    <div class="command-head">
+      <span class="cmd-word">Describe</span>
+      <span class="cmd-toggle">+</span>
+    </div>
+    <div class="command-body">
+      <div class="cmd-demand">Demand: State what can be observed. For graphs/maps: pattern + data. For processes: what happens. Do NOT explain why.</div>
+      <p>For 4C data questions (biodiversity maps, heart rate graphs, allele frequency tables): name the pattern, use specific values or areas, note exceptions. Explaining is a different command word.</p>
+      <div class="cmd-example"><strong>Strong:</strong> "Species richness is highest in tropical regions, particularly the Amazon and Central Africa, with values above 200 species per 0.1 hectare. Arctic regions show the lowest richness, at 1–3 species." <strong>Weak (crosses into explain):</strong> "Species richness is highest in tropical regions because of stable climates..."</div>
+    </div>
+  </div>
+
+  <h3 style="margin:24px 0 16px;">AO2 Command Words</h3>
+
+  <div class="command-reveal" onclick="toggleCommand(this)">
+    <div class="command-head">
+      <span class="cmd-word">Explain</span>
+      <span class="cmd-toggle">+</span>
+    </div>
+    <div class="command-body">
+      <div class="cmd-demand">Demand: Give the biological reasons — the mechanism, the cause, the WHY. Build a chain of reasoning.</div>
+      <p>For 4C: every explanation link needs to be stated. "The camel allows its body temperature to vary 6°C → this delays sweating → sweating uses water → conserving water extends survival" — four separate points, each of which could score a mark.</p>
+      <div class="cmd-example"><strong>Strong:</strong> "Bradycardia reduces heart rate from ~150 to ~20 beats/min, meaning less oxygen is consumed, so the seal can remain underwater longer." <strong>Weak:</strong> "Bradycardia helps the seal stay underwater." — no mechanism, just restates the observation.</div>
+    </div>
+  </div>
+
+  <div class="command-reveal" onclick="toggleCommand(this)">
+    <div class="command-head">
+      <span class="cmd-word">Calculate</span>
+      <span class="cmd-toggle">+</span>
+    </div>
+    <div class="command-body">
+      <div class="cmd-demand">Demand: Show every step. Write down the formula. State substituted values. Give the final answer with correct decimal places.</div>
+      <p>For D index and Hardy-Weinberg: never skip to the answer. Method marks are available. If your final answer is wrong but your method is right, you still score most of the marks. Always present a table for D calculations.</p>
+      <div class="cmd-example"><strong>Strong method for H-W:</strong> q² = 0.16 → q = √0.16 = 0.4 → p = 1 − 0.4 = 0.6 → 2pq = 2×0.6×0.4 = 0.48 ✓ Check: 0.36 + 0.48 + 0.16 = 1.00. <strong>Weak:</strong> "0.48" — no method shown, only 1 mark available even if correct.</div>
+    </div>
+  </div>
+
+  <div class="command-reveal" onclick="toggleCommand(this)">
+    <div class="command-head">
+      <span class="cmd-word">Suggest</span>
+      <span class="cmd-toggle">+</span>
+    </div>
+    <div class="command-body">
+      <div class="cmd-demand">Demand: Apply knowledge to an unfamiliar situation. There may be more than one valid answer.</div>
+      <p>"Suggest" signals that the specific answer isn't in your notes — you need to reason from principles. Use the framework from studied examples. Marks are awarded for biologically sound reasoning, not for guessing the "right" answer.</p>
+      <div class="cmd-example"><strong>Strategy:</strong> Identify the relevant biological concept, apply it to the scenario, link to the specific details given. Even if your answer isn't the "model" one, it can score full marks if the biology holds up.</div>
+    </div>
+  </div>
+
+  <h3 style="margin:24px 0 16px;">AO3 Command Words</h3>
+
+  <div class="command-reveal" onclick="toggleCommand(this)">
+    <div class="command-head">
+      <span class="cmd-word">Compare</span>
+      <span class="cmd-toggle">+</span>
+    </div>
+    <div class="command-body">
+      <div class="cmd-demand">Demand: Identify similarities AND differences. Structure as paired points, not two separate descriptions.</div>
+      <p>A common mistake: describing organism A fully, then organism B fully, with no direct comparison. A proper compare answer uses linking words — "similarly," "however," "in contrast," "both." Each point should address both subjects simultaneously.</p>
+      <div class="cmd-example"><strong>Strong:</strong> "Both the camel and the kangaroo rat have physiological adaptations to produce concentrated urine, however only the camel can store fat in a specific location for metabolic water production." <strong>Weak:</strong> Two paragraphs describing each animal independently.</div>
+    </div>
+  </div>
+
+  <div class="command-reveal" onclick="toggleCommand(this)">
+    <div class="command-head">
+      <span class="cmd-word">Evaluate / Assess</span>
+      <span class="cmd-toggle">+</span>
+    </div>
+    <div class="command-body">
+      <div class="cmd-demand">Demand: Weigh evidence on both sides. Reach a supported judgement. A one-sided answer loses half the available marks.</div>
+      <p>Structure: (1) state the claim or position, (2) evidence supporting it, (3) evidence against it or limitations, (4) reasoned conclusion. Use specific named examples, not vague generalisations.</p>
+      <div class="cmd-example"><strong>Strong structure:</strong> "D captures both richness and evenness, which is useful for comparing habitats. However, D does not measure genetic diversity, so two populations with identical D could differ in resilience. Overall, D is valuable but must be supplemented with heterozygosity data for full assessment."</div>
+    </div>
+  </div>
+
+  <div class="command-reveal" onclick="toggleCommand(this)">
+    <div class="command-head">
+      <span class="cmd-word">Discuss</span>
+      <span class="cmd-toggle">+</span>
+    </div>
+    <div class="command-body">
+      <div class="cmd-demand">Demand: Consider multiple aspects, perspectives, or factors. Present a balanced examination, not a single-sided argument.</div>
+      <p>"Discuss" is more open than "evaluate" — you don't need a definitive judgement, but you must present multiple angles. For 4C this often means considering ecological, genetic, and human factors together.</p>
+      <div class="cmd-example"><strong>Example starter:</strong> "Several factors affect biodiversity in an ecosystem. The stability of environmental conditions is significant because... Productivity is also important since... Additionally, human activity has introduced new pressures..."</div>
+    </div>
+  </div>
+
+  <div class="command-reveal" onclick="toggleCommand(this)">
+    <div class="command-head">
+      <span class="cmd-word">Justify</span>
+      <span class="cmd-toggle">+</span>
+    </div>
+    <div class="command-body">
+      <div class="cmd-demand">Demand: Give reasons that support a stated position. Not balanced — you are defending the stated view.</div>
+      <p>Unlike "evaluate", a justify question has already assumed the position. You are building the case for it using evidence. Each supporting point should be specific and biological, not vague.</p>
+      <div class="cmd-example"><strong>Example:</strong> "Justify the classification of the Hawaiian Islands as a biodiversity hotspot" — build the case: endemism rate, species richness, isolation, number of unique lineages. You don't argue against the classification.</div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <h3 style="margin-bottom:16px;">Quick Check — Match Command Word to Demand</h3>
+
+  <div class="question-card">
+    <div class="q-header">
+      <span class="q-id">Command Word Check · Q1</span>
+      <span class="q-marks">MCQ</span>
+    </div>
+    <p style="font-size:14px; font-weight:700; margin-bottom:12px;">A question asks: "Explain how the variation in body temperature of a camel contributes to its survival in the desert." What is the examiner expecting?</p>
+    <div class="mcq-options">
+      <button class="mcq-option" data-letter="A" onclick="checkMCQ(this,false,'cmd1')">A definition of body temperature variation</button>
+      <button class="mcq-option" data-letter="B" onclick="checkMCQ(this,false,'cmd1')">A description of the temperature range</button>
+      <button class="mcq-option" data-letter="C" onclick="checkMCQ(this,true,'cmd1')">A chain of biological reasoning linking temperature variation to water conservation and survival</button>
+      <button class="mcq-option" data-letter="D" onclick="checkMCQ(this,false,'cmd1')">An evaluation of different adaptations</button>
+    </div>
+    <div id="fb-cmd1-correct" class="fb correct">Correct. "Explain" demands the mechanism — the chain of biological reasoning showing WHY this adaptation helps survival. A descriptive or definitional answer would score nothing on the explanation marks.</div>
+    <div id="fb-cmd1-incorrect" class="fb incorrect">"Explain" demands the mechanism — not a definition, not a description. You need to build a chain of biological reasoning from the adaptation to its survival benefit.</div>
+  </div>
+
+  <div class="question-card">
+    <div class="q-header">
+      <span class="q-id">Command Word Check · Q2</span>
+      <span class="q-marks">MCQ</span>
+    </div>
+    <p style="font-size:14px; font-weight:700; margin-bottom:12px;">A question reads: "Compare the biodiversity of tropical rainforest and temperate woodland ecosystems." Which approach scores best?</p>
+    <div class="mcq-options">
+      <button class="mcq-option" data-letter="A" onclick="checkMCQ(this,false,'cmd2')">Write a paragraph describing tropical rainforests, then a paragraph describing temperate woodland</button>
+      <button class="mcq-option" data-letter="B" onclick="checkMCQ(this,true,'cmd2')">Make paired points addressing both ecosystems simultaneously, using linking words like "however" and "both"</button>
+      <button class="mcq-option" data-letter="C" onclick="checkMCQ(this,false,'cmd2')">Explain why tropical rainforests have more species than temperate woodland</button>
+      <button class="mcq-option" data-letter="D" onclick="checkMCQ(this,false,'cmd2')">Evaluate which ecosystem type deserves greater conservation priority</button>
+    </div>
+    <div id="fb-cmd2-correct" class="fb correct">Correct. "Compare" requires paired points — each sentence addressing both subjects. Describing them separately is the most common mistake and loses structural marks.</div>
+    <div id="fb-cmd2-incorrect" class="fb incorrect">"Compare" demands paired points, not parallel descriptions. Each sentence should address both ecosystems using linking language.</div>
+  </div>
+
+  <div class="lesson-nav">
+    <button class="btn btn-outline" onclick="goTo('cover')">← Back</button>
+    <button class="btn btn-primary" onclick="goTo('ao1')">Part 2: AO1 Practice →</button>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════
+     PART 2 — AO1 PRACTICE
+═══════════════════════════════ -->
+<section id="ao1">
+  <div class="part-header">
+    <div class="part-icon pi-ao1">📖</div>
+    <div class="part-header-text">
+      <h2>Part 2 — AO1 Practice</h2>
+      <p>Knowledge and recall. Quick-fire questions across the unit.</p>
+    </div>
+  </div>
+
+  <div class="ao-badge ao1-b"><div class="ao-num">1</div>Knowledge & Recall</div>
+  <p style="margin-bottom:20px;">These questions test <strong>what you know</strong>. Each should take 1–2 minutes. Write your answer, reveal the mark scheme, and self-mark honestly. A score of 10/12 or above on this section indicates solid AO1 foundations.</p>
+
+  <!-- AO1 Q1 -->
+  <div class="question-card">
+    <div class="q-header">
+      <span class="q-id">AO1 · Q1 · Define</span>
+      <span class="q-marks">2 marks</span>
+    </div>
+    <p class="q-text">Define the term <em>biodiversity</em> and state the three scales at which it can be measured.</p>
+    <textarea placeholder="Write your answer here..."></textarea><br><br>
+    <button class="btn-reveal" onclick="toggleReveal(this)">Reveal mark scheme</button>
+    <div class="reveal-box">
+      <div class="mark-point">Biodiversity is the variety of living organisms and their genetic differences (1)</div>
+      <div class="mark-point">Measured at three scales: genetic diversity (within a species), species diversity (within an area), and ecosystem diversity (across habitats) (1)</div>
+    </div>
+    <div class="self-score"><label>Self-score:</label><select><option>—</option><option>0</option><option>1</option><option>2</option></select></div>
+  </div>
+
+  <!-- AO1 Q2 -->
+  <div class="question-card">
+    <div class="q-header">
+      <span class="q-id">AO1 · Q2 · State</span>
+      <span class="q-marks">1 mark</span>
+    </div>
+    <p class="q-text">State the formula for the diversity index, defining every symbol used.</p>
+    <textarea placeholder="Write your answer here..."></textarea><br><br>
+    <button class="btn-reveal" onclick="toggleReveal(this)">Reveal mark scheme</button>
+    <div class="reveal-box">
+      <div class="mark-point">D = N(N−1) / Σn(n−1), where D = diversity index, N = total number of organisms of all species, n = number of organisms of each individual species, Σ = sum of all n(n−1) values (1)</div>
+    </div>
+    <div class="self-score"><label>Self-score:</label><select><option>—</option><option>0</option><option>1</option></select></div>
+  </div>
+
+  <!-- AO1 Q3 -->
+  <div class="question-card">
+    <div class="q-header">
+      <span class="q-id">AO1 · Q3 · MCQ</span>
+      <span class="q-marks">1 mark</span>
+    </div>
+    <p class="q-text">Which of the following is a physiological adaptation?</p>
+    <div class="mcq-options">
+      <button class="mcq-option" data-letter="A" onclick="checkMCQ(this,false,'ao1q3')">The large, flat feet of a camel</button>
+      <button class="mcq-option" data-letter="B" onclick="checkMCQ(this,true,'ao1q3')">The ability of camel kidneys to produce highly concentrated urine</button>
+      <button class="mcq-option" data-letter="C" onclick="checkMCQ(this,false,'ao1q3')">Camels sitting in groups during the hottest part of the day</button>
+      <button class="mcq-option" data-letter="D" onclick="checkMCQ(this,false,'ao1q3')">Long eyelashes protecting the camel's eyes from sand</button>
+    </div>
+    <div id="fb-ao1q3-correct" class="fb correct">Correct. Concentrated urine production is an internal biochemical/organ-level process — physiological, not anatomical or behavioural.</div>
+    <div id="fb-ao1q3-incorrect" class="fb incorrect">Physiological adaptations involve internal body processes — how the body works. The kidney function is the physiological adaptation here.</div>
+  </div>
+
+  <!-- AO1 Q4 -->
+  <div class="question-card">
+    <div class="q-header">
+      <span class="q-id">AO1 · Q4 · State</span>
+      <span class="q-marks">5 marks</span>
+    </div>
+    <p class="q-text">List the five conditions required for a population to be in Hardy-Weinberg equilibrium.</p>
+    <textarea placeholder="1.&#10;2.&#10;3.&#10;4.&#10;5."></textarea><br><br>
+    <button class="btn-reveal" onclick="toggleReveal(this)">Reveal mark scheme</button>
+    <div class="reveal-box">
+      <div class="mark-point">No mutations (1)</div>
+      <div class="mark-point">Random mating (1)</div>
+      <div class="mark-point">Large population (1)</div>
+      <div class="mark-point">Isolation — no immigration or emigration / no gene flow (1)</div>
+      <div class="mark-point">No selection pressure — all genotypes equally fertile / reproductively successful (1)</div>
+    </div>
+    <div class="self-score"><label>Self-score:</label><select><option>—</option><option>0</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></div>
+  </div>
+
+  <!-- AO1 Q5 -->
+  <div class="question-card">
+    <div class="q-header">
+      <span class="q-id">AO1 · Q5 · Define</span>
+      <span class="q-marks">2 marks</span>
+    </div>
+    <p class="q-text">Define the terms <em>niche</em> and <em>endemic species</em>.</p>
+    <textarea placeholder="Niche:&#10;Endemic species:"></textarea><br><br>
+    <button class="btn-reveal" onclick="toggleReveal(this)">Reveal mark scheme</button>
+    <div class="reveal-box">
+      <div class="mark-point"><strong>Niche:</strong> the role of an organism within the habitat in which it lives — describes how it feeds, interacts, and uses resources, not just where it lives (1)</div>
+      <div class="mark-point"><strong>Endemic species:</strong> a species that evolves in geographical isolation and is found in only one place (1)</div>
+    </div>
+    <div class="self-score"><label>Self-score:</label><select><option>—</option><option>0</option><option>1</option><option>2</option></select></div>
+  </div>
+
+  <!-- AO1 Q6 -->
+  <div class="question-card">
+    <div class="q-header">
+      <span class="q-id">AO1 · Q6 · State</span>
+      <span class="q-marks">3 marks</span>
+    </div>
+    <p class="q-text">State three ecosystem services provided by biodiversity, giving a brief example for each.</p>
+    <textarea placeholder="Write your answer here..." style="min-height:110px;"></textarea><br><br>
+    <button class="btn-reveal" onclick="toggleReveal(this)">Reveal mark scheme</button>
+    <div class="reveal-box">
+      Award 1 mark per valid service with example (any three of):
+      <div class="mark-point">Food — diverse plant species support crop improvement and human diets (1)</div>
+      <div class="mark-point">Medicine — plant secondary metabolites provide pharmacological compounds (1)</div>
+      <div class="mark-point">Pollination — bees/insects enable fruit and seed production (1)</div>
+      <div class="mark-point">Flood regulation — root systems bind soil and slow water movement (1)</div>
+      <div class="mark-point">Nutrient cycling — bacteria/fungi decompose matter, releasing nitrates (1)</div>
+      <div class="mark-point">Carbon storage — plants/phytoplankton fix atmospheric CO₂ (1)</div>
+    </div>
+    <div class="self-score"><label>Self-score:</label><select><option>—</option><option>0</option><option>1</option><option>2</option><option>3</option></select></div>
+  </div>
+
+  <!-- AO1 Q7 -->
+  <div class="question-card">
+    <div class="q-header">
+      <span class="q-id">AO1 · Q7 · State</span>
+      <span class="q-marks">1 mark</span>
+    </div>
+    <p class="q-text">State the formula for the heterozygosity index.</p>
+    <textarea placeholder="Write your answer here..." style="min-height:60px;"></textarea><br><br>
+    <button class="btn-reveal" onclick="toggleReveal(this)">Reveal mark scheme</button>
+    <div class="reveal-box">
+      <div class="mark-point">Heterozygosity index = number of heterozygotes ÷ number of individuals in the population (1)</div>
+    </div>
+    <div class="self-score"><label>Self-score:</label><select><option>—</option><option>0</option><option>1</option></select></div>
+  </div>
+
+  <!-- AO1 Q8 -->
+  <div class="question-card">
+    <div class="q-header">
+      <span class="q-id">AO1 · Q8 · Describe</span>
+      <span class="q-marks">3 marks</span>
+    </div>
+    <p class="q-text">Describe the difference between species richness and relative species abundance, and explain why both are needed to measure biodiversity.</p>
+    <textarea placeholder="Write your answer here..." style="min-height:110px;"></textarea><br><br>
+    <button class="btn-reveal" onclick="toggleReveal(this)">Reveal mark scheme</button>
+    <div class="reveal-box">
+      <div class="mark-point">Species richness = number of different species in an area (1)</div>
+      <div class="mark-point">Relative species abundance = how evenly the species are distributed / proportional representation (1)</div>
+      <div class="mark-point">Both are needed because two areas can have identical richness but very different biodiversity if one is dominated by a single species (1)</div>
+    </div>
+    <div class="self-score"><label>Self-score:</label><select><option>—</option><option>0</option><option>1</option><option>2</option><option>3</option></select></div>
+  </div>
+
+  <div class="card-green" style="margin-top:24px;">
+    <h3 style="margin-bottom:6px;">AO1 total: 18 marks</h3>
+    <p style="margin-bottom:0;">Add up your self-scores. <strong>14+ marks:</strong> strong foundations — move confidently to AO2. <strong>10–13:</strong> some recall gaps to revisit. <strong>Below 10:</strong> go back to the relevant teaching lessons before continuing.</p>
+  </div>
+
+  <div class="lesson-nav">
+    <button class="btn btn-outline" onclick="goTo('commands')">← Part 1</button>
+    <button class="btn btn-primary" onclick="goTo('ao2')">Part 3: AO2 →</button>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════
+     PART 3 — AO2 PRACTICE
+═══════════════════════════════ -->
+<section id="ao2">
+  <div class="part-header">
+    <div class="part-icon pi-ao2">🔬</div>
+    <div class="part-header-text">
+      <h2>Part 3 — AO2 Practice</h2>
+      <p>Applying knowledge. Calculations and unfamiliar scenarios.</p>
+    </div>
+  </div>
+
+  <div class="ao-badge ao2-b"><div class="ao-num">2</div>Application</div>
+  <p style="margin-bottom:18px;">AO2 is where most exam marks live. These questions require you to <strong>apply</strong> what you know to new situations — calculations, novel data, unfamiliar organisms. Before the calculation questions, review the structure template.</p>
+
+  <!-- STRUCTURE TEMPLATE -->
+  <div class="structure-template">
+    <div class="structure-head">
+      <div>
+        <h4>Structure Template — Calculation Questions</h4>
+      </div>
+      <span class="st-tag">USE FOR ALL CALCS</span>
+    </div>
+    <div class="structure-body">
+      <div class="structure-row">
+        <div class="structure-letter">1</div>
+        <div class="structure-desc">
+          <strong>Write the formula</strong>
+          <p>Write the formula at the top of your working. This alone can score a method mark.</p>
+        </div>
+      </div>
+      <div class="structure-row">
+        <div class="structure-letter">2</div>
+        <div class="structure-desc">
+          <strong>Substitute values</strong>
+          <p>Show each value being put into the formula. Don't skip steps.</p>
+        </div>
+      </div>
+      <div class="structure-row">
+        <div class="structure-letter">3</div>
+        <div class="structure-desc">
+          <strong>Calculate step by step</strong>
+          <p>Show intermediate working. For D index, always present a table of n(n−1) values.</p>
+        </div>
+      </div>
+      <div class="structure-row">
+        <div class="structure-letter">4</div>
+        <div class="structure-desc">
+          <strong>State your answer with correct units/decimal places</strong>
+          <p>D has no units. Heterozygosity index is decimal (0–1). H-W: give to 2–3 d.p.</p>
+        </div>
+      </div>
+      <div class="structure-row">
+        <div class="structure-letter">5</div>
+        <div class="structure-desc">
+          <strong>Sanity check</strong>
+          <p>H-W: p² + 2pq + q² should equal 1. D: should be between 1 and N. Heterozygosity: should be between 0 and 1. If not, find the error.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- AO2 Q1 — D Index -->
+  <div class="question-card">
+    <div class="q-header">
+      <span class="q-id">AO2 · Q1 · Calculate + Interpret</span>
+      <span class="q-marks">5 marks</span>
+    </div>
+    <p class="q-text">A biologist samples invertebrates in a stream. She collects 12 mayfly larvae, 8 caddisfly larvae, 15 freshwater shrimp, 5 flatworms, and 10 stonefly larvae. Calculate the diversity index (D) and state what this value suggests about the stream.</p>
+    <textarea placeholder="Show all working following the structure template..." style="min-height:200px;"></textarea><br><br>
+    <button class="btn-reveal" onclick="toggleReveal(this)">Reveal mark scheme</button>
+    <div class="reveal-box">
+      <strong>Method (method marks awarded even if final answer has error):</strong><br><br>
+      <div class="mark-point">n(n−1) calculated for each species: mayfly 12×11=132, caddisfly 8×7=56, shrimp 15×14=210, flatworm 5×4=20, stonefly 10×9=90 (1)</div>
+      <div class="mark-point">Σn(n−1) = 132+56+210+20+90 = 508 (1)</div>
+      <div class="mark-point">N = 50, N(N−1) = 50×49 = 2450 (1)</div>
+      <div class="mark-point">D = 2450/508 = <strong>4.82</strong> (accept 4.8–4.9) (1)</div>
+      <div class="mark-point">Interpretation: relatively high biodiversity — the stream supports several species with reasonable evenness; stonefly and mayfly presence also indicates unpolluted water (indicator species) (1)</div>
+    </div>
+    <div class="self-score"><label>Self-score:</label><select><option>—</option><option>0</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></div>
+  </div>
+
+  <!-- AO2 Q2 — Heterozygosity -->
+  <div class="question-card">
+    <div class="q-header">
+      <span class="q-id">AO2 · Q2 · Calculate + Explain</span>
+      <span class="q-marks">4 marks</span>
+    </div>
+    <p class="q-text">A population of 75 Iberian lynx is analysed for a key gene. 6 individuals are heterozygous. Calculate the heterozygosity index and explain what this value suggests about the conservation status of this population.</p>
+    <textarea placeholder="Write your answer here..." style="min-height:140px;"></textarea><br><br>
+    <button class="btn-reveal" onclick="toggleReveal(this)">Reveal mark scheme</button>
+    <div class="reveal-box">
+      <div class="mark-point">Heterozygosity index = 6/75 = <strong>0.08</strong> (1)</div>
+      <div class="mark-point">This is a very low heterozygosity index / most individuals are homozygous (1)</div>
+      <div class="mark-point">The population has low genetic diversity — this makes it highly vulnerable to disease, as few individuals may carry resistance alleles (1)</div>
+      <div class="mark-point">The population is likely small and/or has experienced a bottleneck — conservation priority is warranted (1)</div>
+    </div>
+    <div class="self-score"><label>Self-score:</label><select><option>—</option><option>0</option><option>1</option><option>2</option><option>3</option><option>4</option></select></div>
+  </div>
+
+  <!-- AO2 Q3 — H-W -->
+  <div class="question-card">
+    <div class="q-header">
+      <span class="q-id">AO2 · Q3 · Calculate</span>
+      <span class="q-marks">5 marks</span>
+    </div>
+    <p class="q-text">In a population of 2,500 mice, 400 show the recessive phenotype for short tail. Calculate the frequencies of all three genotypes in the population, and the expected number of heterozygous individuals.</p>
+    <textarea placeholder="Show all working..." style="min-height:200px;"></textarea><br><br>
+    <button class="btn-reveal" onclick="toggleReveal(this)">Reveal mark scheme</button>
+    <div class="reveal-box">
+      <div class="mark-point">q² = 400/2500 = 0.16 (1)</div>
+      <div class="mark-point">q = √0.16 = 0.4, so p = 1 − 0.4 = 0.6 (1)</div>
+      <div class="mark-point">p² = 0.36, 2pq = 2×0.6×0.4 = 0.48, q² = 0.16 (1)</div>
+      <div class="mark-point">Check: 0.36 + 0.48 + 0.16 = 1.00 ✓ (1)</div>
+      <div class="mark-point">Expected number of heterozygotes = 0.48 × 2500 = <strong>1,200 mice</strong> (1)</div>
+    </div>
+    <div class="self-score"><label>Self-score:</label><select><option>—</option><option>0</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></div>
+  </div>
+
+  <!-- AO2 Q4 — Unfamiliar organism -->
+  <div class="question-card">
+    <div class="q-header">
+      <span class="q-id">AO2 · Q4 · Apply / Suggest</span>
+      <span class="q-marks">4 marks</span>
+    </div>
+    <p class="q-text">The fennec fox (<em>Vulpes zerda</em>) lives in the Sahara Desert. It has unusually large ears, a pale sandy-coloured coat, thick fur on the soles of its feet, and is active mainly at dusk and dawn.<br><br>For each of the four features above, identify the type of adaptation and explain how it aids survival in the fennec fox's niche.</p>
+    <textarea placeholder="Large ears: [type] — helps survival because...&#10;Pale sandy coat: [type] — helps survival because...&#10;Thick fur on feet: [type] — helps survival because...&#10;Active at dusk/dawn: [type] — helps survival because..." style="min-height:180px;"></textarea><br><br>
+    <button class="btn-reveal" onclick="toggleReveal(this)">Reveal mark scheme</button>
+    <div class="reveal-box">
+      <div class="mark-point"><strong>Large ears:</strong> Anatomical — large surface area increases heat loss by convection/radiation, helping thermoregulation in extreme desert heat (1)</div>
+      <div class="mark-point"><strong>Pale sandy coat:</strong> Anatomical — camouflage against desert sand reduces detection by predators and prey, and reflects solar radiation reducing heat absorption (1)</div>
+      <div class="mark-point"><strong>Thick fur on feet:</strong> Anatomical — insulates against scorching sand, allowing movement across hot surfaces without burn damage (1)</div>
+      <div class="mark-point"><strong>Active at dusk/dawn (crepuscular):</strong> Behavioural — avoids extreme midday temperatures, reducing water loss through panting and increasing survival (1)</div>
+    </div>
+    <div class="self-score"><label>Self-score:</label><select><option>—</option><option>0</option><option>1</option><option>2</option><option>3</option><option>4</option></select></div>
+  </div>
+
+  <!-- AO2 Q5 — Explain chain -->
+  <div class="question-card">
+    <div class="q-header">
+      <span class="q-id">AO2 · Q5 · Explain</span>
+      <span class="q-marks">4 marks</span>
+    </div>
+    <p class="q-text">A population of insects is exposed to a new pesticide. After five generations, the frequency of the pesticide-resistance allele has increased from 0.05 to 0.42. Explain how this change has occurred.</p>
+    <textarea placeholder="Write your answer here..." style="min-height:140px;"></textarea><br><br>
+    <button class="btn-reveal" onclick="toggleReveal(this)">Reveal mark scheme</button>
+    <div class="reveal-box">
+      <div class="mark-point">The pesticide acts as a selection pressure — insects without the resistance allele die before reproducing (1)</div>
+      <div class="mark-point">Insects that carry the resistance allele (either homozygous or heterozygous) survive and reproduce, passing the allele to their offspring (1)</div>
+      <div class="mark-point">Over successive generations, the proportion of resistant insects in the population increases — the resistance allele frequency rises (1)</div>
+      <div class="mark-point">The population is not in Hardy-Weinberg equilibrium — directional natural selection is driving change in allele frequency (1)</div>
+    </div>
+    <div class="self-score"><label>Self-score:</label><select><option>—</option><option>0</option><option>1</option><option>2</option><option>3</option><option>4</option></select></div>
+  </div>
+
+  <div class="card-green" style="margin-top:24px;">
+    <h3 style="margin-bottom:6px;">AO2 total: 22 marks</h3>
+    <p style="margin-bottom:0;">This is where most exam marks live. <strong>17+ marks:</strong> strong application skills. <strong>12–16:</strong> accurate knowledge but struggling to apply it — practise more novel scenarios. <strong>Below 12:</strong> revisit the structure template and worked examples from the teaching lessons.</p>
+  </div>
+
+  <div class="lesson-nav">
+    <button class="btn btn-outline" onclick="goTo('ao1')">← Part 2</button>
+    <button class="btn btn-primary" onclick="goTo('ao3')">Part 4: AO3 →</button>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════
+     PART 4 — AO3 PRACTICE
+═══════════════════════════════ -->
+<section id="ao3">
+  <div class="part-header">
+    <div class="part-icon pi-ao3">⚖️</div>
+    <div class="part-header-text">
+      <h2>Part 4 — AO3 Practice</h2>
+      <p>Analysis, evaluation, and synthesis. Extended responses with structure templates.</p>
+    </div>
+  </div>
+
+  <div class="ao-badge ao3-b"><div class="ao-num">3</div>Analysis & Evaluation</div>
+  <p style="margin-bottom:18px;">AO3 questions separate strong candidates from average ones. They require you to <strong>build an argument</strong>, weigh evidence, and reach a supported judgement. Before attempting, study the structure template and annotated model answer below.</p>
+
+  <!-- PEEL STRUCTURE -->
+  <div class="structure-template">
+    <div class="structure-head">
+      <div>
+        <h4>Structure Template — Extended AO3 Response (PEEL+)</h4>
+      </div>
+      <span class="st-tag">USE FOR EVALUATE/DISCUSS</span>
+    </div>
+    <div class="structure-body">
+      <div class="structure-row">
+        <div class="structure-letter">P</div>
+        <div class="structure-desc">
+          <strong>Point — your position or claim</strong>
+          <p>Open with a clear statement of what you will argue. No hedging.</p>
+        </div>
+      </div>
+      <div class="structure-row">
+        <div class="structure-letter">E</div>
+        <div class="structure-desc">
+          <strong>Evidence — specific biological facts</strong>
+          <p>Use named examples, values, mechanisms. Not "lots of species" — "178 species per hectare in Amazonian rainforest."</p>
+        </div>
+      </div>
+      <div class="structure-row">
+        <div class="structure-letter">E</div>
+        <div class="structure-desc">
+          <strong>Explain — link evidence to your point</strong>
+          <p>Show the biological reasoning. Don't assume the examiner will fill in the gap.</p>
+        </div>
+      </div>
+      <div class="structure-row">
+        <div class="structure-letter">L</div>
+        <div class="structure-desc">
+          <strong>Link — connect back to the question and counter-consider</strong>
+          <p>Address limitations or alternative views. This signals AO3 quality.</p>
+        </div>
+      </div>
+      <div class="structure-row">
+        <div class="structure-letter">+</div>
+        <div class="structure-desc">
+          <strong>Judgement — a reasoned conclusion</strong>
+          <p>State your overall position based on the balance of evidence. "Overall, X is more persuasive because..."</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ANNOTATED MODEL -->
+  <h3 style="margin-top:32px; margin-bottom:14px;">Annotated Model Answer — see the structure in action</h3>
+
+  <div class="card-amber">
+    <p style="font-size:13px;font-weight:700;color:var(--amber);margin-bottom:6px;">QUESTION (6 marks)</p>
+    <p style="font-size:15px;font-weight:700;color:var(--text);margin-bottom:0;">Evaluate the usefulness of the diversity index (D) as a measure of biodiversity for conservation decision-making.</p>
+  </div>
+
+  <div class="model-answer">
+    <div class="model-answer-head">
+      <h4>Model Answer with Annotation</h4>
+    </div>
+    <div class="model-answer-body">
+
+      <div class="annotated-sentence">
+        <div class="annotated-text">
+          <strong>The diversity index is a useful but incomplete measure of biodiversity and should be used alongside other indicators for conservation decisions.</strong>
+        </div>
+        <div class="annotation">
+          <strong>P — Point</strong>
+          Clear, balanced position stated upfront. Not a hedged "it depends" — commits to a view.
+        </div>
+      </div>
+
+      <div class="annotated-sentence">
+        <div class="annotated-text">
+          D captures both species richness and relative abundance in a single comparable value using <strong>N(N−1)/Σn(n−1)</strong>. For example, two meadows each with 5 species can produce very different D values if one is dominated by grass at 95% while the other has even distribution.
+        </div>
+        <div class="annotation">
+          <strong>E — Evidence</strong>
+          Uses the formula and a specific scenario. The 95% grass example is the type of biological precision that scores marks.
+        </div>
+      </div>
+
+      <div class="annotated-sentence">
+        <div class="annotated-text">
+          This is useful for conservation because it <strong>quantifies both dimensions of species-level biodiversity simultaneously</strong>, enabling habitats to be ranked objectively and changes to be tracked over time — a polluted habitat will show a falling D.
+        </div>
+        <div class="annotation">
+          <strong>E — Explain</strong>
+          Links the evidence to the conservation purpose. Shows why the mathematical feature matters practically.
+        </div>
+      </div>
+
+      <div class="annotated-sentence">
+        <div class="annotated-text">
+          <strong>However, D has significant limitations.</strong> It does not measure genetic diversity — two populations with identical D could differ radically in heterozygosity and therefore in disease resilience. A cheetah-like population with low H would appear healthy on D alone.
+        </div>
+        <div class="annotation">
+          <strong>L — Counter-consideration</strong>
+          Directly addresses the weakness with a specific biological example. This is the AO3 move that lifts grades.
+        </div>
+      </div>
+
+      <div class="annotated-sentence">
+        <div class="annotated-text">
+          D also treats all species equally — <strong>a rare endemic species carries no more weight than a common one</strong>, yet its loss has far greater evolutionary significance. For decisions involving endangered species protection, the heterozygosity index and endemic species count are essential additions.
+        </div>
+        <div class="annotation">
+          <strong>L — Extended counter</strong>
+          Second limitation with direct conservation relevance. Goes beyond surface-level critique.
+        </div>
+      </div>
+
+      <div class="annotated-sentence">
+        <div class="annotated-text">
+          <strong>Overall, D is a valuable tool as part of a suite of measures</strong> — particularly for comparing habitats over time — but relying on D alone for conservation priorities would miss the genetic and evolutionary dimensions that ultimately determine long-term species survival.
+        </div>
+        <div class="annotation">
+          <strong>+ Judgement</strong>
+          Reasoned conclusion that returns to the original position with nuance. Not just a restated opening.
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- AO3 Q1 -->
+  <div class="question-card">
+    <div class="q-header">
+      <span class="q-id">AO3 · Q1 · Evaluate</span>
+      <span class="q-marks">6 marks</span>
+    </div>
+    <p class="q-text">"For any species, physiological adaptations are more important to survival than either anatomical or behavioural adaptations." Evaluate this statement, using named examples to support your answer.</p>
+    <textarea placeholder="Use the PEEL+ template: Point, Evidence, Explain, Link (counter), Judgement..." style="min-height:240px;"></textarea><br><br>
+    <button class="btn-reveal" onclick="toggleReveal(this)">Reveal mark scheme</button>
+    <div class="reveal-box">
+      Award marks for structured, evidenced evaluation:
+      <div class="mark-point">Clear position stated (agree / disagree / partially) at opening (1)</div>
+      <div class="mark-point">Evidence supporting importance of physiological adaptations with named example — e.g. camel's ability to vary body temperature 6°C, produce concentrated urine, tolerate 30% water loss; seal bradycardia (1)</div>
+      <div class="mark-point">Explanation of mechanism — e.g. these are uncommon in other mammals and directly enable survival in conditions other adaptations alone could not manage (1)</div>
+      <div class="mark-point">Counter-evidence with example — anatomical (camel's hump provides the fat substrate, without which physiological metabolic water production is impossible) (1)</div>
+      <div class="mark-point">Further counter — behavioural adaptations (camels grouping together, sitting to reduce heat absorption) reduce the physiological load and therefore the survival challenge (1)</div>
+      <div class="mark-point">Reasoned judgement — all three types are interdependent; physiological adaptations may be most remarkable but the camel's survival relies on the combination, not any single type (1)</div>
+    </div>
+    <div class="self-score"><label>Self-score:</label><select><option>—</option><option>0</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option></select></div>
+  </div>
+
+  <!-- AO3 Q2 -->
+  <div class="question-card">
+    <div class="q-header">
+      <span class="q-id">AO3 · Q2 · Discuss</span>
+      <span class="q-marks">6 marks</span>
+    </div>
+    <p class="q-text">Discuss why biodiversity hotspots, despite their ecological value, are particularly difficult to conserve in practice.</p>
+    <textarea placeholder="Consider ecological, economic, social, and scientific factors..." style="min-height:240px;"></textarea><br><br>
+    <button class="btn-reveal" onclick="toggleReveal(this)">Reveal mark scheme</button>
+    <div class="reveal-box">
+      Award marks for multi-perspective discussion:
+      <div class="mark-point">Hotspots are often rich in natural resources (timber, minerals, agricultural land) creating direct economic conflict with conservation (1)</div>
+      <div class="mark-point">15.7% of land surface hosts 77% of terrestrial vertebrates — high value per area means high pressure per area (1)</div>
+      <div class="mark-point">Many hotspots are in developing regions where economic development priorities may override conservation (1)</div>
+      <div class="mark-point">Endemic species in hotspots cannot be conserved ex-situ easily / cannot be relocated because they require specific niche conditions (1)</div>
+      <div class="mark-point">Narrow niches of endemic species make them particularly vulnerable to even small habitat changes — partial conservation may not be enough (1)</div>
+      <div class="mark-point">Small populations in hotspots often have low genetic diversity, making conservation efforts vulnerable to disease and climate change even when habitat is preserved (1)</div>
+    </div>
+    <div class="self-score"><label>Self-score:</label><select><option>—</option><option>0</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option></select></div>
+  </div>
+
+  <!-- AO3 Q3 -->
+  <div class="question-card">
+    <div class="q-header">
+      <span class="q-id">AO3 · Q3 · Analyse</span>
+      <span class="q-marks">5 marks</span>
+    </div>
+    <p class="q-text">A conservation team studies two endangered bird populations on different islands. Population A has D = 5.8 and heterozygosity index = 0.08. Population B has D = 3.2 and heterozygosity index = 0.42. Both populations face habitat destruction. Analyse which population is in greater conservation danger, justifying your answer with biological reasoning.</p>
+    <textarea placeholder="Weigh both metrics against each other and justify your conclusion..." style="min-height:220px;"></textarea><br><br>
+    <button class="btn-reveal" onclick="toggleReveal(this)">Reveal mark scheme</button>
+    <div class="reveal-box">
+      <div class="mark-point">Recognises both populations face risks but from different biological causes (1)</div>
+      <div class="mark-point">Population A: high D indicates diverse species-level community BUT very low heterozygosity (0.08) means genetic uniformity and extreme vulnerability to disease / environmental change (1)</div>
+      <div class="mark-point">Population B: moderate D (less species-diverse community) BUT high heterozygosity (0.42) means high genetic diversity and strong resilience (1)</div>
+      <div class="mark-point">Population A is in greater immediate danger because a single pathogen could devastate a genetically uniform population / low genetic diversity cannot be recovered once lost (1)</div>
+      <div class="mark-point">Justification references that species-level diversity (D) can be rebuilt through recolonisation, but genetic diversity lost through bottleneck cannot — making Population A's threat more existential (1)</div>
+    </div>
+    <div class="self-score"><label>Self-score:</label><select><option>—</option><option>0</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></div>
+  </div>
+
+  <div class="card-green" style="margin-top:24px;">
+    <h3 style="margin-bottom:6px;">AO3 total: 17 marks</h3>
+    <p style="margin-bottom:0;">These questions are the mark differentiators at the top end. <strong>13+ marks:</strong> strong analytical writing. <strong>9–12:</strong> argument present but lacking depth or structure. <strong>Below 9:</strong> revisit the PEEL+ template and model answer, then retry.</p>
+  </div>
+
+  <div class="lesson-nav">
+    <button class="btn btn-outline" onclick="goTo('ao2')">← Part 3</button>
+    <button class="btn btn-primary" onclick="goTo('anti')">Part 5: Anti-patterns →</button>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════
+     PART 5 — ANTI-PATTERNS
+═══════════════════════════════ -->
+<section id="anti">
+  <div class="part-header">
+    <div class="part-icon pi-anti">⚠</div>
+    <div class="part-header-text">
+      <h2>Part 5 — Anti-Patterns</h2>
+      <p>Three weak answers. Spot why they fail before revealing the strong answer.</p>
+    </div>
+  </div>
+
+  <div class="card-red" style="margin-bottom:24px;">
+    <h3 style="color:var(--red); margin-bottom:6px;">Why learn from weak answers?</h3>
+    <p style="margin-bottom:0;">Mark schemes reward specific things. Understanding how a superficially "reasonable" answer can still score zero is a skill examiners actively test for. Read each weak answer. Before revealing the feedback, ask yourself: what mark would I give this? Why?</p>
+  </div>
+
+  <div class="card-amber">
+    <p style="font-size:13px;font-weight:700;color:var(--amber);margin-bottom:6px;">EXAM QUESTION (5 marks)</p>
+    <p style="font-size:15px;font-weight:700;color:var(--text);margin-bottom:0;">Explain how the camel is adapted to survive in its desert niche.</p>
+  </div>
+
+  <!-- WEAK 1 -->
+  <div class="anti-example">
+    <div class="anti-head weak">
+      <span>Weak Answer 1 — "The list without mechanism"</span>
+      <span class="anti-score">1 / 5</span>
+    </div>
+    <div class="anti-body">
+      "Camels have humps for storing water. They have long eyelashes to keep sand out of their eyes. They have big feet for walking on sand. They sit in groups in the sun. Their kidneys make concentrated urine."
+    </div>
+    <button class="btn-reveal" style="margin:0 20px 16px;" onclick="toggleReveal(this)">Why does this fail?</button>
+    <div class="reveal-box" style="margin:0 20px 16px;">
+      <strong>What's wrong:</strong>
+      <div class="mark-point">Factual error — the hump stores <strong>fat</strong>, not water (automatic mark deduction)</div>
+      <div class="mark-point">Every adaptation is described but none is <em>explained</em> — the command word is "explain" and this is a "describe" answer</div>
+      <div class="mark-point">No mention of adaptation types (anatomical/physiological/behavioural)</div>
+      <div class="mark-point">No mechanism — why do big feet help? Why does concentrated urine matter?</div>
+      <strong style="margin-top:8px; display:block;">Examiner verdict:</strong> Shows factual knowledge but misses the command word entirely. Even with accurate recall, "explain" questions need biological mechanism chains.
+    </div>
+  </div>
+
+  <!-- WEAK 2 -->
+  <div class="anti-example">
+    <div class="anti-head weak">
+      <span>Weak Answer 2 — "The right words, wrong depth"</span>
+      <span class="anti-score">2 / 5</span>
+    </div>
+    <div class="anti-body">
+      "Camels have anatomical, physiological, and behavioural adaptations. Their anatomical adaptations include the hump and flat feet. Their physiological adaptations include being able to survive in the heat. Their behavioural adaptations include sitting down. All of these help them survive in the desert because the desert is hot and dry."
+    </div>
+    <button class="btn-reveal" style="margin:0 20px 16px;" onclick="toggleReveal(this)">Why does this fail?</button>
+    <div class="reveal-box" style="margin:0 20px 16px;">
+      <strong>What's wrong:</strong>
+      <div class="mark-point">Uses the correct terminology but without biological precision — "being able to survive in the heat" is circular, not a mechanism</div>
+      <div class="mark-point">No specific physiological processes named — no mention of variable body temperature, concentrated urine, metabolic water, blood cell expansion</div>
+      <div class="mark-point">Final sentence states the conclusion without connecting mechanism to outcome</div>
+      <div class="mark-point">Recognises the framework but doesn't apply it — marks are awarded for biological specificity, not terminology alone</div>
+      <strong style="margin-top:8px; display:block;">Examiner verdict:</strong> This student has read the textbook's chapter structure but hasn't absorbed the biological content. Correct category labels with empty content don't score.
+    </div>
+  </div>
+
+  <!-- WEAK 3 -->
+  <div class="anti-example">
+    <div class="anti-head weak">
+      <span>Weak Answer 3 — "Detail in the wrong places"</span>
+      <span class="anti-score">3 / 5</span>
+    </div>
+    <div class="anti-body">
+      "Camels have a hump on their back which contains fat tissue. The fat is a lipid made of glycerol and fatty acids joined by ester bonds through condensation reactions. When the fat is broken down it releases water, so the camel can survive without drinking. Camels also have closable nostrils."
+    </div>
+    <button class="btn-reveal" style="margin:0 20px 16px;" onclick="toggleReveal(this)">Why does this fail?</button>
+    <div class="reveal-box" style="margin:0 20px 16px;">
+      <strong>What's wrong:</strong>
+      <div class="mark-point">Two marks awarded — correctly identifies fat in hump and links to metabolic water (1), mentions closable nostrils (1)</div>
+      <div class="mark-point">But the detail about glycerol/fatty acids/ester bonds is irrelevant to this question — it shows knowledge from another topic but wastes time and shows lack of focus</div>
+      <div class="mark-point">Covers only two adaptations — with 5 marks available, at least 4–5 different adaptations with mechanisms are needed</div>
+      <div class="mark-point">No mention of physiological or behavioural adaptations at all</div>
+      <strong style="margin-top:8px; display:block;">Examiner verdict:</strong> Shows promising biological detail but poor exam technique. Students often over-invest in the first point and run out of time/space. Cover breadth <em>then</em> depth.
+    </div>
+  </div>
+
+  <!-- STRONG -->
+  <div class="anti-example">
+    <div class="anti-head strong">
+      <span>Strong Answer — Mechanism + breadth + command word</span>
+      <span class="anti-score">5 / 5</span>
+    </div>
+    <div class="anti-body" style="font-style:normal; color:var(--text);">
+      "The camel has anatomical adaptations including a hump containing fat — when fat is broken down by aerobic respiration, metabolic water is produced as a by-product, allowing survival without drinking for up to 10 days. Its large, flat feet spread weight across loose sand, preventing the camel from sinking. Physiologically, the camel can allow its body temperature to vary by 6°C, delaying the onset of sweating and conserving water in the heat. Its kidneys produce highly concentrated urine, minimising water loss through excretion. Red blood cells can expand to 240% of normal volume, allowing the camel to drink up to 180L in 24 hours without cell lysis. Behaviourally, camels sit with legs tucked under them in the morning to reduce heat absorption from the hot ground, and group together to reduce exposed surface area — both reduce sweating and conserve water."
+    </div>
+    <div class="anti-feedback">
+      <strong>Why this scores full marks:</strong> ✓ Addresses all three adaptation types ✓ Each adaptation has a mechanism (not just a name) ✓ Links each mechanism back to the desert survival challenge (heat/water) ✓ No factual errors — hump correctly identified as fat ✓ Uses specific data (240%, 180L, 6°C) ✓ Command word "explain" is directly addressed in every clause.
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <h3 style="margin-bottom:16px;">Now you try — spot the weaknesses yourself</h3>
+
+  <div class="card-amber">
+    <p style="font-size:13px;font-weight:700;color:var(--amber);margin-bottom:6px;">EXAM QUESTION (4 marks)</p>
+    <p style="font-size:15px;font-weight:700;color:var(--text);margin-bottom:0;">In a population of 1,600 beetles, 576 are homozygous recessive for wing colour. Calculate the expected number of heterozygous individuals.</p>
+  </div>
+
+  <div class="anti-example">
+    <div class="anti-head weak">
+      <span>Student answer</span>
+      <span class="anti-score">? / 4</span>
+    </div>
+    <div class="anti-body" style="font-style:normal; color:var(--text);">
+      "576 ÷ 1600 = 0.36. 2pq = 0.48. Answer: 768 beetles."
+    </div>
+  </div>
+
+  <p style="margin:16px 0 10px; font-weight:700;">Before revealing — how many marks would you award this answer? Where did the student lose marks (or potentially gain them)?</p>
+  <textarea placeholder="Your assessment of the answer above..." style="min-height:110px;"></textarea>
+  <br><br>
+  <button class="btn-reveal" onclick="toggleReveal(this)">Reveal examiner's assessment</button>
+  <div class="reveal-box">
+    <strong>This answer scores 2/4.</strong>
+    <div class="mark-point">✓ Correct q² = 576/1600 = 0.36 (1 mark — though method isn't shown, the final value is correct)</div>
+    <div class="mark-point">✗ Missing: the crucial step of q = √0.36 = 0.6 (0 marks — no working shown for this step)</div>
+    <div class="mark-point">✗ Missing: p = 1 − 0.6 = 0.4 (0 marks — not stated)</div>
+    <div class="mark-point">✓ The 2pq = 0.48 is correct, and 0.48 × 1600 = 768 (1 mark — correct final calculation)</div>
+    <div class="mark-point">✗ No check that p² + 2pq + q² = 1 (no mark available for this but best practice)</div>
+    <br>
+    <strong>Examiner comment:</strong> "The student gets the right final answer but loses method marks for not showing the chain of working. Had they worked through q and p explicitly and shown the substitution into 2pq = 2 × 0.4 × 0.6, all 4 marks would have been awarded. The lesson: <strong>always show every step in calculation questions</strong>. Correct final answers with missing method typically score only 50% of available marks."
+  </div>
+
+  <div class="lesson-nav">
+    <button class="btn btn-outline" onclick="goTo('ao3')">← Part 4</button>
+    <button class="btn btn-primary" onclick="goTo('mock')">Part 6: Mock Paper →</button>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════
+     PART 6 — MOCK PAPER
+═══════════════════════════════ -->
+<section id="mock">
+  <div class="part-header">
+    <div class="part-icon pi-mock">📝</div>
+    <div class="part-header-text">
+      <h2>Part 6 — Mock Paper</h2>
+      <p>8 questions · 40 marks · Timed or untimed — your choice</p>
+    </div>
+  </div>
+
+  <div class="mock-intro">
+    <h3>How to approach this paper</h3>
+    <p><strong>Duration:</strong> 40 minutes (1 minute per mark is the standard). Use the timer below if you want realistic exam pressure.</p>
+    <p><strong>Instructions:</strong></p>
+    <ul>
+      <li>Attempt every question before revealing any mark scheme</li>
+      <li>Show all working for calculations</li>
+      <li>Read command words carefully — they tell you what's expected</li>
+      <li>If stuck, move on and return later — don't burn time on one question</li>
+      <li>Self-mark honestly using the mark schemes at the end</li>
+    </ul>
+  </div>
+
+  <!-- TIMER -->
+  <div class="timer-wrap">
+    <div>
+      <div id="timer-display" class="timer-display">40:00</div>
+      <div class="timer-label">Time remaining</div>
+    </div>
+    <div class="timer-controls">
+      <button class="btn btn-primary btn-small" id="timer-start" onclick="startTimer()">▶ Start timer</button>
+      <button class="btn btn-outline btn-small" id="timer-pause" onclick="pauseTimer()" style="display:none;">⏸ Pause</button>
+      <button class="btn btn-outline btn-small" onclick="resetTimer()">↺ Reset</button>
+    </div>
+  </div>
+
+  <!-- MOCK Q1 AO1 -->
+  <div class="question-card">
+    <div class="q-header">
+      <span class="q-id">Mock · Q1 · AO1</span>
+      <span class="q-marks">3 marks</span>
+    </div>
+    <p class="q-text">Define each of the following terms: (a) gene pool, (b) allele frequency, (c) selection pressure.</p>
+    <textarea placeholder="Write your answers here..." style="min-height:120px;"></textarea>
+    <div class="self-score"><label>Self-score after completing paper:</label><select><option>—</option><option>0</option><option>1</option><option>2</option><option>3</option></select></div>
+  </div>
+
+  <!-- MOCK Q2 AO1 -->
+  <div class="question-card">
+    <div class="q-header">
+      <span class="q-id">Mock · Q2 · AO1</span>
+      <span class="q-marks">2 marks</span>
+    </div>
+    <p class="q-text">State the formula for the Hardy-Weinberg equation and define every symbol used.</p>
+    <textarea placeholder="Write your answer here..." style="min-height:90px;"></textarea>
+    <div class="self-score"><label>Self-score:</label><select><option>—</option><option>0</option><option>1</option><option>2</option></select></div>
+  </div>
+
+  <!-- MOCK Q3 AO2 -->
+  <div class="question-card">
+    <div class="q-header">
+      <span class="q-id">Mock · Q3 · AO2</span>
+      <span class="q-marks">5 marks</span>
+    </div>
+    <p class="q-text">In a woodland, a student counts the following invertebrates: earthworms (n=28), woodlice (n=19), centipedes (n=6), ground beetles (n=9), slugs (n=11). Calculate the diversity index and interpret the value.</p>
+    <textarea placeholder="Show all working..." style="min-height:200px;"></textarea>
+    <div class="self-score"><label>Self-score:</label><select><option>—</option><option>0</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></div>
+  </div>
+
+  <!-- MOCK Q4 AO2 -->
+  <div class="question-card">
+    <div class="q-header">
+      <span class="q-id">Mock · Q4 · AO2</span>
+      <span class="q-marks">4 marks</span>
+    </div>
+    <p class="q-text">A tuberculosis outbreak in a badger population was monitored. In Year 1, the frequency of a resistance allele was 0.12. By Year 5, it was 0.38. Explain how this change likely occurred and what this reveals about the badger population.</p>
+    <textarea placeholder="Write your answer here..." style="min-height:150px;"></textarea>
+    <div class="self-score"><label>Self-score:</label><select><option>—</option><option>0</option><option>1</option><option>2</option><option>3</option><option>4</option></select></div>
+  </div>
+
+  <!-- MOCK Q5 AO2 -->
+  <div class="question-card">
+    <div class="q-header">
+      <span class="q-id">Mock · Q5 · AO2</span>
+      <span class="q-marks">5 marks</span>
+    </div>
+    <p class="q-text">In a population of 2,000 flowering plants, 180 have the recessive white flower phenotype. Calculate (a) the frequency of the recessive allele, (b) the expected number of heterozygous individuals, (c) the expected number of homozygous dominant individuals.</p>
+    <textarea placeholder="Show all working..." style="min-height:200px;"></textarea>
+    <div class="self-score"><label>Self-score:</label><select><option>—</option><option>0</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></div>
+  </div>
+
+  <!-- MOCK Q6 AO2 -->
+  <div class="question-card">
+    <div class="q-header">
+      <span class="q-id">Mock · Q6 · AO2</span>
+      <span class="q-marks">4 marks</span>
+    </div>
+    <p class="q-text">The kangaroo rat (<em>Dipodomys</em>) lives in the deserts of North America. It has extremely efficient kidneys producing very little urine, obtains most of its water from the metabolism of dry seeds, is nocturnal, and has fur-lined cheek pouches for carrying food. Identify the type of each adaptation and explain how it contributes to survival.</p>
+    <textarea placeholder="Write your answer here..." style="min-height:180px;"></textarea>
+    <div class="self-score"><label>Self-score:</label><select><option>—</option><option>0</option><option>1</option><option>2</option><option>3</option><option>4</option></select></div>
+  </div>
+
+  <!-- MOCK Q7 AO3 -->
+  <div class="question-card">
+    <div class="q-header">
+      <span class="q-id">Mock · Q7 · AO3</span>
+      <span class="q-marks">6 marks</span>
+    </div>
+    <p class="q-text">Evaluate the statement: "In practice, no population can ever be in true Hardy-Weinberg equilibrium, so the equation is of limited use to biologists."</p>
+    <textarea placeholder="Use PEEL+ structure..." style="min-height:240px;"></textarea>
+    <div class="self-score"><label>Self-score:</label><select><option>—</option><option>0</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option></select></div>
+  </div>
+
+  <!-- MOCK Q8 AO3 -->
+  <div class="question-card">
+    <div class="q-header">
+      <span class="q-id">Mock · Q8 · AO3</span>
+      <span class="q-marks">5 marks</span>
+    </div>
+    <p class="q-text">Imagine two conservation charities have equal funds and must choose one site to protect. Site Alpha has D = 7.2, heterozygosity = 0.55, and 3 endemic species. Site Beta has D = 4.1, heterozygosity = 0.08, and 11 endemic species. Analyse which site should be prioritised and justify your reasoning.</p>
+    <textarea placeholder="Weigh all three metrics. State a clear position. Justify with reasoning..." style="min-height:220px;"></textarea>
+    <div class="self-score"><label>Self-score:</label><select><option>—</option><option>0</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></div>
+  </div>
+
+  <div class="divider"></div>
+
+  <h2 style="margin-bottom:16px;">Mark Schemes — Reveal ONLY after completing the full paper</h2>
+
+  <!-- MS -->
+  <div class="question-card">
+    <div class="meta" style="margin-bottom:8px;">Mark Schemes · All 8 Questions</div>
+    <button class="btn-reveal" onclick="toggleReveal(this)">Reveal all mark schemes</button>
+    <div class="reveal-box">
+      <strong style="font-size:14px; color:var(--green-dark); display:block; margin-bottom:10px;">Q1 (3 marks)</strong>
+      <div class="mark-point"><strong>(a) Gene pool:</strong> sum total of all genes in a population at a given time (1)</div>
+      <div class="mark-point"><strong>(b) Allele frequency:</strong> relative frequency with which a particular allele appears within a population (1)</div>
+      <div class="mark-point"><strong>(c) Selection pressure:</strong> effect of environmental factors that determine whether an organism is more or less successful at surviving and reproducing (1)</div>
+
+      <strong style="font-size:14px; color:var(--green-dark); display:block; margin:16px 0 10px;">Q2 (2 marks)</strong>
+      <div class="mark-point">p² + 2pq + q² = 1 (1)</div>
+      <div class="mark-point">where p² = frequency of homozygous dominant (AA), 2pq = frequency of heterozygous (Aa), q² = frequency of homozygous recessive (aa) (1)</div>
+
+      <strong style="font-size:14px; color:var(--green-dark); display:block; margin:16px 0 10px;">Q3 (5 marks)</strong>
+      <div class="mark-point">n(n−1): earthworm 28×27=756, woodlouse 19×18=342, centipede 6×5=30, beetle 9×8=72, slug 11×10=110 (1)</div>
+      <div class="mark-point">Σn(n−1) = 756+342+30+72+110 = 1310 (1)</div>
+      <div class="mark-point">N = 73, N(N−1) = 73×72 = 5256 (1)</div>
+      <div class="mark-point">D = 5256/1310 = <strong>4.01</strong> (accept 4.0–4.1) (1)</div>
+      <div class="mark-point">Interpretation: moderate biodiversity — earthworms dominate, pulling D down; a more even distribution would give higher D (1)</div>
+
+      <strong style="font-size:14px; color:var(--green-dark); display:block; margin:16px 0 10px;">Q4 (4 marks)</strong>
+      <div class="mark-point">Tuberculosis acted as a selection pressure — badgers without resistance alleles died before reproducing (1)</div>
+      <div class="mark-point">Badgers carrying the resistance allele survived and reproduced, passing the allele to offspring (1)</div>
+      <div class="mark-point">Over 4 years (several generations), allele frequency rose from 0.12 to 0.38 (1)</div>
+      <div class="mark-point">The population is not in H-W equilibrium — the "no selection pressure" condition is violated / evolution through natural selection is occurring (1)</div>
+
+      <strong style="font-size:14px; color:var(--green-dark); display:block; margin:16px 0 10px;">Q5 (5 marks)</strong>
+      <div class="mark-point">q² = 180/2000 = 0.09 (1)</div>
+      <div class="mark-point">(a) q = √0.09 = <strong>0.3</strong> (1)</div>
+      <div class="mark-point">p = 0.7, 2pq = 2×0.7×0.3 = 0.42 (1)</div>
+      <div class="mark-point">(b) Heterozygotes: 0.42 × 2000 = <strong>840</strong> (1)</div>
+      <div class="mark-point">(c) p² = 0.49, homozygous dominant: 0.49 × 2000 = <strong>980</strong> (1)</div>
+
+      <strong style="font-size:14px; color:var(--green-dark); display:block; margin:16px 0 10px;">Q6 (4 marks)</strong>
+      <div class="mark-point">Efficient kidneys / concentrated urine: <strong>physiological</strong> — minimises water loss through excretion (1)</div>
+      <div class="mark-point">Metabolic water from seeds: <strong>physiological</strong> — produces water as by-product of respiration, removing need to drink (1)</div>
+      <div class="mark-point">Nocturnal: <strong>behavioural</strong> — avoids daytime heat, reducing water loss and heat stress (1)</div>
+      <div class="mark-point">Fur-lined cheek pouches: <strong>anatomical</strong> — stores food during brief foraging, reducing exposure to predators/heat (1)</div>
+
+      <strong style="font-size:14px; color:var(--green-dark); display:block; margin:16px 0 10px;">Q7 (6 marks)</strong>
+      <div class="mark-point">Agrees in part — the 5 conditions (no mutations, random mating, large population, isolation, no selection) are almost never all met simultaneously (1)</div>
+      <div class="mark-point">Mutations occur continuously; truly random mating is rare; all populations have finite size; gene flow is common; selection pressures always exist (1)</div>
+      <div class="mark-point">However, the equation is still highly valuable as a <em>null model</em> — it provides a theoretical baseline against which real populations can be measured (1)</div>
+      <div class="mark-point">Deviations from H-W predictions reveal which evolutionary force is acting (e.g. changing allele frequency = selection or drift or gene flow) (1)</div>
+      <div class="mark-point">Enables estimation of heterozygote frequencies that cannot be directly observed (e.g. CF carriers — 1 in 25 predicted from 1 in 2500 births) (1)</div>
+      <div class="mark-point">Reasoned judgement — the equation's value is not in describing reality but in enabling inference; its "limited use" is a misreading of how null models work (1)</div>
+
+      <strong style="font-size:14px; color:var(--green-dark); display:block; margin:16px 0 10px;">Q8 (5 marks)</strong>
+      <div class="mark-point">Recognises that Alpha has higher species-level diversity (D=7.2) and genetic diversity (H=0.55) but fewer endemics (3) (1)</div>
+      <div class="mark-point">Recognises that Beta has lower D and critically low genetic diversity (H=0.08) but many more endemics (11) (1)</div>
+      <div class="mark-point">Endemics found only in one place — their extinction is permanent and irreversible, whereas species diversity can recover through immigration (1)</div>
+      <div class="mark-point">However, Beta's very low heterozygosity means its endemic species are genetically vulnerable — conserving them may still fail without genetic rescue (1)</div>
+      <div class="mark-point">Reasoned judgement — Site Beta should likely be prioritised because (a) it holds more unique evolutionary lineages that cannot be replaced and (b) loss here is permanent global biodiversity loss; accept Alpha if reasoning is clear (e.g. protecting higher genetic resilience base) (1)</div>
+
+      <br><strong>Total: 34 marks</strong>
+    </div>
+  </div>
+
+  <div class="card-green" style="margin-top:24px;">
+    <h3 style="margin-bottom:6px;">Translate your score to a likely grade boundary</h3>
+    <p style="margin-bottom:6px; font-size:14px;"><strong>28+ (82%+):</strong> A* performance — strong across all AOs</p>
+    <p style="margin-bottom:6px; font-size:14px;"><strong>24–27 (70–81%):</strong> A performance — some AO3 or calculation refinement needed</p>
+    <p style="margin-bottom:6px; font-size:14px;"><strong>20–23 (59–69%):</strong> B performance — solid AO1, rebuild AO2/AO3 confidence</p>
+    <p style="margin-bottom:6px; font-size:14px;"><strong>16–19 (47–58%):</strong> C performance — revisit teaching lessons for weak topics</p>
+    <p style="margin-bottom:0; font-size:14px;"><strong>Below 16:</strong> significant gaps — use the reflection section to plan recovery</p>
+  </div>
+
+  <div class="lesson-nav">
+    <button class="btn btn-outline" onclick="goTo('anti')">← Part 5</button>
+    <button class="btn btn-primary" onclick="goTo('reflect')">Part 7: Reflect →</button>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════
+     PART 7 — REFLECTION
+═══════════════════════════════ -->
+<section id="reflect">
+  <div class="part-header">
+    <div class="part-icon pi-reflect">🎯</div>
+    <div class="part-header-text">
+      <h2>Part 7 — Reflection & Revision Planning</h2>
+      <p>Convert exam practice into a revision plan</p>
+    </div>
+  </div>
+
+  <div class="card-amber" style="margin-bottom:24px;">
+    <h3 style="color:var(--amber); margin-bottom:6px;">Practice without reflection changes nothing</h3>
+    <p style="margin-bottom:0;">You've just tested yourself across the whole 4C unit. This final section turns those results into action. Be honest with yourself — this isn't graded, it's for <em>your</em> preparation.</p>
+  </div>
+
+  <h3 style="margin-bottom:16px;">Self-assessment grid</h3>
+  <p style="margin-bottom:16px;">For each topic, rate your current confidence. Use your mock paper performance as evidence. Anything marked red goes at the top of your revision list.</p>
+
+  <div class="reflect-grid">
+    <div class="reflect-head">Topic</div>
+    <div class="reflect-head">🟢 Confident</div>
+    <div class="reflect-head">🟡 Shaky</div>
+    <div class="reflect-head">🔴 Gap</div>
+
+    <div class="reflect-topic">Biodiversity definitions (scales, richness, abundance)</div>
+    <div class="reflect-cell"><input type="radio" name="r1"></div>
+    <div class="reflect-cell"><input type="radio" name="r1"></div>
+    <div class="reflect-cell"><input type="radio" name="r1"></div>
+
+    <div class="reflect-topic">Diversity index (D) calculation and interpretation</div>
+    <div class="reflect-cell"><input type="radio" name="r2"></div>
+    <div class="reflect-cell"><input type="radio" name="r2"></div>
+    <div class="reflect-cell"><input type="radio" name="r2"></div>
+
+    <div class="reflect-topic">Endemism and biodiversity hotspots</div>
+    <div class="reflect-cell"><input type="radio" name="r3"></div>
+    <div class="reflect-cell"><input type="radio" name="r3"></div>
+    <div class="reflect-cell"><input type="radio" name="r3"></div>
+
+    <div class="reflect-topic">Three types of adaptation (anat, phys, behav)</div>
+    <div class="reflect-cell"><input type="radio" name="r4"></div>
+    <div class="reflect-cell"><input type="radio" name="r4"></div>
+    <div class="reflect-cell"><input type="radio" name="r4"></div>
+
+    <div class="reflect-topic">Applying adaptation to unfamiliar organisms</div>
+    <div class="reflect-cell"><input type="radio" name="r5"></div>
+    <div class="reflect-cell"><input type="radio" name="r5"></div>
+    <div class="reflect-cell"><input type="radio" name="r5"></div>
+
+    <div class="reflect-topic">Heterozygosity index calculation</div>
+    <div class="reflect-cell"><input type="radio" name="r6"></div>
+    <div class="reflect-cell"><input type="radio" name="r6"></div>
+    <div class="reflect-cell"><input type="radio" name="r6"></div>
+
+    <div class="reflect-topic">Gene pool, allele frequency, selection pressure</div>
+    <div class="reflect-cell"><input type="radio" name="r7"></div>
+    <div class="reflect-cell"><input type="radio" name="r7"></div>
+    <div class="reflect-cell"><input type="radio" name="r7"></div>
+
+    <div class="reflect-topic">Hardy-Weinberg calculations</div>
+    <div class="reflect-cell"><input type="radio" name="r8"></div>
+    <div class="reflect-cell"><input type="radio" name="r8"></div>
+    <div class="reflect-cell"><input type="radio" name="r8"></div>
+
+    <div class="reflect-topic">Five equilibrium conditions</div>
+    <div class="reflect-cell"><input type="radio" name="r9"></div>
+    <div class="reflect-cell"><input type="radio" name="r9"></div>
+    <div class="reflect-cell"><input type="radio" name="r9"></div>
+
+    <div class="reflect-topic">Explaining why equilibrium breaks down</div>
+    <div class="reflect-cell"><input type="radio" name="r10"></div>
+    <div class="reflect-cell"><input type="radio" name="r10"></div>
+    <div class="reflect-cell"><input type="radio" name="r10"></div>
+  </div>
+
+  <div class="divider"></div>
+
+  <h3 style="margin-bottom:16px;">Skills assessment</h3>
+  <p style="margin-bottom:14px;">Your mock paper scores by AO — look back at the self-scores you recorded. Be specific about where the marks were lost.</p>
+
+  <div class="card">
+    <p style="font-weight:700; margin-bottom:8px;">AO1 (knowledge/recall) — Questions 1 & 2 on the mock (5 marks total)</p>
+    <p style="font-size:13px; color:var(--text-light); margin-bottom:8px;">What I scored: ___ / 5 · What I missed:</p>
+    <textarea placeholder="Be specific: which definitions did I get wrong? Which formula did I misremember?" style="min-height:70px;"></textarea>
+  </div>
+
+  <div class="card">
+    <p style="font-weight:700; margin-bottom:8px;">AO2 (application) — Questions 3–6 on the mock (18 marks total)</p>
+    <p style="font-size:13px; color:var(--text-light); margin-bottom:8px;">What I scored: ___ / 18 · What I missed:</p>
+    <textarea placeholder="Specifically: calculation errors? Misidentifying adaptation types? Skipping the mechanism?" style="min-height:70px;"></textarea>
+  </div>
+
+  <div class="card">
+    <p style="font-weight:700; margin-bottom:8px;">AO3 (analysis/evaluation) — Questions 7 & 8 on the mock (11 marks total)</p>
+    <p style="font-size:13px; color:var(--text-light); margin-bottom:8px;">What I scored: ___ / 11 · What I missed:</p>
+    <textarea placeholder="Specifically: missing counter-argument? Weak examples? No clear judgement?" style="min-height:70px;"></textarea>
+  </div>
+
+  <div class="divider"></div>
+
+  <h3 style="margin-bottom:16px;">Your action plan</h3>
+
+  <div class="card-green">
+    <p style="font-weight:700; margin-bottom:10px;">Three things I will do before my next biology lesson:</p>
+    <p style="font-size:13px; color:var(--text-mid); margin-bottom:12px;">Tie each to a specific weakness you've identified. "I'll revise more" is not an action — "I'll do 5 more H-W calculations from the textbook" is.</p>
+    <textarea placeholder="1. &#10;&#10;2. &#10;&#10;3. " style="min-height:140px;"></textarea>
+  </div>
+
+  <div class="card-amber" style="margin-top:16px;">
+    <p style="font-weight:700; margin-bottom:10px;">Questions I want to ask when my teacher returns:</p>
+    <textarea placeholder="Write any questions here — concepts, mark schemes, applications you want to check..." style="min-height:90px;"></textarea>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="card-green" style="margin-top:20px;">
+    <h3 style="margin-bottom:8px;">You've completed the 4C unit 🌿</h3>
+    <p style="margin-bottom:8px;">Across five teaching lessons and this exam practice session, you've worked through biodiversity, measuring biodiversity, adaptation, gene pools, and Hardy-Weinberg. You've written calculations, built arguments, evaluated statements, and analysed data.</p>
+    <p style="margin-bottom:0;">The goal is not to be perfect now — it's to know exactly where you need to be stronger. You have that information now. Use it.</p>
+  </div>
+
+  <div class="lesson-nav">
+    <button class="btn btn-outline" onclick="goTo('mock')">← Part 6</button>
+    <button class="btn btn-primary" onclick="goTo('cover')">↺ Back to start</button>
+  </div>
+</section>
+
+<script>
+// NAV
+const sections=['cover','commands','ao1','ao2','ao3','anti','mock','reflect'];
+const navIds=['nav-cover','nav-commands','nav-ao1','nav-ao2','nav-ao3','nav-anti','nav-mock','nav-reflect'];
+
+function buildDots(){
+  const c=document.getElementById('progress-dots');c.innerHTML='';
+  sections.forEach((_,i)=>{
+    const d=document.createElement('div');
+    d.className='progress-dot'+(i===0?' active':'');
+    d.id='dot-'+i;c.appendChild(d);
+  });
+}
+
+function goTo(id){
+  sections.forEach(s=>{const el=document.getElementById(s);if(el)el.classList.remove('active');});
+  navIds.forEach(n=>{const el=document.getElementById(n);if(el)el.classList.remove('active');});
+  const t=document.getElementById(id);if(t)t.classList.add('active');
+  const idx=sections.indexOf(id);
+  if(idx>=0){
+    const ne=document.getElementById(navIds[idx]);if(ne)ne.classList.add('active');
+    sections.forEach((_,i)=>{
+      const dot=document.getElementById('dot-'+i);if(!dot)return;
+      dot.className='progress-dot';
+      if(i<idx)dot.classList.add('done');
+      else if(i===idx)dot.classList.add('active');
+    });
+  }
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+buildDots();
+
+// REVEAL
+function toggleReveal(btn){
+  const box=btn.nextElementSibling;if(!box)return;
+  const s=box.classList.contains('show');
+  box.classList.toggle('show',!s);
+  btn.textContent=s?'Reveal answer':'Hide answer';
+}
+
+// COMMAND WORDS
+function toggleCommand(el){
+  el.classList.toggle('open');
+}
+
+// MCQ
+function checkMCQ(btn,correct,id){
+  const g=btn.closest('.mcq-options');if(!g)return;
+  g.querySelectorAll('.mcq-option').forEach(b=>b.classList.add('disabled'));
+  const ce=document.getElementById('fb-'+id+'-correct');
+  const ie=document.getElementById('fb-'+id+'-incorrect');
+  if(correct){btn.classList.add('correct');if(ce)ce.classList.add('show');}
+  else{btn.classList.add('incorrect');if(ie)ie.classList.add('show');
+    g.querySelectorAll('.mcq-option').forEach(b=>{if(b.getAttribute('onclick')&&b.getAttribute('onclick').includes('true'))b.classList.add('correct');});
+  }
+}
+
+// TIMER
+let timerSeconds = 40 * 60;
+let timerInterval = null;
+let timerPaused = false;
+
+function updateTimerDisplay() {
+  const m = Math.floor(timerSeconds / 60);
+  const s = timerSeconds % 60;
+  const display = document.getElementById('timer-display');
+  display.textContent = `${m}:${s.toString().padStart(2,'0')}`;
+  display.classList.remove('running','warning','done');
+  if (timerSeconds === 0) display.classList.add('done');
+  else if (timerSeconds <= 300) display.classList.add('warning');
+  else if (timerInterval) display.classList.add('running');
+}
+
+function startTimer() {
+  if (timerInterval) return;
+  timerPaused = false;
+  timerInterval = setInterval(() => {
+    if (timerSeconds > 0) {
+      timerSeconds--;
+      updateTimerDisplay();
+    } else {
+      clearInterval(timerInterval);
+      timerInterval = null;
+      document.getElementById('timer-display').textContent = 'TIME';
+    }
+  }, 1000);
+  document.getElementById('timer-start').style.display = 'none';
+  document.getElementById('timer-pause').style.display = 'inline-flex';
+  updateTimerDisplay();
+}
+
+function pauseTimer() {
+  if (timerInterval) {
+    clearInterval(timerInterval);
+    timerInterval = null;
+    timerPaused = true;
+    document.getElementById('timer-start').style.display = 'inline-flex';
+    document.getElementById('timer-start').textContent = '▶ Resume';
+    document.getElementById('timer-pause').style.display = 'none';
+    updateTimerDisplay();
+  }
+}
+
+function resetTimer() {
+  if (timerInterval) clearInterval(timerInterval);
+  timerInterval = null;
+  timerPaused = false;
+  timerSeconds = 40 * 60;
+  document.getElementById('timer-start').style.display = 'inline-flex';
+  document.getElementById('timer-start').textContent = '▶ Start timer';
+  document.getElementById('timer-pause').style.display = 'none';
+  updateTimerDisplay();
+}
+</script>
+</body>
+</html>
