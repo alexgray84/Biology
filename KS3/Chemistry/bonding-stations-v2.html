@@ -1,0 +1,1013 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Ionic & Covalent Bonding — Station Rotation</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0e0f13;--surface:#16181f;--surface2:#1e2029;--border:#2a2d3a;
+  --text:#f0f0f0;--muted:#7a7f96;
+  --s1:#00d4a4;--s1bg:#00d4a415;
+  --s2:#ffb347;--s2bg:#ffb34715;
+  --s3:#a78bfa;--s3bg:#a78bfa15;
+  --s4:#f87171;--s4bg:#f8717115;
+  --s5:#60a5fa;--s5bg:#60a5fa15;
+}
+html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);overflow:hidden}
+.app{height:100vh;display:flex;flex-direction:column}
+
+/* TOP BAR */
+.topbar{display:flex;align-items:center;gap:10px;padding:10px 16px;border-bottom:1px solid var(--border);background:var(--surface);flex-shrink:0}
+.topbar-title{font-family:'Syne',sans-serif;font-size:14px;font-weight:700;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.timer-wrap{display:flex;align-items:center;gap:6px;flex-shrink:0}
+.timer-display{font-family:'Syne',sans-serif;font-size:20px;font-weight:800;min-width:48px;text-align:right;transition:color .4s}
+.tbtn{background:none;border:1px solid var(--border);color:var(--muted);border-radius:6px;padding:4px 10px;font-size:11px;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .2s;white-space:nowrap}
+.tbtn:hover{border-color:var(--text);color:var(--text)}
+
+/* STATION TABS */
+.station-nav{display:flex;gap:5px;padding:10px 16px;background:var(--surface);border-bottom:1px solid var(--border);flex-shrink:0;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.station-nav::-webkit-scrollbar{display:none}
+.stn-tab{display:flex;align-items:center;gap:6px;padding:7px 12px;border-radius:7px;border:1px solid var(--border);cursor:pointer;transition:all .2s;background:none;font-family:'DM Sans',sans-serif;font-size:12px;color:var(--muted);white-space:nowrap;flex-shrink:0;touch-action:manipulation}
+.stn-tab .tdot{width:7px;height:7px;border-radius:50%;background:currentColor;opacity:.35;transition:opacity .2s;flex-shrink:0}
+.stn-tab.active .tdot{opacity:1}
+.stn-tab[data-s="1"].active{color:var(--s1);border-color:var(--s1);background:var(--s1bg)}
+.stn-tab[data-s="2"].active{color:var(--s2);border-color:var(--s2);background:var(--s2bg)}
+.stn-tab[data-s="3"].active{color:var(--s3);border-color:var(--s3);background:var(--s3bg)}
+.stn-tab[data-s="4"].active{color:var(--s4);border-color:var(--s4);background:var(--s4bg)}
+.stn-tab[data-s="5"].active{color:var(--s5);border-color:var(--s5);background:var(--s5bg)}
+
+/* CONTENT */
+.content{flex:1;overflow-y:auto;padding:16px;-webkit-overflow-scrolling:touch}
+.content::-webkit-scrollbar{width:3px}
+.content::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+.station-panel{display:none;animation:fu .25s ease}
+.station-panel.active{display:block}
+@keyframes fu{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+/* STATION HEADER */
+.stn-header{display:flex;align-items:flex-start;gap:14px;margin-bottom:16px}
+.stn-num{font-family:'Syne',sans-serif;font-size:36px;font-weight:800;line-height:1;flex-shrink:0}
+.stn-info h2{font-family:'Syne',sans-serif;font-size:18px;font-weight:700;margin-bottom:3px}
+.stn-info .sub{font-size:13px;color:var(--muted);line-height:1.4}
+.kbadge{display:inline-block;font-size:11px;padding:2px 10px;border-radius:20px;border:1px solid;margin-top:5px;font-style:italic}
+
+/* STEPS */
+.steps{display:flex;flex-direction:column;gap:8px;margin-bottom:16px}
+.step-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 14px;display:flex;gap:10px;align-items:flex-start;cursor:pointer;transition:opacity .2s;touch-action:manipulation}
+.step-card.done{opacity:.45}
+.step-n{font-family:'Syne',sans-serif;font-size:12px;font-weight:700;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.step-text{font-size:13px;line-height:1.55;flex:1}
+.step-text b{font-weight:500}
+.ck{flex-shrink:0;width:20px;height:20px;border-radius:50%;border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:10px;margin-top:2px;transition:all .2s}
+.step-card.done .ck{background:currentColor;border-color:currentColor;color:var(--bg)}
+
+/* ZONES */
+.zone{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:12px}
+.zone-title{font-family:'Syne',sans-serif;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:10px}
+
+/* BUTTONS */
+.pill-btn{background:none;border:1px solid var(--border);color:var(--muted);border-radius:6px;padding:6px 13px;font-size:12px;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .2s;touch-action:manipulation}
+.pill-btn:hover,.pill-btn:active{color:var(--text);border-color:var(--muted)}
+
+/* ===== STATION 1: CARD SORT ===== */
+.cs-instructions{font-size:12px;color:var(--muted);margin-bottom:10px;padding:8px 10px;background:var(--surface2);border-radius:6px;line-height:1.5}
+.cs-instructions b{color:var(--text);font-weight:500}
+.cs-pool{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px;min-height:30px}
+.cs-chip{background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:7px 11px;font-size:12px;cursor:pointer;transition:all .15s;color:var(--text);touch-action:manipulation;user-select:none}
+.cs-chip:hover{border-color:var(--muted)}
+.cs-chip.selected{border-color:#fff;background:#ffffff18}
+.cs-chip.placed{opacity:.3;pointer-events:none;text-decoration:line-through}
+.cs-cols{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:10px}
+.cs-col{background:var(--surface2);border:2px dashed var(--border);border-radius:8px;min-height:100px;padding:8px;cursor:pointer;transition:all .2s;touch-action:manipulation}
+.cs-col:hover,.cs-col.highlighted{border-style:solid}
+.cs-col[data-col="ionic"]:hover,.cs-col[data-col="ionic"].highlighted{border-color:var(--s1)}
+.cs-col[data-col="covalent"]:hover,.cs-col[data-col="covalent"].highlighted{border-color:var(--s2)}
+.cs-col[data-col="both"]:hover,.cs-col[data-col="both"].highlighted{border-color:var(--s3)}
+.cs-col-label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px;text-align:center}
+.cs-col-label[data-col="ionic"]{color:var(--s1)}
+.cs-col-label[data-col="covalent"]{color:var(--s2)}
+.cs-col-label[data-col="both"]{color:var(--s3)}
+.cs-placed-chip{background:var(--surface);border:1px solid var(--border);border-radius:5px;padding:5px 8px;font-size:11px;margin-bottom:4px;display:flex;justify-content:space-between;align-items:center;gap:6px;cursor:pointer;touch-action:manipulation}
+.cs-placed-chip:hover{border-color:var(--muted)}
+.cs-placed-chip .remove{font-size:10px;color:var(--muted);flex-shrink:0}
+.cs-score{font-size:13px;color:var(--muted);margin-left:8px}
+
+/* ===== STATION 2: DOT & CROSS ===== */
+.mol-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.mol-btn{background:none;border:1px solid var(--border);color:var(--muted);border-radius:6px;padding:6px 12px;font-size:13px;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .2s;touch-action:manipulation}
+.mol-btn.active{border-color:var(--s2);color:var(--s2);background:var(--s2bg)}
+.mol-wrap{display:flex;flex-direction:column;align-items:center;gap:8px}
+.mol-wrap svg{max-width:300px;width:100%}
+.mol-type-badge{font-size:12px;font-weight:500;padding:3px 12px;border-radius:20px}
+.mol-desc{font-size:13px;line-height:1.6;color:var(--muted);text-align:center;max-width:420px}
+.mol-key{display:flex;gap:14px;justify-content:center;margin-top:6px;font-size:12px;color:var(--muted)}
+.mol-key span{display:flex;align-items:center;gap:4px}
+
+/* ===== STATION 3: DATA TABLE ===== */
+.discussion-qs{background:var(--surface2);border-radius:8px;padding:10px 12px;margin-bottom:12px;font-size:13px;line-height:1.6}
+.discussion-qs b{font-weight:500;color:var(--text);display:block;margin-bottom:4px}
+.discussion-qs li{margin-left:14px;color:var(--muted);margin-bottom:3px}
+.dt{width:100%;border-collapse:collapse;font-size:12px}
+.dt th{text-align:left;padding:8px 8px;border-bottom:1px solid var(--border);color:var(--muted);font-weight:500;font-size:11px;white-space:nowrap}
+.dt td{padding:7px 8px;border-bottom:1px solid var(--surface2);vertical-align:middle}
+.dt tr:last-child td{border-bottom:none}
+.clf-btn{background:none;border:1px solid var(--border);border-radius:4px;padding:3px 7px;font-size:11px;cursor:pointer;color:var(--muted);font-family:'DM Sans',sans-serif;transition:all .15s;margin:2px 1px;white-space:nowrap;touch-action:manipulation}
+.clf-btn:hover{border-color:var(--muted);color:var(--text)}
+.clf-btn.sel-ionic{background:var(--s1);color:#000;border-color:var(--s1)}
+.clf-btn.sel-covalent{background:var(--s2);color:#000;border-color:var(--s2)}
+.clf-btn.sel-giant{background:var(--s3);color:#000;border-color:var(--s3)}
+.fb-row td{font-size:11px;font-style:italic;padding:2px 8px 6px}
+
+/* ===== STATION 4: FORMULA BUILDER ===== */
+.crossmult-box{background:var(--surface2);border-radius:8px;padding:12px 14px;margin-bottom:12px;font-size:13px;line-height:1.6}
+.crossmult-box b{font-weight:500;color:var(--text)}
+.crossmult-box .example{font-family:'DM Sans',sans-serif;font-size:12px;color:var(--muted);margin-top:6px;padding:6px 10px;background:var(--surface);border-radius:6px;line-height:1.7}
+.ion-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:5px;margin-bottom:14px}
+.ion-card{background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:8px;text-align:center}
+.ion-card .iname{font-size:10px;color:var(--muted);margin-bottom:2px}
+.ion-card .iform{font-size:15px;font-weight:500}
+.ion-card .icharge{font-size:11px;margin-top:1px}
+.ion-card .icharge.pos{color:var(--s1)}
+.ion-card .icharge.neg{color:var(--s4)}
+.fchallenges{display:flex;flex-direction:column;gap:8px}
+.frow{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 12px}
+.frow .fname{font-size:13px;font-weight:500;margin-bottom:8px}
+.frow .finputs{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.finput{background:var(--surface);border:1px solid var(--border);border-radius:5px;padding:5px 10px;color:var(--text);font-size:14px;font-family:'DM Sans',sans-serif;width:110px;transition:border-color .2s}
+.finput:focus{outline:none;border-color:var(--s4)}
+.finput.ok{border-color:var(--s1);background:var(--s1bg)}
+.finput.wrong{border-color:var(--s4);background:var(--s4bg)}
+.fcheck{background:none;border:1px solid var(--s4);color:var(--s4);border-radius:5px;padding:5px 10px;font-size:12px;cursor:pointer;font-family:'DM Sans',sans-serif;touch-action:manipulation}
+.fhint{font-size:12px;font-style:italic;width:100%;margin-top:4px;line-height:1.5}
+.fshow{font-size:11px;color:var(--muted);cursor:pointer;text-decoration:underline;margin-top:4px;display:inline-block;touch-action:manipulation}
+
+/* ===== STATION 5: FEYNMAN ===== */
+.prompt-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px;margin-bottom:12px}
+.prompt-card{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:12px;cursor:pointer;transition:all .2s;touch-action:manipulation}
+.prompt-card:hover{border-color:var(--muted)}
+.prompt-card.selected{border-color:var(--s5);background:var(--s5bg)}
+.prompt-card .plabel{font-size:10px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:5px}
+.prompt-card p{font-size:13px;line-height:1.5}
+.feynman-rules{background:var(--surface2);border-radius:8px;padding:10px 12px;font-size:12px;color:var(--muted);margin-bottom:12px;line-height:1.6}
+.feynman-rules b{color:var(--text);font-weight:500;display:block;margin-bottom:4px}
+.feynman-rules li{margin-left:14px;margin-bottom:2px}
+.atextarea{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:10px 12px;color:var(--text);font-size:13px;font-family:'DM Sans',sans-serif;resize:vertical;min-height:70px;transition:border-color .2s}
+.atextarea:focus{outline:none;border-color:var(--s5)}
+.submit-a{background:var(--s5);color:#000;border:none;border-radius:6px;padding:7px 16px;font-size:13px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;margin-top:8px;touch-action:manipulation}
+.awall{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;min-height:50px;border:1px dashed var(--border);border-radius:8px;padding:10px}
+.awall-empty{font-size:12px;color:var(--muted);font-style:italic;align-self:center}
+.sticky{background:var(--s5bg);border:1px solid var(--s5);border-radius:6px;padding:8px 10px;font-size:12px;max-width:200px;word-break:break-word;animation:pop .3s ease;position:relative}
+@keyframes pop{from{transform:scale(.85);opacity:0}to{transform:scale(1);opacity:1}}
+.vote-btn{font-size:10px;color:var(--s5);cursor:pointer;display:inline-block;margin-top:4px;touch-action:manipulation}
+.sticky .vote-count{font-size:11px;font-weight:600;color:var(--s5);display:inline-block;margin-left:4px}
+
+/* FOOTER */
+.footer{display:flex;align-items:center;gap:10px;padding:10px 16px;border-top:1px solid var(--border);background:var(--surface);flex-shrink:0}
+.pdots{display:flex;gap:5px}
+.pdot{width:7px;height:7px;border-radius:50%;transition:all .3s}
+.navbtns{display:flex;gap:6px;margin-left:auto}
+.nbtn{background:none;border:1px solid var(--border);color:var(--muted);border-radius:6px;padding:6px 13px;font-size:13px;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .2s;touch-action:manipulation}
+.nbtn:hover{color:var(--text);border-color:var(--muted)}
+.nbtn.primary{background:var(--text);color:var(--bg);border-color:var(--text)}
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <div class="topbar-title">⚗️ Ionic &amp; Covalent Bonding</div>
+  <div class="timer-wrap">
+    <div class="timer-display" id="timerDisplay" style="color:var(--s1)">7:00</div>
+    <button class="tbtn" id="timerBtn" onclick="toggleTimer()">Start</button>
+    <button class="tbtn" onclick="resetTimer()">Reset</button>
+  </div>
+</div>
+
+<!-- STATION TABS -->
+<div class="station-nav">
+  <button class="stn-tab active" data-s="1" onclick="goStation(1)"><span class="tdot"></span>1 · Card Sort</button>
+  <button class="stn-tab" data-s="2" onclick="goStation(2)"><span class="tdot"></span>2 · Dot &amp; Cross</button>
+  <button class="stn-tab" data-s="3" onclick="goStation(3)"><span class="tdot"></span>3 · Detectives</button>
+  <button class="stn-tab" data-s="4" onclick="goStation(4)"><span class="tdot"></span>4 · Formulae</button>
+  <button class="stn-tab" data-s="5" onclick="goStation(5)"><span class="tdot"></span>5 · Explain It</button>
+</div>
+
+<!-- CONTENT -->
+<div class="content">
+
+<!-- ======================================== STATION 1 ======================================== -->
+<div class="station-panel active" id="panel1">
+  <div class="stn-header">
+    <div class="stn-num" style="color:var(--s1)">01</div>
+    <div class="stn-info">
+      <h2>Card Sort — Ionic vs Covalent</h2>
+      <div class="sub">Tap a card to select it, then tap a column to place it. Discuss every card before placing.</div>
+      <span class="kbadge" style="color:var(--s1);border-color:var(--s1)">Rally Robin — take turns reading cards aloud, no skipping</span>
+    </div>
+  </div>
+
+  <div class="steps">
+    <div class="step-card" onclick="toggleStep(this)">
+      <div class="step-n" style="background:var(--s1bg);color:var(--s1)">1</div>
+      <div class="step-text"><b>Partner A</b> taps a card, reads it aloud. Together, agree: Ionic, Covalent, or Both? Tap the correct column to place it.</div>
+      <div class="ck" style="color:var(--s1)">✓</div>
+    </div>
+    <div class="step-card" onclick="toggleStep(this)">
+      <div class="step-n" style="background:var(--s1bg);color:var(--s1)">2</div>
+      <div class="step-text"><b>Partner B</b> picks the next card. Keep alternating — if you disagree, talk for 30 seconds then decide. Tap a placed card to remove it if you change your mind.</div>
+      <div class="ck" style="color:var(--s1)">✓</div>
+    </div>
+    <div class="step-card" onclick="toggleStep(this)">
+      <div class="step-n" style="background:var(--s1bg);color:var(--s1)">3</div>
+      <div class="step-text">Once all cards are placed, tap <b>Check Answers</b>. For every incorrect card: write one sentence on your whiteboard explaining the correct answer.</div>
+      <div class="ck" style="color:var(--s1)">✓</div>
+    </div>
+  </div>
+
+  <div class="zone">
+    <div class="zone-title">Cards — tap one to select, then tap a column</div>
+    <div class="cs-instructions">Selected card will glow white. Tap a column below to place it. <b>Tap a placed card</b> to send it back to the pool.</div>
+    <div class="cs-pool" id="csPool"></div>
+    <div class="cs-cols">
+      <div class="cs-col" data-col="ionic" onclick="placeCard('ionic')">
+        <div class="cs-col-label" data-col="ionic">⬡ Ionic</div>
+        <div id="colIonic"></div>
+      </div>
+      <div class="cs-col" data-col="covalent" onclick="placeCard('covalent')">
+        <div class="cs-col-label" data-col="covalent">○ Covalent</div>
+        <div id="colCovalent"></div>
+      </div>
+      <div class="cs-col" data-col="both" onclick="placeCard('both')">
+        <div class="cs-col-label" data-col="both">◈ Both</div>
+        <div id="colBoth"></div>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;margin-top:6px;flex-wrap:wrap">
+      <button class="pill-btn" onclick="checkSort()">Check Answers</button>
+      <button class="pill-btn" onclick="initSort()">Reset</button>
+      <span class="cs-score" id="csScore"></span>
+    </div>
+  </div>
+</div>
+
+<!-- ======================================== STATION 2 ======================================== -->
+<div class="station-panel" id="panel2">
+  <div class="stn-header">
+    <div class="stn-num" style="color:var(--s2)">02</div>
+    <div class="stn-info">
+      <h2>Dot-and-Cross Relay</h2>
+      <div class="sub">Each person claims one molecule and draws it on their whiteboard — <em>then</em> reveal the diagram to check.</div>
+      <span class="kbadge" style="color:var(--s2);border-color:var(--s2)">Numbered Heads Together — everyone must be ready to explain their diagram</span>
+    </div>
+  </div>
+
+  <div class="steps">
+    <div class="step-card" onclick="toggleStep(this)">
+      <div class="step-n" style="background:var(--s2bg);color:var(--s2)">1</div>
+      <div class="step-text">Number yourselves 1–4 and claim your molecule: <b>1 = NaCl, 2 = MgO, 3 = H₂O, 4 = NH₃</b>. On your whiteboard, draw the dot-and-cross diagram — outer electrons only. Use <b>dots (•)</b> for your atom and <b>crosses (×)</b> for the other atom's electrons.</div>
+      <div class="ck" style="color:var(--s2)">✓</div>
+    </div>
+    <div class="step-card" onclick="toggleStep(this)">
+      <div class="step-n" style="background:var(--s2bg);color:var(--s2)">2</div>
+      <div class="step-text">Once you've drawn yours, tap your molecule tab below to reveal the reference diagram. Check your drawing — fix any mistakes before explaining.</div>
+      <div class="ck" style="color:var(--s2)">✓</div>
+    </div>
+    <div class="step-card" onclick="toggleStep(this)">
+      <div class="step-n" style="background:var(--s2bg);color:var(--s2)">3</div>
+      <div class="step-text">Take turns explaining your diagram to the group. The rest of the group must ask <b>at least one question</b> each. Try: "Why does it have that many electrons?" or "What type of bonding is this?"</div>
+      <div class="ck" style="color:var(--s2)">✓</div>
+    </div>
+    <div class="step-card" onclick="toggleStep(this)">
+      <div class="step-n" style="background:var(--s2bg);color:var(--s2)">4</div>
+      <div class="step-text">As a group: <b>which molecules are ionic? Which are covalent?</b> On your whiteboard write the rule you used. Start with: "Ionic bonding involves… Covalent bonding involves…"</div>
+      <div class="ck" style="color:var(--s2)">✓</div>
+    </div>
+  </div>
+
+  <div class="zone">
+    <div class="zone-title">Reference diagrams — draw on whiteboard first!</div>
+    <div class="mol-tabs">
+      <button class="mol-btn active" onclick="showMol('NaCl',this)">1 · NaCl</button>
+      <button class="mol-btn" onclick="showMol('MgO',this)">2 · MgO</button>
+      <button class="mol-btn" onclick="showMol('H2O',this)">3 · H₂O</button>
+      <button class="mol-btn" onclick="showMol('NH3',this)">4 · NH₃</button>
+    </div>
+    <div id="molDisplay"></div>
+  </div>
+</div>
+
+<!-- ======================================== STATION 3 ======================================== -->
+<div class="station-panel" id="panel3">
+  <div class="stn-header">
+    <div class="stn-num" style="color:var(--s3)">03</div>
+    <div class="stn-info">
+      <h2>Properties Detectives</h2>
+      <div class="sub">Use the data to classify 6 mystery substances. Think alone first — then discuss.</div>
+      <span class="kbadge" style="color:var(--s3);border-color:var(--s3)">Think–Pair–Square — 1 min solo → pair → whole group</span>
+    </div>
+  </div>
+
+  <div class="steps">
+    <div class="step-card" onclick="toggleStep(this)">
+      <div class="step-n" style="background:var(--s3bg);color:var(--s3)">1</div>
+      <div class="step-text"><b>Think (1 min, silently):</b> read the data table. For each substance, decide: ionic, simple covalent, or giant covalent? Don't discuss yet. Use these clues: high melting point = strong bonds; conducts when liquid = ions present; conducts when solid = free electrons.</div>
+      <div class="ck" style="color:var(--s3)">✓</div>
+    </div>
+    <div class="step-card" onclick="toggleStep(this)">
+      <div class="step-n" style="background:var(--s3bg);color:var(--s3)">2</div>
+      <div class="step-text"><b>Pair:</b> compare your answers with the person next to you. Where do you disagree? Write a justification sentence on your whiteboard for each substance. Start: "Substance A is … because…"</div>
+      <div class="ck" style="color:var(--s3)">✓</div>
+    </div>
+    <div class="step-card" onclick="toggleStep(this)">
+      <div class="step-n" style="background:var(--s3bg);color:var(--s3)">3</div>
+      <div class="step-text"><b>Square:</b> share with the other pair. Focus on the two discussion questions in the box below. Resolve any disagreements before tapping Check.</div>
+      <div class="ck" style="color:var(--s3)">✓</div>
+    </div>
+    <div class="step-card" onclick="toggleStep(this)">
+      <div class="step-n" style="background:var(--s3bg);color:var(--s3)">4</div>
+      <div class="step-text">Tap the correct classification for each substance, then tap <b>Check Classifications</b> to see your score and the reasoning for each.</div>
+      <div class="ck" style="color:var(--s3)">✓</div>
+    </div>
+  </div>
+
+  <div class="zone" style="margin-bottom:10px">
+    <div class="zone-title">Group discussion questions</div>
+    <div class="discussion-qs">
+      <b>Discuss these as a group before checking:</b>
+      <ul>
+        <li>Why does diamond (Substance C) have a higher melting point than sodium chloride (Substance A), even though both have very high melting points?</li>
+        <li>Substance F conducts electricity when solid — Substance C does not, even though both are giant covalent. What is the difference between them?</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="zone">
+    <div class="zone-title">Mystery substances — classify each one</div>
+    <div style="overflow-x:auto">
+      <table class="dt">
+        <thead><tr>
+          <th>Substance</th><th>Melting point</th><th>Conducts (solid)?</th><th>Conducts (liquid/dissolved)?</th><th>Your classification</th>
+        </tr></thead>
+        <tbody id="substBody"></tbody>
+      </table>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;margin-top:10px;flex-wrap:wrap">
+      <button class="pill-btn" onclick="checkSubst()">Check Classifications</button>
+      <span id="substScore" style="font-size:13px;color:var(--muted)"></span>
+    </div>
+  </div>
+</div>
+
+<!-- ======================================== STATION 4 ======================================== -->
+<div class="station-panel" id="panel4">
+  <div class="stn-header">
+    <div class="stn-num" style="color:var(--s4)">04</div>
+    <div class="stn-info">
+      <h2>Formula Builders</h2>
+      <div class="sub">Use the ion charges mat and the cross-multiplication method to write correct ionic formulae.</div>
+      <span class="kbadge" style="color:var(--s4);border-color:var(--s4)">Sage &amp; Scribe — swap roles after compound 3. Sage talks, Scribe writes.</span>
+    </div>
+  </div>
+
+  <div class="steps">
+    <div class="step-card" onclick="toggleStep(this)">
+      <div class="step-n" style="background:var(--s4bg);color:var(--s4)">1</div>
+      <div class="step-text">Decide who is <b>Sage</b> first (gives instructions only — no touching the pen/keyboard) and who is <b>Scribe</b> (writes only what they are told). Read the cross-multiplication method below before starting.</div>
+      <div class="ck" style="color:var(--s4)">✓</div>
+    </div>
+    <div class="step-card" onclick="toggleStep(this)">
+      <div class="step-n" style="background:var(--s4bg);color:var(--s4)">2</div>
+      <div class="step-text">Sage: use the ion charges mat to talk your Scribe through compounds 1–3. Scribe: type the answer into the box and tap Check. If it's wrong, the Sage must explain why and try again.</div>
+      <div class="ck" style="color:var(--s4)">✓</div>
+    </div>
+    <div class="step-card" onclick="toggleStep(this)">
+      <div class="step-n" style="background:var(--s4bg);color:var(--s4)">3</div>
+      <div class="step-text"><b>Swap roles</b> after compound 3. The new Sage must first explain why compound 3's answer is correct before continuing to compounds 4–5.</div>
+      <div class="ck" style="color:var(--s4)">✓</div>
+    </div>
+  </div>
+
+  <div class="zone" style="margin-bottom:10px">
+    <div class="zone-title">How to write ionic formulae — cross-multiplication method</div>
+    <div class="crossmult-box">
+      <b>Step-by-step method:</b>
+      <div class="example">
+        1. Write the symbol and charge of each ion<br>
+        2. "Cross the charges" — the number from one charge becomes the subscript of the other ion<br>
+        3. Simplify if possible (e.g. if both numbers are 2, cancel to give 1:1)<br>
+        4. If a polyatomic ion (like SO₄, NO₃, OH) needs a subscript, put it in brackets first<br><br>
+        <b>Example — Calcium chloride:</b> Ca²⁺ and Cl⁻<br>
+        → cross the charges: Ca gets subscript 1 (from the 1), Cl gets subscript 2 (from the 2)<br>
+        → formula: CaCl₂<br><br>
+        <b>Example — Iron(III) oxide:</b> Fe³⁺ and O²⁻<br>
+        → cross the charges: Fe gets subscript 2 (from the 2), O gets subscript 3 (from the 3)<br>
+        → formula: Fe₂O₃
+      </div>
+      <div style="margin-top:8px;font-size:12px;color:var(--muted)"><b style="color:var(--text)">Tip for typing:</b> type subscript numbers as plain numbers — so Fe₂O₃ = Fe2O3, CaCl₂ = CaCl2, (NH₄)₂SO₄ = (NH4)2SO4</div>
+    </div>
+  </div>
+
+  <div class="zone" style="margin-bottom:10px">
+    <div class="zone-title">Ion charges reference mat</div>
+    <div class="ion-grid" id="ionGrid"></div>
+  </div>
+
+  <div class="zone">
+    <div class="zone-title">Formula challenges</div>
+    <div class="fchallenges" id="fchallenges"></div>
+  </div>
+</div>
+
+<!-- ======================================== STATION 5 ======================================== -->
+<div class="station-panel" id="panel5">
+  <div class="stn-header">
+    <div class="stn-num" style="color:var(--s5)">05</div>
+    <div class="stn-info">
+      <h2>Explain It Like I'm 10</h2>
+      <div class="sub">Pick a prompt. Explain it using <em>no science words</em> — everyday language and analogies only.</div>
+      <span class="kbadge" style="color:var(--s5);border-color:var(--s5)">Feynman Technique — if you can't explain it simply, you don't know it yet</span>
+    </div>
+  </div>
+
+  <div class="steps">
+    <div class="step-card" onclick="toggleStep(this)">
+      <div class="step-n" style="background:var(--s5bg);color:var(--s5)">1</div>
+      <div class="step-text">Each person picks <b>one prompt card</b> below. You have <b>90 seconds</b> to write your explanation on your whiteboard. Replace <em>every</em> science word with a simple everyday word or analogy. No jargon allowed.</div>
+      <div class="ck" style="color:var(--s5)">✓</div>
+    </div>
+    <div class="step-card" onclick="toggleStep(this)">
+      <div class="step-n" style="background:var(--s5bg);color:var(--s5)">2</div>
+      <div class="step-text">Take turns reading your explanation aloud. After each one, the rest of the group asks: <b>"What did you mean by…?"</b> The speaker must answer <em>without looking at their whiteboard.</em></div>
+      <div class="ck" style="color:var(--s5)">✓</div>
+    </div>
+    <div class="step-card" onclick="toggleStep(this)">
+      <div class="step-n" style="background:var(--s5bg);color:var(--s5)">3</div>
+      <div class="step-text">Vote as a group: <b>whose analogy was the clearest?</b> Type it into the Analogy Wall. Your teacher will share these with the class at the end. Tap the ★ on any sticky note to vote for it.</div>
+      <div class="ck" style="color:var(--s5)">✓</div>
+    </div>
+  </div>
+
+  <div class="zone" style="margin-bottom:10px">
+    <div class="zone-title">Rules for this station</div>
+    <div class="feynman-rules">
+      <b>Banned words — you cannot use any of these in your explanation:</b>
+      <ul>
+        <li>ion, ionic, covalent, atom, electron, bond, charge, lattice, molecule, nucleus, electrostatic</li>
+        <li>If you say a banned word, your group must challenge you — find a better everyday word instead</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="zone" style="margin-bottom:10px">
+    <div class="zone-title">Pick your prompt — tap to select</div>
+    <div class="prompt-grid" id="promptGrid"></div>
+  </div>
+
+  <div class="zone">
+    <div class="zone-title">Analogy Wall — type your group's best analogy and add it</div>
+    <textarea class="atextarea" id="analogyInput" placeholder="Type your analogy here..."></textarea><br>
+    <button class="submit-a" onclick="addAnalogy()">Add to wall</button>
+    <div class="awall" id="analogyWall"><span class="awall-empty">No analogies yet — be the first!</span></div>
+  </div>
+</div>
+
+</div><!-- end content -->
+
+<!-- FOOTER -->
+<div class="footer">
+  <div class="pdots" id="pdots">
+    <div class="pdot"></div><div class="pdot"></div><div class="pdot"></div><div class="pdot"></div><div class="pdot"></div>
+  </div>
+  <div class="navbtns">
+    <button class="nbtn" onclick="prevStation()">← Back</button>
+    <button class="nbtn primary" onclick="nextStation()">Next →</button>
+  </div>
+</div>
+
+</div><!-- end app -->
+
+<script>
+// ─────────────── NAVIGATION ───────────────
+let cur = 1;
+const sColors = ['','var(--s1)','var(--s2)','var(--s3)','var(--s4)','var(--s5)'];
+
+function goStation(n){
+  document.querySelectorAll('.station-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.stn-tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('panel'+n).classList.add('active');
+  document.querySelector('[data-s="'+n+'"]').classList.add('active');
+  cur = n;
+  document.getElementById('timerDisplay').style.color = sColors[n];
+  resetTimer();
+  renderDots();
+}
+function nextStation(){ if(cur<5) goStation(cur+1); }
+function prevStation(){ if(cur>1) goStation(cur-1); }
+function renderDots(){
+  document.querySelectorAll('.pdot').forEach((d,i)=>{
+    d.style.background = i===cur-1 ? sColors[cur] : i<cur-1 ? '#3a3d4a' : 'var(--border)';
+    d.style.width = i===cur-1 ? '18px' : '7px';
+    d.style.borderRadius = i===cur-1 ? '4px' : '50%';
+  });
+}
+function toggleStep(el){ el.classList.toggle('done'); }
+
+// ─────────────── TIMER ───────────────
+let timerSecs = 420, timerRunning = false, timerInt = null;
+function toggleTimer(){
+  if(timerRunning){ clearInterval(timerInt); timerRunning=false; document.getElementById('timerBtn').textContent='Resume'; }
+  else { timerRunning=true; document.getElementById('timerBtn').textContent='Pause'; timerInt=setInterval(tickTimer,1000); }
+}
+function tickTimer(){
+  if(timerSecs<=0){ clearInterval(timerInt); timerRunning=false; document.getElementById('timerBtn').textContent='Done!'; document.getElementById('timerDisplay').style.color='var(--s4)'; return; }
+  timerSecs--;
+  const m=Math.floor(timerSecs/60), s=timerSecs%60;
+  document.getElementById('timerDisplay').textContent = m+':'+(s<10?'0':'')+s;
+  if(timerSecs<=60) document.getElementById('timerDisplay').style.color='var(--s4)';
+  else if(timerSecs<=120) document.getElementById('timerDisplay').style.color='var(--s2)';
+  else document.getElementById('timerDisplay').style.color=sColors[cur];
+}
+function resetTimer(){
+  clearInterval(timerInt); timerRunning=false; timerSecs=420;
+  document.getElementById('timerBtn').textContent='Start';
+  document.getElementById('timerDisplay').textContent='7:00';
+  document.getElementById('timerDisplay').style.color=sColors[cur];
+}
+
+// ─────────────── STATION 1: CARD SORT ───────────────
+const sortCards = [
+  {text:'Conducts electricity when molten', ans:'ionic'},
+  {text:'Conducts electricity when dissolved in water', ans:'ionic'},
+  {text:'Formed by electron transfer', ans:'ionic'},
+  {text:'High melting point (usually above 600°C)', ans:'ionic'},
+  {text:'Contains a metal and a non-metal', ans:'ionic'},
+  {text:'Forms a giant ionic lattice structure', ans:'ionic'},
+  {text:'NaCl (sodium chloride)', ans:'ionic'},
+  {text:'MgO (magnesium oxide)', ans:'ionic'},
+  {text:'Formed by sharing a pair of electrons', ans:'covalent'},
+  {text:'Usually a gas or liquid at room temperature', ans:'covalent'},
+  {text:'Low melting and boiling point', ans:'covalent'},
+  {text:'Formed between non-metal atoms only', ans:'covalent'},
+  {text:'H₂O (water)', ans:'covalent'},
+  {text:'CO₂ (carbon dioxide)', ans:'covalent'},
+  {text:'NH₃ (ammonia)', ans:'covalent'},
+  {text:'Held together by electrostatic attraction', ans:'both'},
+];
+
+let selectedCard = null;
+let cardPlacements = {}; // cardIndex -> column
+
+function initSort(){
+  selectedCard = null;
+  cardPlacements = {};
+  const pool = document.getElementById('csPool');
+  pool.innerHTML = '';
+  sortCards.forEach((c,i)=>{
+    const chip = document.createElement('div');
+    chip.className = 'cs-chip';
+    chip.textContent = c.text;
+    chip.dataset.idx = i;
+    chip.onclick = () => selectCard(i);
+    pool.appendChild(chip);
+  });
+  ['Ionic','Covalent','Both'].forEach(col=>{
+    document.getElementById('col'+col).innerHTML='';
+  });
+  document.getElementById('csScore').textContent='';
+  // remove feedback colours
+  document.querySelectorAll('.cs-placed-chip').forEach(c=>{ c.style.borderColor=''; c.style.background=''; });
+}
+
+function selectCard(idx){
+  // deselect all
+  document.querySelectorAll('.cs-chip').forEach(c=>c.classList.remove('selected'));
+  if(selectedCard===idx){ selectedCard=null; return; }
+  selectedCard = idx;
+  const chip = document.querySelector('.cs-chip[data-idx="'+idx+'"]');
+  if(chip) chip.classList.add('selected');
+}
+
+function placeCard(col){
+  if(selectedCard===null) return;
+  const idx = selectedCard;
+  const card = sortCards[idx];
+  // highlight col briefly
+  const colEl = document.querySelector('.cs-col[data-col="'+col+'"]');
+  colEl.classList.add('highlighted');
+  setTimeout(()=>colEl.classList.remove('highlighted'),300);
+  // remove from old col if already placed
+  if(cardPlacements[idx]!==undefined){
+    const old = cardPlacements[idx];
+    const oldPlaced = document.getElementById('placed_'+idx);
+    if(oldPlaced) oldPlaced.remove();
+  }
+  // add to new col
+  cardPlacements[idx] = col;
+  const colMap = {ionic:'colIonic',covalent:'colCovalent',both:'colBoth'};
+  const placed = document.createElement('div');
+  placed.className = 'cs-placed-chip';
+  placed.id = 'placed_'+idx;
+  placed.innerHTML = '<span>'+card.text+'</span><span class="remove">✕</span>';
+  placed.onclick = (e)=>{ e.stopPropagation(); removeCard(idx); };
+  document.getElementById(colMap[col]).appendChild(placed);
+  // mark pool chip as placed
+  const poolChip = document.querySelector('.cs-chip[data-idx="'+idx+'"]');
+  if(poolChip){ poolChip.classList.add('placed'); poolChip.classList.remove('selected'); }
+  selectedCard = null;
+  document.getElementById('csScore').textContent='';
+}
+
+function removeCard(idx){
+  const placed = document.getElementById('placed_'+idx);
+  if(placed) placed.remove();
+  delete cardPlacements[idx];
+  const poolChip = document.querySelector('.cs-chip[data-idx="'+idx+'"]');
+  if(poolChip){ poolChip.classList.remove('placed','selected'); }
+}
+
+function checkSort(){
+  let correct=0, total=Object.keys(cardPlacements).length;
+  if(!total){ document.getElementById('csScore').textContent='Place some cards first!'; return; }
+  Object.entries(cardPlacements).forEach(([idx,col])=>{
+    const right = sortCards[idx].ans === col;
+    if(right) correct++;
+    const placed = document.getElementById('placed_'+idx);
+    if(placed){
+      placed.style.borderColor = right ? 'var(--s1)' : 'var(--s4)';
+      placed.style.background = right ? 'var(--s1bg)' : 'var(--s4bg)';
+      placed.style.color = right ? 'var(--s1)' : 'var(--s4)';
+      // show correct answer if wrong
+      if(!right){
+        const ans = sortCards[idx].ans;
+        const label = ans==='ionic'?'⬡ Ionic':ans==='covalent'?'○ Covalent':'◈ Both';
+        placed.querySelector('span').textContent = sortCards[idx].text + ' → correct: ' + label;
+      }
+    }
+  });
+  document.getElementById('csScore').textContent = correct+'/'+total+' correct'+(correct===total?' — well done!':' — check the red ones');
+}
+
+initSort();
+
+// ─────────────── STATION 2: DOT-AND-CROSS ───────────────
+const molData = {
+  NaCl:{
+    label:'NaCl — Sodium Chloride',
+    type:'ionic',
+    typeName:'Ionic compound',
+    typeColor:'var(--s1)',
+    desc:'Sodium (Na) has 1 outer electron. Chlorine (Cl) has 7 outer electrons and needs 1 more to fill its outer shell. Na <b>transfers</b> its outer electron to Cl. Na becomes Na⁺ (lost 1e⁻), Cl becomes Cl⁻ (gained 1e⁻). The opposite charges attract — this is the ionic bond.',
+    svg:`<svg viewBox="0 0 340 180" xmlns="http://www.w3.org/2000/svg" font-family="DM Sans,sans-serif" font-size="13">
+  <!-- Na atom - just nucleus, no outer electrons shown (transferred) -->
+  <circle cx="85" cy="90" r="38" fill="none" stroke="#00d4a4" stroke-width="1.5" stroke-dasharray="5,3"/>
+  <circle cx="85" cy="90" r="20" fill="#00d4a420"/>
+  <text x="85" y="95" text-anchor="middle" fill="#00d4a4" font-weight="600">Na</text>
+  <text x="85" y="140" text-anchor="middle" fill="#7a7f96" font-size="11">2,8 electrons</text>
+  <text x="85" y="153" text-anchor="middle" fill="#7a7f96" font-size="11">(lost outer 1)</text>
+
+  <!-- Arrow -->
+  <text x="142" y="96" text-anchor="middle" fill="#7a7f96" font-size="20">→</text>
+
+  <!-- Cl atom with 8 outer electrons (gained 1 dot from Na) -->
+  <circle cx="240" cy="90" r="48" fill="none" stroke="#ffb347" stroke-width="1.5"/>
+  <circle cx="240" cy="90" r="28" fill="#ffb34720"/>
+  <text x="240" y="95" text-anchor="middle" fill="#ffb347" font-weight="600">Cl</text>
+
+  <!-- 7 crosses (Cl own electrons) + 1 dot (from Na) = 8 -->
+  <!-- top pair -->
+  <text x="228" y="46" fill="#ffb347" font-size="12">×</text>
+  <text x="244" y="46" fill="#ffb347" font-size="12">×</text>
+  <!-- right pair -->
+  <text x="287" y="82" fill="#ffb347" font-size="12">×</text>
+  <text x="287" y="98" fill="#ffb347" font-size="12">×</text>
+  <!-- bottom pair -->
+  <text x="228" y="138" fill="#ffb347" font-size="12">×</text>
+  <text x="244" y="138" fill="#ffb347" font-size="12">×</text>
+  <!-- left: 1 dot (transferred from Na) + 1 cross -->
+  <text x="192" y="86" fill="#00d4a4" font-size="13" font-weight="700">•</text>
+  <text x="192" y="99" fill="#ffb347" font-size="12">×</text>
+
+  <!-- ion labels -->
+  <text x="85" y="58" text-anchor="middle" fill="#00d4a4" font-size="12">Na⁺</text>
+  <text x="296" y="60" fill="#ffb347" font-size="12">Cl⁻</text>
+
+  <!-- key -->
+  <text x="30" y="170" fill="#00d4a4" font-size="11">• = Na electron</text>
+  <text x="180" y="170" fill="#ffb347" font-size="11">× = Cl electron</text>
+</svg>`
+  },
+  MgO:{
+    label:'MgO — Magnesium Oxide',
+    type:'ionic',
+    typeName:'Ionic compound',
+    typeColor:'var(--s1)',
+    desc:'Magnesium (Mg) has 2 outer electrons. Oxygen (O) has 6 outer electrons and needs 2 more to fill its shell. Mg <b>transfers both</b> outer electrons to O. Mg becomes Mg²⁺ (lost 2e⁻), O becomes O²⁻ (gained 2e⁻). Higher charges = stronger ionic bond than NaCl, so higher melting point.',
+    svg:`<svg viewBox="0 0 340 180" xmlns="http://www.w3.org/2000/svg" font-family="DM Sans,sans-serif" font-size="13">
+  <!-- Mg - no outer electrons -->
+  <circle cx="78" cy="90" r="36" fill="none" stroke="#00d4a4" stroke-width="1.5" stroke-dasharray="5,3"/>
+  <circle cx="78" cy="90" r="20" fill="#00d4a420"/>
+  <text x="78" y="95" text-anchor="middle" fill="#00d4a4" font-weight="600">Mg</text>
+  <text x="78" y="140" text-anchor="middle" fill="#7a7f96" font-size="11">2,8 electrons</text>
+  <text x="78" y="153" text-anchor="middle" fill="#7a7f96" font-size="11">(lost outer 2)</text>
+  <text x="78" y="57" text-anchor="middle" fill="#00d4a4" font-size="12">Mg²⁺</text>
+
+  <!-- Arrow -->
+  <text x="135" y="96" text-anchor="middle" fill="#7a7f96" font-size="20">→</text>
+
+  <!-- O atom with 8 outer electrons -->
+  <circle cx="240" cy="90" r="48" fill="none" stroke="#ffb347" stroke-width="1.5"/>
+  <circle cx="240" cy="90" r="28" fill="#ffb34720"/>
+  <text x="240" y="95" text-anchor="middle" fill="#ffb347" font-weight="600">O</text>
+
+  <!-- 6 crosses (O own electrons) + 2 dots (from Mg) -->
+  <text x="228" y="46" fill="#ffb347" font-size="12">×</text>
+  <text x="244" y="46" fill="#ffb347" font-size="12">×</text>
+  <text x="287" y="82" fill="#ffb347" font-size="12">×</text>
+  <text x="287" y="98" fill="#ffb347" font-size="12">×</text>
+  <text x="228" y="138" fill="#ffb347" font-size="12">×</text>
+  <text x="244" y="138" fill="#ffb347" font-size="12">×</text>
+  <!-- 2 dots from Mg on left side -->
+  <text x="190" y="84" fill="#00d4a4" font-size="13" font-weight="700">•</text>
+  <text x="190" y="100" fill="#00d4a4" font-size="13" font-weight="700">•</text>
+
+  <text x="296" y="60" fill="#ffb347" font-size="12">O²⁻</text>
+  <text x="30" y="170" fill="#00d4a4" font-size="11">• = Mg electron</text>
+  <text x="180" y="170" fill="#ffb347" font-size="11">× = O electron</text>
+</svg>`
+  },
+  H2O:{
+    label:'H₂O — Water',
+    type:'covalent',
+    typeName:'Covalent molecule',
+    typeColor:'var(--s2)',
+    desc:'Oxygen has 6 outer electrons (needs 2 more). Each Hydrogen has 1 outer electron (needs 1 more). O <b>shares</b> one pair of electrons with each H. This creates two single covalent bonds. O also has two lone pairs (not involved in bonding). The shared pairs are shown where the circles overlap.',
+    svg:`<svg viewBox="0 0 300 200" xmlns="http://www.w3.org/2000/svg" font-family="DM Sans,sans-serif" font-size="12">
+  <!-- H left -->
+  <circle cx="60" cy="140" r="30" fill="none" stroke="#60a5fa" stroke-width="1.5"/>
+  <circle cx="60" cy="140" r="16" fill="#60a5fa15"/>
+  <text x="60" y="145" text-anchor="middle" fill="#60a5fa" font-weight="600">H</text>
+
+  <!-- H right -->
+  <circle cx="240" cy="140" r="30" fill="none" stroke="#60a5fa" stroke-width="1.5"/>
+  <circle cx="240" cy="140" r="16" fill="#60a5fa15"/>
+  <text x="240" y="145" text-anchor="middle" fill="#60a5fa" font-weight="600">H</text>
+
+  <!-- O centre -->
+  <circle cx="150" cy="90" r="44" fill="none" stroke="#a78bfa" stroke-width="1.5"/>
+  <circle cx="150" cy="90" r="26" fill="#a78bfa15"/>
+  <text x="150" y="96" text-anchor="middle" fill="#a78bfa" font-weight="600">O</text>
+
+  <!-- Shared pair left bond: 1 dot (H) + 1 cross (O) shown in overlap region -->
+  <text x="98" y="122" fill="#60a5fa" font-size="13" font-weight="700">•</text>
+  <text x="106" y="122" fill="#a78bfa" font-size="12">×</text>
+
+  <!-- Shared pair right bond -->
+  <text x="186" y="122" fill="#a78bfa" font-size="12">×</text>
+  <text x="194" y="122" fill="#60a5fa" font-size="13" font-weight="700">•</text>
+
+  <!-- O lone pairs (top) -->
+  <text x="128" y="50" fill="#a78bfa" font-size="12">× ×</text>
+  <text x="157" y="50" fill="#a78bfa" font-size="12">× ×</text>
+  <text x="118" y="42" text-anchor="middle" fill="#7a7f96" font-size="10">lone pair</text>
+  <text x="168" y="42" text-anchor="middle" fill="#7a7f96" font-size="10">lone pair</text>
+
+  <!-- O right lone pair -->
+  <text x="192" y="84" fill="#a78bfa" font-size="12">×</text>
+  <text x="192" y="97" fill="#a78bfa" font-size="12">×</text>
+
+  <!-- O left lone pair -->
+  <text x="108" y="84" fill="#a78bfa" font-size="12">×</text>
+  <text x="108" y="97" fill="#a78bfa" font-size="12">×</text>
+
+  <!-- key -->
+  <text x="10" y="192" fill="#60a5fa" font-size="11">• = H electron</text>
+  <text x="160" y="192" fill="#a78bfa" font-size="11">× = O electron</text>
+</svg>`
+  },
+  NH3:{
+    label:'NH₃ — Ammonia',
+    type:'covalent',
+    typeName:'Covalent molecule',
+    typeColor:'var(--s2)',
+    desc:'Nitrogen has 5 outer electrons (needs 3 more to fill its shell). Each Hydrogen has 1 outer electron (needs 1 more). N <b>shares</b> one pair with each of the three H atoms — three single covalent bonds. N keeps one lone pair (not used in bonding). The shared pairs are shown in the overlapping regions.',
+    svg:`<svg viewBox="0 0 320 210" xmlns="http://www.w3.org/2000/svg" font-family="DM Sans,sans-serif" font-size="12">
+  <!-- N centre -->
+  <circle cx="160" cy="88" r="44" fill="none" stroke="#a78bfa" stroke-width="1.5"/>
+  <circle cx="160" cy="88" r="26" fill="#a78bfa15"/>
+  <text x="160" y="94" text-anchor="middle" fill="#a78bfa" font-weight="600">N</text>
+
+  <!-- H left -->
+  <circle cx="55" cy="158" r="28" fill="none" stroke="#60a5fa" stroke-width="1.5"/>
+  <circle cx="55" cy="158" r="14" fill="#60a5fa15"/>
+  <text x="55" y="163" text-anchor="middle" fill="#60a5fa" font-weight="600">H</text>
+
+  <!-- H centre-bottom -->
+  <circle cx="160" cy="178" r="28" fill="none" stroke="#60a5fa" stroke-width="1.5"/>
+  <circle cx="160" cy="178" r="14" fill="#60a5fa15"/>
+  <text x="160" y="183" text-anchor="middle" fill="#60a5fa" font-weight="600">H</text>
+
+  <!-- H right -->
+  <circle cx="265" cy="158" r="28" fill="none" stroke="#60a5fa" stroke-width="1.5"/>
+  <circle cx="265" cy="158" r="14" fill="#60a5fa15"/>
+  <text x="265" y="163" text-anchor="middle" fill="#60a5fa" font-weight="600">H</text>
+
+  <!-- Shared pair: N-H left -->
+  <text x="96" y="128" fill="#a78bfa" font-size="12">×</text>
+  <text x="104" y="128" fill="#60a5fa" font-size="13" font-weight="700">•</text>
+
+  <!-- Shared pair: N-H centre -->
+  <text x="152" y="132" fill="#a78bfa" font-size="12">×</text>
+  <text x="162" y="132" fill="#60a5fa" font-size="13" font-weight="700">•</text>
+
+  <!-- Shared pair: N-H right -->
+  <text x="212" y="128" fill="#60a5fa" font-size="13" font-weight="700">•</text>
+  <text x="220" y="128" fill="#a78bfa" font-size="12">×</text>
+
+  <!-- N lone pair at top -->
+  <text x="144" y="46" fill="#a78bfa" font-size="12">× ×</text>
+  <text x="152" y="36" text-anchor="middle" fill="#7a7f96" font-size="10">lone pair</text>
+
+  <!-- N remaining electrons left side -->
+  <text x="117" y="78" fill="#a78bfa" font-size="12">×</text>
+  <text x="117" y="92" fill="#a78bfa" font-size="12">×</text>
+
+  <!-- key -->
+  <text x="10" y="204" fill="#60a5fa" font-size="11">• = H electron</text>
+  <text x="170" y="204" fill="#a78bfa" font-size="11">× = N electron</text>
+</svg>`
+  }
+};
+
+function showMol(name, btn){
+  document.querySelectorAll('.mol-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  const d = molData[name];
+  document.getElementById('molDisplay').innerHTML = `
+    <div class="mol-wrap">
+      ${d.svg}
+      <div>
+        <span class="mol-type-badge" style="background:${d.typeColor}20;color:${d.typeColor};border:1px solid ${d.typeColor}">${d.typeName}</span>
+      </div>
+      <div class="mol-desc">${d.desc}</div>
+    </div>`;
+}
+showMol('NaCl', document.querySelector('.mol-btn'));
+
+// ─────────────── STATION 3: SUBSTANCES ───────────────
+const substances = [
+  {id:'A',name:'Substance A',mp:'801°C',solid:'No',liquid:'Yes',ans:'ionic',label:'Ionic',why:'High melting point. Does NOT conduct when solid (ions locked in lattice). DOES conduct when liquid (ions free to move). This is sodium chloride (NaCl).'},
+  {id:'B',name:'Substance B',mp:'−78°C',solid:'No',liquid:'No',ans:'covalent',label:'Simple covalent',why:'Very low melting point — the intermolecular forces between molecules are weak. Never conducts electricity — no ions, no free electrons. This is carbon dioxide (CO₂).'},
+  {id:'C',name:'Substance C',mp:'3550°C',solid:'No',liquid:'No',ans:'giant',label:'Giant covalent',why:'Extremely high melting point — millions of strong covalent bonds must all be broken. Never conducts — all electrons locked in bonds (no free electrons). This is diamond.'},
+  {id:'D',name:'Substance D',mp:'650°C',solid:'No',liquid:'Yes',ans:'ionic',label:'Ionic',why:'High melting point. Does not conduct when solid. Does conduct when liquid (ions free to move). This is magnesium chloride (MgCl₂).'},
+  {id:'E',name:'Substance E',mp:'−33°C',solid:'No',liquid:'No',ans:'covalent',label:'Simple covalent',why:'Very low melting point — weak intermolecular forces. Never conducts electricity. This is ammonia (NH₃).'},
+  {id:'F',name:'Substance F',mp:'3652°C',solid:'Yes',liquid:'Yes',ans:'giant',label:'Giant covalent',why:'Extremely high melting point — giant covalent. Conducts in BOTH states — this is the key difference from diamond. In graphite, one electron per carbon atom is delocalised (free to move). This is graphite.'},
+];
+const substTypes = [
+  {key:'ionic',label:'Ionic',cls:'sel-ionic'},
+  {key:'covalent',label:'Simple covalent',cls:'sel-covalent'},
+  {key:'giant',label:'Giant covalent',cls:'sel-giant'},
+];
+let substAnswers = {};
+
+function initSubst(){
+  const tbody = document.getElementById('substBody');
+  tbody.innerHTML = '';
+  substances.forEach(s=>{
+    const tr = document.createElement('tr');
+    const btns = substTypes.map(t=>`<button class="clf-btn" data-sid="${s.id}" data-type="${t.key}" onclick="selSubst('${s.id}','${t.key}',this)">${t.label}</button>`).join('');
+    tr.innerHTML = `<td style="font-weight:500;white-space:nowrap">${s.name}</td><td style="white-space:nowrap">${s.mp}</td><td>${s.solid}</td><td>${s.liquid}</td><td>${btns}</td>`;
+    tbody.appendChild(tr);
+  });
+}
+function selSubst(id,type,btn){
+  document.querySelectorAll(`.clf-btn[data-sid="${id}"]`).forEach(b=>{ b.classList.remove('sel-ionic','sel-covalent','sel-giant'); });
+  const cls = substTypes.find(t=>t.key===type).cls;
+  btn.classList.add(cls);
+  substAnswers[id] = type;
+}
+function checkSubst(){
+  // remove old feedback rows
+  document.querySelectorAll('.fb-row').forEach(r=>r.remove());
+  let correct=0, total=Object.keys(substAnswers).length;
+  if(!total){ document.getElementById('substScore').textContent='Select a classification for each substance first!'; return; }
+  substances.forEach(s=>{
+    const given = substAnswers[s.id];
+    if(!given) return;
+    const right = given===s.ans;
+    if(right) correct++;
+    const parentRow = document.querySelector(`.clf-btn[data-sid="${s.id}"]`).closest('tr');
+    const fbRow = document.createElement('tr');
+    fbRow.className = 'fb-row';
+    fbRow.innerHTML = `<td colspan="5" style="color:${right?'var(--s1)':'var(--s4)'}"><b>${right?'✓ Correct':'✗ Incorrect'} — ${s.label}:</b> ${s.why}</td>`;
+    parentRow.after(fbRow);
+  });
+  document.getElementById('substScore').textContent = correct+'/'+total+' correct';
+}
+initSubst();
+
+// ─────────────── STATION 4: FORMULA BUILDER ───────────────
+const ions = [
+  {name:'Sodium',f:'Na',c:'+1'},{name:'Potassium',f:'K',c:'+1'},{name:'Calcium',f:'Ca',c:'+2'},
+  {name:'Magnesium',f:'Mg',c:'+2'},{name:'Iron(II)',f:'Fe',c:'+2'},{name:'Iron(III)',f:'Fe',c:'+3'},
+  {name:'Copper(II)',f:'Cu',c:'+2'},{name:'Lead(II)',f:'Pb',c:'+2'},{name:'Zinc',f:'Zn',c:'+2'},
+  {name:'Silver',f:'Ag',c:'+1'},{name:'Ammonium',f:'NH₄',c:'+1'},
+  {name:'Chloride',f:'Cl',c:'−1'},{name:'Oxide',f:'O',c:'−2'},
+  {name:'Hydroxide',f:'OH',c:'−1'},{name:'Nitrate',f:'NO₃',c:'−1'},
+  {name:'Sulfate',f:'SO₄',c:'−2'},{name:'Carbonate',f:'CO₃',c:'−2'},
+];
+const challenges = [
+  {name:'Calcium chloride',ans:'CaCl2',altAns:['cacl2'],worked:'Ca²⁺ and Cl⁻. Cross the charges: Ca gets 1 (from Cl charge), Cl gets 2 (from Ca charge). → CaCl₂'},
+  {name:'Iron(III) oxide',ans:'Fe2O3',altAns:['fe2o3'],worked:'Fe³⁺ and O²⁻. Cross the charges: Fe gets 2 (from O), O gets 3 (from Fe). → Fe₂O₃'},
+  {name:'Ammonium sulfate',ans:'(NH4)2SO4',altAns:['(nh4)2so4','nh42so4'],worked:'NH₄⁺ and SO₄²⁻. Cross: NH₄ gets 2, SO₄ gets 1. Bracket the polyatomic ion: (NH₄)₂SO₄'},
+  {name:'Lead(II) nitrate',ans:'Pb(NO3)2',altAns:['pb(no3)2','pbno32'],worked:'Pb²⁺ and NO₃⁻. Cross: Pb gets 1, NO₃ gets 2. Bracket: Pb(NO₃)₂'},
+  {name:'Copper(II) carbonate',ans:'CuCO3',altAns:['cuco3'],worked:'Cu²⁺ and CO₃²⁻. Both charges are 2 — they cancel to a 1:1 ratio. → CuCO₃'},
+];
+
+function initIons(){
+  document.getElementById('ionGrid').innerHTML = ions.map(ion=>{
+    const pos = ion.c.startsWith('+');
+    return `<div class="ion-card"><div class="iname">${ion.name}</div><div class="iform">${ion.f}</div><div class="icharge ${pos?'pos':'neg'}">${ion.c}</div></div>`;
+  }).join('');
+}
+function initChallenges(){
+  document.getElementById('fchallenges').innerHTML = challenges.map((c,i)=>`
+    <div class="frow">
+      <div class="fname">${i+1}. ${c.name}</div>
+      <div class="finputs">
+        <input class="finput" id="fi${i}" placeholder="Type formula" oninput="clearF(${i})">
+        <button class="fcheck" onclick="checkF(${i})">Check</button>
+        <div id="fhint${i}" class="fhint"></div>
+        <span class="fshow" id="fshow${i}" onclick="showWorked(${i})" style="display:none">Show working</span>
+      </div>
+    </div>`).join('');
+}
+function clearF(i){ document.getElementById('fi'+i).classList.remove('ok','wrong'); document.getElementById('fhint'+i).textContent=''; }
+function checkF(i){
+  const val = document.getElementById('fi'+i).value.trim().replace(/\s/g,'');
+  const c = challenges[i];
+  const correct = val===c.ans || c.altAns.includes(val.toLowerCase());
+  const inp = document.getElementById('fi'+i);
+  inp.classList.toggle('ok',correct); inp.classList.toggle('wrong',!correct);
+  const hint = document.getElementById('fhint'+i);
+  if(correct){ hint.style.color='var(--s1)'; hint.textContent='✓ Correct!'; document.getElementById('fshow'+i).style.display='none'; }
+  else { hint.style.color='var(--s4)'; hint.textContent='Not quite — check the ion charges and try crossing the charges again.'; document.getElementById('fshow'+i).style.display='inline'; }
+}
+function showWorked(i){
+  const hint = document.getElementById('fhint'+i);
+  hint.style.color='var(--muted)'; hint.textContent=challenges[i].worked;
+}
+initIons(); initChallenges();
+
+// ─────────────── STATION 5: FEYNMAN ───────────────
+const prompts = [
+  'Explain why salt dissolves in water and then conducts electricity, to someone who has never studied chemistry.',
+  'Explain the difference between ionic and covalent bonding using only food, sport, or everyday objects as your analogy.',
+  'Explain why diamond is extremely hard and CO₂ is a gas at room temperature, even though both substances only contain covalent bonds.',
+  'Explain why solid salt cannot conduct electricity, but it can when it is melted or dissolved — without using any science words.',
+];
+
+function initPrompts(){
+  document.getElementById('promptGrid').innerHTML = prompts.map((p,i)=>`
+    <div class="prompt-card" onclick="selPrompt(this)">
+      <div class="plabel">Prompt ${i+1}</div>
+      <p>${p}</p>
+    </div>`).join('');
+}
+function selPrompt(el){ document.querySelectorAll('.prompt-card').forEach(c=>c.classList.remove('selected')); el.classList.add('selected'); }
+
+let voteData = [];
+function addAnalogy(){
+  const val = document.getElementById('analogyInput').value.trim();
+  if(!val) return;
+  voteData.push({text:val,votes:0});
+  document.getElementById('analogyInput').value='';
+  renderWall();
+}
+function vote(idx){
+  voteData[idx].votes++;
+  renderWall();
+}
+function renderWall(){
+  const wall = document.getElementById('analogyWall');
+  if(!voteData.length){ wall.innerHTML='<span class="awall-empty">No analogies yet — be the first!</span>'; return; }
+  // sort by votes desc
+  const sorted = voteData.map((d,i)=>({...d,orig:i})).sort((a,b)=>b.votes-a.votes);
+  wall.innerHTML = sorted.map(d=>`
+    <div class="sticky">
+      ${d.text}
+      <br><span class="vote-btn" onclick="vote(${d.orig})">★ Vote</span>
+      ${d.votes>0?`<span class="vote-count">${d.votes}</span>`:''}
+    </div>`).join('');
+}
+renderWall();
+initPrompts();
+
+// init
+renderDots();
+</script>
+</body>
+</html>
