@@ -1,0 +1,1757 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>4C.6 Conservation: Why and How? | IAL Biology Y12</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;0,9..144,700;1,9..144,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #FAF7F2;
+    --bg-warm: #F3EDE3;
+    --card: #FFFFFF;
+    --green-dark: #2D5016;
+    --green-mid: #4A7C2F;
+    --green-light: #7AAD52;
+    --green-pale: #E0EBD0;
+    --green-ultra: #F0F5E8;
+    --text: #2C2C2C;
+    --text-mid: #4A4A4A;
+    --text-light: #7A7A7A;
+    --amber: #C17D2A;
+    --amber-pale: #FDF3E3;
+    --red-pale: #FDECEA;
+    --red: #C0392B;
+    --border: #D8D0C4;
+    --border-green: #B0C898;
+    --blue: #2A6B9B;
+    --blue-pale: #EDF4FA;
+    --purple: #7B3FA0;
+    --purple-pale: #F5EEF8;
+    --teal: #0E7490;
+    --teal-pale: #E6F4F7;
+    --shadow: 0 2px 12px rgba(45,80,22,0.08);
+    --shadow-hover: 0 6px 24px rgba(45,80,22,0.15);
+    --radius: 10px;
+    --nav-h: 64px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Lato', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; padding-top: var(--nav-h); }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; height: var(--nav-h);
+    background: rgba(250,247,242,0.97); backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--border); z-index: 100;
+    display: flex; align-items: center; padding: 0 18px; gap: 0;
+  }
+  .nav-brand { font-family:'Fraunces',serif; font-size:13px; font-weight:600; color:var(--green-dark); white-space:nowrap; margin-right:14px; padding-right:14px; border-right:1px solid var(--border); }
+  .nav-brand span { display:block; font-family:'Lato',sans-serif; font-weight:300; font-size:10px; color:var(--text-light); letter-spacing:0.05em; text-transform:uppercase; }
+  .nav-stations { display:flex; gap:2px; flex:1; overflow-x:auto; scrollbar-width:none; }
+  .nav-stations::-webkit-scrollbar { display:none; }
+  .nav-btn { display:flex; flex-direction:column; align-items:center; gap:1px; padding:5px 8px; border:none; background:transparent; cursor:pointer; border-radius:6px; transition:all 0.2s; white-space:nowrap; position:relative; }
+  .nav-btn:hover { background:var(--green-ultra); }
+  .nav-btn .nl { font-size:10px; font-weight:700; letter-spacing:0.06em; text-transform:uppercase; color:var(--text-light); transition:color 0.2s; }
+  .nav-btn .nt { font-size:10px; color:var(--text-light); transition:color 0.2s; }
+  .nav-btn.active .nl, .nav-btn.active .nt { color:var(--green-dark); }
+  .nav-btn::after { content:''; position:absolute; bottom:0; left:8px; right:8px; height:2px; background:var(--green-mid); border-radius:2px; transform:scaleX(0); transition:transform 0.2s; }
+  .nav-btn.active::after { transform:scaleX(1); }
+  .nav-progress { margin-left:auto; display:flex; align-items:center; padding-left:12px; border-left:1px solid var(--border); }
+  .progress-dots { display:flex; gap:4px; }
+  .progress-dot { width:7px; height:7px; border-radius:50%; background:var(--border); transition:background 0.3s; }
+  .progress-dot.done { background:var(--green-mid); }
+  .progress-dot.active { background:var(--green-dark); }
+
+  /* SECTIONS */
+  section { display:none; max-width:880px; margin:0 auto; padding:44px 24px 80px; animation:fadeUp 0.35s ease both; }
+  section.active { display:block; }
+  @keyframes fadeUp { from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);} }
+
+  /* TYPE */
+  h1 { font-family:'Fraunces',serif; font-size:40px; font-weight:700; color:var(--green-dark); line-height:1.1; margin-bottom:8px; }
+  h2 { font-family:'Fraunces',serif; font-size:24px; font-weight:600; color:var(--green-dark); margin-bottom:14px; }
+  h3 { font-family:'Fraunces',serif; font-size:17px; font-weight:600; color:var(--green-dark); margin-bottom:8px; }
+  p { line-height:1.78; color:var(--text-mid); margin-bottom:12px; }
+  strong { color: var(--text); }
+  .meta { font-size:12px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--green-mid); margin-bottom:6px; }
+  .subtitle { font-size:15px; color:var(--text-light); margin-bottom:28px; font-weight:300; }
+  .divider { height:1px; background:var(--border); margin:28px 0; }
+
+  /* TIME BADGE */
+  .time-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: var(--bg-warm); border: 1px solid var(--border);
+    border-radius: 20px; padding: 4px 12px;
+    font-size: 12px; font-weight: 700; color: var(--text-light);
+    margin-bottom: 20px;
+  }
+  .time-badge::before { content: '⏱'; font-size: 13px; }
+
+  /* PART HEADER */
+  .part-header { display:flex; align-items:center; gap:14px; margin-bottom:28px; padding-bottom:20px; border-bottom:1px solid var(--border); }
+  .part-icon { width:48px; height:48px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:20px; flex-shrink:0; color:white; }
+  .pi-learn { background: var(--blue); }
+  .pi-vtr { background: var(--teal); }
+  .pi-apply { background: var(--purple); }
+  .pi-check { background: var(--amber); }
+  .pi-exam { background: var(--amber); }
+  .part-header-text h2 { margin-bottom:2px; }
+  .part-header-text p { margin-bottom:0; font-size:13px; color:var(--text-light); }
+
+  /* CARDS */
+  .card { background:var(--card); border:1px solid var(--border); border-radius:var(--radius); padding:22px; margin-bottom:18px; box-shadow:var(--shadow); }
+  .card-green { background:var(--green-ultra); border:1px solid var(--border-green); border-left:4px solid var(--green-mid); border-radius:var(--radius); padding:18px 22px; margin-bottom:18px; }
+  .card-amber { background:var(--amber-pale); border:1px solid #E8C88A; border-left:4px solid var(--amber); border-radius:var(--radius); padding:18px 22px; margin-bottom:18px; }
+  .card-blue { background:var(--blue-pale); border:1px solid #A8CCEA; border-left:4px solid var(--blue); border-radius:var(--radius); padding:18px 22px; margin-bottom:18px; }
+  .card-purple { background:var(--purple-pale); border:1px solid #C9A8E0; border-left:4px solid var(--purple); border-radius:var(--radius); padding:18px 22px; margin-bottom:18px; }
+  .card-teal { background:var(--teal-pale); border:1px solid #9DD4E2; border-left:4px solid var(--teal); border-radius:var(--radius); padding:18px 22px; margin-bottom:18px; }
+
+  /* OBJECTIVES */
+  .objectives-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:28px; }
+  .objective-item { background:var(--green-ultra); border:1px solid var(--border-green); border-radius:8px; padding:14px 16px; font-size:14px; color:var(--text-mid); display:flex; gap:10px; align-items:flex-start; }
+  .objective-item::before { content:'◆'; color:var(--green-mid); font-size:10px; margin-top:4px; flex-shrink:0; }
+
+  /* BUTTONS */
+  .btn { display:inline-flex; align-items:center; gap:8px; padding:10px 20px; border-radius:6px; font-family:'Lato',sans-serif; font-size:13px; font-weight:700; letter-spacing:0.04em; cursor:pointer; transition:all 0.2s; border:none; }
+  .btn-primary { background:var(--green-dark); color:white; }
+  .btn-primary:hover { background:var(--green-mid); transform:translateY(-1px); box-shadow:var(--shadow-hover); }
+  .btn-outline { background:transparent; color:var(--green-dark); border:1.5px solid var(--green-dark); }
+  .btn-outline:hover { background:var(--green-ultra); }
+  .btn-reveal { background:var(--bg-warm); color:var(--text-mid); border:1px solid var(--border); font-size:12px; padding:8px 16px; border-radius:6px; cursor:pointer; transition:all 0.2s; font-family:'Lato',sans-serif; font-weight:700; }
+  .btn-reveal:hover { background:var(--green-pale); border-color:var(--border-green); }
+  .reveal-box { display:none; background:var(--green-ultra); border:1px solid var(--border-green); border-radius:6px; padding:14px 16px; margin-top:10px; font-size:14px; color:var(--text-mid); line-height:1.75; animation:fadeUp 0.3s ease; }
+  .reveal-box.show { display:block; }
+
+  textarea { width:100%; min-height:80px; border:1px solid var(--border); border-radius:6px; padding:10px 13px; font-family:'Lato',sans-serif; font-size:14px; color:var(--text); background:var(--bg); resize:vertical; transition:border-color 0.2s; line-height:1.6; }
+  textarea:focus { outline:none; border-color:var(--green-mid); background:#FDFFFE; }
+
+  /* LEARN CONTENT */
+  .learn-block { background:white; border:1px solid var(--border); border-radius:var(--radius); padding:22px; margin-bottom:16px; }
+  .learn-block h3 { font-size:16px; border-bottom:2px solid var(--green-pale); padding-bottom:8px; margin-bottom:12px; }
+  .key-term { display:inline-block; background:var(--green-pale); color:var(--green-dark); font-weight:700; padding:1px 8px; border-radius:4px; font-size:14px; }
+  .definition-box { background:var(--green-ultra); border:1px solid var(--border-green); border-radius:8px; padding:14px 16px; margin:10px 0; }
+  .definition-box .def-term { font-weight:700; color:var(--green-dark); font-size:14px; margin-bottom:4px; }
+  .definition-box .def-body { font-size:13px; color:var(--text-mid); line-height:1.6; margin-bottom:0; }
+
+  /* EXPERT READING PROMPT */
+  .expert-reading {
+    background: var(--blue-pale);
+    border: 1px solid #A8CCEA;
+    border-left: 4px solid var(--blue);
+    border-radius: 8px;
+    padding: 14px 18px;
+    margin-bottom: 16px;
+  }
+  .expert-reading .er-label {
+    font-size: 11px; font-weight: 700;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--blue); margin-bottom: 6px;
+  }
+  .expert-reading p { font-size: 13px; margin-bottom: 0; line-height: 1.6; }
+
+  /* VTR BANNER */
+  .vtr-banner {
+    background: linear-gradient(135deg, var(--teal), #0A5F7A);
+    color: white;
+    border-radius: var(--radius);
+    padding: 22px 26px;
+    margin-bottom: 24px;
+    display: flex; align-items: center; gap: 16px;
+  }
+  .vtr-banner .v-icon {
+    width: 56px; height: 56px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 28px; flex-shrink: 0;
+  }
+  .vtr-banner h3 { color: white; margin-bottom: 4px; font-size: 21px; }
+  .vtr-banner p { color: rgba(255,255,255,0.92); margin-bottom: 0; font-size: 14px; }
+  .vtr-banner .vtr-attr { font-size: 11px; opacity: 0.8; letter-spacing: 0.06em; text-transform: uppercase; margin-top: 6px; }
+
+  /* VTR STEPS */
+  .vtr-step {
+    background: white;
+    border: 1px solid var(--border);
+    border-top: 3px solid var(--teal);
+    border-radius: var(--radius);
+    padding: 20px;
+    margin-bottom: 16px;
+  }
+  .vtr-step-label {
+    display: inline-block;
+    font-size: 11px; font-weight: 700;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    color: white; background: var(--teal);
+    padding: 4px 14px; border-radius: 14px;
+    margin-bottom: 10px;
+  }
+  .vtr-step h4 {
+    font-family: 'Fraunces', serif;
+    font-size: 18px; color: var(--teal);
+    margin-bottom: 6px;
+  }
+  .vtr-step .vtr-prompt {
+    font-size: 13px; color: var(--text-light);
+    font-style: italic; margin-bottom: 12px;
+  }
+
+  /* IMAGE PLACEHOLDER FOR SEE-THINK-WONDER */
+  .vtr-image {
+    background: #1a1a1a;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 20px;
+    position: relative;
+  }
+  .vtr-image-caption {
+    background: rgba(0,0,0,0.9); color: white;
+    padding: 10px 16px; font-size: 12px; font-style: italic;
+    border-top: 2px solid var(--teal);
+  }
+
+  /* POPULATION GRAPH */
+  .pop-graph-wrap { padding: 24px; background: white; }
+  svg.pop-graph { width: 100%; height: 260px; display: block; }
+
+  /* CITY ILLUSTRATION */
+  .city-illustration { padding: 0; background: #5B8BB5; }
+  svg.city-svg { width: 100%; height: 220px; display: block; }
+
+  /* FRAYER MODEL */
+  .frayer-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 0;
+    border: 2px solid var(--green-dark);
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin: 20px 0;
+  }
+  .frayer-cell {
+    background: white;
+    padding: 16px 18px;
+    border-right: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    position: relative;
+  }
+  .frayer-cell:nth-child(2n) { border-right: none; }
+  .frayer-cell:nth-child(n+3) { border-bottom: none; }
+  .frayer-cell .frayer-label {
+    font-size: 11px; font-weight: 700;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--green-dark);
+    margin-bottom: 8px;
+    padding-bottom: 6px;
+    border-bottom: 2px solid var(--green-pale);
+  }
+  .frayer-cell textarea { min-height: 90px; }
+  .frayer-center {
+    background: var(--green-dark); color: white;
+    display: flex; align-items: center; justify-content: center;
+    flex-direction: column;
+    padding: 16px;
+    font-family: 'Fraunces', serif;
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 10;
+    width: 140px; height: 140px;
+    border-radius: 50%;
+    border: 4px solid white;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    text-align: center;
+  }
+  .frayer-center .term {
+    font-size: 18px; font-weight: 700; margin-bottom: 2px;
+  }
+  .frayer-center .subterm {
+    font-size: 11px; opacity: 0.85; font-family: 'Lato', sans-serif;
+    letter-spacing: 0.05em;
+  }
+  .frayer-wrapper { position: relative; margin: 28px 0; }
+
+  /* T-CHART */
+  .tchart {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin: 16px 0;
+  }
+  .tchart-head {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    background: var(--green-dark);
+    color: white;
+  }
+  .tchart-head div {
+    padding: 12px 18px;
+    font-weight: 700; font-size: 13px;
+    text-align: center;
+    letter-spacing: 0.04em;
+  }
+  .tchart-head div:first-child { border-right: 1px solid rgba(255,255,255,0.3); }
+  .tchart-body {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+  .tchart-body > div {
+    padding: 18px;
+    border-right: 1px solid var(--border);
+  }
+  .tchart-body > div:last-child { border-right: none; }
+  .tchart-body ul { list-style: none; padding: 0; }
+  .tchart-body li {
+    font-size: 13px; line-height: 1.6;
+    color: var(--text-mid);
+    padding-left: 18px; position: relative;
+    margin-bottom: 8px;
+  }
+  .tchart-body li::before {
+    content: '◆';
+    position: absolute; left: 0;
+    color: var(--green-mid); font-size: 10px;
+  }
+
+  /* CLAIM-SUPPORT-QUESTION */
+  .csq-row {
+    display: grid; grid-template-columns: 1fr;
+    gap: 14px; margin-bottom: 16px;
+  }
+  .csq-card {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+  .csq-card-head {
+    padding: 12px 18px;
+    font-size: 12px; font-weight: 700;
+    letter-spacing: 0.08em; text-transform: uppercase;
+  }
+  .csq-card-head.claim { background: var(--green-ultra); color: var(--green-dark); border-bottom: 1px solid var(--border-green); }
+  .csq-card-head.support { background: var(--blue-pale); color: var(--blue); border-bottom: 1px solid #A8CCEA; }
+  .csq-card-head.question { background: var(--purple-pale); color: var(--purple); border-bottom: 1px solid #C9A8E0; }
+  .csq-card-body { padding: 16px 18px; }
+  .csq-card-body .csq-prompt {
+    font-size: 13px; color: var(--text-light);
+    font-style: italic; margin-bottom: 10px;
+    line-height: 1.5;
+  }
+
+  /* CONNECT-EXTEND-CHALLENGE */
+  .cec-grid {
+    display: grid; grid-template-columns: 1fr;
+    gap: 16px; margin: 16px 0;
+  }
+  .cec-box {
+    background: white;
+    border: 1px solid var(--border);
+    border-left: 4px solid;
+    border-radius: var(--radius);
+    padding: 18px 22px;
+  }
+  .cec-connect { border-left-color: var(--green-mid); }
+  .cec-extend { border-left-color: var(--blue); }
+  .cec-challenge { border-left-color: var(--purple); }
+  .cec-box h4 {
+    font-family: 'Fraunces', serif;
+    font-size: 17px;
+    margin-bottom: 4px;
+  }
+  .cec-connect h4 { color: var(--green-dark); }
+  .cec-extend h4 { color: var(--blue); }
+  .cec-challenge h4 { color: var(--purple); }
+  .cec-box .cec-prompt {
+    font-size: 13px; color: var(--text-mid);
+    margin-bottom: 12px; line-height: 1.65;
+  }
+
+  /* SENTENCE STEMS */
+  .stem-box {
+    background: var(--amber-pale);
+    border: 1px solid #E8C88A;
+    border-radius: 8px;
+    padding: 14px 16px;
+    margin: 12px 0;
+  }
+  .stem-box .stem-label {
+    font-size: 11px; font-weight: 700;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--amber); margin-bottom: 8px;
+  }
+  .stem-box ul { list-style: none; padding: 0; }
+  .stem-box li {
+    font-size: 13px; color: var(--text-mid);
+    padding-left: 20px; position: relative;
+    margin-bottom: 6px;
+    font-style: italic;
+    line-height: 1.6;
+  }
+  .stem-box li::before {
+    content: '"'; position: absolute; left: 4px;
+    color: var(--amber); font-weight: 700;
+    font-family: 'Fraunces', serif; font-size: 16px;
+  }
+
+  /* METACOGNITIVE CHECK */
+  .meta-check {
+    background: var(--purple-pale);
+    border: 1px solid #C9A8E0;
+    border-radius: 8px;
+    padding: 14px 18px;
+    margin: 16px 0;
+  }
+  .meta-check .mc-label {
+    font-size: 11px; font-weight: 700;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--purple); margin-bottom: 8px;
+  }
+  .meta-check .mc-q { font-size: 13px; color: var(--text); margin-bottom: 10px; font-weight: 700; }
+  .meta-check .mc-options { display: flex; gap: 8px; flex-wrap: wrap; }
+  .meta-check .mc-option {
+    background: white; border: 1.5px solid var(--border);
+    border-radius: 20px; padding: 5px 14px;
+    font-size: 12px; cursor: pointer;
+    transition: all 0.2s; user-select: none;
+  }
+  .meta-check .mc-option:hover { border-color: var(--purple); background: var(--purple-pale); }
+  .meta-check .mc-option.selected { background: var(--purple); color: white; border-color: var(--purple); }
+
+  /* MCQ */
+  .mcq-options { display:flex; flex-direction:column; gap:7px; margin-bottom:12px; }
+  .mcq-option { background:white; border:1.5px solid var(--border); border-radius:6px; padding:10px 15px; font-size:14px; color:var(--text-mid); cursor:pointer; transition:all 0.2s; text-align:left; display:flex; align-items:center; gap:10px; }
+  .mcq-option::before { content:attr(data-letter); width:21px; height:21px; border-radius:50%; background:var(--bg-warm); border:1px solid var(--border); display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700; flex-shrink:0; }
+  .mcq-option:hover { border-color:var(--green-mid); background:var(--green-ultra); }
+  .mcq-option.correct { border-color:var(--green-mid); background:var(--green-ultra); color:var(--green-dark); }
+  .mcq-option.correct::before { background:var(--green-mid); border-color:var(--green-mid); color:white; }
+  .mcq-option.incorrect { border-color:var(--red); background:var(--red-pale); color:var(--red); }
+  .mcq-option.incorrect::before { background:var(--red); border-color:var(--red); color:white; }
+  .mcq-option.disabled { cursor:default; pointer-events:none; opacity:0.6; }
+  .fb { display:none; padding:9px 13px; border-radius:6px; font-size:13px; font-weight:700; margin-top:7px; }
+  .fb.correct { background:var(--green-ultra); color:var(--green-dark); border:1px solid var(--border-green); }
+  .fb.incorrect { background:var(--red-pale); color:var(--red); border:1px solid #E8BABA; }
+  .fb.show { display:block; }
+
+  /* MARK POINT */
+  .mark-point { display:flex; gap:8px; margin-bottom:6px; font-size:13px; color:var(--text-mid); }
+  .mark-point::before { content:'✓'; color:var(--green-mid); font-weight:700; flex-shrink:0; }
+
+  /* CASE STUDY */
+  .case-study {
+    background: white;
+    border: 1px solid var(--border);
+    border-top: 3px solid var(--purple);
+    border-radius: var(--radius);
+    padding: 20px;
+    margin-bottom: 16px;
+  }
+  .case-tag {
+    display: inline-block;
+    font-size: 10px; font-weight: 700;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--purple); background: var(--purple-pale);
+    padding: 3px 10px; border-radius: 10px;
+    margin-bottom: 10px;
+  }
+  .case-study h4 {
+    font-family: 'Fraunces', serif;
+    font-size: 16px; color: var(--purple);
+    margin-bottom: 8px;
+  }
+  .case-study p { font-size: 13px; margin-bottom: 0; line-height: 1.65; }
+
+  /* COMMAND WORD */
+  .command-word { background:white; border:1px solid var(--border); border-left:4px solid var(--amber); border-radius:var(--radius); padding:16px 20px; margin-bottom:12px; }
+  .command-word h4 { font-size:14px; font-weight:700; color:var(--amber); margin-bottom:4px; }
+  .command-word p { font-size:13px; margin-bottom:0; }
+
+  /* TRAFFIC LIGHT */
+  .traffic-light { display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; margin:16px 0; }
+  .tl-item { border-radius:8px; padding:14px 16px; text-align:center; }
+  .tl-green { background:#E8F5E3; border:1px solid #B0D8A0; }
+  .tl-amber { background:var(--amber-pale); border:1px solid #E8C88A; }
+  .tl-red { background:var(--red-pale); border:1px solid #E8BABA; }
+  .tl-item .tl-icon { font-size:22px; margin-bottom:6px; }
+  .tl-item .tl-label { font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:4px; }
+  .tl-item .tl-desc { font-size:12px; color:var(--text-mid); line-height:1.4; }
+
+  /* NAV FOOTER */
+  .lesson-nav { display:flex; justify-content:space-between; align-items:center; margin-top:44px; padding-top:22px; border-top:1px solid var(--border); }
+
+  @media(max-width:640px){
+    h1{font-size:28px;}
+    .objectives-grid{grid-template-columns:1fr;}
+    .frayer-grid{grid-template-columns:1fr;}
+    .frayer-cell{border-right:none;}
+    .frayer-center{display:none;}
+    .tchart-head,.tchart-body{grid-template-columns:1fr;}
+    .traffic-light{grid-template-columns:1fr;}
+    nav{padding:0 10px;}
+    .nav-brand{display:none;}
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-brand">4C.6 <span>IAL Biology · Y12</span></div>
+  <div class="nav-stations">
+    <button class="nav-btn active" onclick="goTo('cover')" id="nav-cover"><span class="nl">Brief</span><span class="nt">Start here</span></button>
+    <button class="nav-btn" onclick="goTo('p1')" id="nav-p1"><span class="nl">Part 1</span><span class="nt">See-Think-Wonder</span></button>
+    <button class="nav-btn" onclick="goTo('p2')" id="nav-p2"><span class="nl">Part 2</span><span class="nt">Human Impact</span></button>
+    <button class="nav-btn" onclick="goTo('p3')" id="nav-p3"><span class="nl">Part 3</span><span class="nt">Frayer Vocab</span></button>
+    <button class="nav-btn" onclick="goTo('p4')" id="nav-p4"><span class="nl">Part 4</span><span class="nt">Ex-situ methods</span></button>
+    <button class="nav-btn" onclick="goTo('p5')" id="nav-p5"><span class="nl">Part 5</span><span class="nt">Claim-Support</span></button>
+    <button class="nav-btn" onclick="goTo('p6')" id="nav-p6"><span class="nl">Part 6</span><span class="nt">Sustainability</span></button>
+    <button class="nav-btn" onclick="goTo('p7')" id="nav-p7"><span class="nl">Part 7</span><span class="nt">Apply writing</span></button>
+    <button class="nav-btn" onclick="goTo('progress')" id="nav-progress"><span class="nl">Check</span><span class="nt">Progress</span></button>
+    <button class="nav-btn" onclick="goTo('exam')" id="nav-exam"><span class="nl">Exam</span><span class="nt">Support</span></button>
+    <button class="nav-btn" onclick="goTo('reflect')" id="nav-reflect"><span class="nl">Close</span><span class="nt">Reflect</span></button>
+  </div>
+  <div class="nav-progress"><div class="progress-dots" id="progress-dots"></div></div>
+</nav>
+
+<!-- ═══════════════════════════════
+     COVER — BRIEFING
+═══════════════════════════════ -->
+<section id="cover" class="active">
+  <div class="meta">Biodiversity and Conservation · 4C</div>
+  <h1>Conservation:<br>Why and How?</h1>
+  <p class="subtitle">Specification reference: 4.15 · 4.21 · Self-directed lesson with thinking routines</p>
+
+  <div class="card-amber" style="margin-bottom:24px;">
+    <h3 style="color:var(--amber); margin-bottom:8px;">📋 Read this before starting</h3>
+    <p style="margin-bottom:0;">This is a self-directed lesson on a topic that invites <strong>judgement</strong>, not just recall. Throughout the lesson, you'll use three <em>Visible Thinking Routines</em> developed at Harvard's Project Zero to slow your thinking down and make it visible to yourself. The lesson will feel different from the others in 4C — lean into that. The goal is to finish with your own considered views, not just information absorbed.</p>
+  </div>
+
+  <h2 style="margin-bottom:16px;">How this lesson works</h2>
+
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:24px;">
+    <div class="card" style="margin-bottom:0;">
+      <h3 style="margin-bottom:4px;">Three Thinking Routines</h3>
+      <p style="font-size:13px; margin-bottom:0;">See-Think-Wonder (Part 1), Claim-Support-Question (Part 5), Connect-Extend-Challenge (Close). These structures make your thinking visible to you.</p>
+    </div>
+    <div class="card" style="margin-bottom:0;">
+      <h3 style="margin-bottom:4px;">Active reading with expert questions</h3>
+      <p style="font-size:13px; margin-bottom:0;">Every content section gives you an expert question to read <em>for</em>. Don't just absorb — read with intent.</p>
+    </div>
+    <div class="card" style="margin-bottom:0;">
+      <h3 style="margin-bottom:4px;">Frayer Model & T-charts</h3>
+      <p style="font-size:13px; margin-bottom:0;">Active vocabulary and comparison tools — you build the understanding, not just read it.</p>
+    </div>
+    <div class="card" style="margin-bottom:0;">
+      <h3 style="margin-bottom:4px;">Sentence stems for extended writing</h3>
+      <p style="font-size:13px; margin-bottom:0;">Scaffolded prompts to help you structure AO3-level answers. Use them when you're stuck, not as a crutch.</p>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <h2 style="margin-bottom:16px;">Timing</h2>
+
+  <div class="card" style="margin-bottom:24px;">
+    <div style="font-size:14px; color:var(--text-mid); line-height:2;">
+      <strong>Part 1 — See-Think-Wonder</strong> · 6 minutes<br>
+      <strong>Part 2 — Human Impact reading</strong> · 10 minutes<br>
+      <strong>Part 3 — Frayer Model vocabulary</strong> · 8 minutes<br>
+      <strong>Part 4 — Ex-situ methods reading</strong> · 12 minutes<br>
+      <strong>Part 5 — Claim-Support-Question</strong> · 10 minutes<br>
+      <strong>Part 6 — Sustainability reading</strong> · 8 minutes<br>
+      <strong>Part 7 — Extended writing</strong> · 15 minutes<br>
+      <strong>Progress Check</strong> · 15 minutes<br>
+      <strong>Exam Support</strong> · 10 minutes<br>
+      <strong>Close — Connect-Extend-Challenge</strong> · 6 minutes<br>
+      <strong>Total:</strong> approximately 100 minutes
+    </div>
+  </div>
+
+  <h2 style="margin-bottom:16px;">What success looks like</h2>
+  <div class="traffic-light">
+    <div class="tl-item tl-green">
+      <div class="tl-icon">🟢</div>
+      <div class="tl-label">You're there</div>
+      <div class="tl-desc">Can explain ex-situ vs in-situ with examples. Evaluate captive breeding on both sides. Discuss sustainability across named case studies.</div>
+    </div>
+    <div class="tl-item tl-amber">
+      <div class="tl-icon">🟡</div>
+      <div class="tl-label">Getting there</div>
+      <div class="tl-desc">Know the definitions but struggle to evaluate. Can list advantages/disadvantages but not weigh them.</div>
+    </div>
+    <div class="tl-item tl-red">
+      <div class="tl-icon">🔴</div>
+      <div class="tl-label">Need support</div>
+      <div class="tl-desc">Ex-situ vs in-situ still confused. Go back to Part 3 (Frayer Model) and construct each term fully before moving on.</div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <h2 style="margin-bottom:12px;">Learning objectives</h2>
+  <div class="objectives-grid">
+    <div class="objective-item">Understand that over time the variety of life has become extensive but is now threatened by human activity</div>
+    <div class="objective-item">Evaluate zoo and seed bank methods for conserving endangered species and genetic diversity</div>
+    <div class="objective-item">Assess the role of captive breeding, reintroduction, and education in conservation</div>
+    <div class="objective-item">Appreciate the importance of sustainability as a long-term conservation strategy</div>
+  </div>
+
+  <div class="lesson-nav">
+    <div></div>
+    <button class="btn btn-primary" onclick="goTo('p1')">Begin Part 1 →</button>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════
+     PART 1 — SEE THINK WONDER
+═══════════════════════════════ -->
+<section id="p1">
+  <div class="part-header">
+    <div class="part-icon pi-vtr">👁</div>
+    <div class="part-header-text">
+      <h2>Part 1 — See · Think · Wonder</h2>
+      <p>A thinking routine that trains observation before interpretation</p>
+    </div>
+  </div>
+  <div class="time-badge">Allow 6 minutes</div>
+
+  <div class="vtr-banner">
+    <div class="v-icon">👁</div>
+    <div>
+      <h3>See-Think-Wonder</h3>
+      <p>Start with what you can see. Then interpret what you think it means. Then ask what you wonder. This order matters — don't skip to interpretation.</p>
+      <div class="vtr-attr">A Visible Thinking Routine · Harvard Project Zero</div>
+    </div>
+  </div>
+
+  <div class="card-teal" style="margin-bottom:20px;">
+    <h3 style="color:var(--teal); margin-bottom:6px;">How to use this routine</h3>
+    <p style="margin-bottom:0; font-size:14px;">Most people jump from "I see this" to "I think it means..." without noticing. This routine slows you down. You observe precisely, then reason from your observations, then ask questions that push your thinking further. These three steps are the foundation of scientific analysis.</p>
+  </div>
+
+  <h3 style="margin-bottom:14px;">The first stimulus — the human population over 2,000 years</h3>
+
+  <div class="vtr-image">
+    <div class="pop-graph-wrap">
+      <svg class="pop-graph" viewBox="0 0 600 260" xmlns="http://www.w3.org/2000/svg">
+        <!-- Axes -->
+        <line x1="60" y1="220" x2="580" y2="220" stroke="#2C2C2C" stroke-width="1.5"/>
+        <line x1="60" y1="20" x2="60" y2="220" stroke="#2C2C2C" stroke-width="1.5"/>
+
+        <!-- Y axis labels -->
+        <text x="50" y="225" font-size="10" text-anchor="end" fill="#4A4A4A">0</text>
+        <text x="50" y="205" font-size="10" text-anchor="end" fill="#4A4A4A">1</text>
+        <text x="50" y="185" font-size="10" text-anchor="end" fill="#4A4A4A">2</text>
+        <text x="50" y="165" font-size="10" text-anchor="end" fill="#4A4A4A">3</text>
+        <text x="50" y="145" font-size="10" text-anchor="end" fill="#4A4A4A">4</text>
+        <text x="50" y="125" font-size="10" text-anchor="end" fill="#4A4A4A">5</text>
+        <text x="50" y="105" font-size="10" text-anchor="end" fill="#4A4A4A">6</text>
+        <text x="50" y="85" font-size="10" text-anchor="end" fill="#4A4A4A">7</text>
+        <text x="50" y="65" font-size="10" text-anchor="end" fill="#4A4A4A">8</text>
+        <text x="50" y="45" font-size="10" text-anchor="end" fill="#4A4A4A">9</text>
+        <text x="50" y="25" font-size="10" text-anchor="end" fill="#4A4A4A">10</text>
+
+        <!-- X axis labels -->
+        <text x="60" y="240" font-size="10" text-anchor="middle" fill="#4A4A4A">0</text>
+        <text x="112" y="240" font-size="10" text-anchor="middle" fill="#4A4A4A">200</text>
+        <text x="164" y="240" font-size="10" text-anchor="middle" fill="#4A4A4A">400</text>
+        <text x="216" y="240" font-size="10" text-anchor="middle" fill="#4A4A4A">600</text>
+        <text x="268" y="240" font-size="10" text-anchor="middle" fill="#4A4A4A">800</text>
+        <text x="320" y="240" font-size="10" text-anchor="middle" fill="#4A4A4A">1000</text>
+        <text x="372" y="240" font-size="10" text-anchor="middle" fill="#4A4A4A">1200</text>
+        <text x="424" y="240" font-size="10" text-anchor="middle" fill="#4A4A4A">1400</text>
+        <text x="476" y="240" font-size="10" text-anchor="middle" fill="#4A4A4A">1600</text>
+        <text x="528" y="240" font-size="10" text-anchor="middle" fill="#4A4A4A">1800</text>
+        <text x="580" y="240" font-size="10" text-anchor="middle" fill="#4A4A4A">2000</text>
+
+        <!-- Axis titles -->
+        <text x="320" y="256" font-size="11" text-anchor="middle" fill="#2C2C2C" font-weight="700">Year</text>
+        <text x="20" y="120" font-size="11" text-anchor="middle" fill="#2C2C2C" font-weight="700" transform="rotate(-90 20 120)">Population / billions</text>
+
+        <!-- Grid lines -->
+        <line x1="60" y1="205" x2="580" y2="205" stroke="#E8E8E8" stroke-width="0.5"/>
+        <line x1="60" y1="165" x2="580" y2="165" stroke="#E8E8E8" stroke-width="0.5"/>
+        <line x1="60" y1="125" x2="580" y2="125" stroke="#E8E8E8" stroke-width="0.5"/>
+        <line x1="60" y1="85" x2="580" y2="85" stroke="#E8E8E8" stroke-width="0.5"/>
+        <line x1="60" y1="45" x2="580" y2="45" stroke="#E8E8E8" stroke-width="0.5"/>
+
+        <!-- Population curve: hockey stick shape -->
+        <path d="M 60 216 Q 200 216, 320 215 Q 420 213, 470 210 Q 500 204, 520 195 Q 540 180, 555 150 Q 570 110, 580 60"
+              stroke="#2A6B9B" stroke-width="2.8" fill="none" stroke-linecap="round"/>
+        <!-- Area under curve -->
+        <path d="M 60 216 Q 200 216, 320 215 Q 420 213, 470 210 Q 500 204, 520 195 Q 540 180, 555 150 Q 570 110, 580 60 L 580 220 L 60 220 Z"
+              fill="#2A6B9B" fill-opacity="0.08"/>
+
+        <!-- Data points -->
+        <circle cx="60" cy="216" r="3" fill="#2A6B9B"/>
+        <circle cx="320" cy="215" r="3" fill="#2A6B9B"/>
+        <circle cx="476" cy="210" r="3" fill="#2A6B9B"/>
+        <circle cx="528" cy="175" r="3" fill="#2A6B9B"/>
+        <circle cx="580" cy="60" r="4" fill="#2A6B9B"/>
+      </svg>
+    </div>
+    <div class="vtr-image-caption">Fig A — World human population from year 0 to 2000. Population now exceeds 7 billion.</div>
+  </div>
+
+  <!-- SEE -->
+  <div class="vtr-step">
+    <span class="vtr-step-label">Step 1 · See</span>
+    <h4>What do you notice?</h4>
+    <p class="vtr-prompt">Write only what you can literally observe in the graph. No interpretation yet. Describe the shape, specific values, patterns. Use numbers.</p>
+    <textarea placeholder="I see..." style="min-height:100px;"></textarea>
+    <button class="btn-reveal" style="margin-top:10px;" onclick="toggleReveal(this)">Example "see" observations</button>
+    <div class="reveal-box">
+      <strong>Good observations (seeing):</strong>
+      <div class="mark-point">The line stays close to zero from year 0 until about year 1700</div>
+      <div class="mark-point">Around 1800 the line starts to rise visibly</div>
+      <div class="mark-point">After 1900 the line rises steeply, almost vertically</div>
+      <div class="mark-point">By 2000, the population is over 7 billion</div>
+      <div class="mark-point">The shape of the curve is often called a "hockey stick"</div>
+      <br><em>Note how none of these include a reason or interpretation — just what's visible.</em>
+    </div>
+  </div>
+
+  <!-- THINK -->
+  <div class="vtr-step">
+    <span class="vtr-step-label">Step 2 · Think</span>
+    <h4>What do you think might be going on?</h4>
+    <p class="vtr-prompt">Now use biological and historical reasoning to explain what you observed. What events or changes could have caused this pattern? What might the consequences be?</p>
+    <textarea placeholder="I think..." style="min-height:100px;"></textarea>
+    <button class="btn-reveal" style="margin-top:10px;" onclick="toggleReveal(this)">Example "think" interpretations</button>
+    <div class="reveal-box">
+      <strong>Good interpretations (thinking):</strong>
+      <div class="mark-point">The flat section before 1700 suggests populations were limited by food supply, disease, and infant mortality</div>
+      <div class="mark-point">The steep rise from around 1800 aligns with the Industrial Revolution — mechanised farming, better food supply, improved medicine</div>
+      <div class="mark-point">The vertical climb after 1900 is probably driven by antibiotics, vaccines, and further agricultural advances</div>
+      <div class="mark-point">This rapid growth must put increasing pressure on natural resources, habitats, and other species</div>
+      <div class="mark-point">Biodiversity loss seen today is likely to be a direct consequence of this population explosion</div>
+    </div>
+  </div>
+
+  <!-- WONDER -->
+  <div class="vtr-step">
+    <span class="vtr-step-label">Step 3 · Wonder</span>
+    <h4>What do you wonder?</h4>
+    <p class="vtr-prompt">Ask genuine questions that the graph raises. Questions without obvious answers. Good wonderings lead to further investigation.</p>
+    <textarea placeholder="I wonder..." style="min-height:100px;"></textarea>
+    <button class="btn-reveal" style="margin-top:10px;" onclick="toggleReveal(this)">Example "wonder" questions</button>
+    <div class="reveal-box">
+      <strong>Good wonderings:</strong>
+      <div class="mark-point">I wonder what happened to other species populations during this same period</div>
+      <div class="mark-point">I wonder if there's a limit to how big the human population can grow</div>
+      <div class="mark-point">I wonder how many species have gone extinct since 1800 compared to before</div>
+      <div class="mark-point">I wonder if any human action could slow this curve</div>
+      <div class="mark-point">I wonder if the relationship between human population and biodiversity loss is inevitable, or if it's the <em>way</em> we live, not <em>how many</em> of us there are</div>
+      <br><em>Notice how wonderings are open questions that drive further inquiry — they are the foundation of good science.</em>
+    </div>
+  </div>
+
+  <div class="meta-check">
+    <div class="mc-label">Metacognitive checkpoint</div>
+    <div class="mc-q">How well did you resist jumping to interpretation too fast?</div>
+    <div class="mc-options">
+      <div class="mc-option" onclick="selectMeta(this)">I stayed in 'see' well — only described what was visible</div>
+      <div class="mc-option" onclick="selectMeta(this)">I mixed 'see' and 'think' a bit</div>
+      <div class="mc-option" onclick="selectMeta(this)">I jumped straight to 'think' — I'll watch for that next time</div>
+    </div>
+  </div>
+
+  <div class="lesson-nav">
+    <button class="btn btn-outline" onclick="goTo('cover')">← Back</button>
+    <button class="btn btn-primary" onclick="goTo('p2')">Part 2 →</button>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════
+     PART 2 — HUMAN IMPACT
+═══════════════════════════════ -->
+<section id="p2">
+  <div class="part-header">
+    <div class="part-icon pi-learn">📖</div>
+    <div class="part-header-text">
+      <h2>Part 2 — The Human Threat to Biodiversity</h2>
+      <p>Active reading with expert-level questions</p>
+    </div>
+  </div>
+  <div class="time-badge">Allow 10 minutes</div>
+
+  <div class="expert-reading">
+    <div class="er-label">Read like an expert</div>
+    <p>As you read the content below, hold this question in your mind: <strong>"What specifically about modern human life drives biodiversity loss — is it our numbers, our behaviour, or both?"</strong> This question has no single correct answer. Your task is to reach your own view by the end.</p>
+  </div>
+
+  <div class="learn-block">
+    <h3>The human population explosion</h3>
+    <p>As people learned to farm plants and animals to provide a reliable supply of food, more children survived and populations grew. But this was on a fairly small and local scale. Later, tools and then machines enabled us to farm on a much bigger scale. Now we can reshape the environment with reservoirs, roads, canals, towns, and cities. We have developed medicines that keep us and our children alive — allowing many of us to survive to great age. We have developed engines that burn fossil fuels and release large quantities of exhaust gases into the atmosphere. We cut down huge areas of rainforest to grow crops or rear cattle. We have developed floating factories that can clear fish from whole areas of the oceans — very different from local fishing boats that provide for a family or a village market.</p>
+    <p>All of these activities have been driven by basic desires to provide for ourselves with food, shelter, and goods. We appear to be having a major impact on many of the ecosystems of the Earth as an unintended consequence. Scientists have increasing evidence that we are affecting the global climate, biological resources, and biodiversity around the world.</p>
+  </div>
+
+  <div class="learn-block">
+    <h3>Climate change</h3>
+    <p>From individual observations to major scientific studies, there is growing agreement that the Earth's climate is changing. Global temperatures are rising. This is seen in overall climate patterns and in the increasing number and frequency of "extreme weather events" all over the world. The world's climate has changed regularly over time — the fossil record shows us how often the world has gone through ice ages and periods of tropical heat or desertification. The difference is that <strong>this time, it is happening quickly</strong> and there is a growing body of evidence to suggest the changes are the direct result of human activities. These changes mean that many plants and animals will no longer survive in their current ranges.</p>
+  </div>
+
+  <div class="learn-block">
+    <h3>Depletion of biological resources</h3>
+    <p>A growing world population means an increase in the demand for resources such as food, firewood, and land. In more economically developed parts of the world, people have gone way beyond simply fulfilling the basic needs of life. They eat far more food than they need and want a great variety of different foods, which may need to be imported from far away. As a result, biological resources are being depleted and ecosystems destroyed, both on land and in the oceans. <strong>Biodiversity is destroyed along with ecosystems.</strong></p>
+  </div>
+
+  <div class="learn-block">
+    <h3>Conservation as a response</h3>
+    <p>Biodiversity is being reduced through activities such as overfishing, habitat reduction, and climate change. However, many people around the world are working to reduce these trends and conserve the biodiversity we still have. This can be tackled in many different ways.</p>
+    <div class="definition-box">
+      <div class="def-term">Conservation</div>
+      <div class="def-body">Maintaining and protecting a living and changing environment. It is an <strong>active process</strong> involving an enormous range of projects — reclaiming land after industrial use, setting up sustainable agriculture, protecting single threatened species, global legislation on pollution and greenhouse gases, and more.</div>
+    </div>
+    <p>Examples of conservation projects include:</p>
+    <ul style="font-size:14px; color:var(--text-mid); line-height:1.8; margin:6px 0 12px 20px;">
+      <li>Reclaiming land after industrial use</li>
+      <li>Helping set up sustainable agriculture systems in the developed world</li>
+      <li>Protection of a single threatened species</li>
+      <li>Global legislation on pollution levels and greenhouse gas emissions</li>
+    </ul>
+  </div>
+
+  <div class="card-blue">
+    <h3 style="margin-bottom:6px;">Key distinction — preservation vs conservation</h3>
+    <p style="margin-bottom:0; font-size:14px;"><strong>Preservation</strong> means keeping something exactly as it is now. <strong>Conservation</strong> recognises that living environments constantly change — so conservation aims to maintain and protect while allowing natural change. A forest conservation project, for example, does not try to freeze the forest; it works to allow natural regeneration, manage human use, and support biodiversity over time.</p>
+  </div>
+
+  <!-- METACOGNITIVE CHECK -->
+  <div class="meta-check">
+    <div class="mc-label">Pause and synthesise</div>
+    <div class="mc-q">Come back to the expert question: is it our numbers, our behaviour, or both that drives biodiversity loss?</div>
+    <textarea placeholder="Write your current view, using evidence from the reading. You can update this view later in the lesson." style="min-height:90px;"></textarea>
+    <br><br>
+    <button class="btn-reveal" onclick="toggleReveal(this)">Reveal a nuanced view</button>
+    <div class="reveal-box">
+      A strong answer would argue it is <strong>both — but differently weighted</strong>. Absolute numbers matter because even basic needs (food, shelter) scaled across 7+ billion people put enormous pressure on ecosystems. But <em>behaviour matters more</em> in developed countries — eating far more than needed, shipping food from far away, and clearing rainforest for cattle cause disproportionate harm per person. A smaller population behaving sustainably would cause less damage than a slightly smaller population behaving as we do now. Both factors interact: population size amplifies the effect of any harmful behaviour.
+    </div>
+  </div>
+
+  <div class="lesson-nav">
+    <button class="btn btn-outline" onclick="goTo('p1')">← Part 1</button>
+    <button class="btn btn-primary" onclick="goTo('p3')">Part 3 →</button>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════
+     PART 3 — FRAYER MODEL
+═══════════════════════════════ -->
+<section id="p3">
+  <div class="part-header">
+    <div class="part-icon pi-learn">📖</div>
+    <div class="part-header-text">
+      <h2>Part 3 — Frayer Model: Ex-situ vs In-situ</h2>
+      <p>Active vocabulary construction — build understanding, don't just read it</p>
+    </div>
+  </div>
+  <div class="time-badge">Allow 8 minutes</div>
+
+  <div class="card-green">
+    <h3 style="margin-bottom:6px;">Why a Frayer Model?</h3>
+    <p style="margin-bottom:0; font-size:14px;">The Frayer Model is a vocabulary strategy that builds deep understanding by forcing you to think about a term from four angles: its definition, its characteristics, examples of it, and — critically — non-examples (things it is NOT). This final step is the one most students skip, and it's the one that prevents confusion in exams.</p>
+  </div>
+
+  <div class="learn-block">
+    <h3>The two key terms</h3>
+    <p>Around the world, there are many animals and plants threatened with extinction — often as a result of human activities causing habitat loss or climate change. There are <strong>two main ways</strong> of conserving animals and plants:</p>
+    <div class="definition-box">
+      <div class="def-term">Ex-situ conservation (ex = outside)</div>
+      <div class="def-body">The conservation of components of biological diversity (living organisms) <strong>outside their natural habitats</strong>. Examples: seed banks, zoos, botanic gardens, captive breeding programmes.</div>
+    </div>
+    <div class="definition-box">
+      <div class="def-term">In-situ conservation (in = in place)</div>
+      <div class="def-body">The conservation of ecosystems and natural habitats, and maintenance and recovery of viable populations of species <strong>in their natural surroundings</strong>. Examples: nature reserves, national parks, marine protected areas.</div>
+    </div>
+    <p style="margin-top:14px;">Ex-situ conservation is always seen as a <strong>complementary</strong> approach to in-situ conservation — not a replacement. Ideally, ex-situ conservation occurs in the country where the threatened species originates, so the genetic material can be reintroduced to the natural habitat.</p>
+  </div>
+
+  <!-- FRAYER FOR EX-SITU -->
+  <h3 style="margin:28px 0 14px;">Build your own Frayer Model — Ex-situ conservation</h3>
+
+  <div class="frayer-wrapper">
+    <div class="frayer-grid">
+      <div class="frayer-cell">
+        <div class="frayer-label">Definition (in your own words)</div>
+        <textarea placeholder="Write a definition in your own words — don't copy the textbook wording."></textarea>
+      </div>
+      <div class="frayer-cell">
+        <div class="frayer-label">Characteristics (features)</div>
+        <textarea placeholder="What makes ex-situ different? List 3-4 key features."></textarea>
+      </div>
+      <div class="frayer-cell">
+        <div class="frayer-label">Examples (things that ARE ex-situ)</div>
+        <textarea placeholder="List 3-4 specific examples from the reading."></textarea>
+      </div>
+      <div class="frayer-cell">
+        <div class="frayer-label">Non-examples (things that are NOT ex-situ)</div>
+        <textarea placeholder="What would be NOT ex-situ? This is the hardest — think about it carefully."></textarea>
+      </div>
+    </div>
+    <div class="frayer-center">
+      <div class="term">Ex-situ</div>
+      <div class="subterm">Conservation</div>
+    </div>
+  </div>
+
+  <button class="btn-reveal" onclick="toggleReveal(this)">Reveal a strong Frayer Model for ex-situ</button>
+  <div class="reveal-box">
+    <strong>Definition:</strong> Conservation of organisms outside their natural habitat, where scientists maintain living populations or genetic material in controlled environments.<br><br>
+    <strong>Characteristics:</strong> happens away from the natural habitat; usually controlled/managed environment; often focuses on a specific species; requires active human intervention; can conserve genetic material (seeds, DNA) or living populations.<br><br>
+    <strong>Examples:</strong> Millennium Seed Bank at Kew (80,000 plant species); captive breeding of Californian condors and Przewalski's horses; International Potato Centre (field gene bank); the Frozen Ark (DNA samples); zoos with endangered species.<br><br>
+    <strong>Non-examples:</strong> a national park protecting lions <em>in their natural range</em>; the Mkomazi Rhino Sanctuary protecting wild rhinos in Tanzania; sustainable forestry in a natural forest; a marine protected area for coral reefs; Costa Rica's protected rainforest (these are all in-situ).
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- FRAYER FOR IN-SITU -->
+  <h3 style="margin:28px 0 14px;">Now build the Frayer for In-situ conservation</h3>
+
+  <div class="frayer-wrapper">
+    <div class="frayer-grid">
+      <div class="frayer-cell">
+        <div class="frayer-label">Definition (in your own words)</div>
+        <textarea placeholder="Write a definition in your own words."></textarea>
+      </div>
+      <div class="frayer-cell">
+        <div class="frayer-label">Characteristics (features)</div>
+        <textarea placeholder="What makes in-situ different? List 3-4 key features."></textarea>
+      </div>
+      <div class="frayer-cell">
+        <div class="frayer-label">Examples (things that ARE in-situ)</div>
+        <textarea placeholder="List specific examples."></textarea>
+      </div>
+      <div class="frayer-cell">
+        <div class="frayer-label">Non-examples (things that are NOT in-situ)</div>
+        <textarea placeholder="This should be the opposite of what you wrote for ex-situ examples."></textarea>
+      </div>
+    </div>
+    <div class="frayer-center">
+      <div class="term">In-situ</div>
+      <div class="subterm">Conservation</div>
+    </div>
+  </div>
+
+  <button class="btn-reveal" onclick="toggleReveal(this)">Reveal a strong Frayer Model for in-situ</button>
+  <div class="reveal-box">
+    <strong>Definition:</strong> Conservation of species and their ecosystems in their natural habitats, with the goal of maintaining viable wild populations.<br><br>
+    <strong>Characteristics:</strong> happens in the organism's natural habitat; protects whole ecosystems, not just species; often involves legal protection of land; allows natural ecological relationships to continue; requires managing human activity in or near the area.<br><br>
+    <strong>Examples:</strong> Mkomazi Rhino Sanctuary (Tanzania); Costa Rica's protected rainforests (25%+ of country); national parks; nature reserves; marine protected areas; sustainable forestry operations; wildlife corridors connecting habitats.<br><br>
+    <strong>Non-examples:</strong> seed banks like Kew (ex-situ); zoo breeding programmes for endangered species (ex-situ); the Frozen Ark (ex-situ); storing cuttings of rare plants in a greenhouse (ex-situ).
+  </div>
+
+  <!-- COMPARE T-CHART -->
+  <h3 style="margin:32px 0 14px;">Now consolidate — a T-chart for rapid recall</h3>
+
+  <div class="tchart">
+    <div class="tchart-head">
+      <div>Ex-situ conservation</div>
+      <div>In-situ conservation</div>
+    </div>
+    <div class="tchart-body">
+      <div>
+        <ul>
+          <li><strong>Location:</strong> outside the natural habitat</li>
+          <li><strong>Focus:</strong> usually individual species or genetic material</li>
+          <li><strong>Examples:</strong> seed banks, zoos, captive breeding, Frozen Ark, botanic gardens</li>
+          <li><strong>Control:</strong> highly controlled environment</li>
+          <li><strong>Strength:</strong> can protect species even if habitat is destroyed</li>
+          <li><strong>Weakness:</strong> can't preserve ecological relationships; costly; not always successful on reintroduction</li>
+        </ul>
+      </div>
+      <div>
+        <ul>
+          <li><strong>Location:</strong> inside the natural habitat</li>
+          <li><strong>Focus:</strong> ecosystems and populations</li>
+          <li><strong>Examples:</strong> national parks, nature reserves, Mkomazi Rhino Sanctuary, protected rainforests</li>
+          <li><strong>Control:</strong> natural conditions, managed human impact</li>
+          <li><strong>Strength:</strong> preserves ecological relationships and evolutionary pressures</li>
+          <li><strong>Weakness:</strong> vulnerable to habitat loss, poaching, climate change</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="lesson-nav">
+    <button class="btn btn-outline" onclick="goTo('p2')">← Part 2</button>
+    <button class="btn btn-primary" onclick="goTo('p4')">Part 4 →</button>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════
+     PART 4 — EX-SITU METHODS
+═══════════════════════════════ -->
+<section id="p4">
+  <div class="part-header">
+    <div class="part-icon pi-learn">📖</div>
+    <div class="part-header-text">
+      <h2>Part 4 — Seed Banks and Captive Breeding</h2>
+      <p>The two main ex-situ methods in depth</p>
+    </div>
+  </div>
+  <div class="time-badge">Allow 12 minutes</div>
+
+  <div class="expert-reading">
+    <div class="er-label">Read like an expert</div>
+    <p>Hold this question: <strong>"Plant conservation looks much easier than animal conservation — is that true, and why?"</strong> You'll be asked to answer this formally in Part 7.</p>
+  </div>
+
+  <div class="learn-block">
+    <h3>Ex-situ conservation of plants — seed banks</h3>
+    <p>It has been estimated that <strong>25% of the world's flowering plant species could disappear within the next 50 years</strong>. There are about 242,000 known flowering plant species — so this could mean 60,500 species disappearing in less than one human lifetime.</p>
+    <p>Plants are of vital importance to our lives. The genetic material of extinct species would be lost forever — a disaster for the plants and potentially for human survival. Cross-breeding crop plants back to wild plants, or using wild plants for genetic engineering, are ways to maintain the long-term health of our crop plants.</p>
+    <p>Botanic gardens (zoos for plants) maintain collections of many of the world's most interesting and unusual plants. In the 1960s, the Royal Botanic Gardens at Kew (UK) set up a seed bank that is now home to the seeds of around <strong>80,000 plants</strong> — the <strong>Millennium Seed Bank</strong>. Its two aims: (1) collect and conserve the seeds of the entire UK native flora (completed 2009 — of the 1442 native UK plants, over 300 are already threatened with extinction); (2) conserve seeds of an additional 25% of the flora of the whole world by 2020, focussing on the drylands which are experiencing rapid habitat loss. Similar seed banks now exist in Sri Lanka and the UAE.</p>
+    <p>A seed bank can preserve many plants in a state of <strong>effective suspended animation</strong>. Live seeds are collected, checked by X-ray for fully developed embryos, then dried and stored between −20°C and −40°C. Many will survive and remain capable of germinating for up to 200 years. In general, the lifespan of a seed doubles for every 5°C drop in temperature or 2% fall in relative humidity. Some stored seeds may even germinate in several thousand years.</p>
+    <p>Most plants make huge numbers of seeds, so they can be collected without damaging the natural population. Seeds are usually quite small, so large numbers can be stored cheaply in small space. They contain all the genetic material of the plant. There are now over <strong>1,000 seed banks</strong> around the world.</p>
+  </div>
+
+  <div class="card-amber" style="margin-top:14px;">
+    <h3 style="color:var(--amber); margin-bottom:6px;">But seed banks have limits</h3>
+    <p style="margin-bottom:0;">About 80% of known plant species could be stored in seed banks, but the seeds of some species don't store well — including many important crop plants: <strong>mango, rubber, oak, avocado, cacao, and coconut</strong>. These plants need to be conserved differently, often in <strong>field gene banks</strong> (plantations, orchards, arboretums) or as tissue cultures. The International Potato Centre in Peru contains around 4,100 clones of potato, all of which need to be planted annually.</p>
+  </div>
+
+  <div class="learn-block">
+    <h3>Ex-situ conservation of animals — captive breeding</h3>
+    <p>It is not always possible to conserve animal species in the wild because the conditions that threatened them continue. Zoos and wildlife parks used to exist just for people to look at animals, but today they are very important in animal conservation.</p>
+    <div class="definition-box">
+      <div class="def-term">Captive breeding programmes</div>
+      <div class="def-body">Programmes where individuals of an endangered species are bred in zoos and parks in an attempt to save the species from extinction, and if possible to reintroduce them to their natural wild environment.</div>
+    </div>
+    <p>Reintroduction does not always work, but it can succeed in national parks or protected areas. Species saved by captive breeding and successfully reintroduced include <strong>Californian condors</strong> and <strong>Przewalski's horses</strong>. Captive breeding programmes for the <strong>white and black rhino</strong>, along with much conservation work in East Africa, give hope these creatures may also be saved.</p>
+  </div>
+
+  <div class="card-amber" style="margin-top:14px;">
+    <h3 style="color:var(--amber); margin-bottom:6px;">The problems with captive breeding</h3>
+    <p style="margin-bottom:0; font-size:14px;">
+      ❖ There's not enough space or resources in zoos and parks for all the endangered species.<br>
+      ❖ It's often difficult to provide the right conditions for breeding, even if scientists know what those conditions are. The giant panda, for example, is notoriously difficult to breed even in ideal conditions.<br>
+      ❖ Reintroduction will be unsuccessful unless the original reason for the species being pushed toward extinction is removed first.<br>
+      ❖ Animals bred in captivity may have great problems adjusting to unsupported life in the wild.<br>
+      ❖ When the population is small, the gene pool is reduced — this can cause serious problems. Zoos try to overcome this by keeping detailed records of genetic data and swapping sperm between zoos for artificial insemination to maximise genetic variation in offspring.<br>
+      ❖ Reintroduction programmes can be very expensive and time-consuming — and they may fail.
+    </p>
+  </div>
+
+  <div class="case-study">
+    <span class="case-tag">Did you know?</span>
+    <h4>The Frozen Ark Project</h4>
+    <p>Set up in 1996, the Frozen Ark aims to conserve genetic resources of animals by storing their DNA and viable cells — the animal equivalent of the Millennium Seed Bank. DNA is very stable and can be stored frozen for hundreds of years. The 10 million samples take up very little room. This gives scientists the possibility of increasing genetic variation in critically endangered species, or even cloning extinct species once their habitat has been restored. The Frozen Ark does not replace in-situ and ex-situ conservation — it supports them.</p>
+  </div>
+
+  <div class="meta-check">
+    <div class="mc-label">Pause and check yourself</div>
+    <div class="mc-q">On a scale of confidence, how would you describe your grasp of captive breeding advantages AND problems?</div>
+    <div class="mc-options">
+      <div class="mc-option" onclick="selectMeta(this)">🟢 I could confidently argue both sides</div>
+      <div class="mc-option" onclick="selectMeta(this)">🟡 I know the content but couldn't argue either side well</div>
+      <div class="mc-option" onclick="selectMeta(this)">🔴 I'll need to reread the "problems" card before Part 5</div>
+    </div>
+  </div>
+
+  <div class="lesson-nav">
+    <button class="btn btn-outline" onclick="goTo('p3')">← Part 3</button>
+    <button class="btn btn-primary" onclick="goTo('p5')">Part 5: Claim-Support-Question →</button>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════
+     PART 5 — CLAIM SUPPORT QUESTION
+═══════════════════════════════ -->
+<section id="p5">
+  <div class="part-header">
+    <div class="part-icon pi-vtr">💡</div>
+    <div class="part-header-text">
+      <h2>Part 5 — Claim · Support · Question</h2>
+      <p>A thinking routine for evaluating complex ideas</p>
+    </div>
+  </div>
+  <div class="time-badge">Allow 10 minutes</div>
+
+  <div class="vtr-banner">
+    <div class="v-icon">💡</div>
+    <div>
+      <h3>Claim-Support-Question</h3>
+      <p>Make a claim about the topic. Find support for your claim — specific examples, evidence, reasons. Then generate questions that challenge or extend your claim. This routine builds evaluation skills you need for AO3 exam questions.</p>
+      <div class="vtr-attr">A Visible Thinking Routine · Harvard Project Zero</div>
+    </div>
+  </div>
+
+  <div class="card-teal" style="margin-bottom:20px;">
+    <h3 style="color:var(--teal); margin-bottom:6px;">The focus for this CSQ</h3>
+    <p style="margin-bottom:0; font-size:14px;">You'll apply Claim-Support-Question to this statement: <strong>"Captive breeding programmes in zoos are an effective way to save endangered species."</strong> This is contested — there are strong views on both sides. Your task is to take a position and support it properly.</p>
+  </div>
+
+  <div class="card-amber" style="margin-bottom:20px;">
+    <h3 style="color:var(--amber); margin-bottom:6px;">How to do CSQ well</h3>
+    <p style="margin-bottom:0; font-size:14px;"><strong>Claim:</strong> take a clear position — don't hedge. <strong>Support:</strong> use <em>specific</em> evidence from the reading (named examples, specific problems, real case studies). Generic statements don't count. <strong>Question:</strong> genuine questions that would challenge or test your claim further — not rhetorical ones.</p>
+  </div>
+
+  <!-- CLAIM -->
+  <div class="csq-card">
+    <div class="csq-card-head claim">Step 1 · Claim</div>
+    <div class="csq-card-body">
+      <p class="csq-prompt">Take a clear position. You might agree, disagree, or give a qualified view ("agree, but only when...").</p>
+      <textarea placeholder="My claim is..." style="min-height:90px;"></textarea>
+      <br><br>
+      <div class="stem-box">
+        <div class="stem-label">Sentence stems if you're stuck</div>
+        <ul>
+          <li>Captive breeding is effective when...</li>
+          <li>Captive breeding is NOT effective because...</li>
+          <li>Captive breeding can be effective but only if...</li>
+          <li>The effectiveness of captive breeding depends on whether...</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- SUPPORT -->
+  <div class="csq-card">
+    <div class="csq-card-head support">Step 2 · Support</div>
+    <div class="csq-card-body">
+      <p class="csq-prompt">Give 2–3 pieces of <em>specific</em> evidence that supports your claim. Name actual species, programmes, case studies, or problems from the reading. Avoid generic statements like "it can work sometimes".</p>
+      <textarea placeholder="Evidence that supports my claim:&#10;&#10;1. &#10;&#10;2. &#10;&#10;3. " style="min-height:160px;"></textarea>
+      <br><br>
+      <div class="stem-box">
+        <div class="stem-label">Evidence you might use</div>
+        <ul>
+          <li>The successful reintroduction of Californian condors and Przewalski's horses shows that...</li>
+          <li>Captive breeding programmes for black and white rhinos in East Africa demonstrate that...</li>
+          <li>The well-known difficulty of breeding giant pandas in captivity suggests that...</li>
+          <li>The problem of small gene pools — zoos manage by swapping sperm between zoos — shows that...</li>
+          <li>The fact that animals bred in captivity often struggle to adjust to the wild suggests that...</li>
+          <li>If the original threat (poaching, habitat loss) is not removed, reintroduction fails — this shows that...</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- QUESTION -->
+  <div class="csq-card">
+    <div class="csq-card-head question">Step 3 · Question</div>
+    <div class="csq-card-body">
+      <p class="csq-prompt">Generate 2–3 questions that probe your own claim — things you don't yet know, challenges to your position, or what would change your mind. Good questions show strong thinking.</p>
+      <textarea placeholder="Questions about my claim:&#10;&#10;1. &#10;&#10;2. &#10;&#10;3. " style="min-height:160px;"></textarea>
+      <br><br>
+      <div class="stem-box">
+        <div class="stem-label">Question starters</div>
+        <ul>
+          <li>Is captive breeding really the best use of conservation funding — what about...?</li>
+          <li>Would my claim still hold if...?</li>
+          <li>How do we know that reintroduced populations are truly "saved" long-term?</li>
+          <li>What would need to change for captive breeding to work for species it currently can't save?</li>
+          <li>At what point does continuing to breed a critically low-diversity species in captivity become pointless?</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODEL RESPONSE -->
+  <button class="btn-reveal" onclick="toggleReveal(this)">Reveal a model Claim-Support-Question response</button>
+  <div class="reveal-box">
+    <strong>Model response:</strong><br><br>
+    <strong>Claim:</strong> Captive breeding is effective <em>only</em> when it is combined with in-situ habitat protection and when the species biology allows controlled breeding. As a stand-alone strategy, it often fails.<br><br>
+    <strong>Support:</strong> (1) The Californian condor and Przewalski's horse show captive breeding <em>can</em> work — both were successfully reintroduced into protected areas where the original threat had been removed. (2) However, the giant panda demonstrates a critical limit — despite decades of captive breeding attempts, reproductive success remains low even in ideal conditions, suggesting that biology itself can block ex-situ success. (3) The gene pool problem — zoos must now swap sperm between institutions to maintain genetic variation — shows that without active management, captive populations will inbreed and become genetically vulnerable over time, like the cheetahs studied earlier in 4C.<br><br>
+    <strong>Questions:</strong> (1) How much funding does captive breeding absorb that could otherwise protect wild habitats — is there an opportunity cost? (2) If a species is reintroduced but the population remains very small and genetically narrow, have we actually "saved" it, or just delayed extinction? (3) The Frozen Ark suggests we might be able to revive extinct species in future — does that change how we should think about captive breeding today?
+  </div>
+
+  <div class="meta-check">
+    <div class="mc-label">Metacognitive checkpoint</div>
+    <div class="mc-q">How specific was your support — did you name real species and problems?</div>
+    <div class="mc-options">
+      <div class="mc-option" onclick="selectMeta(this)">🟢 Fully specific — I named real case studies</div>
+      <div class="mc-option" onclick="selectMeta(this)">🟡 Some specifics, some generic statements</div>
+      <div class="mc-option" onclick="selectMeta(this)">🔴 Mostly generic — I'll add named examples now</div>
+    </div>
+  </div>
+
+  <div class="lesson-nav">
+    <button class="btn btn-outline" onclick="goTo('p4')">← Part 4</button>
+    <button class="btn btn-primary" onclick="goTo('p6')">Part 6 →</button>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════
+     PART 6 — SUSTAINABILITY
+═══════════════════════════════ -->
+<section id="p6">
+  <div class="part-header">
+    <div class="part-icon pi-learn">📖</div>
+    <div class="part-header-text">
+      <h2>Part 6 — Sustainability and Education</h2>
+      <p>Prevention is better than cure</p>
+    </div>
+  </div>
+  <div class="time-badge">Allow 8 minutes</div>
+
+  <div class="expert-reading">
+    <div class="er-label">Read like an expert</div>
+    <p>Hold this question: <strong>"Why might sustainability and education matter <em>more</em> in the long run than seed banks and captive breeding?"</strong></p>
+  </div>
+
+  <div class="learn-block">
+    <h3>Sustainability</h3>
+    <p>In an ideal world, we wouldn't need seed banks, zoos, or other methods of conserving biodiversity. People are increasingly trying to find ways to <strong>prevent the loss of biodiversity in the first place</strong>. Habitats and ecosystems can be conserved with less conflict by encouraging sustainable methods of land use.</p>
+    <p>For example, illegal logging operations in rainforests use "slash and burn" techniques — cutting down all the trees and burning the ground afterwards to harvest wood and clear soil for farming. The soil is soon exhausted and biodiversity lost. However, if we harvest trees selectively and replant for the future, biodiversity can be maintained while people continue to use the forest for income. This is <strong>sustainable forestry</strong>.</p>
+    <p><strong>Sustainable agriculture</strong> includes farming methods that minimise environmental damage and avoid monoculture — using organic fertilisers where possible, minimising artificial fertilisers and chemical pesticides, using biological pest control, and planting in rotation to avoid soil exhaustion. Large-scale farming is essential for food supply, but sustainable methods like biological pest control can actually <em>increase</em> yields and improve profits while being cheaper long-term than expensive manufactured chemicals.</p>
+  </div>
+
+  <div class="learn-block">
+    <h3>Getting priorities right</h3>
+    <p>People and politicians often have limited sympathy for ecology, so it's important to target spending accurately. Around the world, there is a growing understanding of the need for sustainable agriculture and sustainable tourism to conserve biodiversity while still providing food and income.</p>
+    <p>Research continues into how food and other resources can be produced in a way that minimises biodiversity loss — and in some cases increases it again. Tourism can be developed sustainably — providing jobs and money for local people while conserving the environment.</p>
+  </div>
+
+  <div class="case-study">
+    <span class="case-tag">Case Study — Costa Rica</span>
+    <h4>Costa Rica — reversing habitat loss</h4>
+    <p>Costa Rica is a good example of a country reversing its habitat loss. <strong>More than 25% of the country is now protected</strong> in some way. Most of its electricity is from renewable resources. Costa Rica earns a considerable proportion of its national income from <strong>sustainable ecotourism</strong> — from the president to children in schools, people in Costa Rica have become passionate about conserving the country's rich biodiversity. The ecotourism industry now provides many jobs and contributes around <strong>6% of national GDP</strong>. This small country covers only <strong>0.03% of the Earth's surface but contains more than 4% of the world's biodiversity</strong> — proving that it's possible to use natural resources to make money AND conserve biodiversity at the same time.</p>
+  </div>
+
+  <div class="case-study" style="border-top-color:var(--green-mid);">
+    <span class="case-tag" style="color:var(--green-dark); background:var(--green-pale);">Case Study — Ethiopia</span>
+    <h4 style="color:var(--green-dark);">Restoring forests in Ethiopia</h4>
+    <p>Professor Legesse Negash is a pioneer in the propagation of Ethiopia's native trees. Ethiopia has tremendous natural biodiversity threatened by both climate change and deforestation. By propagating indigenous trees and storing germlines in seed and tissue banks, Negash aims to protect soil against erosion and save the country's biodiversity. His Center for Indigenous Trees Propagation and Biodiversity Development produces thousands of young trees and trains new young biologists. Local farmers are taught why and how to plant native trees — so new trees can be planted when older ones are harvested. This combines ex-situ conservation (seed banks), in-situ restoration (forests), and education into one integrated approach.</p>
+  </div>
+
+  <div class="learn-block">
+    <h3>The importance of education</h3>
+    <p>People have to work hard to reduce pollution and support conservation. To help them understand <em>why</em> conservation matters, they need to learn about:</p>
+    <ul style="font-size:14px; color:var(--text-mid); line-height:1.8; margin:6px 0 12px 20px;">
+      <li>The impact of human activities on the natural world</li>
+      <li>Ways in which people can act to protect animals, plants, and habitats</li>
+    </ul>
+    <p>When people learn about the damage they are doing to the environment, they often want to change. When they discover the range of biodiversity in the world and how it can be conserved, they usually want to help. <strong>Zoos, national parks, and seed banks are all important in education</strong> — allowing people to see animals and plants from other parts of the world, explaining different environments, showing how threatened species can be protected.</p>
+    <p>Maintaining biodiversity is a major issue for the 21st century. In a global economy, we can all contribute to maintaining biodiversity by the choices we make now.</p>
+  </div>
+
+  <div class="meta-check">
+    <div class="mc-label">Expert question check</div>
+    <div class="mc-q">Back to the question: why might sustainability and education matter <em>more</em> than seed banks and captive breeding in the long run?</div>
+    <textarea placeholder="Write your view, using specific evidence..." style="min-height:90px;"></textarea>
+    <br><br>
+    <button class="btn-reveal" onclick="toggleReveal(this)">Reveal model response</button>
+    <div class="reveal-box">
+      Seed banks and captive breeding are <em>responses to damage already done</em> — they treat the symptoms of biodiversity loss. Sustainability and education address the <em>root causes</em>. A seed bank can preserve the genetic material of a plant species, but if its habitat is destroyed it may never return to the wild. Costa Rica's approach shows that changing how people use land can reverse habitat loss <em>without</em> relying on emergency preservation. Education matters because conservation requires sustained political and personal support — and people only act when they understand. In the long run, preventing biodiversity loss is vastly cheaper and more effective than trying to recover species one at a time. Ex-situ conservation buys time; sustainability buys the future.
+    </div>
+  </div>
+
+  <div class="lesson-nav">
+    <button class="btn btn-outline" onclick="goTo('p5')">← Part 5</button>
+    <button class="btn btn-primary" onclick="goTo('p7')">Part 7 →</button>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════
+     PART 7 — APPLY: WRITING
+═══════════════════════════════ -->
+<section id="p7">
+  <div class="part-header">
+    <div class="part-icon pi-apply">✍</div>
+    <div class="part-header-text">
+      <h2>Part 7 — Apply: Extended Writing</h2>
+      <p>Scaffolded writing practice from the textbook checkpoints</p>
+    </div>
+  </div>
+  <div class="time-badge">Allow 15 minutes</div>
+
+  <div class="card-purple">
+    <h3 style="color:var(--purple); margin-bottom:6px;">How this section works</h3>
+    <p style="margin-bottom:0; font-size:14px;">These are the textbook checkpoint questions — all AO2/AO3 level. Each comes with <strong>sentence stems</strong> to scaffold your writing. Use the stems if you're stuck; ignore them if you're confident. The goal is structured writing, not perfect writing.</p>
+  </div>
+
+  <!-- QUESTION 1 -->
+  <div class="card" style="margin-bottom:24px;">
+    <div class="meta" style="margin-bottom:8px;">Checkpoint Q1 · 3 marks</div>
+    <p style="font-size:15px; font-weight:700; margin-bottom:12px;">Preservation means preserving something exactly as it is now. Explain how conservation differs from preservation.</p>
+
+    <div class="stem-box">
+      <div class="stem-label">Sentence stems to help structure</div>
+      <ul>
+        <li>Preservation aims to keep something exactly as it is, whereas conservation...</li>
+        <li>Conservation recognises that living environments...</li>
+        <li>A practical example: in a forest, preservation would..., but conservation would...</li>
+      </ul>
+    </div>
+
+    <textarea placeholder="Write your answer here..." style="min-height:130px;"></textarea><br><br>
+    <button class="btn-reveal" onclick="toggleReveal(this)">Reveal mark scheme</button>
+    <div class="reveal-box">
+      <div class="mark-point">Preservation aims to keep something exactly as it is now, whereas conservation is an active process that maintains and protects living environments while allowing natural change (1)</div>
+      <div class="mark-point">Conservation recognises that ecosystems are dynamic and constantly changing — species evolve, communities shift, climates change — so preserving something unchanged is neither possible nor biologically desirable (1)</div>
+      <div class="mark-point">Example — a forest conservation project would manage human use, support regeneration, and allow natural succession, rather than trying to freeze the forest in time (1)</div>
+    </div>
+  </div>
+
+  <!-- QUESTION 2 -->
+  <div class="card" style="margin-bottom:24px;">
+    <div class="meta" style="margin-bottom:8px;">Checkpoint Q2 · 3 marks</div>
+    <p style="font-size:15px; font-weight:700; margin-bottom:12px;">Explain the difference between ex-situ and in-situ conservation.</p>
+
+    <div class="stem-box">
+      <div class="stem-label">Sentence stems</div>
+      <ul>
+        <li>Ex-situ conservation refers to..., whereas in-situ conservation refers to...</li>
+        <li>An example of ex-situ conservation is..., while an example of in-situ conservation is...</li>
+        <li>These approaches are complementary because...</li>
+      </ul>
+    </div>
+
+    <textarea placeholder="Write your answer here..." style="min-height:130px;"></textarea><br><br>
+    <button class="btn-reveal" onclick="toggleReveal(this)">Reveal mark scheme</button>
+    <div class="reveal-box">
+      <div class="mark-point">Ex-situ conservation is the conservation of living organisms outside their natural habitat, whereas in-situ conservation is the conservation of species within their natural habitats and ecosystems (1)</div>
+      <div class="mark-point">Examples — ex-situ: the Millennium Seed Bank at Kew storing 80,000 plant species, or captive breeding of Californian condors in zoos. In-situ: the Mkomazi Rhino Sanctuary in Tanzania, or Costa Rica's protected rainforests (1)</div>
+      <div class="mark-point">Ex-situ and in-situ are complementary — ex-situ acts as a backup when habitats are at risk or species are critically endangered, while in-situ maintains the natural ecosystem and evolutionary processes. Both are needed — neither alone is sufficient (1)</div>
+    </div>
+  </div>
+
+  <!-- QUESTION 3 -->
+  <div class="card" style="margin-bottom:24px;">
+    <div class="meta" style="margin-bottom:8px;">Checkpoint Q3 · 4 marks</div>
+    <p style="font-size:15px; font-weight:700; margin-bottom:12px;">Explain why it is much easier to conserve plant biodiversity than animal biodiversity.</p>
+
+    <div class="stem-box">
+      <div class="stem-label">Sentence stems</div>
+      <ul>
+        <li>Plant conservation is easier because seeds...</li>
+        <li>The genetic material of plants...</li>
+        <li>Animal conservation faces the challenge that...</li>
+        <li>A key specific example is...</li>
+      </ul>
+    </div>
+
+    <textarea placeholder="Write your answer here..." style="min-height:150px;"></textarea><br><br>
+    <button class="btn-reveal" onclick="toggleReveal(this)">Reveal mark scheme</button>
+    <div class="reveal-box">
+      <div class="mark-point">Most plants produce huge numbers of seeds, so large samples can be collected without damaging the wild population, whereas removing animals from the wild can threaten already-small populations (1)</div>
+      <div class="mark-point">Seeds are small and contain all the genetic material of the plant — they can be stored cheaply in large numbers at low temperatures, effectively in suspended animation for up to 200 years. Animals require living conditions, space, food, veterinary care, and appropriate social structures (1)</div>
+      <div class="mark-point">80% of known plant species can be stored in seed banks — 80,000 species are already at Kew. In contrast, zoos have limited space and resources; not all endangered animals can be bred in captivity (the giant panda is a notorious example) (1)</div>
+      <div class="mark-point">Animal captive breeding faces challenges that plant conservation does not: small gene pools causing inbreeding, animals struggling to adjust to wild life after captivity, the difficulty of providing the right breeding conditions, and the expense and time demand of reintroduction programmes (1)</div>
+    </div>
+  </div>
+
+  <!-- QUESTION 4 -->
+  <div class="card" style="margin-bottom:24px;">
+    <div class="meta" style="margin-bottom:8px;">Checkpoint Q4 · 6 marks · AO3 Discuss</div>
+    <p style="font-size:15px; font-weight:700; margin-bottom:12px;">Discuss the main advantages and disadvantages of captive breeding and reintroduction programmes.</p>
+
+    <div class="stem-box">
+      <div class="stem-label">Structure your answer</div>
+      <ul>
+        <li>Advantage 1: ...because / evidenced by...</li>
+        <li>Advantage 2: ...</li>
+        <li>Disadvantage 1: ...because / evidenced by...</li>
+        <li>Disadvantage 2: ...</li>
+        <li>Overall judgement: captive breeding is most effective when...</li>
+      </ul>
+    </div>
+
+    <textarea placeholder="Write your answer using the structure above..." style="min-height:220px;"></textarea><br><br>
+    <button class="btn-reveal" onclick="toggleReveal(this)">Reveal mark scheme</button>
+    <div class="reveal-box">
+      Award up to 6 marks for a balanced discussion with specific evidence:<br><br>
+      <strong>Advantages (any 2-3):</strong>
+      <div class="mark-point">Can save species from extinction when wild populations are critically low — Californian condors and Przewalski's horses are documented successes (1)</div>
+      <div class="mark-point">Provides a genetic reservoir through carefully managed breeding records, with zoos swapping sperm to maximise genetic variation in offspring (1)</div>
+      <div class="mark-point">Zoos also serve an important educational role — helping people understand threatened species and why conservation matters, building public support for broader conservation (1)</div>
+      <br>
+      <strong>Disadvantages (any 2-3):</strong>
+      <div class="mark-point">Not enough space or resources in zoos for all endangered species — captive breeding can only ever cover a fraction of threatened animals (1)</div>
+      <div class="mark-point">Often very difficult to provide correct breeding conditions, even when known — the giant panda is a well-known example where captive breeding has been extremely challenging (1)</div>
+      <div class="mark-point">Reintroduction will fail if the original cause of decline (habitat loss, poaching) has not been addressed; captive-bred animals may struggle to adjust to wild life; programmes are very expensive and may fail entirely (1)</div>
+      <br>
+      <strong>Judgement:</strong>
+      <div class="mark-point">Captive breeding is most effective as part of an integrated strategy — alongside in-situ habitat protection and removal of original threats. As a stand-alone approach, it is often a last resort rather than a reliable solution (1 for reasoned judgement)</div>
+    </div>
+  </div>
+
+  <div class="lesson-nav">
+    <button class="btn btn-outline" onclick="goTo('p6')">← Part 6</button>
+    <button class="btn btn-primary" onclick="goTo('progress')">Progress Check →</button>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════
+     PROGRESS CHECK
+═══════════════════════════════ -->
+<section id="progress">
+  <div class="part-header">
+    <div class="part-icon pi-check">✓</div>
+    <div class="part-header-text">
+      <h2>Progress Check</h2>
+      <p>Individual — attempt all questions before revealing mark schemes</p>
+    </div>
+  </div>
+  <div class="time-badge">Allow 15 minutes</div>
+
+  <div class="card-green" style="margin-bottom:24px;">
+    <p style="margin-bottom:0;"><strong>Instructions:</strong> Six exam-style questions covering today's content. Work through them in order, attempting every question before revealing any mark scheme. Self-mark honestly.</p>
+  </div>
+
+  <!-- PC1 MCQ -->
+  <div class="card" style="margin-bottom:14px;">
+    <div class="meta" style="margin-bottom:8px;">Q1 · 1 mark</div>
+    <p style="font-size:15px; font-weight:700; margin-bottom:12px;">Which of the following is an example of in-situ conservation?</p>
+    <div class="mcq-options">
+      <button class="mcq-option" data-letter="A" onclick="checkMCQ(this,false,'pc1')">Storing the seeds of UK native plants at the Millennium Seed Bank</button>
+      <button class="mcq-option" data-letter="B" onclick="checkMCQ(this,true,'pc1')">Protecting black rhinos in the Mkomazi Rhino Sanctuary in Tanzania</button>
+      <button class="mcq-option" data-letter="C" onclick="checkMCQ(this,false,'pc1')">Breeding Californian condors in a zoo in the USA</button>
+      <button class="mcq-option" data-letter="D" onclick="checkMCQ(this,false,'pc1')">Storing frozen DNA samples of endangered animals at the Frozen Ark</button>
+    </div>
+    <div id="fb-pc1-correct" class="fb correct">Correct. The Mkomazi Rhino Sanctuary protects rhinos in their natural habitat — this is in-situ. The other three all happen outside the natural habitat (ex-situ).</div>
+    <div id="fb-pc1-incorrect" class="fb incorrect">In-situ = in the natural habitat. Seed banks, zoos, and the Frozen Ark are all ex-situ (outside the natural habitat).</div>
+  </div>
+
+  <!-- PC2 MCQ -->
+  <div class="card" style="margin-bottom:14px;">
+    <div class="meta" style="margin-bottom:8px;">Q2 · 1 mark</div>
+    <p style="font-size:15px; font-weight:700; margin-bottom:12px;">According to the reading, what percentage of Costa Rica's surface is protected in some way?</p>
+    <div class="mcq-options">
+      <button class="mcq-option" data-letter="A" onclick="checkMCQ(this,false,'pc2')">More than 6%</button>
+      <button class="mcq-option" data-letter="B" onclick="checkMCQ(this,false,'pc2')">More than 15%</button>
+      <button class="mcq-option" data-letter="C" onclick="checkMCQ(this,true,'pc2')">More than 25%</button>
+      <button class="mcq-option" data-letter="D" onclick="checkMCQ(this,false,'pc2')">More than 50%</button>
+    </div>
+    <div id="fb-pc2-correct" class="fb correct">Correct. Over 25% of Costa Rica is protected — and ecotourism contributes around 6% of GDP.</div>
+    <div id="fb-pc2-incorrect" class="fb incorrect">The figure is over 25% — ecotourism contributes 6% of GDP, which may be what you were thinking of.</div>
+  </div>
+
+  <!-- PC3 -->
+  <div class="card" style="margin-bottom:14px;">
+    <div class="meta" style="margin-bottom:8px;">Q3 · 3 marks</div>
+    <p style="font-size:15px; font-weight:700; margin-bottom:12px;">Explain why seed banks can preserve plants in "effective suspended animation" for up to 200 years.</p>
+    <textarea placeholder="Write your answer here..." style="min-height:120px;"></textarea><br><br>
+    <button class="btn-reveal" onclick="toggleReveal(this)">Reveal mark scheme</button>
+    <div class="reveal-box">
+      <div class="mark-point">Seeds are dried and stored at low temperatures (−20°C to −40°C), reducing metabolic activity inside the seed to near-zero (1)</div>
+      <div class="mark-point">Low temperature and low humidity prevent seed deterioration — for every 5°C drop in temperature or 2% fall in humidity, lifespan doubles (1)</div>
+      <div class="mark-point">The seed's embryo remains viable but dormant — it can be germinated and grow into a living plant when returned to suitable conditions, even after 200+ years (1)</div>
+    </div>
+  </div>
+
+  <!-- PC4 -->
+  <div class="card" style="margin-bottom:14px;">
+    <div class="meta" style="margin-bottom:8px;">Q4 · 4 marks</div>
+    <p style="font-size:15px; font-weight:700; margin-bottom:12px;">Explain two problems that can occur in captive breeding programmes, and how zoos try to overcome them.</p>
+    <textarea placeholder="Write your answer here..." style="min-height:140px;"></textarea><br><br>
+    <button class="btn-reveal" onclick="toggleReveal(this)">Reveal mark scheme</button>
+    <div class="reveal-box">
+      Award 1 mark per valid problem + 1 mark per valid mitigation (any two problems):<br><br>
+      <div class="mark-point"><strong>Problem:</strong> small gene pool when the captive population is small — causes inbreeding, reduced genetic diversity, and greater vulnerability to disease (1)</div>
+      <div class="mark-point"><strong>Mitigation:</strong> zoos keep detailed records of genetic data of breeding individuals, and swap sperm between zoos for artificial insemination, maximising genetic variation in offspring (1)</div>
+      <div class="mark-point"><strong>Problem:</strong> animals bred in captivity may have problems adjusting to the wild on reintroduction — they may not know how to find food or avoid predators (1)</div>
+      <div class="mark-point"><strong>Mitigation:</strong> gradual reintroduction via protected areas and "soft release" programmes / training captive animals in wild-like conditions before release (1)</div>
+    </div>
+  </div>
+
+  <!-- PC5 -->
+  <div class="card" style="margin-bottom:14px;">
+    <div class="meta" style="margin-bottom:8px;">Q5 · 4 marks</div>
+    <p style="font-size:15px; font-weight:700; margin-bottom:12px;">Using Costa Rica as an example, explain how a country can use its natural resources to generate income <em>while</em> conserving biodiversity.</p>
+    <textarea placeholder="Write your answer here..." style="min-height:150px;"></textarea><br><br>
+    <button class="btn-reveal" onclick="toggleReveal(this)">Reveal mark scheme</button>
+    <div class="reveal-box">
+      <div class="mark-point">Costa Rica has developed sustainable ecotourism — people travel to see biodiversity, providing income without destroying the environment (1)</div>
+      <div class="mark-point">Over 25% of the country is protected and most electricity comes from renewable sources — so economic activity does not drive habitat destruction (1)</div>
+      <div class="mark-point">Ecotourism provides jobs for local people and contributes around 6% of national GDP — this gives communities an economic incentive to conserve biodiversity rather than exploit it destructively (1)</div>
+      <div class="mark-point">The country covers 0.03% of Earth's surface but hosts 4% of world biodiversity — showing that sustainability can preserve disproportionately rich biodiversity when national commitment is strong (1)</div>
+    </div>
+  </div>
+
+  <!-- PC6 -->
+  <div class="card" style="margin-bottom:14px;">
+    <div class="meta" style="margin-bottom:8px;">Q6 · 5 marks · AO3</div>
+    <p style="font-size:15px; font-weight:700; margin-bottom:12px;">Evaluate the statement: "Ex-situ conservation such as seed banks and zoos is now more important than in-situ conservation for protecting biodiversity."</p>
+    <textarea placeholder="Take a position, support it, consider the counter-argument, conclude..." style="min-height:200px;"></textarea><br><br>
+    <button class="btn-reveal" onclick="toggleReveal(this)">Reveal mark scheme</button>
+    <div class="reveal-box">
+      Award marks for balanced evaluation with specific evidence:
+      <div class="mark-point">Ex-situ has important roles — 80,000 plant species at Kew, captive breeding successes like Californian condors and Przewalski's horses, and the Frozen Ark enabling potential future genetic rescue (1)</div>
+      <div class="mark-point">Ex-situ acts as a safety net when habitats are destroyed — genetic material can be preserved even if the wild species is lost (1)</div>
+      <div class="mark-point">However, ex-situ cannot replace in-situ — it cannot conserve ecosystem relationships, natural selection pressures, or the evolutionary processes that maintain long-term biodiversity (1)</div>
+      <div class="mark-point">In-situ is ultimately necessary because successful reintroduction requires an intact habitat — and captive breeding often fails when the original threat is not addressed (1)</div>
+      <div class="mark-point">Reasoned judgement — the two are complementary, not competing. Ex-situ is a critical backup, but in-situ conservation is fundamental to long-term biodiversity preservation. Costa Rica demonstrates this with its in-situ-led approach achieving disproportionate biodiversity protection (1)</div>
+    </div>
+  </div>
+
+  <div class="lesson-nav">
+    <button class="btn btn-outline" onclick="goTo('p7')">← Part 7</button>
+    <button class="btn btn-primary" onclick="goTo('exam')">Exam Support →</button>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════
+     EXAM SUPPORT
+═══════════════════════════════ -->
+<section id="exam">
+  <div class="part-header">
+    <div class="part-icon pi-exam">★</div>
+    <div class="part-header-text">
+      <h2>Exam Support</h2>
+      <p>Command words · Common mistakes · Worked answer · Have a go</p>
+    </div>
+  </div>
+  <div class="time-badge">Allow 10 minutes</div>
+
+  <h3 style="margin-bottom:16px;">Command Words for this Topic</h3>
+
+  <div class="command-word">
+    <h4>EXPLAIN</h4>
+    <p>For conservation questions, you must give biological reasons. "Seed banks work because seeds stay alive" isn't enough — give the mechanism: low temperature + low humidity → reduced metabolic activity → seeds viable for 200 years.</p>
+  </div>
+  <div class="command-word">
+    <h4>COMPARE</h4>
+    <p>Ex-situ vs in-situ is a classic compare question. Use paired points with linking words ("Ex-situ happens outside the natural habitat, whereas in-situ happens within it..."). Never two separate paragraphs.</p>
+  </div>
+  <div class="command-word">
+    <h4>DISCUSS</h4>
+    <p>Present multiple angles — advantages AND disadvantages. For conservation questions like captive breeding, you must cover both sides. A one-sided answer caps at half marks.</p>
+  </div>
+  <div class="command-word">
+    <h4>EVALUATE</h4>
+    <p>Like discuss, but with a stronger requirement for a <em>judgement</em> at the end. "Overall, captive breeding is most effective when..." — the conclusion must follow from the evidence, not just restate the question.</p>
+  </div>
+
+  <div class="divider"></div>
+
+  <h3 style="margin-bottom:16px;">Common Mistakes</h3>
+
+  <div class="card" style="margin-bottom:10px;">
+    <div style="display:flex; gap:12px;">
+      <div style="color:var(--red); font-size:18px; flex-shrink:0;">✗</div>
+      <div><p style="font-weight:700; margin-bottom:3px;">Confusing conservation with preservation</p><p style="font-size:13px; margin-bottom:0;">Preservation = keep exactly as it is. Conservation = active, dynamic, allows change. Mixing these up is the single most common error in this topic.</p></div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:10px;">
+    <div style="display:flex; gap:12px;">
+      <div style="color:var(--red); font-size:18px; flex-shrink:0;">✗</div>
+      <div><p style="font-weight:700; margin-bottom:3px;">Giving one-sided answers to "discuss" or "evaluate" questions</p><p style="font-size:13px; margin-bottom:0;">These command words specifically require both advantages AND disadvantages. Captive breeding has real strengths (Californian condors) AND real weaknesses (gene pool problems, giant panda). Both must appear.</p></div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:10px;">
+    <div style="display:flex; gap:12px;">
+      <div style="color:var(--red); font-size:18px; flex-shrink:0;">✗</div>
+      <div><p style="font-weight:700; margin-bottom:3px;">Vague named examples or no examples at all</p><p style="font-size:13px; margin-bottom:0;">"Seed banks store seeds" scores little. "The Millennium Seed Bank at Kew holds 80,000 plant species, including all of the UK's 1,442 native flowering plants" scores marks. Specifics pay.</p></div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:24px;">
+    <div style="display:flex; gap:12px;">
+      <div style="color:var(--red); font-size:18px; flex-shrink:0;">✗</div>
+      <div><p style="font-weight:700; margin-bottom:3px;">Forgetting that ex-situ and in-situ are COMPLEMENTARY</p><p style="font-size:13px; margin-bottom:0;">Examiners reward students who understand conservation isn't either/or. The textbook explicitly states: "Ex-situ conservation is always seen as a complementary approach to in-situ conservation". Use this phrase.</p></div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <h3 style="margin-bottom:16px;">Worked Example Answer</h3>
+
+  <div class="card-amber">
+    <p style="font-size:13px; font-weight:700; color:var(--amber); margin-bottom:8px;">EXAM QUESTION (6 marks)</p>
+    <p style="font-size:15px; font-weight:700; color:var(--text); margin-bottom:0;">Discuss why seed banks have become a vital tool in conserving plant biodiversity, including any limitations of this approach.</p>
+  </div>
+
+  <div class="card" style="border-top:3px solid var(--green-mid); margin-top:0;">
+    <p style="font-size:12px; font-weight:700; letter-spacing:0.06em; text-transform:uppercase; color:var(--green-mid); margin-bottom:12px;">Model Answer (6/6)</p>
+    <p style="font-size:14px; line-height:1.9; color:var(--text-mid);">
+      Seed banks are an effective form of ex-situ conservation because they preserve the genetic material of plants outside their natural habitat. The Millennium Seed Bank at Kew holds seeds of around 80,000 plant species, including the UK's entire native flora — over 300 of which are already threatened with extinction. Seeds are a practical choice for conservation because plants produce huge numbers of seeds that can be collected without damaging wild populations, and seeds are small enough that large numbers can be stored cheaply in small spaces. Stored at −20°C to −40°C with low humidity, metabolic activity is reduced almost to zero — for every 5°C drop in temperature or 2% fall in humidity, lifespan doubles, allowing many seeds to remain viable for 200 years or more.<br><br>
+      However, seed banks have significant limitations. About 20% of known plant species have seeds that do not store well — including crucial crops such as mango, avocado, rubber, cacao, and coconut. These require alternative approaches like <strong>field gene banks</strong> (the International Potato Centre in Peru maintains 4,100 clones of potato requiring annual replanting), which take much more space, labour, and funding than seed storage. Seed banks also cannot preserve ecological relationships — a stored seed retains the plant's genetics, but it cannot preserve the pollinators, soil microbes, or fungi the plant depends on in its natural ecosystem. This is why seed banks are always seen as <em>complementary</em> to in-situ conservation, never a replacement.
+    </p>
+    <div style="margin-top:12px; padding-top:12px; border-top:1px solid var(--border);">
+      <p style="font-size:12px; font-weight:700; color:var(--green-dark);">Why this scores full marks:</p>
+      <p style="font-size:13px; color:var(--text-mid);">✓ Specific named examples (Kew, Peru potato centre, specific crop species) ✓ Specific mechanisms (temperature, humidity, 200-year lifespan) ✓ Balanced — covers benefits AND limitations ✓ Uses the key phrase "complementary to in-situ" ✓ Acknowledges ecological relationships beyond the genetics</p>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <h3 style="margin-bottom:8px;">Have a Go</h3>
+  <p style="margin-bottom:18px; color:var(--text-mid);">Full exam conditions — write your answer, then reveal the mark scheme.</p>
+
+  <div class="card-amber">
+    <p style="font-size:13px; font-weight:700; color:var(--amber); margin-bottom:8px;">EXAM QUESTION (6 marks)</p>
+    <p style="font-size:15px; font-weight:700; color:var(--text); margin-bottom:0;">Evaluate the role of education in long-term biodiversity conservation. Use specific examples to support your answer.</p>
+  </div>
+
+  <textarea style="width:100%; min-height:200px; border:1px solid var(--border); border-radius:6px; padding:14px; font-family:'Lato',sans-serif; font-size:14px; color:var(--text); background:var(--bg); resize:vertical; line-height:1.7; margin-bottom:14px;" placeholder="Write your full exam answer here..."></textarea>
+
+  <button class="btn-reveal" onclick="toggleReveal(this)">Reveal mark scheme</button>
+  <div class="reveal-box">
+    <div class="mark-point">Education is important because long-term conservation requires sustained public and political support — and people are more likely to act when they understand the impact of human activities on the natural world (1)</div>
+    <div class="mark-point">Zoos, national parks, and seed banks play a dual role — they conserve species AND provide educational experiences that help the public understand biodiversity and threats (1)</div>
+    <div class="mark-point">Costa Rica illustrates the power of education — from the president to schoolchildren, national commitment to conservation has made ecotourism 6% of GDP while protecting over 25% of the country (1)</div>
+    <div class="mark-point">Professor Legesse Negash's Center in Ethiopia combines seed banks, tissue culture, AND education — training farmers and young biologists so that conservation can continue after the current generation (1)</div>
+    <div class="mark-point">However, education alone is insufficient — without political action, legislation, and economic alternatives, awareness does not always translate to change (1)</div>
+    <div class="mark-point">Reasoned judgement: education is the foundation that enables other conservation efforts to succeed; without it, even the best scientific conservation strategies will face resistance or apathy (1)</div>
+  </div>
+
+  <div class="card-green" style="margin-top:32px;">
+    <h3 style="margin-bottom:8px;">Exam support complete 🌿</h3>
+    <p style="margin-bottom:0;">One more section — a closing reflection using the Connect-Extend-Challenge routine. This is a chance to consolidate everything you've learned across 4C, not just today.</p>
+  </div>
+
+  <div class="lesson-nav">
+    <button class="btn btn-outline" onclick="goTo('progress')">← Progress Check</button>
+    <button class="btn btn-primary" onclick="goTo('reflect')">Close: Reflect →</button>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════
+     REFLECT — CONNECT EXTEND CHALLENGE
+═══════════════════════════════ -->
+<section id="reflect">
+  <div class="part-header">
+    <div class="part-icon pi-vtr">🌿</div>
+    <div class="part-header-text">
+      <h2>Close — Connect · Extend · Challenge</h2>
+      <p>A closing thinking routine to consolidate the unit</p>
+    </div>
+  </div>
+  <div class="time-badge">Allow 6 minutes</div>
+
+  <div class="vtr-banner">
+    <div class="v-icon">🌿</div>
+    <div>
+      <h3>Connect-Extend-Challenge</h3>
+      <p>How does today's learning CONNECT to what you already knew? How has it EXTENDED your thinking? What still CHALLENGES you? A powerful closing routine that turns one lesson into deeper understanding across the whole topic.</p>
+      <div class="vtr-attr">A Visible Thinking Routine · Harvard Project Zero</div>
+    </div>
+  </div>
+
+  <div class="card-teal" style="margin-bottom:20px;">
+    <h3 style="color:var(--teal); margin-bottom:6px;">How to use this routine</h3>
+    <p style="margin-bottom:0; font-size:14px;">Think back across the whole of 4C — biodiversity, endemism, measuring diversity, adaptation, Hardy-Weinberg, bottlenecks, speciation, and today's conservation. Three simple prompts. No right answers — the quality of your thinking is what matters.</p>
+  </div>
+
+  <div class="cec-grid">
+    <div class="cec-box cec-connect">
+      <h4>🔗 Connect</h4>
+      <p class="cec-prompt">How does today's lesson on conservation connect to what you learned earlier in 4C? What ideas fit together that you hadn't noticed before?</p>
+      <textarea placeholder="Today's lesson connects to earlier 4C content because..." style="min-height:100px;"></textarea>
+      <br><br>
+      <button class="btn-reveal" onclick="toggleReveal(this)">Example connections</button>
+      <div class="reveal-box">
+        <strong>Possible connections:</strong><br>
+        ❖ Biodiversity hotspots (4C.1) — conservation priorities should target hotspots because losing them means losing disproportionate numbers of endemic species forever<br>
+        ❖ Measuring biodiversity (4C.2) — we need D index and heterozygosity index to decide which populations are in greatest conservation need<br>
+        ❖ Adaptation (4C.3) — captive-bred animals may lose behavioural adaptations needed for wild survival, explaining why reintroduction often fails<br>
+        ❖ Hardy-Weinberg (4C.4) — low heterozygosity in cheetahs shows why captive gene-pool management matters<br>
+        ❖ Bottlenecks/founder effect (4C.5) — captive populations experience extreme founder effects, making genetic management via sperm swaps essential<br>
+        ❖ Speciation (4C.5) — adaptive radiation on islands explains why island endemic species are uniquely vulnerable
+      </div>
+    </div>
+
+    <div class="cec-box cec-extend">
+      <h4>🚀 Extend</h4>
+      <p class="cec-prompt">What new idea or insight from today has extended your thinking? What can you now do or understand that you couldn't before?</p>
+      <textarea placeholder="Today has extended my thinking by..." style="min-height:100px;"></textarea>
+      <br><br>
+      <button class="btn-reveal" onclick="toggleReveal(this)">Example extensions</button>
+      <div class="reveal-box">
+        <strong>Possible extensions:</strong><br>
+        ❖ I used to think conservation meant "protecting animals in zoos" — now I see it is a much larger set of tools (sustainable agriculture, education, legislation, ecotourism) with ex-situ being just one part<br>
+        ❖ I now understand that conservation decisions involve trade-offs (cost, space, probability of success, opportunity cost) — not just "is this a good idea?"<br>
+        ❖ I can now see how ALL of 4C connects — biodiversity measurement, adaptation, speciation, genetics — they're all tools for making conservation decisions<br>
+        ❖ I now think about conservation at three scales (genetic, species, ecosystem) rather than just "species"<br>
+        ❖ Costa Rica shows me that economic incentives can align with conservation — that was a surprise
+      </div>
+    </div>
+
+    <div class="cec-box cec-challenge">
+      <h4>🤔 Challenge</h4>
+      <p class="cec-prompt">What ideas still challenge you? What's confusing, contested, or unresolved for you? Good questions are worth more than premature answers.</p>
+      <textarea placeholder="Something that still challenges me is..." style="min-height:100px;"></textarea>
+      <br><br>
+      <button class="btn-reveal" onclick="toggleReveal(this)">Example challenges</button>
+      <div class="reveal-box">
+        <strong>Possible challenges:</strong><br>
+        ❖ How do we decide which species to prioritise when we can't save them all? Is saving one iconic species (panda) at the cost of less charismatic ones actually good conservation?<br>
+        ❖ The Frozen Ark suggests we might revive extinct species in future — does that change how we should think about current extinctions? Should we try harder now if we might be able to recover species later?<br>
+        ❖ Who decides what gets conserved — wealthy countries, scientists, local communities, or all of them?<br>
+        ❖ How do we balance human development (food, land, jobs) against biodiversity protection in poor regions where both needs are urgent?<br>
+        ❖ Is sustainable agriculture actually scalable, or will we always need intensive farming to feed 8+ billion people?<br>
+        ❖ If habitat destruction is the main cause of biodiversity loss, why do we spend so much on zoos and so little on habitat protection?
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="card-green">
+    <h3 style="margin-bottom:8px;">Unit 4C complete 🌿</h3>
+    <p style="margin-bottom:8px;">You've worked through biodiversity, measuring biodiversity, adaptation, Hardy-Weinberg, speciation, and conservation. That's the complete Biodiversity and Conservation topic.</p>
+    <p style="margin-bottom:0;">Hold on to the three thinking routines you used today — See-Think-Wonder, Claim-Support-Question, Connect-Extend-Challenge. They work in any subject, on any topic, and will serve you well beyond biology.</p>
+  </div>
+
+  <div class="lesson-nav">
+    <button class="btn btn-outline" onclick="goTo('exam')">← Exam Support</button>
+    <button class="btn btn-primary" onclick="goTo('cover')">↺ Back to start</button>
+  </div>
+</section>
+
+<script>
+// NAV
+const sections = ['cover','p1','p2','p3','p4','p5','p6','p7','progress','exam','reflect'];
+const navIds = ['nav-cover','nav-p1','nav-p2','nav-p3','nav-p4','nav-p5','nav-p6','nav-p7','nav-progress','nav-exam','nav-reflect'];
+
+function buildDots(){
+  const c=document.getElementById('progress-dots'); c.innerHTML='';
+  sections.forEach((_,i)=>{
+    const d=document.createElement('div');
+    d.className='progress-dot'+(i===0?' active':'');
+    d.id='dot-'+i; c.appendChild(d);
+  });
+}
+
+function goTo(id){
+  sections.forEach(s=>{const el=document.getElementById(s); if(el) el.classList.remove('active');});
+  navIds.forEach(n=>{const el=document.getElementById(n); if(el) el.classList.remove('active');});
+  const t=document.getElementById(id); if(t) t.classList.add('active');
+  const idx=sections.indexOf(id);
+  if(idx>=0){
+    const ne=document.getElementById(navIds[idx]); if(ne) ne.classList.add('active');
+    sections.forEach((_,i)=>{
+      const dot=document.getElementById('dot-'+i); if(!dot) return;
+      dot.className='progress-dot';
+      if(i<idx) dot.classList.add('done');
+      else if(i===idx) dot.classList.add('active');
+    });
+  }
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+buildDots();
+
+// REVEAL
+function toggleReveal(btn){
+  const box = btn.nextElementSibling; if(!box) return;
+  const s = box.classList.contains('show');
+  box.classList.toggle('show', !s);
+  btn.textContent = s ? 'Reveal answer' : 'Hide answer';
+}
+
+// MCQ
+function checkMCQ(btn, correct, id){
+  const g = btn.closest('.mcq-options'); if(!g) return;
+  g.querySelectorAll('.mcq-option').forEach(b=>b.classList.add('disabled'));
+  const ce = document.getElementById('fb-'+id+'-correct');
+  const ie = document.getElementById('fb-'+id+'-incorrect');
+  if(correct){ btn.classList.add('correct'); if(ce) ce.classList.add('show'); }
+  else { btn.classList.add('incorrect'); if(ie) ie.classList.add('show');
+    g.querySelectorAll('.mcq-option').forEach(b=>{ if(b.getAttribute('onclick')&&b.getAttribute('onclick').includes('true')) b.classList.add('correct'); });
+  }
+}
+
+// META-CHECK SELECTIONS
+function selectMeta(el){
+  // Only allow one selection per metacognitive check
+  const group = el.parentElement;
+  group.querySelectorAll('.mc-option').forEach(o=>o.classList.remove('selected'));
+  el.classList.add('selected');
+}
+</script>
+</body>
+</html>
