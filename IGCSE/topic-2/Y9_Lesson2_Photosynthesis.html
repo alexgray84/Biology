@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Photosynthesis — Year 9 Biology · Lesson 2</title>
+<style>
+  :root{
+    --bg:#fafaf7;
+    --ink:#23332b;
+    --muted:#5a6b62;
+    --leaf:#5a8a5a;
+    --leaf-dk:#3f6e3f;
+    --leaf-soft:#e8f1e6;
+    --leaf-line:#cfe1cb;
+    --sky:#eef4fb;
+    --sky-line:#cfe0f0;
+    --sky-dk:#3a6594;
+    --sun:#fff6e3;
+    --sun-line:#f0d9a3;
+    --sun-dk:#8a6614;
+    --rose:#fdeeee;
+    --rose-line:#f2c7c7;
+    --chip:#f1ede4;
+    --shadow:0 1px 2px rgba(0,0,0,.04), 0 6px 18px rgba(34,51,42,.06);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,sans-serif;
+    line-height:1.55;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1080px;margin:0 auto;padding:28px 24px 80px}
+
+  header.hero{background:linear-gradient(180deg,#f4f8ee 0%,#fafaf7 100%);
+    border:1px solid var(--leaf-line);border-radius:18px;padding:22px 26px;
+    box-shadow:var(--shadow);margin-bottom:18px}
+  .eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--leaf);font-weight:600}
+  h1{font-size:28px;margin:6px 0 4px;letter-spacing:-.01em}
+  .sub{color:var(--muted);font-size:14.5px;margin:0 0 14px}
+
+  .picker{display:flex;flex-wrap:wrap;gap:8px;align-items:center;background:#fff;border:1px solid var(--leaf-line);border-radius:14px;padding:10px 12px}
+  .picker .pick-label{font-size:12px;color:var(--muted);font-weight:600;letter-spacing:.05em;text-transform:uppercase;margin-right:4px}
+  .picker button{appearance:none;border:1px solid var(--leaf-line);background:#fff;color:var(--ink);
+    border-radius:999px;padding:7px 14px;font-size:13.5px;font-weight:600;cursor:pointer;transition:.15s}
+  .picker button:hover{background:var(--leaf-soft)}
+  .picker button.active{background:var(--leaf);color:#fff;border-color:var(--leaf)}
+  .picker .reset{margin-left:auto;background:transparent;border:0;color:var(--muted);font-size:12.5px;cursor:pointer;text-decoration:underline}
+
+  .progress{display:flex;gap:6px;margin-top:14px;flex-wrap:wrap}
+  .pdot{flex:1;min-width:18px;height:8px;background:#ede7d6;border-radius:6px;transition:.2s}
+  .pdot.done{background:var(--leaf)}
+  .progress-meta{font-size:12px;color:var(--muted);margin-top:6px;text-align:right}
+
+  .grid{display:grid;grid-template-columns:1fr 290px;gap:20px;margin-top:8px}
+  @media (max-width:880px){.grid{grid-template-columns:1fr}}
+
+  section.card{background:#fff;border:1px solid #ecebe4;border-radius:16px;
+    padding:20px 22px;margin-bottom:16px;box-shadow:var(--shadow);transition:.2s}
+  section.card.done{background:#f7fbf6;border-color:var(--leaf-line)}
+  .sec-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:6px}
+  .sec-num{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;
+    background:var(--leaf);color:#fff;border-radius:8px;font-weight:700;font-size:13px}
+  .sec-title{font-size:17px;font-weight:700;margin:0}
+  .time{margin-left:auto;display:inline-flex;align-items:center;gap:6px;
+    background:var(--chip);color:#665a3f;border-radius:999px;padding:4px 10px;font-size:12px;font-weight:600}
+  .time::before{content:"";width:8px;height:8px;border-radius:50%;background:#d8b85a;display:inline-block}
+  .task{font-size:15px;margin:4px 0 10px}
+
+  .toggles{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 0}
+  .tog{appearance:none;border:1px solid #e0dccd;background:#fff;border-radius:999px;
+    padding:6px 12px;font-size:12.5px;font-weight:600;color:var(--ink);cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:.15s}
+  .tog:hover{background:#fafaf2}
+  .tog.help{color:var(--sky-dk);border-color:var(--sky-line)}
+  .tog.help.on{background:var(--sky);border-color:var(--sky-dk)}
+  .tog.stem{color:#5a3a8a;border-color:#dccff0}
+  .tog.stem.on{background:#f1ebfa;border-color:#5a3a8a}
+  .tog.stretch{color:var(--sun-dk);border-color:var(--sun-line)}
+  .tog.stretch.on{background:var(--sun);border-color:var(--sun-dk)}
+  .tog.done{margin-left:auto;color:var(--leaf-dk);border-color:var(--leaf-line)}
+  .tog.done.on{background:var(--leaf);color:#fff;border-color:var(--leaf)}
+
+  .panel{display:none;border-radius:12px;padding:12px 14px;margin-top:10px;border:1px solid;font-size:14.5px}
+  .panel.show{display:block;animation:slide .18s ease-out}
+  @keyframes slide{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
+  .panel.help{background:var(--sky);border-color:var(--sky-line)}
+  .panel.stem{background:#f7f3fd;border-color:#dccff0}
+  .panel.stretch{background:var(--sun);border-color:var(--sun-line)}
+  .panel .label{font-size:11px;letter-spacing:.12em;text-transform:uppercase;font-weight:700;margin-bottom:4px}
+  .panel.help .label{color:var(--sky-dk)}
+  .panel.stem .label{color:#5a3a8a}
+  .panel.stretch .label{color:var(--sun-dk)}
+  .stems{margin:0;padding-left:18px}
+  .stems li{margin:4px 0;font-style:italic}
+  .panel.stem li{color:#46276e}
+  .panel.help li,.panel.help p{color:#264466}
+
+  .ways{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+  .way{font-size:12px;background:#f7f5ec;border:1px dashed #d8d2bc;border-radius:8px;padding:5px 9px;color:#665a3f}
+
+  figure{margin:14px 0;text-align:center}
+  figure svg{max-width:100%;height:auto;border-radius:12px;background:#fff;border:1px solid #eee;padding:6px}
+  figcaption{font-size:12.5px;color:var(--muted);margin-top:6px}
+
+  .equation{font-family:Menlo,Consolas,monospace;background:#f7f8f3;border:1px solid #ecebe4;border-radius:10px;padding:14px;text-align:center;font-size:16px;margin:10px 0}
+  .equation sub{font-size:11px}
+  .equation .arrow{display:inline-block;margin:0 10px;color:var(--leaf-dk);position:relative}
+  .equation .above{display:block;font-size:11px;color:var(--sun-dk);margin-bottom:-2px}
+  .equation .below{display:block;font-size:11px;color:var(--leaf-dk);margin-top:-2px}
+
+  .uses-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin-top:10px}
+  .ucard{background:#fff;border:1px solid #ecebe4;border-radius:12px;padding:12px}
+  .ucard b{display:block;color:var(--leaf-dk);font-size:13px;margin-bottom:4px}
+  .ucard .icon{font-size:22px;margin-bottom:4px}
+
+  .match-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+  @media (max-width:640px){.match-grid{grid-template-columns:1fr}}
+  .mcard{background:#fff;border:1px solid #ecebe4;border-radius:10px;padding:10px 12px;font-size:14px}
+  .mcard b{display:block;color:var(--leaf-dk);font-size:12.5px;margin-bottom:2px}
+
+  .plenary-fill{display:grid;gap:8px;margin-top:10px}
+  .pfill{background:#fff;border:1px solid #ecebe4;border-radius:10px;padding:10px 12px;font-size:14.5px;cursor:pointer;transition:.15s}
+  .pfill:hover{background:var(--leaf-soft)}
+  .pfill .ans{display:none;color:var(--leaf-dk);font-weight:700;margin-top:6px}
+  .pfill.flipped .ans{display:block;animation:slide .18s ease-out}
+  .pfill .qno{display:inline-block;width:22px;height:22px;line-height:22px;text-align:center;background:var(--leaf);color:#fff;border-radius:50%;font-size:12px;font-weight:700;margin-right:8px}
+
+  aside.glossary{position:sticky;top:14px;align-self:start;background:#fff;border:1px solid #ecebe4;
+    border-radius:16px;padding:16px;box-shadow:var(--shadow);max-height:calc(100vh - 28px);overflow:auto}
+  aside.glossary h3{margin:0 0 4px;font-size:14px;letter-spacing:.1em;text-transform:uppercase;color:var(--leaf)}
+  aside.glossary .gloss-hint{font-size:11.5px;color:var(--muted);margin:0 0 10px}
+  .kw{display:grid;grid-template-columns:34px 1fr;gap:10px;align-items:start;margin:9px 0;padding-bottom:9px;border-bottom:1px dashed #eee}
+  .kw:last-child{border-bottom:0}
+  .kw .ic{width:34px;height:34px;border-radius:9px;background:var(--leaf-soft);display:flex;align-items:center;justify-content:center}
+  .kw .term{font-weight:700;font-size:13.5px;line-height:1.25}
+  .kw .def{font-size:12.5px;color:var(--muted);margin-top:2px}
+
+  footer{color:var(--muted);font-size:12.5px;text-align:center;margin-top:24px}
+  .celebrate{display:none;background:var(--leaf-soft);border:1px solid var(--leaf-line);border-radius:14px;padding:14px;text-align:center;margin-bottom:16px;color:var(--leaf-dk);font-weight:600}
+  .celebrate.show{display:block}
+
+  @media print{
+    .picker,.toggles .done,.celebrate{display:none}
+    .panel,.pfill .ans{display:block !important}
+    aside.glossary{position:static}
+    .grid{grid-template-columns:1fr}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="hero">
+    <div class="eyebrow">Year 9 Biology · Lesson 2 · Plant Nutrition</div>
+    <h1>Photosynthesis 🌞🌿</h1>
+    <p class="sub">By the end of today you'll be able to <b>state the word and symbol equation</b>, <b>describe what photosynthesis does</b>, and <b>explain what the plant does with the glucose</b> it makes.</p>
+
+    <div class="picker">
+      <span class="pick-label">Pick your support level →</span>
+      <button id="lvl-light" class="lvl">🚀 I've got this</button>
+      <button id="lvl-std" class="lvl active">⚖️ Standard</button>
+      <button id="lvl-full" class="lvl">🪜 Give me all the support</button>
+      <button class="reset" id="reset">Reset progress</button>
+    </div>
+
+    <div class="progress" id="progress"></div>
+    <div class="progress-meta"><span id="done-count">0</span> / <span id="total-count">8</span> sections done</div>
+  </header>
+
+  <div class="celebrate" id="celebrate">🌱 Brilliant — you've worked through the whole lesson on photosynthesis. Take a screenshot to show what you covered.</div>
+
+  <div class="grid">
+    <main>
+
+      <!-- SECTION 1 -- DO NOW -->
+      <section class="card" data-sec="1">
+        <div class="sec-head">
+          <span class="sec-num">1</span>
+          <h2 class="sec-title">Do Now — Recap from last lesson</h2>
+          <span class="time">3 min</span>
+        </div>
+        <p class="task">Answer these three quickly in your book:</p>
+        <ol>
+          <li>Explain how plants reduce water loss. <b>(2 marks)</b></li>
+          <li>Which leaf layer contains cells with the most chloroplasts?</li>
+          <li>What is the function of a chloroplast?</li>
+        </ol>
+
+        <div class="toggles">
+          <button class="tog help">💡 Hint</button>
+          <button class="tog stem">📚 Sentence stems</button>
+          <button class="tog stretch">⚡ Check your answers</button>
+          <button class="tog done">✓ I've done this</button>
+        </div>
+
+        <div class="panel help"><div class="label">Hint</div>
+          <ul>
+            <li>For Q1, think about a <b>layer</b> on top of the leaf and tiny <b>holes</b> on the bottom.</li>
+            <li>For Q2, it's the layer right under the upper epidermis.</li>
+            <li>For Q3, chloroplasts are where one specific reaction happens…</li>
+          </ul>
+        </div>
+        <div class="panel stem"><div class="label">Sentence stems</div>
+          <ul class="stems">
+            <li>"Plants reduce water loss by ____ and by ____."</li>
+            <li>"The layer with most chloroplasts is the ____ layer."</li>
+            <li>"Chloroplasts contain ____ which absorbs ____ to make ____."</li>
+          </ul>
+        </div>
+        <div class="panel stretch"><div class="label">Check your answers</div>
+          <ol>
+            <li><b>Waxy cuticle</b> stops water evaporating + <b>guard cells close the stomata</b> in hot/dry conditions.</li>
+            <li><b>Palisade mesophyll.</b></li>
+            <li>Chloroplasts are where <b>photosynthesis</b> happens. They contain <b>chlorophyll</b>, which absorbs light energy to make glucose.</li>
+          </ol>
+        </div>
+      </section>
+
+      <!-- SECTION 2 -- STARTER -->
+      <section class="card" data-sec="2">
+        <div class="sec-head">
+          <span class="sec-num">2</span>
+          <h2 class="sec-title">Starter — Label the leaf layers</h2>
+          <span class="time">5 min</span>
+        </div>
+        <p class="task">Quick recall — label each layer marked 1–7 on the leaf cross-section.</p>
+
+        <figure>
+          <svg viewBox="0 0 760 320" xmlns="http://www.w3.org/2000/svg">
+            <rect x="40" y="30" width="680" height="14" fill="#f6e9c2" stroke="#caa84a"/>
+            <text x="730" y="42" font-size="13" font-weight="700" fill="#23332b">1</text>
+            <rect x="40" y="44" width="680" height="26" fill="#f3eedd" stroke="#caa84a"/>
+            <text x="730" y="62" font-size="13" font-weight="700" fill="#23332b">2</text>
+            <rect x="40" y="70" width="680" height="60" fill="#cfe7c5" stroke="#5a8a5a"/>
+            <g fill="#7fb07a" stroke="#4f7a4f">
+              <g id="col2"><rect width="32" height="50" rx="5" x="0" y="5"/><circle cx="9" cy="18" r="3" fill="#3f6e3f" stroke="none"/><circle cx="20" cy="32" r="3" fill="#3f6e3f" stroke="none"/></g>
+              <use href="#col2" x="55" y="70"/><use href="#col2" x="95" y="70"/><use href="#col2" x="135" y="70"/>
+              <use href="#col2" x="175" y="70"/><use href="#col2" x="215" y="70"/><use href="#col2" x="255" y="70"/>
+              <use href="#col2" x="295" y="70"/><use href="#col2" x="335" y="70"/><use href="#col2" x="375" y="70"/>
+              <use href="#col2" x="415" y="70"/><use href="#col2" x="455" y="70"/><use href="#col2" x="495" y="70"/>
+              <use href="#col2" x="535" y="70"/><use href="#col2" x="575" y="70"/><use href="#col2" x="615" y="70"/>
+              <use href="#col2" x="655" y="70"/>
+            </g>
+            <text x="730" y="100" font-size="13" font-weight="700" fill="#23332b">3</text>
+            <rect x="40" y="130" width="680" height="100" fill="#e8f1e6" stroke="#5a8a5a"/>
+            <g fill="#a5cfa0" stroke="#4f7a4f">
+              <circle cx="80" cy="170" r="13"/><circle cx="125" cy="190" r="11"/><circle cx="160" cy="160" r="12"/>
+              <circle cx="210" cy="185" r="13"/><circle cx="260" cy="170" r="11"/><circle cx="430" cy="170" r="13"/>
+              <circle cx="475" cy="190" r="11"/><circle cx="525" cy="170" r="12"/><circle cx="575" cy="190" r="13"/>
+              <circle cx="625" cy="170" r="11"/><circle cx="100" cy="215" r="11"/><circle cx="180" cy="220" r="11"/>
+              <circle cx="250" cy="218" r="13"/><circle cx="430" cy="218" r="12"/><circle cx="500" cy="215" r="11"/>
+              <circle cx="585" cy="222" r="13"/>
+            </g>
+            <g transform="translate(340 175)">
+              <ellipse rx="42" ry="28" fill="#fff" stroke="#5a6b62"/>
+              <circle cx="-14" r="9" fill="#dceaf6" stroke="#3a6594"/>
+              <circle cx="14" r="9" fill="#fde0d0" stroke="#a05a3f"/>
+            </g>
+            <text x="730" y="170" font-size="13" font-weight="700" fill="#23332b">4</text>
+            <text x="730" y="190" font-size="13" font-weight="700" fill="#23332b">5</text>
+            <rect x="40" y="230" width="680" height="22" fill="#f3eedd" stroke="#caa84a"/>
+            <text x="730" y="246" font-size="13" font-weight="700" fill="#23332b">6</text>
+            <g>
+              <path d="M180 252 q 18 18 0 30 q -22 -10 0 -30 z" fill="#7fb07a" stroke="#3f6e3f"/>
+              <path d="M222 252 q -18 18 0 30 q 22 -10 0 -30 z" fill="#7fb07a" stroke="#3f6e3f"/>
+              <path d="M460 252 q 18 18 0 30 q -22 -10 0 -30 z" fill="#7fb07a" stroke="#3f6e3f"/>
+              <path d="M502 252 q -18 18 0 30 q 22 -10 0 -30 z" fill="#7fb07a" stroke="#3f6e3f"/>
+            </g>
+            <text x="730" y="275" font-size="13" font-weight="700" fill="#23332b">7</text>
+          </svg>
+          <figcaption>Cross-section of a leaf — name each numbered layer.</figcaption>
+        </figure>
+
+        <div class="toggles">
+          <button class="tog help">💡 Need a hint?</button>
+          <button class="tog stretch">⚡ Check answers</button>
+          <button class="tog done">✓ I've done this</button>
+        </div>
+        <div class="panel help"><div class="label">Hint</div>
+          <p>Top → bottom: waxy ____, upper ____, palisade ____, spongy ____, vascular ____, lower ____, ____ &amp; guard cells.</p>
+        </div>
+        <div class="panel stretch"><div class="label">Answers</div>
+          <ol>
+            <li>Waxy cuticle</li>
+            <li>Upper epidermis</li>
+            <li>Palisade mesophyll</li>
+            <li>Spongy mesophyll</li>
+            <li>Vascular bundle (xylem &amp; phloem)</li>
+            <li>Lower epidermis</li>
+            <li>Stomata + guard cells</li>
+          </ol>
+        </div>
+      </section>
+
+      <!-- SECTION 3 -- WHAT IS PHOTOSYNTHESIS -->
+      <section class="card" data-sec="3">
+        <div class="sec-head">
+          <span class="sec-num">3</span>
+          <h2 class="sec-title">So… what is photosynthesis?</h2>
+          <span class="time">3 min</span>
+        </div>
+        <p class="task">Read the two lines below, then in <b>your own words</b> finish the sentence: <i>"Photosynthesis is…"</i></p>
+        <div style="background:#f7f8f3;border-radius:10px;padding:12px 14px;border:1px solid #ecebe4;font-size:14.5px">
+          <p style="margin:0 0 6px"><b>Photosynthesis</b> is a chemical reaction that happens in the <b>leaves</b> of plants.</p>
+          <p style="margin:0">It is powered by <b>energy from sunlight</b>, captured by the green pigment <b>chlorophyll</b> inside the chloroplasts.</p>
+        </div>
+
+        <div class="toggles">
+          <button class="tog stem">📚 Sentence stems</button>
+          <button class="tog stretch">⚡ Stretch</button>
+          <button class="tog done">✓ I've done this</button>
+        </div>
+        <div class="panel stem"><div class="label">Sentence stems</div>
+          <ul class="stems">
+            <li>"Photosynthesis is the reaction that ____, using energy from ____."</li>
+            <li>"It happens inside ____, which contain a green pigment called ____."</li>
+          </ul>
+        </div>
+        <div class="panel stretch"><div class="label">Push yourself</div>
+          <p>Your friend says <i>"photosynthesis is how a plant gets its energy."</i> Why is this <b>not quite right</b>? (Think: the plant makes <b>food</b>, not energy itself.)</p>
+        </div>
+      </section>
+
+      <!-- SECTION 4 -- REACTANTS & PRODUCTS -->
+      <section class="card" data-sec="4">
+        <div class="sec-head">
+          <span class="sec-num">4</span>
+          <h2 class="sec-title">Reactants &amp; products — what goes IN, what comes OUT</h2>
+          <span class="time">10 min</span>
+        </div>
+        <p class="task">Use the diagram. Find the <b>4 reactants</b> (what's needed) and <b>2 products</b> (what's made). Add them to your book in two columns: REACTANTS / PRODUCTS.</p>
+
+        <figure>
+          <svg viewBox="0 0 720 380" xmlns="http://www.w3.org/2000/svg">
+            <!-- sky -->
+            <rect width="720" height="380" fill="#fafaf7"/>
+            <!-- sun -->
+            <g transform="translate(80 60)">
+              <circle r="28" fill="#fde7a8" stroke="#caa84a"/>
+              <g stroke="#caa84a" stroke-width="2" stroke-linecap="round">
+                <line x1="-44" y1="0" x2="-36" y2="0"/>
+                <line x1="44" y1="0" x2="36" y2="0"/>
+                <line x1="0" y1="-44" x2="0" y2="-36"/>
+                <line x1="0" y1="44" x2="0" y2="36"/>
+                <line x1="-32" y1="-32" x2="-26" y2="-26"/>
+                <line x1="32" y1="-32" x2="26" y2="-26"/>
+              </g>
+              <text y="5" text-anchor="middle" font-size="13" fill="#8a6614" font-weight="700">SUN</text>
+            </g>
+            <!-- light arrows -->
+            <g stroke="#e3b94a" stroke-width="2" fill="none">
+              <path d="M120 90 L 230 160" marker-end="url(#a)"/>
+              <path d="M130 100 L 280 160" marker-end="url(#a)"/>
+            </g>
+            <text x="155" y="135" font-size="12" fill="#8a6614" font-weight="700">light energy</text>
+
+            <!-- leaf body -->
+            <g transform="translate(360 200)">
+              <ellipse rx="200" ry="80" fill="#cfe7c5" stroke="#3f6e3f" stroke-width="1.5"/>
+              <line x1="-200" y1="0" x2="200" y2="0" stroke="#3f6e3f" stroke-width="1"/>
+              <text y="-30" text-anchor="middle" font-size="14" fill="#3f6e3f" font-weight="700">LEAF</text>
+              <text y="-12" text-anchor="middle" font-size="11" fill="#3f6e3f">(chloroplasts contain chlorophyll)</text>
+              <!-- chloroplast dots -->
+              <g fill="#3f6e3f">
+                <circle cx="-120" cy="20" r="3"/><circle cx="-80" cy="35" r="3"/><circle cx="-40" cy="20" r="3"/>
+                <circle cx="0" cy="40" r="3"/><circle cx="40" cy="22" r="3"/><circle cx="80" cy="35" r="3"/>
+                <circle cx="120" cy="20" r="3"/>
+              </g>
+              <!-- stomata on bottom -->
+              <g transform="translate(-100 80)" fill="#7fb07a" stroke="#3f6e3f">
+                <path d="M-6 -4 q 6 8 0 16 q -8 -4 0 -16 z"/><path d="M6 -4 q -6 8 0 16 q 8 -4 0 -16 z"/>
+              </g>
+              <g transform="translate(0 80)" fill="#7fb07a" stroke="#3f6e3f">
+                <path d="M-6 -4 q 6 8 0 16 q -8 -4 0 -16 z"/><path d="M6 -4 q -6 8 0 16 q 8 -4 0 -16 z"/>
+              </g>
+              <g transform="translate(100 80)" fill="#7fb07a" stroke="#3f6e3f">
+                <path d="M-6 -4 q 6 8 0 16 q -8 -4 0 -16 z"/><path d="M6 -4 q -6 8 0 16 q 8 -4 0 -16 z"/>
+              </g>
+            </g>
+
+            <!-- arrow defs -->
+            <defs>
+              <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L 10 5 L 0 10 z" fill="#3f6e3f"/></marker>
+              <marker id="b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L 10 5 L 0 10 z" fill="#3a6594"/></marker>
+              <marker id="c" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L 10 5 L 0 10 z" fill="#a05a3f"/></marker>
+            </defs>
+
+            <!-- water from roots up xylem -->
+            <g stroke="#3a6594" stroke-width="2.5" fill="none">
+              <path d="M360 360 L 360 290" marker-end="url(#b)"/>
+            </g>
+            <text x="370" y="345" font-size="12" fill="#3a6594" font-weight="700">H₂O (water)</text>
+            <text x="370" y="358" font-size="11" fill="#3a6594">up the xylem</text>
+
+            <!-- CO2 in via stoma -->
+            <g stroke="#a05a3f" stroke-width="2.5" fill="none">
+              <path d="M260 350 L 290 290" marker-end="url(#c)"/>
+            </g>
+            <text x="180" y="345" font-size="12" fill="#a05a3f" font-weight="700">CO₂ in (via stomata)</text>
+
+            <!-- O2 out -->
+            <g stroke="#3f6e3f" stroke-width="2.5" fill="none">
+              <path d="M460 290 L 490 350" marker-end="url(#a)"/>
+            </g>
+            <text x="500" y="350" font-size="12" fill="#3f6e3f" font-weight="700">O₂ out (by-product)</text>
+
+            <!-- glucose stored -->
+            <g stroke="#8a6614" stroke-width="2.5" fill="none" stroke-dasharray="4 3">
+              <path d="M540 220 L 640 240" marker-end="url(#a)"/>
+            </g>
+            <text x="560" y="215" font-size="12" fill="#8a6614" font-weight="700">glucose (food)</text>
+          </svg>
+          <figcaption>Inputs come in from soil, air and sun. Outputs leave through the stomata or stay in the plant.</figcaption>
+        </figure>
+
+        <div class="ways">
+          <span class="way">📋 Two columns in your book</span>
+          <span class="way">🎨 Annotate the diagram</span>
+          <span class="way">💬 Tell a partner</span>
+        </div>
+
+        <div class="toggles">
+          <button class="tog help">💡 Hint</button>
+          <button class="tog stem">📚 Sentence stems</button>
+          <button class="tog stretch">⚡ Stretch</button>
+          <button class="tog done">✓ I've done this</button>
+        </div>
+        <div class="panel help"><div class="label">Hint — what to look for</div>
+          <ul>
+            <li><b>Reactants</b> are the things going <b>INTO</b> the leaf — find <b>four arrows pointing in</b> (or what the leaf needs).</li>
+            <li><b>Products</b> come <b>OUT</b> — find arrows pointing out.</li>
+            <li>Chlorophyll isn't used up — it's a "helper" but you still <i>need</i> it.</li>
+          </ul>
+        </div>
+        <div class="panel stem"><div class="label">Sentence stems</div>
+          <ul class="stems">
+            <li>"The four things needed are ____, ____, ____ and ____."</li>
+            <li>"The two things made are ____ and ____."</li>
+            <li>"____ is just a by-product, which means it isn't the main thing the plant wanted."</li>
+          </ul>
+        </div>
+        <div class="panel stretch"><div class="label">Push yourself</div>
+          <p>CO₂ enters through the stomata. <b>How does the O₂ leave the leaf?</b> Use the word <i>diffusion</i> in your answer.</p>
+        </div>
+      </section>
+
+      <!-- SECTION 5 -- WORD AND SYMBOL EQUATION -->
+      <section class="card" data-sec="5">
+        <div class="sec-head">
+          <span class="sec-num">5</span>
+          <h2 class="sec-title">Build the equation — word &amp; symbol</h2>
+          <span class="time">8 min</span>
+        </div>
+        <p class="task">In your book, write the <b>word equation</b> first. Then have a go at the <b>balanced symbol equation</b>. Check using the panels.</p>
+
+        <div class="equation">
+          carbon dioxide&nbsp;&nbsp;+&nbsp;&nbsp;water&nbsp;&nbsp;
+          <span class="arrow">
+            <span class="above">sunlight</span>
+            ⟶
+            <span class="below">chlorophyll</span>
+          </span>
+          &nbsp;&nbsp;glucose&nbsp;&nbsp;+&nbsp;&nbsp;oxygen
+        </div>
+
+        <div class="equation">
+          6CO<sub>2</sub>&nbsp;&nbsp;+&nbsp;&nbsp;6H<sub>2</sub>O&nbsp;&nbsp;
+          <span class="arrow">
+            <span class="above">sunlight</span>
+            ⟶
+            <span class="below">chlorophyll</span>
+          </span>
+          &nbsp;&nbsp;C<sub>6</sub>H<sub>12</sub>O<sub>6</sub>&nbsp;&nbsp;+&nbsp;&nbsp;6O<sub>2</sub>
+        </div>
+
+        <div class="ways">
+          <span class="way">✍️ Copy into book</span>
+          <span class="way">🧠 Memorise the symbols</span>
+        </div>
+
+        <div class="toggles">
+          <button class="tog help">💡 What does balanced mean?</button>
+          <button class="tog stem">📚 Sentence stems</button>
+          <button class="tog stretch">⚡ Stretch</button>
+          <button class="tog done">✓ I've done this</button>
+        </div>
+        <div class="panel help"><div class="label">What does "balanced" mean?</div>
+          <p>Atoms can't be created or destroyed. So the <b>same number of each atom</b> must appear on both sides.</p>
+          <p>Count carbons: 6 on the left (in 6CO₂) and 6 on the right (in C₆H₁₂O₆). ✓<br>
+          Count hydrogens: 12 on the left (in 6H₂O) and 12 on the right. ✓<br>
+          Count oxygens: 12 + 6 = 18 on the left, 6 + 12 = 18 on the right. ✓</p>
+        </div>
+        <div class="panel stem"><div class="label">Sentence stems</div>
+          <ul class="stems">
+            <li>"The reactants are ____ and ____. The products are ____ and ____."</li>
+            <li>"Sunlight and chlorophyll go <b>over</b> the arrow because they aren't ____ but they are ____."</li>
+            <li>"C₆H₁₂O₆ is the chemical formula for ____."</li>
+          </ul>
+        </div>
+        <div class="panel stretch"><div class="label">Stretch — past paper style</div>
+          <p>Balance the equation: <b>___ CO₂ + ___ H₂O → C₆H₁₂O₆ + ___ O₂</b>.<br>
+          Then give <b>two conditions</b> needed for photosynthesis (apart from a suitable temperature, water and CO₂).</p>
+        </div>
+      </section>
+
+      <!-- SECTION 6 -- WHAT THE PLANT DOES WITH GLUCOSE -->
+      <section class="card" data-sec="6">
+        <div class="sec-head">
+          <span class="sec-num">6</span>
+          <h2 class="sec-title">What does the plant DO with the glucose?</h2>
+          <span class="time">8 min</span>
+        </div>
+        <p class="task">Glucose isn't just left lying around. Match each <b>use</b> to its description.</p>
+
+        <figure>
+          <svg viewBox="0 0 700 280" xmlns="http://www.w3.org/2000/svg">
+            <!-- glucose center -->
+            <g transform="translate(350 140)">
+              <circle r="42" fill="#fff6e3" stroke="#caa84a" stroke-width="1.6"/>
+              <text y="-4" text-anchor="middle" font-size="14" font-weight="700" fill="#8a6614">GLUCOSE</text>
+              <text y="14" text-anchor="middle" font-size="11" fill="#8a6614">C₆H₁₂O₆</text>
+            </g>
+            <!-- arrows out -->
+            <g stroke="#888" stroke-width="1.4" fill="none">
+              <line x1="310" y1="115" x2="180" y2="60"/>
+              <line x1="310" y1="165" x2="180" y2="220"/>
+              <line x1="390" y1="115" x2="520" y2="60"/>
+              <line x1="390" y1="165" x2="520" y2="220"/>
+            </g>
+            <!-- four uses -->
+            <g transform="translate(80 30)">
+              <rect width="200" height="60" rx="10" fill="#eaf3e6" stroke="#5a8a5a"/>
+              <text x="100" y="22" text-anchor="middle" font-size="13" font-weight="700" fill="#3f6e3f">⚡ Respiration</text>
+              <text x="100" y="40" text-anchor="middle" font-size="11" fill="#3f6e3f">release energy for the cell</text>
+              <text x="100" y="54" text-anchor="middle" font-size="11" fill="#3f6e3f">(in every living cell)</text>
+            </g>
+            <g transform="translate(80 190)">
+              <rect width="200" height="60" rx="10" fill="#fdeeee" stroke="#a05a3f"/>
+              <text x="100" y="22" text-anchor="middle" font-size="13" font-weight="700" fill="#a05a3f">📦 Storage as starch</text>
+              <text x="100" y="40" text-anchor="middle" font-size="11" fill="#a05a3f">insoluble — stored for later</text>
+              <text x="100" y="54" text-anchor="middle" font-size="11" fill="#a05a3f">(potatoes, cereal grains)</text>
+            </g>
+            <g transform="translate(420 30)">
+              <rect width="200" height="60" rx="10" fill="#eef4fb" stroke="#3a6594"/>
+              <text x="100" y="22" text-anchor="middle" font-size="13" font-weight="700" fill="#3a6594">🧱 Cellulose</text>
+              <text x="100" y="40" text-anchor="middle" font-size="11" fill="#3a6594">tough fibres → cell walls</text>
+              <text x="100" y="54" text-anchor="middle" font-size="11" fill="#3a6594">(supports the plant)</text>
+            </g>
+            <g transform="translate(420 190)">
+              <rect width="200" height="60" rx="10" fill="#f1ebfa" stroke="#5a3a8a"/>
+              <text x="100" y="22" text-anchor="middle" font-size="13" font-weight="700" fill="#5a3a8a">🧬 Synthesis</text>
+              <text x="100" y="40" text-anchor="middle" font-size="11" fill="#5a3a8a">+ N → proteins (growth)</text>
+              <text x="100" y="54" text-anchor="middle" font-size="11" fill="#5a3a8a">+ Mg → chlorophyll</text>
+            </g>
+          </svg>
+          <figcaption>Four things a plant does with the glucose it makes.</figcaption>
+        </figure>
+
+        <div class="match-grid" id="match-grid"></div>
+        <p style="font-size:12.5px;color:var(--muted);margin-top:8px">Tap a function card on the right to flip and check. Try to match before flipping!</p>
+
+        <div class="toggles">
+          <button class="tog help">💡 Hint</button>
+          <button class="tog stretch">⚡ Stretch</button>
+          <button class="tog done">✓ I've done this</button>
+        </div>
+        <div class="panel help"><div class="label">Hint</div>
+          <p>Two clues:</p>
+          <ul>
+            <li>"Insoluble store for later" = <b>starch storage</b>.</li>
+            <li>"Tough fibres in cell walls" = <b>cellulose</b>.</li>
+            <li>"Releases energy" = <b>respiration</b> (every living cell does this).</li>
+            <li>"Glucose + minerals → new substances" = <b>synthesis</b>.</li>
+          </ul>
+        </div>
+        <div class="panel stretch"><div class="label">Stretch — exam-style (3 marks)</div>
+          <p>Give <b>three uses</b> a green plant makes of the glucose it produces. (Tip: name the use AND say what it's for.)</p>
+        </div>
+      </section>
+
+      <!-- SECTION 7 -- EXAM QUESTIONS -->
+      <section class="card" data-sec="7">
+        <div class="sec-head">
+          <span class="sec-num">7</span>
+          <h2 class="sec-title">Apply — Past paper questions (10 marks)</h2>
+          <span class="time">10 min</span>
+        </div>
+        <p class="task">Have a go at these on your sheet. Look at the marks — they tell you how many points to make.</p>
+
+        <ol style="margin:8px 0">
+          <li><b>(a)</b> Balance: ___ CO₂ + ___ H₂O → C₆H₁₂O₆ + ___ O₂. <b>(1)</b><br>
+          <b>(b)</b> Give two conditions needed for photosynthesis (other than temperature, water, CO₂). <b>(2)</b></li>
+          <li><b>(c)</b> Explain how <b>guard cells</b> assist photosynthesis. <b>(2)</b><br>
+          Explain how <b>palisade cells</b> assist photosynthesis. <b>(2)</b></li>
+          <li><b>(d)</b> Give <b>three uses</b> a green plant makes of glucose. <b>(3)</b></li>
+        </ol>
+
+        <div class="toggles">
+          <button class="tog help">💡 How to read the question</button>
+          <button class="tog stem">📚 Answer starters</button>
+          <button class="tog stretch">⚡ Mark scheme hints</button>
+          <button class="tog done">✓ I've done this</button>
+        </div>
+        <div class="panel help"><div class="label">How to read the question</div>
+          <ul>
+            <li><b>State / Give</b> → just write the answer.</li>
+            <li><b>Explain</b> → say <b>WHY</b>. Use the words "because…" or "this means…".</li>
+            <li><b>Balance</b> → make atoms equal on both sides.</li>
+          </ul>
+        </div>
+        <div class="panel stem"><div class="label">Answer starters</div>
+          <ul class="stems">
+            <li>"Guard cells help photosynthesis because they ____, which lets ____ enter the leaf."</li>
+            <li>"Palisade cells help photosynthesis because they contain ____ which absorb ____."</li>
+            <li>"Three uses of glucose are ____, ____ and ____."</li>
+          </ul>
+        </div>
+        <div class="panel stretch"><div class="label">Mark scheme hints</div>
+          <ul>
+            <li><b>(a)</b> 6 CO₂ + 6 H₂O → C₆H₁₂O₆ + 6 O₂.</li>
+            <li><b>(b)</b> Light · chlorophyll.</li>
+            <li><b>Guard cells</b>: open the stomata so CO₂ can diffuse in (and O₂ out).</li>
+            <li><b>Palisade cells</b>: column shape + many chloroplasts at the top to absorb maximum light.</li>
+            <li><b>Glucose uses</b>: respiration (energy), starch storage, cellulose for cell walls, making proteins (with N), making chlorophyll (with Mg). Any 3.</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- SECTION 8 -- PLENARY -->
+      <section class="card" data-sec="8">
+        <div class="sec-head">
+          <span class="sec-num">8</span>
+          <h2 class="sec-title">Plenary — Fill the gaps</h2>
+          <span class="time">3 min</span>
+        </div>
+        <p class="task">Try each one in your head, then tap the card to reveal the answer.</p>
+
+        <div class="plenary-fill" id="plenary"></div>
+
+        <div class="toggles">
+          <button class="tog done">✓ I've done this</button>
+        </div>
+      </section>
+
+      <footer>You're in charge of your own learning today. 🌞</footer>
+    </main>
+
+    <!-- KEY WORDS -->
+    <aside class="glossary">
+      <h3>Key Words</h3>
+      <p class="gloss-hint">Stuck on a word? Check here any time.</p>
+
+      <div class="kw"><div class="ic"><svg width="22" height="22" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="#fde7a8" stroke="#caa84a"/><g stroke="#caa84a" stroke-width="1.5"><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/></g></svg></div>
+        <div><div class="term">Photosynthesis</div><div class="def">Reaction in leaves where plants make glucose using sunlight.</div></div></div>
+
+      <div class="kw"><div class="ic"><svg width="22" height="22" viewBox="0 0 24 24"><circle cx="12" cy="12" r="6" fill="#cfe7c5" stroke="#3f6e3f"/><circle cx="9" cy="11" r="1.4" fill="#3f6e3f"/><circle cx="14" cy="13" r="1.4" fill="#3f6e3f"/></svg></div>
+        <div><div class="term">Chloroplast</div><div class="def">Where photosynthesis happens — found in palisade cells.</div></div></div>
+
+      <div class="kw"><div class="ic"><svg width="22" height="22" viewBox="0 0 24 24"><path d="M12 3 C 7 8, 7 14, 12 21 C 17 14, 17 8, 12 3 Z" fill="#7fb07a" stroke="#4f7a4f"/></svg></div>
+        <div><div class="term">Chlorophyll</div><div class="def">Green pigment that absorbs sunlight.</div></div></div>
+
+      <div class="kw"><div class="ic"><svg width="22" height="22" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="#fdeeee" stroke="#a05a3f"/><text x="12" y="15" text-anchor="middle" font-size="9" fill="#a05a3f" font-family="sans-serif">CO₂</text></svg></div>
+        <div><div class="term">Carbon dioxide (CO₂)</div><div class="def">Reactant — enters via stomata.</div></div></div>
+
+      <div class="kw"><div class="ic"><svg width="22" height="22" viewBox="0 0 24 24"><path d="M12 4 C 7 12, 7 18, 12 20 C 17 18, 17 12, 12 4 Z" fill="#dceaf6" stroke="#3a6594"/></svg></div>
+        <div><div class="term">Water (H₂O)</div><div class="def">Reactant — comes up the xylem from roots.</div></div></div>
+
+      <div class="kw"><div class="ic"><svg width="22" height="22" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8" fill="#fff6e3" stroke="#caa84a"/><text x="12" y="15" text-anchor="middle" font-size="9" fill="#8a6614" font-family="sans-serif">G</text></svg></div>
+        <div><div class="term">Glucose</div><div class="def">The sugar made — formula C₆H₁₂O₆.</div></div></div>
+
+      <div class="kw"><div class="ic"><svg width="22" height="22" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="#eaf3e6" stroke="#3f6e3f"/><text x="12" y="15" text-anchor="middle" font-size="9" fill="#3f6e3f" font-family="sans-serif">O₂</text></svg></div>
+        <div><div class="term">Oxygen (O₂)</div><div class="def">Product (by-product) — leaves via stomata.</div></div></div>
+
+      <div class="kw"><div class="ic"><svg width="22" height="22" viewBox="0 0 24 24"><g fill="#a05a3f"><circle cx="6" cy="12" r="3"/><circle cx="12" cy="12" r="3"/><circle cx="18" cy="12" r="3"/></g></svg></div>
+        <div><div class="term">Starch</div><div class="def">Insoluble store of glucose for later.</div></div></div>
+
+      <div class="kw"><div class="ic"><svg width="22" height="22" viewBox="0 0 24 24"><g stroke="#3a6594" stroke-width="1.5" fill="none"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></g></svg></div>
+        <div><div class="term">Cellulose</div><div class="def">Tough fibres that build plant cell walls.</div></div></div>
+
+      <div class="kw"><div class="ic"><svg width="22" height="22" viewBox="0 0 24 24"><circle cx="8" cy="12" r="3" fill="#5a3a8a"/><circle cx="16" cy="12" r="3" fill="#5a3a8a"/><line x1="11" y1="12" x2="13" y2="12" stroke="#5a3a8a" stroke-width="2"/></svg></div>
+        <div><div class="term">Synthesis</div><div class="def">Combining glucose with minerals to make new molecules (proteins, chlorophyll).</div></div></div>
+
+      <div class="kw"><div class="ic"><svg width="22" height="22" viewBox="0 0 24 24"><path d="M12 4 v 16 M8 8 l 4 -4 4 4" stroke="#3f6e3f" stroke-width="1.6" fill="none"/></svg></div>
+        <div><div class="term">Respiration</div><div class="def">All living cells release energy from glucose.</div></div></div>
+
+      <div class="kw"><div class="ic"><svg width="22" height="22" viewBox="0 0 24 24"><g fill="#7fb07a" stroke="#3f6e3f"><path d="M9 4 q 6 8 0 16 q -7 -4 0 -16 z"/><path d="M15 4 q -6 8 0 16 q 7 -4 0 -16 z"/></g></svg></div>
+        <div><div class="term">Stomata</div><div class="def">Pores on the underside of the leaf — gas exchange.</div></div></div>
+
+      <div class="kw"><div class="ic"><svg width="22" height="22" viewBox="0 0 24 24"><path d="M4 12 q 4 -6 8 0 q 4 6 8 0" fill="none" stroke="#3a6594" stroke-width="1.8"/></svg></div>
+        <div><div class="term">Diffusion</div><div class="def">Particles spread from high → low concentration.</div></div></div>
+
+      <div class="kw"><div class="ic"><svg width="22" height="22" viewBox="0 0 24 24"><rect x="6" y="3" width="12" height="18" rx="3" fill="#dceaf6" stroke="#3a6594"/></svg></div>
+        <div><div class="term">Reactant</div><div class="def">Goes IN to the reaction.</div></div></div>
+
+      <div class="kw"><div class="ic"><svg width="22" height="22" viewBox="0 0 24 24"><rect x="6" y="3" width="12" height="18" rx="3" fill="#fde0d0" stroke="#a05a3f"/></svg></div>
+        <div><div class="term">Product</div><div class="def">Comes OUT of the reaction.</div></div></div>
+
+    </aside>
+  </div>
+</div>
+
+<script>
+(function(){
+  // SUPPORT LEVEL
+  const lvls = {
+    'lvl-light': {help:false, stem:false, stretch:true},
+    'lvl-std':   {help:false, stem:false, stretch:false},
+    'lvl-full':  {help:true,  stem:true,  stretch:true}
+  };
+  function applyLevel(id){
+    const cfg = lvls[id];
+    document.querySelectorAll('.lvl').forEach(b=>b.classList.toggle('active', b.id===id));
+    document.querySelectorAll('section.card').forEach(card=>{
+      ['help','stem','stretch'].forEach(k=>{
+        const tog = card.querySelector('.tog.'+k);
+        const panel = card.querySelector('.panel.'+k);
+        if(!tog||!panel) return;
+        const want = cfg[k];
+        tog.classList.toggle('on', want);
+        panel.classList.toggle('show', want);
+      });
+    });
+  }
+  document.querySelectorAll('.lvl').forEach(b=>b.addEventListener('click',()=>applyLevel(b.id)));
+
+  // INDIVIDUAL TOGGLES
+  document.querySelectorAll('section.card').forEach(card=>{
+    ['help','stem','stretch'].forEach(k=>{
+      const tog = card.querySelector('.tog.'+k);
+      const panel = card.querySelector('.panel.'+k);
+      if(!tog||!panel) return;
+      tog.addEventListener('click',()=>{
+        const on = !tog.classList.contains('on');
+        tog.classList.toggle('on', on);
+        panel.classList.toggle('show', on);
+      });
+    });
+  });
+
+  // PROGRESS / DONE
+  const sections = Array.from(document.querySelectorAll('section.card'));
+  const total = sections.length;
+  document.getElementById('total-count').textContent = total;
+  const progress = document.getElementById('progress');
+  for(let i=0;i<total;i++){
+    const d = document.createElement('div'); d.className='pdot'; progress.appendChild(d);
+  }
+  function refresh(){
+    let count = 0;
+    sections.forEach((card,i)=>{
+      const done = card.classList.contains('done');
+      progress.children[i].classList.toggle('done', done);
+      if(done) count++;
+    });
+    document.getElementById('done-count').textContent = count;
+    document.getElementById('celebrate').classList.toggle('show', count===total);
+  }
+  sections.forEach(card=>{
+    const btn = card.querySelector('.tog.done'); if(!btn) return;
+    btn.addEventListener('click',()=>{
+      const on = !btn.classList.contains('on');
+      btn.classList.toggle('on', on);
+      btn.textContent = on ? '✓ Done!' : '✓ I\'ve done this';
+      card.classList.toggle('done', on);
+      refresh();
+    });
+  });
+  document.getElementById('reset').addEventListener('click',()=>{
+    sections.forEach(card=>{
+      card.classList.remove('done');
+      const btn = card.querySelector('.tog.done');
+      if(btn){btn.classList.remove('on'); btn.textContent='✓ I\'ve done this';}
+    });
+    refresh();
+    applyLevel('lvl-std');
+  });
+
+  // MATCH UP - glucose uses
+  const pairs = [
+    ['Respiration','Releases energy in every living cell.'],
+    ['Storage as starch','Insoluble store of glucose for later — found in cereal grains and potatoes.'],
+    ['Cellulose','Tough fibres used to build cell walls and support the plant.'],
+    ['Synthesis (proteins)','Glucose + nitrogen from the soil → proteins for growth.'],
+    ['Synthesis (chlorophyll)','Glucose + magnesium from the soil → chlorophyll.']
+  ];
+  const grid = document.getElementById('match-grid');
+  const fns = pairs.map(p=>p[1]).slice().sort(()=>Math.random()-0.5);
+  pairs.forEach((p,i)=>{
+    const left = document.createElement('div');
+    left.className='mcard'; left.innerHTML=`<b>Use ${i+1}</b>${p[0]}`;
+    const right = document.createElement('div');
+    right.className='mcard'; right.innerHTML=`<b>Description ${String.fromCharCode(65+i)}</b>${fns[i]}`;
+    grid.appendChild(left); grid.appendChild(right);
+  });
+
+  // PLENARY FILL
+  const plenary = [
+    ['What are the reactants in photosynthesis?','Carbon dioxide, water and sunlight (chlorophyll is needed too).'],
+    ['Complete the word equation: carbon dioxide + water → ____ + ____.','glucose + oxygen.'],
+    ['Which substance is a by-product of photosynthesis?','Oxygen.'],
+    ['Where in a plant cell would you find chlorophyll?','In the chloroplasts (inside palisade cells, near the surface).'],
+    ['What are the small holes in the leaf called that let CO₂ in?','Stomata.'],
+    ['Name two other substances that leave the leaf through these holes.','Water vapour and oxygen.']
+  ];
+  const pcontainer = document.getElementById('plenary');
+  plenary.forEach((p,i)=>{
+    const div = document.createElement('div');
+    div.className='pfill';
+    div.innerHTML = `<span class="qno">${i+1}</span>${p[0]}<div class="ans">✓ ${p[1]}</div>`;
+    div.addEventListener('click',()=>div.classList.toggle('flipped'));
+    pcontainer.appendChild(div);
+  });
+
+  applyLevel('lvl-std');
+})();
+</script>
+</body>
+</html>
