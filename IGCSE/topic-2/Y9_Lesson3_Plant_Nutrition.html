@@ -1,0 +1,1016 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Plant Nutrition — Year 9 Biology · Lesson 3</title>
+<style>
+  :root{
+    --bg:#fafaf7;
+    --ink:#23332b;
+    --muted:#5a6b62;
+    --leaf:#5a8a5a;
+    --leaf-dk:#3f6e3f;
+    --leaf-soft:#e8f1e6;
+    --leaf-line:#cfe1cb;
+    --sky:#eef4fb;
+    --sky-line:#cfe0f0;
+    --sky-dk:#3a6594;
+    --sun:#fff6e3;
+    --sun-line:#f0d9a3;
+    --sun-dk:#8a6614;
+    --rose:#fdeeee;
+    --rose-line:#f2c7c7;
+    --plum:#f1ebfa;
+    --plum-line:#dccff0;
+    --plum-dk:#5a3a8a;
+    --chip:#f1ede4;
+    --shadow:0 1px 2px rgba(0,0,0,.04), 0 6px 18px rgba(34,51,42,.06);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,sans-serif;
+    line-height:1.55;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1080px;margin:0 auto;padding:28px 24px 80px}
+
+  header.hero{background:linear-gradient(180deg,#f4f8ee 0%,#fafaf7 100%);
+    border:1px solid var(--leaf-line);border-radius:18px;padding:22px 26px;
+    box-shadow:var(--shadow);margin-bottom:18px}
+  .eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--leaf);font-weight:600}
+  h1{font-size:28px;margin:6px 0 4px;letter-spacing:-.01em}
+  .sub{color:var(--muted);font-size:14.5px;margin:0 0 14px}
+
+  .picker{display:flex;flex-wrap:wrap;gap:8px;align-items:center;background:#fff;border:1px solid var(--leaf-line);border-radius:14px;padding:10px 12px}
+  .picker .pick-label{font-size:12px;color:var(--muted);font-weight:600;letter-spacing:.05em;text-transform:uppercase;margin-right:4px}
+  .picker button{appearance:none;border:1px solid var(--leaf-line);background:#fff;color:var(--ink);
+    border-radius:999px;padding:7px 14px;font-size:13.5px;font-weight:600;cursor:pointer;transition:.15s}
+  .picker button:hover{background:var(--leaf-soft)}
+  .picker button.active{background:var(--leaf);color:#fff;border-color:var(--leaf)}
+  .picker .reset{margin-left:auto;background:transparent;border:0;color:var(--muted);font-size:12.5px;cursor:pointer;text-decoration:underline}
+
+  /* MASTER CODE */
+  .master{background:#fff;border:1px solid var(--leaf-line);border-radius:14px;padding:14px 16px;margin-top:14px;display:flex;flex-wrap:wrap;align-items:center;gap:14px}
+  .master-label{font-size:12px;color:var(--muted);font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+  .code{display:flex;gap:6px}
+  .code .slot{width:34px;height:42px;border:1.5px dashed #cfd2c4;border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:800;font-family:Menlo,Consolas,monospace;font-size:18px;color:#bdb999;background:#fbfaf3;transition:.25s}
+  .code .slot.unlocked{border-style:solid;border-color:var(--leaf);background:var(--leaf-soft);color:var(--leaf-dk);transform:rotateY(0)}
+  .master-hint{font-size:12px;color:var(--muted);margin-left:auto}
+
+  /* PROGRESS DOTS */
+  .progress{display:flex;gap:6px;margin-top:14px;flex-wrap:wrap}
+  .pdot{flex:1;min-width:18px;height:8px;background:#ede7d6;border-radius:6px;transition:.2s}
+  .pdot.done{background:var(--leaf)}
+  .progress-meta{font-size:12px;color:var(--muted);margin-top:6px;text-align:right}
+
+  .grid{display:grid;grid-template-columns:1fr 290px;gap:20px;margin-top:8px}
+  @media (max-width:880px){.grid{grid-template-columns:1fr}}
+
+  section.card{background:#fff;border:1px solid #ecebe4;border-radius:16px;
+    padding:20px 22px;margin-bottom:16px;box-shadow:var(--shadow);transition:.2s}
+  section.card.done{background:#f7fbf6;border-color:var(--leaf-line)}
+  .sec-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:6px}
+  .sec-num{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;
+    background:var(--leaf);color:#fff;border-radius:8px;font-weight:700;font-size:13px}
+  .sec-title{font-size:17px;font-weight:700;margin:0}
+  .time{margin-left:auto;display:inline-flex;align-items:center;gap:6px;
+    background:var(--chip);color:#665a3f;border-radius:999px;padding:4px 10px;font-size:12px;font-weight:600}
+  .time::before{content:"";width:8px;height:8px;border-radius:50%;background:#d8b85a;display:inline-block}
+  .task{font-size:15px;margin:4px 0 10px}
+
+  .toggles{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 0}
+  .tog{appearance:none;border:1px solid #e0dccd;background:#fff;border-radius:999px;
+    padding:6px 12px;font-size:12.5px;font-weight:600;color:var(--ink);cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:.15s}
+  .tog:hover{background:#fafaf2}
+  .tog.help{color:var(--sky-dk);border-color:var(--sky-line)}
+  .tog.help.on{background:var(--sky);border-color:var(--sky-dk)}
+  .tog.stem{color:var(--plum-dk);border-color:var(--plum-line)}
+  .tog.stem.on{background:var(--plum);border-color:var(--plum-dk)}
+  .tog.stretch{color:var(--sun-dk);border-color:var(--sun-line)}
+  .tog.stretch.on{background:var(--sun);border-color:var(--sun-dk)}
+  .tog.unlock{color:var(--leaf-dk);border-color:var(--leaf-line)}
+  .tog.unlock.on{background:var(--leaf-soft);border-color:var(--leaf-dk)}
+  .tog.done{margin-left:auto;color:var(--leaf-dk);border-color:var(--leaf-line)}
+  .tog.done.on{background:var(--leaf);color:#fff;border-color:var(--leaf)}
+
+  .panel{display:none;border-radius:12px;padding:12px 14px;margin-top:10px;border:1px solid;font-size:14.5px}
+  .panel.show{display:block;animation:slide .18s ease-out}
+  @keyframes slide{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
+  .panel.help{background:var(--sky);border-color:var(--sky-line)}
+  .panel.stem{background:var(--plum);border-color:var(--plum-line)}
+  .panel.stretch{background:var(--sun);border-color:var(--sun-line)}
+  .panel .label{font-size:11px;letter-spacing:.12em;text-transform:uppercase;font-weight:700;margin-bottom:4px}
+  .panel.help .label{color:var(--sky-dk)}
+  .panel.stem .label{color:var(--plum-dk)}
+  .panel.stretch .label{color:var(--sun-dk)}
+  .stems{margin:0;padding-left:18px}
+  .stems li{margin:4px 0;font-style:italic}
+  .panel.stem li{color:#46276e}
+  .panel.help li,.panel.help p{color:#264466}
+
+  /* LOCK PANEL */
+  .lockbox{display:none;border-radius:12px;padding:14px 16px;margin-top:10px;border:1.5px solid var(--leaf-line);background:linear-gradient(180deg,#fdfbf2 0%, #f7fbf2 100%)}
+  .lockbox.show{display:block;animation:slide .18s ease-out}
+  .lockbox .label{font-size:11px;letter-spacing:.12em;text-transform:uppercase;font-weight:700;color:var(--leaf-dk);margin-bottom:6px;display:flex;align-items:center;gap:6px}
+  .riddle{font-size:14.5px;color:var(--ink);margin:6px 0 10px;font-style:italic;line-height:1.5}
+  .riddle b{font-style:normal}
+  .keyrow{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+  .keyrow input{flex:1;min-width:160px;border:1.5px solid var(--leaf-line);background:#fff;border-radius:10px;padding:9px 12px;font-size:14.5px;font-family:inherit;outline:none;transition:.15s}
+  .keyrow input:focus{border-color:var(--leaf-dk);background:#fff}
+  .keyrow input.wrong{border-color:#c97070;background:#fdf6f6}
+  .keyrow input.right{border-color:var(--leaf);background:var(--leaf-soft)}
+  .keyrow .check-btn{appearance:none;border:0;background:var(--leaf);color:#fff;border-radius:10px;padding:9px 16px;font-size:14px;font-weight:700;cursor:pointer;transition:.15s}
+  .keyrow .check-btn:hover{background:var(--leaf-dk)}
+  .keyrow .hint-btn{appearance:none;border:1px solid var(--leaf-line);background:#fff;color:var(--leaf-dk);border-radius:10px;padding:8px 12px;font-size:12.5px;font-weight:600;cursor:pointer}
+  .keyrow .hint-btn:hover{background:var(--leaf-soft)}
+  .feedback{font-size:13px;margin-top:8px;min-height:18px}
+  .feedback.wrong{color:#a84a4a}
+  .feedback.right{color:var(--leaf-dk);font-weight:700}
+  .feedback.hint{color:var(--sky-dk)}
+  .answers{display:none;margin-top:12px;padding:12px 14px;background:#fff;border:1px dashed var(--leaf-line);border-radius:10px;font-size:14.5px}
+  .answers.unlocked{display:block;animation:slide .25s ease-out}
+  .answers .alabel{font-size:11px;letter-spacing:.12em;text-transform:uppercase;font-weight:700;color:var(--leaf-dk);margin-bottom:4px}
+  .letter-reveal{display:inline-block;margin-left:8px;background:var(--sun);border:1px solid var(--sun-line);color:var(--sun-dk);font-family:Menlo,Consolas,monospace;font-weight:800;padding:4px 10px;border-radius:8px;font-size:13px}
+
+  .ways{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+  .way{font-size:12px;background:#f7f5ec;border:1px dashed #d8d2bc;border-radius:8px;padding:5px 9px;color:#665a3f}
+
+  figure{margin:14px 0;text-align:center}
+  figure svg{max-width:100%;height:auto;border-radius:12px;background:#fff;border:1px solid #eee;padding:6px}
+  figcaption{font-size:12.5px;color:var(--muted);margin-top:6px}
+
+  .mrsgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:8px;margin-top:10px}
+  .mrscard{background:#fff;border:1px solid #ecebe4;border-radius:10px;padding:10px 12px;font-size:14px}
+  .mrscard b{display:block;color:var(--leaf-dk);font-size:12.5px;margin-bottom:2px}
+  .mrscard .ltr{display:inline-block;width:24px;height:24px;line-height:24px;text-align:center;background:var(--leaf);color:#fff;border-radius:50%;font-size:13px;font-weight:700;margin-right:6px;vertical-align:middle}
+
+  .mineral-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px;margin-top:10px}
+  .mcell{background:#fff;border:1px solid #ecebe4;border-radius:12px;padding:12px;font-size:14px}
+  .mcell .head{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+  .mcell .head svg{flex:0 0 auto}
+  .mcell h4{margin:0;font-size:14.5px;color:var(--leaf-dk)}
+  .mcell .deficiency{margin-top:8px;background:#fdeeee;border-left:3px solid #d99;padding:6px 8px;border-radius:6px;font-size:13px;color:#7a3a3a}
+
+  aside.glossary{position:sticky;top:14px;align-self:start;background:#fff;border:1px solid #ecebe4;
+    border-radius:16px;padding:16px;box-shadow:var(--shadow);max-height:calc(100vh - 28px);overflow:auto}
+  aside.glossary h3{margin:0 0 4px;font-size:14px;letter-spacing:.1em;text-transform:uppercase;color:var(--leaf)}
+  aside.glossary .gloss-hint{font-size:11.5px;color:var(--muted);margin:0 0 10px}
+  .kw{display:grid;grid-template-columns:34px 1fr;gap:10px;align-items:start;margin:9px 0;padding-bottom:9px;border-bottom:1px dashed #eee}
+  .kw:last-child{border-bottom:0}
+  .kw .ic{width:34px;height:34px;border-radius:9px;background:var(--leaf-soft);display:flex;align-items:center;justify-content:center}
+  .kw .term{font-weight:700;font-size:13.5px;line-height:1.25}
+  .kw .def{font-size:12.5px;color:var(--muted);margin-top:2px}
+
+  footer{color:var(--muted);font-size:12.5px;text-align:center;margin-top:24px}
+  .celebrate{display:none;background:linear-gradient(135deg,#e8f1e6 0%,#fff6e3 100%);border:1px solid var(--leaf-line);border-radius:14px;padding:18px;text-align:center;margin-bottom:16px;color:var(--leaf-dk);font-weight:600}
+  .celebrate.show{display:block}
+  .celebrate .big{font-family:Menlo,Consolas,monospace;font-size:28px;letter-spacing:.4em;font-weight:800;display:block;margin:6px 0;color:var(--leaf-dk)}
+
+  @media print{
+    .picker,.toggles .done,.celebrate,.lockbox{display:none}
+    .panel,.answers{display:block !important}
+    aside.glossary{position:static}
+    .grid{grid-template-columns:1fr}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="hero">
+    <div class="eyebrow">Year 9 Biology · Lesson 3 · Plant Nutrition</div>
+    <h1>What plants need to grow 🌱</h1>
+    <p class="sub">By the end you'll know <b>what plants need from their surroundings</b>, that plants make <b>their own food</b>, and what happens when a plant doesn't get enough <b>nitrate</b> or <b>magnesium</b>.</p>
+
+    <div class="picker">
+      <span class="pick-label">Pick your support level →</span>
+      <button id="lvl-light" class="lvl">🚀 I've got this</button>
+      <button id="lvl-std" class="lvl active">⚖️ Standard</button>
+      <button id="lvl-full" class="lvl">🪜 Give me all the support</button>
+      <button class="reset" id="reset">Reset progress</button>
+    </div>
+
+    <!-- MASTER CODE -->
+    <div class="master">
+      <span class="master-label">🔑 Master code</span>
+      <div class="code" id="codeBoxes"></div>
+      <span class="master-hint">Crack each section's keyword to reveal a letter. Solve all 8 to spell the lesson's BIG idea.</span>
+    </div>
+
+    <div class="progress" id="progress"></div>
+    <div class="progress-meta"><span id="done-count">0</span> / <span id="total-count">8</span> sections done</div>
+  </header>
+
+  <div class="celebrate" id="celebrate">
+    🌿 You've cracked all 8 sections. The lesson's big idea was…
+    <span class="big" id="bigword">PRODUCER</span>
+    Plants are <b>producers</b> — they make their own food, which is why they sit at the start of every food chain.
+  </div>
+
+  <div class="grid">
+    <main>
+
+      <!-- SECTION 1 - DO NOW -->
+      <section class="card" data-sec="1" data-keyword="chlorophyll" data-letter="P" data-letter-idx="0">
+        <div class="sec-head">
+          <span class="sec-num">1</span>
+          <h2 class="sec-title">Do Now — Recap photosynthesis</h2>
+          <span class="time">3 min</span>
+        </div>
+        <p class="task">In your book, write the <b>balanced symbol equation</b> for photosynthesis. Add what goes <b>over the arrow</b>.</p>
+
+        <div class="ways"><span class="way">✍️ Write in book</span><span class="way">🧠 No peeking</span></div>
+
+        <div class="toggles">
+          <button class="tog help">💡 Hint</button>
+          <button class="tog stem">📚 Sentence stems</button>
+          <button class="tog stretch">⚡ Stretch</button>
+          <button class="tog unlock">🔒 Unlock answers</button>
+          <button class="tog done">✓ I've done this</button>
+        </div>
+
+        <div class="panel help"><div class="label">Hint</div>
+          <ul>
+            <li>You need <b>6</b> in front of CO₂, H₂O and O₂. C₆H₁₂O₆ stays the same.</li>
+            <li>Two things go over the arrow — they're needed but not used up.</li>
+          </ul>
+        </div>
+        <div class="panel stem"><div class="label">Sentence stems</div>
+          <ul class="stems">
+            <li>"The reactants are ____ and ____."</li>
+            <li>"The products are ____ and ____."</li>
+            <li>"____ and ____ go above the arrow."</li>
+          </ul>
+        </div>
+        <div class="panel stretch"><div class="label">Push yourself</div>
+          <p>Without looking, write the equation <b>twice</b> — once in words, once in symbols. Then count the atoms on each side to prove yours is balanced.</p>
+        </div>
+
+        <div class="lockbox">
+          <div class="label">🔒 Riddle to unlock the answers</div>
+          <p class="riddle">"I'm the green pigment in chloroplasts. I absorb light energy so the reaction can happen. What am I?"</p>
+          <div class="keyrow">
+            <input type="text" placeholder="Type the keyword…" autocomplete="off" spellcheck="false">
+            <button class="check-btn">Check</button>
+            <button class="hint-btn">Hint</button>
+          </div>
+          <div class="feedback"></div>
+          <div class="answers">
+            <div class="alabel">✓ Answers</div>
+            <p><b>Word:</b> carbon dioxide + water → glucose + oxygen<br>
+            <b>Symbol:</b> 6 CO₂ + 6 H₂O → C₆H₁₂O₆ + 6 O₂<br>
+            <b>Over the arrow:</b> sunlight + chlorophyll.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 2 - MRSGREN -->
+      <section class="card" data-sec="2" data-keyword="respiration" data-letter="R" data-letter-idx="1">
+        <div class="sec-head">
+          <span class="sec-num">2</span>
+          <h2 class="sec-title">Are plants alive? — MRSGREN check</h2>
+          <span class="time">8 min</span>
+        </div>
+        <p class="task">All living things show <b>seven</b> life processes (MRSGREN). For each one, write down <b>how a plant shows it</b>.</p>
+
+        <div class="mrsgrid">
+          <div class="mrscard"><b><span class="ltr">M</span>ovement</b>How does a plant move?</div>
+          <div class="mrscard"><b><span class="ltr">R</span>espiration</b>What does a plant respire?</div>
+          <div class="mrscard"><b><span class="ltr">S</span>ensitivity</b>What does a plant respond to?</div>
+          <div class="mrscard"><b><span class="ltr">G</span>rowth</b>How does a plant grow?</div>
+          <div class="mrscard"><b><span class="ltr">R</span>eproduction</b>How does a plant reproduce?</div>
+          <div class="mrscard"><b><span class="ltr">E</span>xcretion</b>What does a plant excrete?</div>
+          <div class="mrscard"><b><span class="ltr">N</span>utrition</b>How does a plant get nutrition?</div>
+        </div>
+
+        <div class="toggles">
+          <button class="tog help">💡 Hint</button>
+          <button class="tog stem">📚 Sentence stems</button>
+          <button class="tog stretch">⚡ Stretch</button>
+          <button class="tog unlock">🔒 Unlock answers</button>
+          <button class="tog done">✓ I've done this</button>
+        </div>
+
+        <div class="panel help"><div class="label">Hint</div>
+          <ul>
+            <li>Plants <b>do</b> move — but slowly, towards <b>light</b> and away from gravity.</li>
+            <li>Every living cell needs to <b>release energy</b>, even plant cells.</li>
+            <li>What gas leaves the leaf during photosynthesis? It's a waste product…</li>
+          </ul>
+        </div>
+        <div class="panel stem"><div class="label">Sentence stems</div>
+          <ul class="stems">
+            <li>"Plants show <b>movement</b> because they ____."</li>
+            <li>"Plants <b>respire</b> by releasing energy from ____."</li>
+            <li>"Plants <b>excrete</b> ____ during photosynthesis and ____ during respiration."</li>
+          </ul>
+        </div>
+        <div class="panel stretch"><div class="label">Push yourself</div>
+          <p>For each life process, give a <b>second</b> example or piece of evidence — beyond the obvious one.</p>
+        </div>
+
+        <div class="lockbox">
+          <div class="label">🔒 Riddle to unlock the answers</div>
+          <p class="riddle">"I'm the process that <b>every</b> living cell — including plant cells — uses to release energy from glucose. The 'R' that's NOT reproduction. What am I?"</p>
+          <div class="keyrow">
+            <input type="text" placeholder="Type the keyword…" autocomplete="off" spellcheck="false">
+            <button class="check-btn">Check</button>
+            <button class="hint-btn">Hint</button>
+          </div>
+          <div class="feedback"></div>
+          <div class="answers">
+            <div class="alabel">✓ How plants show MRSGREN</div>
+            <ul>
+              <li><b>Movement</b> — grow towards light, away from touch, against gravity.</li>
+              <li><b>Respiration</b> — release energy from glucose, in every cell.</li>
+              <li><b>Sensitivity</b> — sense and respond (e.g. grow towards light).</li>
+              <li><b>Growth</b> — seeds → seedlings → adult plants.</li>
+              <li><b>Reproduction</b> — sexually (seeds) or asexually.</li>
+              <li><b>Excretion</b> — O₂ from photosynthesis, CO₂ from respiration.</li>
+              <li><b>Nutrition</b> — photosynthesise + absorb mineral ions for growth.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 3 - 4 ESSENTIALS -->
+      <section class="card" data-sec="3" data-keyword="stomata" data-letter="O" data-letter-idx="2">
+        <div class="sec-head">
+          <span class="sec-num">3</span>
+          <h2 class="sec-title">The 4 things plants take in</h2>
+          <span class="time">7 min</span>
+        </div>
+        <p class="task">Plants need <b>four things</b> from their surroundings. Add arrows on the diagram showing where each one enters: <b>light · gases · water · minerals</b>.</p>
+
+        <figure>
+          <svg viewBox="0 0 700 320" xmlns="http://www.w3.org/2000/svg">
+            <rect x="0" y="220" width="700" height="100" fill="#f5efe1"/>
+            <line x1="0" y1="220" x2="700" y2="220" stroke="#d8c89a"/>
+            <g stroke="#9c7a4a" stroke-width="2" fill="none" stroke-linecap="round">
+              <path d="M350 220 C 340 245, 300 255, 270 280"/>
+              <path d="M350 220 C 360 245, 400 255, 430 285"/>
+              <path d="M350 220 C 350 250, 335 270, 315 290"/>
+              <path d="M350 220 C 350 250, 365 270, 380 295"/>
+              <path d="M350 220 C 345 245, 320 260, 295 285"/>
+              <path d="M350 220 C 355 245, 380 260, 410 285"/>
+            </g>
+            <line x1="350" y1="220" x2="350" y2="100" stroke="#5a8a5a" stroke-width="5" stroke-linecap="round"/>
+            <path d="M350 160 C 295 140, 270 165, 280 195 C 320 195, 345 175, 350 160 Z" fill="#7fb07a" stroke="#4f7a4f"/>
+            <path d="M350 130 C 405 110, 430 135, 420 165 C 380 165, 355 145, 350 130 Z" fill="#7fb07a" stroke="#4f7a4f"/>
+            <g transform="translate(350 90)">
+              <circle r="8" fill="#f3c14a"/>
+              <g fill="#f7d8e1" stroke="#d99fb0">
+                <ellipse cy="-14" rx="7" ry="11"/>
+                <ellipse cx="14" rx="11" ry="7"/>
+                <ellipse cy="14" rx="7" ry="11"/>
+                <ellipse cx="-14" rx="11" ry="7"/>
+              </g>
+              <circle r="5" fill="#e9a82a"/>
+            </g>
+            <!-- sun -->
+            <g transform="translate(70 60)">
+              <circle r="22" fill="#fde7a8" stroke="#caa84a"/>
+              <g stroke="#caa84a" stroke-width="2"><line x1="-32" x2="-26"/><line x1="32" x2="26"/><line y1="-32" y2="-26"/><line y1="32" y2="26"/></g>
+            </g>
+            <!-- empty boxes for student labels -->
+            <g font-size="13" font-family="-apple-system,sans-serif">
+              <rect x="120" y="55" width="120" height="22" rx="4" fill="#fff" stroke="#caa84a" stroke-dasharray="4 3"/>
+              <text x="180" y="71" text-anchor="middle" fill="#bdb999">1. ____ (in via leaves)</text>
+              <rect x="450" y="100" width="180" height="22" rx="4" fill="#fff" stroke="#a05a3f" stroke-dasharray="4 3"/>
+              <text x="540" y="116" text-anchor="middle" fill="#bdb999">2. ____ (in via leaves)</text>
+              <rect x="40" y="245" width="160" height="22" rx="4" fill="#fff" stroke="#3a6594" stroke-dasharray="4 3"/>
+              <text x="120" y="261" text-anchor="middle" fill="#bdb999">3. ____ (in via roots)</text>
+              <rect x="450" y="245" width="180" height="22" rx="4" fill="#fff" stroke="#5a3a8a" stroke-dasharray="4 3"/>
+              <text x="540" y="261" text-anchor="middle" fill="#bdb999">4. ____ (in via roots)</text>
+            </g>
+          </svg>
+          <figcaption>Two enter through leaves. Two enter through roots.</figcaption>
+        </figure>
+
+        <div class="toggles">
+          <button class="tog help">💡 Hint</button>
+          <button class="tog stem">📚 Sentence stems</button>
+          <button class="tog stretch">⚡ Stretch</button>
+          <button class="tog unlock">🔒 Unlock answers</button>
+          <button class="tog done">✓ I've done this</button>
+        </div>
+
+        <div class="panel help"><div class="label">Hint</div>
+          <ul>
+            <li>Two come from <b>above</b> (sun, air) — they enter through the leaves.</li>
+            <li>Two come from <b>below</b> (soil) — they enter through the roots.</li>
+            <li>One of the four is dissolved in another. Which two go together?</li>
+          </ul>
+        </div>
+        <div class="panel stem"><div class="label">Sentence stems</div>
+          <ul class="stems">
+            <li>"The leaves take in ____ and ____."</li>
+            <li>"The roots take in ____ and ____."</li>
+            <li>"The minerals are dissolved in the ____ in the soil."</li>
+          </ul>
+        </div>
+        <div class="panel stretch"><div class="label">Push yourself</div>
+          <p>Two gases move in and out of the leaf. <b>Name both</b>, say which is taken in for photosynthesis and which is taken in for respiration.</p>
+        </div>
+
+        <div class="lockbox">
+          <div class="label">🔒 Riddle to unlock the answers</div>
+          <p class="riddle">"I'm the tiny pore on the underside of the leaf where gases enter and leave. From last lesson — what am I called? (singular or plural is fine)"</p>
+          <div class="keyrow">
+            <input type="text" placeholder="Type the keyword…" autocomplete="off" spellcheck="false">
+            <button class="check-btn">Check</button>
+            <button class="hint-btn">Hint</button>
+          </div>
+          <div class="feedback"></div>
+          <div class="answers">
+            <div class="alabel">✓ Answers</div>
+            <ol>
+              <li><b>Light</b> — taken in through the leaves.</li>
+              <li><b>Gases from the air</b> (CO₂ for photosynthesis, O₂ for respiration) — through the leaves via stomata.</li>
+              <li><b>Water</b> — taken in through the roots (up the xylem).</li>
+              <li><b>Minerals</b> — dissolved in the water, taken in through the roots.</li>
+            </ol>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 4 - PRODUCERS -->
+      <section class="card" data-sec="4" data-keyword="producer" data-letter="D" data-letter-idx="3">
+        <div class="sec-head">
+          <span class="sec-num">4</span>
+          <h2 class="sec-title">Plants are PRODUCERS — not consumers</h2>
+          <span class="time">5 min</span>
+        </div>
+        <p class="task">Look at the food chain below. <b>(a)</b> Why is the plant always at the start? <b>(b)</b> What's the difference between a <i>producer</i> and a <i>consumer</i>?</p>
+
+        <figure>
+          <svg viewBox="0 0 700 160" xmlns="http://www.w3.org/2000/svg">
+            <!-- grass -->
+            <g transform="translate(80 80)">
+              <rect x="-40" y="0" width="80" height="50" rx="4" fill="#e8f1e6" stroke="#5a8a5a"/>
+              <g stroke="#3f6e3f" stroke-width="2" fill="none" stroke-linecap="round">
+                <path d="M-30 50 q 0 -20 -8 -35"/><path d="M-15 50 q 0 -25 5 -38"/>
+                <path d="M0 50 q 0 -25 -3 -36"/><path d="M15 50 q 0 -28 8 -38"/>
+                <path d="M30 50 q 0 -25 -2 -34"/>
+              </g>
+              <text y="-12" text-anchor="middle" font-size="13" fill="#3f6e3f" font-weight="700">grass</text>
+              <text y="70" text-anchor="middle" font-size="11" fill="#3f6e3f">producer</text>
+            </g>
+            <text x="180" y="100" font-size="22" fill="#888">→</text>
+            <!-- cow -->
+            <g transform="translate(280 80)">
+              <ellipse cx="0" cy="20" rx="42" ry="22" fill="#fff" stroke="#5a6b62"/>
+              <circle cx="-32" cy="14" r="11" fill="#fff" stroke="#5a6b62"/>
+              <line x1="-15" y1="40" x2="-15" y2="55" stroke="#5a6b62" stroke-width="2"/>
+              <line x1="15" y1="40" x2="15" y2="55" stroke="#5a6b62" stroke-width="2"/>
+              <circle cx="-35" cy="11" r="1.5" fill="#5a6b62"/>
+              <text y="-12" text-anchor="middle" font-size="13" fill="#3f6e3f" font-weight="700">cow</text>
+              <text y="70" text-anchor="middle" font-size="11" fill="#5a6b62">primary consumer</text>
+            </g>
+            <text x="380" y="100" font-size="22" fill="#888">→</text>
+            <!-- human -->
+            <g transform="translate(490 80)">
+              <circle cx="0" cy="-2" r="10" fill="#fde0d0" stroke="#a05a3f"/>
+              <rect x="-15" y="10" width="30" height="30" rx="4" fill="#cfe0f0" stroke="#3a6594"/>
+              <line x1="-15" y1="40" x2="-15" y2="55" stroke="#5a6b62" stroke-width="2"/>
+              <line x1="15" y1="40" x2="15" y2="55" stroke="#5a6b62" stroke-width="2"/>
+              <text y="-22" text-anchor="middle" font-size="13" fill="#3f6e3f" font-weight="700">human</text>
+              <text y="70" text-anchor="middle" font-size="11" fill="#5a6b62">secondary consumer</text>
+            </g>
+          </svg>
+          <figcaption>Producers make their own food. Consumers eat other organisms.</figcaption>
+        </figure>
+
+        <div class="toggles">
+          <button class="tog help">💡 Hint</button>
+          <button class="tog stem">📚 Sentence stems</button>
+          <button class="tog stretch">⚡ Stretch</button>
+          <button class="tog unlock">🔒 Unlock answers</button>
+          <button class="tog done">✓ I've done this</button>
+        </div>
+
+        <div class="panel help"><div class="label">Hint</div>
+          <p>A producer doesn't eat — it MAKES. A consumer doesn't make — it EATS.</p>
+        </div>
+        <div class="panel stem"><div class="label">Sentence stems</div>
+          <ul class="stems">
+            <li>"A producer is an organism that ____."</li>
+            <li>"A consumer is an organism that ____."</li>
+            <li>"Plants are at the start of every food chain because ____."</li>
+          </ul>
+        </div>
+        <div class="panel stretch"><div class="label">Push yourself</div>
+          <p>If a disease wiped out all the plants in an ecosystem, what would happen to the cows and humans? Explain in 2 sentences.</p>
+        </div>
+
+        <div class="lockbox">
+          <div class="label">🔒 Riddle to unlock the answers</div>
+          <p class="riddle">"I'm the type of organism that <b>makes its own food</b>. I sit at the start of every food chain. What's my name?"</p>
+          <div class="keyrow">
+            <input type="text" placeholder="Type the keyword…" autocomplete="off" spellcheck="false">
+            <button class="check-btn">Check</button>
+            <button class="hint-btn">Hint</button>
+          </div>
+          <div class="feedback"></div>
+          <div class="answers">
+            <div class="alabel">✓ Answers</div>
+            <p><b>(a)</b> The plant is always at the start because it <b>makes its own food</b> using sunlight (photosynthesis). All other organisms in the chain depend on it.</p>
+            <p><b>(b)</b> A <b>producer</b> makes its own food. A <b>consumer</b> eats other organisms to get food.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 5 - ALEX MISCONCEPTION -->
+      <section class="card" data-sec="5" data-keyword="carbohydrate" data-letter="U" data-letter-idx="4">
+        <div class="sec-head">
+          <span class="sec-num">5</span>
+          <h2 class="sec-title">Alex says: "Plants get their food from the soil"</h2>
+          <span class="time">5 min</span>
+        </div>
+
+        <div style="background:#fff6e3;border:1px solid var(--sun-line);border-radius:12px;padding:12px 14px;font-size:14.5px;margin-bottom:8px">
+          <b>Alex says:</b> <i>"Plants get their food from the soil."</i><br>
+          <b>Your job:</b> Give <b>three reasons</b> why Alex is wrong.
+        </div>
+
+        <div class="toggles">
+          <button class="tog help">💡 Hint</button>
+          <button class="tog stem">📚 Sentence stems</button>
+          <button class="tog stretch">⚡ Stretch</button>
+          <button class="tog unlock">🔒 Unlock answers</button>
+          <button class="tog done">✓ I've done this</button>
+        </div>
+
+        <div class="panel help"><div class="label">Hint</div>
+          <ul>
+            <li>What's the science meaning of <b>food</b>? It's a source of <b>energy</b>.</li>
+            <li>What does the plant actually take from the soil — is that food or something else?</li>
+            <li>How do plants get the food they need?</li>
+          </ul>
+        </div>
+        <div class="panel stem"><div class="label">Sentence stems</div>
+          <ul class="stems">
+            <li>"Alex is wrong because plants don't take in ____ from their surroundings."</li>
+            <li>"Plants only absorb ____ and ____ from the soil."</li>
+            <li>"Water/minerals are not food because they ____."</li>
+            <li>"Plants make their own food by ____."</li>
+          </ul>
+        </div>
+        <div class="panel stretch"><div class="label">Push yourself</div>
+          <p>Define "food" in scientific terms (3 features). Then explain why <b>oxygen</b> isn't classed as food, even though plants and animals need it.</p>
+        </div>
+
+        <div class="lockbox">
+          <div class="label">🔒 Riddle to unlock the answers</div>
+          <p class="riddle">"Plants make their own food. The food they make is a type of ____ — a food group that provides energy. (Hint: starts with C, 12 letters)"</p>
+          <div class="keyrow">
+            <input type="text" placeholder="Type the keyword…" autocomplete="off" spellcheck="false">
+            <button class="check-btn">Check</button>
+            <button class="hint-btn">Hint</button>
+          </div>
+          <div class="feedback"></div>
+          <div class="answers">
+            <div class="alabel">✓ Three reasons Alex is wrong</div>
+            <ol>
+              <li>Plants <b>make their own food</b> — they don't take it from anywhere.</li>
+              <li>Plants only absorb <b>water and minerals</b> from the soil — these aren't food.</li>
+              <li>Water and minerals are <b>not</b> food because they are not a source of energy.</li>
+            </ol>
+            <p style="margin:8px 0 0">In science, <b>food</b> means something an organism (a) needs to stay alive, (b) takes in or makes, (c) uses for growth/repair, (d) uses as a source of <b>energy</b>.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 6 - MINERAL IONS -->
+      <section class="card" data-sec="6" data-keyword="amino" data-letter="C" data-letter-idx="5">
+        <div class="sec-head">
+          <span class="sec-num">6</span>
+          <h2 class="sec-title">Mineral ions — Nitrate &amp; Magnesium</h2>
+          <span class="time">10 min</span>
+        </div>
+        <p class="task">Plants only need <b>two main mineral ions</b> for iGCSE. Each has a job — and a tell-tale sign when it's missing.</p>
+
+        <div class="mineral-grid">
+          <div class="mcell">
+            <div class="head">
+              <svg width="36" height="36" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="#e8f1e6" stroke="#3f6e3f"/><text x="12" y="16" text-anchor="middle" font-size="10" font-weight="700" fill="#3f6e3f">NO₃⁻</text></svg>
+              <h4>Nitrate (NO₃⁻)</h4>
+            </div>
+            <div><b>Used for:</b> making <b>amino acids</b>, which join up to make <b>proteins</b> for growth.</div>
+            <div class="deficiency"><b>Deficiency:</b> stunted (poor) growth · yellow older leaves.</div>
+          </div>
+          <div class="mcell">
+            <div class="head">
+              <svg width="36" height="36" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="#fff6e3" stroke="#caa84a"/><text x="12" y="16" text-anchor="middle" font-size="10" font-weight="700" fill="#8a6614">Mg²⁺</text></svg>
+              <h4>Magnesium (Mg²⁺)</h4>
+            </div>
+            <div><b>Used for:</b> making <b>chlorophyll</b> — without it, the plant can't photosynthesise.</div>
+            <div class="deficiency"><b>Deficiency:</b> yellow leaves between the veins (chlorosis).</div>
+          </div>
+        </div>
+
+        <p class="task" style="margin-top:14px">Make notes in your book. Then write one sentence linking each mineral to <b>what would go wrong</b> without it.</p>
+
+        <div class="ways"><span class="way">📋 Mini table</span><span class="way">🎨 Annotate sketch</span></div>
+
+        <div class="toggles">
+          <button class="tog help">💡 Hint</button>
+          <button class="tog stem">📚 Sentence stems</button>
+          <button class="tog stretch">⚡ Stretch</button>
+          <button class="tog unlock">🔒 Unlock answers</button>
+          <button class="tog done">✓ I've done this</button>
+        </div>
+
+        <div class="panel help"><div class="label">Hint — link cause to effect</div>
+          <ul>
+            <li>No nitrate → no amino acids → no proteins → no growth.</li>
+            <li>No magnesium → no chlorophyll → can't absorb light → can't photosynthesise → no glucose.</li>
+          </ul>
+        </div>
+        <div class="panel stem"><div class="label">Sentence stems</div>
+          <ul class="stems">
+            <li>"Without nitrate, the plant cannot make ____, so ____."</li>
+            <li>"Without magnesium, the plant cannot make ____, so ____."</li>
+            <li>"This means the plant would look ____."</li>
+          </ul>
+        </div>
+        <div class="panel stretch"><div class="label">Push yourself — explain a chain</div>
+          <p>Write a 4-step chain: <b>"No magnesium → ____ → ____ → ____ → no glucose."</b> Use full sentences with "because" or "so".</p>
+        </div>
+
+        <div class="lockbox">
+          <div class="label">🔒 Riddle to unlock the answers</div>
+          <p class="riddle">"Nitrates combine with glucose to make these. They're the building blocks of proteins. They start with 'a' (5 letters). What are they called? ____ acids."</p>
+          <div class="keyrow">
+            <input type="text" placeholder="Type the keyword…" autocomplete="off" spellcheck="false">
+            <button class="check-btn">Check</button>
+            <button class="hint-btn">Hint</button>
+          </div>
+          <div class="feedback"></div>
+          <div class="answers">
+            <div class="alabel">✓ Answers</div>
+            <p><b>Nitrate (NO₃⁻):</b> Used to make amino acids → which join up to form proteins for growth. Without it, the plant cannot grow properly (stunted growth, yellow leaves).</p>
+            <p><b>Magnesium (Mg²⁺):</b> Used to make chlorophyll. Without it, leaves go yellow (chlorosis) and the plant can't photosynthesise.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 7 - ALEX PLANT -->
+      <section class="card" data-sec="7" data-keyword="nitrate" data-letter="E" data-letter-idx="6">
+        <div class="sec-head">
+          <span class="sec-num">7</span>
+          <h2 class="sec-title">Apply — "My plant isn't growing!"</h2>
+          <span class="time">5 min</span>
+        </div>
+
+        <div style="background:#fff6e3;border:1px solid var(--sun-line);border-radius:12px;padding:12px 14px;font-size:14.5px;margin-bottom:8px">
+          <b>Alex says:</b> <i>"My plant isn't growing any bigger!"</i><br>
+          <b>Your job:</b> Suggest at least <b>two reasons</b>. Use what you've learned so far.
+        </div>
+
+        <div class="toggles">
+          <button class="tog help">💡 Hint</button>
+          <button class="tog stem">📚 Sentence stems</button>
+          <button class="tog stretch">⚡ Stretch</button>
+          <button class="tog unlock">🔒 Unlock answers</button>
+          <button class="tog done">✓ I've done this</button>
+        </div>
+
+        <div class="panel help"><div class="label">Hint</div>
+          <ul>
+            <li>Could the plant be missing <b>a mineral ion</b>? Which one is for growth?</li>
+            <li>Could the plant be missing one of the things needed for photosynthesis?</li>
+          </ul>
+        </div>
+        <div class="panel stem"><div class="label">Sentence stems</div>
+          <ul class="stems">
+            <li>"The plant might not be getting enough ____, which is needed to make ____ for growth."</li>
+            <li>"The plant might not be getting enough ____, so it can't make enough ____ for energy."</li>
+          </ul>
+        </div>
+        <div class="panel stretch"><div class="label">Push yourself</div>
+          <p>If you were a gardener, name <b>three different changes</b> you could make to fix the problem. Justify each one.</p>
+        </div>
+
+        <div class="lockbox">
+          <div class="label">🔒 Riddle to unlock the answers</div>
+          <p class="riddle">"I'm the mineral ion needed for protein synthesis. Without me, plants are stunted. My formula is NO₃⁻. What am I called? (singular or plural is fine)"</p>
+          <div class="keyrow">
+            <input type="text" placeholder="Type the keyword…" autocomplete="off" spellcheck="false">
+            <button class="check-btn">Check</button>
+            <button class="hint-btn">Hint</button>
+          </div>
+          <div class="feedback"></div>
+          <div class="answers">
+            <div class="alabel">✓ Two reasons Alex's plant isn't growing</div>
+            <ol>
+              <li>The plant is <b>not getting enough nitrate</b>, which is needed to make <b>amino acids → proteins</b> for growth.</li>
+              <li>The plant is <b>not getting enough sunlight</b>, so it isn't making enough <b>glucose</b> for energy (needed for growth).</li>
+            </ol>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 8 - EXIT QUIZ -->
+      <section class="card" data-sec="8" data-keyword="producers" data-letter="R" data-letter-idx="7">
+        <div class="sec-head">
+          <span class="sec-num">8</span>
+          <h2 class="sec-title">Exit quiz — 6 questions</h2>
+          <span class="time">7 min</span>
+        </div>
+        <p class="task">Answer in your book. Don't unlock until you've had a go at all 6.</p>
+        <ol style="margin:6px 0 0">
+          <li>Which <b>two</b> things do plants take in through their leaves?</li>
+          <li>Plants take in minerals and ____ through their roots.</li>
+          <li>Who is right? <b>Andeep:</b> "Plants don't need food." <b>Jacob:</b> "Plants make food for humans but don't need food themselves." <b>Jun:</b> "Plants need food to stay alive." <b>Sofia:</b> "Plants take in nutrients and that's all the food they need."</li>
+          <li>How do plants get the food they need? (a) eat soil (b) make own food (c) take from air (d) take from surroundings</li>
+          <li>The food plants make is a type of ____ (carbohydrate / fat / mineral / protein).</li>
+          <li>Plants use this food for: (tick 2) — (a) source of nitrogen, (b) fuel for respiration, (c) to make proteins, fats, cells &amp; tissues, (d) to provide minerals for growth.</li>
+        </ol>
+
+        <div class="toggles">
+          <button class="tog stretch">⚡ Stretch</button>
+          <button class="tog unlock">🔒 Unlock answers</button>
+          <button class="tog done">✓ I've done this</button>
+        </div>
+
+        <div class="panel stretch"><div class="label">Stretch — beyond the quiz</div>
+          <p>Without looking back, write <b>one</b> exam-style sentence that uses all of these words: <i>producer · photosynthesis · carbohydrate · nitrate · amino acids</i>.</p>
+        </div>
+
+        <div class="lockbox">
+          <div class="label">🔒 Final riddle — last letter of the master code</div>
+          <p class="riddle">"Plants make their own food, so they are called ____. (This is also the BIG idea of today's lesson — and the master code at the top.)"</p>
+          <div class="keyrow">
+            <input type="text" placeholder="Type the keyword…" autocomplete="off" spellcheck="false">
+            <button class="check-btn">Check</button>
+            <button class="hint-btn">Hint</button>
+          </div>
+          <div class="feedback"></div>
+          <div class="answers">
+            <div class="alabel">✓ Answers</div>
+            <ol>
+              <li>Gases from air <b>and</b> light.</li>
+              <li>Water.</li>
+              <li><b>Jun</b> — "Plants need food to stay alive."</li>
+              <li>(b) Plants <b>make their own food</b>.</li>
+              <li><b>Carbohydrate</b>.</li>
+              <li>(b) fuel for respiration <b>and</b> (c) to make proteins, fats, cells &amp; tissues.</li>
+            </ol>
+          </div>
+        </div>
+      </section>
+
+      <footer>You're in charge of your own learning today 🌿 — and don't peek at answers until you've had a real go.</footer>
+    </main>
+
+    <!-- KEY WORDS -->
+    <aside class="glossary">
+      <h3>Key Words</h3>
+      <p class="gloss-hint">Stuck on a word? Check here any time.</p>
+
+      <div class="kw"><div class="ic"><svg width="22" height="22" viewBox="0 0 24 24"><path d="M12 3 C 7 8, 7 14, 12 21 C 17 14, 17 8, 12 3 Z" fill="#7fb07a" stroke="#4f7a4f"/></svg></div>
+        <div><div class="term">Producer</div><div class="def">Organism that makes its own food (plants).</div></div></div>
+
+      <div class="kw"><div class="ic"><svg width="22" height="22" viewBox="0 0 24 24"><circle cx="8" cy="12" r="4" fill="#fff" stroke="#5a6b62"/><circle cx="16" cy="12" r="4" fill="#fde0d0" stroke="#a05a3f"/></svg></div>
+        <div><div class="term">Consumer</div><div class="def">Organism that eats other organisms.</div></div></div>
+
+      <div class="kw"><div class="ic"><svg width="22" height="22" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="#fff6e3" stroke="#caa84a"/><text x="12" y="15" text-anchor="middle" font-size="9" fill="#8a6614" font-family="sans-serif">G</text></svg></div>
+        <div><div class="term">Carbohydrate</div><div class="def">Food group that gives energy — what plants make.</div></div></div>
+
+      <div class="kw"><div class="ic"><svg width="22" height="22" viewBox="0 0 24 24"><circle cx="12" cy="12" r="6" fill="#cfe7c5" stroke="#3f6e3f"/></svg></div>
+        <div><div class="term">Glucose</div><div class="def">The sugar plants make in photosynthesis.</div></div></div>
+
+      <div class="kw"><div class="ic"><svg width="22" height="22" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="#e8f1e6" stroke="#3f6e3f"/><text x="12" y="15" text-anchor="middle" font-size="8" fill="#3f6e3f" font-family="sans-serif">NO₃⁻</text></svg></div>
+        <div><div class="term">Nitrate</div><div class="def">Mineral ion — used to make amino acids → proteins for growth.</div></div></div>
+
+      <div class="kw"><div class="ic"><svg width="22" height="22" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="#fff6e3" stroke="#caa84a"/><text x="12" y="15" text-anchor="middle" font-size="8" fill="#8a6614" font-family="sans-serif">Mg²⁺</text></svg></div>
+        <div><div class="term">Magnesium</div><div class="def">Mineral ion — used to make chlorophyll.</div></div></div>
+
+      <div class="kw"><div class="ic"><svg width="22" height="22" viewBox="0 0 24 24"><g fill="#5a3a8a"><circle cx="6" cy="12" r="2.5"/><circle cx="12" cy="12" r="2.5"/><circle cx="18" cy="12" r="2.5"/></g></svg></div>
+        <div><div class="term">Amino acid</div><div class="def">Building block of proteins.</div></div></div>
+
+      <div class="kw"><div class="ic"><svg width="22" height="22" viewBox="0 0 24 24"><path d="M4 12 Q 8 6, 12 12 T 20 12" fill="none" stroke="#3a6594" stroke-width="2"/></svg></div>
+        <div><div class="term">Protein</div><div class="def">Long chain of amino acids — used for growth.</div></div></div>
+
+      <div class="kw"><div class="ic"><svg width="22" height="22" viewBox="0 0 24 24"><path d="M12 3 C 7 8, 7 14, 12 21 C 17 14, 17 8, 12 3 Z" fill="#7fb07a" stroke="#4f7a4f"/><line x1="12" y1="5" x2="12" y2="20" stroke="#4f7a4f"/></svg></div>
+        <div><div class="term">Chlorophyll</div><div class="def">Green pigment — absorbs light for photosynthesis.</div></div></div>
+
+      <div class="kw"><div class="ic"><svg width="22" height="22" viewBox="0 0 24 24"><path d="M12 4 v 16 M8 8 l 4 -4 4 4" stroke="#3f6e3f" stroke-width="1.6" fill="none"/></svg></div>
+        <div><div class="term">Respiration</div><div class="def">Releasing energy from glucose — every living cell.</div></div></div>
+
+      <div class="kw"><div class="ic"><svg width="22" height="22" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="#fde7a8" stroke="#caa84a"/></svg></div>
+        <div><div class="term">Photosynthesis</div><div class="def">Reaction that makes glucose using sunlight.</div></div></div>
+
+      <div class="kw"><div class="ic"><svg width="22" height="22" viewBox="0 0 24 24"><g fill="#7fb07a" stroke="#3f6e3f"><path d="M9 4 q 6 8 0 16 q -7 -4 0 -16 z"/><path d="M15 4 q -6 8 0 16 q 7 -4 0 -16 z"/></g></svg></div>
+        <div><div class="term">Stomata</div><div class="def">Pores on the leaf — gas exchange.</div></div></div>
+
+      <div class="kw"><div class="ic"><svg width="22" height="22" viewBox="0 0 24 24"><path d="M12 4 C 7 12, 7 18, 12 20 C 17 18, 17 12, 12 4 Z" fill="#dceaf6" stroke="#3a6594"/></svg></div>
+        <div><div class="term">Mineral</div><div class="def">Substance dissolved in soil water — absorbed via roots.</div></div></div>
+
+      <div class="kw"><div class="ic"><svg width="22" height="22" viewBox="0 0 24 24"><text x="12" y="16" text-anchor="middle" font-size="13" font-weight="700" fill="#3f6e3f" font-family="sans-serif">7</text></svg></div>
+        <div><div class="term">MRSGREN</div><div class="def">7 life processes: Movement · Respiration · Sensitivity · Growth · Reproduction · Excretion · Nutrition.</div></div></div>
+
+    </aside>
+  </div>
+</div>
+
+<script>
+(function(){
+  const sections = Array.from(document.querySelectorAll('section.card'));
+  const total = sections.length;
+  document.getElementById('total-count').textContent = total;
+
+  // Build progress dots
+  const progress = document.getElementById('progress');
+  for(let i=0;i<total;i++){
+    const d = document.createElement('div'); d.className='pdot'; progress.appendChild(d);
+  }
+
+  // Build master code boxes
+  const codeBoxes = document.getElementById('codeBoxes');
+  const letters = sections.map(s => s.dataset.letter);
+  letters.forEach((l,i)=>{
+    const slot = document.createElement('div');
+    slot.className='slot'; slot.id='slot-'+i; slot.textContent='?';
+    codeBoxes.appendChild(slot);
+  });
+
+  // SUPPORT LEVEL
+  const lvls = {
+    'lvl-light': {help:false, stem:false, stretch:true},
+    'lvl-std':   {help:false, stem:false, stretch:false},
+    'lvl-full':  {help:true,  stem:true,  stretch:true}
+  };
+  function applyLevel(id){
+    const cfg = lvls[id];
+    document.querySelectorAll('.lvl').forEach(b=>b.classList.toggle('active', b.id===id));
+    sections.forEach(card=>{
+      ['help','stem','stretch'].forEach(k=>{
+        const tog = card.querySelector('.tog.'+k);
+        const panel = card.querySelector('.panel.'+k);
+        if(!tog||!panel) return;
+        const want = cfg[k];
+        tog.classList.toggle('on', want);
+        panel.classList.toggle('show', want);
+      });
+    });
+  }
+  document.querySelectorAll('.lvl').forEach(b=>b.addEventListener('click',()=>applyLevel(b.id)));
+
+  // FREE TOGGLES (help/stem/stretch)
+  sections.forEach(card=>{
+    ['help','stem','stretch'].forEach(k=>{
+      const tog = card.querySelector('.tog.'+k);
+      const panel = card.querySelector('.panel.'+k);
+      if(!tog||!panel) return;
+      tog.addEventListener('click',()=>{
+        const on = !tog.classList.contains('on');
+        tog.classList.toggle('on', on);
+        panel.classList.toggle('show', on);
+      });
+    });
+  });
+
+  // UNLOCK TOGGLE - opens the lockbox (but doesn't reveal answers)
+  sections.forEach(card=>{
+    const tog = card.querySelector('.tog.unlock');
+    const lockbox = card.querySelector('.lockbox');
+    if(!tog||!lockbox) return;
+    tog.addEventListener('click',()=>{
+      const on = !tog.classList.contains('on');
+      tog.classList.toggle('on', on);
+      lockbox.classList.toggle('show', on);
+      if(on) lockbox.querySelector('input')?.focus();
+    });
+  });
+
+  // KEYWORD CHECKING
+  function normalise(s){
+    return (s||'').toLowerCase().trim().replace(/[.,!?;:]/g,'').replace(/s$/,'');
+  }
+  function accepts(target, attempt){
+    const a = normalise(attempt);
+    const t = normalise(target);
+    if(!a) return false;
+    if(a===t) return true;
+    // attempt starts with the target (e.g. "amino acids" → "amino")
+    if(a.startsWith(t)) return true;
+    // target starts with attempt, allow up to 2 missing chars (e.g. "stoma" → "stomata", "chlorophyl" → "chlorophyll")
+    if(t.startsWith(a) && a.length >= t.length - 2) return true;
+    return false;
+  }
+  const tries = {};
+  sections.forEach((card,idx)=>{
+    const lockbox = card.querySelector('.lockbox');
+    if(!lockbox) return;
+    const input = lockbox.querySelector('input');
+    const checkBtn = lockbox.querySelector('.check-btn');
+    const hintBtn = lockbox.querySelector('.hint-btn');
+    const fb = lockbox.querySelector('.feedback');
+    const answers = lockbox.querySelector('.answers');
+    const target = card.dataset.keyword;
+    const letter = card.dataset.letter;
+    const slot = document.getElementById('slot-'+idx);
+    tries[idx] = 0;
+
+    function unlock(){
+      input.classList.add('right'); input.classList.remove('wrong');
+      input.value = target;
+      input.readOnly = true;
+      checkBtn.disabled = true;
+      checkBtn.textContent = '✓ Unlocked';
+      checkBtn.style.background = '#5a8a5a';
+      fb.className = 'feedback right';
+      fb.innerHTML = '✓ Correct! <span class="letter-reveal">Letter: '+letter+'</span>';
+      answers.classList.add('unlocked');
+      slot.classList.add('unlocked');
+      slot.textContent = letter;
+      // celebrate when all unlocked
+      const all = sections.every(s => s.querySelector('.slot.unlocked, .answers.unlocked'));
+      const unlockedCount = document.querySelectorAll('.slot.unlocked').length;
+      if(unlockedCount === total){
+        document.getElementById('celebrate').classList.add('show');
+        document.getElementById('celebrate').scrollIntoView({behavior:'smooth',block:'center'});
+      }
+    }
+
+    function check(){
+      const v = input.value;
+      if(!v.trim()) return;
+      tries[idx]++;
+      if(accepts(target, v)){
+        unlock();
+      } else {
+        input.classList.add('wrong'); input.classList.remove('right');
+        fb.className = 'feedback wrong';
+        if(tries[idx] >= 3){
+          fb.innerHTML = `Not quite — the keyword starts with "<b>${target.slice(0,2)}</b>" and has <b>${target.length}</b> letters. Try once more.`;
+        } else if(tries[idx] >= 2){
+          fb.innerHTML = `Hmm, not quite. Re-read the riddle — the answer has <b>${target.length}</b> letters.`;
+        } else {
+          fb.innerHTML = `Not quite — try again. (Spelling matters but I'll be a bit forgiving.)`;
+        }
+      }
+    }
+
+    checkBtn.addEventListener('click', check);
+    input.addEventListener('keydown', e=>{ if(e.key==='Enter'){ e.preventDefault(); check(); }});
+    hintBtn.addEventListener('click',()=>{
+      fb.className='feedback hint';
+      fb.innerHTML = `💡 Hint: it starts with "<b>${target.slice(0,2)}</b>" and is <b>${target.length}</b> letters long.`;
+    });
+  });
+
+  // DONE / PROGRESS
+  function refresh(){
+    let count = 0;
+    sections.forEach((card,i)=>{
+      const done = card.classList.contains('done');
+      progress.children[i].classList.toggle('done', done);
+      if(done) count++;
+    });
+    document.getElementById('done-count').textContent = count;
+  }
+  sections.forEach(card=>{
+    const btn = card.querySelector('.tog.done'); if(!btn) return;
+    btn.addEventListener('click',()=>{
+      const on = !btn.classList.contains('on');
+      btn.classList.toggle('on', on);
+      btn.textContent = on ? '✓ Done!' : '✓ I\'ve done this';
+      card.classList.toggle('done', on);
+      refresh();
+    });
+  });
+
+  // RESET
+  document.getElementById('reset').addEventListener('click',()=>{
+    sections.forEach((card,i)=>{
+      card.classList.remove('done');
+      const dbtn = card.querySelector('.tog.done');
+      if(dbtn){dbtn.classList.remove('on'); dbtn.textContent='✓ I\'ve done this';}
+      const ub = card.querySelector('.tog.unlock');
+      if(ub){ub.classList.remove('on');}
+      const lb = card.querySelector('.lockbox');
+      if(lb){lb.classList.remove('show');}
+      const inp = card.querySelector('.lockbox input');
+      if(inp){inp.value=''; inp.readOnly=false; inp.className=''; }
+      const cb = card.querySelector('.lockbox .check-btn');
+      if(cb){cb.disabled=false; cb.textContent='Check'; cb.style.background='';}
+      const fb = card.querySelector('.lockbox .feedback');
+      if(fb){fb.className='feedback'; fb.textContent='';}
+      const ans = card.querySelector('.lockbox .answers');
+      if(ans){ans.classList.remove('unlocked');}
+      const slot = document.getElementById('slot-'+i);
+      if(slot){slot.classList.remove('unlocked'); slot.textContent='?';}
+      tries[i]=0;
+    });
+    document.getElementById('celebrate').classList.remove('show');
+    refresh();
+    applyLevel('lvl-std');
+  });
+
+  applyLevel('lvl-std');
+})();
+</script>
+</body>
+</html>
