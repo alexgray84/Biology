@@ -1,0 +1,1147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Practical Planning — Year 9 Biology · Lesson 4</title>
+<style>
+  :root{
+    --bg:#fafaf7;
+    --ink:#23332b;
+    --muted:#5a6b62;
+    --leaf:#5a8a5a;
+    --leaf-dk:#3f6e3f;
+    --leaf-soft:#e8f1e6;
+    --leaf-line:#cfe1cb;
+    --sky:#eef4fb;
+    --sky-line:#cfe0f0;
+    --sky-dk:#3a6594;
+    --sun:#fff6e3;
+    --sun-line:#f0d9a3;
+    --sun-dk:#8a6614;
+    --rose:#fdeeee;
+    --rose-line:#f2c7c7;
+    --rose-dk:#a84a4a;
+    --plum:#f1ebfa;
+    --plum-line:#dccff0;
+    --plum-dk:#5a3a8a;
+    --teal:#e6f3f0;
+    --teal-line:#c2e0d8;
+    --teal-dk:#2c6e5e;
+    --chip:#f1ede4;
+    --shadow:0 1px 2px rgba(0,0,0,.04), 0 6px 18px rgba(34,51,42,.06);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,sans-serif;
+    line-height:1.55;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1080px;margin:0 auto;padding:28px 24px 80px}
+
+  header.hero{background:linear-gradient(180deg,#f4f8ee 0%,#fafaf7 100%);
+    border:1px solid var(--leaf-line);border-radius:18px;padding:22px 26px;
+    box-shadow:var(--shadow);margin-bottom:18px}
+  .eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--leaf);font-weight:600}
+  h1{font-size:28px;margin:6px 0 4px;letter-spacing:-.01em}
+  .sub{color:var(--muted);font-size:14.5px;margin:0 0 14px}
+
+  .picker{display:flex;flex-wrap:wrap;gap:8px;align-items:center;background:#fff;border:1px solid var(--leaf-line);border-radius:14px;padding:10px 12px}
+  .picker .pick-label{font-size:12px;color:var(--muted);font-weight:600;letter-spacing:.05em;text-transform:uppercase;margin-right:4px}
+  .picker button{appearance:none;border:1px solid var(--leaf-line);background:#fff;color:var(--ink);
+    border-radius:999px;padding:7px 14px;font-size:13.5px;font-weight:600;cursor:pointer;transition:.15s}
+  .picker button:hover{background:var(--leaf-soft)}
+  .picker button.active{background:var(--leaf);color:#fff;border-color:var(--leaf)}
+  .picker .reset{margin-left:auto;background:transparent;border:0;color:var(--muted);font-size:12.5px;cursor:pointer;text-decoration:underline}
+
+  .master{background:#fff;border:1px solid var(--leaf-line);border-radius:14px;padding:14px 16px;margin-top:14px;display:flex;flex-wrap:wrap;align-items:center;gap:14px}
+  .master-label{font-size:12px;color:var(--muted);font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+  .code{display:flex;gap:6px}
+  .code .slot{width:34px;height:42px;border:1.5px dashed #cfd2c4;border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:800;font-family:Menlo,Consolas,monospace;font-size:18px;color:#bdb999;background:#fbfaf3;transition:.25s}
+  .code .slot.unlocked{border-style:solid;border-color:var(--leaf);background:var(--leaf-soft);color:var(--leaf-dk)}
+  .master-hint{font-size:12px;color:var(--muted);margin-left:auto}
+
+  .progress{display:flex;gap:6px;margin-top:14px;flex-wrap:wrap}
+  .pdot{flex:1;min-width:18px;height:8px;background:#ede7d6;border-radius:6px;transition:.2s}
+  .pdot.done{background:var(--leaf)}
+  .progress-meta{font-size:12px;color:var(--muted);margin-top:6px;text-align:right}
+
+  .grid{display:grid;grid-template-columns:1fr 290px;gap:20px;margin-top:8px}
+  @media (max-width:880px){.grid{grid-template-columns:1fr}}
+
+  section.card{background:#fff;border:1px solid #ecebe4;border-radius:16px;
+    padding:20px 22px;margin-bottom:16px;box-shadow:var(--shadow);transition:.2s}
+  section.card.done{background:#f7fbf6;border-color:var(--leaf-line)}
+  .sec-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:6px}
+  .sec-num{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;
+    background:var(--leaf);color:#fff;border-radius:8px;font-weight:700;font-size:13px}
+  .sec-title{font-size:17px;font-weight:700;margin:0}
+  .time{margin-left:auto;display:inline-flex;align-items:center;gap:6px;
+    background:var(--chip);color:#665a3f;border-radius:999px;padding:4px 10px;font-size:12px;font-weight:600}
+  .time::before{content:"";width:8px;height:8px;border-radius:50%;background:#d8b85a;display:inline-block}
+  .task{font-size:15px;margin:4px 0 10px}
+
+  /* CONTENT KNOWLEDGE BOX */
+  .knowledge{background:#fbfaf3;border:1px solid #ecebe4;border-radius:12px;padding:14px 16px;margin:10px 0;font-size:14.5px}
+  .knowledge .kl{font-size:11px;letter-spacing:.12em;text-transform:uppercase;font-weight:700;color:var(--leaf-dk);margin-bottom:6px;display:flex;align-items:center;gap:6px}
+  .knowledge ul{margin:6px 0;padding-left:20px}
+  .knowledge li{margin:3px 0}
+
+  .toggles{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 0}
+  .tog{appearance:none;border:1px solid #e0dccd;background:#fff;border-radius:999px;
+    padding:6px 12px;font-size:12.5px;font-weight:600;color:var(--ink);cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:.15s}
+  .tog:hover{background:#fafaf2}
+  .tog.help{color:var(--sky-dk);border-color:var(--sky-line)}
+  .tog.help.on{background:var(--sky);border-color:var(--sky-dk)}
+  .tog.stem{color:var(--plum-dk);border-color:var(--plum-line)}
+  .tog.stem.on{background:var(--plum);border-color:var(--plum-dk)}
+  .tog.model{color:var(--teal-dk);border-color:var(--teal-line)}
+  .tog.model.on{background:var(--teal);border-color:var(--teal-dk)}
+  .tog.unlock{color:var(--leaf-dk);border-color:var(--leaf-line)}
+  .tog.unlock.on{background:var(--leaf-soft);border-color:var(--leaf-dk)}
+  .tog.done{margin-left:auto;color:var(--leaf-dk);border-color:var(--leaf-line)}
+  .tog.done.on{background:var(--leaf);color:#fff;border-color:var(--leaf)}
+
+  .panel{display:none;border-radius:12px;padding:12px 14px;margin-top:10px;border:1px solid;font-size:14.5px}
+  .panel.show{display:block;animation:slide .18s ease-out}
+  @keyframes slide{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
+  .panel.help{background:var(--sky);border-color:var(--sky-line)}
+  .panel.stem{background:var(--plum);border-color:var(--plum-line)}
+  .panel.model{background:var(--teal);border-color:var(--teal-line)}
+  .panel .label{font-size:11px;letter-spacing:.12em;text-transform:uppercase;font-weight:700;margin-bottom:4px}
+  .panel.help .label{color:var(--sky-dk)}
+  .panel.stem .label{color:var(--plum-dk)}
+  .panel.model .label{color:var(--teal-dk)}
+  .stems{margin:0;padding-left:18px}
+  .stems li{margin:4px 0;font-style:italic}
+  .panel.stem li{color:#46276e}
+  .panel.help li,.panel.help p{color:#264466}
+  .panel.model{font-size:14px}
+
+  /* GOOD vs BAD examples */
+  .compare{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+  @media (max-width:540px){.compare{grid-template-columns:1fr}}
+  .ex{padding:10px 12px;border-radius:8px;font-size:13.5px;border:1px solid}
+  .ex.bad{background:#fdeeee;border-color:#f2c7c7;color:#7a3a3a}
+  .ex.good{background:#e8f4eb;border-color:#bcd6c0;color:#2c5a3c}
+  .ex .tag{font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;display:block;margin-bottom:3px}
+  .ex.bad .tag{color:#a84a4a}
+  .ex.good .tag{color:#3f6e3f}
+
+  /* LOCK */
+  .lockbox{display:none;border-radius:12px;padding:14px 16px;margin-top:10px;border:1.5px solid var(--leaf-line);background:linear-gradient(180deg,#fdfbf2 0%, #f7fbf2 100%)}
+  .lockbox.show{display:block;animation:slide .18s ease-out}
+  .lockbox .label{font-size:11px;letter-spacing:.12em;text-transform:uppercase;font-weight:700;color:var(--leaf-dk);margin-bottom:6px;display:flex;align-items:center;gap:6px}
+  .riddle{font-size:14.5px;color:var(--ink);margin:6px 0 10px;font-style:italic;line-height:1.5}
+  .riddle b{font-style:normal}
+  .keyrow{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+  .keyrow input{flex:1;min-width:160px;border:1.5px solid var(--leaf-line);background:#fff;border-radius:10px;padding:9px 12px;font-size:14.5px;font-family:inherit;outline:none;transition:.15s}
+  .keyrow input:focus{border-color:var(--leaf-dk)}
+  .keyrow input.wrong{border-color:#c97070;background:#fdf6f6}
+  .keyrow input.right{border-color:var(--leaf);background:var(--leaf-soft)}
+  .keyrow .check-btn{appearance:none;border:0;background:var(--leaf);color:#fff;border-radius:10px;padding:9px 16px;font-size:14px;font-weight:700;cursor:pointer;transition:.15s}
+  .keyrow .check-btn:hover{background:var(--leaf-dk)}
+  .keyrow .hint-btn{appearance:none;border:1px solid var(--leaf-line);background:#fff;color:var(--leaf-dk);border-radius:10px;padding:8px 12px;font-size:12.5px;font-weight:600;cursor:pointer}
+  .keyrow .hint-btn:hover{background:var(--leaf-soft)}
+  .feedback{font-size:13px;margin-top:8px;min-height:18px}
+  .feedback.wrong{color:#a84a4a}
+  .feedback.right{color:var(--leaf-dk);font-weight:700}
+  .feedback.hint{color:var(--sky-dk)}
+  .answers{display:none;margin-top:12px;padding:12px 14px;background:#fff;border:1px dashed var(--leaf-line);border-radius:10px;font-size:14.5px}
+  .answers.unlocked{display:block;animation:slide .25s ease-out}
+  .answers .alabel{font-size:11px;letter-spacing:.12em;text-transform:uppercase;font-weight:700;color:var(--leaf-dk);margin-bottom:4px}
+  .letter-reveal{display:inline-block;margin-left:8px;background:var(--sun);border:1px solid var(--sun-line);color:var(--sun-dk);font-family:Menlo,Consolas,monospace;font-weight:800;padding:4px 10px;border-radius:8px;font-size:13px}
+
+  .ways{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+  .way{font-size:12px;background:#f7f5ec;border:1px dashed #d8d2bc;border-radius:8px;padding:5px 9px;color:#665a3f}
+
+  figure{margin:14px 0;text-align:center}
+  figure svg{max-width:100%;height:auto;border-radius:12px;background:#fff;border:1px solid #eee;padding:6px}
+  figcaption{font-size:12.5px;color:var(--muted);margin-top:6px}
+
+  /* METHOD STEPS - draggable feel via order numbers */
+  .method-list{margin:8px 0;padding:0;list-style:none;counter-reset:step}
+  .method-list li{counter-increment:step;background:#fff;border:1px solid #ecebe4;border-radius:10px;padding:10px 12px 10px 44px;margin:6px 0;position:relative;font-size:14px}
+  .method-list li::before{content:counter(step);position:absolute;left:10px;top:50%;transform:translateY(-50%);width:24px;height:24px;border-radius:50%;background:var(--leaf);color:#fff;font-weight:700;display:flex;align-items:center;justify-content:center;font-size:12.5px}
+  .scrambled{padding-left:14px}
+  .scrambled li{padding-left:14px}
+  .scrambled li::before{display:none}
+
+  /* RISK TABLE */
+  table.tbl{width:100%;border-collapse:collapse;font-size:13.5px;margin-top:8px;background:#fff;border-radius:8px;overflow:hidden;border:1px solid #ecebe4}
+  table.tbl th,table.tbl td{border:1px solid #ecebe4;padding:8px 10px;vertical-align:top;text-align:left}
+  table.tbl th{background:var(--leaf-soft);color:var(--leaf-dk);font-weight:700;font-size:12.5px}
+  table.tbl tr:nth-child(even) td{background:#fbfaf3}
+
+  /* Results blank */
+  table.blank{width:100%;border-collapse:collapse;font-size:14px;margin:8px 0;background:#fff;border-radius:8px;overflow:hidden;border:1px solid #ecebe4}
+  table.blank th,table.blank td{border:1px solid #d8d2bc;padding:10px 12px;text-align:center;height:32px}
+  table.blank th{background:#fbfaf3;color:var(--muted);font-weight:600;font-style:italic}
+
+  aside.glossary{position:sticky;top:14px;align-self:start;background:#fff;border:1px solid #ecebe4;
+    border-radius:16px;padding:16px;box-shadow:var(--shadow);max-height:calc(100vh - 28px);overflow:auto}
+  aside.glossary h3{margin:0 0 4px;font-size:14px;letter-spacing:.1em;text-transform:uppercase;color:var(--leaf)}
+  aside.glossary .gloss-hint{font-size:11.5px;color:var(--muted);margin:0 0 10px}
+  .kw{display:grid;grid-template-columns:34px 1fr;gap:10px;align-items:start;margin:9px 0;padding-bottom:9px;border-bottom:1px dashed #eee}
+  .kw:last-child{border-bottom:0}
+  .kw .ic{width:34px;height:34px;border-radius:9px;background:var(--leaf-soft);display:flex;align-items:center;justify-content:center;font-weight:800;color:var(--leaf-dk);font-size:13px}
+  .kw .term{font-weight:700;font-size:13.5px;line-height:1.25}
+  .kw .def{font-size:12.5px;color:var(--muted);margin-top:2px}
+
+  footer{color:var(--muted);font-size:12.5px;text-align:center;margin-top:24px}
+  .celebrate{display:none;background:linear-gradient(135deg,#e8f1e6 0%,#fff6e3 100%);border:1px solid var(--leaf-line);border-radius:14px;padding:18px;text-align:center;margin-bottom:16px;color:var(--leaf-dk);font-weight:600}
+  .celebrate.show{display:block}
+  .celebrate .big{font-family:Menlo,Consolas,monospace;font-size:28px;letter-spacing:.4em;font-weight:800;display:block;margin:6px 0;color:var(--leaf-dk)}
+
+  @media print{
+    .picker,.toggles .done,.celebrate,.lockbox{display:none}
+    .panel,.answers{display:block !important}
+    aside.glossary{position:static}
+    .grid{grid-template-columns:1fr}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="hero">
+    <div class="eyebrow">Year 9 Biology · Lesson 4 · Practical Planning</div>
+    <h1>How does light intensity affect photosynthesis? 💡🌿</h1>
+    <p class="sub">Today's job: <b>plan and run</b> an iGCSE practical step-by-step. By the end you'll be able to write variables, a hypothesis, a method, a risk assessment, a results table — and predict the graph.</p>
+
+    <div class="picker">
+      <span class="pick-label">Pick your support level →</span>
+      <button id="lvl-light" class="lvl">🚀 I've got this</button>
+      <button id="lvl-std" class="lvl active">⚖️ Standard</button>
+      <button id="lvl-full" class="lvl">🪜 Give me all the support</button>
+      <button class="reset" id="reset">Reset progress</button>
+    </div>
+
+    <div class="master">
+      <span class="master-label">🔑 Master code</span>
+      <div class="code" id="codeBoxes"></div>
+      <span class="master-hint">Crack each section's keyword. Solve all 8 to spell today's BIG skill.</span>
+    </div>
+
+    <div class="progress" id="progress"></div>
+    <div class="progress-meta"><span id="done-count">0</span> / <span id="total-count">8</span> sections done</div>
+  </header>
+
+  <div class="celebrate" id="celebrate">
+    🎯 You've cracked all 8 sections. Today's BIG skill was…
+    <span class="big" id="bigword">PLANNING</span>
+    A practical only works if the <b>plan</b> is solid. Variables, hypothesis, method, risks, results — every single one matters.
+  </div>
+
+  <div class="grid">
+    <main>
+
+      <!-- SECTION 1 - DO NOW -->
+      <section class="card" data-sec="1" data-keyword="carbon dioxide" data-letter="P" data-letter-idx="0">
+        <div class="sec-head">
+          <span class="sec-num">1</span>
+          <h2 class="sec-title">Do Now — What affects the rate of photosynthesis?</h2>
+          <span class="time">3 min</span>
+        </div>
+        <p class="task">Write the <b>balanced symbol equation</b> for photosynthesis. Then list <b>4 things</b> that might change how fast it goes.</p>
+
+        <div class="knowledge">
+          <div class="kl">📘 Quick content recap</div>
+          <p style="margin:0 0 6px">Photosynthesis happens faster when conditions are better. The four main factors that affect the <b>rate</b> are:</p>
+          <ul>
+            <li><b>Light intensity</b> — more light → more energy for the reaction.</li>
+            <li><b>Carbon dioxide concentration</b> — CO₂ is a reactant.</li>
+            <li><b>Temperature</b> — affects the speed of enzymes that catalyse the reaction.</li>
+            <li><b>Chlorophyll</b> (amount/colour of leaf) — needed to absorb light.</li>
+          </ul>
+        </div>
+
+        <div class="ways"><span class="way">✍️ Write in book</span><span class="way">🧠 No peeking</span></div>
+
+        <div class="toggles">
+          <button class="tog help">💡 Hint</button>
+          <button class="tog stem">📚 Sentence stems</button>
+          <button class="tog model">🎯 Worked example</button>
+          <button class="tog unlock">🔒 Unlock answers</button>
+          <button class="tog done">✓ I've done this</button>
+        </div>
+
+        <div class="panel help"><div class="label">Hint</div>
+          <p>Think back to L2 — 6 in front of CO₂, H₂O and O₂. Sunlight + chlorophyll go above the arrow. Then for "what affects rate", think: what would the plant need MORE of to grow faster?</p>
+        </div>
+        <div class="panel stem"><div class="label">Sentence stems</div>
+          <ul class="stems">
+            <li>"6 ____ + 6 ____ → ____ + 6 ____"</li>
+            <li>"The rate of photosynthesis depends on ____, ____, ____ and ____."</li>
+          </ul>
+        </div>
+        <div class="panel model"><div class="label">🎯 Worked example — how to "think rate"</div>
+          <p>For <b>any</b> reaction, ask: "What does the reaction <b>need</b>?" Then ask "More of any of those things would speed it up."</p>
+          <p>For burning a candle: needs <i>oxygen, fuel, heat</i>. So removing oxygen, fuel or heat slows it down.</p>
+          <p>Apply the same logic to photosynthesis. What does the reaction need?</p>
+        </div>
+
+        <div class="lockbox">
+          <div class="label">🔒 Riddle to unlock the answers</div>
+          <p class="riddle">"I'm a colourless gas, formula CO₂. Plants take me in through their stomata as a reactant for photosynthesis. What's my full name? (2 words)"</p>
+          <div class="keyrow">
+            <input type="text" placeholder="Type the keyword…" autocomplete="off" spellcheck="false">
+            <button class="check-btn">Check</button>
+            <button class="hint-btn">Hint</button>
+          </div>
+          <div class="feedback"></div>
+          <div class="answers">
+            <div class="alabel">✓ Answers</div>
+            <p><b>Equation:</b> 6 CO₂ + 6 H₂O → C₆H₁₂O₆ + 6 O₂ (sunlight + chlorophyll over the arrow).</p>
+            <p><b>4 factors that affect rate:</b> light intensity, carbon dioxide concentration, temperature, chlorophyll amount.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 2 - THE BRIEF -->
+      <section class="card" data-sec="2" data-keyword="oxygen" data-letter="L" data-letter-idx="1">
+        <div class="sec-head">
+          <span class="sec-num">2</span>
+          <h2 class="sec-title">The brief — Pondweed &amp; light</h2>
+          <span class="time">3 min</span>
+        </div>
+        <p class="task">Today's investigation: <b>"How does light intensity affect the rate of photosynthesis in pondweed?"</b><br>
+        Look at the diagram. <b>What do you think the bubbles are?</b> Why do they appear faster when the lamp is closer?</p>
+
+        <figure>
+          <svg viewBox="0 0 700 320" xmlns="http://www.w3.org/2000/svg">
+            <!-- bench -->
+            <rect x="0" y="280" width="700" height="40" fill="#f5efe1"/>
+            <line x1="0" y1="280" x2="700" y2="280" stroke="#d8c89a"/>
+            <!-- ruler -->
+            <rect x="40" y="270" width="500" height="10" fill="#fff" stroke="#888"/>
+            <g stroke="#888" font-size="9" fill="#666">
+              <line x1="40" y1="270" x2="40" y2="278"/><text x="36" y="293">0</text>
+              <line x1="140" y1="270" x2="140" y2="278"/><text x="132" y="293">10</text>
+              <line x1="240" y1="270" x2="240" y2="278"/><text x="232" y="293">20</text>
+              <line x1="340" y1="270" x2="340" y2="278"/><text x="332" y="293">30</text>
+              <line x1="440" y1="270" x2="440" y2="278"/><text x="432" y="293">40 cm</text>
+            </g>
+            <!-- lamp -->
+            <g transform="translate(70 200)">
+              <rect x="-12" y="40" width="24" height="30" fill="#5a6b62"/>
+              <path d="M -28 40 L 28 40 L 18 0 L -18 0 Z" fill="#caa84a" stroke="#8a6614"/>
+              <circle cx="0" cy="20" r="10" fill="#fde7a8"/>
+              <g stroke="#e3b94a" stroke-width="1.5">
+                <line x1="20" y1="20" x2="40" y2="20"/>
+                <line x1="20" y1="10" x2="38" y2="0"/>
+                <line x1="20" y1="30" x2="38" y2="40"/>
+              </g>
+              <text x="0" y="85" text-anchor="middle" font-size="11" fill="#666">lamp</text>
+            </g>
+            <!-- beaker with pondweed -->
+            <g transform="translate(380 100)">
+              <path d="M -90 0 L -85 160 Q 0 175 85 160 L 90 0 Z" fill="rgba(196,224,232,0.4)" stroke="#3a6594" stroke-width="1.5"/>
+              <line x1="-90" y1="0" x2="90" y2="0" stroke="#3a6594" stroke-width="1.5"/>
+              <text x="-110" y="-8" font-size="10" fill="#3a6594">water +</text>
+              <text x="-110" y="3" font-size="10" fill="#3a6594">NaHCO₃</text>
+              <!-- inverted funnel -->
+              <path d="M -40 80 L 40 80 L 12 30 L -12 30 Z" fill="rgba(255,255,255,0.7)" stroke="#888"/>
+              <!-- inverted test tube above funnel -->
+              <rect x="-14" y="-50" width="28" height="80" fill="rgba(196,224,232,0.4)" stroke="#3a6594"/>
+              <path d="M -14 -50 Q 0 -56 14 -50" stroke="#3a6594" fill="none"/>
+              <text x="22" y="-30" font-size="10" fill="#3a6594">test tube</text>
+              <text x="22" y="-18" font-size="10" fill="#3a6594">collects O₂</text>
+              <!-- pondweed -->
+              <g stroke="#3f6e3f" stroke-width="2" fill="none">
+                <path d="M 0 160 Q -10 130 -5 100 Q -20 80 -10 60"/>
+                <g fill="#7fb07a" stroke="#3f6e3f">
+                  <ellipse cx="-12" cy="135" rx="6" ry="3" transform="rotate(-30 -12 135)"/>
+                  <ellipse cx="-2" cy="110" rx="6" ry="3" transform="rotate(30 -2 110)"/>
+                  <ellipse cx="-15" cy="85" rx="6" ry="3" transform="rotate(-20 -15 85)"/>
+                </g>
+              </g>
+              <!-- bubbles -->
+              <g fill="#fff" stroke="#3a6594">
+                <circle cx="2" cy="55" r="3"/>
+                <circle cx="-4" cy="40" r="2.5"/>
+                <circle cx="6" cy="22" r="3"/>
+                <circle cx="-2" cy="0" r="2"/>
+              </g>
+              <text x="20" y="50" font-size="10" fill="#3a6594" font-weight="700">bubbles!</text>
+            </g>
+            <!-- distance label -->
+            <g stroke="#a84a4a" stroke-width="1.2">
+              <line x1="100" y1="250" x2="290" y2="250" stroke-dasharray="3 3"/>
+              <text x="155" y="244" font-size="11" fill="#a84a4a" font-weight="700">distance d (cm)</text>
+            </g>
+          </svg>
+          <figcaption>Pondweed releases bubbles when it photosynthesises. Move the lamp closer or further to change light intensity.</figcaption>
+        </figure>
+
+        <div class="toggles">
+          <button class="tog help">💡 Hint</button>
+          <button class="tog model">🎯 Worked example</button>
+          <button class="tog unlock">🔒 Unlock answers</button>
+          <button class="tog done">✓ I've done this</button>
+        </div>
+
+        <div class="panel help"><div class="label">Hint</div>
+          <p>Look at the photosynthesis equation. What gas is a <b>product</b>? When the reaction happens, that gas escapes from the plant as bubbles. The faster the reaction, the more bubbles per minute.</p>
+        </div>
+        <div class="panel model"><div class="label">🎯 Worked example — what counts as "rate"?</div>
+          <p>"Rate" = how much happens per unit time. Examples:</p>
+          <ul>
+            <li>Rate of running = metres per second</li>
+            <li>Rate of reaction = grams of product per second</li>
+            <li>Rate of photosynthesis = bubbles per minute (or cm³ of O₂ per minute)</li>
+          </ul>
+          <p>Always: <b>amount ÷ time</b>.</p>
+        </div>
+
+        <div class="lockbox">
+          <div class="label">🔒 Riddle to unlock the answers</div>
+          <p class="riddle">"I'm a product of photosynthesis. I'm a gas. My formula is O₂. The bubbles in the pondweed practical are made of me. What am I?"</p>
+          <div class="keyrow">
+            <input type="text" placeholder="Type the keyword…" autocomplete="off" spellcheck="false">
+            <button class="check-btn">Check</button>
+            <button class="hint-btn">Hint</button>
+          </div>
+          <div class="feedback"></div>
+          <div class="answers">
+            <div class="alabel">✓ Answers</div>
+            <p>The bubbles are <b>oxygen gas</b>. Photosynthesis produces oxygen as a by-product, and the bubbles escape from the leaf and rise up through the water.</p>
+            <p>When the lamp is closer, the pondweed gets <b>more light energy</b>, so photosynthesis goes faster and more bubbles are produced per minute.</p>
+            <p><b>Why NaHCO₃?</b> Sodium hydrogen carbonate provides extra CO₂ in the water — so CO₂ doesn't run out and slow the reaction.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 3 - VARIABLES -->
+      <section class="card" data-sec="3" data-keyword="variable" data-letter="A" data-letter-idx="2">
+        <div class="sec-head">
+          <span class="sec-num">3</span>
+          <h2 class="sec-title">Variables — IV, DV, CVs</h2>
+          <span class="time">10 min</span>
+        </div>
+
+        <div class="knowledge">
+          <div class="kl">📘 Content knowledge — the 3 types of variable</div>
+          <ul>
+            <li><b>Independent Variable (IV)</b> — the one thing you <b>change on purpose</b>.</li>
+            <li><b>Dependent Variable (DV)</b> — what you <b>measure</b> in response.</li>
+            <li><b>Control Variables (CVs)</b> — everything you keep <b>the same</b> so the test is <b>fair</b>.</li>
+          </ul>
+          <p style="margin:6px 0 0;font-size:13.5px;color:var(--muted)">⚠️ "Fair test" = only the IV is changed. If you change two things, you can't tell which one caused the effect.</p>
+        </div>
+
+        <p class="task">Write down for the pondweed practical:</p>
+        <ol>
+          <li>The <b>IV</b> (and its units / how you'll change it)</li>
+          <li>The <b>DV</b> (and its units / how you'll measure it)</li>
+          <li><b>Three CVs</b> (with how you'll keep them the same)</li>
+        </ol>
+
+        <div class="toggles">
+          <button class="tog help">💡 Hint</button>
+          <button class="tog stem">📚 Sentence stems</button>
+          <button class="tog model">🎯 Worked example</button>
+          <button class="tog unlock">🔒 Unlock answers</button>
+          <button class="tog done">✓ I've done this</button>
+        </div>
+
+        <div class="panel help"><div class="label">Hint — good vs bad answers</div>
+          <div class="compare">
+            <div class="ex bad">
+              <span class="tag">✗ Weak IV</span>
+              "Light"
+            </div>
+            <div class="ex good">
+              <span class="tag">✓ Strong IV</span>
+              "Distance from the lamp to the beaker, measured in cm using a ruler"
+            </div>
+            <div class="ex bad">
+              <span class="tag">✗ Weak DV</span>
+              "How fast it goes"
+            </div>
+            <div class="ex good">
+              <span class="tag">✓ Strong DV</span>
+              "Number of bubbles released per minute, counted by eye"
+            </div>
+          </div>
+        </div>
+        <div class="panel stem"><div class="label">Sentence stems</div>
+          <ul class="stems">
+            <li>"My IV is ____, measured in ____. I'll change it by ____."</li>
+            <li>"My DV is ____, measured in ____. I'll record it by ____."</li>
+            <li>"I'll keep ____ the same by ____."</li>
+          </ul>
+        </div>
+        <div class="panel model"><div class="label">🎯 Worked example — DIFFERENT practical</div>
+          <p>"Investigate how <b>temperature</b> affects how fast amylase breaks down starch."</p>
+          <ul>
+            <li><b>IV:</b> Temperature, in °C, set using a water bath (10, 20, 30, 40, 50 °C).</li>
+            <li><b>DV:</b> Time taken (in seconds) for iodine to stop turning blue-black, measured with a stopwatch.</li>
+            <li><b>CVs:</b> volume of amylase (5 cm³), volume of starch (5 cm³), pH of solution (kept at 7), time the reaction is allowed to run before testing.</li>
+          </ul>
+          <p>Notice each variable has a <b>name + a unit + how it's measured/controlled</b>. Copy that pattern for the pondweed practical.</p>
+        </div>
+
+        <div class="lockbox">
+          <div class="label">🔒 Riddle to unlock the answers</div>
+          <p class="riddle">"In an experiment, anything that can change is called a ____. There are 3 types: independent, dependent and control. What's the missing word?"</p>
+          <div class="keyrow">
+            <input type="text" placeholder="Type the keyword…" autocomplete="off" spellcheck="false">
+            <button class="check-btn">Check</button>
+            <button class="hint-btn">Hint</button>
+          </div>
+          <div class="feedback"></div>
+          <div class="answers">
+            <div class="alabel">✓ Answers — for the pondweed practical</div>
+            <p><b>IV:</b> Distance from lamp to beaker (cm), measured with a ruler. Change it: 10, 20, 30, 40, 50 cm.</p>
+            <p><b>DV:</b> Number of bubbles per minute (counted), or volume of O₂ collected (cm³ per minute).</p>
+            <p><b>CVs (any 3):</b></p>
+            <ul>
+              <li>Same piece of pondweed (same species, same length/mass).</li>
+              <li>Same temperature of water (use thermometer).</li>
+              <li>Same volume of water + concentration of NaHCO₃.</li>
+              <li>Same time interval (e.g. count for 1 minute each).</li>
+              <li>Same lamp power (wattage).</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 4 - HYPOTHESIS -->
+      <section class="card" data-sec="4" data-keyword="hypothesis" data-letter="N" data-letter-idx="3">
+        <div class="sec-head">
+          <span class="sec-num">4</span>
+          <h2 class="sec-title">Write a hypothesis</h2>
+          <span class="time">5 min</span>
+        </div>
+
+        <div class="knowledge">
+          <div class="kl">📘 What makes a good hypothesis?</div>
+          <p style="margin:0 0 6px">A hypothesis is a <b>testable prediction</b>. It must:</p>
+          <ul>
+            <li>Mention the <b>IV</b> and the <b>DV</b>.</li>
+            <li>Say what will happen to the DV when you change the IV.</li>
+            <li>Include a <b>scientific reason</b> ("because…").</li>
+          </ul>
+        </div>
+
+        <p class="task">Write a hypothesis for the pondweed investigation. Use the sentence frame to scaffold it.</p>
+
+        <div class="toggles">
+          <button class="tog help">💡 Hint</button>
+          <button class="tog stem">📚 Sentence stems</button>
+          <button class="tog model">🎯 Worked example</button>
+          <button class="tog unlock">🔒 Unlock answers</button>
+          <button class="tog done">✓ I've done this</button>
+        </div>
+
+        <div class="panel help"><div class="label">Hint</div>
+          <p>If the lamp is closer, light intensity is higher. Higher light → more energy for photosynthesis → reaction speeds up → more bubbles per minute. So <b>which way</b> does the DV go when the IV (distance) goes <b>down</b>?</p>
+        </div>
+        <div class="panel stem"><div class="label">Sentence frame</div>
+          <p style="font-style:italic;color:#46276e;background:#fff;padding:10px;border-radius:8px;border:1px solid var(--plum-line)">
+          "As the [IV] increases / decreases, the [DV] will increase / decrease, because [scientific reason linked to photosynthesis]."
+          </p>
+        </div>
+        <div class="panel model"><div class="label">🎯 Worked example — hypothesis for amylase practical</div>
+          <p><i>"As the temperature of the water bath increases from 10 °C to 40 °C, the time taken for iodine to stop turning blue-black will <b>decrease</b>, because higher temperatures give amylase enzymes more kinetic energy, so they collide with starch more often and break it down faster. Above 40 °C the enzyme will start to denature."</i></p>
+          <p>Notice it: names IV and DV with units, says <b>direction</b> of change, gives a scientific <b>because</b>, and even predicts the <b>limit</b>.</p>
+        </div>
+
+        <div class="lockbox">
+          <div class="label">🔒 Riddle to unlock the answers</div>
+          <p class="riddle">"I'm a testable scientific prediction. I always include 'as ___ changes, ___ will change because…'. I start with H. What am I?"</p>
+          <div class="keyrow">
+            <input type="text" placeholder="Type the keyword…" autocomplete="off" spellcheck="false">
+            <button class="check-btn">Check</button>
+            <button class="hint-btn">Hint</button>
+          </div>
+          <div class="feedback"></div>
+          <div class="answers">
+            <div class="alabel">✓ Model hypothesis</div>
+            <p><i>"As the distance between the lamp and the pondweed decreases (from 50 cm to 10 cm), the number of bubbles produced per minute will increase, because moving the lamp closer increases the light intensity reaching the pondweed. More light energy means chlorophyll can absorb more, so the rate of photosynthesis goes up and more oxygen is released."</i></p>
+            <p><b>Stretch:</b> "However, at very high light intensities the rate will <b>plateau</b> because another factor (like CO₂ concentration) becomes limiting."</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 5 - METHOD -->
+      <section class="card" data-sec="5" data-keyword="method" data-letter="N" data-letter-idx="4">
+        <div class="sec-head">
+          <span class="sec-num">5</span>
+          <h2 class="sec-title">Method — put the steps in order</h2>
+          <span class="time">8 min</span>
+        </div>
+
+        <div class="knowledge">
+          <div class="kl">📘 What makes a good method?</div>
+          <ul>
+            <li><b>Numbered steps</b> in the right order.</li>
+            <li>Specific <b>quantities</b> (volumes in cm³, distances in cm, times in minutes).</li>
+            <li>Someone else could <b>repeat it exactly</b> — no vague words like "a bit".</li>
+            <li>States the <b>repeats</b> (do at least 3 times).</li>
+          </ul>
+        </div>
+
+        <p class="task">The 7 steps below are <b>scrambled</b>. Re-write them in the correct order in your book.</p>
+
+        <ol class="method-list scrambled">
+          <li>Repeat for distances of 10, 20, 30, 40 and 50 cm.</li>
+          <li>Place a beaker of water containing pondweed and 1 g of NaHCO₃ on the bench.</li>
+          <li>Repeat each distance 3 times and calculate a mean.</li>
+          <li>Move the lamp to 10 cm from the beaker.</li>
+          <li>Cover an inverted funnel over the pondweed and place an inverted test tube on top.</li>
+          <li>Wait 1 minute for the rate to stabilise, then count bubbles for 1 minute.</li>
+          <li>Plot a graph of mean bubbles per minute against distance.</li>
+        </ol>
+
+        <div class="toggles">
+          <button class="tog help">💡 Hint</button>
+          <button class="tog model">🎯 Worked example</button>
+          <button class="tog unlock">🔒 Unlock answers</button>
+          <button class="tog done">✓ I've done this</button>
+        </div>
+
+        <div class="panel help"><div class="label">Hint — the structure of a method</div>
+          <ol>
+            <li>Set up the apparatus.</li>
+            <li>Position / set the IV at its first value.</li>
+            <li>Wait, then measure the DV.</li>
+            <li>Change the IV, repeat.</li>
+            <li>Repeat for reliability, calculate mean.</li>
+            <li>Plot a graph.</li>
+          </ol>
+        </div>
+        <div class="panel model"><div class="label">🎯 Worked example — method writing tips</div>
+          <p>Bad: <i>"Set up the lamp and time it."</i></p>
+          <p>Good: <i>"Place the lamp <b>10 cm</b> from the beaker. Wait <b>1 minute</b> for the rate to stabilise. Count the bubbles produced for <b>exactly 1 minute</b> using a stopwatch. Record the count in your results table."</i></p>
+          <p>Add quantities and times — anyone can repeat it.</p>
+        </div>
+
+        <div class="lockbox">
+          <div class="label">🔒 Riddle to unlock the answers</div>
+          <p class="riddle">"I'm the step-by-step procedure for an experiment. Someone else should be able to follow me exactly to get the same results. What am I called?"</p>
+          <div class="keyrow">
+            <input type="text" placeholder="Type the keyword…" autocomplete="off" spellcheck="false">
+            <button class="check-btn">Check</button>
+            <button class="hint-btn">Hint</button>
+          </div>
+          <div class="feedback"></div>
+          <div class="answers">
+            <div class="alabel">✓ Correct order</div>
+            <ol>
+              <li>Place a beaker of water containing pondweed and 1 g of NaHCO₃ on the bench.</li>
+              <li>Cover an inverted funnel over the pondweed and place an inverted test tube on top.</li>
+              <li>Move the lamp to 10 cm from the beaker.</li>
+              <li>Wait 1 minute for the rate to stabilise, then count bubbles for 1 minute.</li>
+              <li>Repeat for distances of 10, 20, 30, 40 and 50 cm.</li>
+              <li>Repeat each distance 3 times and calculate a mean.</li>
+              <li>Plot a graph of mean bubbles per minute against distance.</li>
+            </ol>
+            <p><b>Tip:</b> set up → IV → wait → DV → change IV → repeat → graph.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 6 - RISK ASSESSMENT -->
+      <section class="card" data-sec="6" data-keyword="hazard" data-letter="I" data-letter-idx="5">
+        <div class="sec-head">
+          <span class="sec-num">6</span>
+          <h2 class="sec-title">Risk assessment — Hazards &amp; control measures</h2>
+          <span class="time">5 min</span>
+        </div>
+
+        <div class="knowledge">
+          <div class="kl">📘 Hazard vs Risk vs Control</div>
+          <ul>
+            <li><b>Hazard</b> — something that <b>could</b> cause harm (e.g. a hot lamp).</li>
+            <li><b>Risk</b> — what could actually <b>happen</b> (e.g. burning your hand).</li>
+            <li><b>Control measure</b> — what you <b>do</b> to reduce the risk (e.g. don't touch the lamp; turn it off when not in use).</li>
+          </ul>
+        </div>
+
+        <p class="task">Identify <b>3 hazards</b> in this practical. For each, write the risk and one control measure.</p>
+
+        <div class="toggles">
+          <button class="tog help">💡 Hint</button>
+          <button class="tog stem">📚 Sentence stems</button>
+          <button class="tog model">🎯 Worked example</button>
+          <button class="tog unlock">🔒 Unlock answers</button>
+          <button class="tog done">✓ I've done this</button>
+        </div>
+
+        <div class="panel help"><div class="label">Hint</div>
+          <p>Walk around your workstation in your head. What's hot? What's breakable? What involves water + electricity? What might you slip on?</p>
+        </div>
+        <div class="panel stem"><div class="label">Sentence stems</div>
+          <ul class="stems">
+            <li>"The hazard of ____ could cause ____. To reduce the risk, I will ____."</li>
+          </ul>
+        </div>
+        <div class="panel model"><div class="label">🎯 Worked example — risk table</div>
+          <table class="tbl">
+            <thead><tr><th>Hazard</th><th>Risk (what could happen)</th><th>Control measure</th></tr></thead>
+            <tbody>
+              <tr><td>Bunsen flame</td><td>Burns to skin or hair</td><td>Tie hair back, wear safety goggles, never reach across the flame</td></tr>
+            </tbody>
+          </table>
+          <p style="margin-top:8px">Always 3 columns: <b>Hazard → Risk → Control</b>. The control should be a specific action, not just "be careful".</p>
+        </div>
+
+        <div class="lockbox">
+          <div class="label">🔒 Riddle to unlock the answers</div>
+          <p class="riddle">"I'm something in the lab that COULD cause harm — I'm not the actual harm, just the dangerous thing. (Examples: hot plate, sharp knife, electricity.) What am I called?"</p>
+          <div class="keyrow">
+            <input type="text" placeholder="Type the keyword…" autocomplete="off" spellcheck="false">
+            <button class="check-btn">Check</button>
+            <button class="hint-btn">Hint</button>
+          </div>
+          <div class="feedback"></div>
+          <div class="answers">
+            <div class="alabel">✓ Risk assessment for pondweed practical</div>
+            <table class="tbl">
+              <thead><tr><th>Hazard</th><th>Risk</th><th>Control measure</th></tr></thead>
+              <tbody>
+                <tr><td>Hot lamp / bulb</td><td>Burns when moving the lamp</td><td>Wait for the lamp to cool before moving; only handle the base</td></tr>
+                <tr><td>Water + electrical lamp</td><td>Electric shock</td><td>Keep lamp lead away from water; dry hands before touching the plug</td></tr>
+                <tr><td>Glass beaker / test tube</td><td>Cuts from broken glass</td><td>Carry with two hands; place on bench, not at edge; report breakages</td></tr>
+                <tr><td>NaHCO₃ powder</td><td>Eye / skin irritation</td><td>Wear safety goggles; wash hands after handling</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 7 - RESULTS TABLE & GRAPH -->
+      <section class="card" data-sec="7" data-keyword="repeats" data-letter="N" data-letter-idx="6">
+        <div class="sec-head">
+          <span class="sec-num">7</span>
+          <h2 class="sec-title">Results table — design &amp; predict the graph</h2>
+          <span class="time">8 min</span>
+        </div>
+
+        <div class="knowledge">
+          <div class="kl">📘 Rules for a good results table</div>
+          <ul>
+            <li>IV in the <b>left column</b>, DV in the <b>right columns</b>.</li>
+            <li>Headings include <b>units</b> in brackets — e.g. "Distance (cm)".</li>
+            <li>At least <b>3 repeats</b>, then a <b>mean</b> column.</li>
+            <li>Numbers to a <b>consistent number of decimal places</b>.</li>
+          </ul>
+        </div>
+
+        <p class="task"><b>(a)</b> Copy the blank results table into your book and label the headings.<br>
+        <b>(b)</b> Predict what the graph will look like — which way does it go? Will it be a straight line or curve? Why?</p>
+
+        <table class="blank">
+          <thead>
+            <tr>
+              <th>____ ( __ )</th>
+              <th>____ Trial 1</th>
+              <th>____ Trial 2</th>
+              <th>____ Trial 3</th>
+              <th>____ Mean</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>10</td><td></td><td></td><td></td><td></td></tr>
+            <tr><td>20</td><td></td><td></td><td></td><td></td></tr>
+            <tr><td>30</td><td></td><td></td><td></td><td></td></tr>
+            <tr><td>40</td><td></td><td></td><td></td><td></td></tr>
+            <tr><td>50</td><td></td><td></td><td></td><td></td></tr>
+          </tbody>
+        </table>
+
+        <figure>
+          <svg viewBox="0 0 500 280" xmlns="http://www.w3.org/2000/svg">
+            <line x1="60" y1="40" x2="60" y2="240" stroke="#23332b" stroke-width="1.4"/>
+            <line x1="60" y1="240" x2="460" y2="240" stroke="#23332b" stroke-width="1.4"/>
+            <text x="20" y="140" font-size="12" transform="rotate(-90 20 140)" fill="#23332b">rate of photosynthesis</text>
+            <text x="20" y="160" font-size="11" transform="rotate(-90 20 160)" fill="#5a6b62">(bubbles / min)</text>
+            <text x="220" y="270" font-size="12" fill="#23332b">light intensity (1/d²) — increasing →</text>
+            <!-- the curve -->
+            <path d="M 70 230 Q 200 100, 300 80 T 450 75" stroke="#5a8a5a" stroke-width="2.5" fill="none"/>
+            <!-- annotations -->
+            <text x="120" y="180" font-size="11" fill="#3f6e3f" font-weight="700">linear rise</text>
+            <text x="115" y="195" font-size="10" fill="#5a6b62">(light is limiting)</text>
+            <text x="320" y="60" font-size="11" fill="#a05a3f" font-weight="700">plateau</text>
+            <text x="320" y="74" font-size="10" fill="#5a6b62" stroke="none">(now CO₂ or temp is limiting)</text>
+            <line x1="280" y1="80" x2="320" y2="65" stroke="#a05a3f" stroke-dasharray="3 2"/>
+          </svg>
+          <figcaption>The typical shape: linear rise, then plateau as another factor becomes limiting.</figcaption>
+        </figure>
+
+        <div class="toggles">
+          <button class="tog help">💡 Hint</button>
+          <button class="tog model">🎯 Worked example</button>
+          <button class="tog unlock">🔒 Unlock answers</button>
+          <button class="tog done">✓ I've done this</button>
+        </div>
+
+        <div class="panel help"><div class="label">Hint</div>
+          <p>For the table: which is your IV (left col)? Which is your DV (right cols)?<br>
+          For the graph: as light intensity increases, what does the rate do? Does it rise forever?</p>
+        </div>
+        <div class="panel model"><div class="label">🎯 Worked example — table for amylase practical</div>
+          <table class="tbl">
+            <thead><tr><th>Temperature (°C)</th><th>Trial 1 (s)</th><th>Trial 2 (s)</th><th>Trial 3 (s)</th><th>Mean (s)</th></tr></thead>
+            <tbody>
+              <tr><td>20</td><td>180</td><td>175</td><td>178</td><td>178</td></tr>
+              <tr><td>30</td><td>95</td><td>98</td><td>92</td><td>95</td></tr>
+            </tbody>
+          </table>
+          <p>IV on left with units. DV across with units. 3 repeats. Mean at the end.</p>
+        </div>
+
+        <div class="lockbox">
+          <div class="label">🔒 Riddle to unlock the answers</div>
+          <p class="riddle">"In a results table, you do this at least 3 times so you can spot anomalies and calculate a mean. (Plural noun — what do scientists do to make results reliable?)"</p>
+          <div class="keyrow">
+            <input type="text" placeholder="Type the keyword…" autocomplete="off" spellcheck="false">
+            <button class="check-btn">Check</button>
+            <button class="hint-btn">Hint</button>
+          </div>
+          <div class="feedback"></div>
+          <div class="answers">
+            <div class="alabel">✓ Answers</div>
+            <p><b>(a) Headings:</b> Distance from lamp (cm) | Bubbles per minute Trial 1 | Trial 2 | Trial 3 | Mean.</p>
+            <p><b>(b) Graph prediction:</b> As light intensity increases (distance decreases), the rate <b>rises in a straight line at first</b> — light is the limiting factor. Then it <b>plateaus</b> when another factor (like CO₂ concentration or temperature) becomes the limiting factor.</p>
+            <p><b>Why?</b> Once the plant has all the light it can use, giving it more light won't speed photosynthesis up further.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 8 - EVALUATION & APPLY -->
+      <section class="card" data-sec="8" data-keyword="accuracy" data-letter="G" data-letter-idx="7">
+        <div class="sec-head">
+          <span class="sec-num">8</span>
+          <h2 class="sec-title">Evaluate &amp; apply</h2>
+          <span class="time">8 min</span>
+        </div>
+
+        <div class="knowledge">
+          <div class="kl">📘 Evaluating an experiment — 4 key words</div>
+          <ul>
+            <li><b>Accuracy</b> — how close to the true value.</li>
+            <li><b>Precision</b> — how close repeats are to each other.</li>
+            <li><b>Reliability</b> — would you get the same results if you did it again? (Improved by repeats.)</li>
+            <li><b>Validity</b> — were you measuring the right thing? (Improved by controlling CVs.)</li>
+          </ul>
+        </div>
+
+        <p class="task"><b>(a)</b> Suggest <b>two limitations</b> of counting bubbles by eye. <br>
+        <b>(b)</b> Suggest <b>two improvements</b> to make the experiment more reliable or accurate.</p>
+
+        <p class="task" style="margin-top:14px"><b>Apply — your turn:</b><br>
+        Plan an investigation into <b>"How does CO₂ concentration affect the rate of photosynthesis in pondweed?"</b><br>
+        In your book, write: IV (with units) · DV (with units) · 2 CVs · a hypothesis.</p>
+
+        <div class="toggles">
+          <button class="tog help">💡 Hint</button>
+          <button class="tog stem">📚 Sentence stems</button>
+          <button class="tog model">🎯 Worked example</button>
+          <button class="tog unlock">🔒 Unlock answers</button>
+          <button class="tog done">✓ I've done this</button>
+        </div>
+
+        <div class="panel help"><div class="label">Hint</div>
+          <ul>
+            <li>What goes wrong if you count bubbles too fast? Or if some are bigger than others?</li>
+            <li>Could a machine count better than a human?</li>
+            <li>For the apply task: what could you change to give the pondweed different amounts of CO₂?</li>
+          </ul>
+        </div>
+        <div class="panel stem"><div class="label">Sentence stems</div>
+          <ul class="stems">
+            <li>"One limitation is ____, because ____."</li>
+            <li>"This could be improved by ____, which would ____."</li>
+            <li>"For the new investigation, my IV would be ____."</li>
+          </ul>
+        </div>
+        <div class="panel model"><div class="label">🎯 Worked example — limitations for amylase practical</div>
+          <p><b>Limitation:</b> "It's hard to spot the exact moment iodine stops turning blue-black, because the colour change is gradual. <b>Improvement:</b> use a colorimeter to measure the colour change objectively, giving more accurate timing."</p>
+        </div>
+
+        <div class="lockbox">
+          <div class="label">🔒 Final riddle — last letter of the master code</div>
+          <p class="riddle">"How close my results are to the true value. If my readings are far from the truth, my results have low ____. (Starts with A — 8 letters.)"</p>
+          <div class="keyrow">
+            <input type="text" placeholder="Type the keyword…" autocomplete="off" spellcheck="false">
+            <button class="check-btn">Check</button>
+            <button class="hint-btn">Hint</button>
+          </div>
+          <div class="feedback"></div>
+          <div class="answers">
+            <div class="alabel">✓ Answers</div>
+            <p><b>(a) Two limitations of counting bubbles:</b></p>
+            <ul>
+              <li>Bubbles can come too quickly to count by eye → <b>human error</b>.</li>
+              <li>Bubbles vary in size → counting them isn't a true measure of volume of O₂ produced.</li>
+              <li>It's hard to start/stop the count exactly on time.</li>
+            </ul>
+            <p><b>(b) Improvements:</b></p>
+            <ul>
+              <li>Collect the gas in an inverted measuring cylinder over water and measure <b>volume</b> of O₂ in cm³ per minute (more accurate).</li>
+              <li>Use a <b>data logger</b> with an oxygen sensor.</li>
+              <li>Do <b>more repeats</b> (5 instead of 3) and calculate a more reliable mean.</li>
+              <li>Use a <b>light meter</b> to measure light intensity directly (in lux), instead of distance.</li>
+            </ul>
+            <p><b>Apply — CO₂ investigation:</b></p>
+            <ul>
+              <li><b>IV:</b> Mass of NaHCO₃ added to the water (g), e.g. 0.5, 1.0, 1.5, 2.0, 2.5 g.</li>
+              <li><b>DV:</b> Number of bubbles per minute (or volume of O₂ in cm³ per min).</li>
+              <li><b>CVs:</b> Same pondweed, same light intensity (distance), same temperature, same volume of water, same time interval.</li>
+              <li><b>Hypothesis:</b> "As the mass of NaHCO₃ added increases, the rate of photosynthesis will increase, because more CO₂ is dissolved in the water — CO₂ is a reactant for photosynthesis. The rate will eventually plateau when another factor becomes limiting."</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <footer>You're in charge of your own learning today 🌱 — and a great practical starts with a great plan.</footer>
+    </main>
+
+    <!-- KEY WORDS -->
+    <aside class="glossary">
+      <h3>Key Words</h3>
+      <p class="gloss-hint">Practical vocab. Look here when you're stuck.</p>
+
+      <div class="kw"><div class="ic">IV</div>
+        <div><div class="term">Independent variable</div><div class="def">The one thing you change on purpose.</div></div></div>
+
+      <div class="kw"><div class="ic">DV</div>
+        <div><div class="term">Dependent variable</div><div class="def">What you measure in response.</div></div></div>
+
+      <div class="kw"><div class="ic">CV</div>
+        <div><div class="term">Control variable</div><div class="def">What you keep the same to make it a fair test.</div></div></div>
+
+      <div class="kw"><div class="ic">H</div>
+        <div><div class="term">Hypothesis</div><div class="def">Testable prediction with a scientific reason.</div></div></div>
+
+      <div class="kw"><div class="ic">⚠️</div>
+        <div><div class="term">Hazard</div><div class="def">Something that could cause harm.</div></div></div>
+
+      <div class="kw"><div class="ic">🛑</div>
+        <div><div class="term">Risk</div><div class="def">What might actually happen because of the hazard.</div></div></div>
+
+      <div class="kw"><div class="ic">🛡️</div>
+        <div><div class="term">Control measure</div><div class="def">A specific action to reduce the risk.</div></div></div>
+
+      <div class="kw"><div class="ic">🎯</div>
+        <div><div class="term">Accuracy</div><div class="def">How close a result is to the true value.</div></div></div>
+
+      <div class="kw"><div class="ic">📏</div>
+        <div><div class="term">Precision</div><div class="def">How close your repeats are to each other.</div></div></div>
+
+      <div class="kw"><div class="ic">🔁</div>
+        <div><div class="term">Reliability</div><div class="def">Same results if repeated. Improved by repeats.</div></div></div>
+
+      <div class="kw"><div class="ic">✓</div>
+        <div><div class="term">Validity</div><div class="def">Whether you measured the right thing. Improved by controlling CVs.</div></div></div>
+
+      <div class="kw"><div class="ic">µ</div>
+        <div><div class="term">Mean</div><div class="def">Average of your repeats. Total ÷ number of values.</div></div></div>
+
+      <div class="kw"><div class="ic">⚡</div>
+        <div><div class="term">Anomaly</div><div class="def">A result that doesn't fit the pattern. Often excluded from the mean.</div></div></div>
+
+      <div class="kw"><div class="ic">📈</div>
+        <div><div class="term">Limiting factor</div><div class="def">The one thing slowing down a reaction. Increase it and rate goes up — until something else becomes limiting.</div></div></div>
+
+      <div class="kw"><div class="ic">💧</div>
+        <div><div class="term">NaHCO₃</div><div class="def">Sodium hydrogen carbonate — provides extra CO₂ in solution.</div></div></div>
+
+    </aside>
+  </div>
+</div>
+
+<script>
+(function(){
+  const sections = Array.from(document.querySelectorAll('section.card'));
+  const total = sections.length;
+  document.getElementById('total-count').textContent = total;
+
+  const progress = document.getElementById('progress');
+  for(let i=0;i<total;i++){
+    const d = document.createElement('div'); d.className='pdot'; progress.appendChild(d);
+  }
+
+  const codeBoxes = document.getElementById('codeBoxes');
+  const letters = sections.map(s => s.dataset.letter);
+  letters.forEach((l,i)=>{
+    const slot = document.createElement('div');
+    slot.className='slot'; slot.id='slot-'+i; slot.textContent='?';
+    codeBoxes.appendChild(slot);
+  });
+
+  const lvls = {
+    'lvl-light': {help:false, stem:false, model:false},
+    'lvl-std':   {help:false, stem:false, model:false},
+    'lvl-full':  {help:true,  stem:true,  model:true}
+  };
+  function applyLevel(id){
+    const cfg = lvls[id];
+    document.querySelectorAll('.lvl').forEach(b=>b.classList.toggle('active', b.id===id));
+    sections.forEach(card=>{
+      ['help','stem','model'].forEach(k=>{
+        const tog = card.querySelector('.tog.'+k);
+        const panel = card.querySelector('.panel.'+k);
+        if(!tog||!panel) return;
+        const want = cfg[k];
+        tog.classList.toggle('on', want);
+        panel.classList.toggle('show', want);
+      });
+    });
+  }
+  document.querySelectorAll('.lvl').forEach(b=>b.addEventListener('click',()=>applyLevel(b.id)));
+
+  // FREE TOGGLES
+  sections.forEach(card=>{
+    ['help','stem','model'].forEach(k=>{
+      const tog = card.querySelector('.tog.'+k);
+      const panel = card.querySelector('.panel.'+k);
+      if(!tog||!panel) return;
+      tog.addEventListener('click',()=>{
+        const on = !tog.classList.contains('on');
+        tog.classList.toggle('on', on);
+        panel.classList.toggle('show', on);
+      });
+    });
+  });
+
+  // UNLOCK BOX TOGGLE
+  sections.forEach(card=>{
+    const tog = card.querySelector('.tog.unlock');
+    const lockbox = card.querySelector('.lockbox');
+    if(!tog||!lockbox) return;
+    tog.addEventListener('click',()=>{
+      const on = !tog.classList.contains('on');
+      tog.classList.toggle('on', on);
+      lockbox.classList.toggle('show', on);
+      if(on) lockbox.querySelector('input')?.focus();
+    });
+  });
+
+  // KEYWORD CHECKING
+  function normalise(s){
+    return (s||'').toLowerCase().trim().replace(/[.,!?;:]/g,'').replace(/s$/,'');
+  }
+  function accepts(target, attempt){
+    const a = normalise(attempt); const t = normalise(target);
+    if(!a) return false;
+    if(a===t) return true;
+    if(a.startsWith(t)) return true;
+    if(t.startsWith(a) && a.length >= t.length-2) return true;
+    return false;
+  }
+  const tries = {};
+  sections.forEach((card,idx)=>{
+    const lockbox = card.querySelector('.lockbox');
+    if(!lockbox) return;
+    const input = lockbox.querySelector('input');
+    const checkBtn = lockbox.querySelector('.check-btn');
+    const hintBtn = lockbox.querySelector('.hint-btn');
+    const fb = lockbox.querySelector('.feedback');
+    const answers = lockbox.querySelector('.answers');
+    const target = card.dataset.keyword;
+    const letter = card.dataset.letter;
+    const slot = document.getElementById('slot-'+idx);
+    tries[idx] = 0;
+
+    function unlock(){
+      input.classList.add('right'); input.classList.remove('wrong');
+      input.value = target;
+      input.readOnly = true;
+      checkBtn.disabled = true;
+      checkBtn.textContent = '✓ Unlocked';
+      checkBtn.style.background = '#5a8a5a';
+      fb.className = 'feedback right';
+      fb.innerHTML = '✓ Correct! <span class="letter-reveal">Letter: '+letter+'</span>';
+      answers.classList.add('unlocked');
+      slot.classList.add('unlocked');
+      slot.textContent = letter;
+      const unlockedCount = document.querySelectorAll('.slot.unlocked').length;
+      if(unlockedCount === total){
+        const cel = document.getElementById('celebrate');
+        cel.classList.add('show');
+        cel.scrollIntoView({behavior:'smooth',block:'center'});
+      }
+    }
+
+    function check(){
+      const v = input.value;
+      if(!v.trim()) return;
+      tries[idx]++;
+      if(accepts(target, v)){
+        unlock();
+      } else {
+        input.classList.add('wrong'); input.classList.remove('right');
+        fb.className = 'feedback wrong';
+        if(tries[idx] >= 3){
+          fb.innerHTML = `Not quite — the keyword starts with "<b>${target.slice(0,2)}</b>" and has <b>${target.replace(' ','').length}</b> letters. Try once more.`;
+        } else if(tries[idx] >= 2){
+          fb.innerHTML = `Hmm, not quite. Re-read the riddle and the content box.`;
+        } else {
+          fb.innerHTML = `Not quite — try again. (Spelling matters but I'll be a bit forgiving.)`;
+        }
+      }
+    }
+
+    checkBtn.addEventListener('click', check);
+    input.addEventListener('keydown', e=>{ if(e.key==='Enter'){ e.preventDefault(); check(); }});
+    hintBtn.addEventListener('click',()=>{
+      fb.className='feedback hint';
+      fb.innerHTML = `💡 Hint: it starts with "<b>${target.slice(0,2)}</b>" and is <b>${target.replace(' ','').length}</b> letters long.`;
+    });
+  });
+
+  // DONE
+  function refresh(){
+    let count = 0;
+    sections.forEach((card,i)=>{
+      const done = card.classList.contains('done');
+      progress.children[i].classList.toggle('done', done);
+      if(done) count++;
+    });
+    document.getElementById('done-count').textContent = count;
+  }
+  sections.forEach(card=>{
+    const btn = card.querySelector('.tog.done'); if(!btn) return;
+    btn.addEventListener('click',()=>{
+      const on = !btn.classList.contains('on');
+      btn.classList.toggle('on', on);
+      btn.textContent = on ? '✓ Done!' : '✓ I\'ve done this';
+      card.classList.toggle('done', on);
+      refresh();
+    });
+  });
+
+  // RESET
+  document.getElementById('reset').addEventListener('click',()=>{
+    sections.forEach((card,i)=>{
+      card.classList.remove('done');
+      const dbtn = card.querySelector('.tog.done');
+      if(dbtn){dbtn.classList.remove('on'); dbtn.textContent='✓ I\'ve done this';}
+      const ub = card.querySelector('.tog.unlock');
+      if(ub){ub.classList.remove('on');}
+      const lb = card.querySelector('.lockbox');
+      if(lb){lb.classList.remove('show');}
+      const inp = card.querySelector('.lockbox input');
+      if(inp){inp.value=''; inp.readOnly=false; inp.className=''; }
+      const cb = card.querySelector('.lockbox .check-btn');
+      if(cb){cb.disabled=false; cb.textContent='Check'; cb.style.background='';}
+      const fb = card.querySelector('.lockbox .feedback');
+      if(fb){fb.className='feedback'; fb.textContent='';}
+      const ans = card.querySelector('.lockbox .answers');
+      if(ans){ans.classList.remove('unlocked');}
+      const slot = document.getElementById('slot-'+i);
+      if(slot){slot.classList.remove('unlocked'); slot.textContent='?';}
+      tries[i]=0;
+    });
+    document.getElementById('celebrate').classList.remove('show');
+    refresh();
+    applyLevel('lvl-std');
+  });
+
+  applyLevel('lvl-std');
+})();
+</script>
+</body>
+</html>
