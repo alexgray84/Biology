@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Y7 Science · Lesson 2 · Energy Transfers</title>
+<style>
+  /* ---------- palette ---------- */
+  :root {
+    --bg: #fdfcf8;
+    --paper: #ffffff;
+    --ink: #2a3138;
+    --ink-soft: #586672;
+    --line: #e7e3d6;
+    --sage: #cfe3d4;
+    --sage-deep: #6fa07a;
+    --sky: #d6e6f2;
+    --sky-deep: #5d87a8;
+    --peach: #fbe1cf;
+    --peach-deep: #c97a4a;
+    --lilac: #e6dcef;
+    --lilac-deep: #8f6db0;
+    --sand: #f4ecd8;
+    --sand-deep: #b08a3e;
+    --shadow: 0 1px 2px rgba(40,50,60,.04), 0 4px 16px rgba(40,50,60,.05);
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Inter', 'Helvetica Neue', system-ui, -apple-system, sans-serif;
+    font-size: 17px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ---------- header ---------- */
+  header {
+    background: var(--paper);
+    border-bottom: 1px solid var(--line);
+    padding: 20px 32px;
+    position: sticky; top: 0; z-index: 50;
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 12px;
+  }
+  header h1 { margin: 4px 0 0 0; font-size: 22px; font-weight: 600; color: var(--ink); }
+  
+  /* ---------- main & layout ---------- */
+  main { max-width: 980px; margin: 0 auto; padding: 32px; }
+  section {
+    background: var(--paper); border: 1px solid var(--line);
+    border-radius: 16px; padding: 28px 32px; margin: 0 0 24px 0;
+    box-shadow: var(--shadow);
+  }
+  section .step {
+    display: inline-block; background: var(--sand); color: var(--sand-deep);
+    font-size: 12px; font-weight: 700; padding: 4px 12px; border-radius: 999px;
+    text-transform: uppercase;
+  }
+  h2 { font-size: 26px; font-weight: 600; margin: 12px 0 6px 0; }
+  h3 { font-size: 17px; font-weight: 600; margin: 22px 0 8px 0; }
+  p { margin: 8px 0; }
+
+  /* ---------- inputs & buttons ---------- */
+  select, input[type="range"] {
+    padding: 6px 12px; border-radius: 8px; border: 1px solid var(--line);
+    font-size: 15px; font-family: inherit; background: var(--bg);
+    cursor: pointer;
+  }
+  button {
+    background: var(--sky-deep); color: white; border: none;
+    padding: 10px 18px; border-radius: 8px; font-size: 15px; font-weight: 600;
+    cursor: pointer; transition: opacity 0.2s; margin-top: 12px; margin-right: 8px;
+  }
+  button.secondary { background: var(--ink-soft); }
+  button:hover { opacity: 0.9; }
+  
+  .feedback { font-size: 14px; font-weight: 600; margin-left: 12px; display: inline-block; }
+  .correct { color: var(--sage-deep); }
+  .incorrect { color: var(--peach-deep); }
+
+  /* ---------- interactive hinge ---------- */
+  .hinge-options { list-style: none; padding: 0; margin: 8px 0; }
+  .hinge-options li {
+    background: white; border: 2px solid var(--line); border-radius: 10px;
+    padding: 12px 16px; margin: 8px 0; display: flex; align-items: flex-start; gap: 12px;
+    cursor: pointer; transition: all 0.2s;
+  }
+  .hinge-options li:hover { border-color: var(--sky-deep); background: var(--sky); }
+  .hinge-options li.selected-correct { border-color: var(--sage-deep); background: var(--sage); }
+  .hinge-options li.selected-incorrect { border-color: var(--peach-deep); background: var(--peach); }
+  
+  .hinge-options .letter {
+    background: var(--line); color: var(--ink); width: 28px; height: 28px;
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 14px; flex-shrink: 0;
+  }
+  .hinge-explanation { display: none; padding: 14px; border-radius: 8px; margin-top: 12px; font-size: 15px; }
+  .hinge-explanation.show { display: block; }
+  
+  /* ---------- simulator canvas ---------- */
+  .sim-container {
+    background: var(--bg); border: 1px solid var(--line); border-radius: 12px;
+    padding: 16px; display: flex; flex-wrap: wrap; gap: 20px; align-items: flex-start;
+  }
+  canvas {
+    background: white; border: 1px solid var(--line); border-radius: 8px;
+    max-width: 100%; height: auto;
+  }
+  .sim-controls { flex: 1; min-width: 250px; }
+  .sim-controls label { display: block; font-size: 14px; font-weight: 600; margin-top: 12px; }
+  
+  /* ---------- tables & callouts ---------- */
+  table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 15px; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--line); }
+  th { background: var(--bg); font-weight: 600; color: var(--ink-soft); font-size: 13px; text-transform: uppercase; }
+
+  .callout { border-radius: 12px; padding: 14px 18px; margin: 16px 0; border: 1px solid; font-size: 15px; }
+  .callout-objective { background: var(--sage); border-color: var(--sage-deep); }
+  .callout-stem { background: var(--sky); border-color: var(--sky-deep); }
+  
+  /* ---------- tiers ---------- */
+  .tiers { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 14px; margin: 18px 0; }
+  .tier { border-radius: 14px; padding: 18px; border: 1.5px solid; }
+  .tier .badge { display: inline-block; font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 999px; color: white; margin-bottom: 8px; }
+  .tier-1 { background: #f4faf6; border-color: var(--sage-deep); }
+  .tier-1 .badge { background: var(--sage-deep); }
+  .tier-2 { background: #f5f9fc; border-color: var(--sky-deep); }
+  .tier-2 .badge { background: var(--sky-deep); }
+  .tier-3 { background: #f8f4fb; border-color: var(--lilac-deep); }
+  .tier-3 .badge { background: var(--lilac-deep); }
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <div style="font-size: 13px; color: var(--ink-soft); text-transform: uppercase;">Y7 Science · Energy</div>
+    <h1>Lesson 2 · Energy Transfers</h1>
+  </div>
+</header>
+
+<main>
+
+  <!-- ============== 1 · DO NOW ============== -->
+  <section id="do-now">
+    <span class="step">Step 1 · Do Now</span>
+    <h2>Match the Action to the Store</h2>
+    <p>Select the energy store that <strong>increases</strong> as a result of each action.</p>
+
+    <table>
+      <tr><th>Action</th><th>Store that increases</th></tr>
+      <tr>
+        <td>Moving an object higher up...</td>
+        <td>
+          <select id="dn1">
+            <option value="">-- Select Store --</option>
+            <option value="T">Thermal</option>
+            <option value="G">Gravitational</option>
+            <option value="E">Elastic</option>
+            <option value="K">Kinetic</option>
+          </select>
+          <span id="dn1-fb" class="feedback"></span>
+        </td>
+      </tr>
+      <tr>
+        <td>Increasing an object's speed...</td>
+        <td>
+          <select id="dn2">
+            <option value="">-- Select Store --</option>
+            <option value="T">Thermal</option>
+            <option value="G">Gravitational</option>
+            <option value="E">Elastic</option>
+            <option value="K">Kinetic</option>
+          </select>
+          <span id="dn2-fb" class="feedback"></span>
+        </td>
+      </tr>
+      <tr>
+        <td>Increasing an object's temperature...</td>
+        <td>
+          <select id="dn3">
+            <option value="">-- Select Store --</option>
+            <option value="T">Thermal</option>
+            <option value="G">Gravitational</option>
+            <option value="E">Elastic</option>
+            <option value="K">Kinetic</option>
+          </select>
+          <span id="dn3-fb" class="feedback"></span>
+        </td>
+      </tr>
+      <tr>
+        <td>Squashing an object with more force...</td>
+        <td>
+          <select id="dn4">
+            <option value="">-- Select Store --</option>
+            <option value="T">Thermal</option>
+            <option value="G">Gravitational</option>
+            <option value="E">Elastic</option>
+            <option value="K">Kinetic</option>
+          </select>
+          <span id="dn4-fb" class="feedback"></span>
+        </td>
+      </tr>
+    </table>
+    <button onclick="checkDoNow()">Check Answers</button>
+  </section>
+
+  <!-- ============== 2 · OBJECTIVES ============== -->
+  <section id="objectives">
+    <span class="step">Step 2 · What we're learning</span>
+    <h2>By the end of this lesson, I will be able to&hellip;</h2>
+    <div class="callout callout-objective">
+      <ol style="margin: 0; padding-left: 20px;">
+        <li>Recall the different ways in which energy can be transferred.</li>
+        <li>Identify situations in which an energy transfer is taking place.</li>
+        <li>State the <strong>principle of conservation of energy</strong>.</li>
+      </ol>
+    </div>
+    <div class="callout callout-stem">
+      <span style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--sky-deep);">My sentence stem</span><br>
+      <strong>"Energy is transferred from the ____ store into a useful ____ store and a wasted ____ store."</strong>
+    </div>
+  </section>
+
+  <!-- ============== 3 · BIG IDEA ============== -->
+  <section id="big-idea">
+    <span class="step">Step 3 · The big idea</span>
+    <h2>The Law of Conservation of Energy</h2>
+    <p>Energy is everywhere! But it follows one very strict rule.</p>
+    <p>The principle of the conservation of energy states that <strong>energy is never destroyed or used up. It is only transferred (changed) into another form.</strong></p>
+    <p>When energy is transferred to make an appliance work, not all of it is useful. The energy that spreads out into the surroundings and cannot be used is called <strong>dissipation</strong> (wasted energy).</p>
+  </section>
+
+  <!-- ============== 4 · QUICK CHECK ============== -->
+  <section id="check">
+    <span class="step">Step 4 · Quick check</span>
+    <h2>Test your understanding</h2>
+    <p>When a television is turned on, it transfers electrical energy into light and sound. The back of the television also gets warm. According to the principle of conservation of energy, which statement is true?</p>
+    
+    <ul class="hinge-options" id="hinge-list">
+      <li onclick="checkHinge(this, false, 'Incorrect. Energy is never destroyed. It only changes forms.')">
+        <div class="letter">A</div> <div>The electrical energy is slowly destroyed until the TV turns off.</div>
+      </li>
+      <li onclick="checkHinge(this, true, 'Correct! Energy cannot be created or destroyed. The total input (Electrical) must exactly equal all the outputs combined (Useful Light + Useful Sound + Wasted Thermal).')">
+        <div class="letter">B</div> <div>The total electrical energy input equals the light, sound, and thermal energy produced.</div>
+      </li>
+      <li onclick="checkHinge(this, false, 'Incorrect. Thermal energy in a TV is wasted (dissipated) energy, not the useful energy we want from a TV.')">
+        <div class="letter">C</div> <div>The thermal energy is the useful energy, while light and sound are dissipated.</div>
+      </li>
+      <li onclick="checkHinge(this, false, 'Incorrect. New energy cannot be created. The thermal energy comes from the electrical energy input.')">
+        <div class="letter">D</div> <div>The TV creates new thermal energy out of nothing.</div>
+      </li>
+    </ul>
+    
+    <div id="hinge-exp" class="hinge-explanation"></div>
+  </section>
+
+  <!-- ============== 5 · INTERACTIVE SIMULATOR ============== -->
+  <section id="simulator">
+    <span class="step">Step 5 · Interactive Simulator</span>
+    <h2>See Conservation in Action</h2>
+    <p>Drop the ball to see how Gravitational energy transfers to Kinetic energy. Notice how some energy is "wasted" into the Thermal store upon every bounce!</p>
+    
+    <div class="sim-container">
+      <canvas id="physicsCanvas" width="550" height="350"></canvas>
+      <div class="sim-controls">
+        <label for="bounceSlider">Energy Dissipated per Bounce</label>
+        <input type="range" id="bounceSlider" min="0.1" max="0.5" step="0.05" value="0.25" style="width: 100%;">
+        <div style="display: flex; justify-content: space-between; font-size: 12px; color: var(--ink-soft);">
+          <span>Very Little (Bouncy)</span>
+          <span>A Lot (Flat)</span>
+        </div>
+        
+        <div style="margin-top: 24px;">
+          <button onclick="startSimulation()">Drop Ball</button>
+          <button class="secondary" onclick="resetSimulation()">Reset</button>
+        </div>
+        
+        <div style="margin-top: 24px; font-size: 14px; color: var(--ink-soft); line-height: 1.4;">
+          <strong>Notice:</strong> The total energy (height of all three bars combined) never changes. Energy is just moving between stores!
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============== 6 · TIERED TASKS ============== -->
+  <section id="tasks">
+    <span class="step">Step 6 · Your task</span>
+    <h2>Energy Circus</h2>
+    <p>Choose your starting tier based on your confidence.</p>
+
+    <div class="tiers">
+      <!-- TIER 1 -->
+      <div class="tier tier-1">
+        <span class="badge">Tier 1 · Build it up</span>
+        <div style="font-weight: 600; margin-bottom: 8px;">Fill in the missing energy stores.</div>
+        <ol style="line-height: 2;">
+          <li><strong>Candle:</strong> Chemical input → <select id="t1-1"><option value="">--</option><option value="Light">Light</option><option value="Kinetic">Kinetic</option></select> useful + Thermal wasted. <span id="t1-1-fb" class="feedback"></span></li>
+          <li><strong>Buzzer:</strong> Electrical input → <select id="t1-2"><option value="">--</option><option value="Light">Light</option><option value="Sound">Sound</option></select> useful + Thermal wasted. <span id="t1-2-fb" class="feedback"></span></li>
+          <li><strong>Falling ball:</strong> <select id="t1-3"><option value="">--</option><option value="Gravitational">Gravitational</option><option value="Elastic">Elastic</option></select> input → Kinetic useful. <span id="t1-3-fb" class="feedback"></span></li>
+        </ol>
+        <button onclick="checkTier1()">Check Answers</button>
+      </div>
+
+      <!-- TIER 2 -->
+      <div class="tier tier-2">
+        <span class="badge">Tier 2 · Write it out</span>
+        <div style="font-weight: 600; margin-bottom: 8px;">Write a full sentence for three items using the stem.</div>
+        <div style="font-size:13px; color:var(--ink-soft); background:white; padding:8px 10px; border-radius:8px; border: 1px dashed var(--sky-deep);">
+          <strong>Stem:</strong> "Energy is transferred from the ____ store into a useful ____ store and a wasted ____ store."
+        </div>
+        <ol>
+          <li>A burning candle.</li>
+          <li>A buzzer sounding an alarm.</li>
+          <li>A wind-up toy walking across the desk.</li>
+        </ol>
+        <textarea placeholder="Type your sentences here..." style="width:100%; height:80px; border-radius:8px; border:1px solid var(--line); padding:8px; margin-top:8px; font-family:inherit;"></textarea>
+      </div>
+
+      <!-- TIER 3 -->
+      <div class="tier tier-3">
+        <span class="badge">Tier 3 · Justify</span>
+        <div style="font-weight: 600; margin-bottom: 8px;">Analyze the dissipated energy.</div>
+        <ol>
+          <li>For an <strong>elastic band being flung</strong>, explain exactly <em>why</em> thermal energy is created and wasted as it moves through the air.</li>
+          <li>For a <strong>falling tennis ball</strong>, explain what happens to the kinetic energy the moment the ball hits the ground. Where does it transfer?</li>
+        </ol>
+        <textarea placeholder="Type your reasoning here..." style="width:100%; height:80px; border-radius:8px; border:1px solid var(--line); padding:8px; margin-top:8px; font-family:inherit;"></textarea>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<script>
+  // --- Text Task Logic ---
+  function checkDoNow() {
+    const answers = { 'dn1': 'G', 'dn2': 'K', 'dn3': 'T', 'dn4': 'E' };
+    for (const [id, correctVal] of Object.entries(answers)) {
+      const select = document.getElementById(id);
+      const fb = document.getElementById(id + '-fb');
+      if (select.value === correctVal) {
+        fb.textContent = '✓ Correct';
+        fb.className = 'feedback correct';
+      } else if (select.value !== "") {
+        fb.textContent = '✗ Try again';
+        fb.className = 'feedback incorrect';
+      }
+    }
+  }
+
+  function checkHinge(element, isCorrect, explanationText) {
+    const items = document.getElementById('hinge-list').children;
+    for (let i = 0; i < items.length; i++) items[i].className = '';
+    element.className = isCorrect ? 'selected-correct' : 'selected-incorrect';
+    
+    const expBox = document.getElementById('hinge-exp');
+    expBox.textContent = explanationText;
+    expBox.className = 'hinge-explanation show';
+    expBox.style.backgroundColor = isCorrect ? 'var(--sage)' : 'var(--peach)';
+    expBox.style.color = isCorrect ? 'var(--sage-deep)' : 'var(--peach-deep)';
+    expBox.style.border = `1px solid ${isCorrect ? 'var(--sage-deep)' : 'var(--peach-deep)'}`;
+  }
+
+  function checkTier1() {
+    const answers = { 't1-1': 'Light', 't1-2': 'Sound', 't1-3': 'Gravitational' };
+    for (const [id, correctVal] of Object.entries(answers)) {
+      const select = document.getElementById(id);
+      const fb = document.getElementById(id + '-fb');
+      if (select.value === correctVal) {
+        fb.textContent = '✓ Correct';
+        fb.className = 'feedback correct';
+      } else if (select.value !== "") {
+        fb.textContent = '✗ Try again';
+        fb.className = 'feedback incorrect';
+      }
+    }
+  }
+
+  // --- Physics Simulator Logic ---
+  const canvas = document.getElementById('physicsCanvas');
+  const ctx = canvas.getContext('2d');
+  
+  let isRunning = false;
+  let animFrame;
+  
+  // Physics parameters
+  const gravity = 0.4;
+  const mass = 1;
+  const groundY = 300;
+  const startY = 50;
+  const maxEnergy = mass * gravity * (groundY - startY);
+  
+  let ball = { x: 100, y: startY, radius: 15, vy: 0 };
+  let thermalEnergy = 0;
+
+  function drawBar(x, y, width, height, color, label, value, maxVal) {
+    // Draw background track
+    ctx.fillStyle = '#fdfcf8';
+    ctx.fillRect(x, y, width, height);
+    ctx.strokeStyle = '#e7e3d6';
+    ctx.strokeRect(x, y, width, height);
+    
+    // Calculate filled height based on percentage
+    const percentage = Math.max(0, Math.min(1, value / maxVal));
+    const fillHeight = height * percentage;
+    
+    // Draw fill
+    ctx.fillStyle = color;
+    ctx.fillRect(x, y + height - fillHeight, width, fillHeight);
+    
+    // Draw label
+    ctx.fillStyle = '#2a3138';
+    ctx.font = '12px Inter, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(label, x + width/2, y + height + 20);
+  }
+
+  function render() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+    // Draw Ground
+    ctx.fillStyle = '#e7e3d6';
+    ctx.fillRect(20, groundY + ball.radius, 160, 10);
+    
+    // Draw Ball
+    ctx.beginPath();
+    ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
+    ctx.fillStyle = '#5d87a8';
+    ctx.fill();
+    ctx.lineWidth = 2;
+    ctx.strokeStyle = '#2a3138';
+    ctx.stroke();
+
+    // Physics step
+    if (isRunning) {
+      ball.vy += gravity;
+      ball.y += ball.vy;
+      
+      // Bounce collision
+      if (ball.y >= groundY) {
+        ball.y = groundY;
+        
+        // Calculate kinetic energy right before bounce
+        const kineticBefore = 0.5 * mass * (ball.vy * ball.vy);
+        
+        // Apply dissipation (loss of velocity)
+        const dissipationFactor = document.getElementById('bounceSlider').value;
+        const bounceRetention = 1 - dissipationFactor; 
+        
+        ball.vy = -ball.vy * bounceRetention;
+        
+        // Calculate kinetic energy after bounce
+        const kineticAfter = 0.5 * mass * (ball.vy * ball.vy);
+        
+        // Wasted energy goes to thermal
+        thermalEnergy += (kineticBefore - kineticAfter);
+        
+        // Stop completely if velocity is negligible
+        if (Math.abs(ball.vy) < 1.5) {
+          ball.vy = 0;
+          isRunning = false;
+          thermalEnergy = maxEnergy; // Cap it perfectly to prevent floating point errors at end
+        }
+      }
+    }
+
+    // Calculate current energies for charts
+    // E_p = mgh
+    let gravEnergy = Math.max(0, mass * gravity * (groundY - ball.y));
+    // E_k = 1/2 mv^2
+    let kinEnergy = 0.5 * mass * (ball.vy * ball.vy);
+    
+    // Enforce conservation limits visually during edge cases
+    if (!isRunning && ball.y === startY) {
+        gravEnergy = maxEnergy; kinEnergy = 0; thermalEnergy = 0;
+    }
+
+    // Draw Energy Charts
+    const startX = 250;
+    const barWidth = 60;
+    const barHeight = 200;
+    const barY = 80;
+    const gap = 30;
+
+    // Title
+    ctx.fillStyle = '#2a3138';
+    ctx.font = 'bold 16px Inter, sans-serif';
+    ctx.textAlign = 'left';
+    ctx.fillText('Real-Time Energy Stores', startX, 50);
+
+    drawBar(startX, barY, barWidth, barHeight, '#5d87a8', 'Gravitational', gravEnergy, maxEnergy);
+    drawBar(startX + barWidth + gap, barY, barWidth, barHeight, '#8f6db0', 'Kinetic', kinEnergy, maxEnergy);
+    drawBar(startX + (barWidth + gap) * 2, barY, barWidth, barHeight, '#c97a4a', 'Thermal', thermalEnergy, maxEnergy);
+    
+    if(isRunning) {
+        animFrame = requestAnimationFrame(render);
+    }
+  }
+
+  function startSimulation() {
+    if(!isRunning) {
+        // If ball is at bottom, reset it to top first
+        if(ball.y === groundY) {
+            resetSimulation();
+        }
+        isRunning = true;
+        render();
+    }
+  }
+
+  function resetSimulation() {
+    isRunning = false;
+    cancelAnimationFrame(animFrame);
+    ball.y = startY;
+    ball.vy = 0;
+    thermalEnergy = 0;
+    render();
+  }
+
+  // Initial render
+  render();
+</script>
+
+</body>
+</html>
