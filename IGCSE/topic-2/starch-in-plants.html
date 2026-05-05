@@ -1,0 +1,1446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Testing Leaves for Starch — Year 9 Biology · Lesson 5</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,800&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0d1b14;
+    --bg-2:#10241a;
+    --panel:#13291f;
+    --panel-2:#1a3a2b;
+    --ink:#e9f5ed;
+    --ink-soft:#b8d4c2;
+    --ink-mute:#86a594;
+    --line:#2a4a39;
+    --line-2:#3b6450;
+
+    --leaf:#3fb168;       /* primary green */
+    --leaf-deep:#1f7a44;
+    --iodine:#d97a2c;     /* iodine orange/brown */
+    --iodine-deep:#a8551c;
+    --bluack:#1c2a4a;     /* iodine blue-black result */
+    --bluack-glow:#6b7fc4;
+    --amber:#e6b54a;
+    --rose:#e36b6b;
+    --gold:#f3d27a;
+
+    --radius:14px;
+    --radius-sm:8px;
+    --shadow:0 1px 0 rgba(255,255,255,0.04) inset, 0 12px 30px rgba(0,0,0,.35);
+  }
+
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    background:
+      radial-gradient(1200px 600px at 90% -10%, rgba(63,177,104,.10), transparent 60%),
+      radial-gradient(900px 500px at -10% 30%, rgba(217,122,44,.08), transparent 55%),
+      var(--bg);
+    color:var(--ink);
+    font-family:"DM Sans", system-ui, -apple-system, sans-serif;
+    font-size:17px;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+    text-rendering:optimizeLegibility;
+  }
+
+  .wrap{max-width:980px;margin:0 auto;padding:28px 22px 80px}
+
+  /* Header */
+  .topbar{
+    display:flex;align-items:center;justify-content:space-between;
+    font-family:"DM Sans";font-size:13px;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--ink-mute);margin-bottom:10px;
+  }
+  .topbar .dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--leaf);margin:0 10px;vertical-align:middle}
+
+  h1.lesson-title{
+    font-family:"Fraunces", Georgia, serif;
+    font-weight:800;
+    font-size:clamp(34px, 5.6vw, 54px);
+    line-height:1.05;
+    letter-spacing:-.01em;
+    margin:6px 0 14px;
+    color:var(--ink);
+  }
+  h1.lesson-title .accent{color:var(--leaf);font-style:italic;font-weight:600}
+  .subtitle{font-size:18px;color:var(--ink-soft);max-width:760px;margin:0 0 24px}
+  .subtitle b{color:var(--gold);font-weight:600}
+
+  /* Support level toggle */
+  .support{
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:14px 16px;
+    display:flex;flex-wrap:wrap;align-items:center;gap:10px;
+    margin-bottom:18px;
+  }
+  .support .label{font-size:14px;color:var(--ink-soft);margin-right:6px}
+  .support button{
+    background:transparent;color:var(--ink-soft);
+    border:1px solid var(--line-2);border-radius:999px;
+    padding:8px 14px;font-family:"DM Sans";font-size:14px;font-weight:500;
+    cursor:pointer;transition:all .18s ease;
+  }
+  .support button:hover{border-color:var(--leaf);color:var(--ink)}
+  .support button.active{background:var(--leaf);color:#0a1a10;border-color:var(--leaf);font-weight:600}
+  .support .reset{margin-left:auto;font-size:12.5px;color:var(--ink-mute);background:none;border:none;cursor:pointer;text-decoration:underline}
+  .support .reset:hover{color:var(--rose)}
+
+  /* Master code */
+  .mastercode{
+    background:linear-gradient(180deg, var(--panel-2), var(--panel));
+    border:1px solid var(--line-2);
+    border-radius:var(--radius);
+    padding:18px 18px 16px;
+    margin-bottom:30px;
+    position:relative;overflow:hidden;
+  }
+  .mastercode::before{
+    content:"";position:absolute;inset:0;
+    background:radial-gradient(400px 200px at 100% 0%, rgba(243,210,122,.08), transparent 60%);
+    pointer-events:none;
+  }
+  .mastercode h3{
+    margin:0 0 4px;font-family:"Fraunces";font-weight:700;font-size:22px;color:var(--gold);
+    display:flex;align-items:center;gap:10px;
+  }
+  .mastercode p{margin:0 0 12px;font-size:14.5px;color:var(--ink-soft)}
+  .mastercode .slots{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px}
+  .mastercode .slot{
+    width:42px;height:50px;
+    border:2px dashed var(--line-2);border-radius:8px;
+    display:flex;align-items:center;justify-content:center;
+    font-family:"Fraunces";font-weight:800;font-size:24px;color:var(--gold);
+    background:rgba(0,0,0,0.2);
+    transition:all .3s ease;
+  }
+  .mastercode .slot.filled{
+    border-style:solid;border-color:var(--gold);
+    background:rgba(243,210,122,.12);
+    transform:scale(1.02);
+  }
+  .mastercode .progress{font-size:13px;color:var(--ink-mute);font-variant-numeric:tabular-nums}
+  .mastercode .reveal{
+    margin-top:10px;padding:12px 14px;background:rgba(63,177,104,.12);
+    border:1px solid var(--leaf);border-radius:var(--radius-sm);
+    font-size:14.5px;color:var(--ink);display:none;
+  }
+  .mastercode .reveal.show{display:block;animation:fadeUp .5s ease}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+  /* Section card */
+  .section{
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:24px 24px 22px;
+    margin-bottom:22px;
+    position:relative;
+    transition:opacity .25s ease, border-color .25s ease;
+  }
+  .section.locked{opacity:.55}
+  .section .num{
+    position:absolute;top:-14px;left:22px;
+    width:36px;height:36px;border-radius:50%;
+    background:var(--bg);
+    border:2px solid var(--leaf);
+    display:flex;align-items:center;justify-content:center;
+    font-family:"Fraunces";font-weight:800;font-size:18px;color:var(--leaf);
+  }
+  .section .timing{
+    display:inline-block;font-size:12px;color:var(--ink-mute);
+    background:rgba(255,255,255,0.04);
+    border:1px solid var(--line);border-radius:999px;padding:3px 10px;margin-left:8px;
+    vertical-align:middle;
+    letter-spacing:.06em;text-transform:uppercase;
+  }
+  .section h2{
+    font-family:"Fraunces";font-weight:700;font-size:26px;
+    margin:6px 0 14px;color:var(--ink);letter-spacing:-.005em;
+  }
+  .section .task{
+    background:rgba(63,177,104,.06);
+    border-left:3px solid var(--leaf);
+    padding:12px 14px;border-radius:0 8px 8px 0;
+    margin:14px 0 16px;
+    font-size:16px;
+  }
+  .section .task b{color:var(--gold)}
+
+  /* Content recap box */
+  details.recap{
+    background:rgba(255,255,255,.025);
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:0;margin:0 0 14px;
+  }
+  details.recap > summary{
+    cursor:pointer;list-style:none;
+    padding:12px 14px;
+    font-size:14.5px;color:var(--ink-soft);
+    display:flex;align-items:center;gap:8px;
+    user-select:none;
+  }
+  details.recap > summary::-webkit-details-marker{display:none}
+  details.recap > summary::before{content:"📘";font-size:16px}
+  details.recap > summary::after{
+    content:"+";margin-left:auto;font-size:18px;color:var(--ink-mute);
+    transition:transform .2s ease;
+  }
+  details.recap[open] > summary::after{transform:rotate(45deg)}
+  details.recap .recap-body{
+    padding:0 16px 14px 16px;font-size:15px;color:var(--ink-soft);
+    border-top:1px solid var(--line);
+    margin-top:0;
+  }
+  details.recap .recap-body p:first-child{margin-top:14px}
+  details.recap .recap-body ul{margin:8px 0;padding-left:22px}
+  details.recap .recap-body li{margin-bottom:6px}
+  details.recap .recap-body strong{color:var(--ink)}
+  details.recap .recap-body .warn{
+    background:rgba(230,181,74,.08);border:1px solid rgba(230,181,74,.3);
+    border-radius:8px;padding:8px 12px;margin:10px 0 0;font-size:14px;color:var(--gold);
+  }
+
+  /* Tool buttons (Hint, Stems, Worked example, Unlock, Done) */
+  .tools{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+  .tool-btn{
+    background:rgba(255,255,255,0.03);
+    color:var(--ink-soft);
+    border:1px solid var(--line-2);
+    border-radius:999px;
+    padding:7px 13px;
+    font-family:"DM Sans";font-size:13.5px;font-weight:500;
+    cursor:pointer;
+    transition:all .18s ease;
+    display:inline-flex;align-items:center;gap:6px;
+  }
+  .tool-btn:hover{border-color:var(--leaf);color:var(--ink);background:rgba(63,177,104,.08)}
+  .tool-btn.write{border-color:var(--gold);color:var(--gold)}
+  .tool-btn.unlock{border-color:var(--iodine);color:var(--iodine)}
+  .tool-btn.done{margin-left:auto;border-color:var(--leaf-deep);color:var(--leaf)}
+  .tool-btn.done.checked{background:var(--leaf);color:#0a1a10;border-color:var(--leaf);font-weight:600}
+
+  /* Hidden support panels */
+  .panel{
+    background:rgba(0,0,0,.18);
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:14px 16px;margin-top:12px;
+    font-size:15px;color:var(--ink-soft);
+    display:none;
+    animation:fadeUp .35s ease;
+  }
+  .panel.show{display:block}
+  .panel h4{
+    margin:0 0 8px;font-family:"Fraunces";font-weight:700;font-size:17px;color:var(--ink);
+    display:flex;align-items:center;gap:8px;
+  }
+  .panel ul{margin:6px 0;padding-left:22px}
+  .panel li{margin-bottom:6px}
+  .panel strong{color:var(--ink)}
+  .panel.hint h4::before{content:"💡"}
+  .panel.stems h4::before{content:"📚"}
+  .panel.example h4::before{content:"🎯"}
+  .panel.example .ex-title{color:var(--gold);font-weight:600}
+  .panel.unlock h4::before{content:"🔒"}
+  .panel.unlock .riddle{
+    font-style:italic;color:var(--ink);background:rgba(255,255,255,.03);
+    padding:10px 12px;border-radius:8px;border:1px solid var(--line);
+    margin:8px 0 10px;
+  }
+  .panel.unlock .input-row{display:flex;gap:8px;flex-wrap:wrap}
+  .panel.unlock input[type=text]{
+    flex:1;min-width:160px;
+    padding:9px 12px;border-radius:8px;
+    background:rgba(0,0,0,.25);
+    border:1px solid var(--line-2);
+    color:var(--ink);font-family:"DM Sans";font-size:15px;
+  }
+  .panel.unlock input[type=text]:focus{outline:none;border-color:var(--leaf)}
+  .panel.unlock .check-btn{
+    background:var(--iodine);color:#1a0d04;border:none;border-radius:8px;
+    padding:9px 16px;font-family:"DM Sans";font-weight:600;font-size:14px;cursor:pointer;
+  }
+  .panel.unlock .check-btn:hover{background:var(--iodine-deep);color:#fff}
+  .panel.unlock .feedback{margin-top:8px;font-size:14px;min-height:18px}
+  .panel.unlock .feedback.right{color:var(--leaf)}
+  .panel.unlock .feedback.wrong{color:var(--rose)}
+  .panel.unlock .small-hint{font-size:13px;color:var(--ink-mute);margin-top:6px;font-style:italic}
+
+  /* Answer panel (revealed after riddle) */
+  .answers{
+    background:rgba(63,177,104,.06);
+    border:1px solid var(--leaf-deep);
+    border-radius:10px;
+    padding:14px 16px;margin-top:12px;
+    display:none;
+    animation:fadeUp .4s ease;
+  }
+  .answers.show{display:block}
+  .answers h4{
+    margin:0 0 10px;font-family:"Fraunces";font-weight:700;font-size:17px;color:var(--leaf);
+    display:flex;align-items:center;gap:8px;
+  }
+  .answers h4::before{content:"✓"}
+  .answers p, .answers li{font-size:15px;color:var(--ink-soft)}
+  .answers strong{color:var(--ink)}
+  .answers ul, .answers ol{margin:8px 0;padding-left:22px}
+  .answers li{margin-bottom:6px}
+
+  /* Tables */
+  table.lesson-tbl{
+    width:100%;border-collapse:collapse;margin:10px 0;font-size:14.5px;
+    background:rgba(0,0,0,.18);border-radius:8px;overflow:hidden;
+  }
+  table.lesson-tbl th, table.lesson-tbl td{
+    padding:9px 12px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top;
+  }
+  table.lesson-tbl th{
+    background:rgba(255,255,255,.04);
+    color:var(--gold);font-weight:600;font-size:13px;letter-spacing:.05em;text-transform:uppercase;
+  }
+  table.lesson-tbl tr:last-child td{border-bottom:none}
+
+  /* Method scramble */
+  .scramble{margin:8px 0 4px}
+  .scramble .step{
+    display:flex;align-items:flex-start;gap:10px;
+    background:rgba(255,255,255,.025);border:1px solid var(--line);
+    border-radius:8px;padding:10px 12px;margin-bottom:8px;font-size:15px;
+  }
+  .scramble .step .badge{
+    flex:0 0 28px;height:28px;border-radius:6px;
+    background:var(--panel-2);border:1px solid var(--line-2);
+    display:flex;align-items:center;justify-content:center;
+    font-family:"Fraunces";font-weight:700;color:var(--amber);font-size:14px;
+  }
+
+  /* Inline diagram styling */
+  .diagram-card{
+    background:rgba(0,0,0,.22);
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:14px;margin:12px 0;
+    text-align:center;
+  }
+  .diagram-card svg{max-width:100%;height:auto;display:block;margin:0 auto}
+  .diagram-card .cap{
+    font-size:13px;color:var(--ink-mute);margin-top:8px;font-style:italic;
+  }
+
+  /* Predict-explain-observe blocks */
+  .peo{
+    display:grid;grid-template-columns:repeat(3, 1fr);gap:12px;margin:10px 0 6px;
+  }
+  .peo .card{
+    background:rgba(255,255,255,.025);
+    border:1px solid var(--line);
+    border-radius:10px;padding:12px 14px;
+  }
+  .peo .card h5{
+    margin:0 0 6px;font-family:"Fraunces";font-weight:700;font-size:15px;color:var(--ink);
+  }
+  .peo .card .num-tag{
+    display:inline-block;font-size:11px;color:var(--bg);background:var(--leaf);
+    padding:2px 8px;border-radius:999px;letter-spacing:.06em;text-transform:uppercase;font-weight:600;margin-bottom:6px;
+  }
+  .peo .card p{margin:0;font-size:14px;color:var(--ink-soft)}
+  @media (max-width:720px){
+    .peo{grid-template-columns:1fr}
+  }
+
+  /* Key words glossary */
+  .glossary{
+    margin-top:36px;
+    background:linear-gradient(180deg, var(--panel-2), var(--panel));
+    border:1px solid var(--line-2);border-radius:var(--radius);
+    padding:22px 24px;
+  }
+  .glossary h3{
+    font-family:"Fraunces";font-weight:700;font-size:24px;margin:0 0 4px;color:var(--gold);
+  }
+  .glossary .gintro{font-size:14px;color:var(--ink-soft);margin:0 0 14px}
+  .glossary .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}
+  .gword{
+    background:rgba(0,0,0,.18);border:1px solid var(--line);
+    border-radius:10px;padding:12px 14px;
+  }
+  .gword .ico{font-size:20px;margin-bottom:4px}
+  .gword .term{font-family:"Fraunces";font-weight:700;font-size:16px;color:var(--ink)}
+  .gword .desc{font-size:13.5px;color:var(--ink-soft);margin-top:4px;line-height:1.45}
+
+  /* Footer line */
+  .endnote{
+    margin-top:30px;text-align:center;font-size:14.5px;color:var(--ink-soft);font-style:italic;
+  }
+  .endnote .leaf{color:var(--leaf)}
+
+  /* Visibility by support level */
+  body[data-level="confident"] .stems-btn,
+  body[data-level="confident"] .panel.stems,
+  body[data-level="confident"] .panel.example,
+  body[data-level="confident"] .panel.hint,
+  body[data-level="confident"] .hint-btn,
+  body[data-level="confident"] .example-btn{display:none}
+  body[data-level="confident"] details.recap{display:none}
+  body[data-level="standard"] .panel.stems,
+  body[data-level="standard"] .stems-btn{display:none}
+  /* "scaffold" shows everything by default */
+
+  body[data-level="confident"] .section .task::before{content:"🚀 "}
+  body[data-level="scaffold"] .section .task::before{content:"🪜 "}
+
+  /* small */
+  @media(max-width:600px){
+    .wrap{padding:18px 14px 60px}
+    .section{padding:20px 18px 18px}
+    h1.lesson-title{font-size:32px}
+    .mastercode .slot{width:36px;height:44px;font-size:20px}
+    .section h2{font-size:21px}
+    .glossary{padding:18px}
+  }
+</style>
+</head>
+<body data-level="standard">
+<div class="wrap">
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <span>Year 9 Biology<span class="dot"></span>Lesson 5<span class="dot"></span>Testing for Starch</span>
+  <span>2e · Nutrition (Plants)</span>
+</div>
+
+<h1 class="lesson-title">Why do plants make <span class="accent">starch</span>? 🌿🟦</h1>
+<p class="subtitle">Today's job: prove that plants make <b>starch</b> when they photosynthesise — using a leaf, a Bunsen, some ethanol, and a few drops of <b>iodine</b>. By the end you'll be able to write the method, explain every step, and predict what happens with foil, soda lime and variegated leaves.</p>
+
+<!-- SUPPORT LEVEL -->
+<div class="support" id="supportBar">
+  <span class="label">Pick your support level →</span>
+  <button data-level="confident">🚀 I've got this</button>
+  <button data-level="standard" class="active">⚖️ Standard</button>
+  <button data-level="scaffold">🪜 Give me all the support</button>
+  <button class="reset" id="resetBtn">Reset progress</button>
+</div>
+
+<!-- MASTER CODE -->
+<div class="mastercode">
+  <h3>🔑 Master code</h3>
+  <p>Crack each section's keyword to fill in a letter. Solve all <b>8</b> sections to spell today's BIG idea.</p>
+  <div class="slots" id="slots"></div>
+  <div class="progress"><span id="codeCount">0</span> / 8 sections done</div>
+  <div class="reveal" id="codeReveal">
+    🎯 You've cracked all 8 sections. Today's BIG idea was… <b>PRODUCED</b>. Glucose is <b>produced</b> in photosynthesis — and stored as <b>starch</b>. The iodine test is how we prove it.
+  </div>
+</div>
+
+<!-- ============================ SECTION 1 ============================ -->
+<section class="section" id="s1" data-letter="P">
+  <div class="num">1</div>
+  <h2>Do Now — What does a plant do with glucose? <span class="timing">3 min</span></h2>
+
+  <details class="recap">
+    <summary>Quick content recap</summary>
+    <div class="recap-body">
+      <p>Plants make <strong>glucose</strong> in photosynthesis. Glucose is a small sugar molecule, and the plant uses it for several jobs:</p>
+      <ul>
+        <li>🟦 <strong>Stored as starch</strong> in leaves and roots (today's lesson!)</li>
+        <li>🧱 Turned into <strong>cellulose</strong> to build cell walls</li>
+        <li>⚡ Used in <strong>respiration</strong> to release energy</li>
+        <li>💪 Combined with <strong>nitrogen</strong> to make proteins for growth</li>
+        <li>🍎 Stored in fruits as <strong>sucrose</strong></li>
+      </ul>
+      <div class="warn">⚠️ Glucose itself is small and dissolves easily — that's why plants convert it into <strong>starch</strong> for storage. Starch is insoluble, so it stays put.</div>
+    </div>
+  </details>
+
+  <div class="task">
+    <b>Task:</b> Write the word equation for photosynthesis. Then list <b>3 things</b> a plant does with the glucose it makes.
+  </div>
+
+  <div class="tools">
+    <button class="tool-btn write">✍️ Write in book</button>
+    <button class="tool-btn hint-btn" data-target="s1-hint">💡 Hint</button>
+    <button class="tool-btn stems-btn" data-target="s1-stems">📚 Sentence stems</button>
+    <button class="tool-btn example-btn" data-target="s1-ex">🎯 Worked example</button>
+    <button class="tool-btn unlock" data-target="s1-unlock">🔒 Unlock answers</button>
+    <button class="tool-btn done" data-section="s1">✓ I've done this</button>
+  </div>
+
+  <div class="panel hint" id="s1-hint">
+    <h4>Hint</h4>
+    <p>Photosynthesis takes in <strong>carbon dioxide + water</strong> and makes <strong>glucose + oxygen</strong>. Light energy and chlorophyll go above the arrow. For "what does the plant do with glucose," scan the recap box — pick any 3.</p>
+  </div>
+
+  <div class="panel stems" id="s1-stems">
+    <h4>Sentence stems</h4>
+    <ul>
+      <li>"____ + ____ → ____ + ____"</li>
+      <li>"The plant uses glucose to ____, ____, and ____."</li>
+      <li>"Glucose is converted into ____ for long-term storage because ____."</li>
+    </ul>
+  </div>
+
+  <div class="panel example" id="s1-ex">
+    <h4>Worked example — using glucose</h4>
+    <p>Think of glucose like <span class="ex-title">money</span> the plant earns from photosynthesis.</p>
+    <ul>
+      <li>Some money is <strong>spent today</strong> → respiration (energy now).</li>
+      <li>Some is <strong>saved in the bank</strong> → stored as starch.</li>
+      <li>Some is used to <strong>build the house</strong> → cellulose for cell walls.</li>
+      <li>Some is used to <strong>buy food / grow muscles</strong> → proteins (with added nitrogen).</li>
+    </ul>
+    <p>That's 4 different uses. The plant doesn't waste anything.</p>
+  </div>
+
+  <div class="panel unlock" id="s1-unlock">
+    <h4>Riddle to unlock the answers</h4>
+    <div class="riddle">"I'm a sweet sugar with the formula C₆H₁₂O₆. Plants make me during photosynthesis. My name starts with G. What am I?"</div>
+    <div class="input-row">
+      <input type="text" id="s1-input" placeholder="Type your answer…">
+      <button class="check-btn" data-target="s1" data-answer="glucose">Check</button>
+    </div>
+    <div class="feedback" id="s1-feedback"></div>
+    <div class="small-hint">Hint: 7 letters. The product of photosynthesis.</div>
+  </div>
+
+  <div class="answers" id="s1-answers">
+    <h4>Answers</h4>
+    <p><strong>Word equation:</strong> carbon dioxide + water → glucose + oxygen <em>(light + chlorophyll over the arrow)</em></p>
+    <p><strong>3 uses for glucose</strong> (any 3):</p>
+    <ul>
+      <li>Stored as <strong>starch</strong> in leaves / roots.</li>
+      <li>Turned into <strong>cellulose</strong> for cell walls.</li>
+      <li>Used in <strong>respiration</strong> to release energy.</li>
+      <li>Made into <strong>proteins</strong> (with nitrogen) for growth.</li>
+      <li>Stored as <strong>sucrose</strong> in fruits.</li>
+    </ul>
+  </div>
+</section>
+
+
+<!-- ============================ SECTION 2 ============================ -->
+<section class="section" id="s2" data-letter="R">
+  <div class="num">2</div>
+  <h2>The brief — Why test for starch? <span class="timing">3 min</span></h2>
+
+  <details class="recap">
+    <summary>Quick content recap</summary>
+    <div class="recap-body">
+      <p>We can't see photosynthesis happening — it's a chemical reaction inside leaf cells. But we <em>can</em> see the <strong>evidence</strong> it leaves behind.</p>
+      <ul>
+        <li>If the plant has been photosynthesising → glucose was made → <strong>stored as starch</strong> in the leaf.</li>
+        <li>If we can show <strong>starch is in the leaf</strong>, we've proved photosynthesis happened.</li>
+        <li>The chemical we use to test for starch is called <strong>iodine solution</strong>.</li>
+      </ul>
+    </div>
+  </details>
+
+  <div class="diagram-card">
+    <svg viewBox="0 0 600 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Glucose stored as starch in a leaf">
+      <defs>
+        <linearGradient id="leafgrad2" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#3fb168"/>
+          <stop offset="100%" stop-color="#1f7a44"/>
+        </linearGradient>
+      </defs>
+      <!-- Sun -->
+      <circle cx="60" cy="50" r="22" fill="#f3d27a"/>
+      <g stroke="#f3d27a" stroke-width="2" stroke-linecap="round">
+        <line x1="60" y1="14" x2="60" y2="22"/>
+        <line x1="60" y1="78" x2="60" y2="86"/>
+        <line x1="24" y1="50" x2="32" y2="50"/>
+        <line x1="88" y1="50" x2="96" y2="50"/>
+        <line x1="34" y1="24" x2="40" y2="30"/>
+        <line x1="80" y1="70" x2="86" y2="76"/>
+        <line x1="86" y1="24" x2="80" y2="30"/>
+        <line x1="40" y1="70" x2="34" y2="76"/>
+      </g>
+      <!-- arrow to leaf -->
+      <path d="M95 60 Q150 80 195 100" fill="none" stroke="#f3d27a" stroke-width="2" stroke-dasharray="4 4"/>
+      <text x="115" y="80" fill="#f3d27a" font-family="DM Sans" font-size="11">light energy</text>
+      <!-- Leaf -->
+      <path d="M210 130 Q200 60 290 70 Q380 80 320 160 Q260 200 210 130 Z" fill="url(#leafgrad2)" stroke="#1f7a44" stroke-width="2"/>
+      <path d="M260 90 Q280 130 300 155" stroke="#1f7a44" stroke-width="1.5" fill="none" opacity="0.6"/>
+      <path d="M275 80 Q260 110 230 130" stroke="#1f7a44" stroke-width="1.5" fill="none" opacity="0.6"/>
+      <!-- Inside leaf: glucose → starch grain -->
+      <circle cx="265" cy="125" r="6" fill="#f3d27a" stroke="#1f7a44"/>
+      <text x="265" y="129" text-anchor="middle" fill="#1a0d04" font-family="Fraunces" font-size="9" font-weight="700">G</text>
+      <text x="290" y="115" fill="#e9f5ed" font-family="DM Sans" font-size="10">glucose</text>
+      <!-- arrow inside -->
+      <path d="M310 140 L350 155" fill="none" stroke="#e9f5ed" stroke-width="1.5" marker-end="url(#arr2)"/>
+      <defs><marker id="arr2" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#e9f5ed"/></marker></defs>
+      <!-- Starch grain -->
+      <ellipse cx="380" cy="160" rx="22" ry="12" fill="#1c2a4a" stroke="#6b7fc4" stroke-width="2"/>
+      <text x="380" y="164" text-anchor="middle" fill="#fff" font-family="Fraunces" font-size="10" font-weight="700">STARCH</text>
+      <!-- iodine drop -->
+      <path d="M500 50 Q510 30 520 50 Q520 65 500 50 Z" fill="#d97a2c" stroke="#a8551c" stroke-width="1.5"/>
+      <text x="510" y="80" text-anchor="middle" fill="#d97a2c" font-family="Fraunces" font-size="12" font-weight="700">iodine</text>
+      <text x="510" y="95" text-anchor="middle" fill="#86a594" font-family="DM Sans" font-size="10">orange/brown</text>
+      <!-- arrow + result -->
+      <path d="M510 100 L510 135" stroke="#d97a2c" stroke-width="2" stroke-dasharray="4 4" marker-end="url(#arr3)"/>
+      <defs><marker id="arr3" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#d97a2c"/></marker></defs>
+      <ellipse cx="510" cy="160" rx="22" ry="12" fill="#1c2a4a" stroke="#6b7fc4" stroke-width="2"/>
+      <text x="510" y="164" text-anchor="middle" fill="#fff" font-family="Fraunces" font-size="9" font-weight="700">BLUE/BLACK</text>
+    </svg>
+    <div class="cap">Light → glucose → stored as starch grains. Iodine turns blue/black when it touches starch.</div>
+  </div>
+
+  <div class="task">
+    <b>Task:</b> In your own words, explain <b>why</b> we test leaves for starch instead of testing for glucose directly.
+  </div>
+
+  <div class="tools">
+    <button class="tool-btn write">✍️ Write in book</button>
+    <button class="tool-btn hint-btn" data-target="s2-hint">💡 Hint</button>
+    <button class="tool-btn stems-btn" data-target="s2-stems">📚 Sentence stems</button>
+    <button class="tool-btn example-btn" data-target="s2-ex">🎯 Worked example</button>
+    <button class="tool-btn unlock" data-target="s2-unlock">🔒 Unlock answers</button>
+    <button class="tool-btn done" data-section="s2">✓ I've done this</button>
+  </div>
+
+  <div class="panel hint" id="s2-hint">
+    <h4>Hint</h4>
+    <p>Glucose is <strong>used up</strong> almost as soon as it's made (respiration, growth, etc.). It also dissolves and moves around. So at any moment, there's not much in the leaf. <strong>Starch</strong>, on the other hand, builds up in the leaf as a long-term store and stays put.</p>
+  </div>
+
+  <div class="panel stems" id="s2-stems">
+    <h4>Sentence stems</h4>
+    <ul>
+      <li>"We test for starch because glucose is ____."</li>
+      <li>"Starch is a good thing to test for because it ____ in the leaf."</li>
+      <li>"If a leaf contains starch, it must have ____."</li>
+    </ul>
+  </div>
+
+  <div class="panel example" id="s2-ex">
+    <h4>Worked example — testing for evidence</h4>
+    <p><span class="ex-title">A detective doesn't see the crime — they look for evidence left behind.</span></p>
+    <p>You can't see photosynthesis (it's microscopic chemistry). But you <em>can</em> look for the evidence: <strong>starch</strong> in the leaf. If starch is there → photosynthesis happened. No starch → it didn't.</p>
+    <p>Glucose is a poor "evidence" molecule because it gets used up fast and is hard to spot. Starch is the perfect detective's clue: stable, accumulates, and we have a clear chemical test (iodine) that gives a colour change.</p>
+  </div>
+
+  <div class="panel unlock" id="s2-unlock">
+    <h4>Riddle to unlock the answers</h4>
+    <div class="riddle">"I'm an orange/brown chemical. Drip me on a leaf and I'll turn blue/black if there's starch. What am I? (Two words.)"</div>
+    <div class="input-row">
+      <input type="text" id="s2-input" placeholder="Type your answer…">
+      <button class="check-btn" data-target="s2" data-answer="iodine solution|iodine">Check</button>
+    </div>
+    <div class="feedback" id="s2-feedback"></div>
+    <div class="small-hint">Hint: starts with I. The reagent we use to test for starch.</div>
+  </div>
+
+  <div class="answers" id="s2-answers">
+    <h4>Answers</h4>
+    <p>We test for <strong>starch</strong> rather than glucose because:</p>
+    <ul>
+      <li>Glucose is <strong>quickly used up</strong> by the plant (in respiration, to make cellulose, etc.) so there isn't much in the leaf at any one time.</li>
+      <li>Glucose is <strong>soluble</strong> — it dissolves and moves around, so it's hard to test reliably.</li>
+      <li>Starch is <strong>insoluble</strong> and accumulates in the leaf as a long-term store.</li>
+      <li>We have an easy, clear chemical test for starch: <strong>iodine solution</strong> (orange/brown → blue/black).</li>
+    </ul>
+    <p><strong>The logic:</strong> if a leaf contains starch, it must have made glucose, which means it must have been photosynthesising.</p>
+  </div>
+</section>
+
+
+<!-- ============================ SECTION 3 ============================ -->
+<section class="section" id="s3" data-letter="O">
+  <div class="num">3</div>
+  <h2>The iodine test — what colour change tells us what? <span class="timing">5 min</span></h2>
+
+  <details class="recap">
+    <summary>Quick content recap</summary>
+    <div class="recap-body">
+      <p>Iodine solution is a <strong>chemical reagent</strong> — a chemical we use to test for something specific. It changes colour in the presence of starch.</p>
+      <ul>
+        <li>🟧 <strong>No starch</strong> → iodine stays its normal colour (orange / brown).</li>
+        <li>🟦 <strong>Starch present</strong> → iodine turns blue / black.</li>
+      </ul>
+      <p>The colour change is a <strong>positive result</strong>. No colour change is a <strong>negative result</strong>.</p>
+    </div>
+  </details>
+
+  <div class="diagram-card">
+    <svg viewBox="0 0 600 180" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Iodine colour change">
+      <!-- Bottle -->
+      <rect x="40" y="40" width="60" height="100" rx="6" fill="#d97a2c" stroke="#a8551c" stroke-width="2"/>
+      <rect x="55" y="22" width="30" height="20" fill="#a8551c"/>
+      <text x="70" y="100" text-anchor="middle" fill="#fff" font-family="Fraunces" font-size="12" font-weight="700">I₂</text>
+      <text x="70" y="160" text-anchor="middle" fill="#86a594" font-family="DM Sans" font-size="11">iodine</text>
+      <!-- Arrow 1 -->
+      <path d="M120 90 L180 90" stroke="#86a594" stroke-width="2" marker-end="url(#arrA)"/>
+      <defs><marker id="arrA" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#86a594"/></marker></defs>
+      <text x="150" y="80" text-anchor="middle" fill="#86a594" font-family="DM Sans" font-size="11">drip on</text>
+      <text x="150" y="105" text-anchor="middle" fill="#86a594" font-family="DM Sans" font-size="11">leaf</text>
+      <!-- Two outcomes: no starch / starch -->
+      <!-- No starch leaf -->
+      <ellipse cx="240" cy="60" rx="40" ry="22" fill="#d97a2c" stroke="#a8551c" stroke-width="2"/>
+      <text x="240" y="64" text-anchor="middle" fill="#fff" font-family="Fraunces" font-size="11" font-weight="700">orange</text>
+      <text x="240" y="100" text-anchor="middle" fill="#86a594" font-family="DM Sans" font-size="11">no colour change</text>
+      <text x="240" y="116" text-anchor="middle" fill="#d97a2c" font-family="Fraunces" font-size="13" font-weight="700">NO starch ✗</text>
+      <!-- Starch leaf -->
+      <ellipse cx="430" cy="60" rx="40" ry="22" fill="#1c2a4a" stroke="#6b7fc4" stroke-width="2"/>
+      <text x="430" y="64" text-anchor="middle" fill="#fff" font-family="Fraunces" font-size="11" font-weight="700">blue/black</text>
+      <text x="430" y="100" text-anchor="middle" fill="#86a594" font-family="DM Sans" font-size="11">colour changed!</text>
+      <text x="430" y="116" text-anchor="middle" fill="#6b7fc4" font-family="Fraunces" font-size="13" font-weight="700">STARCH present ✓</text>
+      <!-- divider -->
+      <line x1="335" y1="20" x2="335" y2="160" stroke="#3b6450" stroke-width="1" stroke-dasharray="4 4"/>
+      <text x="335" y="155" text-anchor="middle" fill="#86a594" font-family="DM Sans" font-size="10">two possible results</text>
+    </svg>
+    <div class="cap">Iodine starts orange/brown. It turns blue/black <em>only</em> if starch is there.</div>
+  </div>
+
+  <div class="task">
+    <b>Task:</b> Copy this table into your book and complete it. Then write one sentence: "If a leaf turns blue/black with iodine, it means…"
+  </div>
+
+  <table class="lesson-tbl">
+    <thead><tr><th>Iodine result</th><th>Meaning</th><th>Conclusion about photosynthesis</th></tr></thead>
+    <tbody>
+      <tr><td>Stays orange / brown</td><td>____________</td><td>____________</td></tr>
+      <tr><td>Turns blue / black</td><td>____________</td><td>____________</td></tr>
+    </tbody>
+  </table>
+
+  <div class="tools">
+    <button class="tool-btn write">✍️ Write in book</button>
+    <button class="tool-btn hint-btn" data-target="s3-hint">💡 Hint</button>
+    <button class="tool-btn stems-btn" data-target="s3-stems">📚 Sentence stems</button>
+    <button class="tool-btn example-btn" data-target="s3-ex">🎯 Worked example</button>
+    <button class="tool-btn unlock" data-target="s3-unlock">🔒 Unlock answers</button>
+    <button class="tool-btn done" data-section="s3">✓ I've done this</button>
+  </div>
+
+  <div class="panel hint" id="s3-hint">
+    <h4>Hint</h4>
+    <p>Two questions to answer for each row: (1) Is starch in the leaf? (2) What does that tell you about photosynthesis? Remember: starch only forms <em>after</em> glucose is made — and glucose only forms during photosynthesis.</p>
+  </div>
+
+  <div class="panel stems" id="s3-stems">
+    <h4>Sentence stems</h4>
+    <ul>
+      <li>"Orange/brown means there is ____ starch, so the leaf ____ photosynthesised."</li>
+      <li>"Blue/black means there ____ starch, so the leaf ____ photosynthesised."</li>
+      <li>"If a leaf turns blue/black with iodine, it means ____."</li>
+    </ul>
+  </div>
+
+  <div class="panel example" id="s3-ex">
+    <h4>Worked example — reading reagent tests</h4>
+    <p>Reagent tests work in 3 steps:</p>
+    <ul>
+      <li><strong>1.</strong> Reagent has a <em>starting colour</em> (iodine = orange/brown).</li>
+      <li><strong>2.</strong> Add it to your sample.</li>
+      <li><strong>3.</strong> If it changes to a specific <em>end colour</em>, the substance is present. No change = not present.</li>
+    </ul>
+    <p>Same logic with other tests you'll meet later: Benedict's (blue → red for sugar), biuret (blue → purple for protein). Always: starting colour, end colour, what it tells you.</p>
+  </div>
+
+  <div class="panel unlock" id="s3-unlock">
+    <h4>Riddle to unlock the answers</h4>
+    <div class="riddle">"I'm the colour iodine turns when it meets starch. I'm two colours joined by a slash. What am I?"</div>
+    <div class="input-row">
+      <input type="text" id="s3-input" placeholder="Type your answer…">
+      <button class="check-btn" data-target="s3" data-answer="blue/black|blue black|blue-black|blueblack">Check</button>
+    </div>
+    <div class="feedback" id="s3-feedback"></div>
+    <div class="small-hint">Hint: dark blue + black. Write it as "blue/black".</div>
+  </div>
+
+  <div class="answers" id="s3-answers">
+    <h4>Answers</h4>
+    <table class="lesson-tbl">
+      <thead><tr><th>Iodine result</th><th>Meaning</th><th>Conclusion</th></tr></thead>
+      <tbody>
+        <tr><td>Stays orange / brown</td><td><strong>No starch</strong> in the leaf</td><td>Plant has <strong>not</strong> been photosynthesising (or starch was used up)</td></tr>
+        <tr><td>Turns blue / black</td><td><strong>Starch is present</strong></td><td>Plant <strong>has</strong> been photosynthesising — glucose was made and stored as starch</td></tr>
+      </tbody>
+    </table>
+    <p><strong>One-sentence summary:</strong> "If a leaf turns blue/black with iodine, it means starch is present, which proves the plant has been photosynthesising."</p>
+  </div>
+</section>
+
+
+<!-- ============================ SECTION 4 ============================ -->
+<section class="section" id="s4" data-letter="D">
+  <div class="num">4</div>
+  <h2>Method — put the steps in order <span class="timing">8 min</span></h2>
+
+  <details class="recap">
+    <summary>Quick content recap</summary>
+    <div class="recap-body">
+      <p>The starch test has <strong>5 main steps</strong>. Each step has a specific <em>purpose</em> — none of them are optional!</p>
+      <ul>
+        <li>You boil the leaf to <strong>kill the cells</strong> and stop reactions.</li>
+        <li>You use <strong>ethanol</strong> to remove the green chlorophyll so you can see the iodine result clearly.</li>
+        <li>You <strong>rinse</strong> the leaf in water to soften it (ethanol makes it brittle).</li>
+        <li>Then you drip on <strong>iodine</strong> and observe.</li>
+      </ul>
+      <div class="warn">⚠️ <strong>Ethanol is highly flammable.</strong> The Bunsen flame must be <strong>OFF</strong> before you put the leaf in ethanol. We use a water bath to heat it instead.</div>
+    </div>
+  </details>
+
+  <div class="task">
+    <b>Task:</b> The 5 steps below are <b>scrambled</b>. Re-write them in the correct order in your book.
+  </div>
+
+  <div class="scramble">
+    <div class="step"><div class="badge">A</div><div>Spread the leaf flat on a white tile and drip iodine solution over it. Observe the colour change.</div></div>
+    <div class="step"><div class="badge">B</div><div>Place the leaf in a beaker of <b>boiling water</b> for about 30 seconds to kill it.</div></div>
+    <div class="step"><div class="badge">C</div><div>Rinse the leaf in <b>cold water</b> to soften it.</div></div>
+    <div class="step"><div class="badge">D</div><div>Remove a leaf from the plant.</div></div>
+    <div class="step"><div class="badge">E</div><div>Place the leaf in a boiling tube of <b>ethanol</b>, sat in the hot water bath. <b>Bunsen must be OFF.</b> Leave for ~1 minute until the leaf goes pale.</div></div>
+  </div>
+
+  <div class="tools">
+    <button class="tool-btn write">✍️ Write in book</button>
+    <button class="tool-btn hint-btn" data-target="s4-hint">💡 Hint</button>
+    <button class="tool-btn example-btn" data-target="s4-ex">🎯 Worked example</button>
+    <button class="tool-btn unlock" data-target="s4-unlock">🔒 Unlock answers</button>
+    <button class="tool-btn done" data-section="s4">✓ I've done this</button>
+  </div>
+
+  <div class="panel hint" id="s4-hint">
+    <h4>Hint</h4>
+    <p>Think about what has to happen <em>first</em> before anything else: you need a leaf! Then you need to stop chemical reactions in it (boil). Then remove the green colour. Then make it bendy again. Then test. The iodine test is always <em>last</em>.</p>
+  </div>
+
+  <div class="panel example" id="s4-ex">
+    <h4>Worked example — write it like a chef's recipe</h4>
+    <p><span class="ex-title">Bad method:</span> "Boil it, ethanol, iodine."</p>
+    <p><span class="ex-title">Good method:</span></p>
+    <ol>
+      <li>Pick a fresh leaf from the plant.</li>
+      <li>Place it in <strong>boiling water for 30 seconds</strong>.</li>
+      <li>Transfer it into a boiling tube of <strong>ethanol</strong> in a hot water bath, with the Bunsen <strong>off</strong>. Wait until the leaf pales (~1 min).</li>
+      <li>Use forceps to remove the leaf, then <strong>rinse it in cold water</strong>.</li>
+      <li>Spread it on a white tile, drip <strong>iodine solution</strong>, and observe.</li>
+    </ol>
+    <p>Notice: each step has a <strong>quantity</strong> (30 seconds, 1 min) and an <strong>action verb</strong>. Anyone could repeat it.</p>
+  </div>
+
+  <div class="panel unlock" id="s4-unlock">
+    <h4>Riddle to unlock the answers</h4>
+    <div class="riddle">"I'm the flammable liquid used in this practical to remove the green colour from a leaf. The Bunsen must NEVER be on when I'm being used. What am I?"</div>
+    <div class="input-row">
+      <input type="text" id="s4-input" placeholder="Type your answer…">
+      <button class="check-btn" data-target="s4" data-answer="ethanol">Check</button>
+    </div>
+    <div class="feedback" id="s4-feedback"></div>
+    <div class="small-hint">Hint: 7 letters. A type of alcohol.</div>
+  </div>
+
+  <div class="answers" id="s4-answers">
+    <h4>Answers — correct order</h4>
+    <ol>
+      <li><strong>D</strong> — Remove a leaf from the plant.</li>
+      <li><strong>B</strong> — Place the leaf in <strong>boiling water</strong> for 30 seconds (to kill it).</li>
+      <li><strong>E</strong> — Place the leaf in a boiling tube of <strong>ethanol</strong> in the hot water bath, Bunsen <strong>off</strong>, until pale (~1 min) — this removes chlorophyll.</li>
+      <li><strong>C</strong> — Rinse the leaf in <strong>cold water</strong> to soften it.</li>
+      <li><strong>A</strong> — Spread on a white tile, drip <strong>iodine</strong>, observe colour change.</li>
+    </ol>
+    <p><strong>Memory trick:</strong> "<strong>D</strong>on't <strong>B</strong>oil <strong>E</strong>thanol — <strong>C</strong>ool, then <strong>A</strong>dd iodine." (D-B-E-C-A)</p>
+  </div>
+</section>
+
+
+<!-- ============================ SECTION 5 ============================ -->
+<section class="section" id="s5" data-letter="U">
+  <div class="num">5</div>
+  <h2>Why each step? — The reasoning <span class="timing">8 min</span></h2>
+
+  <details class="recap">
+    <summary>Quick content recap</summary>
+    <div class="recap-body">
+      <p>Examiners love asking "why?" for each step. Every step has a clear <strong>reason</strong>:</p>
+      <ul>
+        <li><strong>Boiling water (30s):</strong> kills the cells, stops enzyme reactions, breaks open cell membranes so chemicals can move in/out.</li>
+        <li><strong>Ethanol (Bunsen OFF):</strong> dissolves and removes the green <strong>chlorophyll</strong> pigment. We use a water bath because ethanol is <strong>highly flammable</strong>.</li>
+        <li><strong>Cold water rinse:</strong> ethanol leaves the leaf <strong>brittle and shrivelled</strong>; cold water softens it so iodine can soak in.</li>
+        <li><strong>Iodine on white tile:</strong> the white background lets us see the colour change clearly.</li>
+      </ul>
+    </div>
+  </details>
+
+  <div class="task">
+    <b>Task:</b> For each step in the table, write <b>one sentence</b> explaining <b>why</b> we do it.
+  </div>
+
+  <table class="lesson-tbl">
+    <thead><tr><th>Step</th><th>Why? (your answer)</th></tr></thead>
+    <tbody>
+      <tr><td>1. Place leaf in boiling water</td><td>____________</td></tr>
+      <tr><td>2. Place leaf in ethanol (Bunsen OFF)</td><td>____________</td></tr>
+      <tr><td>3. Rinse in cold water</td><td>____________</td></tr>
+      <tr><td>4. Drip iodine on a white tile</td><td>____________</td></tr>
+    </tbody>
+  </table>
+
+  <div class="tools">
+    <button class="tool-btn write">✍️ Write in book</button>
+    <button class="tool-btn hint-btn" data-target="s5-hint">💡 Hint</button>
+    <button class="tool-btn stems-btn" data-target="s5-stems">📚 Sentence stems</button>
+    <button class="tool-btn example-btn" data-target="s5-ex">🎯 Worked example</button>
+    <button class="tool-btn unlock" data-target="s5-unlock">🔒 Unlock answers</button>
+    <button class="tool-btn done" data-section="s5">✓ I've done this</button>
+  </div>
+
+  <div class="panel hint" id="s5-hint">
+    <h4>Hint</h4>
+    <ul>
+      <li><strong>Boiling water:</strong> what does heat do to living cells?</li>
+      <li><strong>Ethanol:</strong> what colour is a normal leaf? What gets in the way of seeing the iodine result?</li>
+      <li><strong>Cold water:</strong> ethanol-treated leaves go crispy. What do we want the leaf to be like before iodine?</li>
+      <li><strong>White tile:</strong> if you dripped iodine onto a black surface, could you see blue/black?</li>
+    </ul>
+  </div>
+
+  <div class="panel stems" id="s5-stems">
+    <h4>Sentence stems</h4>
+    <ul>
+      <li>"We boil the leaf to ____ the cells and ____."</li>
+      <li>"We use ethanol to remove the ____, so we can ____."</li>
+      <li>"We rinse in cold water because ethanol makes the leaf ____."</li>
+      <li>"A white tile is used so we can ____ the colour change clearly."</li>
+    </ul>
+  </div>
+
+  <div class="panel example" id="s5-ex">
+    <h4>Worked example — explaining "why"</h4>
+    <p><span class="ex-title">Question:</span> "Why is the leaf placed in boiling water?"</p>
+    <p><span class="ex-title">Weak answer:</span> "To kill it." <em>(true but only half the marks — what does killing it actually do?)</em></p>
+    <p><span class="ex-title">Strong answer:</span> "Boiling water kills the leaf cells and stops the enzymes inside them. It also breaks the cell membranes so iodine can later get into the cells. This means the iodine can reach any starch grains."</p>
+    <p>Pattern: <strong>"What does the step do?" + "Why does that matter?"</strong></p>
+  </div>
+
+  <div class="panel unlock" id="s5-unlock">
+    <h4>Riddle to unlock the answers</h4>
+    <div class="riddle">"I'm the green pigment in leaves. I absorb light for photosynthesis. Ethanol removes me so we can see the iodine result. What am I?"</div>
+    <div class="input-row">
+      <input type="text" id="s5-input" placeholder="Type your answer…">
+      <button class="check-btn" data-target="s5" data-answer="chlorophyll">Check</button>
+    </div>
+    <div class="feedback" id="s5-feedback"></div>
+    <div class="small-hint">Hint: 11 letters. Starts with C. Without me, plants are white.</div>
+  </div>
+
+  <div class="answers" id="s5-answers">
+    <h4>Answers</h4>
+    <table class="lesson-tbl">
+      <thead><tr><th>Step</th><th>Why?</th></tr></thead>
+      <tbody>
+        <tr><td>1. Boiling water</td><td><strong>Kills the leaf cells</strong> and stops enzyme reactions. Also breaks cell membranes so iodine can get in later.</td></tr>
+        <tr><td>2. Ethanol (Bunsen OFF)</td><td><strong>Removes the green chlorophyll</strong> from the leaf so the iodine colour change is easy to see. Bunsen must be OFF because <strong>ethanol is flammable</strong>.</td></tr>
+        <tr><td>3. Cold water rinse</td><td>Ethanol leaves the leaf <strong>brittle and shrivelled</strong>. Cold water <strong>softens</strong> it so iodine can soak in.</td></tr>
+        <tr><td>4. White tile</td><td>The white background makes the <strong>blue/black colour change</strong> easy to see against a contrasting surface.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+
+<!-- ============================ SECTION 6 ============================ -->
+<section class="section" id="s6" data-letter="C">
+  <div class="num">6</div>
+  <h2>Safety — Hazards &amp; control measures <span class="timing">5 min</span></h2>
+
+  <details class="recap">
+    <summary>Quick content recap</summary>
+    <div class="recap-body">
+      <p>Three big safety reminders:</p>
+      <ul>
+        <li><strong>Hazard</strong> — something that <em>could</em> cause harm (e.g. ethanol).</li>
+        <li><strong>Risk</strong> — what <em>could happen</em> because of the hazard (e.g. fire).</li>
+        <li><strong>Control measure</strong> — what we <em>do</em> to reduce the risk (e.g. Bunsen off when ethanol is in use).</li>
+      </ul>
+      <p>This practical has three big hazards: <strong>ethanol (flammable)</strong>, <strong>boiling water (burns)</strong>, and <strong>iodine (irritant — stains skin and eyes)</strong>.</p>
+    </div>
+  </details>
+
+  <div class="task">
+    <b>Task:</b> Identify <b>2 safety precautions</b> for this practical. For each one, say what the hazard is and how the precaution reduces the risk.
+  </div>
+
+  <div class="tools">
+    <button class="tool-btn write">✍️ Write in book</button>
+    <button class="tool-btn hint-btn" data-target="s6-hint">💡 Hint</button>
+    <button class="tool-btn stems-btn" data-target="s6-stems">📚 Sentence stems</button>
+    <button class="tool-btn example-btn" data-target="s6-ex">🎯 Worked example</button>
+    <button class="tool-btn unlock" data-target="s6-unlock">🔒 Unlock answers</button>
+    <button class="tool-btn done" data-section="s6">✓ I've done this</button>
+  </div>
+
+  <div class="panel hint" id="s6-hint">
+    <h4>Hint</h4>
+    <p>Walk around the workstation in your head. What's hot? What could catch fire? What might splash in your eyes? What stains? You should easily think of: ethanol + flame, boiling water + skin, iodine + eyes.</p>
+  </div>
+
+  <div class="panel stems" id="s6-stems">
+    <h4>Sentence stems</h4>
+    <ul>
+      <li>"The hazard of ____ could cause ____. To reduce the risk, I will ____."</li>
+      <li>"I will wear ____ to protect my ____ from ____."</li>
+      <li>"I will not use ____ near ____ because ____."</li>
+    </ul>
+  </div>
+
+  <div class="panel example" id="s6-ex">
+    <h4>Worked example — risk table</h4>
+    <table class="lesson-tbl">
+      <thead><tr><th>Hazard</th><th>Risk</th><th>Control measure</th></tr></thead>
+      <tbody>
+        <tr><td>Bunsen flame</td><td>Burns to skin or hair</td><td>Tie hair back, wear safety goggles, never reach across the flame</td></tr>
+      </tbody>
+    </table>
+    <p>Always 3 columns: <strong>Hazard → Risk → Control</strong>. The control should be a specific action — not "be careful". "Be careful" gets <strong>zero marks</strong>.</p>
+  </div>
+
+  <div class="panel unlock" id="s6-unlock">
+    <h4>Riddle to unlock the answers</h4>
+    <div class="riddle">"I'm the protective eyewear you must put on at the start of every practical. I sit on your face and stop chemicals splashing into your eyes. What am I? (Two words, starts with S.)"</div>
+    <div class="input-row">
+      <input type="text" id="s6-input" placeholder="Type your answer…">
+      <button class="check-btn" data-target="s6" data-answer="safety goggles|goggles|safety glasses">Check</button>
+    </div>
+    <div class="feedback" id="s6-feedback"></div>
+    <div class="small-hint">Hint: every science lesson begins with putting these on.</div>
+  </div>
+
+  <div class="answers" id="s6-answers">
+    <h4>Answers — risk assessment for the starch test</h4>
+    <table class="lesson-tbl">
+      <thead><tr><th>Hazard</th><th>Risk</th><th>Control measure</th></tr></thead>
+      <tbody>
+        <tr><td>Ethanol (flammable liquid)</td><td>Catches fire near a flame</td><td><strong>Turn Bunsen OFF</strong> before adding the leaf to ethanol; heat ethanol using a hot water bath, not a direct flame</td></tr>
+        <tr><td>Boiling water</td><td>Scalds / burns to skin</td><td>Use <strong>tongs or forceps</strong> to handle the leaf; carry beakers carefully; don't lean over the beaker</td></tr>
+        <tr><td>Iodine solution</td><td>Stains skin and clothes; irritates eyes</td><td>Wear <strong>safety goggles</strong>; wash hands after handling; report spills</td></tr>
+        <tr><td>Hot apparatus / glass</td><td>Burns or cuts</td><td>Wait for equipment to cool; carry beakers with two hands; report breakages</td></tr>
+      </tbody>
+    </table>
+    <p><strong>Two precautions (model answer):</strong> "1) Wear safety goggles to stop iodine or ethanol splashing into my eyes. 2) Turn the Bunsen burner OFF before placing the leaf in ethanol, because ethanol is highly flammable and could catch fire."</p>
+  </div>
+</section>
+
+
+<!-- ============================ SECTION 7 ============================ -->
+<section class="section" id="s7" data-letter="E">
+  <div class="num">7</div>
+  <h2>Variegated &amp; destarched leaves — predict the result <span class="timing">8 min</span></h2>
+
+  <details class="recap">
+    <summary>Quick content recap</summary>
+    <div class="recap-body">
+      <p>Two trickier types of leaf to test:</p>
+      <ul>
+        <li>🟩⬜ <strong>Variegated leaf</strong> — has both <strong>green</strong> and <strong>white</strong> patches. The white parts have <em>no chlorophyll</em>.</li>
+        <li>🌑 <strong>Destarched leaf</strong> — a leaf taken from a plant kept in a <strong>dark cupboard</strong> for a few days. With no light, the plant can't photosynthesise — so it <em>uses up</em> its starch stores for energy.</li>
+      </ul>
+      <p>These are control experiments — they prove that <strong>light</strong> and <strong>chlorophyll</strong> are both needed for photosynthesis.</p>
+    </div>
+  </details>
+
+  <div class="diagram-card">
+    <svg viewBox="0 0 600 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Variegated and destarched leaves">
+      <!-- Variegated leaf BEFORE -->
+      <text x="100" y="20" text-anchor="middle" fill="#86a594" font-family="DM Sans" font-size="11" letter-spacing="1">VARIEGATED — BEFORE</text>
+      <path d="M50 100 Q40 50 100 50 Q160 55 150 110 Q120 145 50 100 Z" fill="#3fb168" stroke="#1f7a44" stroke-width="2"/>
+      <path d="M75 65 Q90 75 100 95 Q90 110 75 115 Q60 95 75 65 Z" fill="#f5f5e8" stroke="#1f7a44" stroke-width="1.5"/>
+      <path d="M120 85 Q130 80 138 95 Q130 105 118 100 Q115 92 120 85 Z" fill="#f5f5e8" stroke="#1f7a44" stroke-width="1.5"/>
+      <!-- Arrow -->
+      <path d="M170 95 L210 95" stroke="#d97a2c" stroke-width="2" marker-end="url(#arrV)"/>
+      <defs><marker id="arrV" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#d97a2c"/></marker></defs>
+      <text x="190" y="85" text-anchor="middle" fill="#d97a2c" font-family="DM Sans" font-size="11">+ iodine</text>
+      <!-- Variegated leaf AFTER -->
+      <text x="270" y="20" text-anchor="middle" fill="#86a594" font-family="DM Sans" font-size="11" letter-spacing="1">VARIEGATED — AFTER</text>
+      <path d="M220 100 Q210 50 270 50 Q330 55 320 110 Q290 145 220 100 Z" fill="#1c2a4a" stroke="#6b7fc4" stroke-width="2"/>
+      <path d="M245 65 Q260 75 270 95 Q260 110 245 115 Q230 95 245 65 Z" fill="#d97a2c" stroke="#a8551c" stroke-width="1.5"/>
+      <path d="M290 85 Q300 80 308 95 Q300 105 288 100 Q285 92 290 85 Z" fill="#d97a2c" stroke="#a8551c" stroke-width="1.5"/>
+      <text x="270" y="170" text-anchor="middle" fill="#e9f5ed" font-family="Fraunces" font-size="11" font-weight="600">green = blue/black ✓</text>
+      <text x="270" y="186" text-anchor="middle" fill="#86a594" font-family="DM Sans" font-size="10">white = orange/brown ✗</text>
+
+      <!-- Destarched leaf -->
+      <text x="450" y="20" text-anchor="middle" fill="#86a594" font-family="DM Sans" font-size="11" letter-spacing="1">DESTARCHED LEAF</text>
+      <!-- dark cupboard -->
+      <rect x="370" y="40" width="80" height="60" fill="#0a1810" stroke="#3b6450" stroke-width="1"/>
+      <text x="410" y="73" text-anchor="middle" fill="#86a594" font-family="DM Sans" font-size="9">2 days</text>
+      <text x="410" y="86" text-anchor="middle" fill="#86a594" font-family="DM Sans" font-size="9">DARK</text>
+      <!-- Arrow -->
+      <path d="M460 70 L490 70" stroke="#d97a2c" stroke-width="2" marker-end="url(#arrV2)"/>
+      <defs><marker id="arrV2" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#d97a2c"/></marker></defs>
+      <text x="475" y="60" text-anchor="middle" fill="#d97a2c" font-family="DM Sans" font-size="10">+ iodine</text>
+      <!-- destarched leaf result -->
+      <path d="M500 80 Q495 50 540 50 Q580 55 570 95 Q545 130 500 80 Z" fill="#d97a2c" stroke="#a8551c" stroke-width="2"/>
+      <text x="540" y="155" text-anchor="middle" fill="#d97a2c" font-family="Fraunces" font-size="11" font-weight="600">orange/brown ✗</text>
+      <text x="540" y="172" text-anchor="middle" fill="#86a594" font-family="DM Sans" font-size="10">no starch — no light</text>
+      <text x="540" y="186" text-anchor="middle" fill="#86a594" font-family="DM Sans" font-size="10">used up its store</text>
+    </svg>
+    <div class="cap">Two key control experiments — they isolate <em>chlorophyll</em> and <em>light</em> as essential for photosynthesis.</div>
+  </div>
+
+  <div class="task">
+    <b>Task:</b> Predict and explain the iodine result for:
+    <br><b>(a)</b> a leaf from a <b>variegated</b> plant (kept in normal sunlight).
+    <br><b>(b)</b> a leaf from a <b>destarched</b> plant (kept in a dark cupboard for 2 days).
+  </div>
+
+  <div class="tools">
+    <button class="tool-btn write">✍️ Write in book</button>
+    <button class="tool-btn hint-btn" data-target="s7-hint">💡 Hint</button>
+    <button class="tool-btn stems-btn" data-target="s7-stems">📚 Sentence stems</button>
+    <button class="tool-btn example-btn" data-target="s7-ex">🎯 Worked example</button>
+    <button class="tool-btn unlock" data-target="s7-unlock">🔒 Unlock answers</button>
+    <button class="tool-btn done" data-section="s7">✓ I've done this</button>
+  </div>
+
+  <div class="panel hint" id="s7-hint">
+    <h4>Hint</h4>
+    <ul>
+      <li><strong>Variegated:</strong> the white parts have no chlorophyll. No chlorophyll = no photosynthesis = no starch. The green parts work normally.</li>
+      <li><strong>Destarched:</strong> no light = no photosynthesis. The plant has been respiring for 2 days, using up its starch for energy.</li>
+    </ul>
+  </div>
+
+  <div class="panel stems" id="s7-stems">
+    <h4>Sentence stems</h4>
+    <ul>
+      <li><strong>Prediction:</strong> "The ____ parts will turn ____. The ____ parts will stay ____."</li>
+      <li><strong>Explanation:</strong> "This is because ____ is needed for photosynthesis."</li>
+      <li><strong>Destarched:</strong> "The whole leaf will stay ____ because ____."</li>
+    </ul>
+  </div>
+
+  <div class="panel example" id="s7-ex">
+    <h4>Worked example — predict-explain pattern</h4>
+    <p><span class="ex-title">Question:</span> "What would happen to a leaf grown in a dark cupboard?"</p>
+    <p><span class="ex-title">Prediction:</span> "The whole leaf will stay orange/brown when iodine is added — no starch."</p>
+    <p><span class="ex-title">Explanation:</span> "This is because there is no light in a dark cupboard. Without light, the plant cannot photosynthesise. It then uses up any stored starch in respiration, so no starch is left in the leaf when we test it."</p>
+    <p>Pattern: <strong>predict → explain why → link to photosynthesis requirement.</strong></p>
+  </div>
+
+  <div class="panel unlock" id="s7-unlock">
+    <h4>Riddle to unlock the answers</h4>
+    <div class="riddle">"I describe a leaf that has both green AND white patches. I'm an adjective starting with V. What am I?"</div>
+    <div class="input-row">
+      <input type="text" id="s7-input" placeholder="Type your answer…">
+      <button class="check-btn" data-target="s7" data-answer="variegated">Check</button>
+    </div>
+    <div class="feedback" id="s7-feedback"></div>
+    <div class="small-hint">Hint: 10 letters. Sounds like "variety".</div>
+  </div>
+
+  <div class="answers" id="s7-answers">
+    <h4>Answers</h4>
+    <p><strong>(a) Variegated leaf</strong></p>
+    <ul>
+      <li><strong>Prediction:</strong> The <strong>green parts</strong> turn blue/black; the <strong>white parts</strong> stay orange/brown.</li>
+      <li><strong>Explanation:</strong> The green parts contain <strong>chlorophyll</strong>, which is needed to absorb light for photosynthesis. So glucose was made there and stored as starch. The white parts have <strong>no chlorophyll</strong>, so no photosynthesis happened — no starch was made.</li>
+    </ul>
+    <p><strong>(b) Destarched leaf</strong></p>
+    <ul>
+      <li><strong>Prediction:</strong> The <strong>whole leaf</strong> stays orange/brown.</li>
+      <li><strong>Explanation:</strong> In the dark cupboard there was no <strong>light</strong>, so the plant could not photosynthesise. Over 2 days it used up its starch stores in <strong>respiration</strong>, leaving no starch in the leaf to detect.</li>
+    </ul>
+    <p><strong>Why these matter:</strong> the variegated experiment proves chlorophyll is needed; the destarched experiment proves light is needed.</p>
+  </div>
+</section>
+
+
+<!-- ============================ SECTION 8 ============================ -->
+<section class="section" id="s8" data-letter="D">
+  <div class="num">8</div>
+  <h2>Apply — Predict, explain, observe (3 plants) <span class="timing">10 min</span></h2>
+
+  <details class="recap">
+    <summary>Quick content recap</summary>
+    <div class="recap-body">
+      <p>Three plants have been set up overnight to test what's needed for photosynthesis. One leaf will be tested from each plant.</p>
+      <ul>
+        <li><strong>Plant 1:</strong> a strip of <strong>aluminium foil</strong> covers part of one leaf (blocks light from that part only).</li>
+        <li><strong>Plant 2:</strong> kept in a sealed jar with <strong>soda lime</strong> (soda lime <em>absorbs</em> CO₂ from the air).</li>
+        <li><strong>Plant 3:</strong> a <strong>variegated</strong> plant kept in a sealed jar with <strong>marble chips in acid</strong> (the reaction produces CO₂).</li>
+      </ul>
+      <p>Each setup tests <em>one</em> requirement of photosynthesis: <strong>light</strong>, <strong>CO₂</strong>, or <strong>chlorophyll</strong>.</p>
+    </div>
+  </details>
+
+  <div class="peo">
+    <div class="card">
+      <span class="num-tag">Plant 1</span>
+      <h5>🟫 Foil strip on leaf</h5>
+      <p>Half the leaf is covered with foil; the other half is exposed to light. Tests the role of <strong>light</strong>.</p>
+    </div>
+    <div class="card">
+      <span class="num-tag">Plant 2</span>
+      <h5>⚪ Soda lime in jar</h5>
+      <p>Soda lime <em>absorbs</em> CO₂. The plant has none to use. Tests the role of <strong>carbon dioxide</strong>.</p>
+    </div>
+    <div class="card">
+      <span class="num-tag">Plant 3</span>
+      <h5>🟩⬜ Variegated + acid+marble</h5>
+      <p>Marble chips in acid produce CO₂ for the plant. The variegated leaf has green AND white parts. Tests the role of <strong>chlorophyll</strong>.</p>
+    </div>
+  </div>
+
+  <div class="task">
+    <b>Task:</b> For each plant, predict the iodine result and <b>explain</b> why. Use the sentence stems if you need them. Then link your answer to <b>which factor</b> the experiment is testing.
+  </div>
+
+  <div class="tools">
+    <button class="tool-btn write">✍️ Write in book</button>
+    <button class="tool-btn hint-btn" data-target="s8-hint">💡 Hint</button>
+    <button class="tool-btn stems-btn" data-target="s8-stems">📚 Sentence stems</button>
+    <button class="tool-btn example-btn" data-target="s8-ex">🎯 Worked example</button>
+    <button class="tool-btn unlock" data-target="s8-unlock">🔒 Unlock answers</button>
+    <button class="tool-btn done" data-section="s8">✓ I've done this</button>
+  </div>
+
+  <div class="panel hint" id="s8-hint">
+    <h4>Hint</h4>
+    <ul>
+      <li><strong>Plant 1 (foil):</strong> the covered part has no light. The uncovered part does. Will both parts make starch?</li>
+      <li><strong>Plant 2 (soda lime):</strong> no CO₂ in the jar. CO₂ is a <em>reactant</em> for photosynthesis. What happens if a key reactant is missing?</li>
+      <li><strong>Plant 3 (variegated + CO₂):</strong> CO₂ is supplied. Light is fine. But the white patches have no chlorophyll. Same logic as section 7.</li>
+    </ul>
+  </div>
+
+  <div class="panel stems" id="s8-stems">
+    <h4>Sentence stems</h4>
+    <ul>
+      <li>"In the ____ part, photosynthesis ____ happen because ____."</li>
+      <li>"The iodine result will be ____ in the ____ part and ____ in the ____ part."</li>
+      <li>"This experiment proves that ____ is needed for photosynthesis."</li>
+    </ul>
+  </div>
+
+  <div class="panel example" id="s8-ex">
+    <h4>Worked example — Plant 1 (foil)</h4>
+    <p><span class="ex-title">Prediction:</span> "The part of the leaf covered by foil will stay orange/brown. The uncovered part will turn blue/black."</p>
+    <p><span class="ex-title">Explanation:</span> "The foil blocked light from reaching the covered part of the leaf. Without light, photosynthesis cannot happen, so no glucose was made and no starch was stored. In the uncovered part, light was available, so photosynthesis happened and starch was stored — that's why iodine turns blue/black there."</p>
+    <p><span class="ex-title">Conclusion:</span> "This experiment proves that <strong>light is needed</strong> for photosynthesis."</p>
+  </div>
+
+  <div class="panel unlock" id="s8-unlock">
+    <h4>Final riddle — last letter of the master code!</h4>
+    <div class="riddle">"I'm a chemical compound that absorbs carbon dioxide from the air. Mixed in a sealed jar, I starve a plant of one of its key reactants. What am I? (Two words.)"</div>
+    <div class="input-row">
+      <input type="text" id="s8-input" placeholder="Type your answer…">
+      <button class="check-btn" data-target="s8" data-answer="soda lime|sodalime">Check</button>
+    </div>
+    <div class="feedback" id="s8-feedback"></div>
+    <div class="small-hint">Hint: 9 letters total. White solid. Used to test the CO₂ requirement.</div>
+  </div>
+
+  <div class="answers" id="s8-answers">
+    <h4>Answers</h4>
+    <p><strong>Plant 1 — Foil strip (tests LIGHT)</strong></p>
+    <ul>
+      <li><strong>Prediction:</strong> Covered part = orange/brown. Uncovered part = blue/black.</li>
+      <li><strong>Explanation:</strong> No light reached the covered part, so no photosynthesis there → no starch. The uncovered part had light, so photosynthesis happened → starch stored.</li>
+    </ul>
+    <p><strong>Plant 2 — Soda lime (tests CO₂)</strong></p>
+    <ul>
+      <li><strong>Prediction:</strong> The whole leaf stays orange/brown.</li>
+      <li><strong>Explanation:</strong> Soda lime absorbs all the CO₂ in the sealed jar. CO₂ is a <strong>reactant</strong> for photosynthesis, so without it, no glucose is made and no starch is stored.</li>
+    </ul>
+    <p><strong>Plant 3 — Variegated leaf with marble chips + acid (tests CHLOROPHYLL)</strong></p>
+    <ul>
+      <li><strong>Prediction:</strong> Green parts = blue/black. White parts = orange/brown.</li>
+      <li><strong>Explanation:</strong> The marble chips + acid produce CO₂, so CO₂ is available. Light is also available. The only difference between the green and white parts is <strong>chlorophyll</strong>. Green parts photosynthesise (and store starch); white parts can't (no chlorophyll).</li>
+    </ul>
+    <p><strong>Big idea:</strong> these three experiments together prove that <strong>light, CO₂, and chlorophyll</strong> are all needed for photosynthesis.</p>
+  </div>
+</section>
+
+
+<!-- ============================ GLOSSARY ============================ -->
+<div class="glossary">
+  <h3>Key words</h3>
+  <p class="gintro">Practical vocab. Look here when you're stuck.</p>
+  <div class="grid">
+    <div class="gword"><div class="ico">🌿</div><div class="term">Photosynthesis</div><div class="desc">Plants use light, CO₂ and water to make glucose and oxygen.</div></div>
+    <div class="gword"><div class="ico">🍬</div><div class="term">Glucose</div><div class="desc">The sugar made in photosynthesis. Formula C₆H₁₂O₆.</div></div>
+    <div class="gword"><div class="ico">🟦</div><div class="term">Starch</div><div class="desc">Insoluble storage molecule. Made from glucose. Found in leaf cells.</div></div>
+    <div class="gword"><div class="ico">🟩</div><div class="term">Chlorophyll</div><div class="desc">Green pigment in leaves. Absorbs light energy for photosynthesis.</div></div>
+    <div class="gword"><div class="ico">🧪</div><div class="term">Iodine solution</div><div class="desc">Reagent used to test for starch. Orange/brown → blue/black.</div></div>
+    <div class="gword"><div class="ico">🟫</div><div class="term">Reagent</div><div class="desc">A chemical used to test for the presence of another substance.</div></div>
+    <div class="gword"><div class="ico">🔥</div><div class="term">Ethanol</div><div class="desc">Flammable alcohol used to remove chlorophyll. Heat with a water bath, NOT a flame.</div></div>
+    <div class="gword"><div class="ico">⚪</div><div class="term">Soda lime</div><div class="desc">White solid that absorbs CO₂. Used to remove CO₂ in control experiments.</div></div>
+    <div class="gword"><div class="ico">🌑</div><div class="term">Destarched</div><div class="desc">A leaf from a plant kept in the dark — has used up its starch reserves in respiration.</div></div>
+    <div class="gword"><div class="ico">🟩⬜</div><div class="term">Variegated</div><div class="desc">A leaf with both green and white parts. White parts have no chlorophyll.</div></div>
+    <div class="gword"><div class="ico">⚠️</div><div class="term">Hazard</div><div class="desc">Something that could cause harm (e.g. ethanol, hot water).</div></div>
+    <div class="gword"><div class="ico">🛡️</div><div class="term">Control measure</div><div class="desc">A specific action to reduce risk (e.g. wear goggles).</div></div>
+    <div class="gword"><div class="ico">🔬</div><div class="term">Reactant</div><div class="desc">A starting substance in a chemical reaction. CO₂ and water are reactants in photosynthesis.</div></div>
+    <div class="gword"><div class="ico">⚡</div><div class="term">Respiration</div><div class="desc">How cells release energy from glucose. Happens in plants too — that's why destarched leaves have no starch.</div></div>
+  </div>
+</div>
+
+<p class="endnote">You're a starch detective now <span class="leaf">🌿</span> — you can prove a plant has been photosynthesising just by looking at a leaf.</p>
+
+</div><!-- /.wrap -->
+
+<script>
+(function(){
+  const STORAGE_KEY = "starchLesson_v1";
+  const masterWord = "PRODUCED";
+  const sectionIds = ["s1","s2","s3","s4","s5","s6","s7","s8"];
+
+  /* state */
+  let state = {
+    level: "standard",
+    cracked: {}, // sectionId -> true
+    done: {},    // sectionId -> true
+  };
+
+  /* load */
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(raw){ state = Object.assign(state, JSON.parse(raw)); }
+  } catch(e){}
+
+  function save(){
+    try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch(e){}
+  }
+
+  /* SUPPORT LEVEL */
+  const supportBar = document.getElementById("supportBar");
+  function applyLevel(level){
+    state.level = level;
+    document.body.dataset.level = level;
+    supportBar.querySelectorAll("button[data-level]").forEach(b=>{
+      b.classList.toggle("active", b.dataset.level === level);
+    });
+    save();
+  }
+  supportBar.querySelectorAll("button[data-level]").forEach(b=>{
+    b.addEventListener("click", ()=> applyLevel(b.dataset.level));
+  });
+  applyLevel(state.level);
+
+  /* RESET */
+  document.getElementById("resetBtn").addEventListener("click", ()=>{
+    if(!confirm("Reset all progress? Your support level will stay the same.")) return;
+    state.cracked = {}; state.done = {};
+    save();
+    // clear visual UI
+    document.querySelectorAll(".answers.show").forEach(a=>a.classList.remove("show"));
+    document.querySelectorAll(".panel.show").forEach(p=>p.classList.remove("show"));
+    document.querySelectorAll(".tool-btn.done.checked").forEach(b=>{
+      b.classList.remove("checked");
+      b.textContent = "✓ I've done this";
+    });
+    document.querySelectorAll(".feedback").forEach(f=>{ f.textContent=""; f.className="feedback"; });
+    document.querySelectorAll('input[type="text"]').forEach(i=>i.value="");
+    renderSlots();
+  });
+
+  /* MASTER CODE SLOTS */
+  const slotsEl = document.getElementById("slots");
+  function renderSlots(){
+    slotsEl.innerHTML = "";
+    let count = 0;
+    masterWord.split("").forEach((ch, i)=>{
+      const id = sectionIds[i];
+      const isCracked = !!state.cracked[id];
+      const slot = document.createElement("div");
+      slot.className = "slot" + (isCracked ? " filled" : "");
+      slot.textContent = isCracked ? ch : "";
+      slotsEl.appendChild(slot);
+      if(isCracked) count++;
+    });
+    document.getElementById("codeCount").textContent = count;
+    document.getElementById("codeReveal").classList.toggle("show", count === sectionIds.length);
+  }
+  renderSlots();
+
+  /* TOOL BUTTONS — toggle panels */
+  document.querySelectorAll(".tool-btn[data-target]").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      const t = document.getElementById(btn.dataset.target);
+      if(!t) return;
+      t.classList.toggle("show");
+    });
+  });
+
+  /* WRITE IN BOOK button — informative only */
+  document.querySelectorAll(".tool-btn.write").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      const original = btn.textContent;
+      btn.textContent = "📓 Yes — write it in your exercise book first!";
+      setTimeout(()=>{ btn.textContent = original; }, 2200);
+    });
+  });
+
+  /* CHECK ANSWER (riddle) */
+  document.querySelectorAll(".check-btn").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      const sec = btn.dataset.target;
+      const accepted = btn.dataset.answer.toLowerCase().split("|").map(s=>s.trim());
+      const input = document.getElementById(sec + "-input");
+      const fb = document.getElementById(sec + "-feedback");
+      const value = (input.value || "").trim().toLowerCase();
+      if(!value){
+        fb.textContent = "Have a go — type something!"; fb.className="feedback wrong"; return;
+      }
+      const correct = accepted.some(a => value === a || value.includes(a));
+      if(correct){
+        fb.textContent = "✓ Cracked it! Letter unlocked.";
+        fb.className = "feedback right";
+        state.cracked[sec] = true;
+        save();
+        // reveal answers
+        const ans = document.getElementById(sec + "-answers");
+        if(ans) ans.classList.add("show");
+        renderSlots();
+      } else {
+        fb.textContent = "Not quite — read the hint underneath and try again.";
+        fb.className = "feedback wrong";
+      }
+    });
+  });
+
+  /* DONE BUTTONS */
+  function setDoneState(btn, isDone){
+    btn.classList.toggle("checked", isDone);
+    btn.textContent = isDone ? "✓ Done!" : "✓ I've done this";
+  }
+  document.querySelectorAll(".tool-btn.done").forEach(btn=>{
+    const sec = btn.dataset.section;
+    if(state.done[sec]) setDoneState(btn, true);
+    btn.addEventListener("click", ()=>{
+      const next = !state.done[sec];
+      state.done[sec] = next;
+      setDoneState(btn, next);
+      save();
+    });
+  });
+
+  /* On load: re-show answers if already cracked, on enter key in inputs */
+  sectionIds.forEach(id=>{
+    if(state.cracked[id]){
+      const ans = document.getElementById(id + "-answers");
+      if(ans) ans.classList.add("show");
+    }
+  });
+  document.querySelectorAll('input[type="text"]').forEach(input=>{
+    input.addEventListener("keydown", e=>{
+      if(e.key === "Enter"){
+        const sec = input.id.replace("-input","");
+        const btn = document.querySelector('.check-btn[data-target="'+sec+'"]');
+        if(btn) btn.click();
+      }
+    });
+  });
+
+})();
+</script>
+</body>
+</html>
