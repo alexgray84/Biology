@@ -44,6 +44,7 @@
     position: sticky; top: 0; z-index: 50;
     display: flex; align-items: center; justify-content: space-between;
     flex-wrap: wrap; gap: 12px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
   }
   header h1 { margin: 4px 0 0 0; font-size: 22px; font-weight: 600; color: var(--ink); }
   
@@ -57,7 +58,7 @@
   section .step {
     display: inline-block; background: var(--sand); color: var(--sand-deep);
     font-size: 12px; font-weight: 700; padding: 4px 12px; border-radius: 999px;
-    text-transform: uppercase;
+    text-transform: uppercase; letter-spacing: 0.05em;
   }
   h2 { font-size: 26px; font-weight: 600; margin: 12px 0 6px 0; }
   h3 { font-size: 17px; font-weight: 600; margin: 22px 0 8px 0; }
@@ -67,14 +68,17 @@
   select, input[type="range"] {
     padding: 6px 12px; border-radius: 8px; border: 1px solid var(--line);
     font-size: 15px; font-family: inherit; background: var(--bg);
-    cursor: pointer;
+    cursor: pointer; transition: border-color 0.2s;
   }
+  select:focus { border-color: var(--sky-deep); outline: none; }
+  
   button {
     background: var(--sky-deep); color: white; border: none;
     padding: 10px 18px; border-radius: 8px; font-size: 15px; font-weight: 600;
-    cursor: pointer; transition: opacity 0.2s; margin-top: 12px; margin-right: 8px;
+    cursor: pointer; transition: background 0.2s; margin-top: 12px; margin-right: 8px;
   }
   button.secondary { background: var(--ink-soft); }
+  button.ghost { background: transparent; color: var(--sky-deep); border: 1px solid var(--sky-deep); }
   button:hover { opacity: 0.9; }
   
   .feedback { font-size: 14px; font-weight: 600; margin-left: 12px; display: inline-block; }
@@ -107,37 +111,62 @@
   }
   canvas {
     background: white; border: 1px solid var(--line); border-radius: 8px;
-    max-width: 100%; height: auto;
+    max-width: 100%; height: auto; box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
   }
   .sim-controls { flex: 1; min-width: 250px; }
   .sim-controls label { display: block; font-size: 14px; font-weight: 600; margin-top: 12px; }
+  .status-badge { 
+    display: inline-block; padding: 4px 8px; border-radius: 4px; 
+    font-size: 12px; font-weight: bold; text-transform: uppercase; 
+    background: var(--line); color: var(--ink-soft); margin-bottom: 12px;
+  }
+  .status-active { background: var(--sage); color: var(--sage-deep); }
   
   /* ---------- tables & callouts ---------- */
   table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 15px; }
-  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--line); }
+  th, td { text-align: left; padding: 12px 12px; border-bottom: 1px solid var(--line); vertical-align: middle; }
   th { background: var(--bg); font-weight: 600; color: var(--ink-soft); font-size: 13px; text-transform: uppercase; }
 
   .callout { border-radius: 12px; padding: 14px 18px; margin: 16px 0; border: 1px solid; font-size: 15px; }
   .callout-objective { background: var(--sage); border-color: var(--sage-deep); }
   .callout-stem { background: var(--sky); border-color: var(--sky-deep); }
   
-  /* ---------- tiers ---------- */
-  .tiers { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 14px; margin: 18px 0; }
-  .tier { border-radius: 14px; padding: 18px; border: 1.5px solid; }
-  .tier .badge { display: inline-block; font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 999px; color: white; margin-bottom: 8px; }
+  /* ---------- tiers & dual coding ---------- */
+  .tiers { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin: 18px 0; }
+  .tier { border-radius: 14px; padding: 20px; border: 1.5px solid; position: relative; }
+  .tier .badge { display: inline-block; font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 999px; color: white; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.05em; }
   .tier-1 { background: #f4faf6; border-color: var(--sage-deep); }
   .tier-1 .badge { background: var(--sage-deep); }
   .tier-2 { background: #f5f9fc; border-color: var(--sky-deep); }
   .tier-2 .badge { background: var(--sky-deep); }
   .tier-3 { background: #f8f4fb; border-color: var(--lilac-deep); }
   .tier-3 .badge { background: var(--lilac-deep); }
+  
+  .dual-code-list { list-style: none; padding: 0; margin: 0; }
+  .dual-code-list li { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; line-height: 1.4; }
+  .icon-box { 
+    width: 32px; height: 32px; background: white; border: 1px solid var(--line); 
+    border-radius: 6px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  
+  /* Helper block for hints */
+  .hint-box {
+    display: none; background: white; border: 1px dashed var(--ink-soft);
+    padding: 10px; border-radius: 8px; font-size: 13px; color: var(--ink-soft);
+    margin-bottom: 12px;
+  }
+
+  @media (max-width: 700px) {
+    main { padding: 16px; }
+    section { padding: 20px; }
+  }
 </style>
 </head>
 <body>
 
 <header>
   <div>
-    <div style="font-size: 13px; color: var(--ink-soft); text-transform: uppercase;">Y7 Science · Energy</div>
+    <div style="font-size: 13px; color: var(--ink-soft); text-transform: uppercase; font-weight: 600;">Y7 Science · Energy</div>
     <h1>Lesson 2 · Energy Transfers</h1>
   </div>
 </header>
@@ -146,7 +175,7 @@
 
   <!-- ============== 1 · DO NOW ============== -->
   <section id="do-now">
-    <span class="step">Step 1 · Do Now</span>
+    <span class="step">Step 1 · Do Now (Retrieval)</span>
     <h2>Match the Action to the Store</h2>
     <p>Select the energy store that <strong>increases</strong> as a result of each action.</p>
 
@@ -267,6 +296,8 @@
     <div class="sim-container">
       <canvas id="physicsCanvas" width="550" height="350"></canvas>
       <div class="sim-controls">
+        <div id="simStatus" class="status-badge">System at Rest</div>
+        
         <label for="bounceSlider">Energy Dissipated per Bounce</label>
         <input type="range" id="bounceSlider" min="0.1" max="0.5" step="0.05" value="0.25" style="width: 100%;">
         <div style="display: flex; justify-content: space-between; font-size: 12px; color: var(--ink-soft);">
@@ -290,45 +321,64 @@
   <section id="tasks">
     <span class="step">Step 6 · Your task</span>
     <h2>Energy Circus</h2>
-    <p>Choose your starting tier based on your confidence.</p>
+    <p>Choose your starting tier based on your confidence. Use the icons to help you visualize the object.</p>
 
     <div class="tiers">
       <!-- TIER 1 -->
       <div class="tier tier-1">
         <span class="badge">Tier 1 · Build it up</span>
-        <div style="font-weight: 600; margin-bottom: 8px;">Fill in the missing energy stores.</div>
-        <ol style="line-height: 2;">
-          <li><strong>Candle:</strong> Chemical input → <select id="t1-1"><option value="">--</option><option value="Light">Light</option><option value="Kinetic">Kinetic</option></select> useful + Thermal wasted. <span id="t1-1-fb" class="feedback"></span></li>
-          <li><strong>Buzzer:</strong> Electrical input → <select id="t1-2"><option value="">--</option><option value="Light">Light</option><option value="Sound">Sound</option></select> useful + Thermal wasted. <span id="t1-2-fb" class="feedback"></span></li>
-          <li><strong>Falling ball:</strong> <select id="t1-3"><option value="">--</option><option value="Gravitational">Gravitational</option><option value="Elastic">Elastic</option></select> input → Kinetic useful. <span id="t1-3-fb" class="feedback"></span></li>
-        </ol>
+        <div style="font-weight: 600; margin-bottom: 12px;">Fill in the missing energy stores.</div>
+        
+        <button class="ghost" style="padding: 4px 10px; font-size: 13px; margin: 0 0 12px 0;" onclick="document.getElementById('hint1').style.display='block'">Show Word Bank</button>
+        <div id="hint1" class="hint-box"><strong>Word Bank:</strong> Light · Sound · Kinetic · Gravitational · Thermal</div>
+
+        <ul class="dual-code-list">
+          <li>
+            <div class="icon-box">🕯️</div>
+            <div><strong>Candle:</strong> Chemical input → <select id="t1-1"><option value="">--</option><option value="Light">Light</option><option value="Kinetic">Kinetic</option></select> useful + Thermal wasted. <span id="t1-1-fb" class="feedback"></span></div>
+          </li>
+          <li>
+            <div class="icon-box">⏰</div>
+            <div><strong>Buzzer:</strong> Electrical input → <select id="t1-2"><option value="">--</option><option value="Light">Light</option><option value="Sound">Sound</option></select> useful + Thermal wasted. <span id="t1-2-fb" class="feedback"></span></div>
+          </li>
+          <li>
+            <div class="icon-box">🎾</div>
+            <div><strong>Falling ball:</strong> <select id="t1-3"><option value="">--</option><option value="Gravitational">Gravitational</option><option value="Elastic">Elastic</option></select> input → Kinetic useful. <span id="t1-3-fb" class="feedback"></span></div>
+          </li>
+        </ul>
         <button onclick="checkTier1()">Check Answers</button>
       </div>
 
       <!-- TIER 2 -->
       <div class="tier tier-2">
         <span class="badge">Tier 2 · Write it out</span>
-        <div style="font-weight: 600; margin-bottom: 8px;">Write a full sentence for three items using the stem.</div>
-        <div style="font-size:13px; color:var(--ink-soft); background:white; padding:8px 10px; border-radius:8px; border: 1px dashed var(--sky-deep);">
-          <strong>Stem:</strong> "Energy is transferred from the ____ store into a useful ____ store and a wasted ____ store."
-        </div>
-        <ol>
-          <li>A burning candle.</li>
-          <li>A buzzer sounding an alarm.</li>
-          <li>A wind-up toy walking across the desk.</li>
-        </ol>
-        <textarea placeholder="Type your sentences here..." style="width:100%; height:80px; border-radius:8px; border:1px solid var(--line); padding:8px; margin-top:8px; font-family:inherit;"></textarea>
+        <div style="font-weight: 600; margin-bottom: 12px;">Write a full sentence for three items.</div>
+        
+        <button class="ghost" style="padding: 4px 10px; font-size: 13px; margin: 0 0 12px 0;" onclick="document.getElementById('hint2').style.display='block'">Show Sentence Stem</button>
+        <div id="hint2" class="hint-box"><strong>Stem:</strong> "Energy is transferred from the ____ store into a useful ____ store and a wasted ____ store."</div>
+
+        <ul class="dual-code-list">
+          <li><div class="icon-box">🕯️</div> <div>A burning candle.</div></li>
+          <li><div class="icon-box">⏰</div> <div>A buzzer sounding an alarm.</div></li>
+          <li><div class="icon-box">🧸</div> <div>A wind-up toy walking across the desk.</div></li>
+        </ul>
+        
+        <!-- Scaffolded Textareas -->
+        <textarea placeholder="1. Energy is transferred from the..." style="width:100%; height:50px; border-radius:8px; border:1px solid var(--line); padding:8px; margin-top:8px; font-family:inherit; font-size: 14px;"></textarea>
+        <textarea placeholder="2. Energy is..." style="width:100%; height:50px; border-radius:8px; border:1px solid var(--line); padding:8px; margin-top:8px; font-family:inherit; font-size: 14px;"></textarea>
+        <textarea placeholder="3. " style="width:100%; height:50px; border-radius:8px; border:1px solid var(--line); padding:8px; margin-top:8px; font-family:inherit; font-size: 14px;"></textarea>
       </div>
 
       <!-- TIER 3 -->
       <div class="tier tier-3">
         <span class="badge">Tier 3 · Justify</span>
-        <div style="font-weight: 600; margin-bottom: 8px;">Analyze the dissipated energy.</div>
-        <ol>
+        <div style="font-weight: 600; margin-bottom: 12px;">Analyze the dissipated energy.</div>
+        <ol style="margin-top: 0; padding-left: 20px;">
           <li>For an <strong>elastic band being flung</strong>, explain exactly <em>why</em> thermal energy is created and wasted as it moves through the air.</li>
           <li>For a <strong>falling tennis ball</strong>, explain what happens to the kinetic energy the moment the ball hits the ground. Where does it transfer?</li>
         </ol>
-        <textarea placeholder="Type your reasoning here..." style="width:100%; height:80px; border-radius:8px; border:1px solid var(--line); padding:8px; margin-top:8px; font-family:inherit;"></textarea>
+        <textarea placeholder="1. As the elastic band moves through the air, friction causes..." style="width:100%; height:80px; border-radius:8px; border:1px solid var(--line); padding:8px; margin-top:8px; font-family:inherit; font-size: 14px; line-height: 1.5;"></textarea>
+        <textarea placeholder="2. When the ball hits the ground..." style="width:100%; height:80px; border-radius:8px; border:1px solid var(--line); padding:8px; margin-top:8px; font-family:inherit; font-size: 14px; line-height: 1.5;"></textarea>
       </div>
     </div>
   </section>
@@ -383,6 +433,7 @@
   // --- Physics Simulator Logic ---
   const canvas = document.getElementById('physicsCanvas');
   const ctx = canvas.getContext('2d');
+  const statusBadge = document.getElementById('simStatus');
   
   let isRunning = false;
   let animFrame;
@@ -396,6 +447,16 @@
   
   let ball = { x: 100, y: startY, radius: 15, vy: 0 };
   let thermalEnergy = 0;
+
+  function updateStatus(active) {
+    if(active) {
+      statusBadge.textContent = "Energy Transferring...";
+      statusBadge.className = "status-badge status-active";
+    } else {
+      statusBadge.textContent = "System at Rest";
+      statusBadge.className = "status-badge";
+    }
+  }
 
   function drawBar(x, y, width, height, color, label, value, maxVal) {
     // Draw background track
@@ -464,14 +525,13 @@
           ball.vy = 0;
           isRunning = false;
           thermalEnergy = maxEnergy; // Cap it perfectly to prevent floating point errors at end
+          updateStatus(false);
         }
       }
     }
 
     // Calculate current energies for charts
-    // E_p = mgh
     let gravEnergy = Math.max(0, mass * gravity * (groundY - ball.y));
-    // E_k = 1/2 mv^2
     let kinEnergy = 0.5 * mass * (ball.vy * ball.vy);
     
     // Enforce conservation limits visually during edge cases
@@ -503,11 +563,11 @@
 
   function startSimulation() {
     if(!isRunning) {
-        // If ball is at bottom, reset it to top first
         if(ball.y === groundY) {
             resetSimulation();
         }
         isRunning = true;
+        updateStatus(true);
         render();
     }
   }
@@ -518,10 +578,12 @@
     ball.y = startY;
     ball.vy = 0;
     thermalEnergy = 0;
+    updateStatus(false);
     render();
   }
 
   // Initial render
+  updateStatus(false);
   render();
 </script>
 
