@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Energy Efficiency — Year 7 Physics</title>
+<style>
+  :root {
+    --bg: #fdfcf8;
+    --ink: #23332b;
+    --muted: #5a6b62;
+    
+    /* Energy Theme Colors (Orange/Blue) */
+    --primary: #e67e22;
+    --primary-dk: #d35400;
+    --primary-soft: #fdf0e4;
+    --primary-line: #f5cba7;
+    
+    --secondary: #3498db;
+    --secondary-dk: #2980b9;
+    --secondary-soft: #ebf5fb;
+    --secondary-line: #aed6f1;
+    
+    --accent: #9b59b6;
+    --accent-dk: #8e44ad;
+    --accent-soft: #f5eef8;
+    --accent-line: #d2b4de;
+
+    --chip: #f1ede4;
+    --shadow: 0 1px 2px rgba(0,0,0,.04), 0 6px 18px rgba(230, 126, 34,.06);
+  }
+  
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0; background: var(--bg); color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, sans-serif;
+    line-height: 1.55; -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 28px 24px 80px; }
+
+  header.hero {
+    background: linear-gradient(180deg, #fff 0%, #fdfcf8 100%);
+    border: 1px solid var(--primary-line); border-radius: 18px; padding: 22px 26px;
+    box-shadow: var(--shadow); margin-bottom: 18px;
+  }
+  .eyebrow { font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--primary-dk); font-weight: 600; }
+  h1 { font-size: 28px; margin: 6px 0 4px; letter-spacing: -.01em; color: var(--primary-dk); }
+  .sub { color: var(--muted); font-size: 14.5px; margin: 0 0 14px; }
+
+  .picker { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; background: #fff; border: 1px solid var(--primary-line); border-radius: 14px; padding: 10px 12px; }
+  .picker .pick-label { font-size: 12px; color: var(--muted); font-weight: 600; letter-spacing: .05em; text-transform: uppercase; margin-right: 4px; }
+  .picker button {
+    appearance: none; border: 1px solid var(--primary-line); background: #fff; color: var(--ink);
+    border-radius: 999px; padding: 7px 14px; font-size: 13.5px; font-weight: 600; cursor: pointer; transition: .15s;
+  }
+  .picker button:hover { background: var(--primary-soft); }
+  .picker button.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+  .picker .reset { margin-left: auto; background: transparent; border: 0; color: var(--muted); font-size: 12.5px; cursor: pointer; text-decoration: underline; }
+
+  /* MASTER CODE */
+  .master { background: #fff; border: 1px solid var(--primary-line); border-radius: 14px; padding: 14px 16px; margin-top: 14px; display: flex; flex-wrap: wrap; align-items: center; gap: 14px; }
+  .master-label { font-size: 12px; color: var(--muted); font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+  .code { display: flex; gap: 6px; }
+  .code .slot {
+    width: 34px; height: 42px; border: 1.5px dashed #d5d8dc; border-radius: 8px; display: flex; align-items: center; justify-content: center;
+    font-weight: 800; font-family: Menlo, Consolas, monospace; font-size: 18px; color: #b2babb; background: #f8f9f9; transition: .25s;
+  }
+  .code .slot.unlocked { border-style: solid; border-color: var(--primary); background: var(--primary-soft); color: var(--primary-dk); }
+  .master-hint { font-size: 12px; color: var(--muted); margin-left: auto; }
+
+  /* PROGRESS DOTS */
+  .progress { display: flex; gap: 6px; margin-top: 14px; flex-wrap: wrap; }
+  .pdot { flex: 1; min-width: 18px; height: 8px; background: #eaeded; border-radius: 6px; transition: .2s; }
+  .pdot.done { background: var(--primary); }
+  .progress-meta { font-size: 12px; color: var(--muted); margin-top: 6px; text-align: right; }
+
+  .grid { display: grid; grid-template-columns: 1fr 290px; gap: 20px; margin-top: 8px; }
+  @media (max-width: 880px) { .grid { grid-template-columns: 1fr; } }
+
+  section.card {
+    background: #fff; border: 1px solid #ecebe4; border-radius: 16px;
+    padding: 20px 22px; margin-bottom: 16px; box-shadow: var(--shadow); transition: .2s;
+  }
+  section.card.done { background: #fffcf9; border-color: var(--primary-line); }
+  .sec-head { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 6px; }
+  .sec-num {
+    display: inline-flex; align-items: center; justify-content: center; width: 26px; height: 26px;
+    background: var(--primary); color: #fff; border-radius: 8px; font-weight: 700; font-size: 13px;
+  }
+  .sec-title { font-size: 17px; font-weight: 700; margin: 0; }
+  .time {
+    margin-left: auto; display: inline-flex; align-items: center; gap: 6px;
+    background: var(--chip); color: #665a3f; border-radius: 999px; padding: 4px 10px; font-size: 12px; font-weight: 600;
+  }
+  .time::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: #d8b85a; display: inline-block; }
+  .task { font-size: 15px; margin: 4px 0 10px; }
+
+  /* EQUATIONS (No LaTeX) */
+  .formula-box { background: #fbfaf3; border: 1px solid #ecebe4; border-radius: 12px; padding: 14px 16px; margin: 10px 0; text-align: center; }
+  .eq { display: inline-flex; align-items: center; gap: 8px; font-family: "Georgia", serif; font-size: 16.5px; }
+  .eq-frac { display: inline-flex; flex-direction: column; align-items: center; vertical-align: middle; margin: 0 4px; }
+  .eq-num { border-bottom: 1.5px solid var(--ink); padding: 0 4px 2px; }
+  .eq-den { padding: 2px 4px 0; }
+
+  .toggles { display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0 0; }
+  .tog {
+    appearance: none; border: 1px solid #e0dccd; background: #fff; border-radius: 999px;
+    padding: 6px 12px; font-size: 12.5px; font-weight: 600; color: var(--ink); cursor: pointer; display: inline-flex; align-items: center; gap: 6px; transition: .15s;
+  }
+  .tog:hover { background: #fafaf2; }
+  .tog.help { color: var(--secondary-dk); border-color: var(--secondary-line); }
+  .tog.help.on { background: var(--secondary-soft); border-color: var(--secondary-dk); }
+  .tog.stem { color: var(--accent-dk); border-color: var(--accent-line); }
+  .tog.stem.on { background: var(--accent-soft); border-color: var(--accent-dk); }
+  .tog.stretch { color: var(--primary-dk); border-color: var(--primary-line); }
+  .tog.stretch.on { background: var(--primary-soft); border-color: var(--primary-dk); }
+  .tog.unlock { color: #d35400; border-color: #f5cba7; }
+  .tog.unlock.on { background: #fdf0e4; border-color: #d35400; }
+  .tog.done { margin-left: auto; color: var(--primary-dk); border-color: var(--primary-line); }
+  .tog.done.on { background: var(--primary); color: #fff; border-color: var(--primary); }
+
+  .panel { display: none; border-radius: 12px; padding: 12px 14px; margin-top: 10px; border: 1px solid; font-size: 14.5px; }
+  .panel.show { display: block; animation: slide .18s ease-out; }
+  @keyframes slide { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
+  .panel.help { background: var(--secondary-soft); border-color: var(--secondary-line); }
+  .panel.stem { background: var(--accent-soft); border-color: var(--accent-line); }
+  .panel.stretch { background: var(--primary-soft); border-color: var(--primary-line); }
+  .panel .label { font-size: 11px; letter-spacing: .12em; text-transform: uppercase; font-weight: 700; margin-bottom: 4px; }
+  .panel.help .label { color: var(--secondary-dk); }
+  .panel.stem .label { color: var(--accent-dk); }
+  .panel.stretch .label { color: var(--primary-dk); }
+  .stems { margin: 0; padding-left: 18px; }
+  .stems li { margin: 4px 0; font-style: italic; }
+
+  /* LOCK PANEL */
+  .lockbox { display: none; border-radius: 12px; padding: 14px 16px; margin-top: 10px; border: 1.5px solid var(--primary-line); background: linear-gradient(180deg, #fff 0%, #fdf0e4 100%); }
+  .lockbox.show { display: block; animation: slide .18s ease-out; }
+  .lockbox .label { font-size: 11px; letter-spacing: .12em; text-transform: uppercase; font-weight: 700; color: var(--primary-dk); margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
+  .riddle { font-size: 14.5px; color: var(--ink); margin: 6px 0 10px; font-style: italic; line-height: 1.5; }
+  .riddle b { font-style: normal; }
+  .keyrow { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+  .keyrow input { flex: 1; min-width: 160px; border: 1.5px solid var(--primary-line); background: #fff; border-radius: 10px; padding: 9px 12px; font-size: 14.5px; font-family: inherit; outline: none; transition: .15s; }
+  .keyrow input:focus { border-color: var(--primary-dk); background: #fff; }
+  .keyrow input.wrong { border-color: #c97070; background: #fdf6f6; }
+  .keyrow input.right { border-color: var(--primary); background: var(--primary-soft); }
+  .keyrow .check-btn { appearance: none; border: 0; background: var(--primary); color: #fff; border-radius: 10px; padding: 9px 16px; font-size: 14px; font-weight: 700; cursor: pointer; transition: .15s; }
+  .keyrow .check-btn:hover { background: var(--primary-dk); }
+  .keyrow .hint-btn { appearance: none; border: 1px solid var(--primary-line); background: #fff; color: var(--primary-dk); border-radius: 10px; padding: 8px 12px; font-size: 12.5px; font-weight: 600; cursor: pointer; }
+  .keyrow .hint-btn:hover { background: var(--primary-soft); }
+  .feedback { font-size: 13px; margin-top: 8px; min-height: 18px; }
+  .feedback.wrong { color: #a84a4a; }
+  .feedback.right { color: var(--primary-dk); font-weight: 700; }
+  .feedback.hint { color: var(--secondary-dk); }
+  .answers { display: none; margin-top: 12px; padding: 12px 14px; background: #fff; border: 1px dashed var(--primary-line); border-radius: 10px; font-size: 14.5px; }
+  .answers.unlocked { display: block; animation: slide .25s ease-out; }
+  .answers .alabel { font-size: 11px; letter-spacing: .12em; text-transform: uppercase; font-weight: 700; color: var(--primary-dk); margin-bottom: 4px; }
+  .letter-reveal { display: inline-block; margin-left: 8px; background: #fff6e3; border: 1px solid #f0d9a3; color: #8a6614; font-family: Menlo, Consolas, monospace; font-weight: 800; padding: 4px 10px; border-radius: 8px; font-size: 13px; }
+
+  .ways { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+  .way { font-size: 12px; background: #f7f5ec; border: 1px dashed #d8d2bc; border-radius: 8px; padding: 5px 9px; color: #665a3f; }
+
+  figure { margin: 14px 0; text-align: center; }
+  figure svg { max-width: 100%; height: auto; border-radius: 12px; background: #fff; border: 1px solid #eee; padding: 6px; }
+  figcaption { font-size: 12.5px; color: var(--muted); margin-top: 6px; }
+
+  /* ENERGY LABEL SIMULATION */
+  .eu-label { width: 100%; max-width: 200px; margin: 0 auto; border: 2px solid #ddd; border-radius: 8px; overflow: hidden; font-family: sans-serif; }
+  .eu-label-top { background: #004b9b; color: white; padding: 8px; font-weight: 800; font-size: 20px; display: flex; justify-content: space-between; }
+  .eu-label-body { padding: 10px; background: #fff; }
+  .eu-row { display: flex; margin: 4px 0; align-items: center; position: relative; }
+  .eu-bar { height: 18px; color: white; font-size: 12px; font-weight: 700; padding-left: 6px; line-height: 18px; position: relative; }
+  .eu-bar::after { content: ""; position: absolute; right: -9px; top: 0; width: 0; height: 0; border-top: 9px solid transparent; border-bottom: 9px solid transparent; border-left: 9px solid; }
+  .eu-bar.A { background: #009640; width: 40%; border-left-color: #009640; }
+  .eu-bar.A::after { border-left-color: #009640; }
+  .eu-bar.B { background: #51af32; width: 50%; }
+  .eu-bar.B::after { border-left-color: #51af32; }
+  .eu-bar.C { background: #c8d400; width: 60%; }
+  .eu-bar.C::after { border-left-color: #c8d400; }
+  .eu-bar.D { background: #ffed00; width: 70%; color: #333; }
+  .eu-bar.D::after { border-left-color: #ffed00; }
+  .eu-bar.E { background: #fdb913; width: 80%; }
+  .eu-bar.E::after { border-left-color: #fdb913; }
+  .eu-bar.F { background: #eb690b; width: 90%; }
+  .eu-bar.F::after { border-left-color: #eb690b; }
+  .eu-bar.G { background: #e3001b; width: 100%; }
+  .eu-bar.G::after { border-left-color: #e3001b; }
+  .eu-rating { position: absolute; right: 0; top: 0; background: #000; color: #fff; padding: 4px 8px; font-weight: 800; font-size: 18px; border-radius: 4px; }
+
+  aside.glossary {
+    position: sticky; top: 14px; align-self: start; background: #fff; border: 1px solid #ecebe4;
+    border-radius: 16px; padding: 16px; box-shadow: var(--shadow); max-height: calc(100vh - 28px); overflow: auto;
+  }
+  aside.glossary h3 { margin: 0 0 4px; font-size: 14px; letter-spacing: .1em; text-transform: uppercase; color: var(--primary-dk); }
+  aside.glossary .gloss-hint { font-size: 11.5px; color: var(--muted); margin: 0 0 10px; }
+  .kw { display: grid; grid-template-columns: 34px 1fr; gap: 10px; align-items: start; margin: 9px 0; padding-bottom: 9px; border-bottom: 1px dashed #eee; }
+  .kw:last-child { border-bottom: 0; }
+  .kw .ic { width: 34px; height: 34px; border-radius: 9px; background: var(--primary-soft); color: var(--primary-dk); display: flex; align-items: center; justify-content: center; font-size: 16px; }
+  .kw .term { font-weight: 700; font-size: 13.5px; line-height: 1.25; }
+  .kw .def { font-size: 12.5px; color: var(--muted); margin-top: 2px; }
+
+  footer { color: var(--muted); font-size: 12.5px; text-align: center; margin-top: 24px; }
+  .celebrate { display: none; background: linear-gradient(135deg, #fdf0e4 0%, #fff6e3 100%); border: 1px solid var(--primary-line); border-radius: 14px; padding: 18px; text-align: center; margin-bottom: 16px; color: var(--primary-dk); font-weight: 600; }
+  .celebrate.show { display: block; }
+  .celebrate .big { font-family: Menlo, Consolas, monospace; font-size: 28px; letter-spacing: .4em; font-weight: 800; display: block; margin: 6px 0; color: var(--primary-dk); }
+
+  @media print {
+    .picker, .toggles .done, .celebrate, .lockbox { display: none; }
+    .panel, .answers { display: block !important; }
+    aside.glossary { position: static; }
+    .grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="hero">
+    <div class="eyebrow">Year 7 Physics · Energy</div>
+    <h1>Energy Efficiency ⚡</h1>
+    <p class="sub">By the end of this lesson you will be able to identify the unit of energy as <b>Joules</b>[cite: 5], define <b>efficiency</b>[cite: 5], and calculate the efficiency of a system when given the formula[cite: 5].</p>
+
+    <div class="picker">
+      <span class="pick-label">Pick your support level →</span>
+      <button id="lvl-light" class="lvl">🚀 I've got this</button>
+      <button id="lvl-std" class="lvl active">⚖️ Standard</button>
+      <button id="lvl-full" class="lvl">🪜 Give me all the support</button>
+      <button class="reset" id="reset">Reset progress</button>
+    </div>
+
+    <!-- MASTER CODE -->
+    <div class="master">
+      <span class="master-label">🔑 Master code</span>
+      <div class="code" id="codeBoxes"></div>
+      <span class="master-hint">Crack each section's keyword to reveal a letter. Solve all 6 to spell today's BIG idea!</span>
+    </div>
+
+    <div class="progress" id="progress"></div>
+    <div class="progress-meta"><span id="done-count">0</span> / <span id="total-count">6</span> sections done</div>
+  </header>
+
+  <div class="celebrate" id="celebrate">
+    🎯 You've cracked all 6 sections. The lesson's big idea was…
+    <span class="big" id="bigword">USEFUL</span>
+    Energy efficiency is all about maximizing the <b>useful</b> energy output and minimizing the wasted energy[cite: 5]!
+  </div>
+
+  <div class="grid">
+    <main>
+
+      <!-- SECTION 1 - DO NOW -->
+      <section class="card" data-sec="1" data-keyword="useful" data-letter="U" data-letter-idx="0">
+        <div class="sec-head">
+          <span class="sec-num">1</span>
+          <h2 class="sec-title">Do Now — Recap Energy Stores</h2>
+          <span class="time">5 min</span>
+        </div>
+        <p class="task">Name <b>5 different stores of energy</b> and give an example of each one in your book[cite: 5].</p>
+
+        <div class="ways"><span class="way">✍️ Write in book</span><span class="way">🧠 No peeking</span></div>
+
+        <div class="toggles">
+          <button class="tog help">💡 Hint</button>
+          <button class="tog stem">📚 Sentence stems</button>
+          <button class="tog stretch">⚡ Stretch</button>
+          <button class="tog unlock">🔒 Unlock answers</button>
+          <button class="tog done">✓ I've done this</button>
+        </div>
+
+        <div class="panel help"><div class="label">Hint</div>
+          <p>Remember the mnemonic: <b>G</b>reat <b>T</b>eachers <b>E</b>at <b>C</b>ake (<b>K</b>indly)[cite: 6]!</p>
+        </div>
+        <div class="panel stem"><div class="label">Sentence stems</div>
+          <ul class="stems">
+            <li>"A moving car has a ____ store of energy because it is moving."[cite: 6]</li>
+            <li>"A stretched rubber band has an ____ store of energy because it is stretched."[cite: 6]</li>
+            <li>"A hot cup of tea has a ____ store of energy because it has a temperature."[cite: 6]</li>
+          </ul>
+        </div>
+        <div class="panel stretch"><div class="label">Push yourself</div>
+          <p>For each example, write a full sentence to explain <b>why</b> it has that store (e.g., "A book on a shelf has a gravitational store <i>because</i> it is raised up.")[cite: 6]</p>
+        </div>
+
+        <div class="lockbox">
+          <div class="label">🔒 Riddle to unlock the answers</div>
+          <p class="riddle">"Efficiency is about getting as much of THIS type of energy output as possible[cite: 5]. What word describes energy that does the job we want it to do? (6 letters)"</p>
+          <div class="keyrow">
+            <input type="text" placeholder="Type the keyword…" autocomplete="off" spellcheck="false">
+            <button class="check-btn">Check</button>
+            <button class="hint-btn">Hint</button>
+          </div>
+          <div class="feedback"></div>
+          <div class="answers">
+            <div class="alabel">✓ Answers</div>
+            <p>The 5 core stores are[cite: 6]:</p>
+            <ul>
+              <li><b>Gravitational</b> (e.g., a book on a high shelf)</li>
+              <li><b>Thermal</b> (e.g., a hot water bottle)</li>
+              <li><b>Elastic</b> (e.g., a stretched rubber band)</li>
+              <li><b>Chemical</b> (e.g., a battery or food)</li>
+              <li><b>Kinetic</b> (e.g., a spinning top)</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 2 - WHAT IS EFFICIENCY? -->
+      <section class="card" data-sec="2" data-keyword="stores" data-letter="S" data-letter-idx="1">
+        <div class="sec-head">
+          <span class="sec-num">2</span>
+          <h2 class="sec-title">What is Efficiency?</h2>
+          <span class="time">5 min</span>
+        </div>
+        
+        <figure>
+          <div class="eu-label">
+            <div class="eu-label-top"><span>ENERG</span><span>Y</span></div>
+            <div class="eu-label-body">
+              <div class="eu-row"><div class="eu-bar A">A</div></div>
+              <div class="eu-row"><div class="eu-bar B">B</div></div>
+              <div class="eu-row"><div class="eu-bar C">C</div><div class="eu-rating">A</div></div>
+              <div class="eu-row"><div class="eu-bar D">D</div></div>
+              <div class="eu-row"><div class="eu-bar E">E</div></div>
+              <div class="eu-row"><div class="eu-bar F">F</div></div>
+              <div class="eu-row"><div class="eu-bar G">G</div></div>
+            </div>
+          </div>
+          <figcaption>Where do you see this sort of label? What is it for?[cite: 5]</figcaption>
+        </figure>
+
+        <p class="task">In your own words, what does it mean to be efficient? Look at the label above and discuss with a partner.</p>
+
+        <div class="toggles">
+          <button class="tog help">💡 Hint</button>
+          <button class="tog stem">📚 Sentence stems</button>
+          <button class="tog unlock">🔒 Unlock answers</button>
+          <button class="tog done">✓ I've done this</button>
+        </div>
+
+        <div class="panel help"><div class="label">Hint</div>
+          <p>Think about appliances in your kitchen (like a fridge or washing machine). What does an "A" rating mean compared to a "G" rating for your electricity bill?</p>
+        </div>
+        <div class="panel stem"><div class="label">Sentence stems</div>
+          <ul class="stems">
+            <li>"Being efficient means performing a task with the least ____."[cite: 5]</li>
+            <li>"An energy label tells you the ____ of an appliance."[cite: 5]</li>
+          </ul>
+        </div>
+
+        <div class="lockbox">
+          <div class="label">🔒 Riddle to unlock the answers</div>
+          <p class="riddle">"Gravitational, Thermal, Elastic, Chemical, and Kinetic are the 5 main WHAT of energy? (Plural, 6 letters)[cite: 6]"</p>
+          <div class="keyrow">
+            <input type="text" placeholder="Type the keyword…" autocomplete="off" spellcheck="false">
+            <button class="check-btn">Check</button>
+            <button class="hint-btn">Hint</button>
+          </div>
+          <div class="feedback"></div>
+          <div class="answers">
+            <div class="alabel">✓ Answers</div>
+            <p><b>Efficiency</b> means 'performing in the best possible way with the least waste of time or effort'[cite: 5].</p>
+            <p>In Physics, energy efficiency is about getting as much <b>useful energy output</b> as possible from a device[cite: 5]. The labels (like the one above) are found on appliances to tell you their efficiency[cite: 5].</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 3 - THE FORMULA -->
+      <section class="card" data-sec="3" data-keyword="efficiency" data-letter="E" data-letter-idx="2">
+        <div class="sec-head">
+          <span class="sec-num">3</span>
+          <h2 class="sec-title">How do we calculate it?</h2>
+          <span class="time">5 min</span>
+        </div>
+        <p class="task">Copy the efficiency formula into your book. Make sure you highlight or put a box around it!</p>
+
+        <div class="formula-box">
+          <div class="eq">
+            <span>Efficiency</span> <span>=</span>
+            <div class="eq-frac">
+              <span class="eq-num">Useful energy output[cite: 5]</span>
+              <span class="eq-den">Total energy input[cite: 5]</span>
+            </div>
+          </div>
+        </div>
+        
+        <p>If you want to show the percentage of energy that is not wasted, you can multiply the answer by 100[cite: 5]:</p>
+
+        <div class="formula-box">
+          <div class="eq">
+            <span>Efficiency (%)</span> <span>=</span>
+            <div class="eq-frac">
+              <span class="eq-num">Useful energy output &times; 100[cite: 5]</span>
+              <span class="eq-den">Energy input[cite: 5]</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="toggles">
+          <button class="tog stretch">⚡ Stretch</button>
+          <button class="tog unlock">🔒 Unlock answers</button>
+          <button class="tog done">✓ I've done this</button>
+        </div>
+
+        <div class="panel stretch"><div class="label">Push yourself</div>
+          <p>Can the efficiency of a machine ever be greater than 1 (or 100%)? Why or why not?</p>
+        </div>
+
+        <div class="lockbox">
+          <div class="label">🔒 Riddle to unlock the answers</div>
+          <p class="riddle">"What is the name of the measure that tells us the proportion of energy that is NOT wasted? (10 letters)[cite: 5]"</p>
+          <div class="keyrow">
+            <input type="text" placeholder="Type the keyword…" autocomplete="off" spellcheck="false">
+            <button class="check-btn">Check</button>
+            <button class="hint-btn">Hint</button>
+          </div>
+          <div class="feedback"></div>
+          <div class="answers">
+            <div class="alabel">✓ Answers</div>
+            <p><b>Stretch Answer:</b> Efficiency can <b>never</b> be greater than 1 (or 100%). You cannot get more useful energy out of a device than the total energy you put into it! Energy cannot be created from nothing.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 4 - WORKED EXAMPLES -->
+      <section class="card" data-sec="4" data-keyword="formula" data-letter="F" data-letter-idx="3">
+        <div class="sec-head">
+          <span class="sec-num">4</span>
+          <h2 class="sec-title">Worked Examples — Toasters & Kettles</h2>
+          <span class="time">10 min</span>
+        </div>
+        <p class="task">Read the two examples below. Identify the <b>useful</b> energy and calculate the <b>wasted</b> energy.</p>
+
+        <div style="background:#fffcf9; border:1px solid var(--primary-line); border-radius:12px; padding:12px 14px; margin-bottom:12px;">
+          <b>🍞 Example 1: The Toaster</b><br>
+          A toaster takes in <b>200 J</b> of electrical energy. It outputs <b>125 J</b> of thermal energy (heat) to toast the bread. It also outputs light energy[cite: 5].<br>
+          <i>How much energy, in Joules, was wasted?</i>
+        </div>
+
+        <div style="background:#fffcf9; border:1px solid var(--primary-line); border-radius:12px; padding:12px 14px; margin-bottom:12px;">
+          <b>☕ Example 2: The Kettle</b><br>
+          An electric kettle uses <b>500 kJ</b> of electrical energy and transfers <b>400 kJ</b> of thermal energy to the water in the kettle[cite: 5].<br>
+          <i>What is the efficiency, and how much energy was wasted?</i>
+        </div>
+
+        <div class="toggles">
+          <button class="tog help">💡 Hint</button>
+          <button class="tog stem">📚 Sentence stems</button>
+          <button class="tog unlock">🔒 Unlock answers</button>
+          <button class="tog done">✓ I've done this</button>
+        </div>
+
+        <div class="panel help"><div class="label">Hint</div>
+          <ul>
+            <li>To find wasted energy, subtract the useful energy from the total input energy (Input - Useful = Wasted)[cite: 5].</li>
+            <li>For the kettle's efficiency, divide 400 by 500[cite: 5].</li>
+          </ul>
+        </div>
+        <div class="panel stem"><div class="label">Sentence stems</div>
+          <ul class="stems">
+            <li>"The energy wasted by the toaster is 200 J – ____ J = ____ J."[cite: 5]</li>
+            <li>"The efficiency of the kettle is ____ ÷ ____ = ____%."[cite: 5]</li>
+          </ul>
+        </div>
+
+        <div class="lockbox">
+          <div class="label">🔒 Riddle to unlock the answers</div>
+          <p class="riddle">"What do we call the mathematical rule: Useful energy out ÷ Total energy in? (7 letters)[cite: 5]"</p>
+          <div class="keyrow">
+            <input type="text" placeholder="Type the keyword…" autocomplete="off" spellcheck="false">
+            <button class="check-btn">Check</button>
+            <button class="hint-btn">Hint</button>
+          </div>
+          <div class="feedback"></div>
+          <div class="answers">
+            <div class="alabel">✓ Answers</div>
+            <p><b>Toaster:</b><br>
+            Total in = 200 J. Useful out (Thermal) = 125 J.<br>
+            Wasted energy (Light) = 200 - 125 = <b>75 J wasted</b>[cite: 5].</p>
+            
+            <p><b>Kettle:</b><br>
+            Total in = 500 kJ. Useful out = 400 kJ.<br>
+            Efficiency = 400 ÷ 500 = 0.8 (or <b>80%</b>).<br>
+            Wasted energy = 500 - 400 = <b>100 kJ wasted</b>[cite: 5].</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 5 - PRACTICE QUESTIONS -->
+      <section class="card" data-sec="5" data-keyword="units" data-letter="U" data-letter-idx="4">
+        <div class="sec-head">
+          <span class="sec-num">5</span>
+          <h2 class="sec-title">Practice Questions</h2>
+          <span class="time">15 min</span>
+        </div>
+        <p class="task">Answer these 4 questions in your book. Show your working out!</p>
+        <ol style="margin:6px 0 0; padding-left:20px;">
+          <li><b>5000 J</b> of electrical energy are put into a motor. The motor converts this into <b>100 J</b> of movement energy. How efficient is it?[cite: 5]</li>
+          <li>A laptop can convert <b>400 J</b> of electrical energy into <b>240 J</b> of light and sound. What is its efficiency? Where does the rest of the energy go?[cite: 5]</li>
+          <li>A steam engine is <b>50% efficient</b>. If it delivers <b>20,000 J</b> of movement energy, how much chemical energy was put into it?[cite: 5]</li>
+          <li>A car produces <b>65% wasted energy</b>. If <b>1500 J</b> of energy is put into the vehicle, how much energy is useful?[cite: 5]</li>
+        </ol>
+
+        <div class="toggles">
+          <button class="tog help">💡 Hint</button>
+          <button class="tog stretch">⚡ Stretch</button>
+          <button class="tog unlock">🔒 Unlock answers</button>
+          <button class="tog done">✓ I've done this</button>
+        </div>
+
+        <div class="panel help"><div class="label">Hint</div>
+          <ul>
+            <li>Q1: Divide 100 by 5000 and multiply by 100.[cite: 5]</li>
+            <li>Q3: If it's 50% efficient, the input must be <b>double</b> the output.[cite: 5]</li>
+            <li>Q4: If 65% is wasted, what percentage is useful? (100% - 65% = ?)[cite: 5]</li>
+          </ul>
+        </div>
+        <div class="panel stretch"><div class="label">Push yourself</div>
+          <p>For Q2, what <i>store</i> of energy is the "wasted" energy transferred into? Why is this a common problem for computers?</p>
+        </div>
+
+        <div class="lockbox">
+          <div class="label">🔒 Riddle to unlock the answers</div>
+          <p class="riddle">"Joules (J) and kilojoules (kJ) are the _____ of energy. (5 letters, plural)[cite: 5]"</p>
+          <div class="keyrow">
+            <input type="text" placeholder="Type the keyword…" autocomplete="off" spellcheck="false">
+            <button class="check-btn">Check</button>
+            <button class="hint-btn">Hint</button>
+          </div>
+          <div class="feedback"></div>
+          <div class="answers">
+            <div class="alabel">✓ Answers</div>
+            <ol>
+              <li><b>Motor:</b> 100 ÷ 5000 = 0.02. Percentage = <b>2% efficient</b>[cite: 5].</li>
+              <li><b>Laptop:</b> 240 ÷ 400 = 0.6 or <b>60% efficient</b>. The remaining 160 J is wasted as <b>heat energy (thermal energy)</b> dissipated to the surroundings[cite: 5].</li>
+              <li><b>Steam Engine:</b> Input = Useful Output ÷ Efficiency. 20,000 ÷ 0.5 = <b>40,000 J</b> of chemical energy was put in[cite: 5].</li>
+              <li><b>Car:</b> Useful efficiency = 100% - 65% = 35% (or 0.35). Useful Energy = 1500 J &times; 0.35 = <b>525 J</b>[cite: 5].</li>
+            </ol>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 6 - PLENARY / LUBRICATION -->
+      <section class="card" data-sec="6" data-keyword="lubrication" data-letter="L" data-letter-idx="5">
+        <div class="sec-head">
+          <span class="sec-num">6</span>
+          <h2 class="sec-title">Plenary — Improving Efficiency in the Real World 🌍</h2>
+          <span class="time">5 min</span>
+        </div>
+        <p class="task">Engineers use <b>lubrication</b> (like oil or grease) on the moving parts of bicycles and car engines[cite: 5]. Explain how this improves the mechanical efficiency of the machine.</p>
+
+        <div class="toggles">
+          <button class="tog help">💡 Hint</button>
+          <button class="tog stem">📚 Sentence stems</button>
+          <button class="tog unlock">🔒 Unlock answers</button>
+          <button class="tog done">✓ I've done this</button>
+        </div>
+
+        <div class="panel help"><div class="label">Hint</div>
+          <p>When two parts rub together, what force is created? What type of wasted energy does this force usually produce?[cite: 5]</p>
+        </div>
+        <div class="panel stem"><div class="label">Sentence stems</div>
+          <ul class="stems">
+            <li>"Lubrication reduces ____ between moving parts."[cite: 5]</li>
+            <li>"This means less kinetic energy is wasted as ____ energy, so efficiency increases."[cite: 5]</li>
+          </ul>
+        </div>
+
+        <div class="lockbox">
+          <div class="label">🔒 Final riddle — last letter of the master code</div>
+          <p class="riddle">"Engineers use oil or grease on moving parts to reduce friction. What is this process called? (11 letters)[cite: 5]"</p>
+          <div class="keyrow">
+            <input type="text" placeholder="Type the keyword…" autocomplete="off" spellcheck="false">
+            <button class="check-btn">Check</button>
+            <button class="hint-btn">Hint</button>
+          </div>
+          <div class="feedback"></div>
+          <div class="answers">
+            <div class="alabel">✓ Answers</div>
+            <p>Lubrication reduces <b>friction</b> between moving parts[cite: 5].</p>
+            <p>This means less kinetic energy is wasted as <b>thermal (heat) energy</b>, so more of the input energy is transferred usefully, increasing efficiency[cite: 5].</p>
+          </div>
+        </div>
+      </section>
+
+      <footer>You're in charge of your own learning today ⚡ — take your time, show your working, and don't peek at answers until you've tried!</footer>
+    </main>
+
+    <!-- KEY WORDS -->
+    <aside class="glossary">
+      <h3>Key Words</h3>
+      <p class="gloss-hint">Stuck on a word? Check here any time.</p>
+
+      <div class="kw"><div class="ic">⚡</div>
+        <div><div class="term">Energy Store</div><div class="def">A way in which energy is kept in an object (e.g. Kinetic, Thermal, Gravitational, Elastic, Chemical)[cite: 6].</div></div></div>
+
+      <div class="kw"><div class="ic">⚙️</div>
+        <div><div class="term">Efficiency</div><div class="def">Getting as much useful energy output as possible from a device with the least waste[cite: 5].</div></div></div>
+
+      <div class="kw"><div class="ic">🧮</div>
+        <div><div class="term">Joule (J)</div><div class="def">The standard unit used to measure energy[cite: 5].</div></div></div>
+
+      <div class="kw"><div class="ic">✅</div>
+        <div><div class="term">Useful Energy</div><div class="def">The energy transferred to the store we want it to go to[cite: 5].</div></div></div>
+
+      <div class="kw"><div class="ic">❌</div>
+        <div><div class="term">Wasted Energy</div><div class="def">Energy that is not useful and is transferred to the surroundings (often as heat/thermal energy)[cite: 5].</div></div></div>
+
+      <div class="kw"><div class="ic">🛢️</div>
+        <div><div class="term">Lubrication</div><div class="def">Using oil or grease to reduce friction between moving parts, reducing wasted thermal energy[cite: 5].</div></div></div>
+
+      <div class="kw"><div class="ic">🔥</div>
+        <div><div class="term">Friction</div><div class="def">A force that opposes motion between two surfaces, often generating wasted thermal energy[cite: 5].</div></div></div>
+
+    </aside>
+  </div>
+</div>
+
+<script>
+(function(){
+  const sections = Array.from(document.querySelectorAll('section.card'));
+  const total = sections.length;
+  document.getElementById('total-count').textContent = total;
+
+  // Build progress dots
+  const progress = document.getElementById('progress');
+  for(let i=0;i<total;i++){
+    const d = document.createElement('div'); d.className='pdot'; progress.appendChild(d);
+  }
+
+  // Build master code boxes
+  const codeBoxes = document.getElementById('codeBoxes');
+  const letters = sections.map(s => s.dataset.letter);
+  letters.forEach((l,i)=>{
+    const slot = document.createElement('div');
+    slot.className='slot'; slot.id='slot-'+i; slot.textContent='?';
+    codeBoxes.appendChild(slot);
+  });
+
+  // SUPPORT LEVEL
+  const lvls = {
+    'lvl-light': {help:false, stem:false, stretch:true},
+    'lvl-std':   {help:false, stem:false, stretch:false},
+    'lvl-full':  {help:true,  stem:true,  stretch:true}
+  };
+  function applyLevel(id){
+    const cfg = lvls[id];
+    document.querySelectorAll('.lvl').forEach(b=>b.classList.toggle('active', b.id===id));
+    sections.forEach(card=>{
+      ['help','stem','stretch'].forEach(k=>{
+        const tog = card.querySelector('.tog.'+k);
+        const panel = card.querySelector('.panel.'+k);
+        if(!tog||!panel) return;
+        const want = cfg[k];
+        tog.classList.toggle('on', want);
+        panel.classList.toggle('show', want);
+      });
+    });
+  }
+  document.querySelectorAll('.lvl').forEach(b=>b.addEventListener('click',()=>applyLevel(b.id)));
+
+  // FREE TOGGLES (help/stem/stretch)
+  sections.forEach(card=>{
+    ['help','stem','stretch'].forEach(k=>{
+      const tog = card.querySelector('.tog.'+k);
+      const panel = card.querySelector('.panel.'+k);
+      if(!tog||!panel) return;
+      tog.addEventListener('click',()=>{
+        const on = !tog.classList.contains('on');
+        tog.classList.toggle('on', on);
+        panel.classList.toggle('show', on);
+      });
+    });
+  });
+
+  // UNLOCK TOGGLE - opens the lockbox (but doesn't reveal answers)
+  sections.forEach(card=>{
+    const tog = card.querySelector('.tog.unlock');
+    const lockbox = card.querySelector('.lockbox');
+    if(!tog||!lockbox) return;
+    tog.addEventListener('click',()=>{
+      const on = !tog.classList.contains('on');
+      tog.classList.toggle('on', on);
+      lockbox.classList.toggle('show', on);
+      if(on) lockbox.querySelector('input')?.focus();
+    });
+  });
+
+  // KEYWORD CHECKING
+  function normalise(s){
+    return (s||'').toLowerCase().trim().replace(/[.,!?;:]/g,'').replace(/s$/,'');
+  }
+  function accepts(target, attempt){
+    const a = normalise(attempt);
+    const t = normalise(target);
+    if(!a) return false;
+    if(a===t) return true;
+    if(a.startsWith(t)) return true;
+    if(t.startsWith(a) && a.length >= t.length - 2) return true;
+    return false;
+  }
+  const tries = {};
+  sections.forEach((card,idx)=>{
+    const lockbox = card.querySelector('.lockbox');
+    if(!lockbox) return;
+    const input = lockbox.querySelector('input');
+    const checkBtn = lockbox.querySelector('.check-btn');
+    const hintBtn = lockbox.querySelector('.hint-btn');
+    const fb = lockbox.querySelector('.feedback');
+    const answers = lockbox.querySelector('.answers');
+    const target = card.dataset.keyword;
+    const letter = card.dataset.letter;
+    const slot = document.getElementById('slot-'+idx);
+    tries[idx] = 0;
+
+    function unlock(){
+      input.classList.add('right'); input.classList.remove('wrong');
+      input.value = target;
+      input.readOnly = true;
+      checkBtn.disabled = true;
+      checkBtn.textContent = '✓ Unlocked';
+      checkBtn.style.background = '#e67e22';
+      fb.className = 'feedback right';
+      fb.innerHTML = '✓ Correct! <span class="letter-reveal">Letter: '+letter+'</span>';
+      answers.classList.add('unlocked');
+      slot.classList.add('unlocked');
+      slot.textContent = letter;
+      
+      const unlockedCount = document.querySelectorAll('.slot.unlocked').length;
+      if(unlockedCount === total){
+        document.getElementById('celebrate').classList.add('show');
+        document.getElementById('celebrate').scrollIntoView({behavior:'smooth',block:'center'});
+      }
+    }
+
+    function check(){
+      const v = input.value;
+      if(!v.trim()) return;
+      tries[idx]++;
+      if(accepts(target, v)){
+        unlock();
+      } else {
+        input.classList.add('wrong'); input.classList.remove('right');
+        fb.className = 'feedback wrong';
+        if(tries[idx] >= 3){
+          fb.innerHTML = `Not quite — the keyword starts with "<b>${target.slice(0,2)}</b>" and has <b>${target.length}</b> letters. Try once more.`;
+        } else if(tries[idx] >= 2){
+          fb.innerHTML = `Hmm, not quite. Re-read the riddle — the answer has <b>${target.length}</b> letters.`;
+        } else {
+          fb.innerHTML = `Not quite — try again. (Spelling matters but I'll be a bit forgiving.)`;
+        }
+      }
+    }
+
+    checkBtn.addEventListener('click', check);
+    input.addEventListener('keydown', e=>{ if(e.key==='Enter'){ e.preventDefault(); check(); }});
+    hintBtn.addEventListener('click',()=>{
+      fb.className='feedback hint';
+      fb.innerHTML = `💡 Hint: it starts with "<b>${target.slice(0,2)}</b>" and is <b>${target.length}</b> letters long.`;
+    });
+  });
+
+  // DONE / PROGRESS
+  function refresh(){
+    let count = 0;
+    sections.forEach((card,i)=>{
+      const done = card.classList.contains('done');
+      progress.children[i].classList.toggle('done', done);
+      if(done) count++;
+    });
+    document.getElementById('done-count').textContent = count;
+  }
+  sections.forEach(card=>{
+    const btn = card.querySelector('.tog.done'); if(!btn) return;
+    btn.addEventListener('click',()=>{
+      const on = !btn.classList.contains('on');
+      btn.classList.toggle('on', on);
+      btn.textContent = on ? '✓ Done!' : '✓ I\'ve done this';
+      card.classList.toggle('done', on);
+      refresh();
+    });
+  });
+
+  // RESET
+  document.getElementById('reset').addEventListener('click',()=>{
+    sections.forEach((card,i)=>{
+      card.classList.remove('done');
+      const dbtn = card.querySelector('.tog.done');
+      if(dbtn){dbtn.classList.remove('on'); dbtn.textContent='✓ I\'ve done this';}
+      const ub = card.querySelector('.tog.unlock');
+      if(ub){ub.classList.remove('on');}
+      const lb = card.querySelector('.lockbox');
+      if(lb){lb.classList.remove('show');}
+      const inp = card.querySelector('.lockbox input');
+      if(inp){inp.value=''; inp.readOnly=false; inp.className=''; }
+      const cb = card.querySelector('.lockbox .check-btn');
+      if(cb){cb.disabled=false; cb.textContent='Check'; cb.style.background='';}
+      const fb = card.querySelector('.lockbox .feedback');
+      if(fb){fb.className='feedback'; fb.textContent='';}
+      const ans = card.querySelector('.lockbox .answers');
+      if(ans){ans.classList.remove('unlocked');}
+      const slot = document.getElementById('slot-'+i);
+      if(slot){slot.classList.remove('unlocked'); slot.textContent='?';}
+      tries[i]=0;
+    });
+    document.getElementById('celebrate').classList.remove('show');
+    refresh();
+    applyLevel('lvl-std');
+  });
+
+  applyLevel('lvl-std');
+})();
+</script>
+</body>
+</html>
