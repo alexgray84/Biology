@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lesson 1: The Precision of the Table — KS3 Working Scientifically</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #FAF6F0;
+    --paper-warm: #F5EFE6;
+    --paper-edge: #E8DFD1;
+    --ink: #1A1612;
+    --ink-light: #3D362E;
+    --ink-faded: #6B6157;
+    --ink-ghost: #9E9589;
+    --red: #C43B2E;
+    --red-soft: #E8645A;
+    --red-bg: rgba(196, 59, 46, 0.06);
+    --red-border: rgba(196, 59, 46, 0.15);
+    --green: #2D7A4F;
+    --green-soft: #4AA06E;
+    --green-bg: rgba(45, 122, 79, 0.06);
+    --green-border: rgba(45, 122, 79, 0.15);
+    --blue: #2B5EA7;
+    --blue-soft: #4A7EC7;
+    --blue-bg: rgba(43, 94, 167, 0.06);
+    --blue-border: rgba(43, 94, 167, 0.15);
+    --amber: #B8860B;
+    --amber-bg: rgba(184, 134, 11, 0.08);
+    --amber-border: rgba(184, 134, 11, 0.2);
+    --purple: #6B4C9A;
+    --purple-bg: rgba(107, 76, 154, 0.06);
+    --purple-border: rgba(107, 76, 154, 0.15);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--paper);
+    color: var(--ink-light);
+    line-height: 1.65;
+    font-size: 15px;
+  }
+
+  /* ── Header ── */
+  .lesson-header {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 2.5rem 2rem 2rem;
+    text-align: center;
+  }
+  .lesson-header h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2rem;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    margin-bottom: 0.3rem;
+  }
+  .lesson-header .subtitle {
+    font-size: 0.95rem;
+    color: var(--ink-ghost);
+    font-weight: 400;
+  }
+  .spec-badges {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-top: 1rem;
+    flex-wrap: wrap;
+  }
+  .spec-badge {
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.2);
+    padding: 0.25rem 0.75rem;
+    border-radius: 100px;
+    font-size: 0.78rem;
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--paper-edge);
+  }
+
+  /* ── Navigation Tabs ── */
+  .phase-nav {
+    display: flex;
+    justify-content: center;
+    gap: 0;
+    background: var(--paper-warm);
+    border-bottom: 1px solid var(--paper-edge);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    overflow-x: auto;
+  }
+  .phase-tab {
+    padding: 0.85rem 1.5rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--ink-faded);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+    background: none;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    font-family: 'DM Sans', sans-serif;
+    white-space: nowrap;
+  }
+  .phase-tab:hover { color: var(--ink); }
+  .phase-tab.active {
+    color: var(--ink);
+    border-bottom-color: var(--red);
+  }
+  .phase-tab .tab-time {
+    font-size: 0.72rem;
+    font-weight: 400;
+    color: var(--ink-ghost);
+    display: block;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  /* ── Content Container ── */
+  .lesson-content {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem 4rem;
+  }
+
+  .phase { display: none; }
+  .phase.active { display: block; }
+
+  /* ── Section Headings ── */
+  h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.6rem;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 0.5rem;
+  }
+  h3 {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--ink);
+    margin: 1.5rem 0 0.5rem;
+  }
+  h4 {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.92rem;
+    font-weight: 600;
+    color: var(--ink-faded);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin: 1.5rem 0 0.4rem;
+  }
+
+  p { margin-bottom: 0.8rem; }
+
+  /* ── Practical Cards ── */
+  .practical-card {
+    background: white;
+    border: 1px solid var(--paper-edge);
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin: 1.2rem 0;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  }
+  .practical-card .cp-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    font-weight: 500;
+    color: var(--blue);
+    background: var(--blue-bg);
+    border: 1px solid var(--blue-border);
+    padding: 0.15rem 0.5rem;
+    border-radius: 100px;
+    display: inline-block;
+    margin-bottom: 0.5rem;
+  }
+  .practical-card h3 {
+    margin-top: 0.3rem;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.2rem;
+  }
+
+  /* ── Activity Boxes ── */
+  .activity-box {
+    border-radius: 8px;
+    padding: 1.2rem 1.4rem;
+    margin: 1rem 0;
+  }
+  .activity-box.vtr {
+    background: var(--amber-bg);
+    border: 1px solid var(--amber-border);
+  }
+  .activity-box.exam {
+    background: var(--blue-bg);
+    border: 1px solid var(--blue-border);
+  }
+  .activity-box.stretch {
+    background: var(--purple-bg);
+    border: 1px solid var(--purple-border);
+  }
+  .activity-box.success {
+    background: var(--green-bg);
+    border: 1px solid var(--green-border);
+  }
+  .activity-box .activity-label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 0.4rem;
+  }
+  .activity-box.vtr .activity-label { color: var(--amber); }
+  .activity-box.exam .activity-label { color: var(--blue); }
+  .activity-box.stretch .activity-label { color: var(--purple); }
+  .activity-box.success .activity-label { color: var(--green); }
+
+  /* ── Question Blocks (exam style) ── */
+  .exam-question {
+    background: white;
+    border: 1px solid var(--paper-edge);
+    border-left: 3px solid var(--blue);
+    border-radius: 0 6px 6px 0;
+    padding: 1.2rem 1.4rem;
+    margin: 1rem 0;
+    position: relative;
+  }
+  .exam-question .q-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.6rem;
+  }
+  .exam-question .q-number {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.78rem;
+    color: var(--ink-faded);
+  }
+  .exam-question .marks-badge {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--blue);
+    background: var(--blue-bg);
+    border: 1px solid var(--blue-border);
+    padding: 0.1rem 0.5rem;
+    border-radius: 100px;
+  }
+  .exam-question .q-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.1rem;
+    line-height: 1.55;
+    color: var(--ink);
+  }
+  .exam-question .q-text em {
+    font-style: italic;
+  }
+  .exam-question .command-word {
+    font-weight: 700;
+    font-style: italic;
+  }
+  .exam-question .q-context {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.88rem;
+    color: var(--ink-light);
+    background: var(--paper-warm);
+    padding: 0.8rem 1rem;
+    border-radius: 5px;
+    margin-bottom: 0.8rem;
+    line-height: 1.55;
+  }
+
+  /* ── Mark Scheme Reveal ── */
+  .ms-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--red);
+    cursor: pointer;
+    margin-top: 0.8rem;
+    padding: 0.3rem 0;
+    border: none;
+    background: none;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .ms-toggle:hover { opacity: 0.8; }
+  .ms-toggle .arrow { transition: transform 0.2s; display: inline-block; }
+  .ms-toggle.open .arrow { transform: rotate(90deg); }
+
+  .mark-scheme {
+    display: none;
+    background: var(--red-bg);
+    border: 1px solid var(--red-border);
+    border-radius: 6px;
+    padding: 1rem 1.2rem;
+    margin-top: 0.6rem;
+    font-size: 0.88rem;
+  }
+  .mark-scheme.visible { display: block; }
+  .mark-scheme .ms-header {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    font-weight: 500;
+    color: var(--red);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 0.5rem;
+  }
+  .mark-scheme ul {
+    list-style: none;
+    padding: 0;
+  }
+  .mark-scheme li {
+    padding: 0.25rem 0 0.25rem 1.2rem;
+    position: relative;
+    color: var(--ink-light);
+    line-height: 1.5;
+  }
+  .mark-scheme li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    color: var(--green);
+    font-weight: 700;
+  }
+  .mark-scheme .examiner-note {
+    margin-top: 0.6rem;
+    padding-top: 0.5rem;
+    border-top: 1px solid var(--red-border);
+    font-style: italic;
+    color: var(--ink-faded);
+    font-size: 0.84rem;
+  }
+
+  /* ── Key Knowledge Boxes ── */
+  .key-knowledge {
+    background: white;
+    border: 1px solid var(--paper-edge);
+    border-radius: 8px;
+    padding: 1.2rem 1.4rem;
+    margin: 1rem 0;
+  }
+  .key-knowledge .kk-header {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    font-weight: 500;
+    color: var(--green);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 0.5rem;
+  }
+
+  /* ── Data Tables ── */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0.8rem 0;
+    font-size: 0.88rem;
+  }
+  th {
+    background: var(--paper-warm);
+    font-weight: 600;
+    text-align: left;
+    padding: 0.5rem 0.7rem;
+    border: 1px solid var(--paper-edge);
+    font-size: 0.82rem;
+  }
+  td {
+    padding: 0.45rem 0.7rem;
+    border: 1px solid var(--paper-edge);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.82rem;
+  }
+  .bad-table td, .bad-table th {
+    border: 2px solid var(--red-soft);
+    color: var(--red);
+  }
+
+  /* ── Teacher Notes (hidden by default) ── */
+  .teacher-note {
+    background: #FFF8E1;
+    border: 1px dashed var(--amber);
+    border-radius: 6px;
+    padding: 0.8rem 1rem;
+    margin: 0.8rem 0;
+    font-size: 0.84rem;
+    display: none;
+  }
+  .teacher-note .tn-label {
+    font-weight: 700;
+    color: var(--amber);
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 0.3rem;
+  }
+  body.show-teacher-notes .teacher-note { display: block; }
+
+  /* ── Timer Widget ── */
+  .timer-widget {
+    position: fixed;
+    bottom: 1.5rem;
+    right: 1.5rem;
+    background: var(--ink);
+    color: var(--paper);
+    border-radius: 12px;
+    padding: 0.8rem 1.2rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.4rem;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    z-index: 200;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+  }
+  .timer-widget button {
+    background: rgba(255,255,255,0.15);
+    border: none;
+    color: var(--paper);
+    padding: 0.3rem 0.6rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.75rem;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 600;
+  }
+  .timer-widget button:hover { background: rgba(255,255,255,0.25); }
+
+  /* ── Toggle Bar ── */
+  .toggle-bar {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.8rem;
+    padding: 0.6rem 1.5rem;
+    background: var(--paper-warm);
+    border-bottom: 1px solid var(--paper-edge);
+    font-size: 0.78rem;
+  }
+  .toggle-bar label {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    cursor: pointer;
+    color: var(--ink-faded);
+    font-weight: 500;
+  }
+  .toggle-bar input[type="checkbox"] { accent-color: var(--red); }
+
+  /* ── Lines for writing space ── */
+  .answer-lines {
+    border-top: 1px dotted var(--paper-edge);
+    min-height: 80px;
+    margin-top: 0.5rem;
+    background-image: repeating-linear-gradient(
+      to bottom,
+      transparent,
+      transparent 27px,
+      var(--paper-edge) 27px,
+      var(--paper-edge) 28px
+    );
+    background-position: 0 1px;
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 680px) {
+    .lesson-header h1 { font-size: 1.5rem; }
+    .lesson-content { padding: 1.2rem 1rem 3rem; }
+    .phase-tab { padding: 0.7rem 0.8rem; font-size: 0.78rem; }
+    .timer-widget { bottom: 0.8rem; right: 0.8rem; font-size: 1.1rem; padding: 0.6rem 0.8rem; }
+  }
+
+  @media print {
+    .phase-nav, .toggle-bar, .timer-widget { display: none; }
+    .phase { display: block !important; page-break-before: always; }
+    .phase:first-child { page-break-before: avoid; }
+    .teacher-note { display: none !important; }
+    .mark-scheme { display: block !important; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ════════════════════════════════════════════════ -->
+<!-- HEADER                                          -->
+<!-- ════════════════════════════════════════════════ -->
+<header class="lesson-header">
+  <h1>Lesson 1: The Precision of the Table</h1>
+  <div class="subtitle">KS3 Science — Working Scientifically Skills</div>
+  <div class="spec-badges">
+    <span class="spec-badge">Variables</span>
+    <span class="spec-badge">Data Collection</span>
+    <span class="spec-badge">Human Biology</span>
+    <span class="spec-badge">~50 min</span>
+  </div>
+</header>
+
+<!-- ════════════════════════════════════════════════ -->
+<!-- TOGGLE BAR                                      -->
+<!-- ════════════════════════════════════════════════ -->
+<div class="toggle-bar">
+  <label><input type="checkbox" id="toggleTeacher" onchange="document.body.classList.toggle('show-teacher-notes', this.checked)"> Teacher notes</label>
+</div>
+
+<!-- ════════════════════════════════════════════════ -->
+<!-- PHASE NAVIGATION                                -->
+<!-- ════════════════════════════════════════════════ -->
+<nav class="phase-nav">
+  <button class="phase-tab active" data-phase="starter">Starter<span class="tab-time">5 min</span></button>
+  <button class="phase-tab" data-phase="rules">Golden Rules<span class="tab-time">10 min</span></button>
+  <button class="phase-tab" data-phase="practical">The Challenge<span class="tab-time">20 min</span></button>
+  <button class="phase-tab" data-phase="benchmarks">Benchmarks<span class="tab-time">10 min</span></button>
+  <button class="phase-tab" data-phase="plenary">Plenary<span class="tab-time">5 min</span></button>
+</nav>
+
+<!-- ════════════════════════════════════════════════ -->
+<!-- MAIN CONTENT                                    -->
+<!-- ════════════════════════════════════════════════ -->
+<main class="lesson-content">
+
+<!-- ─────────────── PHASE 1: STARTER ─────────────── -->
+<section class="phase active" id="phase-starter">
+  <h2>Phase 1 — Activate &amp; Connect (Retrieval)</h2>
+  <p>Rapid retrieval of variable identification. You cannot build a table if you don't know what you are measuring.</p>
+
+  <div class="teacher-note">
+    <div class="tn-label">Teacher Note — Setup</div>
+    Cold-call students for these answers. Use the "I do, We do, You do" method if they struggle. Reinforce the definitions: <strong>Independent</strong> = "I change", <strong>Dependent</strong> = "Data I collect", <strong>Control</strong> = "Keep constant". 
+  </div>
+
+  <div class="activity-box vtr">
+    <div class="activity-label">Retrieval Practice — Spot the Variable</div>
+    <p><strong>Task:</strong> For the three scientific scenarios below, identify the <strong>Independent Variable (IV)</strong>, the <strong>Dependent Variable (DV)</strong>, and at least one <strong>Control Variable (CV)</strong>.</p>
+  </div>
+
+  <div class="practical-card">
+    <h3>Scenario 1: The Bouncing Ball</h3>
+    <p>A student drops a tennis ball from 1 metre, 2 metres, and 3 metres to see how high it bounces back up.</p>
+    <div class="teacher-note">
+      <div class="tn-label">Teacher Note — Answers</div>
+      <strong>IV:</strong> Drop height. <strong>DV:</strong> Bounce height. <strong>CV:</strong> Type of ball, surface dropped on, person dropping it.
+    </div>
+  </div>
+
+  <div class="practical-card">
+    <h3>Scenario 2: The Thirsty Plant</h3>
+    <p>A scientist gives three identical tomato plants different amounts of water each day (10ml, 50ml, 100ml) and measures their height after two weeks.</p>
+    <div class="teacher-note">
+      <div class="tn-label">Teacher Note — Answers</div>
+      <strong>IV:</strong> Amount of water. <strong>DV:</strong> Height of plant. <strong>CV:</strong> Type of plant, amount of light, soil type, temperature.
+    </div>
+  </div>
+
+</section>
+
+<!-- ─────────────── PHASE 2: THE GOLDEN RULES ─────────────── -->
+<section class="phase" id="phase-rules">
+  <h2>Phase 2 — The Golden Rules of Tables</h2>
+  <p>Data is useless if it cannot be read clearly. Scientists follow strict rules so that anyone in the world can understand their results.</p>
+
+  <div class="key-knowledge">
+    <div class="kk-header">Key Knowledge — The 3 Golden Rules</div>
+    <p><strong>Rule 1: Placement.</strong> The Independent Variable (IV) ALWAYS goes in the very first column on the left. The Dependent Variable (DV) goes in the columns to the right.</p>
+    <p><strong>Rule 2: Units.</strong> Units (like <em>cm</em>, <em>seconds</em>, <em>°C</em>) only ever go in the column headers. NEVER write units inside the data boxes. If you write "5 cm" in a box, a computer cannot calculate an average because it sees letters, not numbers.</p>
+    <p><strong>Rule 3: Consistency.</strong> All data in a single column must be recorded to the same number of decimal places, matching the precision of your measuring equipment.</p>
+  </div>
+
+  <h3>Apply It: The "Messy" Table</h3>
+  <div class="exam-question">
+    <div class="q-header">
+      <span class="q-number">Q1</span>
+      <span class="marks-badge">3 marks</span>
+    </div>
+    <div class="q-context">A Year 7 student has recorded the time it takes for sugar to dissolve in water at different temperatures. Look at their table below.
+    <table class="bad-table">
+      <thead>
+        <tr>
+          <th>Time to dissolve</th>
+          <th>Temperature of water</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>45 s</td>
+          <td>20</td>
+        </tr>
+        <tr>
+          <td>30.5 s</td>
+          <td>40 °C</td>
+        </tr>
+        <tr>
+          <td>12 seconds</td>
+          <td>60</td>
+        </tr>
+      </tbody>
+    </table></div>
+    <div class="q-text"><em class="command-word">Identify</em> three errors the student has made in the design of their table, based on the Golden Rules.</div>
+    <button class="ms-toggle" onclick="toggleMS(this)"><span class="arrow">▶</span> Mark scheme</button>
+    <div class="mark-scheme">
+      <div class="ms-header">Mark Scheme</div>
+      <ul>
+        <li>The Independent Variable (Temperature) should be in the first column, not the second. (1)</li>
+        <li>Units (s and °C) have been written inside the data boxes instead of just in the headers. (1)</li>
+        <li>Inconsistent decimal places in the time column (45 vs 30.5). (1)</li>
+      </ul>
+      <div class="examiner-note">Examiner note: Emphasize that writing units in the body of a table is the most common reason students lose marks in practical exams. Numbers only in the boxes!</div>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────── PHASE 3: THE PRACTICAL CHALLENGE ─────────────── -->
+<section class="phase" id="phase-practical">
+  <h2>Phase 3 — The Reflex Challenge</h2>
+  <p>You will now collect your own "Human Data" and record it with scientific precision.</p>
+
+  <div class="teacher-note">
+    <div class="tn-label">Teacher Note — Differentiation &amp; Scaffolding</div>
+    <strong>Support:</strong> Draw the table frame on the board for students to copy: IV (Hand) on the left, Trial 1-5 in the middle, Mean on the right. <br>
+    <strong>Stretch:</strong> Have students convert their distance (cm) into reaction time (s) using the formula <em>t = √(2d/g)</em> or provide a conversion chart.
+  </div>
+
+  <div class="practical-card">
+    <span class="cp-label">Working Scientifically</span>
+    <h3>The Ruler Drop Test</h3>
+    <p><strong>The Scientific Link:</strong> This tests your nervous system. Your eye sees the ruler drop, sends a signal to your brain, which sends a motor signal to your hand to close. We are testing if this pathway is faster in your dominant hand.</p>
+    
+    <ol style="margin-left: 1.5rem; margin-top: 1rem; font-family: 'DM Sans', sans-serif;">
+      <li>Work in pairs. Person A holds a 30cm ruler vertically, with the 0cm mark exactly between Person B's open thumb and index finger.</li>
+      <li>Without warning, Person A drops the ruler.</li>
+      <li>Person B catches it as quickly as possible.</li>
+      <li>Record the distance (in cm) where Person B's fingers caught the ruler.</li>
+      <li>Repeat for a total of 5 trials on the <strong>Left Hand</strong>, and 5 trials on the <strong>Right Hand</strong>.</li>
+    </ol>
+  </div>
+
+  <div class="activity-box exam">
+    <div class="activity-label">Task: Table Design &amp; Data Collection — 20 Minutes</div>
+    <p>Before you begin dropping the ruler, you must design a perfect table using a pencil and ruler. Ensure it has space for your IV, your 5 repeats, and a final column to calculate your Mean. Once your table is drawn, collect your data.</p>
+  </div>
+
+</section>
+
+<!-- ─────────────── PHASE 4: BENCHMARKS ─────────────── -->
+<section class="phase" id="phase-benchmarks">
+  <h2>Phase 4 — Real-World Comparison</h2>
+  <p>How do your reflexes compare to professional athletes? To compare your results, we must convert your 'Distance (cm)' into 'Time (s)'.</p>
+
+  <div class="practical-card">
+    <span class="cp-label">Big Data</span>
+    <h3>Professional Reaction Time Benchmarks</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Group</th>
+          <th>Average Reaction Time / s</th>
+          <th>Best Performance / s</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>F1 Drivers</strong></td>
+          <td>0.20</td>
+          <td>0.13</td>
+        </tr>
+        <tr>
+          <td><strong>Olympic Sprinters</strong></td>
+          <td>0.16</td>
+          <td>0.12</td>
+        </tr>
+        <tr>
+          <td><strong>Elite Gamers (eSports)</strong></td>
+          <td>0.18</td>
+          <td>0.15</td>
+        </tr>
+        <tr>
+          <td><strong>Typical Teenager</strong></td>
+          <td>0.28</td>
+          <td>0.22</td>
+        </tr>
+        <tr>
+          <td><strong>Tired / Distracted Human</strong></td>
+          <td>0.45+</td>
+          <td>0.35</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Nail It</h3>
+  <div class="exam-question">
+    <div class="q-header">
+      <span class="q-number">Q2</span>
+      <span class="marks-badge">4 marks</span>
+    </div>
+    <div class="q-context">Look closely at your own data for Trial 1 compared to Trial 5. In many scientific experiments involving human performance, the first trial is often discarded as an "anomaly" or source of error.</div>
+    <div class="q-text">(a) <em class="command-word">Calculate</em> the mean distance for your dominant hand. (1)<br><br>
+    (b) <em class="command-word">Explain</em> why Trial 1 in this specific experiment might be unreliable and naturally slower than Trial 5. (2)<br><br>
+    (c) <em class="command-word">Suggest</em> how a scientist could alter the method to prevent this from affecting the final average. (1)</div>
+    <button class="ms-toggle" onclick="toggleMS(this)"><span class="arrow">▶</span> Mark scheme</button>
+    <div class="mark-scheme">
+      <div class="ms-header">Mark Scheme</div>
+      <ul>
+        <li>(a) Correct addition of 5 trials divided by 5. (1)</li>
+        <li>(b) "The Practice Effect" / The participant was not used to the motion yet. (1)</li>
+        <li>(b) By Trial 5, the nervous pathway has been primed / they know what to expect. (1)</li>
+        <li>(c) Allow the participant to have 2 "practice drops" before officially recording the data. (1)</li>
+      </ul>
+      <div class="examiner-note">Examiner note: This introduces the concept of methodology evaluation. Human data is notoriously messy, and anticipating human error is a key Working Scientifically skill.</div>
+    </div>
+  </div>
+
+</section>
+
+<!-- ─────────────── PHASE 5: PLENARY ─────────────── -->
+<section class="phase" id="phase-plenary">
+  <h2>Phase 5 — Reflect &amp; Monitor</h2>
+
+  <div class="activity-box vtr">
+    <div class="activity-label">Student Self-Monitoring Rubric</div>
+    <p>Read the statements below. Be honest with yourself—where does your table from today's lesson fit?</p>
+    
+    <table style="margin-top: 1rem;">
+      <thead>
+        <tr>
+          <th>Skill: Table Design</th>
+          <th>Check if achieved</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Emerging:</strong> I can record results in a simple list or box.</td>
+          <td style="text-align: center;">[  ]</td>
+        </tr>
+        <tr>
+          <td><strong>Developing:</strong> I use a table with headers, but units might be inside the boxes.</td>
+          <td style="text-align: center;">[  ]</td>
+        </tr>
+        <tr>
+          <td><strong>Secure:</strong> I use a professional table with units ONLY in headers and space for repeats.</td>
+          <td style="text-align: center;">[  ]</td>
+        </tr>
+        <tr>
+          <td><strong>Excelling:</strong> I identify and exclude anomalies (like missed ruler drops) before calculating my mean.</td>
+          <td style="text-align: center;">[  ]</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="practical-card">
+    <h3>Wrap Up</h3>
+    <p>Data is the language of science. Today you learned how to structure it so that the rest of the world can read it. Next lesson, we will learn how to turn this data into a visual story by selecting the correct graph.</p>
+  </div>
+</section>
+
+</main>
+
+<!-- ════════════════════════════════════════════════ -->
+<!-- TIMER WIDGET                                    -->
+<!-- ════════════════════════════════════════════════ -->
+<div class="timer-widget" id="timer">
+  <span id="timerDisplay">20:00</span>
+  <button onclick="startTimer()">Start</button>
+  <button onclick="resetTimer()">Reset</button>
+</div>
+
+<!-- ════════════════════════════════════════════════ -->
+<!-- JAVASCRIPT                                      -->
+<!-- ════════════════════════════════════════════════ -->
+<script>
+  // ── Tab navigation ──
+  document.querySelectorAll('.phase-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.phase-tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.phase').forEach(p => p.classList.remove('active'));
+      tab.classList.add('active');
+      document.getElementById('phase-' + tab.dataset.phase).classList.add('active');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  });
+
+  // ── Mark scheme toggle ──
+  function toggleMS(btn) {
+    btn.classList.toggle('open');
+    const ms = btn.nextElementSibling;
+    ms.classList.toggle('visible');
+  }
+
+  // ── Countdown timer ──
+  let timerInterval = null;
+  let timerSeconds = 20 * 60;
+
+  function updateTimerDisplay() {
+    const m = Math.floor(timerSeconds / 60);
+    const s = timerSeconds % 60;
+    document.getElementById('timerDisplay').textContent =
+      String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0');
+  }
+
+  function startTimer() {
+    if (timerInterval) return;
+    timerInterval = setInterval(() => {
+      if (timerSeconds <= 0) {
+        clearInterval(timerInterval);
+        timerInterval = null;
+        document.getElementById('timerDisplay').style.color = '#E8645A';
+        return;
+      }
+      timerSeconds--;
+      updateTimerDisplay();
+      if (timerSeconds <= 60) {
+        document.getElementById('timerDisplay').style.color = '#E8645A';
+      }
+    }, 1000);
+  }
+
+  function resetTimer() {
+    clearInterval(timerInterval);
+    timerInterval = null;
+    timerSeconds = 20 * 60;
+    document.getElementById('timerDisplay').style.color = '';
+    updateTimerDisplay();
+  }
+</script>
+</body>
+</html>
