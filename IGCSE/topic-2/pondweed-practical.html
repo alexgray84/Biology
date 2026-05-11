@@ -1,0 +1,1155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pondweed Practical — Year 9 Biology · Lesson 5</title>
+<style>
+  :root{
+    --bg:#fafaf7;
+    --ink:#23332b;
+    --muted:#5a6b62;
+    --leaf:#5a8a5a;
+    --leaf-dk:#3f6e3f;
+    --leaf-soft:#e8f1e6;
+    --leaf-line:#cfe1cb;
+    --sky:#eef4fb;
+    --sky-line:#cfe0f0;
+    --sky-dk:#3a6594;
+    --sun:#fff6e3;
+    --sun-line:#f0d9a3;
+    --sun-dk:#8a6614;
+    --rose:#fdeeee;
+    --rose-line:#f2c7c7;
+    --rose-dk:#a84a4a;
+    --plum:#f1ebfa;
+    --plum-line:#dccff0;
+    --plum-dk:#5a3a8a;
+    --teal:#e6f3f0;
+    --teal-line:#c2e0d8;
+    --teal-dk:#2c6e5e;
+    --chip:#f1ede4;
+    --shadow:0 1px 2px rgba(0,0,0,.04), 0 6px 18px rgba(34,51,42,.06);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,sans-serif;
+    line-height:1.55;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1080px;margin:0 auto;padding:28px 24px 80px}
+
+  header.hero{background:linear-gradient(180deg,#f4f8ee 0%,#fafaf7 100%);
+    border:1px solid var(--leaf-line);border-radius:18px;padding:22px 26px;
+    box-shadow:var(--shadow);margin-bottom:18px}
+  .eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--leaf);font-weight:600}
+  h1{font-size:28px;margin:6px 0 4px;letter-spacing:-.01em}
+  .sub{color:var(--muted);font-size:14.5px;margin:0 0 14px}
+
+  .picker{display:flex;flex-wrap:wrap;gap:8px;align-items:center;background:#fff;border:1px solid var(--leaf-line);border-radius:14px;padding:10px 12px}
+  .picker .pick-label{font-size:12px;color:var(--muted);font-weight:600;letter-spacing:.05em;text-transform:uppercase;margin-right:4px}
+  .picker button{appearance:none;border:1px solid var(--leaf-line);background:#fff;color:var(--ink);
+    border-radius:999px;padding:7px 14px;font-size:13.5px;font-weight:600;cursor:pointer;transition:.15s}
+  .picker button:hover{background:var(--leaf-soft)}
+  .picker button.active{background:var(--leaf);color:#fff;border-color:var(--leaf)}
+  .picker .reset{margin-left:auto;background:transparent;border:0;color:var(--muted);font-size:12.5px;cursor:pointer;text-decoration:underline}
+
+  .master{background:#fff;border:1px solid var(--leaf-line);border-radius:14px;padding:14px 16px;margin-top:14px;display:flex;flex-wrap:wrap;align-items:center;gap:14px}
+  .master-label{font-size:12px;color:var(--muted);font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+  .code{display:flex;gap:6px}
+  .code .slot{width:34px;height:42px;border:1.5px dashed #cfd2c4;border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:800;font-family:Menlo,Consolas,monospace;font-size:18px;color:#bdb999;background:#fbfaf3;transition:.25s}
+  .code .slot.unlocked{border-style:solid;border-color:var(--leaf);background:var(--leaf-soft);color:var(--leaf-dk)}
+  .master-hint{font-size:12px;color:var(--muted);margin-left:auto}
+
+  /* Phase strip - I do / we do / you do */
+  .phase-strip{display:flex;gap:6px;margin-top:14px;flex-wrap:wrap;font-size:11.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase}
+  .phase-strip .ph{background:#fbfaf3;border:1px solid #ecebe4;border-radius:8px;padding:6px 10px;color:var(--muted)}
+  .phase-strip .ph .dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px;vertical-align:middle}
+  .phase-strip .ph.ido .dot{background:var(--sky-dk)}
+  .phase-strip .ph.wedo .dot{background:var(--sun-dk)}
+  .phase-strip .ph.youdo .dot{background:var(--leaf)}
+
+  .progress{display:flex;gap:6px;margin-top:14px;flex-wrap:wrap}
+  .pdot{flex:1;min-width:18px;height:8px;background:#ede7d6;border-radius:6px;transition:.2s}
+  .pdot.done{background:var(--leaf)}
+  .progress-meta{font-size:12px;color:var(--muted);margin-top:6px;text-align:right}
+
+  .grid{display:grid;grid-template-columns:1fr 290px;gap:20px;margin-top:8px}
+  @media (max-width:880px){.grid{grid-template-columns:1fr}}
+
+  section.card{background:#fff;border:1px solid #ecebe4;border-radius:16px;
+    padding:20px 22px;margin-bottom:16px;box-shadow:var(--shadow);transition:.2s;position:relative}
+  section.card.done{background:#f7fbf6;border-color:var(--leaf-line)}
+  section.card.ido::before, section.card.wedo::before, section.card.youdo::before{
+    content:'';position:absolute;left:0;top:24px;bottom:24px;width:4px;border-radius:2px}
+  section.card.ido::before{background:var(--sky-dk)}
+  section.card.wedo::before{background:var(--sun-dk)}
+  section.card.youdo::before{background:var(--leaf)}
+
+  .sec-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:6px}
+  .sec-num{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;
+    background:var(--leaf);color:#fff;border-radius:8px;font-weight:700;font-size:13px}
+  .sec-title{font-size:17px;font-weight:700;margin:0}
+  .sec-tag{font-size:10.5px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:3px 8px;border-radius:6px;color:#fff}
+  .sec-tag.ido{background:var(--sky-dk)}
+  .sec-tag.wedo{background:var(--sun-dk)}
+  .sec-tag.youdo{background:var(--leaf)}
+  .time{margin-left:auto;display:inline-flex;align-items:center;gap:6px;
+    background:var(--chip);color:#665a3f;border-radius:999px;padding:4px 10px;font-size:12px;font-weight:600}
+  .time::before{content:"";width:8px;height:8px;border-radius:50%;background:#d8b85a;display:inline-block}
+  .task{font-size:15px;margin:4px 0 10px}
+
+  .knowledge{background:#fbfaf3;border:1px solid #ecebe4;border-radius:12px;padding:14px 16px;margin:10px 0;font-size:14.5px}
+  .knowledge .kl{font-size:11px;letter-spacing:.12em;text-transform:uppercase;font-weight:700;color:var(--leaf-dk);margin-bottom:6px;display:flex;align-items:center;gap:6px}
+  .knowledge ul{margin:6px 0;padding-left:20px}
+  .knowledge li{margin:3px 0}
+
+  /* TIER picker - T1/T2/T3 */
+  .tiers{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:10px 0}
+  @media (max-width:540px){.tiers{grid-template-columns:1fr}}
+  .tier{background:#fff;border:1.5px solid #ecebe4;border-radius:12px;padding:12px;cursor:pointer;transition:.15s}
+  .tier:hover{background:#fbfaf3}
+  .tier.on{border-color:var(--leaf-dk);background:var(--leaf-soft);box-shadow:0 0 0 2px rgba(90,138,90,.15)}
+  .tier h4{margin:0 0 4px;font-size:13.5px;color:var(--leaf-dk)}
+  .tier .lvl{font-size:10.5px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:2px}
+  .tier p{margin:4px 0;font-size:13px;color:var(--ink)}
+  .tier-detail{display:none;background:var(--leaf-soft);border:1px solid var(--leaf-line);border-radius:10px;padding:12px;margin-top:8px;font-size:14px}
+  .tier-detail.show{display:block;animation:slide .2s ease-out}
+
+  .toggles{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 0}
+  .tog{appearance:none;border:1px solid #e0dccd;background:#fff;border-radius:999px;
+    padding:6px 12px;font-size:12.5px;font-weight:600;color:var(--ink);cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:.15s}
+  .tog:hover{background:#fafaf2}
+  .tog.help{color:var(--sky-dk);border-color:var(--sky-line)}
+  .tog.help.on{background:var(--sky);border-color:var(--sky-dk)}
+  .tog.stem{color:var(--plum-dk);border-color:var(--plum-line)}
+  .tog.stem.on{background:var(--plum);border-color:var(--plum-dk)}
+  .tog.model{color:var(--teal-dk);border-color:var(--teal-line)}
+  .tog.model.on{background:var(--teal);border-color:var(--teal-dk)}
+  .tog.unlock{color:var(--leaf-dk);border-color:var(--leaf-line)}
+  .tog.unlock.on{background:var(--leaf-soft);border-color:var(--leaf-dk)}
+  .tog.done{margin-left:auto;color:var(--leaf-dk);border-color:var(--leaf-line)}
+  .tog.done.on{background:var(--leaf);color:#fff;border-color:var(--leaf)}
+
+  .panel{display:none;border-radius:12px;padding:12px 14px;margin-top:10px;border:1px solid;font-size:14.5px}
+  .panel.show{display:block;animation:slide .18s ease-out}
+  @keyframes slide{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
+  .panel.help{background:var(--sky);border-color:var(--sky-line)}
+  .panel.stem{background:var(--plum);border-color:var(--plum-line)}
+  .panel.model{background:var(--teal);border-color:var(--teal-line)}
+  .panel .label{font-size:11px;letter-spacing:.12em;text-transform:uppercase;font-weight:700;margin-bottom:4px}
+  .panel.help .label{color:var(--sky-dk)}
+  .panel.stem .label{color:var(--plum-dk)}
+  .panel.model .label{color:var(--teal-dk)}
+  .stems{margin:0;padding-left:18px}
+  .stems li{margin:4px 0;font-style:italic}
+  .panel.stem li{color:#46276e}
+  .panel.help li,.panel.help p{color:#264466}
+
+  /* CHECKLIST */
+  .check-list{margin:8px 0;padding:0;list-style:none}
+  .check-list li{background:#fff;border:1px solid #ecebe4;border-radius:8px;padding:8px 12px;margin:5px 0;font-size:14px;display:flex;align-items:center;gap:10px;cursor:pointer;transition:.12s}
+  .check-list li:hover{background:#fbfaf3}
+  .check-list li.checked{background:var(--leaf-soft);border-color:var(--leaf-line);text-decoration:line-through;color:var(--muted)}
+  .check-list .box{width:18px;height:18px;border:1.5px solid var(--leaf);border-radius:5px;flex:0 0 auto;display:flex;align-items:center;justify-content:center;color:var(--leaf-dk);font-weight:800;font-size:13px}
+  .check-list li.checked .box{background:var(--leaf);color:#fff}
+
+  /* LOCK */
+  .lockbox{display:none;border-radius:12px;padding:14px 16px;margin-top:10px;border:1.5px solid var(--leaf-line);background:linear-gradient(180deg,#fdfbf2 0%, #f7fbf2 100%)}
+  .lockbox.show{display:block;animation:slide .18s ease-out}
+  .lockbox .label{font-size:11px;letter-spacing:.12em;text-transform:uppercase;font-weight:700;color:var(--leaf-dk);margin-bottom:6px;display:flex;align-items:center;gap:6px}
+  .riddle{font-size:14.5px;color:var(--ink);margin:6px 0 10px;font-style:italic;line-height:1.5}
+  .riddle b{font-style:normal}
+  .keyrow{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+  .keyrow input{flex:1;min-width:160px;border:1.5px solid var(--leaf-line);background:#fff;border-radius:10px;padding:9px 12px;font-size:14.5px;font-family:inherit;outline:none;transition:.15s}
+  .keyrow input:focus{border-color:var(--leaf-dk)}
+  .keyrow input.wrong{border-color:#c97070;background:#fdf6f6}
+  .keyrow input.right{border-color:var(--leaf);background:var(--leaf-soft)}
+  .keyrow .check-btn{appearance:none;border:0;background:var(--leaf);color:#fff;border-radius:10px;padding:9px 16px;font-size:14px;font-weight:700;cursor:pointer;transition:.15s}
+  .keyrow .check-btn:hover{background:var(--leaf-dk)}
+  .keyrow .hint-btn{appearance:none;border:1px solid var(--leaf-line);background:#fff;color:var(--leaf-dk);border-radius:10px;padding:8px 12px;font-size:12.5px;font-weight:600;cursor:pointer}
+  .keyrow .hint-btn:hover{background:var(--leaf-soft)}
+  .feedback{font-size:13px;margin-top:8px;min-height:18px}
+  .feedback.wrong{color:#a84a4a}
+  .feedback.right{color:var(--leaf-dk);font-weight:700}
+  .feedback.hint{color:var(--sky-dk)}
+  .answers{display:none;margin-top:12px;padding:12px 14px;background:#fff;border:1px dashed var(--leaf-line);border-radius:10px;font-size:14.5px}
+  .answers.unlocked{display:block;animation:slide .25s ease-out}
+  .answers .alabel{font-size:11px;letter-spacing:.12em;text-transform:uppercase;font-weight:700;color:var(--leaf-dk);margin-bottom:4px}
+  .letter-reveal{display:inline-block;margin-left:8px;background:var(--sun);border:1px solid var(--sun-line);color:var(--sun-dk);font-family:Menlo,Consolas,monospace;font-weight:800;padding:4px 10px;border-radius:8px;font-size:13px}
+
+  .ways{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+  .way{font-size:12px;background:#f7f5ec;border:1px dashed #d8d2bc;border-radius:8px;padding:5px 9px;color:#665a3f}
+
+  figure{margin:14px 0;text-align:center}
+  figure svg{max-width:100%;height:auto;border-radius:12px;background:#fff;border:1px solid #eee;padding:6px}
+  figcaption{font-size:12.5px;color:var(--muted);margin-top:6px}
+
+  /* Results table */
+  table.results{width:100%;border-collapse:collapse;font-size:14px;margin:8px 0;background:#fff;border-radius:8px;overflow:hidden;border:1px solid #ecebe4}
+  table.results th,table.results td{border:1px solid #d8d2bc;padding:9px 10px;text-align:center}
+  table.results th{background:var(--leaf-soft);color:var(--leaf-dk);font-weight:700;font-size:12.5px}
+  table.results td.iv{font-weight:700;background:#fbfaf3}
+  .filled td.cell{background:#fff6e3;font-weight:600;color:var(--sun-dk)}
+
+  /* OBSERVATION prompt */
+  .obs{background:#fff;border:1.5px dashed var(--leaf-line);border-radius:10px;padding:10px 12px;margin:8px 0;font-size:13.5px;color:var(--muted)}
+  .obs::before{content:"👀 ";}
+
+  aside.glossary{position:sticky;top:14px;align-self:start;background:#fff;border:1px solid #ecebe4;
+    border-radius:16px;padding:16px;box-shadow:var(--shadow);max-height:calc(100vh - 28px);overflow:auto}
+  aside.glossary h3{margin:0 0 4px;font-size:14px;letter-spacing:.1em;text-transform:uppercase;color:var(--leaf)}
+  aside.glossary .gloss-hint{font-size:11.5px;color:var(--muted);margin:0 0 10px}
+  .kw{display:grid;grid-template-columns:34px 1fr;gap:10px;align-items:start;margin:9px 0;padding-bottom:9px;border-bottom:1px dashed #eee}
+  .kw:last-child{border-bottom:0}
+  .kw .ic{width:34px;height:34px;border-radius:9px;background:var(--leaf-soft);display:flex;align-items:center;justify-content:center;font-weight:800;color:var(--leaf-dk);font-size:13px}
+  .kw .term{font-weight:700;font-size:13.5px;line-height:1.25}
+  .kw .def{font-size:12.5px;color:var(--muted);margin-top:2px}
+
+  footer{color:var(--muted);font-size:12.5px;text-align:center;margin-top:24px}
+  .celebrate{display:none;background:linear-gradient(135deg,#e8f1e6 0%,#fff6e3 100%);border:1px solid var(--leaf-line);border-radius:14px;padding:18px;text-align:center;margin-bottom:16px;color:var(--leaf-dk);font-weight:600}
+  .celebrate.show{display:block}
+  .celebrate .big{font-family:Menlo,Consolas,monospace;font-size:28px;letter-spacing:.4em;font-weight:800;display:block;margin:6px 0;color:var(--leaf-dk)}
+
+  @media print{
+    .picker,.toggles .done,.celebrate,.lockbox{display:none}
+    .panel,.answers,.tier-detail{display:block !important}
+    aside.glossary{position:static}
+    .grid{grid-template-columns:1fr}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="hero">
+    <div class="eyebrow">Year 9 Biology · Lesson 5 · Practical day</div>
+    <h1>Pondweed practical — let's run it 🧪</h1>
+    <p class="sub">Last lesson you <b>planned</b> the investigation. Today you'll <b>do</b> it. By the end you'll have your own results, a graph, and an evaluation.</p>
+
+    <div class="picker">
+      <span class="pick-label">Pick your support level →</span>
+      <button id="lvl-light" class="lvl">🚀 I've got this</button>
+      <button id="lvl-std" class="lvl active">⚖️ Standard</button>
+      <button id="lvl-full" class="lvl">🪜 Give me all the support</button>
+      <button class="reset" id="reset">Reset progress</button>
+    </div>
+
+    <div class="phase-strip">
+      <span class="ph ido"><span class="dot"></span>I do · teacher demos</span>
+      <span class="ph wedo"><span class="dot"></span>We do · together</span>
+      <span class="ph youdo"><span class="dot"></span>You do · alone</span>
+    </div>
+
+    <div class="master">
+      <span class="master-label">🔑 Master code</span>
+      <div class="code" id="codeBoxes"></div>
+      <span class="master-hint">Crack each section's keyword. The 8 letters spell what scientists do best.</span>
+    </div>
+
+    <div class="progress" id="progress"></div>
+    <div class="progress-meta"><span id="done-count">0</span> / <span id="total-count">8</span> sections done</div>
+  </header>
+
+  <div class="celebrate" id="celebrate">
+    🌿 You've cracked all 8 sections. The skill that holds it all together is…
+    <span class="big" id="bigword">OBSERVED</span>
+    Great scientists <b>observe</b> carefully, write down exactly what they see, and let the data — not their hopes — tell the story.
+  </div>
+
+  <div class="grid">
+    <main>
+
+      <!-- SECTION 1 - RECAP & CONNECT -->
+      <section class="card" data-sec="1" data-keyword="independent" data-letter="O" data-letter-idx="0">
+        <div class="sec-head">
+          <span class="sec-num">1</span>
+          <h2 class="sec-title">Recap &amp; connect — what do you already know?</h2>
+          <span class="time">3 min</span>
+        </div>
+
+        <p class="task">Quick brain-dump. Without looking back at L1–L4, answer in your book:</p>
+        <ol>
+          <li>What's the <b>word equation</b> for photosynthesis?</li>
+          <li>What's the <b>IV</b>, <b>DV</b> and <b>one CV</b> for today's practical?</li>
+          <li>What gas are the <b>bubbles</b> made of, and where do they come from?</li>
+        </ol>
+
+        <div class="knowledge">
+          <div class="kl">📘 Why we recap (Rosenshine 01)</div>
+          <p style="margin:0">Pulling info OUT of memory makes it stronger than re-reading. If you can't quite remember, leave a gap and come back — that's the moment your brain learns most.</p>
+        </div>
+
+        <div class="toggles">
+          <button class="tog help">💡 Hint</button>
+          <button class="tog stem">📚 Sentence stems</button>
+          <button class="tog unlock">🔒 Unlock answers</button>
+          <button class="tog done">✓ I've done this</button>
+        </div>
+
+        <div class="panel help"><div class="label">Hint</div>
+          <ul>
+            <li>The reactants are CO₂ and H₂O. The products are…?</li>
+            <li>The IV is what you <b>change</b>. Today, you change the distance of what?</li>
+            <li>Photosynthesis produces a gas. Which one?</li>
+          </ul>
+        </div>
+        <div class="panel stem"><div class="label">Sentence stems</div>
+          <ul class="stems">
+            <li>"Photosynthesis: ____ + ____ → ____ + ____ "</li>
+            <li>"My IV is ____, measured in ____."</li>
+            <li>"My DV is ____, measured in ____."</li>
+            <li>"The bubbles are ____ gas, produced by ____."</li>
+          </ul>
+        </div>
+
+        <div class="lockbox">
+          <div class="label">🔒 Riddle to unlock the answers</div>
+          <p class="riddle">"I'm the variable you change on purpose. The 'I' in IV/DV/CV. What am I called? (1 word)"</p>
+          <div class="keyrow">
+            <input type="text" placeholder="Type the keyword…" autocomplete="off" spellcheck="false">
+            <button class="check-btn">Check</button>
+            <button class="hint-btn">Hint</button>
+          </div>
+          <div class="feedback"></div>
+          <div class="answers">
+            <div class="alabel">✓ Answers</div>
+            <ol>
+              <li>Carbon dioxide + water → glucose + oxygen (sunlight + chlorophyll over the arrow).</li>
+              <li>IV = distance of lamp from beaker (cm). DV = bubbles per minute (or cm³ O₂/min). CV = e.g. same pondweed, same temperature, same NaHCO₃.</li>
+              <li>The bubbles are <b>oxygen</b>. Photosynthesis produces O₂ as a by-product, which leaves the pondweed and floats to the top.</li>
+            </ol>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 2 - PREDICT -->
+      <section class="card youdo" data-sec="2" data-keyword="prediction" data-letter="B" data-letter-idx="1">
+        <div class="sec-head">
+          <span class="sec-num">2</span>
+          <span class="sec-tag youdo">You do</span>
+          <h2 class="sec-title">Predict — sketch your graph BEFORE you start</h2>
+          <span class="time">4 min</span>
+        </div>
+
+        <div class="knowledge">
+          <div class="kl">📘 Why predict first?</div>
+          <p style="margin:0">You'll remember and notice <b>far more</b> if you commit to a prediction first. Being a bit wrong is way more memorable than just being told.</p>
+        </div>
+
+        <p class="task">In your book:</p>
+        <ol>
+          <li>Sketch a pair of axes: distance from lamp on x-axis, bubbles per minute on y-axis.</li>
+          <li>Draw the line you <b>think</b> you'll get.</li>
+          <li>Write a one-sentence prediction underneath.</li>
+        </ol>
+
+        <div class="toggles">
+          <button class="tog help">💡 Hint</button>
+          <button class="tog stem">📚 Sentence stems</button>
+          <button class="tog model">🎯 Worked example</button>
+          <button class="tog unlock">🔒 Unlock model answer</button>
+          <button class="tog done">✓ I've done this</button>
+        </div>
+
+        <div class="panel help"><div class="label">Hint</div>
+          <p>When the lamp is <b>closer</b>, the pondweed gets more light. More light → more photosynthesis → more bubbles. So as distance <b>increases</b>, what happens to bubbles per minute?</p>
+        </div>
+        <div class="panel stem"><div class="label">Sentence stems</div>
+          <ul class="stems">
+            <li>"As the distance from the lamp increases, the number of bubbles per minute will ____."</li>
+            <li>"This is because ____."</li>
+          </ul>
+        </div>
+        <div class="panel model"><div class="label">🎯 What good predictions look like</div>
+          <p>A weak prediction: <i>"The bubbles will go down."</i></p>
+          <p>A strong prediction: <i>"As the lamp moves further away (10 cm → 50 cm), the bubbles per minute will <b>decrease</b>, because lower light intensity means less energy for photosynthesis. The drop will be steepest at first and then level off when light is no longer the limiting factor."</i></p>
+          <p>Notice it: gives direction, includes numbers, gives a reason, predicts the shape.</p>
+        </div>
+
+        <div class="lockbox">
+          <div class="label">🔒 Riddle to unlock the model prediction</div>
+          <p class="riddle">"What you make BEFORE the experiment. A scientific guess about what will happen — but not quite a hypothesis. Starts with P, 10 letters."</p>
+          <div class="keyrow">
+            <input type="text" placeholder="Type the keyword…" autocomplete="off" spellcheck="false">
+            <button class="check-btn">Check</button>
+            <button class="hint-btn">Hint</button>
+          </div>
+          <div class="feedback"></div>
+          <div class="answers">
+            <div class="alabel">✓ Model prediction</div>
+            <p><i>"As distance increases from 10 cm to 50 cm, the number of bubbles per minute will <b>decrease</b> because the light intensity reaching the pondweed is lower. There will be a sharp drop at first, then the line will start to level off (because light won't be the only limiting factor any more)."</i></p>
+            <p><b>Sketch:</b> a curve that starts high on the left, drops steeply, then flattens off on the right.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 3 - APPARATUS & SAFETY -->
+      <section class="card" data-sec="3" data-keyword="thermometer" data-letter="S" data-letter-idx="2">
+        <div class="sec-head">
+          <span class="sec-num">3</span>
+          <h2 class="sec-title">Apparatus check &amp; safety</h2>
+          <span class="time">3 min</span>
+        </div>
+
+        <p class="task">At your bench, find each item. Tap to tick it off as you find it.</p>
+
+        <ul class="check-list" id="apparatus-list">
+          <li><span class="box">✓</span><span>Pondweed (Cabomba or Elodea) — 1 sprig, ~10 cm</span></li>
+          <li><span class="box">✓</span><span>Beaker (250 cm³) filled with water</span></li>
+          <li><span class="box">✓</span><span>Sodium hydrogen carbonate (NaHCO₃) — 1 g</span></li>
+          <li><span class="box">✓</span><span>Inverted funnel + inverted test tube</span></li>
+          <li><span class="box">✓</span><span>Lamp (with bulb) + ruler (30+ cm)</span></li>
+          <li><span class="box">✓</span><span>Thermometer (to check the water stays at the same temperature)</span></li>
+          <li><span class="box">✓</span><span>Stopwatch / timer</span></li>
+          <li><span class="box">✓</span><span>Safety goggles · paper towel</span></li>
+        </ul>
+
+        <div class="knowledge" style="background:#fdeeee;border-color:#f2c7c7">
+          <div class="kl" style="color:#a84a4a">⚠️ Safety reminders</div>
+          <ul style="margin:6px 0">
+            <li>Lamp gets <b>hot</b> — hold by the base, never the bulb.</li>
+            <li>Water + electricity = danger. Keep the lamp lead well away from the beaker.</li>
+            <li>Glass beaker / test tube — handle with two hands. Tell your teacher if anything breaks.</li>
+            <li>Wear goggles when handling NaHCO₃ powder.</li>
+          </ul>
+        </div>
+
+        <div class="toggles">
+          <button class="tog unlock">🔒 Unlock the "what could go wrong?" tips</button>
+          <button class="tog done">✓ I've done this</button>
+        </div>
+
+        <div class="lockbox">
+          <div class="label">🔒 Riddle to unlock the troubleshooting tips</div>
+          <p class="riddle">"I'm a thin glass tool with a red or silver line. I tell you the temperature of the water. (One word, starts with T.)"</p>
+          <div class="keyrow">
+            <input type="text" placeholder="Type the keyword…" autocomplete="off" spellcheck="false">
+            <button class="check-btn">Check</button>
+            <button class="hint-btn">Hint</button>
+          </div>
+          <div class="feedback"></div>
+          <div class="answers">
+            <div class="alabel">✓ What could go wrong (and how to fix it)</div>
+            <ul>
+              <li><b>No bubbles at all?</b> → Pondweed might be old, lamp might be too far, water might be too cold. Try crushing the cut end of the pondweed gently and put the lamp at 10 cm to start.</li>
+              <li><b>Bubbles are tiny / inconsistent?</b> → Add a fresh pinch of NaHCO₃. Make sure the funnel is over the pondweed, not next to it.</li>
+              <li><b>Water heating up?</b> → Use a beaker of cold water as a heat shield between lamp and beaker. Heat is a CV — keep it constant!</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 4 - I DO -->
+      <section class="card ido" data-sec="4" data-keyword="modelling" data-letter="E" data-letter-idx="3">
+        <div class="sec-head">
+          <span class="sec-num">4</span>
+          <span class="sec-tag ido">I do</span>
+          <h2 class="sec-title">Watch the demo — what to look for</h2>
+          <span class="time">8 min</span>
+        </div>
+
+        <p class="task">Your teacher (or video) will run through the practical once. <b>Don't</b> try to do it yet. Just watch. Note 3 things you notice in your book.</p>
+
+        <figure>
+          <svg viewBox="0 0 700 320" xmlns="http://www.w3.org/2000/svg">
+            <rect x="0" y="280" width="700" height="40" fill="#f5efe1"/>
+            <line x1="0" y1="280" x2="700" y2="280" stroke="#d8c89a"/>
+            <rect x="40" y="270" width="500" height="10" fill="#fff" stroke="#888"/>
+            <g stroke="#888" font-size="9" fill="#666">
+              <line x1="40" y1="270" x2="40" y2="278"/><text x="36" y="293">0</text>
+              <line x1="140" y1="270" x2="140" y2="278"/><text x="132" y="293">10</text>
+              <line x1="240" y1="270" x2="240" y2="278"/><text x="232" y="293">20</text>
+              <line x1="340" y1="270" x2="340" y2="278"/><text x="332" y="293">30</text>
+              <line x1="440" y1="270" x2="440" y2="278"/><text x="432" y="293">40 cm</text>
+            </g>
+            <g transform="translate(70 200)">
+              <rect x="-12" y="40" width="24" height="30" fill="#5a6b62"/>
+              <path d="M -28 40 L 28 40 L 18 0 L -18 0 Z" fill="#caa84a" stroke="#8a6614"/>
+              <circle cx="0" cy="20" r="10" fill="#fde7a8"/>
+              <g stroke="#e3b94a" stroke-width="1.5">
+                <line x1="20" y1="20" x2="40" y2="20"/>
+                <line x1="20" y1="10" x2="38" y2="0"/>
+                <line x1="20" y1="30" x2="38" y2="40"/>
+              </g>
+            </g>
+            <g transform="translate(380 100)">
+              <path d="M -90 0 L -85 160 Q 0 175 85 160 L 90 0 Z" fill="rgba(196,224,232,0.4)" stroke="#3a6594" stroke-width="1.5"/>
+              <line x1="-90" y1="0" x2="90" y2="0" stroke="#3a6594" stroke-width="1.5"/>
+              <path d="M -40 80 L 40 80 L 12 30 L -12 30 Z" fill="rgba(255,255,255,0.7)" stroke="#888"/>
+              <rect x="-14" y="-50" width="28" height="80" fill="rgba(196,224,232,0.4)" stroke="#3a6594"/>
+              <path d="M -14 -50 Q 0 -56 14 -50" stroke="#3a6594" fill="none"/>
+              <g stroke="#3f6e3f" stroke-width="2" fill="none">
+                <path d="M 0 160 Q -10 130 -5 100 Q -20 80 -10 60"/>
+                <g fill="#7fb07a" stroke="#3f6e3f">
+                  <ellipse cx="-12" cy="135" rx="6" ry="3" transform="rotate(-30 -12 135)"/>
+                  <ellipse cx="-2" cy="110" rx="6" ry="3" transform="rotate(30 -2 110)"/>
+                  <ellipse cx="-15" cy="85" rx="6" ry="3" transform="rotate(-20 -15 85)"/>
+                </g>
+              </g>
+              <g fill="#fff" stroke="#3a6594">
+                <circle cx="2" cy="55" r="3"/><circle cx="-4" cy="40" r="2.5"/>
+                <circle cx="6" cy="22" r="3"/><circle cx="-2" cy="0" r="2"/>
+              </g>
+            </g>
+            <g stroke="#a84a4a" stroke-width="1.2">
+              <line x1="100" y1="250" x2="290" y2="250" stroke-dasharray="3 3"/>
+              <text x="155" y="244" font-size="11" fill="#a84a4a" font-weight="700">distance d (cm)</text>
+            </g>
+          </svg>
+          <figcaption>Refresher diagram — same setup as last lesson.</figcaption>
+        </figure>
+
+        <div class="knowledge">
+          <div class="kl">📘 What experts pay attention to (live modelling)</div>
+          <p style="margin:0 0 6px">Your teacher will be talking aloud while doing it. They'll point out <b>five things</b> that beginners miss:</p>
+          <ol style="margin:6px 0">
+            <li>Where exactly the ruler is measured from (lamp or bulb? front of beaker or middle?)</li>
+            <li>Why we wait 1 minute before counting (the rate needs to <b>stabilise</b>).</li>
+            <li>How to count fast bubbles (count for less time × scale up).</li>
+            <li>What to do if bubbles come too fast to count.</li>
+            <li>How they record the number STRAIGHT into the table (not "I'll remember").</li>
+          </ol>
+        </div>
+
+        <div class="toggles">
+          <button class="tog stem">📚 Sentence stems for observation</button>
+          <button class="tog unlock">🔒 Unlock model observations</button>
+          <button class="tog done">✓ I've done this</button>
+        </div>
+
+        <div class="panel stem"><div class="label">Sentence stems for what you noticed</div>
+          <ul class="stems">
+            <li>"I noticed that ____."</li>
+            <li>"The teacher waited ____ before ____."</li>
+            <li>"One thing I would do differently is ____."</li>
+          </ul>
+        </div>
+
+        <div class="lockbox">
+          <div class="label">🔒 Riddle to unlock the answers</div>
+          <p class="riddle">"When a teacher demonstrates a task and talks through it out loud, this is called live ___. (One word, starts with M, 9 letters.)"</p>
+          <div class="keyrow">
+            <input type="text" placeholder="Type the keyword…" autocomplete="off" spellcheck="false">
+            <button class="check-btn">Check</button>
+            <button class="hint-btn">Hint</button>
+          </div>
+          <div class="feedback"></div>
+          <div class="answers">
+            <div class="alabel">✓ 3 things you should have noticed</div>
+            <ol>
+              <li>The lamp gives off heat — that's why the lamp is positioned away from the beaker (and a heat-shield beaker of cold water can be used).</li>
+              <li>Bubbles aren't perfectly steady — there's a "warm-up" period after the lamp moves, which is why we wait 1 minute.</li>
+              <li>Numbers are written down <b>immediately</b>, in pencil, in the right column. Not "I'll write it after."</li>
+            </ol>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 5 - WE DO -->
+      <section class="card wedo" data-sec="5" data-keyword="one" data-letter="R" data-letter-idx="4">
+        <div class="sec-head">
+          <span class="sec-num">5</span>
+          <span class="sec-tag wedo">We do</span>
+          <h2 class="sec-title">Run 1 together — calibrate at 30 cm</h2>
+          <span class="time">10 min</span>
+        </div>
+
+        <p class="task">As a class, set up at <b>30 cm</b>. Everyone counts together. Compare numbers — should be similar across the room (same conditions!).</p>
+
+        <div class="knowledge">
+          <div class="kl">📘 The 6-step run (do this every time)</div>
+          <ol style="margin:6px 0">
+            <li>Move the lamp to the chosen distance from the beaker.</li>
+            <li>Wait <b>1 minute</b> — let the rate stabilise.</li>
+            <li>Start your stopwatch and count bubbles for <b>1 minute</b>.</li>
+            <li>Write the number straight into the results table (in pencil).</li>
+            <li>Glance at the thermometer — has the water heated up? (Aim to keep it constant.)</li>
+            <li>Move to the next distance and repeat.</li>
+          </ol>
+        </div>
+
+        <div class="obs">After your "warm up + count" at 30 cm, write down: my count = ____ bubbles/min. Then compare with two other people on your bench.</div>
+
+        <div class="toggles">
+          <button class="tog help">💡 If you got 0 bubbles</button>
+          <button class="tog stem">📚 Sentence stems</button>
+          <button class="tog unlock">🔒 Unlock the calibration check</button>
+          <button class="tog done">✓ I've done this</button>
+        </div>
+
+        <div class="panel help"><div class="label">Troubleshooting</div>
+          <ul>
+            <li>Cut a fresh end on the pondweed stem — bubbles often start straight after a fresh cut.</li>
+            <li>Move the lamp closer (15 cm) just for the calibration. Then move it back to 30 cm.</li>
+            <li>Add a small pinch more NaHCO₃.</li>
+          </ul>
+        </div>
+        <div class="panel stem"><div class="label">Sentence stems</div>
+          <ul class="stems">
+            <li>"At 30 cm, I counted ____ bubbles per minute."</li>
+            <li>"My partner counted ____. The difference is ____."</li>
+            <li>"This could be because ____."</li>
+          </ul>
+        </div>
+
+        <div class="lockbox">
+          <div class="label">🔒 Riddle to unlock the calibration check</div>
+          <p class="riddle">"How many minutes do you wait before starting to count bubbles, after moving the lamp? (Number word — spell it out, e.g. 'two'.)"</p>
+          <div class="keyrow">
+            <input type="text" placeholder="Type the keyword…" autocomplete="off" spellcheck="false">
+            <button class="check-btn">Check</button>
+            <button class="hint-btn">Hint</button>
+          </div>
+          <div class="feedback"></div>
+          <div class="answers">
+            <div class="alabel">✓ Calibration check — what counts as "good data"?</div>
+            <ul>
+              <li><b>If three people on your bench got within ±5 bubbles of each other:</b> excellent — go for it.</li>
+              <li><b>If results vary wildly:</b> check that the funnel is centred over the pondweed, the distance is measured the same way (lamp bulb to centre of beaker), and the lamp wattage is the same.</li>
+              <li><b>If you got 0:</b> see the troubleshooting hint and rerun. Don't panic — record what you did, that's still data.</li>
+              <li>Always note the temperature of the water (CV check).</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 6 - YOU DO -->
+      <section class="card youdo" data-sec="6" data-keyword="three" data-letter="V" data-letter-idx="5">
+        <div class="sec-head">
+          <span class="sec-num">6</span>
+          <span class="sec-tag youdo">You do</span>
+          <h2 class="sec-title">Run the experiment — pick your tier</h2>
+          <span class="time">12 min</span>
+        </div>
+
+        <p class="task">Your turn. Pick a tier — same destination (you'll have a results table by the end), different routes through.</p>
+
+        <div class="tiers" id="tiers">
+          <div class="tier" data-tier="t1">
+            <span class="lvl">T1 — secure the basics</span>
+            <h4>2 distances</h4>
+            <p>Run at <b>10 cm</b> and <b>50 cm</b> only. Repeat each <b>2 times</b>. Pre-filled table below.</p>
+          </div>
+          <div class="tier" data-tier="t2">
+            <span class="lvl">T2 — full method</span>
+            <h4>5 distances</h4>
+            <p>Run at <b>10, 20, 30, 40, 50 cm</b>. Repeat each <b>3 times</b>. Calculate a mean.</p>
+          </div>
+          <div class="tier" data-tier="t3">
+            <span class="lvl">T3 — stretch</span>
+            <h4>5 distances + extra IV</h4>
+            <p>Do T2, then <b>add a second IV</b>: change NaHCO₃ mass too. Plot two lines on one graph.</p>
+          </div>
+        </div>
+
+        <div class="tier-detail" id="t1-detail">
+          <p><b>T1 — your table:</b></p>
+          <table class="results filled">
+            <thead><tr><th>Distance (cm)</th><th>Trial 1<br>bubbles/min</th><th>Trial 2<br>bubbles/min</th><th>Mean</th></tr></thead>
+            <tbody>
+              <tr><td class="iv">10</td><td class="cell">_</td><td class="cell">_</td><td class="cell">_</td></tr>
+              <tr><td class="iv">50</td><td class="cell">_</td><td class="cell">_</td><td class="cell">_</td></tr>
+            </tbody>
+          </table>
+          <p><b>Question to think about:</b> If the count at 10 cm is way bigger than at 50 cm, what does that tell you?</p>
+        </div>
+
+        <div class="tier-detail" id="t2-detail">
+          <p><b>T2 — your table (copy into your book):</b></p>
+          <table class="results">
+            <thead><tr><th>Distance (cm)</th><th>Trial 1</th><th>Trial 2</th><th>Trial 3</th><th>Mean</th></tr></thead>
+            <tbody>
+              <tr><td class="iv">10</td><td></td><td></td><td></td><td></td></tr>
+              <tr><td class="iv">20</td><td></td><td></td><td></td><td></td></tr>
+              <tr><td class="iv">30</td><td></td><td></td><td></td><td></td></tr>
+              <tr><td class="iv">40</td><td></td><td></td><td></td><td></td></tr>
+              <tr><td class="iv">50</td><td></td><td></td><td></td><td></td></tr>
+            </tbody>
+          </table>
+          <p><b>Reminder:</b> wait 1 min before counting. Repeat each distance 3 times. Calculate the mean (ignore obvious anomalies).</p>
+        </div>
+
+        <div class="tier-detail" id="t3-detail">
+          <p><b>T3 — extension table:</b></p>
+          <table class="results">
+            <thead><tr><th>Distance (cm)</th><th>Mean (low CO₂)<br>0.5 g NaHCO₃</th><th>Mean (high CO₂)<br>1.5 g NaHCO₃</th></tr></thead>
+            <tbody>
+              <tr><td class="iv">10</td><td></td><td></td></tr>
+              <tr><td class="iv">20</td><td></td><td></td></tr>
+              <tr><td class="iv">30</td><td></td><td></td></tr>
+              <tr><td class="iv">40</td><td></td><td></td></tr>
+              <tr><td class="iv">50</td><td></td><td></td></tr>
+            </tbody>
+          </table>
+          <p><b>Stretch question:</b> If light is the limiting factor at high distances, will adding more CO₂ help? Use your data to argue.</p>
+        </div>
+
+        <div class="obs">As you run each distance, write down ONE thing you notice (e.g. "bubbles got slower as I moved the lamp away" / "the water warmed up after 10 minutes").</div>
+
+        <div class="toggles">
+          <button class="tog help">💡 Hint — when to call your teacher</button>
+          <button class="tog stem">📚 Sentence stems for observation</button>
+          <button class="tog unlock">🔒 Unlock the "what to do if you finish early"</button>
+          <button class="tog done">✓ I've done this</button>
+        </div>
+
+        <div class="panel help"><div class="label">When to call your teacher</div>
+          <ul>
+            <li>If your pondweed isn't bubbling after fresh cut + lamp at 10 cm.</li>
+            <li>If the water temperature has gone above 30 °C.</li>
+            <li>If glass breaks or water spills near the lamp.</li>
+            <li>If you've finished and want to be checked before moving on.</li>
+          </ul>
+        </div>
+        <div class="panel stem"><div class="label">Observation sentence stems</div>
+          <ul class="stems">
+            <li>"I observed that as the distance increased, the bubbles ____."</li>
+            <li>"The biggest count was at ____ cm."</li>
+            <li>"I noticed an anomaly at ____ — I think this was because ____."</li>
+          </ul>
+        </div>
+
+        <div class="lockbox">
+          <div class="label">🔒 Riddle to unlock the early-finisher tasks</div>
+          <p class="riddle">"How many times should you repeat each measurement to make the data more reliable? (Spell out the number.)"</p>
+          <div class="keyrow">
+            <input type="text" placeholder="Type the keyword…" autocomplete="off" spellcheck="false">
+            <button class="check-btn">Check</button>
+            <button class="hint-btn">Hint</button>
+          </div>
+          <div class="feedback"></div>
+          <div class="answers">
+            <div class="alabel">✓ If you finish early</div>
+            <ul>
+              <li>Do an extra repeat at the distance where your readings were furthest apart.</li>
+              <li>Try a 5 cm distance — does the rate keep going up, or has it plateaued?</li>
+              <li>Help a partner who's struggling — explain why you wait 1 minute before counting.</li>
+              <li>Start plotting your graph in pencil while the data is fresh.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 7 - PLOT & ANALYSE -->
+      <section class="card" data-sec="7" data-keyword="plateau" data-letter="E" data-letter-idx="6">
+        <div class="sec-head">
+          <span class="sec-num">7</span>
+          <h2 class="sec-title">Plot &amp; analyse — what does your data say?</h2>
+          <span class="time">6 min</span>
+        </div>
+
+        <div class="knowledge">
+          <div class="kl">📘 Rules for a good graph</div>
+          <ul>
+            <li>IV on the <b>x-axis</b> (horizontal). DV on the <b>y-axis</b> (vertical).</li>
+            <li>Both axes labelled with <b>units in brackets</b>.</li>
+            <li>Use a sensible scale (use 80%+ of the page).</li>
+            <li>Points marked with a small × or +. Draw a smooth line / curve of best fit.</li>
+            <li>Title: "Graph showing how distance from lamp affects rate of photosynthesis in pondweed."</li>
+          </ul>
+        </div>
+
+        <p class="task">Plot your results. Then answer in your book:</p>
+        <ol>
+          <li>What's the <b>shape</b> of your line?</li>
+          <li>At what distance does the rate <b>start to level off</b>?</li>
+          <li>Compare your graph to your <b>prediction</b>. Were you right?</li>
+        </ol>
+
+        <figure>
+          <svg viewBox="0 0 500 270" xmlns="http://www.w3.org/2000/svg">
+            <line x1="60" y1="40" x2="60" y2="240" stroke="#23332b" stroke-width="1.4"/>
+            <line x1="60" y1="240" x2="460" y2="240" stroke="#23332b" stroke-width="1.4"/>
+            <text x="20" y="140" font-size="12" transform="rotate(-90 20 140)" fill="#23332b">bubbles per minute</text>
+            <text x="220" y="265" font-size="12" fill="#23332b">distance from lamp (cm) →</text>
+            <!-- Your data point markers (example) -->
+            <g stroke="#5a8a5a" stroke-width="2" fill="none">
+              <path d="M 80 60 Q 130 80, 180 130 Q 250 195, 340 220 T 440 230"/>
+            </g>
+            <g fill="#3f6e3f">
+              <circle cx="80" cy="60" r="4"/><circle cx="160" cy="120" r="4"/>
+              <circle cx="240" cy="180" r="4"/><circle cx="320" cy="215" r="4"/>
+              <circle cx="400" cy="228" r="4"/>
+            </g>
+            <g font-size="10" fill="#666">
+              <text x="55" y="62" text-anchor="end">high</text>
+              <text x="55" y="232" text-anchor="end">low</text>
+              <text x="78" y="252">10</text><text x="158" y="252">20</text>
+              <text x="238" y="252">30</text><text x="318" y="252">40</text>
+              <text x="398" y="252">50</text>
+            </g>
+            <text x="120" y="100" font-size="11" fill="#3f6e3f" font-weight="700">steep drop</text>
+            <text x="320" y="200" font-size="11" fill="#a05a3f" font-weight="700">levelling off</text>
+          </svg>
+          <figcaption>Typical shape — high near the lamp, dropping steeply, then levelling off as distance increases.</figcaption>
+        </figure>
+
+        <div class="toggles">
+          <button class="tog help">💡 Hint</button>
+          <button class="tog stem">📚 Sentence stems</button>
+          <button class="tog unlock">🔒 Unlock the analysis</button>
+          <button class="tog done">✓ I've done this</button>
+        </div>
+
+        <div class="panel help"><div class="label">Hint</div>
+          <p>If your graph is going DOWN (left to right), distance is on x and bubbles on y, so your line shows: more distance → fewer bubbles. That makes sense — further from the light = less light = slower photosynthesis. Look for the <b>plateau</b>: the part where the line stops dropping much.</p>
+        </div>
+        <div class="panel stem"><div class="label">Sentence stems</div>
+          <ul class="stems">
+            <li>"My graph shows that as distance increases, the rate ____."</li>
+            <li>"The rate started to level off at about ____ cm."</li>
+            <li>"My prediction was ____ . My results ____ this."</li>
+          </ul>
+        </div>
+
+        <div class="lockbox">
+          <div class="label">🔒 Riddle to unlock the model analysis</div>
+          <p class="riddle">"The flat part of a graph after the steep change. The rate has stopped speeding up because another factor is now limiting. (One word, 7 letters, starts with P.)"</p>
+          <div class="keyrow">
+            <input type="text" placeholder="Type the keyword…" autocomplete="off" spellcheck="false">
+            <button class="check-btn">Check</button>
+            <button class="hint-btn">Hint</button>
+          </div>
+          <div class="feedback"></div>
+          <div class="answers">
+            <div class="alabel">✓ Model analysis</div>
+            <ol>
+              <li><b>Shape:</b> the line is highest at 10 cm and decreases as distance increases. The drop is steepest between 10 cm and 30 cm.</li>
+              <li><b>Plateau:</b> after about 30–40 cm, the line starts to level off. This means light is no longer the only limiting factor — something else (CO₂, temperature, or chlorophyll) is now controlling the rate.</li>
+              <li><b>Compared to prediction:</b> if you predicted a curve that dropped steeply then levelled, your prediction matched. If you predicted a straight line, your real data is more nuanced — well done for noticing.</li>
+            </ol>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 8 - REFLECT -->
+      <section class="card youdo" data-sec="8" data-keyword="anomaly" data-letter="D" data-letter-idx="7">
+        <div class="sec-head">
+          <span class="sec-num">8</span>
+          <span class="sec-tag youdo">You do</span>
+          <h2 class="sec-title">Reflect &amp; evaluate</h2>
+          <span class="time">4 min</span>
+        </div>
+
+        <p class="task">Three questions in your book:</p>
+        <ol>
+          <li>What was the <b>most surprising</b> thing you observed?</li>
+          <li>If you had an <b>anomaly</b>, what do you think caused it?</li>
+          <li>If you ran this again tomorrow, name <b>one improvement</b> you'd make.</li>
+        </ol>
+
+        <div class="knowledge">
+          <div class="kl">📘 Plan-monitor-evaluate cycle</div>
+          <p style="margin:0">You <b>planned</b> in L4. You <b>monitored</b> as you went today. Now you <b>evaluate</b>. Real scientists do all three — and the evaluation is usually where the next investigation comes from.</p>
+        </div>
+
+        <div class="toggles">
+          <button class="tog stem">📚 Sentence stems</button>
+          <button class="tog model">🎯 Model evaluation</button>
+          <button class="tog unlock">🔒 Unlock the next-lesson preview</button>
+          <button class="tog done">✓ I've done this</button>
+        </div>
+
+        <div class="panel stem"><div class="label">Reflection stems</div>
+          <ul class="stems">
+            <li>"The most surprising thing was ____, because ____."</li>
+            <li>"An anomaly happened at ____ cm — I think this was caused by ____."</li>
+            <li>"To improve the experiment, I would ____, because this would ____."</li>
+            <li>"My results would be more reliable if ____."</li>
+            <li>"My results would be more accurate if ____."</li>
+          </ul>
+        </div>
+        <div class="panel model"><div class="label">🎯 Model evaluation paragraph</div>
+          <p><i>"The most surprising thing I observed was that the rate didn't keep dropping forever — it levelled off at around 40 cm. This shows that light isn't the only limiting factor. I had one anomaly at 30 cm where I counted 25 bubbles compared to 38 in my other trials. I think this was because the water had warmed slightly from the lamp, which changed the temperature CV. To improve, I would put a beaker of cold water between the lamp and the experiment as a heat shield, so temperature stays constant. I'd also use a measuring cylinder to collect O₂ over water — that would give a more accurate measure of volume than counting bubbles, which vary in size."</i></p>
+        </div>
+
+        <div class="lockbox">
+          <div class="label">🔒 Final riddle — last letter of OBSERVED</div>
+          <p class="riddle">"A result that doesn't fit the pattern. You usually leave it out when calculating the mean. (One word, 7 letters, starts with A.)"</p>
+          <div class="keyrow">
+            <input type="text" placeholder="Type the keyword…" autocomplete="off" spellcheck="false">
+            <button class="check-btn">Check</button>
+            <button class="hint-btn">Hint</button>
+          </div>
+          <div class="feedback"></div>
+          <div class="answers">
+            <div class="alabel">✓ What's coming next lesson</div>
+            <p>Next lesson we'll write up the <b>full practical report</b>: title, hypothesis, method, results table, graph, conclusion, evaluation. You've now got everything you need.</p>
+            <p><b>Big picture so far:</b></p>
+            <ul>
+              <li>L1 — Leaf structure (where photosynthesis happens)</li>
+              <li>L2 — Photosynthesis equation (the reaction)</li>
+              <li>L3 — Plant nutrition (what plants need)</li>
+              <li>L4 — Planning skills (how to design a test)</li>
+              <li>L5 — Practical (your own data)</li>
+              <li>L6 — Write-up &amp; mark scheme</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <footer>You're in charge of your own learning today 🌿 — and remember: the data is more important than the prediction.</footer>
+    </main>
+
+    <!-- KEY WORDS -->
+    <aside class="glossary">
+      <h3>Key Words</h3>
+      <p class="gloss-hint">Practical vocab + planning vocab.</p>
+
+      <div class="kw"><div class="ic">🧪</div>
+        <div><div class="term">Pondweed</div><div class="def">Cabomba or Elodea — a water plant that produces visible O₂ bubbles.</div></div></div>
+
+      <div class="kw"><div class="ic">💧</div>
+        <div><div class="term">NaHCO₃</div><div class="def">Sodium hydrogen carbonate — provides extra CO₂ in the water.</div></div></div>
+
+      <div class="kw"><div class="ic">📐</div>
+        <div><div class="term">Distance (IV)</div><div class="def">Distance from lamp to beaker, in cm. The variable you change.</div></div></div>
+
+      <div class="kw"><div class="ic">🫧</div>
+        <div><div class="term">Bubbles/min (DV)</div><div class="def">What you count — your dependent variable.</div></div></div>
+
+      <div class="kw"><div class="ic">⚖️</div>
+        <div><div class="term">Control variable</div><div class="def">Kept the same to make it a fair test.</div></div></div>
+
+      <div class="kw"><div class="ic">🔁</div>
+        <div><div class="term">Repeat</div><div class="def">Do each measurement at least 3 times. Improves reliability.</div></div></div>
+
+      <div class="kw"><div class="ic">µ</div>
+        <div><div class="term">Mean</div><div class="def">Average of your repeats. Total ÷ number of values.</div></div></div>
+
+      <div class="kw"><div class="ic">⚡</div>
+        <div><div class="term">Anomaly</div><div class="def">A reading that doesn't fit the pattern. Usually excluded from the mean.</div></div></div>
+
+      <div class="kw"><div class="ic">📊</div>
+        <div><div class="term">Plateau</div><div class="def">Flat part of a graph — rate has stopped changing because another factor is limiting.</div></div></div>
+
+      <div class="kw"><div class="ic">📈</div>
+        <div><div class="term">Limiting factor</div><div class="def">The thing currently slowing the rate. Increase it and rate goes up.</div></div></div>
+
+      <div class="kw"><div class="ic">🎯</div>
+        <div><div class="term">Accuracy</div><div class="def">How close to the true value.</div></div></div>
+
+      <div class="kw"><div class="ic">📏</div>
+        <div><div class="term">Precision</div><div class="def">How close repeats are to each other.</div></div></div>
+
+      <div class="kw"><div class="ic">✓</div>
+        <div><div class="term">Reliability</div><div class="def">Same results if repeated. Improved by repeats.</div></div></div>
+
+      <div class="kw"><div class="ic">🌡️</div>
+        <div><div class="term">Calibration</div><div class="def">Setting up your measurement so different people get similar readings.</div></div></div>
+
+    </aside>
+  </div>
+</div>
+
+<script>
+(function(){
+  const sections = Array.from(document.querySelectorAll('section.card'));
+  const total = sections.length;
+  document.getElementById('total-count').textContent = total;
+
+  const progress = document.getElementById('progress');
+  for(let i=0;i<total;i++){
+    const d = document.createElement('div'); d.className='pdot'; progress.appendChild(d);
+  }
+
+  const codeBoxes = document.getElementById('codeBoxes');
+  sections.forEach((s,i)=>{
+    const slot = document.createElement('div');
+    slot.className='slot'; slot.id='slot-'+i; slot.textContent='?';
+    codeBoxes.appendChild(slot);
+  });
+
+  const lvls = {
+    'lvl-light': {help:false, stem:false, model:false},
+    'lvl-std':   {help:false, stem:false, model:false},
+    'lvl-full':  {help:true,  stem:true,  model:true}
+  };
+  function applyLevel(id){
+    const cfg = lvls[id];
+    document.querySelectorAll('.lvl').forEach(b=>b.classList.toggle('active', b.id===id));
+    sections.forEach(card=>{
+      ['help','stem','model'].forEach(k=>{
+        const tog = card.querySelector('.tog.'+k);
+        const panel = card.querySelector('.panel.'+k);
+        if(!tog||!panel) return;
+        const want = cfg[k];
+        tog.classList.toggle('on', want);
+        panel.classList.toggle('show', want);
+      });
+    });
+  }
+  document.querySelectorAll('.lvl').forEach(b=>b.addEventListener('click',()=>applyLevel(b.id)));
+
+  // FREE TOGGLES
+  sections.forEach(card=>{
+    ['help','stem','model'].forEach(k=>{
+      const tog = card.querySelector('.tog.'+k);
+      const panel = card.querySelector('.panel.'+k);
+      if(!tog||!panel) return;
+      tog.addEventListener('click',()=>{
+        const on = !tog.classList.contains('on');
+        tog.classList.toggle('on', on);
+        panel.classList.toggle('show', on);
+      });
+    });
+  });
+
+  // UNLOCK BOX
+  sections.forEach(card=>{
+    const tog = card.querySelector('.tog.unlock');
+    const lockbox = card.querySelector('.lockbox');
+    if(!tog||!lockbox) return;
+    tog.addEventListener('click',()=>{
+      const on = !tog.classList.contains('on');
+      tog.classList.toggle('on', on);
+      lockbox.classList.toggle('show', on);
+      if(on) lockbox.querySelector('input')?.focus();
+    });
+  });
+
+  // KEYWORD CHECK
+  function normalise(s){
+    return (s||'').toLowerCase().trim().replace(/[.,!?;:]/g,'').replace(/s$/,'');
+  }
+  function accepts(target, attempt){
+    const a = normalise(attempt); const t = normalise(target);
+    if(!a) return false;
+    if(a===t) return true;
+    if(a.startsWith(t)) return true;
+    if(t.startsWith(a) && a.length >= t.length-2) return true;
+    return false;
+  }
+  const tries = {};
+  sections.forEach((card,idx)=>{
+    const lockbox = card.querySelector('.lockbox');
+    if(!lockbox) return;
+    const input = lockbox.querySelector('input');
+    const checkBtn = lockbox.querySelector('.check-btn');
+    const hintBtn = lockbox.querySelector('.hint-btn');
+    const fb = lockbox.querySelector('.feedback');
+    const answers = lockbox.querySelector('.answers');
+    const target = card.dataset.keyword;
+    const letter = card.dataset.letter;
+    const slot = document.getElementById('slot-'+idx);
+    tries[idx] = 0;
+
+    function unlock(){
+      input.classList.add('right'); input.classList.remove('wrong');
+      input.value = target;
+      input.readOnly = true;
+      checkBtn.disabled = true;
+      checkBtn.textContent = '✓ Unlocked';
+      checkBtn.style.background = '#5a8a5a';
+      fb.className = 'feedback right';
+      fb.innerHTML = '✓ Correct! <span class="letter-reveal">Letter: '+letter+'</span>';
+      answers.classList.add('unlocked');
+      slot.classList.add('unlocked');
+      slot.textContent = letter;
+      const unlockedCount = document.querySelectorAll('.slot.unlocked').length;
+      if(unlockedCount === total){
+        const cel = document.getElementById('celebrate');
+        cel.classList.add('show');
+        cel.scrollIntoView({behavior:'smooth',block:'center'});
+      }
+    }
+
+    function check(){
+      const v = input.value;
+      if(!v.trim()) return;
+      tries[idx]++;
+      if(accepts(target, v)){
+        unlock();
+      } else {
+        input.classList.add('wrong'); input.classList.remove('right');
+        fb.className = 'feedback wrong';
+        const tlen = target.replace(' ','').length;
+        if(tries[idx] >= 3){
+          fb.innerHTML = `Not quite — the keyword starts with "<b>${target.slice(0,2)}</b>" and has <b>${tlen}</b> letters. Try once more.`;
+        } else if(tries[idx] >= 2){
+          fb.innerHTML = `Hmm, not quite. Re-read the riddle and the content box.`;
+        } else {
+          fb.innerHTML = `Not quite — try again.`;
+        }
+      }
+    }
+
+    checkBtn.addEventListener('click', check);
+    input.addEventListener('keydown', e=>{ if(e.key==='Enter'){ e.preventDefault(); check(); }});
+    hintBtn.addEventListener('click',()=>{
+      fb.className='feedback hint';
+      const tlen = target.replace(' ','').length;
+      fb.innerHTML = `💡 Hint: it starts with "<b>${target.slice(0,2)}</b>" and is <b>${tlen}</b> letters long.`;
+    });
+  });
+
+  // APPARATUS CHECKLIST
+  document.querySelectorAll('#apparatus-list li').forEach(li=>{
+    li.addEventListener('click',()=>li.classList.toggle('checked'));
+  });
+
+  // TIER PICKER
+  document.querySelectorAll('#tiers .tier').forEach(t=>{
+    t.addEventListener('click',()=>{
+      document.querySelectorAll('#tiers .tier').forEach(x=>x.classList.remove('on'));
+      t.classList.add('on');
+      document.querySelectorAll('.tier-detail').forEach(d=>d.classList.remove('show'));
+      document.getElementById(t.dataset.tier+'-detail').classList.add('show');
+    });
+  });
+
+  // DONE / PROGRESS
+  function refresh(){
+    let count = 0;
+    sections.forEach((card,i)=>{
+      const done = card.classList.contains('done');
+      progress.children[i].classList.toggle('done', done);
+      if(done) count++;
+    });
+    document.getElementById('done-count').textContent = count;
+  }
+  sections.forEach(card=>{
+    const btn = card.querySelector('.tog.done'); if(!btn) return;
+    btn.addEventListener('click',()=>{
+      const on = !btn.classList.contains('on');
+      btn.classList.toggle('on', on);
+      btn.textContent = on ? '✓ Done!' : '✓ I\'ve done this';
+      card.classList.toggle('done', on);
+      refresh();
+    });
+  });
+
+  // RESET
+  document.getElementById('reset').addEventListener('click',()=>{
+    sections.forEach((card,i)=>{
+      card.classList.remove('done');
+      const dbtn = card.querySelector('.tog.done');
+      if(dbtn){dbtn.classList.remove('on'); dbtn.textContent='✓ I\'ve done this';}
+      const ub = card.querySelector('.tog.unlock');
+      if(ub){ub.classList.remove('on');}
+      const lb = card.querySelector('.lockbox');
+      if(lb){lb.classList.remove('show');}
+      const inp = card.querySelector('.lockbox input');
+      if(inp){inp.value=''; inp.readOnly=false; inp.className=''; }
+      const cb = card.querySelector('.lockbox .check-btn');
+      if(cb){cb.disabled=false; cb.textContent='Check'; cb.style.background='';}
+      const fb = card.querySelector('.lockbox .feedback');
+      if(fb){fb.className='feedback'; fb.textContent='';}
+      const ans = card.querySelector('.lockbox .answers');
+      if(ans){ans.classList.remove('unlocked');}
+      const slot = document.getElementById('slot-'+i);
+      if(slot){slot.classList.remove('unlocked'); slot.textContent='?';}
+      tries[i]=0;
+    });
+    document.querySelectorAll('#apparatus-list li').forEach(li=>li.classList.remove('checked'));
+    document.querySelectorAll('#tiers .tier').forEach(t=>t.classList.remove('on'));
+    document.querySelectorAll('.tier-detail').forEach(d=>d.classList.remove('show'));
+    document.getElementById('celebrate').classList.remove('show');
+    refresh();
+    applyLevel('lvl-std');
+  });
+
+  applyLevel('lvl-std');
+})();
+</script>
+</body>
+</html>
