@@ -1,0 +1,554 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lesson 2a: The Narrative of the Graph — KS3 Skills</title>
+<style>
+  :root{
+    /* Analytical Blue Theme */
+    --bg:#fafaf7;
+    --ink:#23332b;
+    --muted:#5a6b62;
+    --leaf:#2B5EA7;      /* Primary Blue */
+    --leaf-dk:#1A365D;   /* Dark Blue */
+    --leaf-soft:#EBF4FF; /* Light Blue */
+    --leaf-line:#BEE3F8; /* Border Blue */
+    --sky:#eef4fb;
+    --sky-line:#cfe0f0;
+    --sky-dk:#3a6594;
+    --sun:#fff6e3;
+    --sun-line:#f0d9a3;
+    --sun-dk:#8a6614;
+    --rose:#fdeeee;
+    --rose-line:#f2c7c7;
+    --plum:#f1ebfa;
+    --plum-line:#dccff0;
+    --plum-dk:#5a3a8a;
+    --chip:#f1ede4;
+    --shadow:0 1px 2px rgba(0,0,0,.04), 0 6px 18px rgba(43,94,167,.08);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,sans-serif;
+    line-height:1.55;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1080px;margin:0 auto;padding:28px 24px 80px}
+
+  header.hero{background:linear-gradient(180deg,#ffffff 0%,#f4f8fc 100%);
+    border:1px solid var(--leaf-line);border-radius:18px;padding:22px 26px;
+    box-shadow:var(--shadow);margin-bottom:18px}
+  .eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--leaf);font-weight:600}
+  h1{font-size:28px;margin:6px 0 4px;letter-spacing:-.01em}
+  .sub{color:var(--muted);font-size:14.5px;margin:0 0 14px}
+
+  .picker{display:flex;flex-wrap:wrap;gap:8px;align-items:center;background:#fff;border:1px solid var(--leaf-line);border-radius:14px;padding:10px 12px}
+  .picker .pick-label{font-size:12px;color:var(--muted);font-weight:600;letter-spacing:.05em;text-transform:uppercase;margin-right:4px}
+  .picker button{appearance:none;border:1px solid var(--leaf-line);background:#fff;color:var(--ink);
+    border-radius:999px;padding:7px 14px;font-size:13.5px;font-weight:600;cursor:pointer;transition:.15s}
+  .picker button:hover{background:var(--leaf-soft)}
+  .picker button.active{background:var(--leaf);color:#fff;border-color:var(--leaf)}
+  .picker .reset{margin-left:auto;background:transparent;border:0;color:var(--muted);font-size:12.5px;cursor:pointer;text-decoration:underline}
+
+  /* MASTER CODE */
+  .master{background:#fff;border:1px solid var(--leaf-line);border-radius:14px;padding:14px 16px;margin-top:14px;display:flex;flex-wrap:wrap;align-items:center;gap:14px}
+  .master-label{font-size:12px;color:var(--muted);font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+  .code{display:flex;gap:6px}
+  .code .slot{width:34px;height:42px;border:1.5px dashed #cfd2c4;border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:800;font-family:Menlo,Consolas,monospace;font-size:18px;color:#bdb999;background:#fbfaf3;transition:.25s}
+  .code .slot.unlocked{border-style:solid;border-color:var(--leaf);background:var(--leaf-soft);color:var(--leaf-dk);transform:rotateY(0)}
+  .master-hint{font-size:12px;color:var(--muted);margin-left:auto}
+
+  /* PROGRESS DOTS */
+  .progress{display:flex;gap:6px;margin-top:14px;flex-wrap:wrap}
+  .pdot{flex:1;min-width:18px;height:8px;background:#e2e8f0;border-radius:6px;transition:.2s}
+  .pdot.done{background:var(--leaf)}
+  .progress-meta{font-size:12px;color:var(--muted);margin-top:6px;text-align:right}
+
+  .grid{display:grid;grid-template-columns:1fr 290px;gap:20px;margin-top:8px}
+  @media (max-width:880px){.grid{grid-template-columns:1fr}}
+
+  section.card{background:#fff;border:1px solid #ecebe4;border-radius:16px;
+    padding:20px 22px;margin-bottom:16px;box-shadow:var(--shadow);transition:.2s}
+  section.card.done{background:#f8fafc;border-color:var(--leaf-line)}
+  .sec-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:6px}
+  .sec-num{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;
+    background:var(--leaf);color:#fff;border-radius:8px;font-weight:700;font-size:13px}
+  .sec-title{font-size:17px;font-weight:700;margin:0}
+  .time{margin-left:auto;display:inline-flex;align-items:center;gap:6px;
+    background:var(--chip);color:#665a3f;border-radius:999px;padding:4px 10px;font-size:12px;font-weight:600}
+  .time::before{content:"";width:8px;height:8px;border-radius:50%;background:#d8b85a;display:inline-block}
+  .task{font-size:15px;margin:4px 0 10px}
+
+  .toggles{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 0}
+  .tog{appearance:none;border:1px solid #e0dccd;background:#fff;border-radius:999px;
+    padding:6px 12px;font-size:12.5px;font-weight:600;color:var(--ink);cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:.15s}
+  .tog:hover{background:#fafaf2}
+  .tog.help{color:var(--sky-dk);border-color:var(--sky-line)}
+  .tog.help.on{background:var(--sky);border-color:var(--sky-dk)}
+  .tog.stem{color:var(--plum-dk);border-color:var(--plum-line)}
+  .tog.stem.on{background:var(--plum);border-color:var(--plum-dk)}
+  .tog.stretch{color:var(--sun-dk);border-color:var(--sun-line)}
+  .tog.stretch.on{background:var(--sun);border-color:var(--sun-dk)}
+  .tog.unlock{color:var(--leaf-dk);border-color:var(--leaf-line)}
+  .tog.unlock.on{background:var(--leaf-soft);border-color:var(--leaf-dk)}
+  .tog.done{margin-left:auto;color:var(--leaf-dk);border-color:var(--leaf-line)}
+  .tog.done.on{background:var(--leaf);color:#fff;border-color:var(--leaf)}
+
+  .panel{display:none;border-radius:12px;padding:12px 14px;margin-top:10px;border:1px solid;font-size:14.5px}
+  .panel.show{display:block;animation:slide .18s ease-out}
+  @keyframes slide{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
+  .panel.help{background:var(--sky);border-color:var(--sky-line)}
+  .panel.stem{background:var(--plum);border-color:var(--plum-line)}
+  .panel.stretch{background:var(--sun);border-color:var(--sun-line)}
+  .panel .label{font-size:11px;letter-spacing:.12em;text-transform:uppercase;font-weight:700;margin-bottom:4px}
+  .panel.help .label{color:var(--sky-dk)}
+  .panel.stem .label{color:var(--plum-dk)}
+  .panel.stretch .label{color:var(--sun-dk)}
+
+  /* LOCK PANEL */
+  .lockbox{display:none;border-radius:12px;padding:14px 16px;margin-top:10px;border:1.5px solid var(--leaf-line);background:linear-gradient(180deg,#ffffff 0%, #f4f8fc 100%)}
+  .lockbox.show{display:block;animation:slide .18s ease-out}
+  .lockbox .label{font-size:11px;letter-spacing:.12em;text-transform:uppercase;font-weight:700;color:var(--leaf-dk);margin-bottom:6px;display:flex;align-items:center;gap:6px}
+  .riddle{font-size:14.5px;color:var(--ink);margin:6px 0 10px;font-style:italic;line-height:1.5}
+  .keyrow{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+  .keyrow input{flex:1;min-width:160px;border:1.5px solid var(--leaf-line);background:#fff;border-radius:10px;padding:9px 12px;font-size:14.5px;font-family:inherit;outline:none;transition:.15s}
+  .keyrow input:focus{border-color:var(--leaf-dk);background:#fff}
+  .keyrow input.wrong{border-color:#c97070;background:#fdf6f6}
+  .keyrow input.right{border-color:var(--leaf);background:var(--leaf-soft)}
+  .keyrow .check-btn{appearance:none;border:0;background:var(--leaf);color:#fff;border-radius:10px;padding:9px 16px;font-size:14px;font-weight:700;cursor:pointer;transition:.15s}
+  .keyrow .hint-btn{appearance:none;border:1px solid var(--leaf-line);background:#fff;color:var(--leaf-dk);border-radius:10px;padding:8px 12px;font-size:12.5px;font-weight:600;cursor:pointer}
+  .feedback{font-size:13px;margin-top:8px;min-height:18px}
+  .feedback.wrong{color:#a84a4a}
+  .feedback.right{color:var(--leaf-dk);font-weight:700}
+  .answers{display:none;margin-top:12px;padding:12px 14px;background:#fff;border:1px dashed var(--leaf-line);border-radius:10px;font-size:14.5px}
+  .answers.unlocked{display:block;animation:slide .25s ease-out}
+
+  table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 14.5px; }
+  th { background: #f1f5f9; font-weight: 700; text-align: left; padding: 8px 10px; border: 1px solid #cbd5e1; font-size: 13px; color: var(--leaf-dk); }
+  td { padding: 8px 10px; border: 1px solid #e2e8f0; font-family: 'JetBrains Mono', monospace; font-size: 13.5px; }
+
+  aside.glossary{position:sticky;top:14px;align-self:start;background:#fff;border:1px solid #ecebe4;
+    border-radius:16px;padding:16px;box-shadow:var(--shadow);max-height:calc(100vh - 28px);overflow:auto}
+  aside.glossary h3{margin:0 0 4px;font-size:14px;letter-spacing:.1em;text-transform:uppercase;color:var(--leaf)}
+  .kw{display:grid;grid-template-columns:34px 1fr;gap:10px;align-items:start;margin:9px 0;padding-bottom:9px;border-bottom:1px dashed #eee}
+  .kw .ic{width:34px;height:34px;border-radius:9px;background:var(--leaf-soft);display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--leaf-dk);}
+  .kw .term{font-weight:700;font-size:13.5px;line-height:1.25}
+  .kw .def{font-size:12.5px;color:var(--muted);margin-top:2px}
+
+  .celebrate{display:none;background:linear-gradient(135deg,#ebf4ff 0%,#fff6e3 100%);border:1px solid var(--leaf-line);border-radius:14px;padding:18px;text-align:center;margin-bottom:16px;color:var(--leaf-dk);font-weight:600}
+  .celebrate.show{display:block}
+  .celebrate .big{font-family:Menlo,Consolas,monospace;font-size:28px;letter-spacing:.4em;font-weight:800;display:block;margin:6px 0;color:var(--leaf-dk)}
+
+  .plenary-fill{display:grid;gap:8px;margin-top:10px}
+  .pfill{background:#fff;border:1px solid #ecebe4;border-radius:10px;padding:10px 12px;font-size:14.5px;cursor:pointer;transition:.15s}
+  .pfill .ans{display:none;color:var(--leaf-dk);font-weight:700;margin-top:6px}
+  .pfill.flipped .ans{display:block;animation:slide .18s ease-out}
+
+  .salt-box{background:#f8fafc; border:1px solid var(--leaf-line); border-radius:12px; padding:14px; margin:14px 0;}
+  .salt-box b{color:var(--leaf); font-size:18px; display:inline-block; width:20px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="hero">
+    <div class="eyebrow">KS3 Science · Working Scientifically</div>
+    <h1>The Narrative of the Graph 📉</h1>
+    <p class="sub">Data tells a story, but only if you choose the right visual. Today we master <b>graph selection</b> and the <b>S.A.L.T. framework</b> for precision plotting.</p>
+
+    <div class="picker">
+      <span class="pick-label">Pick your support level →</span>
+      <button id="lvl-light" class="lvl">🚀 I've got this</button>
+      <button id="lvl-std" class="lvl active">⚖️ Standard</button>
+      <button id="lvl-full" class="lvl">🪜 Give me all the support</button>
+      <button class="reset" id="reset">Reset progress</button>
+    </div>
+
+    <div class="master">
+      <span class="master-label">🔑 Master code</span>
+      <div class="code" id="codeBoxes"></div>
+      <span class="master-hint">Crack each section's keyword to reveal a letter. Solve all 6 to spell today's key theme.</span>
+    </div>
+
+    <div class="progress" id="progress"></div>
+    <div class="progress-meta"><span id="done-count">0</span> / <span id="total-count">6</span> sections done</div>
+  </header>
+
+  <div class="celebrate" id="celebrate">
+    ✨ Master code cracked! The word was…
+    <span class="big">GRAPHS</span>
+    You are ready to turn raw numbers into scientific evidence.
+  </div>
+
+  <div class="grid">
+    <main>
+
+      <section class="card" data-sec="1" data-keyword="independent" data-letter="G" data-letter-idx="0">
+        <div class="sec-head">
+          <span class="sec-num">1</span>
+          <h2 class="sec-title">Activate — X marks the spot</h2>
+          <span class="time">5 min</span>
+        </div>
+        <p class="task">In Lesson 1, we learned that the IV always goes in the first column. On a graph, the <b>Independent Variable (IV)</b> always goes on the <b>X-axis</b> (the horizontal one).</p>
+        
+        <div style="background:#f8fafc; border:1px solid #cbd5e1; border-radius:12px; padding:14px;">
+          <b>Scenario: Heating Water</b><br>
+          A student measures the <b>temperature</b> of water every <b>60 seconds</b> as it is heated by a Bunsen burner.
+        </div>
+
+        <div class="toggles">
+          <button class="tog help">💡 Help me identify</button>
+          <button class="tog stretch">⚡ Stretch</button>
+          <button class="tog unlock">🔒 Unlock check</button>
+          <button class="tog done">✓ I've done this</button>
+        </div>
+
+        <div class="panel help"><div class="label">Variables Reminder</div>
+          <p><b>IV (Independent):</b> What did the student decide to change/set? (Hint: The clock kept ticking...)</p>
+          <p><b>DV (Dependent):</b> What changed <i>because</i> of the heat? What was written in the table?</p>
+        </div>
+        <div class="panel stretch"><div class="label">Push yourself</div>
+          <p>If you were to plot this, what would be the <b>labels</b> for your X and Y axes, including the units?</p>
+        </div>
+
+        <div class="lockbox">
+          <div class="label">🔒 Riddle to unlock</div>
+          <p class="riddle">"I am the variable that goes on the horizontal X-axis. I am the thing 'I change' or set. What am I? (11 letters)"</p>
+          <div class="keyrow">
+            <input type="text" placeholder="Type the keyword…">
+            <button class="check-btn">Check</button>
+          </div>
+          <div class="feedback"></div>
+          <div class="answers">
+            <div class="alabel">✓ Answers</div>
+            <p><b>IV (X-axis):</b> Time (seconds)<br><b>DV (Y-axis):</b> Temperature (°C)</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="card" data-sec="2" data-keyword="continuous" data-letter="R" data-letter-idx="1">
+        <div class="sec-head">
+          <span class="sec-num">2</span>
+          <h2 class="sec-title">The Selection Matrix</h2>
+          <span class="time">8 min</span>
+        </div>
+        <p class="task">You must choose between a <b>Bar Chart</b> and a <b>Line Graph</b>. The choice depends on the <i>type</i> of data.</p>
+
+        <div class="salt-box" style="background:#ebf4ff;">
+          <p>📊 <b>Bar Charts</b> are for <b>Categorical</b> data (words or distinct groups). Bars must not touch!</p>
+          <p>📈 <b>Line Graphs</b> are for <b>Continuous</b> data (measurements that can be any value, like time or length).</p>
+        </div>
+
+        <p class="task"><b>Task:</b> Decide which graph you would use for these 3 datasets:</p>
+        <ul>
+          <li>A: Number of students with different eye colours.</li>
+          <li>B: The height of a bean plant measured every day for a week.</li>
+          <li>C: The boiling point of different types of alcohol.</li>
+        </ul>
+
+        <div class="toggles">
+          <button class="tog help">💡 Decision Hint</button>
+          <button class="tog stretch">⚡ Stretch</button>
+          <button class="tog unlock">🔒 Unlock check</button>
+          <button class="tog done">✓ I've done this</button>
+        </div>
+
+        <div class="panel help"><div class="label">Hint</div>
+          <p>If the data is <b>words</b> (Brown, Blue, Green), use a <b>Bar Chart</b>. If the data is <b>numbers</b> that come from measuring, use a <b>Line Graph</b>.</p>
+        </div>
+        <div class="panel stretch"><div class="label">Push yourself</div>
+          <p>Shoe size is numerical (4, 5, 6), but you can't be a size 5.234. Is this discrete or continuous? Which graph would a scientist use?</p>
+        </div>
+
+        <div class="lockbox">
+          <div class="label">🔒 Riddle to unlock</div>
+          <p class="riddle">"I am data that can be any numerical value on a scale. I usually require a line graph. What am I? (10 letters)"</p>
+          <div class="keyrow">
+            <input type="text" placeholder="Type the keyword…">
+            <button class="check-btn">Check</button>
+          </div>
+          <div class="feedback"></div>
+          <div class="answers">
+            <div class="alabel">✓ Answers</div>
+            <p><b>A:</b> Bar Chart (Categorical)<br><b>B:</b> Line Graph (Continuous)<br><b>C:</b> Bar Chart (Categorical - "Types" are categories)</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="card" data-sec="3" data-keyword="scale" data-letter="A" data-letter-idx="2">
+        <div class="sec-head">
+          <span class="sec-num">3</span>
+          <h2 class="sec-title">The S.A.L.T. Framework</h2>
+          <span class="time">7 min</span>
+        </div>
+        <p class="task">To get full marks in an exam, every graph must follow the <b>S.A.L.T.</b> rules. Memorise these now.</p>
+
+        <div class="salt-box">
+          <p><b>S</b> — <b>Scale:</b> Must go up in equal steps and cover at least 50% of the grid.</p>
+          <p><b>A</b> — <b>Axes:</b> IV on X, DV on Y. Use a ruler!</p>
+          <p><b>L</b> — <b>Labels:</b> Must match your table headers EXACTLY, including units.</p>
+          <p><b>T</b> — <b>Title:</b> "A graph to show how [IV] affects [DV]".</p>
+        </div>
+
+        <div class="toggles">
+          <button class="tog help">💡 Scale Tips</button>
+          <button class="tog stretch">⚡ Stretch</button>
+          <button class="tog unlock">🔒 Unlock check</button>
+          <button class="tog done">✓ I've done this</button>
+        </div>
+
+        <div class="panel help"><div class="label">Scale Tips</div>
+          <p>Good scales use multiples of 1, 2, 5, or 10. Avoid "awkward" scales like going up in 3s or 7s—it makes plotting nearly impossible!</p>
+        </div>
+        <div class="panel stretch"><div class="label">Push yourself</div>
+          <p>Explain why a scale that only uses the bottom corner of the graph paper is considered "Bad Science".</p>
+        </div>
+
+        <div class="lockbox">
+          <div class="label">🔒 Riddle to unlock</div>
+          <p class="riddle">"In SALT, I am the letter that ensures your graph isn't too small and goes up in even steps. What am I? (5 letters)"</p>
+          <div class="keyrow">
+            <input type="text" placeholder="Type the keyword…">
+            <button class="check-btn">Check</button>
+          </div>
+          <div class="feedback"></div>
+          <div class="answers">
+            <div class="alabel">✓ Secure</div>
+            <p>If your scale is too small, you cannot see the <b>precision</b> of the data or identify anomalies easily. Always aim for "Big and Bold".</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="card" data-sec="4" data-keyword="pencil" data-letter="P" data-letter-idx="3">
+        <div class="sec-head">
+          <span class="sec-num">4</span>
+          <h2 class="sec-title">Face-to-Face Plotting Challenge</h2>
+          <span class="time">15 min</span>
+        </div>
+        <p class="task"><b>Hand-draw</b> a line graph using the data below. This shows how water heats up with the Bunsen air-hole <b>slightly open</b> vs <b>fully open</b>. <i>(From Skills Sheet 4)</i></p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Time (s)</th>
+              <th>Temp (Slightly Open) / °C</th>
+              <th>Temp (Fully Open) / °C</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>0</td><td>22</td><td>22</td></tr>
+            <tr><td>120</td><td>33</td><td>42</td></tr>
+            <tr><td>240</td><td>41</td><td>61</td></tr>
+            <tr><td>360</td><td>52</td><td>83</td></tr>
+            <tr><td>480</td><td>62</td><td>100</td></tr>
+          </tbody>
+        </table>
+
+        <div class="toggles">
+          <button class="tog help">💡 Plotting Tips</button>
+          <button class="tog stem">📚 Drawing Checklist</button>
+          <button class="tog stretch">⚡ Stretch</button>
+          <button class="tog unlock">🔒 Unlock check</button>
+          <button class="tog done">✓ I've done this</button>
+        </div>
+
+        <div class="panel help"><div class="label">Plotting Tips</div>
+          <ul>
+            <li>Use a <b>sharp pencil</b> and mark points with a small 'x', not a big blob.</li>
+            <li>Plot both sets of data on the same grid. Use a <b>Key</b> to show which line is which.</li>
+          </ul>
+        </div>
+        <div class="panel stem"><div class="label">Checklist</div>
+          <ul class="stems">
+            <li>Scale: X goes to 480, Y goes to 100.</li>
+            <li>Labels: Time (s) on X, Temperature (°C) on Y.</li>
+            <li>Ruler: Are your axes and lines of best fit perfectly straight?</li>
+          </ul>
+        </div>
+        <div class="panel stretch"><div class="label">Push yourself</div>
+          <p>Calculate the <b>Rate of Heating</b> for the 'Fully Open' burner. (Change in Temp ÷ Time taken).</p>
+        </div>
+
+        <div class="lockbox">
+          <div class="label">🔒 Riddle to unlock</div>
+          <p class="riddle">"I must be sharp. If you use a pen to draw a graph, I am what you'll wish you had when you make a mistake. What am I? (6 letters)"</p>
+          <div class="keyrow">
+            <input type="text" placeholder="Type the keyword…">
+            <button class="check-btn">Check</button>
+          </div>
+          <div class="feedback"></div>
+          <div class="answers">
+            <div class="alabel">✓ Plotting Gold Standard</div>
+            <p>Check your graph: Does the 'Fully Open' line have a steeper gradient (slope)? It should, as it heats the water faster.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="card" data-sec="5" data-keyword="units" data-letter="H" data-letter-idx="4">
+        <div class="sec-head">
+          <span class="sec-num">5</span>
+          <h2 class="sec-title">Audit — Spot the Error</h2>
+          <span class="time">7 min</span>
+        </div>
+        
+        <p class="task">A student investigated adding Zinc to Copper Sulphate. Look at the data from their table (<i>Sheet 10</i>) and <b>identify 3 errors</b>.</p>
+
+        <div style="background:#fff; border:2px solid var(--rose-line); border-radius:12px; padding:12px; margin-bottom:12px; color:#b91c1c;">
+          <b>Student Table:</b><br>
+          • Mass of Zinc: 0.5, 1, 1.5, 2, 2.5<br>
+          • Temp Change: 11, 21.5, 1.5, 37, 38.5<br>
+          • Mean: 11.0°C, 21.5°C, 18.5°C, 34.0°C
+        </div>
+
+        <div class="toggles">
+          <button class="tog help">💡 Hint</button>
+          <button class="tog stretch">⚡ Stretch</button>
+          <button class="tog unlock">🔒 Unlock answers</button>
+          <button class="tog done">✓ I've done this</button>
+        </div>
+
+        <div class="panel help"><div class="label">Hint</div>
+          <ul>
+            <li>Check the "Mean" column headers.</li>
+            <li>Look at the numbers for "1.5g". Does "1.5" fit the pattern of 11 and 21.5?</li>
+            <li>Check the decimal places in the first column.</li>
+          </ul>
+        </div>
+        <div class="panel stretch"><div class="label">Push yourself</div>
+          <p>If you were plotting this, how would you handle the "1.5" result? Should it be included in the line of best fit?</p>
+        </div>
+
+        <div class="lockbox">
+          <div class="label">🔒 Riddle to unlock</div>
+          <p class="riddle">"I belong in the header, but the student put me in every single box of the Mean column (e.g. °C). What am I? (5 letters)"</p>
+          <div class="keyrow">
+            <input type="text" placeholder="Type the keyword…">
+            <button class="check-btn">Check</button>
+          </div>
+          <div class="feedback"></div>
+          <div class="answers">
+            <div class="alabel">✓ The Audit Results</div>
+            <ol>
+              <li><b>Anomaly:</b> The 1.5 value in the second row is clearly an error (far too low).</li>
+              <li><b>Consistency:</b> The mass column should be 1.0, 1.5, 2.0 (consistent decimals).</li>
+              <li><b>Units:</b> Symbols like °C should only be in the header, not the data boxes.</li>
+            </ol>
+          </div>
+        </div>
+      </section>
+
+      <section class="card" data-sec="6" data-keyword="stomata" data-letter="S" data-letter-idx="5">
+        <div class="sec-head">
+          <span class="sec-num">6</span>
+          <h2 class="sec-title">Exit Quiz — S.A.L.T. Master</h2>
+          <span class="time">5 min</span>
+        </div>
+        
+        <div class="plenary-fill" id="plenary"></div>
+
+        <div class="lockbox">
+          <div class="label">🔒 Final riddle — last letter of the master code</div>
+          <p class="riddle">"I'm the tiny pore on the underside of a leaf from last lesson. I have nothing to do with graphs, but I am your final password. What am I? (7 letters)"</p>
+          <div class="keyrow">
+            <input type="text" placeholder="Type the keyword…">
+            <button class="check-btn">Check</button>
+          </div>
+          <div class="feedback"></div>
+        </div>
+      </section>
+
+    </main>
+
+    <aside class="glossary">
+      <h3>Key Words</h3>
+      <div class="kw"><div class="ic">IV</div><div><div class="term">Independent Variable</div><div class="def">Goes on the X-axis. The thing you set.</div></div></div>
+      <div class="kw"><div class="ic">DV</div><div><div class="term">Dependent Variable</div><div class="def">Goes on the Y-axis. The result you measure.</div></div></div>
+      <div class="kw"><div class="ic">C</div><div><div class="term">Continuous</div><div><div class="def">Data that can be any value (needs a line graph).</div></div></div>
+      <div class="kw"><div class="ic">D</div><div><div class="term">Discrete</div><div><div class="def">Data that fits into groups (needs a bar chart).</div></div></div>
+      <div class="kw"><div class="ic">L</div><div><div class="term">LOBF</div><div><div class="def">Line of Best Fit. Smooths out random errors.</div></div></div>
+    </aside>
+  </div>
+</div>
+
+<script>
+(function(){
+  const sections = Array.from(document.querySelectorAll('section.card'));
+  const total = sections.length;
+  document.getElementById('total-count').textContent = total;
+
+  // Progress dots & Master boxes
+  const progress = document.getElementById('progress');
+  const codeBoxes = document.getElementById('codeBoxes');
+  sections.forEach((s,i)=>{
+    const d = document.createElement('div'); d.className='pdot'; progress.appendChild(d);
+    const slot = document.createElement('div'); slot.className='slot'; slot.id='slot-'+i; slot.textContent='?';
+    codeBoxes.appendChild(slot);
+  });
+
+  // Level Logic
+  const lvls = {'lvl-light':{help:false,stem:false,stretch:true}, 'lvl-std':{help:false,stem:false,stretch:false}, 'lvl-full':{help:true,stem:true,stretch:true}};
+  function applyLevel(id){
+    const cfg = lvls[id];
+    document.querySelectorAll('.lvl').forEach(b=>b.classList.toggle('active', b.id===id));
+    sections.forEach(card=>{
+      ['help','stem','stretch'].forEach(k=>{
+        const tog = card.querySelector('.tog.'+k), panel = card.querySelector('.panel.'+k);
+        if(tog&&panel){ tog.classList.toggle('on', cfg[k]); panel.classList.toggle('show', cfg[k]); }
+      });
+    });
+  }
+  document.querySelectorAll('.lvl').forEach(b=>b.addEventListener('click',()=>applyLevel(b.id)));
+
+  // Toggles
+  sections.forEach(card=>{
+    ['help','stem','stretch','unlock'].forEach(k=>{
+      const tog = card.querySelector('.tog.'+k), panel = card.querySelector(k==='unlock'?'.lockbox':'.panel.'+k);
+      if(tog&&panel) tog.addEventListener('click',()=>{
+        tog.classList.toggle('on'); panel.classList.toggle('show');
+      });
+    });
+  });
+
+  // Checking Logic
+  sections.forEach((card,idx)=>{
+    const btn = card.querySelector('.check-btn'), input = card.querySelector('input'), fb = card.querySelector('.feedback'), ans = card.querySelector('.answers'), target = card.dataset.keyword, letter = card.dataset.letter;
+    if(!btn) return;
+    btn.addEventListener('click',()=>{
+      if(input.value.toLowerCase().trim().includes(target.toLowerCase())){
+        input.classList.add('right'); btn.disabled=true; fb.innerHTML='✓ Correct!'; ans.classList.add('unlocked');
+        const slot = document.getElementById('slot-'+idx); slot.textContent=letter; slot.classList.add('unlocked');
+        if(document.querySelectorAll('.slot.unlocked').length === total) document.getElementById('celebrate').classList.add('show');
+      } else { fb.innerHTML='❌ Try again'; input.classList.add('wrong'); setTimeout(()=>input.classList.remove('wrong'),400); }
+    });
+  });
+
+  // Plenary
+  const plenary = [
+    ['Which axis does the Dependent Variable go on?','The Y-axis (vertical).'],
+    ['True or False: Bars in a bar chart should touch.','False. There should be gaps between categories.'],
+    ['What does the L in S.A.L.T. stand for?','Labels (including units).'],
+    ['Why do we use a small x instead of a dot?','For better precision and accuracy.']
+  ];
+  const pcontainer = document.getElementById('plenary');
+  plenary.forEach((p,i)=>{
+    const div = document.createElement('div'); div.className='pfill';
+    div.innerHTML = `<span>${i+1}. ${p[0]}</span><div class="ans">✓ ${p[1]}</div>`;
+    div.addEventListener('click',()=>div.classList.toggle('flipped'));
+    pcontainer.appendChild(div);
+  });
+
+  // Done logic
+  sections.forEach((card,i)=>{
+    const btn = card.querySelector('.tog.done');
+    btn.addEventListener('click',()=>{
+      card.classList.toggle('done'); btn.classList.toggle('on');
+      progress.children[i].classList.toggle('done', card.classList.contains('done'));
+      document.getElementById('done-count').textContent = document.querySelectorAll('section.card.done').length;
+    });
+  });
+})();
+</script>
+</body>
+</html>
+
+```
