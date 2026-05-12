@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lesson 2: Designing a fossil-fuel-free future for Dubai</title>
+<style>
+  :root {
+    --sand: #f4ead5;
+    --sand-2: #ede0c2;
+    --ink: #1b2a3a;
+    --ink-soft: #34495e;
+    --teal: #0f6b7a;
+    --teal-dark: #0a4a55;
+    --warm: #d97b3a;
+    --warm-dark: #b35e23;
+    --leaf: #4f8a3a;
+    --paper: #fffdf8;
+    --border: #d8c9a3;
+    --shadow: 0 2px 8px rgba(27, 42, 58, 0.08);
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    font-family: "Helvetica Neue", Arial, "Segoe UI", sans-serif;
+    background: var(--sand);
+    color: var(--ink);
+    line-height: 1.55;
+    font-size: 17px;
+  }
+
+  /* HEADER */
+  header.mission-bar {
+    background: linear-gradient(135deg, var(--teal-dark), var(--teal));
+    color: var(--paper);
+    padding: 22px 28px;
+    box-shadow: var(--shadow);
+  }
+  header.mission-bar h1 {
+    margin: 0 0 6px;
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: 0.2px;
+  }
+  header.mission-bar .sub {
+    font-size: 0.95rem;
+    opacity: 0.92;
+  }
+  header.mission-bar .badges {
+    margin-top: 14px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .badge {
+    display: inline-block;
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.35);
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 0.78rem;
+    font-weight: 600;
+  }
+
+  /* PROGRESS */
+  .progress-wrap {
+    background: var(--paper);
+    border-bottom: 1px solid var(--border);
+    padding: 12px 28px;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+  .progress-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.85rem;
+    color: var(--ink-soft);
+    margin-bottom: 6px;
+  }
+  .progress-track {
+    height: 8px;
+    background: var(--sand-2);
+    border-radius: 99px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: var(--warm);
+    width: 16.6%;
+    transition: width 0.3s ease;
+  }
+
+  /* LAYOUT */
+  main {
+    max-width: 820px;
+    margin: 24px auto 80px;
+    padding: 0 20px;
+  }
+  .step {
+    display: none;
+    background: var(--paper);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 26px 28px;
+    box-shadow: var(--shadow);
+  }
+  .step.active { display: block; }
+
+  .step-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 16px;
+    margin-bottom: 6px;
+  }
+  .step-num {
+    color: var(--warm-dark);
+    font-weight: 700;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .timer {
+    color: var(--ink-soft);
+    font-size: 0.85rem;
+    background: var(--sand);
+    padding: 4px 10px;
+    border-radius: 8px;
+    font-weight: 600;
+  }
+  h2.step-title {
+    margin: 4px 0 14px;
+    color: var(--teal-dark);
+    font-size: 1.35rem;
+    font-weight: 700;
+  }
+  h3 {
+    color: var(--ink);
+    font-size: 1.05rem;
+    margin: 18px 0 8px;
+  }
+  p { margin: 8px 0; }
+
+  .callout {
+    background: var(--sand);
+    border-left: 4px solid var(--warm);
+    padding: 12px 16px;
+    border-radius: 8px;
+    margin: 14px 0;
+    font-size: 0.96rem;
+  }
+  .callout strong { color: var(--warm-dark); }
+
+  .designer-tip {
+    background: #e8f3f5;
+    border-left: 4px solid var(--teal);
+    padding: 12px 16px;
+    border-radius: 8px;
+    margin: 14px 0;
+    font-size: 0.95rem;
+  }
+  .designer-tip strong { color: var(--teal-dark); }
+
+  /* CONTROLS */
+  .controls {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 24px;
+    gap: 12px;
+  }
+  button {
+    font-family: inherit;
+    font-size: 0.95rem;
+    cursor: pointer;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 18px;
+    font-weight: 600;
+    transition: transform 0.05s ease, background 0.2s ease;
+  }
+  button:active { transform: translateY(1px); }
+  .btn-next {
+    background: var(--warm);
+    color: white;
+  }
+  .btn-next:hover { background: var(--warm-dark); }
+  .btn-back {
+    background: var(--sand-2);
+    color: var(--ink);
+  }
+  .btn-back:hover { background: var(--border); }
+  .btn-ghost {
+    background: transparent;
+    color: var(--teal-dark);
+    border: 1px solid var(--teal);
+  }
+
+  /* FORMS & INPUTS */
+  textarea, input[type="text"] {
+    width: 100%;
+    font-family: inherit;
+    font-size: 0.95rem;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px;
+    background: var(--paper);
+    color: var(--ink);
+    resize: vertical;
+  }
+  textarea:focus, input:focus {
+    outline: none;
+    border-color: var(--teal);
+    box-shadow: 0 0 0 3px rgba(15, 107, 122, 0.15);
+  }
+  .stems {
+    font-size: 0.85rem;
+    color: var(--ink-soft);
+    font-style: italic;
+    margin: 6px 0 4px;
+  }
+
+  /* RECAP BOX */
+  .recap-box {
+    background: var(--paper);
+    border: 2px dashed var(--teal);
+    border-radius: 12px;
+    padding: 16px;
+    margin: 16px 0;
+    font-size: 1.05rem;
+  }
+  .recap-box .tag {
+    display: inline-block;
+    background: var(--sand-2);
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+
+  /* TRADE-OFF CARDS */
+  .trade-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 14px;
+    margin: 16px 0;
+  }
+  .trade-card {
+    background: var(--paper);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px 16px;
+  }
+  .trade-card h4 {
+    margin: 0 0 6px;
+    color: var(--teal-dark);
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .trade-card p {
+    font-size: 0.88rem;
+    margin: 0;
+    color: var(--ink-soft);
+  }
+
+  /* CRAZY 8s TIMER */
+  .timer-display {
+    font-size: 3rem;
+    font-weight: 700;
+    text-align: center;
+    color: var(--teal-dark);
+    background: #e8f3f5;
+    padding: 20px;
+    border-radius: 12px;
+    margin: 20px 0;
+    font-variant-numeric: tabular-nums;
+  }
+  .timer-btn-wrap {
+    text-align: center;
+  }
+
+  /* GALLERY WALK FEEDBACK */
+  .feedback-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-top: 12px;
+  }
+  .feedback-box {
+    background: var(--sand);
+    padding: 14px;
+    border-radius: 12px;
+  }
+  .feedback-box h4 { margin: 0 0 8px; color: var(--ink); }
+
+  @media (max-width: 600px) {
+    .feedback-grid { grid-template-columns: 1fr; }
+  }
+
+  /* PRINT */
+  @media print {
+    header.mission-bar, .progress-wrap, .controls, .btn-ghost, .timer-btn-wrap { display: none !important; }
+    body { background: white; }
+    main { max-width: 100%; padding: 0; margin: 0; }
+    .step { display: block !important; page-break-after: always; box-shadow: none; border: 1px solid #999; }
+    .step:last-child { page-break-after: auto; }
+    textarea, input[type="text"] { border: 1px solid #999; }
+  }
+</style>
+</head>
+<body>
+
+<header class="mission-bar">
+  <h1>Lesson 2: Designing a fossil-fuel-free future</h1>
+  <div class="sub">Y7 Science. Moving from problems to prototypes.</div>
+  <div class="badges">
+    <span class="badge">Big question: where does our energy come from, and why does it matter?</span>
+    <span class="badge">Today I am learning to navigate trade-offs and pitch a solution to a real Dubai problem</span>
+  </div>
+</header>
+
+<div class="progress-wrap">
+  <div class="progress-meta">
+    <span id="progressLabel">Step 1 of 6</span>
+    <span><button class="btn-ghost" onclick="window.print()">Print my workbook</button></span>
+  </div>
+  <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+</div>
+
+<main>
+
+<!-- STEP 1: RECAP -->
+<section class="step active" data-step="1">
+  <div class="step-head">
+    <span class="step-num">Step 1 of 6</span>
+    <span class="timer">5 min</span>
+  </div>
+  <h2 class="step-title">Welcome back to the design room</h2>
+  <p>Last lesson, you explored how fossil fuels hide in five sectors of Dubai life. You then chose a problem and wrote a <strong>How might we</strong> statement.</p>
+
+  <div class="recap-box">
+    <span class="tag" id="recapSector">Your chosen sector</span>
+    <div id="recapHMW"><em>Loading your problem statement from last lesson...</em></div>
+  </div>
+
+  <p>If the box above is empty or you want to change your target, type your final team problem below.</p>
+  <div class="stems">Sentence stem: "How might we help [who] in Dubai to [do what] without using as much [fossil fuel]?"</div>
+  <textarea data-save="l2-hmw" rows="2" placeholder="Write your final How might we statement here..."></textarea>
+
+  <div class="controls">
+    <span></span>
+    <button class="btn-next" onclick="nextStep()">Problem locked in</button>
+  </div>
+</section>
+
+<!-- STEP 2: CONSTRAINTS -->
+<section class="step" data-step="2">
+  <div class="step-head">
+    <span class="step-num">Step 2 of 6</span>
+    <span class="timer">8 min</span>
+  </div>
+  <h2 class="step-title">Understand your design trade-offs</h2>
+
+  <p>A good idea on paper does not always work in the real world. Designers have to deal with <strong>constraints</strong> limits on what they can build. When you fix one constraint, you often break another. This is called a <strong>trade-off</strong>.</p>
+
+  <div class="designer-tip">
+    <strong>Example trade-off.</strong> "We could replace all school buses with electric ones to stop burning diesel. The trade-off is that it costs millions of dirhams, and the electricity might still come from gas power stations."
+  </div>
+
+  <h3>The four big constraints you must think about</h3>
+  <div class="trade-grid">
+    <div class="trade-card">
+      <h4>💰 Cost</h4>
+      <p>Who pays for this new idea? Is it too expensive for normal families to afford?</p>
+    </div>
+    <div class="trade-card">
+      <h4>⏱️ Time</h4>
+      <p>Can we do this next month, or will it take ten years to build the infrastructure?</p>
+    </div>
+    <div class="trade-card">
+      <h4>⚙️ Tech fit</h4>
+      <p>Does the technology actually exist yet? Will it break in the Dubai summer heat?</p>
+    </div>
+    <div class="trade-card">
+      <h4>👥 People</h4>
+      <p>Who benefits from this? Does it make life harder for certain workers or communities?</p>
+    </div>
+  </div>
+
+  <p class="stems">Talk to your team. Which of these four constraints will be the hardest for your chosen sector?</p>
+
+  <div class="controls">
+    <button class="btn-back" onclick="prevStep()">Back</button>
+    <button class="btn-next" onclick="nextStep()">Ready for ideas</button>
+  </div>
+</section>
+
+<!-- STEP 3: CRAZY 8s -->
+<section class="step" data-step="3">
+  <div class="step-head">
+    <span class="step-num">Step 3 of 6</span>
+    <span class="timer">8 min</span>
+  </div>
+  <h2 class="step-title">Crazy 8s ideation</h2>
+
+  <p>It is time to generate solutions. You are going to use a famous design method called Crazy 8s. The goal is <strong>quantity, not quality</strong>. Wild, weird, and crazy ideas are highly encouraged here.</p>
+
+  <div class="callout">
+    <strong>Instructions.</strong> Take a piece of blank A4 paper. Fold it in half three times so you have eight boxes. When the timer starts, you have exactly one minute to sketch one idea per box. When the bell rings, move to the next box.
+  </div>
+
+  <div class="timer-display" id="timerDisplay">08:00</div>
+  
+  <div class="timer-btn-wrap">
+    <button class="btn-next" id="startTimerBtn" onclick="startCrazy8()">Start 8-minute timer</button>
+  </div>
+
+  <p style="margin-top: 24px;">Once the timer finishes, share your paper with your team. Put a star next to the best single idea out of the whole group. That is what you will pitch.</p>
+
+  <div class="controls">
+    <button class="btn-back" onclick="prevStep()">Back</button>
+    <button class="btn-next" onclick="nextStep()">Idea chosen</button>
+  </div>
+</section>
+
+<!-- STEP 4: PITCH POSTER -->
+<section class="step" data-step="4">
+  <div class="step-head">
+    <span class="step-num">Step 4 of 6</span>
+    <span class="timer">20 min</span>
+  </div>
+  <h2 class="step-title">Plan your pitch poster</h2>
+
+  <p>You have twenty minutes to create a one-page pitch poster for your best idea. You can draw this on large paper or build it digitally on a slide. Use the planner below to organise your thoughts before you start drawing.</p>
+
+  <h3>1. Give your solution a catchy name</h3>
+  <input type="text" data-save="l2-title" placeholder="e.g. The Solar Shade System">
+
+  <h3>2. How does it actually work?</h3>
+  <div class="stems">Explain the mechanism. Sentence stems: "Our design works by...", "Instead of using fossil fuels to..., it uses..."</div>
+  <textarea data-save="l2-how" rows="3" placeholder="Explain the mechanics of your idea..."></textarea>
+
+  <h3>3. The biggest trade-off</h3>
+  <div class="stems">Be honest about the constraints. Sentence stems: "The hardest trade-off is...", "We know it might be difficult because..."</div>
+  <textarea data-save="l2-tradeoff" rows="3" placeholder="Which constraint (cost, time, tech, people) is your weak spot?"></textarea>
+
+  <div class="designer-tip">
+    <strong>Poster checklist.</strong> Does your final poster have: a clear title, a labelled sketch or diagram, an explanation of how it reduces fossil fuel use, and an honest note about trade-offs?
+  </div>
+
+  <div class="controls">
+    <button class="btn-back" onclick="prevStep()">Back</button>
+    <button class="btn-next" onclick="nextStep()">Ready for gallery walk</button>
+  </div>
+</section>
+
+<!-- STEP 5: GALLERY WALK -->
+<section class="step" data-step="5">
+  <div class="step-head">
+    <span class="step-num">Step 5 of 6</span>
+    <span class="timer">12 min</span>
+  </div>
+  <h2 class="step-title">Gallery walk and peer critique</h2>
+
+  <p>Leave your poster on your desk. Walk around the room silently to view other teams' designs. A good designer knows how to give specific, helpful critique.</p>
+
+  <div class="callout">
+    <strong>How to give critique.</strong> Use these three phrases when leaving feedback on sticky notes or whiteboards:
+    <br><br>
+    <strong>I noticed...</strong> (state a fact about their design)<br>
+    <strong>I wonder...</strong> (ask a question about a trade-off or gap)<br>
+    <strong>What if...</strong> (suggest an upgrade or a new direction)
+  </div>
+
+  <h3>Record your feedback</h3>
+  <div class="feedback-grid">
+    <div class="feedback-box">
+      <h4>Feedback we received</h4>
+      <p class="stems">Jot down the best piece of feedback another team left for you.</p>
+      <textarea data-save="l2-received" rows="3" placeholder="Another team wondered if..."></textarea>
+    </div>
+    <div class="feedback-box">
+      <h4>Feedback we gave</h4>
+      <p class="stems">Jot down a great suggestion you gave to another team's poster.</p>
+      <textarea data-save="l2-gave" rows="3" placeholder="We looked at team X's poster and suggested what if..."></textarea>
+    </div>
+  </div>
+
+  <div class="controls">
+    <button class="btn-back" onclick="prevStep()">Back</button>
+    <button class="btn-next" onclick="nextStep()">On to reflection</button>
+  </div>
+</section>
+
+<!-- STEP 6: REFLECTION -->
+<section class="step" data-step="6">
+  <div class="step-head">
+    <span class="step-num">Step 6 of 6</span>
+    <span class="timer">7 min</span>
+  </div>
+  <h2 class="step-title">Reflection and exit ticket</h2>
+
+  <p>The mission is complete. Look back at the last two lessons: mapping out fossil fuels, writing a problem statement, dealing with trade-offs, and pitching a new design. Take a quiet moment to reflect.</p>
+
+  <h3>What was the hardest part?</h3>
+  <div class="stems">Sentence stem: "The hardest part about thinking like a designer was... because..."</div>
+  <textarea data-save="l2-hardest" rows="3" placeholder="Was it finding a problem? Compromising on constraints? Giving critique?"></textarea>
+
+  <h3>What changed?</h3>
+  <div class="stems">Sentence stem: "Before this project I thought fossil fuels were..., but now I realise..."</div>
+  <textarea data-save="l2-changed" rows="3" placeholder="How has your view of the energy system in Dubai changed?"></textarea>
+
+  <div class="designer-tip" style="margin-top: 24px;">
+    <strong>Mission accomplished.</strong> You have successfully completed the fossil fuel design sprint. Use the button below to print your digital workbook for your teacher.
+  </div>
+
+  <div class="controls">
+    <button class="btn-back" onclick="prevStep()">Back</button>
+    <button class="btn-next" onclick="window.print()">Print my workbook</button>
+  </div>
+</section>
+
+</main>
+
+<script>
+  // ---- Step navigation ----
+  let current = 1;
+  const total = 6;
+
+  function showStep(n) {
+    document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+    const target = document.querySelector('.step[data-step="' + n + '"]');
+    if (target) target.classList.add('active');
+    document.getElementById('progressLabel').textContent = 'Step ' + n + ' of ' + total;
+    document.getElementById('progressFill').style.width = (n / total * 100) + '%';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function nextStep() {
+    if (current < total) { current++; showStep(current); }
+  }
+  function prevStep() {
+    if (current > 1) { current--; showStep(current); }
+  }
+
+  // ---- Pull data from Part 1 ----
+  window.addEventListener('DOMContentLoaded', () => {
+    const sector = localStorage.getItem('fossil-sector');
+    if (sector) {
+      document.getElementById('recapSector').innerText = 'Sector: ' + sector;
+    } else {
+      document.getElementById('recapSector').style.display = 'none';
+    }
+
+    const who = localStorage.getItem('fossil-hmw-who');
+    const what = localStorage.getItem('fossil-hmw-what');
+    const fuel = localStorage.getItem('fossil-hmw-fuel');
+    
+    if (who || what || fuel) {
+      document.getElementById('recapHMW').innerHTML = 
+        'How might we help <strong>' + escapeHTML(who || '___') + '</strong> in Dubai to <strong>' + 
+        escapeHTML(what || '___') + '</strong> without using as much <strong>' + escapeHTML(fuel || '___') + '</strong>?';
+      
+      // Auto-fill the textarea so they have a starting point
+      const existingL2HMW = localStorage.getItem('fossil2-l2-hmw');
+      if (!existingL2HMW) {
+        document.querySelector('[data-save="l2-hmw"]').value = `How might we help ${who || '___'} in Dubai to ${what || '___'} without using as much ${fuel || '___'}?`;
+      }
+    } else {
+      document.getElementById('recapHMW').innerHTML = '<em>No problem statement found from Lesson 1. Please write one below.</em>';
+    }
+  });
+
+  function escapeHTML(s) {
+    return String(s).replace(/[&<>"']/g, c => ({
+      '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'
+    }[c]));
+  }
+
+  // ---- Auto-save text fields ----
+  document.querySelectorAll('[data-save]').forEach(el => {
+    const key = 'fossil2-' + el.dataset.save;
+    const saved = localStorage.getItem(key);
+    if (saved !== null) el.value = saved;
+    el.addEventListener('input', () => localStorage.setItem(key, el.value));
+  });
+
+  // ---- Crazy 8s Timer ----
+  let timerInterval;
+  function startCrazy8() {
+    const btn = document.getElementById('startTimerBtn');
+    const display = document.getElementById('timerDisplay');
+    btn.disabled = true;
+    btn.innerText = "Timer running...";
+    btn.style.opacity = "0.5";
+    
+    let timeLeft = 8 * 60; // 8 minutes in seconds
+    
+    timerInterval = setInterval(() => {
+      timeLeft--;
+      let m = Math.floor(timeLeft / 60);
+      let s = timeLeft % 60;
+      display.innerText = (m < 10 ? '0' + m : m) + ':' + (s < 10 ? '0' + s : s);
+      
+      // Flash at 1 minute mark intervals to signal moving to the next box
+      if (timeLeft % 60 === 0 && timeLeft > 0) {
+        display.style.background = "#d97b3a";
+        display.style.color = "white";
+        setTimeout(() => {
+          display.style.background = "#e8f3f5";
+          display.style.color = "#0a4a55";
+        }, 1500);
+      }
+
+      if (timeLeft <= 0) {
+        clearInterval(timerInterval);
+        display.innerText = "Time is up!";
+        display.style.background = "#1b2a3a";
+        display.style.color = "white";
+        btn.innerText = "Timer finished";
+      }
+    }, 1000);
+  }
+
+  // Init
+  showStep(1);
+</script>
+
+</body>
+</html>
