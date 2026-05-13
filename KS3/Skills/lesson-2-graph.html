@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -178,7 +179,7 @@
       color:var(--muted);
       margin:6px 0 0;
     }
-    .callout,.feedback,.thinking-note,.sample-answer{
+    .callout,.feedback,.thinking-note,.sample-answer,.micro-hint,.challenge-note{
       border-radius:14px;
       padding:14px;
       margin-top:14px;
@@ -189,13 +190,16 @@
     .callout.warn,.feedback.retry{background:var(--gold-soft);border-color:#edd38d}
     .thinking-note{background:#f3efe4;border-color:#dfd4bc}
     .sample-answer{background:#fff;border-style:dashed}
-    .grid-2,.grid-3,.tier-grid{
+    .micro-hint{background:#eef7fb;border-color:#cfe3ef}
+    .challenge-note{background:#f7f1fb;border-color:#dfd1ef}
+    .grid-2,.grid-3,.tier-grid,.salt-grid{
       display:grid;
       gap:12px;
       margin-top:14px;
     }
     .grid-2{grid-template-columns:repeat(2,minmax(0,1fr))}
     .grid-3{grid-template-columns:repeat(3,minmax(0,1fr))}
+    .salt-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
     .mini-card,.choice-card,.audit-card,.tier-panel,.response-box,.graph-frame{
       border:1px solid var(--line);
       border-radius:14px;
@@ -378,7 +382,11 @@
       .hero-top,.control-row,.layout,.grid-2,.grid-3,.audit-grid{
         grid-template-columns:1fr;
       }
+      .salt-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
       aside{position:static}
+    }
+    @media (max-width:640px){
+      .salt-grid{grid-template-columns:1fr}
     }
     @media (prefers-reduced-motion:reduce){
       *{scroll-behavior:auto!important;transition:none!important}
@@ -519,6 +527,12 @@
               <div class="response-box">
                 <label for="graph-story-answer"><strong>Your graph story:</strong> Write one sentence that describes the whole pattern.</label>
                 <textarea id="graph-story-answer" placeholder="Start with: As time increases, temperature..."></textarea>
+                <div class="action-row">
+                  <button class="toggle-btn secondary reveal-btn" data-target="graph-story-hint">Need a micro-hint?</button>
+                </div>
+                <div class="micro-hint hidden" id="graph-story-hint">
+                  Start with the overall trend, then add how the rate changes: "Temperature decreases..., then..."
+                </div>
               </div>
               <div class="sample-answer full-only">
                 <h3>Sentence scaffold</h3>
@@ -527,6 +541,10 @@
               <div class="sample-answer light-only">
                 <h3>Challenge</h3>
                 <p>What feature of the curve shows that cooling is not happening at a constant rate?</p>
+              </div>
+              <div class="challenge-note">
+                <h3>Think harder</h3>
+                <p>Would the sentence still be accurate if the final two points were joined by a straight steep line? Explain what would change.</p>
               </div>
             </div>
           </div>
@@ -554,8 +572,11 @@
             <button class="choice-btn hinge-choice" data-correct="false"><strong>Scatter graph</strong><span>Because there is variation.</span></button>
           </div>
           <div class="feedback hidden" id="hinge-feedback" aria-live="polite"></div>
-          <div class="thinking-note">
-            <strong>Hint:</strong> ask yourself whether the x-axis would show a measured scale or named groups. Named groups usually point towards a bar chart.
+          <div class="action-row">
+            <button class="toggle-btn secondary reveal-btn" data-target="hinge-hint">Need a micro-hint?</button>
+          </div>
+          <div class="micro-hint hidden" id="hinge-hint">
+            Ask yourself whether the x-axis would show a measured scale or named groups. Named groups usually point towards a bar chart.
           </div>
           <div class="keyword-row">
             <label class="sr-only" for="keyword-3">Checkpoint keyword</label>
@@ -570,6 +591,28 @@
             <div>
               <h2>S.A.L.T. audit: spot what weakens the graph</h2>
               <p class="section-copy">Spot the graphing errors before you draw your own. Each choice should connect to S.A.L.T.</p>
+            </div>
+          </div>
+          <div class="callout info">
+            <h3>What does S.A.L.T. mean?</h3>
+            <p>Use S.A.L.T. as a quick graphing checklist before you say a graph is finished.</p>
+            <div class="salt-grid">
+              <div class="mini-card">
+                <strong>S · Scale</strong>
+                <p class="small">Numbers increase evenly and use the space well.</p>
+              </div>
+              <div class="mini-card">
+                <strong>A · Axes</strong>
+                <p class="small">The correct variables are placed on the correct axes.</p>
+              </div>
+              <div class="mini-card">
+                <strong>L · Labels</strong>
+                <p class="small">Each axis names the variable and includes units where needed.</p>
+              </div>
+              <div class="mini-card">
+                <strong>T · Title</strong>
+                <p class="small">The title tells the reader what relationship the graph shows.</p>
+              </div>
             </div>
           </div>
           <div class="grid-2">
@@ -669,12 +712,20 @@
             <label for="recovery-answer"><strong>Evidence sentence:</strong> Which student appears to recover fastest, and what data supports your claim?</label>
             <textarea id="recovery-answer" placeholder="Write one precise sentence using at least one value from the table."></textarea>
             <div class="action-row">
+              <button class="toggle-btn secondary reveal-btn" data-target="recovery-hint">Need a micro-hint?</button>
               <button class="toggle-btn" id="show-recovery-model">Show exemplar</button>
               <button class="toggle-btn secondary" id="hide-recovery-model">Hide exemplar</button>
+            </div>
+            <div class="micro-hint hidden" id="recovery-hint">
+              Compare the size of the pulse drop and how close each student gets to their final value by 5 or 10 minutes.
             </div>
             <div class="sample-answer hidden" id="recovery-model">
               Katie appears to recover fastest because her pulse drops from 143 bpm at 0 minutes to 91 bpm by 5 minutes, and it reaches 82 bpm by 10 minutes.
             </div>
+          </div>
+          <div class="challenge-note">
+            <h3>Think harder</h3>
+            <p>Which student has the highest starting pulse, and does that automatically mean they had the slowest recovery? Use the table to justify your view.</p>
           </div>
           <div class="keyword-row">
             <label class="sr-only" for="keyword-5">Checkpoint keyword</label>
@@ -831,11 +882,26 @@
         const feedback = document.getElementById('audit-feedback');
         const hasFalse = chosenAudit.has('false');
         const hasAllTrue = [...correctAudit].every(item => chosenAudit.has(item));
-        feedback.classList.remove('hidden','good','retry');
-        feedback.classList.add(hasAllTrue && !hasFalse ? 'good' : 'retry');
-        feedback.textContent = hasAllTrue && !hasFalse
-          ? 'Audit secure. Missing title, missing units, and uneven scale all weaken the graph.'
-          : 'Look again. Three issues are genuine S.A.L.T. problems. One option is a trap.';
+        feedback.classList.remove('good','retry');
+
+        if (chosenAudit.size === 0) {
+          feedback.classList.add('hidden');
+          feedback.textContent = '';
+          return;
+        }
+
+        feedback.classList.remove('hidden');
+
+        if (hasAllTrue && !hasFalse && chosenAudit.size === correctAudit.size) {
+          feedback.classList.add('good');
+          feedback.textContent = 'Audit secure. Missing title, missing units, and uneven scale all weaken the graph.';
+        } else if (hasFalse) {
+          feedback.classList.add('retry');
+          feedback.textContent = 'One selected option is not a graphing error. Recheck the x-axis statement.';
+        } else {
+          feedback.classList.add('retry');
+          feedback.textContent = `${chosenAudit.size} issue${chosenAudit.size === 1 ? '' : 's'} selected. Keep going until you have found all three genuine S.A.L.T. problems.`;
+        }
       });
     });
 
@@ -857,6 +923,15 @@
     });
     document.getElementById('hide-recovery-model').addEventListener('click', () => {
       document.getElementById('recovery-model').classList.add('hidden');
+    });
+
+    document.querySelectorAll('.reveal-btn').forEach(button => {
+      button.addEventListener('click', () => {
+        const target = document.getElementById(button.dataset.target);
+        const willShow = target.classList.contains('hidden');
+        target.classList.toggle('hidden');
+        button.textContent = willShow ? 'Hide micro-hint' : 'Need a micro-hint?';
+      });
     });
 
     document.getElementById('check-exit').addEventListener('click', () => {
@@ -914,3 +989,4 @@
   </script>
 </body>
 </html>
+```
