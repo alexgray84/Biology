@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bonding &amp; Structure – Revision Cards</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', system-ui, sans-serif; background: #f5f0ff; min-height: 100vh; display: flex; flex-direction: column; }
+  .header { background: #2d1b69; color: white; padding: 14px 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
+  .header-left h1 { font-size: 1.05rem; font-weight: 700; }
+  .header-left .sub { font-size: 0.78rem; opacity: 0.68; margin-top: 2px; }
+  .progress-pill { background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.25); padding: 5px 14px; border-radius: 20px; font-size: 0.82rem; font-weight: 600; white-space: nowrap; }
+  .progress-track { height: 4px; background: #ddd6fe; }
+  .progress-fill { height: 100%; background: #7c3aed; transition: width 0.5s ease; }
+  .main { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 20px 16px 32px; gap: 14px; }
+  .spec-nav { display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; }
+  .spec-dot { width: 48px; height: 32px; border-radius: 16px; border: 2px solid #c4b5fd; background: white; color: #5b21b6; font-weight: 700; font-size: 0.72rem; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.15s; }
+  .spec-dot:hover { background: #ede9fe; }
+  .spec-dot.active { background: #2d1b69; color: white; border-color: #2d1b69; }
+  .spec-dot.done { background: #7c3aed; color: white; border-color: #7c3aed; }
+  .card-scene { width: 100%; max-width: 900px; display: grid; }
+  .card-face { grid-area: 1/1; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.11); transition: opacity 0.35s ease, transform 0.35s ease; }
+  .card-face.back { opacity: 0; transform: scale(0.97); pointer-events: none; }
+  .card-scene.revealed .card-face.front { opacity: 0; transform: scale(0.97); pointer-events: none; }
+  .card-scene.revealed .card-face.back { opacity: 1; transform: scale(1); pointer-events: all; }
+  .q-header { background: #2d1b69; color: white; padding: 14px 20px; display: flex; align-items: center; gap: 12px; }
+  .spec-badge { background: #c4b5fd; color: #2d1b69; font-weight: 700; font-size: 0.88rem; padding: 5px 12px; border-radius: 8px; white-space: nowrap; flex-shrink: 0; }
+  .q-header-title { font-size: 0.95rem; font-weight: 600; line-height: 1.3; }
+  .marks-badge { margin-left: auto; background: #f4d03f; color: #1a1a2e; font-weight: 700; font-size: 0.8rem; padding: 5px 12px; border-radius: 20px; white-space: nowrap; flex-shrink: 0; }
+  .spec-stmt { background: #ede9fe; padding: 9px 20px; font-size: 0.84rem; color: #2d1b69; font-style: italic; line-height: 1.45; border-bottom: 1px solid #c4b5fd; }
+  .spec-stmt strong { font-style: normal; color: #2d1b69; }
+  .q-body { background: white; padding: 16px 20px; display: flex; gap: 18px; align-items: flex-start; }
+  .questions-col { flex: 1; min-width: 0; }
+  .diagram-col { width: 270px; flex-shrink: 0; }
+  .diagram-box { border: 2px dashed #c4b5fd; border-radius: 10px; background: #fdf8ff; padding: 12px; display: flex; flex-direction: column; align-items: center; gap: 6px; }
+  .diagram-box svg { width: 100%; height: auto; }
+  .diagram-caption { font-size: 0.74rem; color: #777; font-style: italic; text-align: center; line-height: 1.4; }
+  .q-item { display: flex; gap: 10px; padding: 12px 0; border-bottom: 1px solid #f3f0ff; align-items: flex-start; }
+  .q-item:last-child { border-bottom: none; padding-bottom: 0; }
+  .q-ref { font-weight: 700; color: #2d1b69; font-size: 1rem; min-width: 30px; padding-top: 1px; flex-shrink: 0; }
+  .q-content { flex: 1; min-width: 0; }
+  .q-stem { font-size: 0.91rem; color: #1a1a2e; line-height: 1.55; }
+  .q-meta { margin-top: 7px; display: flex; gap: 7px; align-items: center; flex-wrap: wrap; }
+  .marks-pill { background: #5b21b6; color: white; font-size: 0.73rem; font-weight: 700; padding: 2px 9px; border-radius: 10px; }
+  .ao-pill { background: #f3f0ff; color: #5b21b6; font-size: 0.71rem; font-weight: 600; padding: 2px 8px; border-radius: 10px; border: 1px solid #ddd6fe; }
+  .data-table-wrap { margin-top: 10px; overflow-x: auto; }
+  .data-table { border-collapse: collapse; font-size: 0.84rem; min-width: 220px; }
+  .data-table th { background: #5b21b6; color: white; padding: 6px 14px; text-align: center; font-weight: 600; }
+  .data-table td { padding: 4px 14px; text-align: center; border: 1px solid #ddd6fe; }
+  .data-table tr:nth-child(odd) td { background: #fdf8ff; }
+  .data-table tr:nth-child(even) td { background: #f3f0ff; }
+  .ms-header { background: #6d28d9; color: white; padding: 14px 20px; display: flex; align-items: center; gap: 12px; }
+  .ms-badge { background: #c4b5fd; color: #2d1b69; font-weight: 700; font-size: 0.85rem; padding: 5px 11px; border-radius: 8px; white-space: nowrap; flex-shrink: 0; }
+  .ms-header-title { font-size: 1rem; font-weight: 600; }
+  .ms-body { background: #faf5ff; padding: 16px 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .ms-body.cols-1 { grid-template-columns: 1fr; }
+  .ms-item { background: white; border-radius: 8px; overflow: hidden; border: 1px solid #ddd6fe; box-shadow: 0 1px 4px rgba(0,0,0,0.05); }
+  .ms-item-hdr { background: #f0e6ff; padding: 7px 13px; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid #ddd6fe; }
+  .ms-ref { font-weight: 700; color: #6d28d9; font-size: 0.93rem; }
+  .ms-total { font-size: 0.76rem; color: #666; }
+  .ms-points { padding: 10px 13px; display: flex; flex-direction: column; gap: 6px; }
+  .ms-point { display: flex; gap: 8px; align-items: flex-start; font-size: 0.86rem; color: #1a1a2e; line-height: 1.45; }
+  .ms-tick { color: #7c3aed; font-weight: 800; font-size: 0.9rem; flex-shrink: 0; margin-top: 1px; }
+  .ms-note { font-size: 0.76rem; color: #6b7280; font-style: italic; line-height: 1.4; border-top: 1px solid #f3f0ff; margin-top: 4px; padding-top: 6px; }
+  .award-badge { display: inline-block; background: #ede9fe; color: #5b21b6; font-size: 0.72rem; font-weight: 600; padding: 1px 6px; border-radius: 6px; margin-left: 4px; white-space: nowrap; }
+  .hint-text { font-size: 0.8rem; color: #777; text-align: center; min-height: 18px; font-style: italic; }
+  .controls { display: flex; gap: 10px; justify-content: center; align-items: center; flex-wrap: wrap; width: 100%; max-width: 900px; }
+  .btn { padding: 10px 22px; border: none; border-radius: 8px; cursor: pointer; font-size: 0.88rem; font-weight: 600; font-family: inherit; transition: all 0.15s; white-space: nowrap; }
+  .btn:hover:not(:disabled) { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+  .btn:active:not(:disabled) { transform: translateY(0); }
+  .btn:disabled { opacity: 0.35; cursor: not-allowed; }
+  .btn-outline { background: white; color: #2d1b69; border: 2px solid #2d1b69; }
+  .btn-reveal { background: #7c3aed; color: white; padding: 11px 30px; font-size: 0.92rem; }
+  .btn-next { background: #2d1b69; color: white; padding: 11px 30px; font-size: 0.92rem; }
+  .complete-banner { background: #2d1b69; color: white; text-align: center; padding: 20px; border-radius: 12px; width: 100%; max-width: 900px; display: none; }
+  .complete-banner h2 { font-size: 1.3rem; margin-bottom: 6px; }
+  .complete-banner p { opacity: 0.8; font-size: 0.9rem; }
+  .complete-banner.show { display: block; }
+  @media (max-width: 640px) {
+    .header { padding: 10px 14px; }
+    .header-left h1 { font-size: 0.9rem; }
+    .header-left .sub { font-size: 0.7rem; }
+    .progress-pill { font-size: 0.74rem; padding: 4px 10px; }
+    .main { padding: 12px 10px 24px; gap: 10px; }
+    .spec-dot { width: 36px; height: 27px; font-size: 0.67rem; }
+    .q-header { padding: 10px 14px; flex-wrap: wrap; }
+    .q-header-title { font-size: 0.87rem; order: 3; flex-basis: 100%; padding-top: 4px; }
+    .marks-badge { font-size: 0.74rem; padding: 3px 9px; }
+    .spec-stmt { padding: 7px 14px; font-size: 0.79rem; }
+    .q-body { flex-direction: column; padding: 12px 14px; }
+    .diagram-col { width: 100%; }
+    .q-item { padding: 9px 0; }
+    .q-stem { font-size: 0.86rem; }
+    .ms-header { padding: 10px 14px; }
+    .ms-header-title { font-size: 0.9rem; }
+    .ms-body { grid-template-columns: 1fr !important; padding: 12px 14px; }
+    .ms-point { font-size: 0.82rem; }
+    .ms-note { font-size: 0.74rem; }
+    .controls { gap: 8px; }
+    .btn { padding: 9px 14px; font-size: 0.82rem; }
+    .btn-reveal, .btn-next { padding: 9px 18px; font-size: 0.85rem; }
+    .complete-banner h2 { font-size: 1.1rem; }
+    .complete-banner p { font-size: 0.82rem; }
+  }
+</style>
+</head>
+<body>
+<div class="header">
+  <div class="header-left">
+    <h1>⚗️ Bonding &amp; Structure — Revision Cards</h1>
+    <div class="sub">Y9 Chemistry &nbsp;·&nbsp; Edexcel IGCSE Combined Science &nbsp;·&nbsp; Spec 1.37–1.51</div>
+  </div>
+  <div class="progress-pill" id="progressPill">Card 1 of 15</div>
+</div>
+<div class="progress-track"><div class="progress-fill" id="progressFill" style="width:6.67%"></div></div>
+
+<div class="main">
+  <div class="spec-nav" id="specNav"></div>
+  <div class="card-scene" id="cardScene">
+    <div class="card-face front" id="qFace"></div>
+    <div class="card-face back"  id="msFace"></div>
+  </div>
+  <div class="hint-text" id="hintText">Answer the questions, then tap <em>Reveal Answers</em></div>
+  <div class="controls">
+    <button class="btn btn-outline" id="btnPrev" onclick="navigate(-1)">&#8592; Previous</button>
+    <button class="btn btn-reveal" id="btnReveal" onclick="revealAnswers()">Reveal Answers ✓</button>
+    <button class="btn btn-next"   id="btnNext"   onclick="navigate(1)" disabled>Next Card &#8594;</button>
+  </div>
+  <div class="complete-banner" id="completeBanner">
+    <h2>🎉 All 15 cards complete!</h2>
+    <p>You've worked through all of Bonding &amp; Structure. Use the dots above to revisit any topic.</p>
+  </div>
+</div>
+
+<script>
+const diagrams = {
+
+  ionicDC: `<svg viewBox="0 0 300 175" xmlns="http://www.w3.org/2000/svg" font-family="inherit">
+    <text x="150" y="13" text-anchor="middle" font-size="9" fill="#6b7280" font-style="italic">NaCl — ionic dot-and-cross diagram</text>
+    <!-- Na+ ion -->
+    <text x="52" y="105" text-anchor="middle" font-size="38" fill="#5b21b6" font-weight="200">[</text>
+    <circle cx="80" cy="88" r="22" fill="#fdf8ff" stroke="#7c3aed" stroke-width="1.5"/>
+    <text x="80" y="93" text-anchor="middle" font-size="12" font-weight="700" fill="#5b21b6">Na</text>
+    <circle cx="80" cy="88" r="33" fill="none" stroke="#ddd6fe" stroke-width="1" stroke-dasharray="4,3"/>
+    <text x="114" y="105" text-anchor="middle" font-size="38" fill="#5b21b6" font-weight="200">]</text>
+    <text x="125" y="62" font-size="13" fill="#5b21b6" font-weight="700">+</text>
+    <text x="80" y="145" text-anchor="middle" font-size="9" fill="#7c3aed" font-style="italic">Na⁺ — 8 outer e⁻</text>
+    <!-- Cl- ion -->
+    <text x="155" y="114" text-anchor="middle" font-size="48" fill="#5b21b6" font-weight="200">[</text>
+    <circle cx="197" cy="88" r="20" fill="#fdf8ff" stroke="#7c3aed" stroke-width="1.5"/>
+    <text x="197" y="93" text-anchor="middle" font-size="12" font-weight="700" fill="#5b21b6">Cl</text>
+    <circle cx="197" cy="88" r="36" fill="none" stroke="#ddd6fe" stroke-width="1"/>
+    <!-- 7 crosses at r=36 around (197,88) at angles 0,51,103,154,206,257,309 deg -->
+    <!-- k=0  0°:   (233, 88) -->  <line x1="229" y1="85" x2="237" y2="91" stroke="#5b21b6" stroke-width="1.4"/><line x1="237" y1="85" x2="229" y2="91" stroke="#5b21b6" stroke-width="1.4"/>
+    <!-- k=1  51°:  (220, 116) --> <line x1="216" y1="112" x2="224" y2="120" stroke="#5b21b6" stroke-width="1.4"/><line x1="224" y1="112" x2="216" y2="120" stroke="#5b21b6" stroke-width="1.4"/>
+    <!-- k=2  103°: (189, 123) --> <line x1="185" y1="119" x2="193" y2="127" stroke="#5b21b6" stroke-width="1.4"/><line x1="193" y1="119" x2="185" y2="127" stroke="#5b21b6" stroke-width="1.4"/>
+    <!-- k=3  154°: (165, 104) --> <line x1="161" y1="100" x2="169" y2="108" stroke="#5b21b6" stroke-width="1.4"/><line x1="169" y1="100" x2="161" y2="108" stroke="#5b21b6" stroke-width="1.4"/>
+    <!-- k=4  206°: (165, 72)  --> <line x1="161" y1="68" x2="169" y2="76" stroke="#5b21b6" stroke-width="1.4"/><line x1="169" y1="68" x2="161" y2="76" stroke="#5b21b6" stroke-width="1.4"/>
+    <!-- k=5  257°: (189, 52)  --> <line x1="185" y1="48" x2="193" y2="56" stroke="#5b21b6" stroke-width="1.4"/><line x1="193" y1="48" x2="185" y2="56" stroke="#5b21b6" stroke-width="1.4"/>
+    <!-- k=6  309°: (220, 60)  --> <line x1="216" y1="56" x2="224" y2="64" stroke="#5b21b6" stroke-width="1.4"/><line x1="224" y1="56" x2="216" y2="64" stroke="#5b21b6" stroke-width="1.4"/>
+    <!-- k=7  360°=0 same as k=0 but use dot for transferred e from Na -->
+    <!-- Actually dot at top-right: ~(222, 56) — use as 8th position -->
+    <!-- Place dot slightly offset from cross at k=6: use angle 335° -->
+    <!-- (197+36cos(335°), 88+36sin(335°)) = (197+32.6, 88-15.2) = (230, 73) -->
+    <circle cx="230" cy="73" r="3" fill="#2d1b69"/>
+    <text x="238" y="71" font-size="7.5" fill="#2d1b69" font-style="italic">← from Na</text>
+    <text x="241" y="114" text-anchor="middle" font-size="48" fill="#5b21b6" font-weight="200">]</text>
+    <text x="256" y="60" font-size="13" fill="#5b21b6" font-weight="700">-</text>
+    <text x="197" y="145" text-anchor="middle" font-size="9" fill="#7c3aed" font-style="italic">Cl⁻ — 8 outer e⁻ (7×, 1•)</text>
+  </svg>`,
+
+  covalentDC: `<svg viewBox="0 0 300 160" xmlns="http://www.w3.org/2000/svg" font-family="inherit">
+    <text x="150" y="13" text-anchor="middle" font-size="9" fill="#6b7280" font-style="italic">Cl₂ — covalent dot-and-cross diagram</text>
+    <!-- Left Cl atom -->
+    <circle cx="108" cy="85" r="44" fill="none" stroke="#ddd6fe" stroke-width="1"/>
+    <circle cx="108" cy="85" r="22" fill="#fdf8ff" stroke="#7c3aed" stroke-width="1.5"/>
+    <text x="108" y="90" text-anchor="middle" font-size="13" font-weight="700" fill="#5b21b6">Cl</text>
+    <!-- Right Cl atom -->
+    <circle cx="192" cy="85" r="44" fill="none" stroke="#ddd6fe" stroke-width="1"/>
+    <circle cx="192" cy="85" r="22" fill="#fdf8ff" stroke="#7c3aed" stroke-width="1.5"/>
+    <text x="192" y="90" text-anchor="middle" font-size="13" font-weight="700" fill="#5b21b6">Cl</text>
+    <!-- Shared pair (1 dot from left Cl, 1 cross from right Cl) in overlap -->
+    <circle cx="143" cy="82" r="3" fill="#5b21b6"/>
+    <line x1="155" y1="79" x2="163" y2="87" stroke="#5b21b6" stroke-width="1.5"/><line x1="163" y1="79" x2="155" y2="87" stroke="#5b21b6" stroke-width="1.5"/>
+    <text x="153" y="98" text-anchor="middle" font-size="8" fill="#7c3aed" font-style="italic">shared pair</text>
+    <!-- Lone pairs on left Cl (3 pairs shown as dots) -->
+    <circle cx="70"  cy="70"  r="2.5" fill="#5b21b6"/><circle cx="76"  cy="70"  r="2.5" fill="#5b21b6"/>
+    <circle cx="65"  cy="85"  r="2.5" fill="#5b21b6"/><circle cx="65"  cy="92"  r="2.5" fill="#5b21b6"/>
+    <circle cx="70"  cy="102" r="2.5" fill="#5b21b6"/><circle cx="76"  cy="102" r="2.5" fill="#5b21b6"/>
+    <!-- Lone pairs on right Cl (3 pairs shown as crosses) -->
+    <line x1="224" y1="67" x2="230" y2="73" stroke="#5b21b6" stroke-width="1.3"/><line x1="230" y1="67" x2="224" y2="73" stroke="#5b21b6" stroke-width="1.3"/>
+    <line x1="224" y1="79" x2="230" y2="73" stroke="#5b21b6" stroke-width="1.3"/>
+    <line x1="234" y1="83" x2="240" y2="89" stroke="#5b21b6" stroke-width="1.3"/><line x1="240" y1="83" x2="234" y2="89" stroke="#5b21b6" stroke-width="1.3"/>
+    <line x1="224" y1="98" x2="230" y2="104" stroke="#5b21b6" stroke-width="1.3"/><line x1="230" y1="98" x2="224" y2="104" stroke="#5b21b6" stroke-width="1.3"/>
+    <line x1="234" y1="98" x2="240" y2="104" stroke="#5b21b6" stroke-width="1.3"/><line x1="240" y1="98" x2="234" y2="104" stroke="#5b21b6" stroke-width="1.3"/>
+    <line x1="224" y1="110" x2="230" y2="116" stroke="#5b21b6" stroke-width="1.3"/><line x1="230" y1="110" x2="224" y2="116" stroke="#5b21b6" stroke-width="1.3"/>
+    <!-- Labels -->
+    <text x="75"  cy="140" y="140" text-anchor="middle" font-size="8.5" fill="#7c3aed" font-style="italic">3 lone pairs</text>
+    <text x="228" y="140" text-anchor="middle" font-size="8.5" fill="#7c3aed" font-style="italic">3 lone pairs</text>
+  </svg>`,
+
+  diamondSVG: `<svg viewBox="0 0 280 200" xmlns="http://www.w3.org/2000/svg" font-family="inherit">
+    <text x="140" y="13" text-anchor="middle" font-size="9" fill="#6b7280" font-style="italic">Diamond — giant covalent structure</text>
+    <!-- Central C atom -->
+    <circle cx="140" cy="105" r="14" fill="#ede9fe" stroke="#5b21b6" stroke-width="2"/>
+    <text x="140" y="110" text-anchor="middle" font-size="11" font-weight="700" fill="#2d1b69">C</text>
+    <!-- 4 bonds to neighbouring C atoms (tetrahedral projection) -->
+    <!-- Top-left -->
+    <line x1="130" y1="95"  x2="88"  y2="60"  stroke="#7c3aed" stroke-width="2"/>
+    <circle cx="80" cy="52" r="12" fill="#ede9fe" stroke="#5b21b6" stroke-width="1.8"/>
+    <text x="80" y="57" text-anchor="middle" font-size="10" font-weight="700" fill="#2d1b69">C</text>
+    <!-- Top-right -->
+    <line x1="150" y1="95"  x2="192" y2="60"  stroke="#7c3aed" stroke-width="2"/>
+    <circle cx="200" cy="52" r="12" fill="#ede9fe" stroke="#5b21b6" stroke-width="1.8"/>
+    <text x="200" y="57" text-anchor="middle" font-size="10" font-weight="700" fill="#2d1b69">C</text>
+    <!-- Bottom-left -->
+    <line x1="130" y1="116" x2="88"  y2="152" stroke="#7c3aed" stroke-width="2"/>
+    <circle cx="80" cy="160" r="12" fill="#ede9fe" stroke="#5b21b6" stroke-width="1.8"/>
+    <text x="80" y="165" text-anchor="middle" font-size="10" font-weight="700" fill="#2d1b69">C</text>
+    <!-- Bottom-right -->
+    <line x1="150" y1="116" x2="192" y2="152" stroke="#7c3aed" stroke-width="2"/>
+    <circle cx="200" cy="160" r="12" fill="#ede9fe" stroke="#5b21b6" stroke-width="1.8"/>
+    <text x="200" y="165" text-anchor="middle" font-size="10" font-weight="700" fill="#2d1b69">C</text>
+    <!-- Bond count label -->
+    <text x="140" y="185" text-anchor="middle" font-size="9" fill="#5b21b6" font-weight="600">Each C: 4 covalent bonds (tetrahedral)</text>
+    <!-- Second shell bonds hinting at 3D extension -->
+    <line x1="68"  y1="52"  x2="48"  y2="38"  stroke="#c4b5fd" stroke-width="1.5" stroke-dasharray="4,3"/>
+    <line x1="80"  y1="40"  x2="80"  y2="22"  stroke="#c4b5fd" stroke-width="1.5" stroke-dasharray="4,3"/>
+    <line x1="212" y1="52"  x2="232" y2="38"  stroke="#c4b5fd" stroke-width="1.5" stroke-dasharray="4,3"/>
+    <line x1="200" y1="40"  x2="200" y2="22"  stroke="#c4b5fd" stroke-width="1.5" stroke-dasharray="4,3"/>
+    <text x="140" y="26" text-anchor="middle" font-size="8" fill="#a78bfa" font-style="italic">…extends throughout in 3D…</text>
+  </svg>`,
+
+  graphiteSVG: `<svg viewBox="0 0 290 195" xmlns="http://www.w3.org/2000/svg" font-family="inherit">
+    <text x="145" y="13" text-anchor="middle" font-size="9" fill="#6b7280" font-style="italic">Graphite — layered giant covalent structure</text>
+    <!-- Layer 1 (top, darker) — hexagonal rings -->
+    <g stroke="#5b21b6" stroke-width="1.8" fill="none">
+      <polygon points="80,30 104,30 116,51 104,72 80,72 68,51"/>
+      <polygon points="116,51 140,51 152,72 140,93 116,93 104,72"/>
+      <polygon points="152,72 176,72 188,93 176,114 152,114 140,93"/>
+      <polygon points="80,72 104,72 116,93 104,114 80,114 68,93"/>
+    </g>
+    <!-- C atom circles at vertices -->
+    <g fill="#ede9fe" stroke="#5b21b6" stroke-width="1.2">
+      <circle cx="80" cy="30" r="6"/><circle cx="104" cy="30" r="6"/><circle cx="116" cy="51" r="6"/>
+      <circle cx="104" cy="72" r="6"/><circle cx="80"  cy="72" r="6"/><circle cx="68"  cy="51" r="6"/>
+      <circle cx="140" cy="51" r="6"/><circle cx="152" cy="72" r="6"/><circle cx="140" cy="93" r="6"/>
+      <circle cx="116" cy="93" r="6"/><circle cx="176" cy="72" r="6"/><circle cx="188" cy="93" r="6"/>
+      <circle cx="176" cy="114" r="6"/><circle cx="152" cy="114" r="6"/><circle cx="80"  cy="114" r="6"/>
+      <circle cx="104" cy="114" r="6"/>
+    </g>
+    <!-- Weak interlayer forces annotation -->
+    <line x1="60" y1="128" x2="200" y2="128" stroke="#ddd6fe" stroke-width="1" stroke-dasharray="6,4"/>
+    <text x="130" y="124" text-anchor="middle" font-size="8" fill="#a78bfa" font-style="italic">↕ weak van der Waals forces</text>
+    <!-- Layer 2 (bottom, lighter, offset) -->
+    <g stroke="#c4b5fd" stroke-width="1.5" fill="none">
+      <polygon points="102,140 126,140 138,161 126,182 102,182 90,161"/>
+      <polygon points="138,161 162,161 174,182 162,182 138,182 126,182"/>
+    </g>
+    <g fill="#f5f0ff" stroke="#c4b5fd" stroke-width="1">
+      <circle cx="102" cy="140" r="5"/><circle cx="126" cy="140" r="5"/>
+      <circle cx="138" cy="161" r="5"/><circle cx="126" cy="182" r="5"/>
+      <circle cx="102" cy="182" r="5"/><circle cx="90"  cy="161" r="5"/>
+      <circle cx="162" cy="161" r="5"/>
+    </g>
+    <!-- Delocalized electrons between layers -->
+    <circle cx="220" cy="100" r="3" fill="#7c3aed" opacity="0.7"/>
+    <circle cx="235" cy="115" r="3" fill="#7c3aed" opacity="0.7"/>
+    <circle cx="225" cy="130" r="3" fill="#7c3aed" opacity="0.7"/>
+    <circle cx="245" cy="105" r="3" fill="#7c3aed" opacity="0.5"/>
+    <circle cx="240" cy="125" r="3" fill="#7c3aed" opacity="0.5"/>
+    <text x="255" cy="116" y="110" font-size="8" fill="#7c3aed">e⁻</text>
+    <text x="258" y="122" font-size="7.5" fill="#7c3aed" font-style="italic">deloc.</text>
+    <!-- Layer labels -->
+    <text x="210" y="55"  font-size="8.5" fill="#5b21b6" font-weight="600">Layer 1</text>
+    <text x="210" y="165" font-size="8.5" fill="#a78bfa" font-weight="600">Layer 2</text>
+  </svg>`
+};
+
+const specPoints = [
+  {id:"1.37",stmt:"Understand how ionic bonds form by electron transfer; ions achieve noble gas configurations",diagram:null,qs:[{ref:"(a)",ao:"AO1",marks:2,stem:"Explain how an ionic bond forms between a sodium atom and a chlorine atom."},{ref:"(b)",ao:"AO1",marks:1,stem:"State the formula and charge of the ion formed by each of: (i) magnesium &nbsp; (ii) oxygen."},{ref:"(c)",ao:"AO2",marks:2,stem:"Explain why the formula of aluminium oxide is Al₂O₃ and not AlO."}],ms:[{ref:"(a)",total:2,items:[{pt:"Sodium transfers one electron to the chlorine atom ✓ (1)"},{pt:"Both atoms achieve a full outer electron shell / noble gas configuration ✓ (1)"}]},{ref:"(b)",total:1,items:[{pt:"(i) Mg²⁺ AND (ii) O²⁻ ✓ (1 for both correct)"},{note:"Do not accept either alone"}]},{ref:"(c)",total:2,items:[{pt:"Al loses 3 electrons → Al³⁺; O gains 2 electrons → O²⁻ ✓ (1)"},{pt:"Two Al³⁺ (total 6+) balance three O²⁻ (total 6−) → Al₂O₃ ✓ (1)"}]}]},
+  {id:"1.38",stmt:"Draw and interpret dot-and-cross diagrams for ionic compounds, showing outer electrons only",diagram:"ionicDC",qs:[{ref:"(a)",ao:"AO1",marks:2,stem:"Fig. 1 shows the dot-and-cross diagram for NaCl. State: (i) what the square brackets represent, and (ii) why the transferred electron is shown as a dot (not a cross) inside Cl⁻."},{ref:"(a cont.)",ao:"AO1",marks:1,stem:"State the number of outer electrons in each ion: (i) Na⁺ &nbsp; (ii) Cl⁻ &nbsp; (iii) Mg²⁺."},{ref:"(b)",ao:"AO2",marks:2,stem:"Describe the dot-and-cross diagram you would draw for magnesium oxide (MgO). State the charge on each ion and the number of electrons transferred."}],ms:[{ref:"(a)",total:2,items:[{pt:"Square brackets: mark the boundary of the ion / show all electrons belong to that ion ✓ (1)"},{pt:"The dot identifies the electron as originating from Na; crosses represent Cl's original electrons — tracking their source ✓ (1)"}]},{ref:"(a cont.)",total:1,items:[{pt:"(i) Na⁺: 8; (ii) Cl⁻: 8; (iii) Mg²⁺: 8 ✓ (all three correct for 1 mark)"}]},{ref:"(b)",total:2,items:[{pt:"Mg transfers 2 electrons to O → Mg²⁺ (no outer electrons shown); O²⁻ (8 outer electrons shown) ✓ (1)"},{pt:"Mg²⁺ in square brackets with 2+ charge; O²⁻ in square brackets with 2− charge ✓ (1)"}]}]},
+  {id:"1.39",stmt:"Understand the giant ionic lattice structure; explain properties of ionic compounds",diagram:null,qs:[{ref:"(a)",ao:"AO1",marks:1,stem:"Describe the structure of a giant ionic lattice."},{ref:"(b)",ao:"AO2",marks:2,stem:"Explain why sodium chloride has a high melting point."},{ref:"(c)",ao:"AO3",marks:2,stem:"Ionic compounds conduct electricity when dissolved or melted, but not when solid. Explain why, using ideas about ions."}],ms:[{ref:"(a)",total:1,items:[{pt:"3D regular arrangement of alternating positive and negative ions held by strong electrostatic attraction ✓"}]},{ref:"(b)",total:2,items:[{pt:"Strong electrostatic forces of attraction between oppositely charged ions ✓ (1)"},{pt:"Large amount of energy needed to overcome these forces and separate the ions ✓ (1)"}]},{ref:"(c)",total:2,items:[{pt:"In solid state, ions are fixed / cannot move → no conduction ✓ (1)"},{pt:"When dissolved or melted, ions are free to move and carry charge → conducts electricity ✓ (1)"}]}]},
+  {id:"1.40",stmt:"Understand how covalent bonds form by sharing of electron pairs between non-metal atoms",diagram:null,qs:[{ref:"(a)",ao:"AO1",marks:2,stem:"Explain how a covalent bond is formed. Use hydrogen (H₂) as your example."},{ref:"(b)",ao:"AO1",marks:1,stem:"State what is meant by a single covalent bond."},{ref:"(c)",ao:"AO2",marks:2,stem:"Explain why covalent bonds form between two non-metal atoms rather than ionic bonds."}],ms:[{ref:"(a)",total:2,items:[{pt:"Each hydrogen atom contributes one electron to form a shared pair ✓ (1)"},{pt:"Both atoms achieve a full outer shell of 2 electrons ✓ (1)"}]},{ref:"(b)",total:1,items:[{pt:"One shared pair of electrons (one electron from each atom) ✓"}]},{ref:"(c)",total:2,items:[{pt:"Both non-metals have high electronegativity / both want to gain electrons / neither can lose electrons easily ✓ (1)"},{pt:"Sharing electrons is more energetically favourable than transfer ✓ (1)"}]}]},
+  {id:"1.41",stmt:"Draw and interpret dot-and-cross diagrams for simple covalent molecules (H₂, Cl₂, H₂O)",diagram:"covalentDC",qs:[{ref:"(a)",ao:"AO1",marks:1,stem:"Fig. 2 shows a dot-and-cross diagram for Cl₂. State how many shared pairs of electrons form the Cl–Cl bond."},{ref:"(b)",ao:"AO1",marks:2,stem:"From Fig. 2, state: (i) bonding electron pairs per Cl atom; (ii) lone pairs per Cl atom."},{ref:"(c)",ao:"AO2",marks:2,stem:"Water (H₂O) has O bonded to two H atoms. Explain the bonding, including why hydrogen forms only one bond."}],ms:[{ref:"(a)",total:1,items:[{pt:"1 shared pair ✓"}]},{ref:"(b)",total:2,items:[{pt:"(i) 1 bonding pair ✓ (1)"},{pt:"(ii) 3 lone pairs ✓ (1)"}]},{ref:"(c)",total:2,items:[{pt:"Oxygen forms 2 covalent bonds (one with each H) to achieve a full outer shell of 8 ✓ (1)"},{pt:"H has 1 outer electron; needs 1 more to achieve a full shell of 2 / can only form 1 bond ✓ (1)"}]}]},
+  {id:"1.42",stmt:"Know the properties of simple covalent molecules and explain in terms of intermolecular forces",diagram:null,qs:[{ref:"(a)",ao:"AO1",marks:1,stem:"State one property of simple covalent molecules related to melting and boiling points."},{ref:"(b)",ao:"AO2",marks:2,stem:"Explain, in terms of intermolecular forces, why simple covalent molecules have low boiling points."},{ref:"(c)",ao:"AO3",marks:2,stem:"A student states: <em>\"Since covalent bonds in water are very strong, water must have a very high boiling point.\"</em> Evaluate this statement. Explain the error."}],ms:[{ref:"(a)",total:1,items:[{pt:"Low melting / boiling points ✓ (accept: often gases or liquids at room temperature)"}]},{ref:"(b)",total:2,items:[{pt:"Forces between molecules (intermolecular forces) are weak ✓ (1)"},{pt:"Only a small amount of energy is needed to overcome these weak intermolecular forces ✓ (1)"},{note:"Do not award marks for 'covalent bonds are weak'"}]},{ref:"(c)",total:2,items:[{pt:"The reasoning is incorrect; covalent bonds within water are indeed strong ✓ (1)"},{pt:"It is the weak intermolecular forces between water molecules — not the covalent bonds — that are overcome during boiling ✓ (1)"}]}]},
+  {id:"1.43",stmt:"Understand the nature of giant covalent structures; compare with simple covalent molecules",diagram:null,qs:[{ref:"(a)",ao:"AO1",marks:2,stem:"Explain the difference between a simple covalent molecule and a giant covalent structure."},{ref:"(b)",ao:"AO2",marks:2,stem:"Giant covalent structures have very high melting points. Explain why, using ideas about bonding."},{ref:"(c)",ao:"AO3",marks:1,stem:"Diamond, graphite, and SiO₂ all have very high melting points. What does this tell you about the bonding they share, despite different atomic arrangements?"}],ms:[{ref:"(a)",total:2,items:[{pt:"Simple covalent: fixed, small number of atoms covalently bonded into a discrete molecule ✓ (1)"},{pt:"Giant covalent: very large number of atoms covalently bonded in a regular repeating lattice ✓ (1)"}]},{ref:"(b)",total:2,items:[{pt:"Every atom is bonded to neighbours by strong covalent bonds ✓ (1)"},{pt:"Very large amount of energy needed to break all bonds throughout the structure ✓ (1)"}]},{ref:"(c)",total:1,items:[{pt:"All have strong covalent bonds throughout the entire structure; breaking these bonds requires large amounts of energy → very high melting points ✓"}]}]},
+  {id:"1.44",stmt:"Describe and explain the structure and properties of diamond",diagram:"diamondSVG",qs:[{ref:"(a)",ao:"AO1",marks:1,stem:"Using Fig. 3, state how many covalent bonds each carbon atom forms in diamond."},{ref:"(b)",ao:"AO2",marks:2,stem:"Explain why diamond is extremely hard, using ideas about its structure."},{ref:"(c)",ao:"AO3",marks:2,stem:"Explain why diamond does not conduct electricity, even though carbon is the same element found in graphite, which does conduct."}],ms:[{ref:"(a)",total:1,items:[{pt:"4 (covalent bonds per carbon atom) ✓"}]},{ref:"(b)",total:2,items:[{pt:"Each C atom forms 4 strong covalent bonds to 4 neighbours ✓ (1)"},{pt:"Creates a rigid 3D tetrahedral network resistant to deformation ✓ (1)"}]},{ref:"(c)",total:2,items:[{pt:"All four outer electrons of each C atom are used in covalent bonding ✓ (1)"},{pt:"No free / delocalized electrons to carry charge → does not conduct ✓ (1)"}]}]},
+  {id:"1.45",stmt:"Describe and explain the structure and properties of graphite",diagram:"graphiteSVG",qs:[{ref:"(a)",ao:"AO1",marks:2,stem:"Using Fig. 4, describe the structure of graphite. Include the arrangement of atoms and how layers are held together."},{ref:"(b)",ao:"AO2",marks:2,stem:"Explain why graphite conducts electricity, using ideas about electron structure."},{ref:"(c)",ao:"AO3",marks:1,stem:"Graphite is used as a lubricant. Explain why its structure makes it suitable."}],ms:[{ref:"(a)",total:2,items:[{pt:"Layered structure of hexagonal rings; each C covalently bonded to 3 others within the same layer ✓ (1)"},{pt:"Layers held together by weak intermolecular (van der Waals) forces ✓ (1)"}]},{ref:"(b)",total:2,items:[{pt:"Each C forms only 3 bonds → 1 delocalized electron per C atom ✓ (1)"},{pt:"Delocalized electrons move freely and carry electrical charge → conducts ✓ (1)"}]},{ref:"(c)",total:1,items:[{pt:"Weak forces between layers allow layers to slide over each other with minimal friction → suitable lubricant ✓"}]}]},
+  {id:"1.46",stmt:"Know the structure of C60 (buckminsterfullerene) and its properties",diagram:null,qs:[{ref:"(a)",ao:"AO1",marks:2,stem:"Describe the structure of C₆₀. Include number of atoms, arrangement, and bonding."},{ref:"(b)",ao:"AO2",marks:2,stem:"Explain whether C₆₀ should be classified as a simple covalent molecule or a giant covalent structure. Justify your answer."},{ref:"(c)",ao:"AO3",marks:1,stem:"Suggest one potential application of C₆₀. Explain why its structure makes it suitable."}],ms:[{ref:"(a)",total:2,items:[{pt:"60 carbon atoms arranged in a spherical / ball-shaped molecule ✓ (1)"},{pt:"Pattern of hexagonal and pentagonal rings; each C bonded to 3 others by covalent bonds ✓ (1)"}]},{ref:"(b)",total:2,items:[{pt:"Simple covalent molecule ✓ (1)"},{pt:"Fixed number of atoms (60) forming a discrete molecule; weak intermolecular forces between molecules ✓ (1)"}]},{ref:"(c)",total:1,items:[{pt:"e.g. Drug delivery: hollow cage can carry drug molecules ✓; Lubricant: spherical shape reduces friction ✓; Electronics: delocalized electrons ✓"},{note:"1 mark for valid suggestion with brief structural justification"}]}]},
+  {id:"1.47",stmt:"Understand metallic bonding: lattice of positive ions in a sea of delocalized electrons",diagram:null,qs:[{ref:"(a)",ao:"AO1",marks:2,stem:"Describe the structure of a metal in terms of metallic bonding. Use 'positive ions' and 'delocalized electrons'."},{ref:"(b)",ao:"AO1",marks:1,stem:"State what holds the metallic lattice together."},{ref:"(c)",ao:"AO2",marks:2,stem:"Explain why metals generally have high melting points, using ideas about metallic bonding."}],ms:[{ref:"(a)",total:2,items:[{pt:"Regular lattice of positive metal ions (cations) ✓ (1)"},{pt:"Surrounded by / in a 'sea' of delocalized (free-moving) electrons ✓ (1)"}]},{ref:"(b)",total:1,items:[{pt:"Strong electrostatic attraction between the positive ions and the delocalized electrons ✓"}]},{ref:"(c)",total:2,items:[{pt:"Strong electrostatic forces between positive ions and delocalized electrons ✓ (1)"},{pt:"Large amount of energy needed to overcome these forces / disrupt the lattice ✓ (1)"}]}]},
+  {id:"1.48",stmt:"Explain the properties of metals in terms of metallic bonding (conductivity, malleability)",diagram:null,qs:[{ref:"(a)",ao:"AO1",marks:1,stem:"Name one property of metals (other than electrical conductivity) explained by delocalized electrons."},{ref:"(b)",ao:"AO2",marks:2,stem:"Explain why metals are good electrical conductors."},{ref:"(c)",ao:"AO3",marks:2,stem:"A student claims: <em>\"Metals conduct electricity because they have a regular lattice structure.\"</em> Evaluate this claim."}],ms:[{ref:"(a)",total:1,items:[{pt:"Thermal conductivity / good conductor of heat ✓ (accept malleability / ductility)"}]},{ref:"(b)",total:2,items:[{pt:"Metals contain delocalized electrons free to move throughout the structure ✓ (1)"},{pt:"These electrons carry electrical charge when a voltage is applied ✓ (1)"}]},{ref:"(c)",total:2,items:[{pt:"The claim is incomplete / misleading ✓ (1)"},{pt:"It is the delocalized electrons — not the lattice — that enable conduction; ionic compounds also have regular lattices but do not conduct when solid ✓ (1)"}]}]},
+  {id:"1.49",stmt:"Understand alloys and explain why they are harder than pure metals",diagram:null,qs:[{ref:"(a)",ao:"AO1",marks:2,stem:"Explain what an alloy is. Give one named example and state the elements it contains."},{ref:"(b)",ao:"AO2",marks:2,stem:"Explain, in terms of atomic structure, why alloys are harder than the pure metals they contain."},{ref:"(c)",ao:"AO3",marks:1,stem:"Brass is an alloy of copper and zinc. Predict whether brass is harder or softer than pure copper. Justify your prediction."}],ms:[{ref:"(a)",total:2,items:[{pt:"Mixture of two or more metals / a metal mixed with other elements ✓ (1)"},{pt:"Named example with correct elements, e.g. steel (iron + carbon); brass (copper + zinc) ✓ (1)"}]},{ref:"(b)",total:2,items:[{pt:"In pure metal, same-size atoms are in regular layers that slide easily ✓ (1)"},{pt:"In alloy, different-sized atoms disrupt the regular arrangement → prevent layers sliding → more rigid / harder ✓ (1)"}]},{ref:"(c)",total:1,items:[{pt:"Brass is harder than pure copper ✓; zinc atoms (different size) disrupt the regular copper lattice / prevent layer sliding ✓"},{note:"Must include prediction AND justification for 1 mark"}]}]},
+  {id:"1.50",stmt:"Predict and explain electrical conductivity from bonding and structure",diagram:null,qs:[{ref:"(a)",ao:"AO1",marks:1,stem:"State the two conditions under which ionic compounds can conduct electricity."},{ref:"(b)",ao:"AO2",marks:2,stem:"Graphite is a non-metal, yet it conducts electricity. Explain why."},{ref:"(c)",ao:"AO3",marks:2,stem:"A student tests four liquids: water, mercury, olive oil, and molten NaCl. Two conduct electricity. Identify the two and explain why the other two do not."}],ms:[{ref:"(a)",total:1,items:[{pt:"When dissolved in water (aqueous) AND when melted / molten ✓ (both needed for 1 mark)"}]},{ref:"(b)",total:2,items:[{pt:"Each C forms only 3 bonds → 1 delocalized electron per atom ✓ (1)"},{pt:"Delocalized electrons move freely and carry charge ✓ (1)"}]},{ref:"(c)",total:2,items:[{pt:"Mercury (metal — delocalized electrons) and molten NaCl (free ions) conduct ✓ (1)"},{pt:"Water and olive oil do not — they are covalent molecules with no free ions or delocalized electrons ✓ (1)"}]}]},
+  {id:"1.51",stmt:"Predict and explain physical properties from bonding type and structure",diagram:null,qs:[{ref:"(a)",ao:"AO3",marks:3,stem:"Substance X has a melting point of 2996 °C, does not conduct electricity in any state, and is extremely hard. Predict the type of bonding and structure. Justify your answer fully."},{ref:"(b)",ao:"AO2",marks:2,stem:"Substance Y has a melting point of 70 °C and does not conduct electricity in any state. Identify the most likely type of structure and explain your reasoning."}],ms:[{ref:"(a)",total:3,items:[{pt:"Giant covalent structure ✓ (1)"},{pt:"Very high melting point → strong bonds throughout consistent with covalent bonds ✓ (1)"},{pt:"Does not conduct → no free electrons or ions; extremely hard → rigid 3D covalent network ✓ (1)"}]},{ref:"(b)",total:2,items:[{pt:"Simple covalent molecule ✓ (1)"},{pt:"Low melting point → only weak intermolecular forces overcome; does not conduct → no free ions or electrons ✓ (1)"}]}]}
+];
+
+let current = 0;
+const done = new Set();
+
+function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function getTotalMarks(sp){ return sp.qs.reduce((s,q)=>s+q.marks,0); }
+function shortStmt(stmt){ return stmt.length>58 ? stmt.substring(0,55)+'…' : stmt; }
+
+function buildQuestion(sp){
+  const hasDiag = !!sp.diagram;
+  let qsHTML='';
+  for(const q of sp.qs){
+    let tableHTML='';
+    if(q.table){
+      const th=q.table.heads.map(h=>`<th>${esc(h)}</th>`).join('');
+      const trs=q.table.rows.map(r=>'<tr>'+r.map(c=>`<td>${esc(c)}</td>`).join('')+'</tr>').join('');
+      tableHTML=`<div class="data-table-wrap"><table class="data-table"><thead><tr>${th}</tr></thead><tbody>${trs}</tbody></table></div>`;
+    }
+    qsHTML+=`<div class="q-item"><div class="q-ref">${esc(q.ref)}</div><div class="q-content"><div class="q-stem">${q.stem}</div>${tableHTML}<div class="q-meta"><span class="marks-pill">[${q.marks}]</span><span class="ao-pill">${esc(q.ao)}</span></div></div></div>`;
+  }
+  const diagHTML = hasDiag ? `<div class="diagram-col"><div class="diagram-box">${diagrams[sp.diagram]||''}<div class="diagram-caption">Fig. — refer to diagram when answering</div></div></div>` : '';
+  return `<div class="q-header"><span class="spec-badge">${esc(sp.id)}</span><span class="q-header-title">${esc(shortStmt(sp.stmt))}</span><span class="marks-badge">${getTotalMarks(sp)} marks</span></div><div class="spec-stmt"><strong>Spec ${esc(sp.id)}:</strong> ${esc(sp.stmt)}</div><div class="q-body"><div class="questions-col">${qsHTML}</div>${diagHTML}</div>`;
+}
+
+function buildMarkScheme(sp){
+  const singleCol = sp.ms.length <= 2;
+  let itemsHTML='';
+  for(const msQ of sp.ms){
+    const ptsHTML=msQ.items.map(item=>{
+      if(item.note) return `<div class="ms-note">${esc(item.note)}</div>`;
+      const text=item.pt||'';
+      const hasCheck=text.includes('✓');
+      const cleaned=text.replace(/\s*✓\s*\(\d+\)/g,'').replace(/\s*✓/g,'').trim();
+      const awardHTML=item.award?` <span class="award-badge">${esc(item.award)}</span>`:'';
+      const showTick=hasCheck||!!item.award;
+      return `<div class="ms-point"><span class="ms-tick"${showTick?'':' style="opacity:0"'}>✓</span><span>${esc(cleaned)}${awardHTML}</span></div>`;
+    }).join('');
+    itemsHTML+=`<div class="ms-item"><div class="ms-item-hdr"><span class="ms-ref">${esc(msQ.ref)}</span><span class="ms-total">[${msQ.total} mark${msQ.total>1?'s':''}]</span></div><div class="ms-points">${ptsHTML}</div></div>`;
+  }
+  return `<div class="ms-header"><span class="ms-badge">✓ MS</span><span class="ms-header-title">${esc(sp.id)} — Mark Scheme</span></div><div class="spec-stmt"><strong>Spec ${esc(sp.id)}:</strong> ${esc(sp.stmt)}</div><div class="ms-body${singleCol?' cols-1':''}">${itemsHTML}</div>`;
+}
+
+function renderNav(){
+  document.getElementById('specNav').innerHTML=specPoints.map((sp,i)=>{
+    const cls=i===current?'active':done.has(i)?'done':'';
+    return `<div class="spec-dot ${cls}" onclick="goTo(${i})" title="${esc(sp.stmt)}">${esc(sp.id)}</div>`;
+  }).join('');
+}
+
+function render(){
+  const sp=specPoints[current];
+  document.getElementById('cardScene').classList.remove('revealed');
+  document.getElementById('progressPill').textContent=`Card ${current+1} of ${specPoints.length}`;
+  document.getElementById('progressFill').style.width=`${(current+1)/specPoints.length*100}%`;
+  document.getElementById('hintText').textContent='Answer the questions, then tap "Reveal Answers"';
+  document.getElementById('btnReveal').disabled=false;
+  document.getElementById('btnReveal').textContent='Reveal Answers ✓';
+  document.getElementById('btnNext').disabled=true;
+  document.getElementById('btnPrev').disabled=current===0;
+  document.getElementById('completeBanner').classList.remove('show');
+  document.getElementById('qFace').innerHTML=buildQuestion(sp);
+  document.getElementById('msFace').innerHTML=buildMarkScheme(sp);
+  renderNav();
+}
+
+function revealAnswers(){
+  const scene=document.getElementById('cardScene');
+  const btn=document.getElementById('btnReveal');
+  if(scene.classList.contains('revealed')){
+    scene.classList.remove('revealed');
+    btn.textContent='Reveal Answers ✓';
+    document.getElementById('hintText').textContent='Answer the questions, then tap "Reveal Answers"';
+  } else {
+    scene.classList.add('revealed');
+    btn.textContent='Hide Answers ↩';
+    document.getElementById('btnNext').disabled=(current===specPoints.length-1);
+    document.getElementById('hintText').textContent='Check your answers carefully, then move on';
+    done.add(current); renderNav();
+  }
+}
+
+function navigate(dir){
+  const next=current+dir;
+  if(next>=0&&next<specPoints.length){ current=next; render(); }
+  else if(dir===1){ document.getElementById('completeBanner').classList.add('show'); document.getElementById('hintText').textContent=''; }
+}
+
+function goTo(idx){ current=idx; render(); }
+
+render();
+</script>
+</body>
+</html>
