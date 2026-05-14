@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Motion & Forces – Revision Cards</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', system-ui, sans-serif; background: #f0f4ff; min-height: 100vh; display: flex; flex-direction: column; }
+  .header { background: #0c2340; color: white; padding: 14px 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
+  .header-left h1 { font-size: 1.05rem; font-weight: 700; }
+  .header-left .sub { font-size: 0.78rem; opacity: 0.68; margin-top: 2px; }
+  .progress-pill { background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.25); padding: 5px 14px; border-radius: 20px; font-size: 0.82rem; font-weight: 600; white-space: nowrap; }
+  .progress-track { height: 4px; background: #bfdbfe; }
+  .progress-fill { height: 100%; background: #3b82f6; transition: width 0.5s ease; }
+  .main { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 20px 16px 32px; gap: 14px; }
+  .spec-nav { display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; }
+  .spec-dot { width: 44px; height: 32px; border-radius: 16px; border: 2px solid #93c5fd; background: white; color: #1d4ed8; font-weight: 700; font-size: 0.73rem; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.15s; }
+  .spec-dot:hover { background: #dbeafe; }
+  .spec-dot.active { background: #0c2340; color: white; border-color: #0c2340; }
+  .spec-dot.done { background: #3b82f6; color: white; border-color: #3b82f6; }
+  .card-scene { width: 100%; max-width: 900px; display: grid; }
+  .card-face { grid-area: 1/1; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.11); transition: opacity 0.35s ease, transform 0.35s ease; }
+  .card-face.back { opacity: 0; transform: scale(0.97); pointer-events: none; }
+  .card-scene.revealed .card-face.front { opacity: 0; transform: scale(0.97); pointer-events: none; }
+  .card-scene.revealed .card-face.back { opacity: 1; transform: scale(1); pointer-events: all; }
+  .q-header { background: #0c2340; color: white; padding: 14px 20px; display: flex; align-items: center; gap: 12px; }
+  .spec-badge { background: #93c5fd; color: #0c2340; font-weight: 700; font-size: 0.88rem; padding: 5px 12px; border-radius: 8px; white-space: nowrap; flex-shrink: 0; }
+  .q-header-title { font-size: 0.95rem; font-weight: 600; line-height: 1.3; }
+  .marks-badge { margin-left: auto; background: #f4d03f; color: #1a2e1f; font-weight: 700; font-size: 0.8rem; padding: 5px 12px; border-radius: 20px; white-space: nowrap; flex-shrink: 0; }
+  .spec-stmt { background: #dbeafe; padding: 9px 20px; font-size: 0.84rem; color: #1e3a5f; font-style: italic; line-height: 1.45; border-bottom: 1px solid #93c5fd; }
+  .spec-stmt strong { font-style: normal; color: #0c2340; }
+  .q-body { background: white; padding: 16px 20px; display: flex; gap: 18px; align-items: flex-start; }
+  .questions-col { flex: 1; min-width: 0; }
+  .diagram-col { width: 270px; flex-shrink: 0; }
+  .diagram-box { border: 2px dashed #93c5fd; border-radius: 10px; background: #f8faff; padding: 12px; display: flex; flex-direction: column; align-items: center; gap: 6px; }
+  .diagram-box svg { width: 100%; height: auto; }
+  .diagram-caption { font-size: 0.74rem; color: #777; font-style: italic; text-align: center; line-height: 1.4; }
+  .q-item { display: flex; gap: 10px; padding: 12px 0; border-bottom: 1px solid #eff6ff; align-items: flex-start; }
+  .q-item:last-child { border-bottom: none; padding-bottom: 0; }
+  .q-ref { font-weight: 700; color: #0c2340; font-size: 1rem; min-width: 30px; padding-top: 1px; flex-shrink: 0; }
+  .q-content { flex: 1; min-width: 0; }
+  .q-stem { font-size: 0.91rem; color: #1a2e4f; line-height: 1.55; }
+  .q-meta { margin-top: 7px; display: flex; gap: 7px; align-items: center; flex-wrap: wrap; }
+  .marks-pill { background: #1d4ed8; color: white; font-size: 0.73rem; font-weight: 700; padding: 2px 9px; border-radius: 10px; }
+  .ao-pill { background: #eff6ff; color: #1d4ed8; font-size: 0.71rem; font-weight: 600; padding: 2px 8px; border-radius: 10px; border: 1px solid #bfdbfe; }
+  .data-table-wrap { margin-top: 10px; overflow-x: auto; }
+  .data-table { border-collapse: collapse; font-size: 0.84rem; min-width: 220px; }
+  .data-table th { background: #1d4ed8; color: white; padding: 6px 14px; text-align: center; font-weight: 600; }
+  .data-table td { padding: 4px 14px; text-align: center; border: 1px solid #bfdbfe; }
+  .data-table tr:nth-child(odd) td { background: #f8faff; }
+  .data-table tr:nth-child(even) td { background: #eff6ff; }
+  .ms-header { background: #1e5fa8; color: white; padding: 14px 20px; display: flex; align-items: center; gap: 12px; }
+  .ms-badge { background: #93c5fd; color: #0c2340; font-weight: 700; font-size: 0.85rem; padding: 5px 11px; border-radius: 8px; white-space: nowrap; flex-shrink: 0; }
+  .ms-header-title { font-size: 1rem; font-weight: 600; }
+  .ms-body { background: #f0f4ff; padding: 16px 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .ms-body.cols-1 { grid-template-columns: 1fr; }
+  .ms-item { background: white; border-radius: 8px; overflow: hidden; border: 1px solid #bfdbfe; box-shadow: 0 1px 4px rgba(0,0,0,0.05); }
+  .ms-item-hdr { background: #e8f0ff; padding: 7px 13px; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid #bfdbfe; }
+  .ms-ref { font-weight: 700; color: #1e5fa8; font-size: 0.93rem; }
+  .ms-total { font-size: 0.76rem; color: #666; }
+  .ms-points { padding: 10px 13px; display: flex; flex-direction: column; gap: 6px; }
+  .ms-point { display: flex; gap: 8px; align-items: flex-start; font-size: 0.86rem; color: #1a2e4f; line-height: 1.45; }
+  .ms-tick { color: #2563eb; font-weight: 800; font-size: 0.9rem; flex-shrink: 0; margin-top: 1px; }
+  .ms-note { font-size: 0.76rem; color: #6b7280; font-style: italic; line-height: 1.4; border-top: 1px solid #eff6ff; margin-top: 4px; padding-top: 6px; }
+  .award-badge { display: inline-block; background: #dbeafe; color: #1d4ed8; font-size: 0.72rem; font-weight: 600; padding: 1px 6px; border-radius: 6px; margin-left: 4px; white-space: nowrap; }
+  .hint-text { font-size: 0.8rem; color: #777; text-align: center; min-height: 18px; font-style: italic; }
+  .controls { display: flex; gap: 10px; justify-content: center; align-items: center; flex-wrap: wrap; width: 100%; max-width: 900px; }
+  .btn { padding: 10px 22px; border: none; border-radius: 8px; cursor: pointer; font-size: 0.88rem; font-weight: 600; font-family: inherit; transition: all 0.15s; white-space: nowrap; }
+  .btn:hover:not(:disabled) { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+  .btn:active:not(:disabled) { transform: translateY(0); }
+  .btn:disabled { opacity: 0.35; cursor: not-allowed; }
+  .btn-outline { background: white; color: #0c2340; border: 2px solid #0c2340; }
+  .btn-reveal { background: #3b82f6; color: white; padding: 11px 30px; font-size: 0.92rem; }
+  .btn-next { background: #0c2340; color: white; padding: 11px 30px; font-size: 0.92rem; }
+  .complete-banner { background: #0c2340; color: white; text-align: center; padding: 20px; border-radius: 12px; width: 100%; max-width: 900px; display: none; }
+  .complete-banner h2 { font-size: 1.3rem; margin-bottom: 6px; }
+  .complete-banner p { opacity: 0.8; font-size: 0.9rem; }
+  .complete-banner.show { display: block; }
+  @media (max-width: 640px) {
+    .header { padding: 10px 14px; }
+    .header-left h1 { font-size: 0.9rem; }
+    .header-left .sub { font-size: 0.7rem; }
+    .progress-pill { font-size: 0.74rem; padding: 4px 10px; }
+    .main { padding: 12px 10px 24px; gap: 10px; }
+    .spec-dot { width: 36px; height: 27px; font-size: 0.67rem; }
+    .q-header { padding: 10px 14px; flex-wrap: wrap; }
+    .q-header-title { font-size: 0.87rem; order: 3; flex-basis: 100%; padding-top: 4px; }
+    .marks-badge { font-size: 0.74rem; padding: 3px 9px; }
+    .spec-stmt { padding: 7px 14px; font-size: 0.79rem; }
+    .q-body { flex-direction: column; padding: 12px 14px; }
+    .diagram-col { width: 100%; }
+    .q-item { padding: 9px 0; }
+    .q-stem { font-size: 0.86rem; }
+    .ms-header { padding: 10px 14px; }
+    .ms-header-title { font-size: 0.9rem; }
+    .ms-body { grid-template-columns: 1fr !important; padding: 12px 14px; }
+    .ms-point { font-size: 0.82rem; }
+    .ms-note { font-size: 0.74rem; }
+    .controls { gap: 8px; }
+    .btn { padding: 9px 14px; font-size: 0.82rem; }
+    .btn-reveal, .btn-next { padding: 9px 18px; font-size: 0.85rem; }
+    .complete-banner h2 { font-size: 1.1rem; }
+    .complete-banner p { font-size: 0.82rem; }
+  }
+</style>
+</head>
+<body>
+<div class="header">
+  <div class="header-left">
+    <h1>⚡ Motion &amp; Forces — Revision Cards</h1>
+    <div class="sub">Y9 Physics &nbsp;·&nbsp; Edexcel IGCSE Combined Science &nbsp;·&nbsp; Spec 1.1–1.18</div>
+  </div>
+  <div class="progress-pill" id="progressPill">Card 1 of 18</div>
+</div>
+<div class="progress-track"><div class="progress-fill" id="progressFill" style="width:5.56%"></div></div>
+
+<div class="main">
+  <div class="spec-nav" id="specNav"></div>
+  <div class="card-scene" id="cardScene">
+    <div class="card-face front" id="qFace"></div>
+    <div class="card-face back"  id="msFace"></div>
+  </div>
+  <div class="hint-text" id="hintText">Answer the questions, then tap <em>Reveal Answers</em></div>
+  <div class="controls">
+    <button class="btn btn-outline" id="btnPrev" onclick="navigate(-1)">&#8592; Previous</button>
+    <button class="btn btn-reveal" id="btnReveal" onclick="revealAnswers()">Reveal Answers ✓</button>
+    <button class="btn btn-next"   id="btnNext"   onclick="navigate(1)" disabled>Next Card &#8594;</button>
+  </div>
+  <div class="complete-banner" id="completeBanner">
+    <h2>🎉 All 18 cards complete!</h2>
+    <p>You've worked through all of Motion &amp; Forces. Use the dots above to revisit any topic.</p>
+  </div>
+</div>
+
+<script>
+const diagrams = {
+  dtGraph: `<svg viewBox="0 0 290 210" xmlns="http://www.w3.org/2000/svg" font-family="inherit">
+    <rect x="48" y="20" width="220" height="162" fill="#f8faff" stroke="#bfdbfe" stroke-width="1" rx="2"/>
+    <line x1="48" y1="128" x2="268" y2="128" stroke="#e0e8f8" stroke-width="0.8"/>
+    <line x1="48" y1="74" x2="268" y2="74" stroke="#e0e8f8" stroke-width="0.8"/>
+    <line x1="103" y1="20" x2="103" y2="182" stroke="#e0e8f8" stroke-width="0.8"/>
+    <line x1="158" y1="20" x2="158" y2="182" stroke="#e0e8f8" stroke-width="0.8"/>
+    <line x1="213" y1="20" x2="213" y2="182" stroke="#e0e8f8" stroke-width="0.8"/>
+    <line x1="48" y1="182" x2="268" y2="182" stroke="#0c2340" stroke-width="1.8"/>
+    <line x1="48" y1="20" x2="48" y2="182" stroke="#0c2340" stroke-width="1.8"/>
+    <text x="103" y="196" text-anchor="middle" font-size="9" fill="#334155">10</text>
+    <text x="158" y="196" text-anchor="middle" font-size="9" fill="#334155">20</text>
+    <text x="213" y="196" text-anchor="middle" font-size="9" fill="#334155">30</text>
+    <text x="268" y="196" text-anchor="middle" font-size="9" fill="#334155">40</text>
+    <text x="44" y="131" text-anchor="end" font-size="9" fill="#334155">20</text>
+    <text x="44" y="77" text-anchor="end" font-size="9" fill="#334155">40</text>
+    <text x="44" y="23" text-anchor="end" font-size="9" fill="#334155">60</text>
+    <text x="158" y="207" text-anchor="middle" font-size="9.5" fill="#1e3a5f">Time / s</text>
+    <text x="14" y="101" text-anchor="middle" font-size="9.5" fill="#1e3a5f" transform="rotate(-90,14,101)">Distance / m</text>
+    <polyline points="48,182 103,128 183,128 268,20" fill="none" stroke="#1d4ed8" stroke-width="2.5" stroke-linejoin="round"/>
+    <circle cx="48"  cy="182" r="4" fill="#dc2626" stroke="white" stroke-width="1.5"/>
+    <circle cx="103" cy="128" r="4" fill="#dc2626" stroke="white" stroke-width="1.5"/>
+    <circle cx="183" cy="128" r="4" fill="#dc2626" stroke="white" stroke-width="1.5"/>
+    <circle cx="268" cy="20"  r="4" fill="#dc2626" stroke="white" stroke-width="1.5"/>
+    <text x="42"  cy="176" y="176" font-size="10" font-weight="700" fill="#dc2626">A</text>
+    <text x="97"  y="122" font-size="10" font-weight="700" fill="#dc2626">B</text>
+    <text x="177" y="122" font-size="10" font-weight="700" fill="#dc2626">C</text>
+    <text x="262" y="14"  font-size="10" font-weight="700" fill="#dc2626">D</text>
+  </svg>`,
+
+  vtGraph: `<svg viewBox="0 0 290 210" xmlns="http://www.w3.org/2000/svg" font-family="inherit">
+    <rect x="48" y="20" width="220" height="162" fill="#f8faff" stroke="#bfdbfe" stroke-width="1" rx="2"/>
+    <line x1="48" y1="142" x2="268" y2="142" stroke="#e0e8f8" stroke-width="0.8"/>
+    <line x1="48" y1="101" x2="268" y2="101" stroke="#e0e8f8" stroke-width="0.8"/>
+    <line x1="48" y1="61" x2="268"  y2="61"  stroke="#e0e8f8" stroke-width="0.8"/>
+    <line x1="103" y1="20" x2="103" y2="182" stroke="#e0e8f8" stroke-width="0.8"/>
+    <line x1="158" y1="20" x2="158" y2="182" stroke="#e0e8f8" stroke-width="0.8"/>
+    <line x1="213" y1="20" x2="213" y2="182" stroke="#e0e8f8" stroke-width="0.8"/>
+    <line x1="48" y1="182" x2="268" y2="182" stroke="#0c2340" stroke-width="1.8"/>
+    <line x1="48" y1="20"  x2="48"  y2="182" stroke="#0c2340" stroke-width="1.8"/>
+    <text x="103" y="196" text-anchor="middle" font-size="9" fill="#334155">10</text>
+    <text x="158" y="196" text-anchor="middle" font-size="9" fill="#334155">20</text>
+    <text x="213" y="196" text-anchor="middle" font-size="9" fill="#334155">30</text>
+    <text x="268" y="196" text-anchor="middle" font-size="9" fill="#334155">40</text>
+    <text x="44" y="144" text-anchor="end" font-size="9" fill="#334155">5</text>
+    <text x="44" y="104" text-anchor="end" font-size="9" fill="#334155">10</text>
+    <text x="44" y="64"  text-anchor="end" font-size="9" fill="#334155">15</text>
+    <text x="44" y="23"  text-anchor="end" font-size="9" fill="#334155">20</text>
+    <text x="158" y="207" text-anchor="middle" font-size="9.5" fill="#1e3a5f">Time / s</text>
+    <text x="14" y="101" text-anchor="middle" font-size="9.5" fill="#1e3a5f" transform="rotate(-90,14,101)">Velocity / m s⁻¹</text>
+    <polyline points="48,182 103,20 213,20 268,182" fill="none" stroke="#1d4ed8" stroke-width="2.5" stroke-linejoin="round"/>
+    <circle cx="48"  cy="182" r="4" fill="#dc2626" stroke="white" stroke-width="1.5"/>
+    <circle cx="103" cy="20"  r="4" fill="#dc2626" stroke="white" stroke-width="1.5"/>
+    <circle cx="213" cy="20"  r="4" fill="#dc2626" stroke="white" stroke-width="1.5"/>
+    <circle cx="268" cy="182" r="4" fill="#dc2626" stroke="white" stroke-width="1.5"/>
+    <text x="42"  y="176" font-size="10" font-weight="700" fill="#dc2626">A</text>
+    <text x="97"  y="14"  font-size="10" font-weight="700" fill="#dc2626">B</text>
+    <text x="207" y="14"  font-size="10" font-weight="700" fill="#dc2626">C</text>
+    <text x="262" y="176" font-size="10" font-weight="700" fill="#dc2626">D</text>
+  </svg>`,
+
+  vtGraphShaded: `<svg viewBox="0 0 290 210" xmlns="http://www.w3.org/2000/svg" font-family="inherit">
+    <rect x="48" y="20" width="220" height="162" fill="#f8faff" stroke="#bfdbfe" stroke-width="1" rx="2"/>
+    <polygon points="48,182 103,20 103,182" fill="rgba(59,130,246,0.15)"/>
+    <polygon points="103,20 213,20 213,182 103,182" fill="rgba(59,130,246,0.10)"/>
+    <polygon points="213,20 268,182 213,182" fill="rgba(59,130,246,0.15)"/>
+    <line x1="48" y1="142" x2="268" y2="142" stroke="#e0e8f8" stroke-width="0.8"/>
+    <line x1="48" y1="101" x2="268" y2="101" stroke="#e0e8f8" stroke-width="0.8"/>
+    <line x1="48" y1="61"  x2="268" y2="61"  stroke="#e0e8f8" stroke-width="0.8"/>
+    <line x1="103" y1="20" x2="103" y2="182" stroke="#93c5fd" stroke-width="0.8" stroke-dasharray="3,3"/>
+    <line x1="213" y1="20" x2="213" y2="182" stroke="#93c5fd" stroke-width="0.8" stroke-dasharray="3,3"/>
+    <line x1="48" y1="182" x2="268" y2="182" stroke="#0c2340" stroke-width="1.8"/>
+    <line x1="48" y1="20"  x2="48"  y2="182" stroke="#0c2340" stroke-width="1.8"/>
+    <text x="103" y="196" text-anchor="middle" font-size="9" fill="#334155">10</text>
+    <text x="158" y="196" text-anchor="middle" font-size="9" fill="#334155">20</text>
+    <text x="213" y="196" text-anchor="middle" font-size="9" fill="#334155">30</text>
+    <text x="268" y="196" text-anchor="middle" font-size="9" fill="#334155">40</text>
+    <text x="44" y="144" text-anchor="end" font-size="9" fill="#334155">5</text>
+    <text x="44" y="104" text-anchor="end" font-size="9" fill="#334155">10</text>
+    <text x="44" y="64"  text-anchor="end" font-size="9" fill="#334155">15</text>
+    <text x="44" y="23"  text-anchor="end" font-size="9" fill="#334155">20</text>
+    <text x="158" y="207" text-anchor="middle" font-size="9.5" fill="#1e3a5f">Time / s</text>
+    <text x="14" y="101" text-anchor="middle" font-size="9.5" fill="#1e3a5f" transform="rotate(-90,14,101)">Velocity / m s⁻¹</text>
+    <polyline points="48,182 103,20 213,20 268,182" fill="none" stroke="#1d4ed8" stroke-width="2.5" stroke-linejoin="round"/>
+    <text x="72"  y="165" font-size="9" fill="#1d4ed8" text-anchor="middle" font-style="italic">A–B</text>
+    <text x="158" y="120" font-size="9" fill="#1d4ed8" text-anchor="middle" font-style="italic">B–C</text>
+    <text x="244" y="165" font-size="9" fill="#1d4ed8" text-anchor="middle" font-style="italic">C–D</text>
+    <circle cx="48"  cy="182" r="4" fill="#dc2626" stroke="white" stroke-width="1.5"/>
+    <circle cx="103" cy="20"  r="4" fill="#dc2626" stroke="white" stroke-width="1.5"/>
+    <circle cx="213" cy="20"  r="4" fill="#dc2626" stroke="white" stroke-width="1.5"/>
+    <circle cx="268" cy="182" r="4" fill="#dc2626" stroke="white" stroke-width="1.5"/>
+    <text x="42"  y="176" font-size="10" font-weight="700" fill="#dc2626">A</text>
+    <text x="97"  y="14"  font-size="10" font-weight="700" fill="#dc2626">B</text>
+    <text x="207" y="14"  font-size="10" font-weight="700" fill="#dc2626">C</text>
+    <text x="262" y="176" font-size="10" font-weight="700" fill="#dc2626">D</text>
+  </svg>`,
+
+  hookesGraph: `<svg viewBox="0 0 290 210" xmlns="http://www.w3.org/2000/svg" font-family="inherit">
+    <rect x="48" y="20" width="220" height="162" fill="#f8faff" stroke="#bfdbfe" stroke-width="1" rx="2"/>
+    <line x1="48" y1="150" x2="268" y2="150" stroke="#e0e8f8" stroke-width="0.8"/>
+    <line x1="48" y1="117" x2="268" y2="117" stroke="#e0e8f8" stroke-width="0.8"/>
+    <line x1="48" y1="85"  x2="268" y2="85"  stroke="#e0e8f8" stroke-width="0.8"/>
+    <line x1="48" y1="52"  x2="268" y2="52"  stroke="#e0e8f8" stroke-width="0.8"/>
+    <line x1="92" y1="20"  x2="92"  y2="182" stroke="#e0e8f8" stroke-width="0.8"/>
+    <line x1="136" y1="20" x2="136" y2="182" stroke="#e0e8f8" stroke-width="0.8"/>
+    <line x1="180" y1="20" x2="180" y2="182" stroke="#e0e8f8" stroke-width="0.8"/>
+    <line x1="224" y1="20" x2="224" y2="182" stroke="#e0e8f8" stroke-width="0.8"/>
+    <line x1="48" y1="182" x2="268" y2="182" stroke="#0c2340" stroke-width="1.8"/>
+    <line x1="48" y1="20"  x2="48"  y2="182" stroke="#0c2340" stroke-width="1.8"/>
+    <text x="92"  y="196" text-anchor="middle" font-size="9" fill="#334155">2</text>
+    <text x="136" y="196" text-anchor="middle" font-size="9" fill="#334155">4</text>
+    <text x="180" y="196" text-anchor="middle" font-size="9" fill="#334155">6</text>
+    <text x="224" y="196" text-anchor="middle" font-size="9" fill="#334155">8</text>
+    <text x="268" y="196" text-anchor="middle" font-size="9" fill="#334155">10</text>
+    <text x="44" y="153" text-anchor="end" font-size="9" fill="#334155">1</text>
+    <text x="44" y="120" text-anchor="end" font-size="9" fill="#334155">2</text>
+    <text x="44" y="88"  text-anchor="end" font-size="9" fill="#334155">3</text>
+    <text x="44" y="55"  text-anchor="end" font-size="9" fill="#334155">4</text>
+    <text x="44" y="23"  text-anchor="end" font-size="9" fill="#334155">5</text>
+    <text x="158" y="207" text-anchor="middle" font-size="9.5" fill="#1e3a5f">Extension / cm</text>
+    <text x="14" y="101" text-anchor="middle" font-size="9.5" fill="#1e3a5f" transform="rotate(-90,14,101)">Force / N</text>
+    <line x1="48" y1="182" x2="268" y2="117" stroke="#60a5fa" stroke-width="2"/>
+    <text x="270" y="115" font-size="10" font-weight="700" fill="#60a5fa">B</text>
+    <line x1="48" y1="182" x2="180" y2="85" stroke="#1d4ed8" stroke-width="2"/>
+    <path d="M 180,85 C 196,68 212,42 230,22" fill="none" stroke="#1d4ed8" stroke-width="2"/>
+    <text x="232" y="20" font-size="10" font-weight="700" fill="#1d4ed8">A</text>
+    <circle cx="180" cy="85" r="5" fill="#dc2626" stroke="white" stroke-width="1.5"/>
+    <text x="184" y="78" font-size="8.5" fill="#dc2626" font-weight="600">LOP</text>
+    <rect x="50" y="22" width="105" height="34" fill="white" stroke="#bfdbfe" rx="3"/>
+    <line x1="56" y1="32" x2="70" y2="32" stroke="#1d4ed8" stroke-width="2"/>
+    <text x="74" y="35" font-size="8.5" fill="#334155">Spring A (steeper)</text>
+    <line x1="56" y1="46" x2="70" y2="46" stroke="#60a5fa" stroke-width="2"/>
+    <text x="74" y="49" font-size="8.5" fill="#334155">Spring B</text>
+  </svg>`
+};
+
+const specPoints = [
+  {id:"1.1",stmt:"Know and use the relationship between average speed, distance moved and time taken (v = d/t)",diagram:null,qs:[{ref:"(a)",ao:"AO1",marks:2,stem:"A car travels 360 m in 15 s. <strong>Calculate</strong> the average speed. Show your working."},{ref:"(b)",ao:"AO2",marks:2,stem:"A cyclist completes a 2.4 km route in 12 minutes. <strong>Calculate</strong> the average speed in m/s. Show your working."},{ref:"(c)",ao:"AO3",marks:1,stem:"A student states: <em>\"If a car's average speed is 20 m/s, it must have been travelling at exactly 20 m/s throughout.\"</em> Explain why this may not be true."}],ms:[{ref:"(a)",total:2,items:[{pt:"v = d ÷ t = 360 ÷ 15",award:"(1)"},{pt:"= 24 m/s",award:"(1) — unit required"}]},{ref:"(b)",total:2,items:[{pt:"t = 12 × 60 = 720 s; d = 2400 m",award:"(1)"},{pt:"v = 2400 ÷ 720 = 3.3 m/s",award:"(1)"}]},{ref:"(c)",total:1,items:[{pt:"Average speed = total distance ÷ total time; the car may have been faster, slower or stationary at various points / speed varied throughout ✓"}]}]},
+  {id:"1.2",stmt:"Plot and explain distance–time graphs",diagram:"dtGraph",qs:[{ref:"(a)",ao:"AO1",marks:1,stem:"State what the gradient of a distance–time graph represents."},{ref:"(b)",ao:"AO2",marks:2,stem:"Using the graph, <strong>calculate</strong> the speed during section C–D. Show your working."},{ref:"(c)",ao:"AO3",marks:2,stem:"Explain what a <strong>curved</strong> line on a distance–time graph indicates about the object's motion."}],ms:[{ref:"(a)",total:1,items:[{pt:"Speed (or velocity) ✓"},{note:"Do not accept 'distance' or 'time' alone"}]},{ref:"(b)",total:2,items:[{pt:"gradient = (60−20) ÷ (40−25) = 40 ÷ 15",award:"(1)"},{pt:"= 2.7 m/s",award:"(1)"}]},{ref:"(c)",total:2,items:[{pt:"The object is accelerating / the speed is changing ✓ (1)"},{pt:"The gradient is increasing → speed is increasing / the object is speeding up ✓ (1)"}]}]},
+  {id:"1.3",stmt:"Know and use the relationship between acceleration, change in velocity and time (a = Δv/t)",diagram:null,qs:[{ref:"(a)",ao:"AO1",marks:1,stem:"State the equation linking acceleration, change in velocity and time taken."},{ref:"(b)",ao:"AO2",marks:2,stem:"A car accelerates from 8 m/s to 28 m/s in 5 s. <strong>Calculate</strong> the acceleration."},{ref:"(c)",ao:"AO2",marks:2,stem:"A bus decelerates from 15 m/s to rest in 6 s. <strong>Calculate</strong> the magnitude of the deceleration. State the direction of the acceleration relative to motion."}],ms:[{ref:"(a)",total:1,items:[{pt:"a = Δv ÷ t (accept a = (v − u) ÷ t) ✓"}]},{ref:"(b)",total:2,items:[{pt:"Δv = 20 m/s; a = 20 ÷ 5",award:"(1)"},{pt:"= 4 m/s²",award:"(1)"}]},{ref:"(c)",total:2,items:[{pt:"deceleration = 15 ÷ 6 = 2.5 m/s²",award:"(1)"},{pt:"Opposite to direction of motion / backward",award:"(1)"}]}]},
+  {id:"1.4",stmt:"Plot and interpret velocity–time graphs; determine acceleration from the gradient",diagram:"vtGraph",qs:[{ref:"(a)",ao:"AO1",marks:1,stem:"State what the gradient of a velocity–time graph represents."},{ref:"(b)",ao:"AO2",marks:2,stem:"<strong>Calculate</strong> the acceleration during section A–B. Show your working."},{ref:"(c)",ao:"AO3",marks:2,stem:"Describe the motion during section C–D. Explain how you can determine this from the graph."}],ms:[{ref:"(a)",total:1,items:[{pt:"Acceleration ✓"}]},{ref:"(b)",total:2,items:[{pt:"gradient = (20−0) ÷ (10−0) = 20 ÷ 10",award:"(1)"},{pt:"= 2 m/s²",award:"(1)"}]},{ref:"(c)",total:2,items:[{pt:"The object is decelerating / slowing to a stop ✓ (1)"},{pt:"Gradient is negative / line slopes downward → velocity decreasing ✓ (1)"}]}]},
+  {id:"1.5",stmt:"Determine the distance travelled from the area under a velocity–time graph",diagram:"vtGraphShaded",qs:[{ref:"(a)",ao:"AO2",marks:3,stem:"<strong>Calculate</strong> the total distance travelled during the entire journey A–D. Show your working for each section."},{ref:"(b)",ao:"AO3",marks:2,stem:"A student calculates the distance during section A–B as 20 m/s × 10 s = 200 m. Identify and explain the error in the student's reasoning."}],ms:[{ref:"(a)",total:3,items:[{pt:"Section A–B: triangle → ½ × 10 × 20 = 100 m ✓ (1)"},{pt:"Section B–C: rectangle → 20 × 20 = 400 m ✓ (1)"},{pt:"Section C–D: triangle → ½ × 10 × 20 = 100 m; Total = 600 m ✓ (1)"}]},{ref:"(b)",total:2,items:[{pt:"Student used maximum velocity as if constant throughout A–B ✓ (1)"},{pt:"The object accelerates from 0; triangle area applies → ½ × 10 × 20 = 100 m ✓ (1)"}]}]},
+  {id:"1.6",stmt:"Know and use the relationship: v² = u² + 2as",diagram:null,qs:[{ref:"(a)",ao:"AO1",marks:1,stem:"State the equation linking final velocity, initial velocity, acceleration and distance."},{ref:"(b)",ao:"AO2",marks:2,stem:"A car has initial velocity 10 m/s and acceleration 2.5 m/s². <strong>Calculate</strong> its speed after travelling 48 m."},{ref:"(c)",ao:"AO2",marks:2,stem:"A ball is thrown downward at 4 m/s (g = 10 m/s²). <strong>Calculate</strong> the distance fallen when the ball reaches 12 m/s."}],ms:[{ref:"(a)",total:1,items:[{pt:"v² = u² + 2as ✓"}]},{ref:"(b)",total:2,items:[{pt:"v² = 100 + 2(2.5)(48) = 340",award:"(1)"},{pt:"v = √340 = 18.4 m/s",award:"(1)"}]},{ref:"(c)",total:2,items:[{pt:"144 = 16 + 20s → s = 128 ÷ 20",award:"(1)"},{pt:"s = 6.4 m",award:"(1)"}]}]},
+  {id:"1.7",stmt:"Know the difference between scalar and vector quantities; give examples of each",diagram:null,qs:[{ref:"(a)",ao:"AO1",marks:2,stem:"Explain the difference between a scalar quantity and a vector quantity. Give <strong>one example of each</strong>."},{ref:"(b)",ao:"AO2",marks:3,stem:"A student states: <em>\"Two cars both travelling at 60 mph must have the same velocity.\"</em><br/><br/>Evaluate this statement. Explain your reasoning fully."}],ms:[{ref:"(a)",total:2,items:[{pt:"Scalars have magnitude only; vectors have both magnitude and direction ✓ (1)"},{pt:"One correct example of each, e.g. scalar: speed/mass; vector: velocity/force ✓ (1)"}]},{ref:"(b)",total:3,items:[{pt:"The statement is incorrect ✓ (1)"},{pt:"Velocity is a vector — it includes direction as well as magnitude ✓ (1)"},{pt:"If the cars travel in different directions, their velocities differ despite equal speeds ✓ (1)"}]}]},
+  {id:"1.8",stmt:"Know that forces may be balanced or unbalanced; understand resultant force",diagram:null,qs:[{ref:"(a)",ao:"AO1",marks:1,stem:"Explain what is meant by the <strong>resultant force</strong> acting on an object."},{ref:"(b)",ao:"AO2",marks:2,stem:"A boat engine provides 800 N forward thrust. Drag = 320 N. <strong>Calculate</strong> the resultant force and state its direction."},{ref:"(c)",ao:"AO3",marks:2,stem:"A car travels at constant velocity of 30 m/s. State the resultant force and explain what this indicates about the forces acting on the car."}],ms:[{ref:"(a)",total:1,items:[{pt:"The single force that has the same effect as all individual forces combined / vector sum of all forces ✓"}]},{ref:"(b)",total:2,items:[{pt:"Resultant = 800 − 320 = 480 N",award:"(1)"},{pt:"In the forward direction",award:"(1)"}]},{ref:"(c)",total:2,items:[{pt:"Resultant force = 0 N ✓ (1)"},{pt:"Forces are balanced / driving force equals friction and air resistance ✓ (1)"}]}]},
+  {id:"1.9",stmt:"Know and use Newton's First Law of Motion",diagram:null,qs:[{ref:"(a)",ao:"AO1",marks:2,stem:"State Newton's First Law of Motion."},{ref:"(b)",ao:"AO2",marks:2,stem:"A car is at constant speed. The driver releases the accelerator (no braking). The car gradually slows. Explain using Newton's First Law."},{ref:"(c)",ao:"AO3",marks:1,stem:"A space probe travels through deep space at constant velocity with engines off. Explain why this is possible."}],ms:[{ref:"(a)",total:2,items:[{pt:"An object remains at rest, or continues at constant velocity ✓ (1)"},{pt:"Unless acted upon by a resultant (non-zero) force ✓ (1)"}]},{ref:"(b)",total:2,items:[{pt:"Driving force is removed / reduced to zero ✓ (1)"},{pt:"Friction and air resistance provide unbalanced force opposing motion → car decelerates ✓ (1)"}]},{ref:"(c)",total:1,items:[{pt:"In deep space, resultant force is (essentially) zero; by Newton's First Law the probe continues at constant velocity ✓"}]}]},
+  {id:"1.10",stmt:"Know and use the relationship F = ma — Newton's Second Law",diagram:null,qs:[{ref:"(a)",ao:"AO1",marks:1,stem:"State the relationship between resultant force, mass and acceleration."},{ref:"(b)",ao:"AO2",marks:2,stem:"Resultant force = 1200 N; mass = 1500 kg. <strong>Calculate</strong> the acceleration."},{ref:"(c)",ao:"AO3",marks:2,stem:"A student pushes a 40 kg trolley and a 70 kg trolley with the same resultant force. Predict which has the greater acceleration and explain using Newton's Second Law."}],ms:[{ref:"(a)",total:1,items:[{pt:"F = ma ✓"}]},{ref:"(b)",total:2,items:[{pt:"a = F ÷ m = 1200 ÷ 1500",award:"(1)"},{pt:"= 0.8 m/s²",award:"(1)"}]},{ref:"(c)",total:2,items:[{pt:"The 40 kg trolley has the greater acceleration ✓ (1)"},{pt:"a = F/m; same F, smaller mass → larger acceleration ✓ (1)"}]}]},
+  {id:"1.11",stmt:"Know and use W = mg; understand the difference between mass and weight",diagram:null,qs:[{ref:"(a)",ao:"AO1",marks:2,stem:"State the difference between mass and weight. Include the <strong>unit</strong> of each."},{ref:"(b)",ao:"AO1",marks:1,stem:"<strong>Calculate</strong> the weight of a 65 kg person on Earth (g = 10 N/kg)."},{ref:"(c)",ao:"AO2",marks:2,stem:"The Moon has g = 1.6 N/kg. Calculate this person's weight on the Moon. Explain why their mass is unchanged."}],ms:[{ref:"(a)",total:2,items:[{pt:"Mass: amount of matter; unit kg ✓ (1)"},{pt:"Weight: gravitational force on object; unit N ✓ (1)"}]},{ref:"(b)",total:1,items:[{pt:"W = 65 × 10 = 650 N ✓"}]},{ref:"(c)",total:2,items:[{pt:"W = 65 × 1.6 = 104 N ✓ (1)"},{pt:"Mass is amount of matter and does not depend on location / gravitational field strength ✓ (1)"}]}]},
+  {id:"1.12",stmt:"Know and use Newton's Third Law; identify Newton's Third Law force pairs",diagram:null,qs:[{ref:"(a)",ao:"AO1",marks:2,stem:"State Newton's Third Law of Motion."},{ref:"(b)",ao:"AO2",marks:2,stem:"When a gun fires a bullet, the gun recoils backward. Explain using Newton's Third Law."},{ref:"(c)",ao:"AO3",marks:1,stem:"A student claims: <em>\"Newton's Third Law says all forces cancel, so nothing can ever accelerate.\"</em> Identify the error."}],ms:[{ref:"(a)",total:2,items:[{pt:"When object A exerts a force on object B ✓ (1)"},{pt:"Object B exerts an equal and opposite force on object A ✓ (1)"}]},{ref:"(b)",total:2,items:[{pt:"Gun exerts a forward force on the bullet ✓ (1)"},{pt:"Bullet exerts equal and opposite force on gun in the backward direction → gun recoils ✓ (1)"}]},{ref:"(c)",total:1,items:[{pt:"Newton's Third Law force pairs act on different objects; they cannot cancel because they never act on the same object ✓"}]}]},
+  {id:"1.13",stmt:"Know that stopping distance = thinking distance + braking distance",diagram:null,qs:[{ref:"(a)",ao:"AO1",marks:2,stem:"State the two components of stopping distance. Explain what each represents."},{ref:"(b)",ao:"AO1",marks:1,stem:"State <strong>two</strong> factors that would increase the <strong>thinking distance</strong>."},{ref:"(c)",ao:"AO2",marks:2,stem:"A car takes a longer stopping distance on a wet road than a dry road (same speed). Explain why, referring to both components."}],ms:[{ref:"(a)",total:2,items:[{pt:"Thinking distance: distance travelled during driver's reaction time ✓ (1)"},{pt:"Braking distance: distance travelled while brakes are applied until vehicle stops ✓ (1)"}]},{ref:"(b)",total:1,items:[{pt:"Any two from: alcohol/drugs; tiredness/fatigue; distractions; high speed ✓ (1 for any two)"}]},{ref:"(c)",total:2,items:[{pt:"Thinking distance is unchanged — reaction time unaffected by road surface ✓ (1)"},{pt:"Wet road reduces friction → less braking force → greater braking distance → greater stopping distance ✓ (1)"}]}]},
+  {id:"1.14",stmt:"Know the factors that affect thinking distance and braking distance",diagram:null,qs:[{ref:"(a)",ao:"AO1",marks:2,stem:"Give <strong>two</strong> factors that increase the <strong>braking distance</strong>. For each, explain how."},{ref:"(b)",ao:"AO3",marks:3,stem:"The table shows stopping distance data. Calculate the stopping distance at 50 mph. Describe the relationship between speed and braking distance.",table:{heads:["Speed / mph","Thinking distance / m","Braking distance / m"],rows:[["30","9","14"],["50","15","38"],["70","21","75"]]}}],ms:[{ref:"(a)",total:2,items:[{pt:"Any two from: worn brakes / worn tyres / wet/icy road / greater vehicle mass → each with linked explanation ✓"},{note:"Factor without explanation = 0 marks; 1 mark per factor-explanation pair"}]},{ref:"(b)",total:3,items:[{pt:"Stopping distance at 50 mph = 15 + 38 = 53 m ✓ (1)"},{pt:"As speed increases, braking distance increases ✓ (1)"},{pt:"Braking distance increases more rapidly than thinking distance / non-linear relationship / braking distance ∝ v² ✓ (1)"}]}]},
+  {id:"1.15",stmt:"Know and use the relationship between momentum, mass and velocity (p = mv)",diagram:null,qs:[{ref:"(a)",ao:"AO1",marks:1,stem:"Write the equation for momentum. State the unit of momentum."},{ref:"(b)",ao:"AO2",marks:2,stem:"<strong>Calculate</strong> the momentum of a 1200 kg car at 25 m/s."},{ref:"(c)",ao:"AO2",marks:2,stem:"A 70 kg person runs at 4 m/s. A 30 kg child runs at 9 m/s. <strong>Calculate</strong> both momenta. State which is greater."}],ms:[{ref:"(a)",total:1,items:[{pt:"p = mv; unit: kg m/s ✓"}]},{ref:"(b)",total:2,items:[{pt:"p = 1200 × 25",award:"(1)"},{pt:"= 30 000 kg m/s",award:"(1)"}]},{ref:"(c)",total:2,items:[{pt:"Person: 70 × 4 = 280 kg m/s; Child: 30 × 9 = 270 kg m/s ✓ (1)"},{pt:"The person has the greater momentum ✓ (1)"}]}]},
+  {id:"1.16",stmt:"Know and use conservation of momentum to calculate mass, velocity or momentum in collisions",diagram:null,qs:[{ref:"(a)",ao:"AO1",marks:2,stem:"State the principle of conservation of momentum. State the condition under which it applies."},{ref:"(b)",ao:"AO2",marks:3,stem:"A 0.15 kg ball at 2.0 m/s strikes a stationary 0.14 kg ball. After collision, first ball moves at 0.50 m/s (same direction). <strong>Calculate</strong> the velocity of the second ball."}],ms:[{ref:"(a)",total:2,items:[{pt:"Total momentum before = total momentum after a collision ✓ (1)"},{pt:"Provided no resultant external force acts / in a closed system ✓ (1)"}]},{ref:"(b)",total:3,items:[{pt:"Total momentum before = 0.15 × 2.0 = 0.30 kg m/s ✓ (1)"},{pt:"0.30 = (0.15 × 0.50) + 0.14v → 0.14v = 0.225 ✓ (1)"},{pt:"v = 1.6 m/s (in original direction) ✓ (1)"}]}]},
+  {id:"1.17",stmt:"Know Hooke's Law (F = ke); know the spring constant k; understand the limit of proportionality",diagram:"hookesGraph",qs:[{ref:"(a)",ao:"AO1",marks:1,stem:"State Hooke's Law."},{ref:"(b)",ao:"AO2",marks:2,stem:"A spring has k = 40 N/m. Force = 14 N. <strong>Calculate</strong> the extension produced."},{ref:"(c)",ao:"AO3",marks:2,stem:"The graph shows force against extension for Springs A and B. Explain which spring has the greater spring constant and how you can determine this from the graph."}],ms:[{ref:"(a)",total:1,items:[{pt:"The extension of a spring is directly proportional to the applied force, provided the limit of proportionality is not exceeded ✓"}]},{ref:"(b)",total:2,items:[{pt:"e = F ÷ k = 14 ÷ 40",award:"(1)"},{pt:"= 0.35 m (accept 35 cm)",award:"(1)"}]},{ref:"(c)",total:2,items:[{pt:"Spring A has the greater spring constant ✓ (1)"},{pt:"Spring A has a steeper gradient; gradient = k → steeper gradient = larger spring constant ✓ (1)"}]}]},
+  {id:"1.18",stmt:"Practical: investigate the relationship between force and extension for a spring",diagram:null,qs:[{ref:"(a)",ao:"AO2",marks:2,stem:"Describe how a student should set up the apparatus to investigate Hooke's Law reliably and safely."},{ref:"(b)",ao:"AO3",marks:3,stem:"The student's results are shown below. Analyse the data and state whether the spring obeys Hooke's Law throughout. Justify your answer.",table:{heads:["Force / N","Extension / cm"],rows:[["0","0.0"],["1","1.5"],["2","3.0"],["3","4.5"],["4","6.0"],["5","7.5"],["6","10.5"]]}}],ms:[{ref:"(a)",total:2,items:[{pt:"Any two: hang spring from clamp/stand; align ruler parallel to spring and take zero reading; add masses one at a time; safety: don't exceed elastic limit ✓"},{note:"1 mark per valid procedure/safety point; any two"}]},{ref:"(b)",total:3,items:[{pt:"For 0–5 N: extension increases by 1.5 cm per newton → constant ratio ✓ (1)"},{pt:"Spring obeys Hooke's Law for forces up to 5 N ✓ (1)"},{pt:"At 6 N: extension = 10.5 cm not expected 9.0 cm → limit of proportionality exceeded ✓ (1)"}]}]}
+];
+
+let current = 0;
+const done = new Set();
+
+function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+function getTotalMarks(sp){ return sp.qs.reduce((s,q)=>s+q.marks,0); }
+
+function shortStmt(stmt){ return stmt.length>58 ? stmt.substring(0,55)+'…' : stmt; }
+
+function buildQuestion(sp){
+  const hasDiag = !!sp.diagram;
+  let qsHTML='';
+  for(const q of sp.qs){
+    let tableHTML='';
+    if(q.table){
+      const th=q.table.heads.map(h=>`<th>${esc(h)}</th>`).join('');
+      const trs=q.table.rows.map(r=>'<tr>'+r.map(c=>`<td>${esc(c)}</td>`).join('')+'</tr>').join('');
+      tableHTML=`<div class="data-table-wrap"><table class="data-table"><thead><tr>${th}</tr></thead><tbody>${trs}</tbody></table></div>`;
+    }
+    qsHTML+=`<div class="q-item"><div class="q-ref">${esc(q.ref)}</div><div class="q-content"><div class="q-stem">${q.stem}</div>${tableHTML}<div class="q-meta"><span class="marks-pill">[${q.marks}]</span><span class="ao-pill">${esc(q.ao)}</span></div></div></div>`;
+  }
+  const diagHTML = hasDiag ? `<div class="diagram-col"><div class="diagram-box">${diagrams[sp.diagram]||''}<div class="diagram-caption">Fig. 1 — refer to diagram when answering</div></div></div>` : '';
+  return `<div class="q-header"><span class="spec-badge">${esc(sp.id)}</span><span class="q-header-title">${esc(shortStmt(sp.stmt))}</span><span class="marks-badge">${getTotalMarks(sp)} marks</span></div><div class="spec-stmt"><strong>Spec ${esc(sp.id)}:</strong> ${esc(sp.stmt)}</div><div class="q-body"><div class="questions-col">${qsHTML}</div>${diagHTML}</div>`;
+}
+
+function buildMarkScheme(sp){
+  const singleCol = sp.ms.length <= 2;
+  let itemsHTML='';
+  for(const msQ of sp.ms){
+    const ptsHTML=msQ.items.map(item=>{
+      if(item.note) return `<div class="ms-note">${esc(item.note)}</div>`;
+      const text=item.pt||'';
+      const hasCheck=text.includes('✓');
+      const cleaned=text.replace(/\s*✓\s*\(\d+\)/g,'').replace(/\s*✓/g,'').trim();
+      const awardHTML=item.award?` <span class="award-badge">${esc(item.award)}</span>`:'';
+      const showTick=hasCheck||!!item.award;
+      return `<div class="ms-point"><span class="ms-tick"${showTick?'':' style="opacity:0"'}>✓</span><span>${esc(cleaned)}${awardHTML}</span></div>`;
+    }).join('');
+    itemsHTML+=`<div class="ms-item"><div class="ms-item-hdr"><span class="ms-ref">${esc(msQ.ref)}</span><span class="ms-total">[${msQ.total} mark${msQ.total>1?'s':''}]</span></div><div class="ms-points">${ptsHTML}</div></div>`;
+  }
+  return `<div class="ms-header"><span class="ms-badge">✓ MS</span><span class="ms-header-title">${esc(sp.id)} — Mark Scheme</span></div><div class="spec-stmt"><strong>Spec ${esc(sp.id)}:</strong> ${esc(sp.stmt)}</div><div class="ms-body${singleCol?' cols-1':''}">${itemsHTML}</div>`;
+}
+
+function renderNav(){
+  document.getElementById('specNav').innerHTML=specPoints.map((sp,i)=>{
+    const cls=i===current?'active':done.has(i)?'done':'';
+    return `<div class="spec-dot ${cls}" onclick="goTo(${i})" title="${esc(sp.stmt)}">${esc(sp.id)}</div>`;
+  }).join('');
+}
+
+function render(){
+  const sp=specPoints[current];
+  document.getElementById('cardScene').classList.remove('revealed');
+  document.getElementById('progressPill').textContent=`Card ${current+1} of ${specPoints.length}`;
+  document.getElementById('progressFill').style.width=`${(current+1)/specPoints.length*100}%`;
+  document.getElementById('hintText').textContent='Answer the questions, then tap "Reveal Answers"';
+  document.getElementById('btnReveal').disabled=false;
+  document.getElementById('btnReveal').textContent='Reveal Answers ✓';
+  document.getElementById('btnNext').disabled=true;
+  document.getElementById('btnPrev').disabled=current===0;
+  document.getElementById('completeBanner').classList.remove('show');
+  document.getElementById('qFace').innerHTML=buildQuestion(sp);
+  document.getElementById('msFace').innerHTML=buildMarkScheme(sp);
+  renderNav();
+}
+
+function revealAnswers(){
+  const scene=document.getElementById('cardScene');
+  const btn=document.getElementById('btnReveal');
+  if(scene.classList.contains('revealed')){
+    scene.classList.remove('revealed');
+    btn.textContent='Reveal Answers ✓';
+    document.getElementById('hintText').textContent='Answer the questions, then tap "Reveal Answers"';
+  } else {
+    scene.classList.add('revealed');
+    btn.textContent='Hide Answers ↩';
+    document.getElementById('btnNext').disabled=(current===specPoints.length-1);
+    document.getElementById('hintText').textContent='Check your answers carefully, then move on';
+    done.add(current); renderNav();
+  }
+}
+
+function navigate(dir){
+  const next=current+dir;
+  if(next>=0&&next<specPoints.length){ current=next; render(); }
+  else if(dir===1){ document.getElementById('completeBanner').classList.add('show'); document.getElementById('hintText').textContent=''; }
+}
+
+function goTo(idx){ current=idx; render(); }
+
+render();
+</script>
+</body>
+</html>
