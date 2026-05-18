@@ -1,0 +1,976 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IAL Biology — Topics 3 & 4 Revision Cards</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: #eef4f7;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+  .header {
+    background: #0d2137;
+    color: white;
+    padding: 14px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .header-left h1 { font-size: 1.05rem; font-weight: 700; letter-spacing: 0.01em; }
+  .header-left .sub { font-size: 0.78rem; opacity: 0.65; margin-top: 2px; }
+  .progress-pill {
+    background: rgba(255,255,255,0.13);
+    border: 1px solid rgba(255,255,255,0.22);
+    padding: 5px 14px; border-radius: 20px;
+    font-size: 0.82rem; font-weight: 600; white-space: nowrap;
+  }
+  .progress-track { height: 4px; background: #c5d9e8; }
+  .progress-fill { height: 100%; background: #3a9ad9; transition: width 0.5s ease; }
+  /* ── Topic legend ─────────────────────────────────── */
+  .topic-legend {
+    display: flex; gap: 10px; justify-content: center;
+    padding: 8px 16px 0; flex-wrap: wrap;
+  }
+  .topic-legend-item { display: flex; align-items: center; gap: 5px; font-size: 0.75rem; color: #555; }
+  .topic-legend-dot { width: 10px; height: 10px; border-radius: 50%; }
+  /* ── Main ────────────────────────────────────────── */
+  .main {
+    flex: 1; display: flex; flex-direction: column;
+    align-items: center; padding: 14px 16px 32px; gap: 12px;
+  }
+  /* ── Spec dot nav ───────────────────────────────── */
+  .spec-nav { display: flex; gap: 7px; flex-wrap: wrap; justify-content: center; }
+  .spec-dot {
+    min-width: 48px; height: 30px; padding: 0 8px;
+    border-radius: 15px; border: 2px solid #b0c8da;
+    background: white; color: #2c4a60;
+    font-weight: 700; font-size: 0.7rem;
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+    transition: all 0.15s;
+  }
+  .spec-dot:hover { background: #ddeef8; }
+  .spec-dot.active  { background: #0d2137; color: white; border-color: #0d2137; }
+  .spec-dot.done    { background: #3a9ad9; color: white; border-color: #3a9ad9; }
+  /* Topic 3 — teal */
+  .spec-dot[data-topic="3"]        { border-left: 4px solid #00897b; }
+  .spec-dot[data-topic="3"].active { background: #004d40; border-color: #004d40; border-left-color: #00897b; }
+  .spec-dot[data-topic="3"].done   { background: #00796b; border-color: #00796b; border-left-color: #00897b; }
+  /* Topic 4 — amber-brown */
+  .spec-dot[data-topic="4"]        { border-left: 4px solid #ef8c00; }
+  .spec-dot[data-topic="4"].active { background: #6d3a00; border-color: #6d3a00; border-left-color: #ef8c00; }
+  .spec-dot[data-topic="4"].done   { background: #b86000; border-color: #b86000; border-left-color: #ef8c00; }
+  /* CP — purple-grey */
+  .spec-dot[data-topic="cp"]        { border-left: 4px solid #7c6bc9; }
+  .spec-dot[data-topic="cp"].active { background: #311b6e; border-color: #311b6e; border-left-color: #7c6bc9; }
+  .spec-dot[data-topic="cp"].done   { background: #5746a0; border-color: #5746a0; border-left-color: #7c6bc9; }
+  /* ── Card scene ─────────────────────────────────── */
+  .card-scene { width: 100%; max-width: 920px; display: grid; }
+  .card-face {
+    grid-area: 1 / 1; border-radius: 12px; overflow: hidden;
+    box-shadow: 0 4px 22px rgba(0,0,0,0.12);
+    transition: opacity 0.35s ease, transform 0.35s ease;
+  }
+  .card-face.back { opacity: 0; transform: scale(0.97); pointer-events: none; }
+  .card-scene.revealed .card-face.front { opacity: 0; transform: scale(0.97); pointer-events: none; }
+  .card-scene.revealed .card-face.back  { opacity: 1; transform: scale(1); pointer-events: all; }
+  /* ── Header colours by topic ─────────────────────── */
+  .q-header { color: white; padding: 13px 20px; display: flex; align-items: center; gap: 11px; flex-wrap: wrap; }
+  .q-header.t3  { background: #00473e; }
+  .q-header.t4  { background: #5a2e00; }
+  .q-header.tcp { background: #2a1a5e; }
+  .ms-header { color: white; padding: 13px 20px; display: flex; align-items: center; gap: 11px; }
+  .ms-header.t3  { background: #00695c; }
+  .ms-header.t4  { background: #7a4000; }
+  .ms-header.tcp { background: #3c277a; }
+  .topic-badge { font-size: 0.67rem; font-weight: 700; padding: 3px 8px; border-radius: 10px; white-space: nowrap; flex-shrink: 0; letter-spacing: 0.04em; text-transform: uppercase; }
+  .topic-badge.t3  { background: #00897b; color: #e0f2f1; }
+  .topic-badge.t4  { background: #ef8c00; color: #2d1600; }
+  .topic-badge.tcp { background: #7c6bc9; color: #fff; }
+  .spec-badge {
+    background: rgba(255,255,255,0.18); font-weight: 700; font-size: 0.88rem;
+    padding: 4px 11px; border-radius: 7px; white-space: nowrap; flex-shrink: 0;
+    border: 1px solid rgba(255,255,255,0.25);
+  }
+  .q-header-title { font-size: 0.97rem; font-weight: 600; line-height: 1.3; flex: 1; }
+  .marks-badge {
+    margin-left: auto; background: #f4d03f; color: #1a1a00;
+    font-weight: 700; font-size: 0.78rem; padding: 4px 11px;
+    border-radius: 20px; white-space: nowrap; flex-shrink: 0;
+  }
+  .spec-stmt { padding: 8px 20px; font-size: 0.83rem; color: #1a2530; font-style: italic; line-height: 1.45; border-bottom: 1px solid #cde; }
+  .spec-stmt.t3  { background: #e0f2f1; border-bottom-color: #80cbc4; }
+  .spec-stmt.t4  { background: #fff3e0; border-bottom-color: #ffcc80; }
+  .spec-stmt.tcp { background: #ede7f6; border-bottom-color: #b39ddb; }
+  .spec-stmt strong { font-style: normal; }
+  .q-body { background: white; padding: 16px 20px; display: flex; gap: 18px; align-items: flex-start; }
+  .questions-col { flex: 1; min-width: 0; }
+  .diagram-col { width: 290px; flex-shrink: 0; }
+  .diagram-box { border: 2px dashed #b0c8da; border-radius: 10px; background: #f5f9fc; padding: 11px; display: flex; flex-direction: column; align-items: center; gap: 6px; }
+  .diagram-box svg { width: 100%; height: auto; }
+  .diagram-caption { font-size: 0.72rem; color: #778; font-style: italic; text-align: center; line-height: 1.4; }
+  .q-item { display: flex; gap: 10px; padding: 11px 0; border-bottom: 1px solid #e8eef3; align-items: flex-start; }
+  .q-item:last-child { border-bottom: none; padding-bottom: 0; }
+  .q-ref { font-weight: 700; color: #0d2137; font-size: 0.97rem; min-width: 30px; padding-top: 1px; flex-shrink: 0; }
+  .q-content { flex: 1; min-width: 0; }
+  .q-stem { font-size: 0.91rem; color: #1a2530; line-height: 1.55; }
+  .q-meta { margin-top: 7px; display: flex; gap: 7px; align-items: center; flex-wrap: wrap; }
+  .marks-pill { background: #0d2137; color: white; font-size: 0.71rem; font-weight: 700; padding: 2px 9px; border-radius: 10px; }
+  .ao-pill { background: #e8eef3; color: #2c4a60; font-size: 0.7rem; font-weight: 600; padding: 2px 8px; border-radius: 10px; border: 1px solid #b0c8da; }
+  /* Data table */
+  .data-table-wrap { margin-top: 10px; overflow-x: auto; }
+  .data-table { border-collapse: collapse; font-size: 0.83rem; min-width: 260px; }
+  .data-table th { background: #0d2137; color: white; padding: 5px 13px; text-align: center; font-weight: 600; }
+  .data-table td { padding: 4px 13px; text-align: center; border: 1px solid #b0c8da; }
+  .data-table tr:nth-child(odd) td { background: #f5f9fc; }
+  .data-table tr:nth-child(even) td { background: #ddeef8; }
+  /* ── Mark scheme ────────────────────────────────── */
+  .ms-badge { background: rgba(255,255,255,0.22); font-weight: 700; font-size: 0.83rem; padding: 4px 10px; border-radius: 7px; white-space: nowrap; flex-shrink: 0; border: 1px solid rgba(255,255,255,0.3); }
+  .ms-header-title { font-size: 0.97rem; font-weight: 600; }
+  .ms-body { background: #f4f8fb; padding: 16px 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 11px; }
+  .ms-body.cols-1 { grid-template-columns: 1fr; }
+  .ms-item { background: white; border-radius: 8px; overflow: hidden; border: 1px solid #b0c8da; box-shadow: 0 1px 4px rgba(0,0,0,0.05); }
+  .ms-item-hdr { background: #e8eef3; padding: 6px 13px; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid #b0c8da; }
+  .ms-ref { font-weight: 700; color: #0d2137; font-size: 0.92rem; }
+  .ms-total { font-size: 0.74rem; color: #666; }
+  .ms-points { padding: 9px 13px; display: flex; flex-direction: column; gap: 6px; }
+  .ms-point { display: flex; gap: 8px; align-items: flex-start; font-size: 0.86rem; color: #1a2530; line-height: 1.45; }
+  .ms-tick { color: #27ae60; font-weight: 800; font-size: 0.9rem; flex-shrink: 0; margin-top: 1px; }
+  .ms-note { font-size: 0.74rem; color: #6b7280; font-style: italic; line-height: 1.4; border-top: 1px solid #e8eef3; margin-top: 4px; padding-top: 5px; }
+  /* ── Controls ───────────────────────────────────── */
+  .hint-text { font-size: 0.8rem; color: #777; text-align: center; min-height: 18px; font-style: italic; }
+  .controls { display: flex; gap: 10px; justify-content: center; align-items: center; flex-wrap: wrap; width: 100%; max-width: 920px; }
+  .btn { padding: 10px 22px; border: none; border-radius: 8px; cursor: pointer; font-size: 0.87rem; font-weight: 600; font-family: inherit; transition: all 0.15s; white-space: nowrap; }
+  .btn:hover:not(:disabled) { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+  .btn:active:not(:disabled) { transform: translateY(0); }
+  .btn:disabled { opacity: 0.35; cursor: not-allowed; }
+  .btn-outline { background: white; color: #0d2137; border: 2px solid #0d2137; }
+  .btn-reveal  { background: #3a9ad9; color: white; padding: 11px 30px; font-size: 0.92rem; }
+  .btn-next    { background: #0d2137; color: white; padding: 11px 30px; font-size: 0.92rem; }
+  .complete-banner { background: #0d2137; color: white; text-align: center; padding: 20px; border-radius: 12px; width: 100%; max-width: 920px; display: none; }
+  .complete-banner h2 { font-size: 1.3rem; margin-bottom: 6px; }
+  .complete-banner p { opacity: 0.8; font-size: 0.9rem; }
+  .complete-banner.show { display: block; }
+  @media (max-width: 640px) {
+    .header { padding: 10px 14px; }
+    .main { padding: 10px 10px 24px; gap: 9px; }
+    .spec-dot { min-width: 38px; height: 26px; font-size: 0.62rem; }
+    .q-body { flex-direction: column; padding: 12px 14px; }
+    .diagram-col { width: 100%; }
+    .ms-body { grid-template-columns: 1fr !important; padding: 12px 14px; }
+    .btn { padding: 9px 14px; font-size: 0.81rem; }
+    .btn-reveal, .btn-next { padding: 9px 18px; font-size: 0.84rem; }
+  }
+</style>
+</head>
+<body>
+<div class="header">
+  <div class="header-left">
+    <h1>🔬 IAL Biology &mdash; Topics 3 &amp; 4</h1>
+    <div class="sub">Unit 2 (WBI02) &nbsp;·&nbsp; Voice of the Genome &amp; Biodiversity &nbsp;·&nbsp; Papers 2 &amp; 3 &nbsp;·&nbsp; Includes Core Practicals</div>
+  </div>
+  <div class="progress-pill" id="progressPill">Card 1 of 12</div>
+</div>
+<div class="progress-track"><div class="progress-fill" id="progressFill" style="width:8.33%"></div></div>
+<div class="main">
+  <div class="topic-legend">
+    <div class="topic-legend-item"><div class="topic-legend-dot" style="background:#00897b"></div> Topic 3: Voice of the Genome</div>
+    <div class="topic-legend-item"><div class="topic-legend-dot" style="background:#ef8c00"></div> Topic 4: Biodiversity &amp; Natural Resources</div>
+    <div class="topic-legend-item"><div class="topic-legend-dot" style="background:#7c6bc9"></div> Core Practical (CP)</div>
+  </div>
+  <div class="spec-nav" id="specNav"></div>
+  <div class="card-scene" id="cardScene">
+    <div class="card-face front" id="qFace"></div>
+    <div class="card-face back"  id="msFace"></div>
+  </div>
+  <div class="hint-text" id="hintText">Answer the questions, then tap <em>Reveal Answers</em></div>
+  <div class="controls">
+    <button class="btn btn-outline" id="btnPrev" onclick="navigate(-1)">&#8592; Previous</button>
+    <button class="btn btn-reveal" id="btnReveal" onclick="revealAnswers()">Reveal Answers ✓</button>
+    <button class="btn btn-next"   id="btnNext"   onclick="navigate(1)" disabled>Next Card &#8594;</button>
+  </div>
+  <div class="complete-banner" id="completeBanner">
+    <h2>🎉 All 12 cards complete!</h2>
+    <p>You've covered Topics 3 &amp; 4 including both Core Practicals. Use the dots above to revisit any spec point.</p>
+  </div>
+</div>
+<script>
+// ── SVG Diagrams ──────────────────────────────────────────────────────────
+const diagrams = {
+  "T3.1": `<svg viewBox="0 0 290 210" xmlns="http://www.w3.org/2000/svg" font-family="inherit" font-size="8">
+    <!-- Bilayer background -->
+    <rect x="5" y="50" width="280" height="115" rx="4" fill="#e0f7fa"/>
+    <!-- Phospholipid heads (outer) -->
+    <g fill="#00897b" stroke="#004d40" stroke-width="0.8">
+      <circle cx="20" cy="55" r="7"/><circle cx="40" cy="55" r="7"/><circle cx="60" cy="55" r="7"/>
+      <circle cx="80" cy="55" r="7"/><circle cx="100" cy="55" r="7"/><circle cx="120" cy="55" r="7"/>
+      <circle cx="140" cy="55" r="7"/><circle cx="160" cy="55" r="7"/><circle cx="180" cy="55" r="7"/>
+      <circle cx="200" cy="55" r="7"/><circle cx="220" cy="55" r="7"/><circle cx="240" cy="55" r="7"/>
+      <circle cx="260" cy="55" r="7"/><circle cx="278" cy="55" r="7"/>
+    </g>
+    <!-- Outer tails -->
+    <g stroke="#006064" stroke-width="1.5" fill="none">
+      <line x1="16" y1="62" x2="16" y2="95"/><line x1="24" y1="62" x2="24" y2="95"/>
+      <line x1="36" y1="62" x2="36" y2="95"/><line x1="44" y1="62" x2="44" y2="95"/>
+      <line x1="56" y1="62" x2="56" y2="95"/><line x1="64" y1="62" x2="64" y2="95"/>
+      <line x1="76" y1="62" x2="76" y2="95"/><line x1="84" y1="62" x2="84" y2="95"/>
+      <line x1="96" y1="62" x2="96" y2="95"/><line x1="104" y1="62" x2="104" y2="95"/>
+      <line x1="116" y1="62" x2="116" y2="78"/><line x1="116" y1="78" x2="122" y2="90"/><line x1="122" y1="90" x2="122" y2="95"/>
+      <line x1="124" y1="62" x2="118" y2="78"/><line x1="118" y1="78" x2="118" y2="95"/>
+      <line x1="136" y1="62" x2="136" y2="95"/><line x1="144" y1="62" x2="144" y2="95"/>
+      <line x1="156" y1="62" x2="156" y2="95"/><line x1="164" y1="62" x2="164" y2="95"/>
+      <line x1="176" y1="62" x2="176" y2="95"/><line x1="184" y1="62" x2="184" y2="95"/>
+      <line x1="196" y1="62" x2="196" y2="95"/><line x1="204" y1="62" x2="204" y2="95"/>
+      <line x1="216" y1="62" x2="216" y2="95"/><line x1="224" y1="62" x2="224" y2="95"/>
+      <line x1="236" y1="62" x2="236" y2="95"/><line x1="244" y1="62" x2="244" y2="95"/>
+      <line x1="256" y1="62" x2="256" y2="95"/><line x1="264" y1="62" x2="264" y2="95"/>
+      <line x1="274" y1="62" x2="274" y2="95"/>
+    </g>
+    <!-- Phospholipid heads (inner) -->
+    <g fill="#00897b" stroke="#004d40" stroke-width="0.8">
+      <circle cx="20" cy="160" r="7"/><circle cx="40" cy="160" r="7"/><circle cx="60" cy="160" r="7"/>
+      <circle cx="80" cy="160" r="7"/><circle cx="100" cy="160" r="7"/><circle cx="120" cy="160" r="7"/>
+      <circle cx="140" cy="160" r="7"/><circle cx="160" cy="160" r="7"/><circle cx="180" cy="160" r="7"/>
+      <circle cx="200" cy="160" r="7"/><circle cx="220" cy="160" r="7"/><circle cx="240" cy="160" r="7"/>
+      <circle cx="260" cy="160" r="7"/><circle cx="278" cy="160" r="7"/>
+    </g>
+    <!-- Inner tails -->
+    <g stroke="#006064" stroke-width="1.5" fill="none">
+      <line x1="16" y1="153" x2="16" y2="120"/><line x1="24" y1="153" x2="24" y2="120"/>
+      <line x1="36" y1="153" x2="36" y2="120"/><line x1="44" y1="153" x2="44" y2="120"/>
+      <line x1="56" y1="153" x2="56" y2="120"/><line x1="64" y1="153" x2="64" y2="120"/>
+      <line x1="76" y1="153" x2="76" y2="120"/><line x1="84" y1="153" x2="84" y2="120"/>
+      <line x1="96" y1="153" x2="96" y2="120"/><line x1="104" y1="153" x2="104" y2="120"/>
+      <line x1="136" y1="153" x2="136" y2="120"/><line x1="144" y1="153" x2="144" y2="120"/>
+      <line x1="156" y1="153" x2="156" y2="120"/><line x1="164" y1="153" x2="164" y2="120"/>
+      <line x1="176" y1="153" x2="176" y2="120"/><line x1="184" y1="153" x2="184" y2="120"/>
+      <line x1="196" y1="153" x2="196" y2="120"/><line x1="204" y1="153" x2="204" y2="120"/>
+      <line x1="216" y1="153" x2="216" y2="120"/><line x1="224" y1="153" x2="224" y2="120"/>
+      <line x1="236" y1="153" x2="236" y2="120"/><line x1="244" y1="153" x2="244" y2="120"/>
+      <line x1="256" y1="153" x2="256" y2="120"/><line x1="264" y1="153" x2="264" y2="120"/>
+      <line x1="274" y1="153" x2="274" y2="120"/>
+    </g>
+    <!-- Channel protein (spanning) -->
+    <rect x="108" y="58" width="22" height="99" rx="5" fill="#ff8f00" stroke="#e65100" stroke-width="1"/>
+    <text x="119" y="112" text-anchor="middle" fill="#fff" font-weight="bold" font-size="7">Chan-</text>
+    <text x="119" y="121" text-anchor="middle" fill="#fff" font-weight="bold" font-size="7">nel</text>
+    <!-- Carrier protein -->
+    <rect x="114" y="120" width="12" height="5" rx="2" fill="#1565c0" opacity="0.6"/>
+    <!-- Cholesterol (between tails) -->
+    <rect x="228" y="96" width="10" height="25" rx="3" fill="#ffd54f" stroke="#f9a825" stroke-width="1"/>
+    <text x="233" y="117" text-anchor="middle" fill="#6d4c00" font-size="6" font-weight="bold">C</text>
+    <!-- Glycoprotein (outer surface) -->
+    <path d="M178,50 Q185,30 195,25 Q205,20 200,35" fill="none" stroke="#e91e63" stroke-width="1.5"/>
+    <circle cx="200" cy="35" r="4" fill="#e91e63" opacity="0.8"/>
+    <circle cx="195" cy="25" r="3" fill="#e91e63" opacity="0.8"/>
+    <!-- Labels -->
+    <text x="10" y="46" fill="#004d40" font-size="7.5" font-weight="bold">Phospholipid</text>
+    <text x="10" y="55" fill="#004d40" font-size="7.5" font-weight="bold">head (hydrophilic)</text>
+    <text x="7" y="80" fill="#006064" font-size="7">Fatty acid</text>
+    <text x="7" y="89" fill="#006064" font-size="7">tails (hydrophobic)</text>
+    <text x="110" y="45" text-anchor="middle" fill="#e65100" font-size="7.5" font-weight="bold">Channel</text>
+    <text x="110" y="53" text-anchor="middle" fill="#e65100" font-size="7.5" font-weight="bold">protein</text>
+    <text x="233" y="88" text-anchor="middle" fill="#f9a825" font-size="7.5" font-weight="bold">Chol-</text>
+    <text x="233" y="96" text-anchor="middle" fill="#f9a825" font-size="7.5" font-weight="bold">esterol</text>
+    <text x="210" y="22" fill="#c2185b" font-size="7.5" font-weight="bold">Glycoprotein</text>
+    <!-- Extracellular / Intracellular labels -->
+    <text x="145" y="25" text-anchor="middle" fill="#555" font-size="8" font-style="italic">Extracellular (outside)</text>
+    <text x="145" y="203" text-anchor="middle" fill="#555" font-size="8" font-style="italic">Intracellular (inside)</text>
+  </svg>`,
+
+  "T3.4": `<svg viewBox="0 0 290 200" xmlns="http://www.w3.org/2000/svg" font-family="inherit" font-size="8">
+    <!-- Nucleus box -->
+    <rect x="5" y="10" width="280" height="100" rx="10" fill="#e8f5e9" stroke="#388e3c" stroke-width="1.5"/>
+    <text x="145" y="24" text-anchor="middle" font-weight="bold" fill="#1b5e20" font-size="9">NUCLEUS</text>
+    <!-- DNA double helix (simplified) -->
+    <rect x="20" y="35" width="90" height="60" rx="6" fill="#c8e6c9" stroke="#388e3c" stroke-width="1"/>
+    <text x="65" y="52" text-anchor="middle" font-weight="bold" fill="#1b5e20" font-size="8">DNA</text>
+    <text x="65" y="63" text-anchor="middle" fill="#1b5e20" font-size="7">Template strand</text>
+    <text x="65" y="73" text-anchor="middle" fill="#1b5e20" font-size="7">(3' → 5')</text>
+    <text x="65" y="83" text-anchor="middle" fill="#1b5e20" font-size="7">Coding strand</text>
+    <text x="65" y="93" text-anchor="middle" fill="#1b5e20" font-size="7">(5' → 3')</text>
+    <!-- RNA polymerase -->
+    <ellipse cx="130" cy="65" rx="22" ry="18" fill="#ff8f00" stroke="#e65100" stroke-width="1.5"/>
+    <text x="130" y="62" text-anchor="middle" fill="white" font-weight="bold" font-size="7">RNA</text>
+    <text x="130" y="72" text-anchor="middle" fill="white" font-weight="bold" font-size="7">Pol.</text>
+    <!-- mRNA strand emerging -->
+    <path d="M150,65 L175,55 L200,65 L225,55 L250,65 L270,60" fill="none" stroke="#1565c0" stroke-width="2.5"/>
+    <text x="210" y="48" text-anchor="middle" fill="#1565c0" font-weight="bold" font-size="8.5">pre-mRNA</text>
+    <text x="210" y="57" text-anchor="middle" fill="#1565c0" font-size="7">(5' → 3')</text>
+    <!-- Nuclear pore -->
+    <rect x="125" y="108" width="30" height="10" rx="3" fill="#a5d6a7" stroke="#388e3c" stroke-width="1"/>
+    <text x="140" y="117" text-anchor="middle" fill="#1b5e20" font-size="7">Nuclear pore</text>
+    <!-- Splicing box -->
+    <rect x="60" y="130" width="110" height="35" rx="6" fill="#fff9c4" stroke="#f9a825" stroke-width="1.5"/>
+    <text x="115" y="145" text-anchor="middle" font-weight="bold" fill="#6d4c00" font-size="8">RNA splicing</text>
+    <text x="115" y="156" text-anchor="middle" fill="#555" font-size="7">Introns removed; exons joined</text>
+    <text x="115" y="165" text-anchor="middle" fill="#555" font-size="7">→ mature mRNA</text>
+    <!-- Ribosome in cytoplasm -->
+    <rect x="195" y="132" width="80" height="35" rx="6" fill="#ddeef8" stroke="#3a9ad9" stroke-width="1.5"/>
+    <text x="235" y="147" text-anchor="middle" font-weight="bold" fill="#0d2e4a" font-size="8">CYTOPLASM</text>
+    <text x="235" y="158" text-anchor="middle" fill="#0d2e4a" font-size="7">Ribosome translates</text>
+    <text x="235" y="167" text-anchor="middle" fill="#0d2e4a" font-size="7">mature mRNA</text>
+    <!-- Arrow from splicing to cytoplasm -->
+    <line x1="170" y1="148" x2="193" y2="148" stroke="#555" stroke-width="1.2" marker-end="url(#arrGrey)"/>
+    <!-- Arrow from nuclear pore down -->
+    <line x1="140" y1="118" x2="115" y2="130" stroke="#555" stroke-width="1.2" marker-end="url(#arrGrey)"/>
+    <defs><marker id="arrGrey" viewBox="0 0 6 6" refX="6" refY="3" markerWidth="4" markerHeight="4" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#555"/></marker></defs>
+    <!-- Free nucleotides -->
+    <text x="175" y="80" fill="#7b1fa2" font-size="7.5" font-weight="bold">Free RNA</text>
+    <text x="175" y="89" fill="#7b1fa2" font-size="7.5" font-weight="bold">nucleotides</text>
+    <text x="175" y="98" fill="#7b1fa2" font-size="7">(A, U, G, C)</text>
+    <line x1="174" y1="72" x2="162" y2="65" stroke="#7b1fa2" stroke-width="0.8" stroke-dasharray="2,2"/>
+    <!-- Cytoplasm label -->
+    <text x="145" y="192" text-anchor="middle" fill="#555" font-size="8" font-style="italic">Process: DNA → pre-mRNA → (splicing) → mature mRNA → translation</text>
+  </svg>`,
+
+  "T4.1": `<svg viewBox="0 0 290 200" xmlns="http://www.w3.org/2000/svg" font-family="inherit" font-size="8.5">
+    <!-- Phylogenetic tree -->
+    <!-- Root line -->
+    <line x1="30" y1="180" x2="30" y2="100" stroke="#555" stroke-width="2"/>
+    <!-- First split at 80 Ma -->
+    <line x1="30" y1="100" x2="120" y2="100" stroke="#555" stroke-width="2"/>
+    <line x1="30" y1="100" x2="30" y2="40" stroke="#555" stroke-width="2"/>
+    <!-- Right branch (D) -->
+    <line x1="120" y1="100" x2="120" y2="55" stroke="#ef8c00" stroke-width="2"/>
+    <line x1="120" y1="55" x2="220" y2="55" stroke="#ef8c00" stroke-width="2"/>
+    <circle cx="220" cy="55" r="5" fill="#ef8c00"/>
+    <text x="228" y="59" fill="#ef8c00" font-weight="bold">D</text>
+    <!-- Left branch splits at 40 Ma -->
+    <line x1="30" y1="40" x2="120" y2="40" stroke="#555" stroke-width="2"/>
+    <!-- Second split at 20 Ma -->
+    <line x1="120" y1="40" x2="120" y2="15" stroke="#1565c0" stroke-width="2"/>
+    <line x1="120" y1="40" x2="120" y2="68" stroke="#555" stroke-width="2"/>
+    <!-- A branch -->
+    <line x1="120" y1="15" x2="220" y2="15" stroke="#1565c0" stroke-width="2"/>
+    <circle cx="220" cy="15" r="5" fill="#1565c0"/>
+    <text x="228" y="19" fill="#1565c0" font-weight="bold">A</text>
+    <!-- B branch -->
+    <line x1="120" y1="68" x2="120" y2="55" stroke="#27ae60" stroke-width="2"/>
+    <line x1="120" y1="68" x2="120" y2="80" stroke="#c0392b" stroke-width="2"/>
+    <!-- B -->
+    <line x1="120" y1="55" x2="220" y2="55" stroke="#27ae60" stroke-width="2"/>
+    <circle cx="220" cy="55" r="5" fill="#27ae60"/>
+    <text x="228" y="59" fill="#27ae60" font-weight="bold">B</text>
+    <!-- C -->
+    <line x1="120" y1="80" x2="220" y2="80" stroke="#c0392b" stroke-width="2"/>
+    <circle cx="220" cy="80" r="5" fill="#c0392b"/>
+    <text x="228" y="84" fill="#c0392b" font-weight="bold">C</text>
+    <!-- D repeat fix: D is on the right of first split -->
+    <!-- Time axis -->
+    <line x1="10" y1="185" x2="260" y2="185" stroke="#999" stroke-width="1"/>
+    <text x="135" y="198" text-anchor="middle" fill="#555" font-size="8">Time (millions of years ago)</text>
+    <!-- Time markers on y-axis -->
+    <line x1="25" y1="180" x2="35" y2="180" stroke="#999" stroke-width="1"/>
+    <text x="22" y="183" text-anchor="end" fill="#555" font-size="7.5">0</text>
+    <line x1="25" y1="100" x2="35" y2="100" stroke="#999" stroke-width="1"/>
+    <text x="22" y="103" text-anchor="end" fill="#555" font-size="7.5">80</text>
+    <line x1="25" y1="40" x2="35" y2="40" stroke="#999" stroke-width="1"/>
+    <text x="22" y="43" text-anchor="end" fill="#555" font-size="7.5">40</text>
+    <line x1="25" y1="68" x2="35" y2="68" stroke="#999" stroke-width="1"/>
+    <text x="22" y="71" text-anchor="end" fill="#555" font-size="7.5">20</text>
+    <!-- "Ma" label -->
+    <text x="8" y="100" text-anchor="middle" fill="#555" font-size="7.5" transform="rotate(-90,8,100)">Mya</text>
+    <!-- Legend -->
+    <text x="145" y="15" fill="#555" font-size="8" font-weight="bold">Key — common ancestors:</text>
+    <line x1="145" y1="25" x2="165" y2="25" stroke="#555" stroke-width="2"/>
+    <text x="168" y="29" fill="#555" font-size="8">80 Mya: A,B,C split from D</text>
+    <line x1="145" y1="38" x2="165" y2="38" stroke="#555" stroke-width="2"/>
+    <text x="168" y="42" fill="#555" font-size="8">40 Mya: A+B,C split from D lineage</text>
+    <line x1="145" y1="51" x2="165" y2="51" stroke="#555" stroke-width="2"/>
+    <text x="168" y="55" fill="#555" font-size="8">20 Mya: A and B diverge</text>
+    <text x="145" y="70" fill="#555" font-size="8">Most closely related = A &amp; B</text>
+    <text x="145" y="82" fill="#555" font-size="8">(shared ancestor 20 Mya)</text>
+  </svg>`,
+
+  "CP3": `<svg viewBox="0 0 290 200" xmlns="http://www.w3.org/2000/svg" font-family="inherit" font-size="8.5">
+    <!-- Root tip diagram -->
+    <rect x="5" y="5" width="110" height="185" rx="8" fill="#e8f5e9" stroke="#388e3c" stroke-width="1.5"/>
+    <text x="60" y="20" text-anchor="middle" font-weight="bold" fill="#1b5e20" font-size="9">Root tip zones</text>
+    <!-- Zone of elongation -->
+    <rect x="12" y="28" width="96" height="45" rx="4" fill="#c8e6c9" stroke="#66bb6a" stroke-width="1"/>
+    <text x="60" y="45" text-anchor="middle" fill="#1b5e20" font-size="8" font-weight="bold">Zone of</text>
+    <text x="60" y="55" text-anchor="middle" fill="#1b5e20" font-size="8" font-weight="bold">elongation</text>
+    <text x="60" y="65" text-anchor="middle" fill="#555" font-size="7">(cells lengthening)</text>
+    <!-- Zone of cell division (meristem) -->
+    <rect x="12" y="78" width="96" height="55" rx="4" fill="#a5d6a7" stroke="#388e3c" stroke-width="1.5"/>
+    <text x="60" y="95" text-anchor="middle" fill="#1b5e20" font-size="8" font-weight="bold">Meristem</text>
+    <text x="60" y="106" text-anchor="middle" fill="#1b5e20" font-size="8" font-weight="bold">(mitosis zone)</text>
+    <text x="60" y="117" text-anchor="middle" fill="#555" font-size="7">High mitotic index</text>
+    <text x="60" y="127" text-anchor="middle" fill="#e53935" font-size="7" font-weight="bold">→ observe here</text>
+    <!-- Root cap -->
+    <rect x="12" y="138" width="96" height="42" rx="4" fill="#dcedc8" stroke="#9ccc65" stroke-width="1"/>
+    <text x="60" y="155" text-anchor="middle" fill="#33691e" font-size="8" font-weight="bold">Root cap</text>
+    <text x="60" y="166" text-anchor="middle" fill="#555" font-size="7">(protects meristem)</text>
+    <text x="60" y="176" text-anchor="middle" fill="#555" font-size="7">Low mitotic index</text>
+    <!-- Right panel: mitotic index formula + protocol -->
+    <rect x="125" y="5" width="160" height="60" rx="6" fill="#ede7f6" stroke="#7c6bc9" stroke-width="1.5"/>
+    <text x="205" y="22" text-anchor="middle" font-weight="bold" fill="#311b6e" font-size="9">Mitotic Index (MI)</text>
+    <line x1="132" y1="27" x2="278" y2="27" stroke="#b39ddb" stroke-width="1"/>
+    <text x="205" y="41" text-anchor="middle" font-size="10" font-weight="bold" fill="#311b6e">MI = D ÷ T</text>
+    <text x="205" y="55" text-anchor="middle" font-size="7" fill="#555">D = cells in division · T = total cells</text>
+    <!-- Stain protocol -->
+    <rect x="125" y="74" width="160" height="80" rx="6" fill="#fff9c4" stroke="#f9a825" stroke-width="1.5"/>
+    <text x="205" y="90" text-anchor="middle" font-weight="bold" fill="#6d4c00" font-size="9">Squash protocol</text>
+    <line x1="132" y1="95" x2="278" y2="95" stroke="#f9a825" stroke-width="1"/>
+    <text x="205" y="107" text-anchor="middle" fill="#444" font-size="7.5">1. Cut 1 cm root tip</text>
+    <text x="205" y="118" text-anchor="middle" fill="#444" font-size="7.5">2. Hydrolyse in HCl (60°C, 5 min)</text>
+    <text x="205" y="129" text-anchor="middle" fill="#444" font-size="7.5">3. Stain with aceto-orcein</text>
+    <text x="205" y="140" text-anchor="middle" fill="#444" font-size="7.5">4. Squash under coverslip</text>
+    <text x="205" y="151" text-anchor="middle" fill="#444" font-size="7.5">5. View under microscope</text>
+    <!-- Purpose of stain -->
+    <rect x="125" y="162" width="160" height="33" rx="6" fill="#ddeef8" stroke="#3a9ad9" stroke-width="1.5"/>
+    <text x="205" y="177" text-anchor="middle" font-weight="bold" fill="#0d2e4a" font-size="8">Stain purpose:</text>
+    <text x="205" y="188" text-anchor="middle" fill="#444" font-size="7.5">Aceto-orcein stains chromosomes</text>
+  </svg>`,
+
+  "CP4": `<svg viewBox="0 0 290 200" xmlns="http://www.w3.org/2000/svg" font-family="inherit" font-size="8.5">
+    <!-- Field scene background -->
+    <rect x="5" y="5" width="280" height="90" rx="6" fill="#f1f8e9" stroke="#7cb342" stroke-width="1.5"/>
+    <text x="145" y="21" text-anchor="middle" font-weight="bold" fill="#33691e" font-size="9">Random quadrat sampling</text>
+    <!-- Grid field -->
+    <rect x="15" y="28" width="120" height="60" rx="2" fill="#dcedc8" stroke="#558b2f" stroke-width="1"/>
+    <!-- Quadrat squares -->
+    <rect x="35" y="40" width="20" height="20" fill="none" stroke="#33691e" stroke-width="1.5" stroke-dasharray="3,2"/>
+    <rect x="75" y="55" width="20" height="20" fill="none" stroke="#33691e" stroke-width="1.5" stroke-dasharray="3,2"/>
+    <rect x="95" y="33" width="20" height="20" fill="none" stroke="#33691e" stroke-width="1.5" stroke-dasharray="3,2"/>
+    <!-- Random coordinate cross-hairs -->
+    <line x1="15" y1="50" x2="135" y2="50" stroke="#ef8c00" stroke-width="0.5" stroke-dasharray="2,3"/>
+    <line x1="45" y1="28" x2="45" y2="88" stroke="#ef8c00" stroke-width="0.5" stroke-dasharray="2,3"/>
+    <circle cx="45" cy="50" r="3" fill="#ef8c00"/>
+    <text x="50" y="46" fill="#ef8c00" font-size="7">random coord</text>
+    <!-- Transect line -->
+    <line x1="145" y1="28" x2="280" y2="88" stroke="#1565c0" stroke-width="2" stroke-dasharray="5,3"/>
+    <text x="213" y="40" fill="#1565c0" font-weight="bold" font-size="8">Belt transect</text>
+    <!-- Quadrats along transect -->
+    <rect x="148" y="30" width="18" height="18" fill="none" stroke="#1565c0" stroke-width="1.5"/>
+    <rect x="180" y="48" width="18" height="18" fill="none" stroke="#1565c0" stroke-width="1.5"/>
+    <rect x="210" y="62" width="18" height="18" fill="none" stroke="#1565c0" stroke-width="1.5"/>
+    <rect x="248" y="74" width="18" height="18" fill="none" stroke="#1565c0" stroke-width="1.5"/>
+    <!-- Legend for field -->
+    <text x="15" y="98" fill="#555" font-size="7.5">Random quadrats: use random number table for coordinates</text>
+    <!-- Simpson's reminder -->
+    <rect x="5" y="104" width="135" height="88" rx="6" fill="#fff9c4" stroke="#f9a825" stroke-width="1.5"/>
+    <text x="72" y="120" text-anchor="middle" font-weight="bold" fill="#6d4c00" font-size="9">Simpson's Index</text>
+    <line x1="12" y1="125" x2="133" y2="125" stroke="#f9a825" stroke-width="1"/>
+    <text x="72" y="139" text-anchor="middle" font-size="11" font-weight="bold" fill="#6d4c00">D = 1 − Σ(n/N)²</text>
+    <text x="72" y="152" text-anchor="middle" font-size="7.5" fill="#555">n = no. of individuals of each sp.</text>
+    <text x="72" y="163" text-anchor="middle" font-size="7.5" fill="#555">N = total no. of all individuals</text>
+    <text x="72" y="175" text-anchor="middle" font-size="7.5" fill="#555">D near 1 = high diversity</text>
+    <text x="72" y="186" text-anchor="middle" font-size="7.5" fill="#555">D near 0 = low diversity</text>
+    <!-- Transect use case -->
+    <rect x="148" y="104" width="137" height="88" rx="6" fill="#ddeef8" stroke="#3a9ad9" stroke-width="1.5"/>
+    <text x="216" y="120" text-anchor="middle" font-weight="bold" fill="#0d2e4a" font-size="9">Transect: when to use</text>
+    <line x1="155" y1="125" x2="278" y2="125" stroke="#3a9ad9" stroke-width="1"/>
+    <text x="216" y="139" text-anchor="middle" font-size="7.5" fill="#444">Use when you expect</text>
+    <text x="216" y="150" text-anchor="middle" font-size="7.5" fill="#444">a gradient / zonation</text>
+    <text x="216" y="163" text-anchor="middle" font-size="7.5" fill="#444">e.g. rocky shore, sand</text>
+    <text x="216" y="174" text-anchor="middle" font-size="7.5" fill="#444">dunes, woodland edge</text>
+    <text x="216" y="187" text-anchor="middle" font-size="7.5" fill="#444">→ records change across</text>
+  </svg>`
+};
+
+// ── Data ──────────────────────────────────────────────────────────────────
+const specPoints = [
+  // ======================== TOPIC 3 ========================
+  {
+    id: "T3.1", topic: "3", paper: 2,
+    topicName: "Topic 3: Voice of the Genome",
+    statement: "Know the structure of the cell surface membrane and understand the fluid mosaic model, including the roles of phospholipids, cholesterol, glycoproteins and channel/carrier proteins",
+    totalMarks: 6, hasDiagram: true,
+    questionSlide: {
+      title: "Fluid Mosaic Model",
+      questions: [
+        { ref:"(a)", ao:"AO1", marks:3, stem:"Describe the fluid mosaic model of the cell surface membrane. In your answer, explain the roles of (i) phospholipids, (ii) cholesterol, and (iii) channel and carrier proteins." },
+        { ref:"(b)", ao:"AO2", marks:2, stem:"Explain why the cell surface membrane is described as (i) 'fluid' and (ii) 'mosaic'." },
+        { ref:"(c)", ao:"AO3", marks:1, stem:"When a cell membrane is heated above 45 °C it becomes increasingly permeable to substances that would not normally cross it. Suggest an explanation for this observation in terms of membrane structure." }
+      ]
+    },
+    markSchemeSlide: {
+      markScheme: [
+        { ref:"(a)", total:3,
+          points:["(i) Phospholipids form a bilayer with hydrophilic heads facing the aqueous environments and hydrophobic tails forming the non-polar interior, making the membrane selectively permeable ✓ (1)","(ii) Cholesterol molecules sit between phospholipid tails, reducing their movement and increasing membrane stability and rigidity at high temperatures; also maintains fluidity at low temperatures ✓ (1)","(iii) Channel proteins form hydrophilic pores allowing water and small ions to pass by facilitated diffusion; carrier proteins bind specific molecules and change shape to transport them across the membrane (facilitated diffusion or active transport) ✓ (1)"],
+          notes:["1 mark per component; must describe the role, not just name it"] },
+        { ref:"(b)", total:2,
+          points:["(i) 'Fluid': phospholipids and proteins can move laterally within the bilayer, so the membrane is not rigid ✓ (1)","(ii) 'Mosaic': proteins of different types are embedded throughout the bilayer in a varied, non-uniform pattern, like tiles in a mosaic ✓ (1)"],
+          notes:["Must address both terms; one term alone = 1 mark; vague answers (e.g. 'moves around') = 0"] },
+        { ref:"(c)", total:1,
+          points:["At high temperatures the phospholipid tails gain kinetic energy and move more rapidly; cholesterol is less effective at maintaining structure; proteins denature / change shape; the membrane becomes more fluid and gaps form, allowing substances to pass through by leakage ✓"],
+          notes:["Accept any two of: increased phospholipid movement, protein denaturation, loss of selective permeability; must be linked to membrane structure"] }
+      ]
+    }
+  },
+
+  {
+    id: "T3.2", topic: "3", paper: 2,
+    topicName: "Topic 3: Voice of the Genome",
+    statement: "Understand how substances cross cell membranes by simple diffusion, facilitated diffusion, osmosis and active transport, and be able to predict the direction of water movement by osmosis",
+    totalMarks: 6, hasDiagram: false,
+    questionSlide: {
+      title: "Transport Across Membranes",
+      questions: [
+        { ref:"(a)", ao:"AO1", marks:2, stem:"Distinguish between simple diffusion and facilitated diffusion in terms of: (i) the types of molecules transported by each; (ii) whether membrane proteins are required." },
+        { ref:"(b)", ao:"AO2", marks:2, stem:"Explain why active transport requires both specific carrier proteins and a supply of ATP from mitochondria." },
+        { ref:"(c)", ao:"AO3", marks:2, stem:"A plant cell with a water potential of −600 kPa is placed in a solution with a water potential of −200 kPa. Predict the direction of net water movement and explain what will happen to the plant cell over time." }
+      ]
+    },
+    markSchemeSlide: {
+      markScheme: [
+        { ref:"(a)", total:2,
+          points:["(i) Simple diffusion transports small, non-polar/lipid-soluble molecules (e.g. O₂, CO₂, ethanol) directly through the phospholipid bilayer; facilitated diffusion transports large, polar or charged molecules/ions (e.g. glucose, Na⁺) that cannot pass through the bilayer directly ✓ (1)","(ii) Simple diffusion requires no membrane proteins; facilitated diffusion requires specific channel or carrier proteins ✓ (1)"],
+          notes:["1 mark per distinction; must contrast both types for each mark"] },
+        { ref:"(b)", total:2,
+          points:["Carrier proteins are needed to bind the specific solute molecule; ATP is hydrolysed to provide energy to change the carrier protein's shape, moving the solute across the membrane against its concentration gradient ✓ (1+1)"],
+          notes:["1 mark for carrier protein role; 1 mark for ATP hydrolysis driving conformational change; 'needs energy' alone without mechanism = max 1"] },
+        { ref:"(c)", total:2,
+          points:["Water moves by osmosis from the solution (water potential −200 kPa; higher/less negative) into the plant cell (water potential −600 kPa; lower/more negative) ✓ (1)","Water enters the cell vacuole; the cell swells and the cytoplasm pushes against the cell wall; the cell becomes turgid; turgor pressure builds until water potential equilibrium is reached — the cell does not burst because of the rigid cell wall ✓ (1)"],
+          notes:["Direction of water movement must be correct for first mark; 'from high to low water potential' phrasing acceptable; do not accept 'high concentration to low' without clarifying water potential context"] }
+      ]
+    }
+  },
+
+  {
+    id: "T3.3", topic: "3", paper: 2,
+    topicName: "Topic 3: Voice of the Genome",
+    statement: "Understand co-transport in the ileum, including the role of sodium-glucose co-transporters and the Na⁺/K⁺ ATPase pump in maintaining the sodium gradient for glucose absorption",
+    totalMarks: 5, hasDiagram: false,
+    questionSlide: {
+      title: "Co-transport & Glucose Absorption",
+      questions: [
+        { ref:"(a)", ao:"AO1", marks:2, stem:"Describe how glucose is absorbed from the lumen of the small intestine (ileum) into an epithelial cell by co-transport. Include the role of the Na⁺/K⁺ ATPase pump." },
+        { ref:"(b)", ao:"AO2", marks:2, stem:"A drug that specifically inhibits Na⁺/K⁺ ATPase is administered to a patient. Predict and explain the effect on glucose absorption in the ileum." },
+        { ref:"(c)", ao:"AO3", marks:1, stem:"Glucose absorption by co-transport is described as 'indirect active transport'. Explain what this means." }
+      ]
+    },
+    markSchemeSlide: {
+      markScheme: [
+        { ref:"(a)", total:2,
+          points:["The Na⁺/K⁺ ATPase pump on the basolateral membrane actively transports Na⁺ out of the epithelial cell (using ATP), maintaining a low Na⁺ concentration inside the cell ✓ (1)","The low intracellular [Na⁺] creates a concentration gradient; Na⁺ moves down this gradient from the lumen into the epithelial cell via the sodium-glucose co-transporter, carrying glucose into the cell simultaneously (against glucose's own concentration gradient) ✓ (1)"],
+          notes:["Must mention the Na⁺ gradient AND co-transport for full marks; 'co-transporter' without mentioning the Na⁺ gradient = max 1"] },
+        { ref:"(b)", total:2,
+          points:["Na⁺/K⁺ ATPase inhibited → Na⁺ accumulates inside the epithelial cell; the Na⁺ concentration gradient across the brush border membrane is reduced or eliminated ✓ (1)","Without the Na⁺ gradient, the co-transporter cannot drive glucose into the cell → glucose absorption falls / stops ✓ (1)"],
+          notes:["Must describe loss of gradient AND effect on glucose transport for both marks"] },
+        { ref:"(c)", total:1,
+          points:["Glucose moves against its own concentration gradient into the cell — this normally requires energy (active transport) — but it uses the Na⁺ gradient as an energy source rather than directly hydrolyzing ATP for glucose transport; ATP is used only by the Na⁺/K⁺ ATPase pump to generate this gradient ✓"],
+          notes:["Key point: glucose transport is coupled to the Na⁺ gradient (not directly ATP-driven); indirect = energy comes from the Na⁺ gradient generated by the ATPase"] }
+      ]
+    }
+  },
+
+  {
+    id: "T3.4", topic: "3", paper: 2,
+    topicName: "Topic 3: Voice of the Genome",
+    statement: "Understand the process of transcription, including the roles of RNA polymerase, template and coding strands, the production of pre-mRNA, and the splicing of introns in eukaryotes",
+    totalMarks: 6, hasDiagram: true,
+    questionSlide: {
+      title: "Transcription",
+      questions: [
+        { ref:"(a)", ao:"AO1", marks:3, stem:"Describe the process of transcription. Include: (i) which DNA strand is used as the template and the direction of synthesis; (ii) the role of RNA polymerase; (iii) the type of base pairing that occurs." },
+        { ref:"(b)", ao:"AO2", marks:2, stem:"Explain why introns must be removed from pre-mRNA before translation can produce a functional protein in eukaryotes." },
+        { ref:"(c)", ao:"AO3", marks:1, stem:"A point mutation changes the base sequence of the template strand by altering one base. Explain why this mutation may or may not change the amino acid sequence of the protein produced." }
+      ]
+    },
+    markSchemeSlide: {
+      markScheme: [
+        { ref:"(a)", total:3,
+          points:["(i) The template (antisense) strand of DNA is read 3'→5'; RNA is synthesised in the 5'→3' direction ✓ (1)","(ii) RNA polymerase binds to the promoter region, unwinds and separates the DNA strands, and catalyses the formation of phosphodiester bonds between complementary RNA nucleotides ✓ (1)","(iii) RNA nucleotides form complementary base pairs with the template strand: A pairs with U (not T), T pairs with A, C pairs with G ✓ (1)"],
+          notes:["1 mark per sub-part; U instead of T is key for (iii); do not penalise if direction not stated for (i) if template strand is correctly identified"] },
+        { ref:"(b)", total:2,
+          points:["Introns are non-coding sequences; if not removed they would be translated, inserting incorrect amino acids into the polypeptide chain and producing a non-functional protein ✓ (1)","Splicing removes introns and joins exons (coding sequences) to produce mature mRNA with the correct sequence for translation ✓ (1)"],
+          notes:["Must explain what introns are (non-coding) AND the consequence of their presence for full marks"] },
+        { ref:"(c)", total:1,
+          points:["The genetic code is degenerate — some amino acids are coded for by more than one codon (synonymous codons); if the mutation produces a new codon that codes for the same amino acid, there is no change in the protein (silent mutation); if the new codon codes for a different amino acid, the protein sequence changes and may be non-functional ✓"],
+          notes:["Must reference degeneracy of the code; 'may not change because the code is degenerate' is sufficient; both outcomes should be acknowledged"] }
+      ]
+    }
+  },
+
+  {
+    id: "T3.5", topic: "3", paper: 2,
+    topicName: "Topic 3: Voice of the Genome",
+    statement: "Understand the process of translation at ribosomes, including the roles of codons, anticodons, tRNA, mRNA and ribosomes, and the significance of start and stop codons",
+    totalMarks: 6, hasDiagram: false,
+    questionSlide: {
+      title: "Translation",
+      questions: [
+        { ref:"(a)", ao:"AO1", marks:3, stem:"Describe the process of translation. Include: (i) how the ribosome reads the mRNA; (ii) the role of tRNA molecules and anticodons; (iii) how the polypeptide chain is elongated." },
+        { ref:"(b)", ao:"AO2", marks:2, stem:"The mRNA codon UAC is mutated to UAG. (i) State the name given to UAG codons. (ii) Explain the likely effect of this mutation on the polypeptide chain produced." },
+        { ref:"(c)", ao:"AO3", marks:1, stem:"Suggest why at least 20 different tRNA molecules are needed for translation, but only 3 different types of ribosome are not required — only one ribosome structure is used." }
+      ]
+    },
+    markSchemeSlide: {
+      markScheme: [
+        { ref:"(a)", total:3,
+          points:["(i) The ribosome binds to the 5' end of the mRNA and moves along it reading successive triplets of bases (codons) in the 5'→3' direction ✓ (1)","(ii) Each tRNA molecule has a specific anticodon that is complementary to one codon on the mRNA; the tRNA also carries the amino acid corresponding to that codon; the anticodon pairs with the codon at the ribosome's A-site ✓ (1)","(iii) A peptide bond is formed (by peptidyl transferase) between the amino acid at the A-site and the growing polypeptide chain at the P-site; the ribosome moves one codon along the mRNA (translocation), and the process repeats until a stop codon is reached ✓ (1)"],
+          notes:["1 mark per sub-part; accept 'complementary base pairing between anticodon and codon' for (ii); 'peptide bond formation' required for (iii)"] },
+        { ref:"(b)", total:2,
+          points:["(i) UAG is a stop codon (nonsense codon / termination codon) ✓ (1)","(ii) Translation would stop prematurely at the point where UAG appears; a shorter, truncated polypeptide would be produced and is likely to be non-functional ✓ (1)"],
+          notes:["(i): accept 'nonsense codon'; (ii): must state truncation AND likely non-functional outcome"] },
+        { ref:"(c)", total:1,
+          points:["At least 20 different tRNA molecules are needed because there are (at least) 20 different amino acids, each requiring a specific tRNA with the correct anticodon to carry it to the ribosome ✓; the ribosome simply provides the site for peptide bond formation and does not need to be specific to each amino acid, so one type is sufficient"],
+          notes:["Must link 'one tRNA per amino acid type' to the requirement for 20+ tRNAs; do not penalise if candidate says 61 tRNAs (one per sense codon — also acceptable)"] }
+      ]
+    }
+  },
+
+  {
+    id: "T3.6", topic: "3", paper: 2,
+    topicName: "Topic 3: Voice of the Genome",
+    statement: "Understand how cell differentiation occurs through selective gene expression, and know the differences between totipotent, pluripotent and multipotent stem cells including their therapeutic potential and associated ethical issues",
+    totalMarks: 5, hasDiagram: false,
+    questionSlide: {
+      title: "Stem Cells & Cell Differentiation",
+      questions: [
+        { ref:"(a)", ao:"AO1", marks:2, stem:"Distinguish between totipotent and pluripotent stem cells. Give one example of where each type is found in humans." },
+        { ref:"(b)", ao:"AO2", marks:2, stem:"All nucleated cells in an organism contain the same DNA, yet liver cells and muscle cells have very different structures and functions. Explain how this is possible." },
+        { ref:"(c)", ao:"AO3", marks:1, stem:"State one potential therapeutic benefit of using embryonic stem cells in medicine and one ethical objection to their use. Suggest how induced pluripotent stem cells (iPSCs) might reduce this ethical concern." }
+      ]
+    },
+    markSchemeSlide: {
+      markScheme: [
+        { ref:"(a)", total:2,
+          points:["Totipotent: can differentiate into any cell type including extraembryonic (placental) tissues; found in the zygote and very early embryo (up to the 8-cell stage / morula) ✓ (1)","Pluripotent: can differentiate into almost any cell type of the body (all three germ layers) but not placental tissues; found in the inner cell mass of the blastocyst (embryonic stem cells) ✓ (1)"],
+          notes:["Must distinguish on the basis of which cell types they can form, not just 'many' vs 'any'; examples must be correctly matched"] },
+        { ref:"(b)", total:2,
+          points:["All cells contain the same DNA but only certain genes are expressed (switched on) in each cell type — selective gene expression ✓ (1)","Transcription factors and epigenetic changes (e.g. histone modification, DNA methylation) determine which genes are expressed in a given cell type, leading to different proteins being produced and thus different cell structures and functions ✓ (1)"],
+          notes:["'Same DNA, different genes expressed' is essential; mechanism (transcription factors / epigenetics) needed for second mark"] },
+        { ref:"(c)", total:1,
+          points:["Therapeutic benefit: e.g. potential to generate replacement tissues/organs (nerve cells for spinal injury, beta cells for diabetes, heart muscle cells) ✓","Ethical objection: embryonic stem cells are derived from embryos that are destroyed in the process — some consider this equivalent to taking a human life ✓","iPSC reduction: adult body cells are reprogrammed to a pluripotent state without destroying embryos, avoiding the ethical issue of embryo destruction ✓"],
+          notes:["Award 1 mark for any one of: benefit stated + objection stated + iPSC explanation; all three elements not required for 1 mark — but both sides of the debate should be acknowledged in a full answer"] }
+      ]
+    }
+  },
+
+  {
+    id: "CP3", topic: "cp", paper: 3,
+    topicName: "Core Practical 3: Microscopy & Mitotic Index",
+    statement: "CP3: Use a light microscope to observe, draw and measure cells; prepare a temporary slide of plant root tip cells; observe stages of mitosis; calculate the mitotic index",
+    totalMarks: 6, hasDiagram: true,
+    questionSlide: {
+      title: "CP3 — Root Tip Squash & Mitotic Index",
+      questions: [
+        { ref:"(a)", ao:"AO1", marks:2, stem:"Describe how to prepare a root tip squash to observe mitosis under a light microscope. State the purpose of (i) the hydrochloric acid treatment; (ii) the aceto-orcein stain." },
+        { ref:"(b)", ao:"AO2", marks:3, stem:"A student counts 200 cells in a region of a root tip under the microscope. 24 cells are in some stage of mitosis. (i) Calculate the mitotic index for this region. Show your working. (ii) The student observes a second region, farther from the root tip, and finds only 4 cells dividing in 200. Suggest why the mitotic index is lower in this region." },
+        { ref:"(c)", ao:"AO3", marks:1, stem:"Suggest one source of error in this method of calculating the mitotic index and state how it could be reduced." }
+      ]
+    },
+    markSchemeSlide: {
+      markScheme: [
+        { ref:"(a)", total:2,
+          points:["(i) HCl (hydrochloric acid) softens the cell wall and breaks down the middle lamella between cells, allowing the tissue to be squashed into a single-cell layer for viewing ✓ (1)","(ii) Aceto-orcein (or similar DNA stain) is a red/purple stain that binds to chromosomes, making them visible under the light microscope so stages of mitosis can be identified ✓ (1)"],
+          notes:["Accept acetocarmine / crystal violet as alternative stains; must give the purpose not just 'it stains chromosomes' — why that helps must be implicit or stated"] },
+        { ref:"(b)", total:3,
+          points:["(i) Mitotic index = cells in division ÷ total cells observed = 24 ÷ 200 = 0.12 (or 12%) ✓ (1 for correct method and answer)","(ii) The region farther from the tip is outside the meristematic zone — these cells have already differentiated / are in the zone of elongation or maturation; differentiated cells no longer divide by mitosis ✓ (1)","(ii) Accept: cells have left the cell cycle / fewer mitotic signals present in this region ✓"],
+          notes:["(i): must show working; accept 0.12 or 12% or ratio; (ii): must reference differentiation or absence of meristematic activity — 'older cells' alone = 0"] },
+        { ref:"(c)", total:1,
+          points:["Error: difficulty in distinguishing cells in early stages of mitosis from interphase cells, leading to undercounting of dividing cells; reduce by using a higher-power objective lens and practising identification of mitotic stages ✓","Error: sample size — only one region counted, which may not be representative; reduce by counting multiple fields of view ✓","Error: staining quality — understaining makes chromosomes hard to see; ensure correct stain concentration and timing ✓"],
+          notes:["Any one valid source of error + a corresponding method to reduce it; 1 mark for both parts together"] }
+      ]
+    }
+  },
+
+  // ======================== TOPIC 4 ========================
+  {
+    id: "T4.1", topic: "4", paper: 2,
+    topicName: "Topic 4: Biodiversity and Natural Resources",
+    statement: "Understand how living organisms are classified using phylogenetic methods and the three-domain system, use binomial nomenclature, and interpret phylogenetic trees to determine evolutionary relationships",
+    totalMarks: 6, hasDiagram: true,
+    questionSlide: {
+      title: "Classification & Phylogenetics",
+      questions: [
+        { ref:"(a)", ao:"AO1", marks:2, stem:"State the three domains used in the three-domain classification system and give one distinguishing feature for each." },
+        { ref:"(b)", ao:"AO1", marks:1, stem:"State one advantage of using binomial nomenclature to name species." },
+        { ref:"(c)", ao:"AO2", marks:2, stem:"Fig. 1 shows a phylogenetic tree for four species A, B, C and D. State which two species are most closely related. Justify your answer using evidence from the tree." },
+        { ref:"(d)", ao:"AO3", marks:1, stem:"Explain why molecular evidence (e.g. DNA base sequences) is often considered more reliable than morphological evidence when constructing phylogenetic trees." }
+      ]
+    },
+    markSchemeSlide: {
+      markScheme: [
+        { ref:"(a)", total:2,
+          points:["Bacteria: prokaryotes; peptidoglycan cell walls; 70S ribosomes ✓","Archaea: prokaryotes; no peptidoglycan; distinctive membrane lipids; often found in extreme environments ✓","Eukarya: eukaryotes; membrane-bound nucleus; 80S ribosomes; cells may contain mitochondria and/or chloroplasts ✓"],
+          notes:["Award 1 mark for correctly naming all three domains; 1 mark for one correct distinguishing feature for each; any valid distinguishing feature accepted"] },
+        { ref:"(b)", total:1,
+          points:["Binomial nomenclature provides a universal, internationally accepted name that is used by scientists worldwide, avoiding confusion caused by different common names in different languages ✓"],
+          notes:["Accept: avoids ambiguity of common names; enables communication across languages; do not accept 'it is in Latin' as a reason without further elaboration"] },
+        { ref:"(c)", total:2,
+          points:["Species A and B are most closely related ✓ (1)","They share the most recent common ancestor (approximately 20 million years ago), which is more recent than any other pair on the tree ✓ (1)"],
+          notes:["Must use the tree explicitly — 'most recent common ancestor' is the key phrase; 'they branch off together most recently' is acceptable"] },
+        { ref:"(d)", total:1,
+          points:["Morphological characteristics can be subject to convergent evolution — unrelated organisms may evolve similar structures due to similar selection pressures, making them appear more closely related than they are; DNA sequences are directly inherited and are less likely to be affected by convergent evolution, giving a more accurate picture of true evolutionary relationships ✓"],
+          notes:["Must mention convergent evolution or analogous structures as the specific problem with morphology; 'DNA is more reliable' alone = 0"] }
+      ]
+    }
+  },
+
+  {
+    id: "T4.2", topic: "4", paper: 2,
+    topicName: "Topic 4: Biodiversity and Natural Resources",
+    statement: "Know the structure of plant cells and cell walls; compare cellulose and starch in terms of structure and properties; describe natural resources obtained from plants including timber, fibres and medicines",
+    totalMarks: 6, hasDiagram: false,
+    questionSlide: {
+      title: "Plant Cell Structure & Natural Resources",
+      questions: [
+        { ref:"(a)", ao:"AO1", marks:3, stem:"State three structural features that distinguish a plant cell from an animal cell." },
+        { ref:"(b)", ao:"AO2", marks:2, stem:"Compare the molecular structures of cellulose and starch. Explain why cellulose, rather than starch, provides structural support in plant cell walls." },
+        { ref:"(c)", ao:"AO3", marks:1, stem:"Suggest why the commercial use of cellulose as a biofuel (bioethanol) is technically challenging, even though cellulose contains a large amount of chemical energy." }
+      ]
+    },
+    markSchemeSlide: {
+      markScheme: [
+        { ref:"(a)", total:3,
+          points:["Cell wall made of cellulose (outside the cell surface membrane) ✓","Large central vacuole containing cell sap ✓","Chloroplasts (in photosynthetic cells) ✓","Plasmodesmata connecting adjacent cells through the cell wall ✓","Absence of centrioles ✓"],
+          notes:["Any three correct features; 1 mark each; do not accept 'nucleus' as a difference — both plant and animal cells have nuclei"] },
+        { ref:"(b)", total:2,
+          points:["Both are polymers of glucose; cellulose is made of β-glucose joined by 1,4-glycosidic bonds causing alternating glucose units to be inverted, forming straight chains that can hydrogen-bond to adjacent chains, creating microfibrils with great tensile strength ✓ (1)","Starch (amylose) is made of α-glucose joined by 1,4-glycosidic bonds forming a helical coil that cannot form the same cross-links; it is used for energy storage, not structural support ✓ (1)"],
+          notes:["Key contrast: β-glucose straight chains (cellulose) vs α-glucose helical (starch); 'hydrogen bonding between chains' needed for cellulose structural role; both marks require the structural reason"] },
+        { ref:"(c)", total:1,
+          points:["Cellulose is very difficult to hydrolyse because the β-1,4-glycosidic bonds are resistant to most commercial enzymes (cellulases are not widely or cheaply available); the hydrogen bonding between microfibrils also makes cellulose physically tough and resistant to breakdown ✓"],
+          notes:["Accept: few enzymes can digest cellulose efficiently; most organisms lack cellulase; expensive enzymatic treatment needed; β-linkage more resistant than α-linkage in starch"] }
+      ]
+    }
+  },
+
+  {
+    id: "T4.3", topic: "4", paper: 2,
+    topicName: "Topic 4: Biodiversity and Natural Resources",
+    statement: "Understand how medicines have been developed from plants (e.g. aspirin from willow, quinine from cinchona bark, taxol from yew), including the process of drug testing and ethical issues of bioprospecting",
+    totalMarks: 5, hasDiagram: false,
+    questionSlide: {
+      title: "Medicines from Plants & Drug Development",
+      questions: [
+        { ref:"(a)", ao:"AO1", marks:2, stem:"Give two examples of medicinal drugs derived from plants. For each, name the plant source and state the medical use of the drug." },
+        { ref:"(b)", ao:"AO2", marks:2, stem:"Describe the three main phases of clinical trials that a plant-derived drug must pass through before it can be licensed for widespread use. State the purpose of each phase." },
+        { ref:"(c)", ao:"AO3", marks:1, stem:"Define 'bioprospecting' and state one ethical concern it raises. Suggest how international agreements could address this concern." }
+      ]
+    },
+    markSchemeSlide: {
+      markScheme: [
+        { ref:"(a)", total:2,
+          points:["Aspirin (salicylic acid/acetylsalicylic acid) from willow bark (Salix spp.) — used as a painkiller/anti-inflammatory/antiplatelet agent ✓ (1)","Quinine from cinchona bark (Cinchona spp.) — used to treat malaria ✓ (1)","Taxol (paclitaxel) from Pacific yew (Taxus brevifolia) — used as an anticancer drug (inhibits cell division) ✓ (1)","Morphine from opium poppy (Papaver somniferum) — used as a painkiller/analgesic ✓ (1)","Digoxin from foxglove (Digitalis spp.) — used to treat heart conditions ✓ (1)"],
+          notes:["Any two correct examples; 1 mark each; must include both plant source and medical use for each mark"] },
+        { ref:"(b)", total:2,
+          points:["Phase I: small number of healthy volunteers; test safety, dosage range and pharmacokinetics (how the drug is absorbed and eliminated) ✓","Phase II: larger group of patients with the target condition; test effectiveness and monitor side effects at therapeutic doses ✓","Phase III: large randomised controlled trial (RCT); compare drug against placebo/existing treatment; establish efficacy and safety in a representative population ✓"],
+          notes:["Award 1 for any two phases with their purposes; 1 for the third; do not accept 'test on animals' — these are human clinical trial phases; accept 'double blind' as a feature of Phase III"] },
+        { ref:"(c)", total:1,
+          points:["Bioprospecting: the search for commercially valuable biological compounds (e.g. drugs, chemicals) from organisms in natural ecosystems, often in biodiversity-rich developing countries ✓","Ethical concern: local/indigenous communities and governments may not receive fair compensation or share of profits from drugs developed from their native plants ✓","International agreement: e.g. the Nagoya Protocol requires prior informed consent from the country of origin and fair sharing of benefits derived from its biological resources ✓"],
+          notes:["Award 1 for definition + concern + agreement; all three elements needed for the single mark; or award 1 for a well-explained concern that implicitly defines bioprospecting"] }
+      ]
+    }
+  },
+
+  {
+    id: "T4.4", topic: "4", paper: 2,
+    topicName: "Topic 4: Biodiversity and Natural Resources",
+    statement: "Understand the reasons for maintaining biodiversity and describe in situ and ex situ conservation strategies, including their relative advantages and disadvantages",
+    totalMarks: 5, hasDiagram: false,
+    questionSlide: {
+      title: "Conservation Strategies",
+      questions: [
+        { ref:"(a)", ao:"AO1", marks:2, stem:"Distinguish between in situ and ex situ conservation. Give one example of each strategy." },
+        { ref:"(b)", ao:"AO2", marks:2, stem:"Explain why in situ conservation in a protected national park is generally considered more effective for maintaining a plant species in the long term compared to storing seeds in a seed bank (ex situ conservation)." },
+        { ref:"(c)", ao:"AO3", marks:1, stem:"The mountain gorilla population has increased through conservation efforts in protected reserves. Suggest two reasons why sustaining large mammal populations in protected reserves remains difficult." }
+      ]
+    },
+    markSchemeSlide: {
+      markScheme: [
+        { ref:"(a)", total:2,
+          points:["In situ conservation: protecting species within their natural habitat; examples include national parks/nature reserves, marine protected areas, SSSI designations ✓ (1)","Ex situ conservation: protecting species outside their natural habitat; examples include seed banks, botanical gardens, zoos, captive breeding programmes ✓ (1)"],
+          notes:["1 mark per strategy + correct example; definition alone without example = 0; 'in natural habitat vs not in natural habitat' is the core distinction"] },
+        { ref:"(b)", total:2,
+          points:["In situ: species continue to evolve and adapt to natural selection pressures; maintain ecological interactions (pollination, seed dispersal, predator–prey relationships) essential for long-term survival ✓ (1)","Seed banks: seeds may not remain viable indefinitely; stored seeds cannot evolve or adapt; if the original habitat is destroyed, seeds cannot simply be released into the wild without suitable habitat; loss of genetic diversity over time ✓ (1)"],
+          notes:["1 mark for advantages of in situ; 1 mark for limitations of seed banks; must compare the two approaches"] },
+        { ref:"(c)", total:1,
+          points:["Minimum viable population size: small isolated populations are vulnerable to inbreeding / genetic drift / loss of genetic diversity ✓","Reserve size: large mammals have large home ranges that may exceed the reserve boundary, leading to conflict with local human communities ✓","Disease: dense populations in restricted areas may be more susceptible to disease outbreaks ✓","Poaching: high-value species remain targets even in protected areas ✓","Human–wildlife conflict: gorillas may raid crops on reserve boundaries ✓","Climate change may alter habitat suitability within the reserve ✓"],
+          notes:["Any two valid reasons; 1 mark for the first, 1 mark for the second — but question is worth 1 mark total so any two valid points = 1 mark"] }
+      ]
+    }
+  },
+
+  {
+    id: "CP4", topic: "cp", paper: 3,
+    topicName: "Core Practical 4: Biodiversity Field Sampling",
+    statement: "CP4: Use appropriate sampling techniques including random quadrats and belt transects to investigate the distribution and abundance of organisms in a habitat; apply Simpson's Diversity Index",
+    totalMarks: 6, hasDiagram: true,
+    questionSlide: {
+      title: "CP4 — Sampling Techniques & Diversity",
+      questions: [
+        { ref:"(a)", ao:"AO1", marks:2, stem:"Describe how random quadrat sampling is used to estimate the percentage cover of plant species in a meadow. Explain why random sampling is essential." },
+        { ref:"(b)", ao:"AO2", marks:2, stem:"A student uses a belt transect to survey vegetation along a gradient from open grassland to woodland. (i) Describe how a belt transect is carried out. (ii) Explain why a transect, rather than random quadrats, is the more appropriate technique here." },
+        { ref:"(c)", ao:"AO3", marks:2, stem:"A student calculates Simpson's Diversity Index for two zones of a sand dune system. Zone 1 (foredune): D = 0.28. Zone 2 (mature dune): D = 0.87. Evaluate whether the student can conclude that the difference in biodiversity is caused by the distance from the sea. Justify your answer." }
+      ]
+    },
+    markSchemeSlide: {
+      markScheme: [
+        { ref:"(a)", total:2,
+          points:["Use a random number generator (or random number table) to generate grid coordinates; place a quadrat at each coordinate; record the species present and estimate percentage cover of each species within each quadrat; repeat across multiple quadrats and calculate mean percentage cover ✓ (1)","Random sampling ensures every point in the area has an equal probability of being selected, avoiding sampling bias — if the researcher chose quadrat positions, they might unconsciously select areas with more/fewer species ✓ (1)"],
+          notes:["1 mark for method (coordinates + quadrats + repeats); 1 mark for why random is essential (avoids bias / ensures representative sample); 'reduces bias' alone without explanation = max 1"] },
+        { ref:"(b)", total:2,
+          points:["(i) Lay a tape measure (transect line) along the gradient; place quadrats at regular intervals along the transect (e.g. every 5 m); record species and percentage cover (or frequency) at each quadrat; a belt transect uses quadrats of defined width placed adjacently or at intervals along the line ✓ (1)","(ii) A transect is designed to detect a systematic change (zonation) in species composition across a gradient; random quadrats would not capture the directional change from one habitat type to another ✓ (1)"],
+          notes:["(i): must mention tape measure/transect line AND regular interval quadrats; (ii): must explain 'detecting a gradient/zonation' as the reason"] },
+        { ref:"(c)", total:2,
+          points:["The data show that Zone 2 (D = 0.87) has considerably higher biodiversity than Zone 1 (D = 0.28), indicating greater species richness and/or evenness in the mature dune ✓ (1)","However, the student cannot conclude that distance from the sea caused this difference — other variables differ along the transect (e.g. soil depth, organic matter, pH, shelter, moisture) and these confounding variables were not controlled; a correlation between distance and diversity does not establish causation; a controlled experiment would be needed ✓ (1)"],
+          notes:["1 mark for comparing D values correctly (direction and magnitude); 1 mark for evaluating the causal claim — must identify confounding variables OR distinguish correlation from causation"] }
+      ]
+    }
+  }
+];
+
+// ── State ─────────────────────────────────────────────────────────────────
+let current = 0;
+const done = new Set();
+
+// ── Helpers ───────────────────────────────────────────────────────────────
+function isNote(line) {
+  return /^(NOTE|Do not|Accept|Allow|Award|Must|Any |Both|Either|Key |approx|ecf|answer alone|mark\s+alone)/i.test(line.trim());
+}
+function cleanPoint(pt) {
+  return pt.replace(/\s*✓\s*\(\d+\)/g, '').replace(/\s*✓/g, '').trim();
+}
+function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function topicClass(t) { return 't' + t; }
+
+// ── Render question face ──────────────────────────────────────────────────
+function buildQuestion(sp) {
+  const qs = sp.questionSlide;
+  const tc = topicClass(sp.topic);
+  let qsHTML = '';
+  for (const q of qs.questions) {
+    let tableHTML = '';
+    if (q.table) {
+      const th = q.table.headers.map(h=>`<th>${esc(h)}</th>`).join('');
+      const trs = q.table.rows.map(r=>'<tr>'+r.map(c=>`<td>${esc(c)}</td>`).join('')+'</tr>').join('');
+      tableHTML = `<div class="data-table-wrap"><table class="data-table"><thead><tr>${th}</tr></thead><tbody>${trs}</tbody></table></div>`;
+    }
+    qsHTML += `
+      <div class="q-item">
+        <div class="q-ref">${esc(q.ref)}</div>
+        <div class="q-content">
+          <div class="q-stem">${esc(q.stem)}</div>
+          ${tableHTML}
+          <div class="q-meta">
+            <span class="marks-pill">[${q.marks}]</span>
+            <span class="ao-pill">${esc(q.ao)}</span>
+          </div>
+        </div>
+      </div>`;
+  }
+  const diagHTML = sp.hasDiagram ? `
+    <div class="diagram-col">
+      <div class="diagram-box">
+        ${diagrams[sp.id] || ''}
+        <div class="diagram-caption">Fig. 1 — refer to diagram when answering</div>
+      </div>
+    </div>` : '';
+  return `
+    <div class="q-header ${tc}">
+      <span class="topic-badge ${tc}">${esc(sp.topicName.split(':')[0])}</span>
+      <span class="spec-badge">${esc(sp.id)}</span>
+      <span class="q-header-title">${esc(qs.title)}</span>
+      <span class="marks-badge">${sp.totalMarks} marks</span>
+    </div>
+    <div class="spec-stmt ${tc}"><strong>${esc(sp.id)}:</strong> ${esc(sp.statement)}</div>
+    <div class="q-body">
+      <div class="questions-col">${qsHTML}</div>
+      ${diagHTML}
+    </div>`;
+}
+
+// ── Render mark scheme face ───────────────────────────────────────────────
+function buildMarkScheme(sp) {
+  const ms = sp.markSchemeSlide;
+  const tc = topicClass(sp.topic);
+  const numQ = ms.markScheme.length;
+  const singleCol = numQ <= 2;
+  let itemsHTML = '';
+  for (const item of ms.markScheme) {
+    const pureAnswers = item.points.filter(p => !isNote(p));
+    const pureNotes = item.points.filter(p => isNote(p));
+    const allNotes = [...pureNotes, ...(item.notes || [])];
+    const pointsHTML = pureAnswers.map(pt => {
+      const hasCheck = pt.includes('✓');
+      const cleaned = cleanPoint(pt);
+      return `<div class="ms-point">${hasCheck ? '<span class="ms-tick">✓</span>' : '<span class="ms-tick" style="opacity:0">·</span>'}<span>${esc(cleaned)}</span></div>`;
+    }).join('');
+    const notesHTML = allNotes.map(n => `<div class="ms-note">${esc(n)}</div>`).join('');
+    itemsHTML += `
+      <div class="ms-item">
+        <div class="ms-item-hdr">
+          <span class="ms-ref">${esc(item.ref)}</span>
+          <span class="ms-total">[${item.total} mark${item.total > 1 ? 's' : ''}]</span>
+        </div>
+        <div class="ms-points">${pointsHTML}${notesHTML}</div>
+      </div>`;
+  }
+  return `
+    <div class="ms-header ${tc}">
+      <span class="topic-badge ${tc}">${esc(sp.topicName.split(':')[0])}</span>
+      <span class="ms-badge">✓ Mark Scheme</span>
+      <span class="ms-header-title">${esc(sp.id)} — ${esc(sp.questionSlide.title)}</span>
+    </div>
+    <div class="spec-stmt ${tc}"><strong>${esc(sp.id)}:</strong> ${esc(sp.statement)}</div>
+    <div class="ms-body ${singleCol ? 'cols-1' : ''}">
+      ${itemsHTML}
+    </div>`;
+}
+
+// ── Nav ───────────────────────────────────────────────────────────────────
+function renderNav() {
+  document.getElementById('specNav').innerHTML = specPoints.map((sp, i) => {
+    const cls = i === current ? 'active' : done.has(i) ? 'done' : '';
+    return `<div class="spec-dot ${cls}" data-topic="${sp.topic}" onclick="goTo(${i})" title="${sp.id}: ${sp.questionSlide.title}">${sp.id}</div>`;
+  }).join('');
+}
+
+// ── Render ────────────────────────────────────────────────────────────────
+function render() {
+  const sp = specPoints[current];
+  document.getElementById('cardScene').classList.remove('revealed');
+  document.getElementById('progressPill').textContent = `Card ${current + 1} of ${specPoints.length}`;
+  document.getElementById('progressFill').style.width = `${(current + 1) / specPoints.length * 100}%`;
+  document.getElementById('hintText').textContent = 'Answer the questions, then tap "Reveal Answers"';
+  document.getElementById('btnReveal').disabled = false;
+  document.getElementById('btnReveal').textContent = 'Reveal Answers ✓';
+  document.getElementById('btnNext').disabled = true;
+  document.getElementById('btnPrev').disabled = current === 0;
+  document.getElementById('completeBanner').classList.remove('show');
+  document.getElementById('qFace').innerHTML  = buildQuestion(sp);
+  document.getElementById('msFace').innerHTML = buildMarkScheme(sp);
+  renderNav();
+}
+
+function revealAnswers() {
+  const scene = document.getElementById('cardScene');
+  const btn = document.getElementById('btnReveal');
+  if (scene.classList.contains('revealed')) {
+    scene.classList.remove('revealed');
+    btn.textContent = 'Reveal Answers ✓';
+    document.getElementById('hintText').textContent = 'Answer the questions, then tap "Reveal Answers"';
+  } else {
+    scene.classList.add('revealed');
+    btn.textContent = 'Hide Answers ↩';
+    document.getElementById('btnNext').disabled = (current === specPoints.length - 1);
+    document.getElementById('hintText').textContent = 'Check your answers carefully, then move on';
+    done.add(current);
+    renderNav();
+  }
+}
+function navigate(dir) {
+  const next = current + dir;
+  if (next >= 0 && next < specPoints.length) { current = next; render(); }
+  else if (dir === 1 && current === specPoints.length - 1) {
+    document.getElementById('completeBanner').classList.add('show');
+    document.getElementById('hintText').textContent = '';
+  }
+}
+function goTo(idx) { current = idx; render(); }
+
+render();
+</script>
+</body>
+</html>

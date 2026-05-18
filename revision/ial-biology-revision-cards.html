@@ -1,0 +1,993 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IAL Biology — Revision Cards</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: #eef4f7;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+  /* ── Header ─────────────────────────────────────── */
+  .header {
+    background: #0d2137;
+    color: white;
+    padding: 14px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .header-left h1 { font-size: 1.05rem; font-weight: 700; letter-spacing: 0.01em; }
+  .header-left .sub { font-size: 0.78rem; opacity: 0.65; margin-top: 2px; }
+  .progress-pill {
+    background: rgba(255,255,255,0.13);
+    border: 1px solid rgba(255,255,255,0.22);
+    padding: 5px 14px;
+    border-radius: 20px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .progress-track { height: 4px; background: #c5d9e8; }
+  .progress-fill {
+    height: 100%;
+    background: #3a9ad9;
+    transition: width 0.5s ease;
+  }
+  /* ── Unit legend ─────────────────────────────────── */
+  .unit-legend {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    padding: 8px 16px 0;
+    flex-wrap: wrap;
+  }
+  .unit-legend-item {
+    display: flex; align-items: center; gap: 5px;
+    font-size: 0.75rem; color: #555;
+  }
+  .unit-legend-dot {
+    width: 10px; height: 10px; border-radius: 50%;
+  }
+  /* ── Main ────────────────────────────────────────── */
+  .main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 14px 16px 32px;
+    gap: 12px;
+  }
+  /* ── Spec dot nav ───────────────────────────────── */
+  .spec-nav { display: flex; gap: 7px; flex-wrap: wrap; justify-content: center; }
+  .spec-dot {
+    width: 48px; height: 30px;
+    border-radius: 15px;
+    border: 2px solid #b0c8da;
+    background: white;
+    color: #2c4a60;
+    font-weight: 700;
+    font-size: 0.72rem;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.15s;
+  }
+  .spec-dot:hover { background: #ddeef8; }
+  .spec-dot.active  { background: #0d2137; color: white; border-color: #0d2137; }
+  .spec-dot.done    { background: #3a9ad9; color: white; border-color: #3a9ad9; }
+  /* Unit colour stripes on dots */
+  .spec-dot[data-unit="1"]         { border-left: 4px solid #e6a817; }
+  .spec-dot[data-unit="1"].active  { background: #7a4e00; border-color: #7a4e00; border-left-color: #e6a817; }
+  .spec-dot[data-unit="1"].done    { background: #c07d00; border-color: #c07d00; border-left-color: #e6a817; }
+  .spec-dot[data-unit="2"]         { border-left: 4px solid #3a9ad9; }
+  .spec-dot[data-unit="2"].active  { background: #143d5c; border-color: #143d5c; border-left-color: #3a9ad9; }
+  .spec-dot[data-unit="2"].done    { background: #1e6ea0; border-color: #1e6ea0; border-left-color: #3a9ad9; }
+  .spec-dot[data-unit="3"]         { border-left: 4px solid #27ae60; }
+  .spec-dot[data-unit="3"].active  { background: #0e4d2a; border-color: #0e4d2a; border-left-color: #27ae60; }
+  .spec-dot[data-unit="3"].done    { background: #1e7d45; border-color: #1e7d45; border-left-color: #27ae60; }
+  /* ── Card scene ─────────────────────────────────── */
+  .card-scene {
+    width: 100%;
+    max-width: 920px;
+    display: grid;
+  }
+  .card-face {
+    grid-area: 1 / 1;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 22px rgba(0,0,0,0.12);
+    transition: opacity 0.35s ease, transform 0.35s ease;
+  }
+  .card-face.back { opacity: 0; transform: scale(0.97); pointer-events: none; }
+  .card-scene.revealed .card-face.front { opacity: 0; transform: scale(0.97); pointer-events: none; }
+  .card-scene.revealed .card-face.back  { opacity: 1; transform: scale(1); pointer-events: all; }
+  /* ── Unit header colours ─────────────────────────── */
+  .q-header {
+    color: white;
+    padding: 13px 20px;
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    flex-wrap: wrap;
+  }
+  .q-header.u1 { background: #6b3a00; }
+  .q-header.u2 { background: #0d2e4a; }
+  .q-header.u3 { background: #0d3d22; }
+  .ms-header {
+    color: white;
+    padding: 13px 20px;
+    display: flex;
+    align-items: center;
+    gap: 11px;
+  }
+  .ms-header.u1 { background: #8a5010; }
+  .ms-header.u2 { background: #15436e; }
+  .ms-header.u3 { background: #1a5c36; }
+  .unit-badge {
+    font-size: 0.68rem;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 10px;
+    white-space: nowrap;
+    flex-shrink: 0;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .unit-badge.u1 { background: #e6a817; color: #3a2000; }
+  .unit-badge.u2 { background: #3a9ad9; color: #021624; }
+  .unit-badge.u3 { background: #27ae60; color: #041a0f; }
+  .spec-badge {
+    background: rgba(255,255,255,0.18);
+    font-weight: 700;
+    font-size: 0.88rem;
+    padding: 4px 11px;
+    border-radius: 7px;
+    white-space: nowrap;
+    flex-shrink: 0;
+    border: 1px solid rgba(255,255,255,0.25);
+  }
+  .q-header-title { font-size: 0.97rem; font-weight: 600; line-height: 1.3; flex: 1; }
+  .marks-badge {
+    margin-left: auto;
+    background: #f4d03f;
+    color: #1a1a00;
+    font-weight: 700;
+    font-size: 0.78rem;
+    padding: 4px 11px;
+    border-radius: 20px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .spec-stmt {
+    padding: 8px 20px;
+    font-size: 0.83rem;
+    color: #1a2530;
+    font-style: italic;
+    line-height: 1.45;
+    border-bottom: 1px solid #cde;
+  }
+  .spec-stmt.u1 { background: #fdf3df; border-bottom-color: #e6cc88; }
+  .spec-stmt.u2 { background: #deeef8; border-bottom-color: #9bbdd8; }
+  .spec-stmt.u3 { background: #e8f5ee; border-bottom-color: #88d4aa; }
+  .spec-stmt strong { font-style: normal; }
+  .q-body {
+    background: white;
+    padding: 16px 20px;
+    display: flex;
+    gap: 18px;
+    align-items: flex-start;
+  }
+  .questions-col { flex: 1; min-width: 0; }
+  .diagram-col { width: 280px; flex-shrink: 0; }
+  .diagram-box {
+    border: 2px dashed #b0c8da;
+    border-radius: 10px;
+    background: #f5f9fc;
+    padding: 11px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+  }
+  .diagram-box svg { width: 100%; height: auto; }
+  .diagram-caption {
+    font-size: 0.72rem; color: #778; font-style: italic;
+    text-align: center; line-height: 1.4;
+  }
+  .q-item {
+    display: flex; gap: 10px;
+    padding: 11px 0;
+    border-bottom: 1px solid #e8eef3;
+    align-items: flex-start;
+  }
+  .q-item:last-child { border-bottom: none; padding-bottom: 0; }
+  .q-ref { font-weight: 700; color: #0d2137; font-size: 0.97rem; min-width: 30px; padding-top: 1px; flex-shrink: 0; }
+  .q-content { flex: 1; min-width: 0; }
+  .q-stem { font-size: 0.91rem; color: #1a2530; line-height: 1.55; }
+  .q-meta { margin-top: 7px; display: flex; gap: 7px; align-items: center; flex-wrap: wrap; }
+  .marks-pill { background: #0d2137; color: white; font-size: 0.71rem; font-weight: 700; padding: 2px 9px; border-radius: 10px; }
+  .ao-pill { background: #e8eef3; color: #2c4a60; font-size: 0.7rem; font-weight: 600; padding: 2px 8px; border-radius: 10px; border: 1px solid #b0c8da; }
+  /* Data table */
+  .data-table-wrap { margin-top: 10px; overflow-x: auto; }
+  .data-table { border-collapse: collapse; font-size: 0.83rem; min-width: 260px; }
+  .data-table th { background: #0d2137; color: white; padding: 5px 13px; text-align: center; font-weight: 600; }
+  .data-table td { padding: 4px 13px; text-align: center; border: 1px solid #b0c8da; }
+  .data-table tr:nth-child(odd) td { background: #f5f9fc; }
+  .data-table tr:nth-child(even) td { background: #ddeef8; }
+  /* ── Mark scheme card ───────────────────────────── */
+  .ms-badge { background: rgba(255,255,255,0.22); font-weight: 700; font-size: 0.83rem; padding: 4px 10px; border-radius: 7px; white-space: nowrap; flex-shrink: 0; border: 1px solid rgba(255,255,255,0.3); }
+  .ms-header-title { font-size: 0.97rem; font-weight: 600; }
+  .ms-body { background: #f4f8fb; padding: 16px 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 11px; }
+  .ms-body.cols-1 { grid-template-columns: 1fr; }
+  .ms-item { background: white; border-radius: 8px; overflow: hidden; border: 1px solid #b0c8da; box-shadow: 0 1px 4px rgba(0,0,0,0.05); }
+  .ms-item-hdr { background: #e8eef3; padding: 6px 13px; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid #b0c8da; }
+  .ms-ref { font-weight: 700; color: #0d2137; font-size: 0.92rem; }
+  .ms-total { font-size: 0.74rem; color: #666; }
+  .ms-points { padding: 9px 13px; display: flex; flex-direction: column; gap: 6px; }
+  .ms-point { display: flex; gap: 8px; align-items: flex-start; font-size: 0.86rem; color: #1a2530; line-height: 1.45; }
+  .ms-tick { color: #27ae60; font-weight: 800; font-size: 0.9rem; flex-shrink: 0; margin-top: 1px; }
+  .ms-note { font-size: 0.74rem; color: #6b7280; font-style: italic; line-height: 1.4; border-top: 1px solid #e8eef3; margin-top: 4px; padding-top: 5px; }
+  /* ── Controls ───────────────────────────────────── */
+  .hint-text { font-size: 0.8rem; color: #777; text-align: center; min-height: 18px; font-style: italic; }
+  .controls { display: flex; gap: 10px; justify-content: center; align-items: center; flex-wrap: wrap; width: 100%; max-width: 920px; }
+  .btn { padding: 10px 22px; border: none; border-radius: 8px; cursor: pointer; font-size: 0.87rem; font-weight: 600; font-family: inherit; transition: all 0.15s; white-space: nowrap; }
+  .btn:hover:not(:disabled) { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+  .btn:active:not(:disabled) { transform: translateY(0); }
+  .btn:disabled { opacity: 0.35; cursor: not-allowed; }
+  .btn-outline { background: white; color: #0d2137; border: 2px solid #0d2137; }
+  .btn-reveal  { background: #3a9ad9; color: white; padding: 11px 30px; font-size: 0.92rem; }
+  .btn-next    { background: #0d2137; color: white; padding: 11px 30px; font-size: 0.92rem; }
+  /* ── Completion banner ──────────────────────────── */
+  .complete-banner { background: #0d2137; color: white; text-align: center; padding: 20px; border-radius: 12px; width: 100%; max-width: 920px; display: none; }
+  .complete-banner h2 { font-size: 1.3rem; margin-bottom: 6px; }
+  .complete-banner p { opacity: 0.8; font-size: 0.9rem; }
+  .complete-banner.show { display: block; }
+  @media (max-width: 640px) {
+    .header { padding: 10px 14px; }
+    .header-left h1 { font-size: 0.9rem; }
+    .main { padding: 10px 10px 24px; gap: 9px; }
+    .spec-dot { width: 40px; height: 26px; font-size: 0.65rem; }
+    .q-header { padding: 10px 14px; }
+    .q-header-title { font-size: 0.87rem; }
+    .spec-stmt { padding: 7px 14px; font-size: 0.79rem; }
+    .q-body { flex-direction: column; padding: 12px 14px; }
+    .diagram-col { width: 100%; }
+    .ms-body { grid-template-columns: 1fr !important; padding: 12px 14px; }
+    .controls { gap: 8px; }
+    .btn { padding: 9px 14px; font-size: 0.81rem; }
+    .btn-reveal, .btn-next { padding: 9px 18px; font-size: 0.84rem; }
+  }
+</style>
+</head>
+<body>
+<div class="header">
+  <div class="header-left">
+    <h1>🔬 IAL Biology &mdash; Revision Cards</h1>
+    <div class="sub">Edexcel IAL &nbsp;·&nbsp; Units 1, 2 &amp; 4 &nbsp;·&nbsp; Papers 1, 2 &amp; 4 &nbsp;·&nbsp; Mixed starter set</div>
+  </div>
+  <div class="progress-pill" id="progressPill">Card 1 of 12</div>
+</div>
+<div class="progress-track"><div class="progress-fill" id="progressFill" style="width:8.33%"></div></div>
+<div class="main">
+  <div class="unit-legend">
+    <div class="unit-legend-item"><div class="unit-legend-dot" style="background:#e6a817"></div> Unit 1 (Paper 1)</div>
+    <div class="unit-legend-item"><div class="unit-legend-dot" style="background:#3a9ad9"></div> Unit 2 (Paper 2)</div>
+    <div class="unit-legend-item"><div class="unit-legend-dot" style="background:#27ae60"></div> Unit 3 (Paper 3 — Practical)</div>
+  </div>
+  <div class="spec-nav" id="specNav"></div>
+  <div class="card-scene" id="cardScene">
+    <div class="card-face front" id="qFace"></div>
+    <div class="card-face back"  id="msFace"></div>
+  </div>
+  <div class="hint-text" id="hintText">Answer the questions, then tap <em>Reveal Answers</em></div>
+  <div class="controls">
+    <button class="btn btn-outline" id="btnPrev" onclick="navigate(-1)">&#8592; Previous</button>
+    <button class="btn btn-reveal" id="btnReveal" onclick="revealAnswers()">Reveal Answers ✓</button>
+    <button class="btn btn-next"   id="btnNext"   onclick="navigate(1)" disabled>Next Card &#8594;</button>
+  </div>
+  <div class="complete-banner" id="completeBanner">
+    <h2>🎉 All 12 cards complete!</h2>
+    <p>You've covered a spread across Units 1, 2 and 4. Use the dots above to revisit any topic.</p>
+  </div>
+</div>
+<script>
+// ── SVG Diagrams ─────────────────────────────────────────────────────────
+const diagrams = {
+  "1.1": `<svg viewBox="0 0 280 210" xmlns="http://www.w3.org/2000/svg" font-family="inherit" font-size="9">
+    <!-- Glycerol backbone -->
+    <rect x="16" y="60" width="36" height="90" rx="5" fill="#fde8b0" stroke="#c07d00" stroke-width="1.5"/>
+    <text x="34" y="79" text-anchor="middle" font-weight="bold" fill="#6b3a00">G</text>
+    <text x="34" y="90" text-anchor="middle" font-weight="bold" fill="#6b3a00">L</text>
+    <text x="34" y="101" text-anchor="middle" font-weight="bold" fill="#6b3a00">Y</text>
+    <text x="34" y="112" text-anchor="middle" font-weight="bold" fill="#6b3a00">C</text>
+    <text x="34" y="123" text-anchor="middle" font-weight="bold" fill="#6b3a00">E</text>
+    <text x="34" y="134" text-anchor="middle" font-weight="bold" fill="#6b3a00">R</text>
+    <text x="34" y="145" text-anchor="middle" font-weight="bold" fill="#6b3a00">O</text>
+    <text x="34" y="156" text-anchor="middle" font-weight="bold" fill="#6b3a00">L</text>
+    <!-- Label X arrow -->
+    <line x1="52" y1="105" x2="66" y2="105" stroke="#c07d00" stroke-width="1"/>
+    <text x="68" y="90" fill="#c07d00" font-weight="bold">X</text>
+    <!-- Three ester bonds (connectors) -->
+    <line x1="52" y1="80" x2="80" y2="80" stroke="#888" stroke-width="1.5" stroke-dasharray="3,2"/>
+    <line x1="52" y1="105" x2="80" y2="105" stroke="#888" stroke-width="1.5" stroke-dasharray="3,2"/>
+    <line x1="52" y1="130" x2="80" y2="130" stroke="#888" stroke-width="1.5" stroke-dasharray="3,2"/>
+    <text x="59" y="74" fill="#27ae60" font-size="7.5" font-weight="bold">ester</text>
+    <text x="59" y="99" fill="#27ae60" font-size="7.5" font-weight="bold">ester</text>
+    <text x="59" y="124" fill="#27ae60" font-size="7.5" font-weight="bold">ester</text>
+    <!-- Fatty acid 1 (saturated) -->
+    <polyline points="80,80 100,70 120,80 140,70 160,80 180,70 200,80 220,70 240,80" fill="none" stroke="#0d2137" stroke-width="2"/>
+    <text x="245" y="83" fill="#0d2137" font-size="8">COOH</text>
+    <!-- Fatty acid 2 (saturated) -->
+    <polyline points="80,105 100,95 120,105 140,95 160,105 180,95 200,105 220,95 240,105" fill="none" stroke="#0d2137" stroke-width="2"/>
+    <text x="245" y="108" fill="#0d2137" font-size="8">COOH</text>
+    <!-- Fatty acid 3 (unsaturated - has a kink/double bond) -->
+    <polyline points="80,130 100,120 120,130 140,120" fill="none" stroke="#c0392b" stroke-width="2"/>
+    <line x1="140" y1="120" x2="155" y2="120" stroke="#c0392b" stroke-width="2"/>
+    <line x1="140" y1="123" x2="155" y2="123" stroke="#c0392b" stroke-width="2"/>
+    <polyline points="155,120 175,130 195,120 215,130 235,130" fill="none" stroke="#c0392b" stroke-width="2"/>
+    <text x="245" y="133" fill="#c0392b" font-size="8">COOH</text>
+    <text x="141" y="115" fill="#c0392b" font-size="7.5">C=C</text>
+    <!-- labels -->
+    <text x="88" y="62" text-anchor="middle" fill="#0d2137" font-weight="bold" font-size="8">Saturated</text>
+    <text x="88" y="72" text-anchor="middle" fill="#0d2137" font-size="7">fatty acids</text>
+    <text x="155" y="147" text-anchor="middle" fill="#c0392b" font-weight="bold" font-size="8">Unsaturated</text>
+    <text x="155" y="157" text-anchor="middle" fill="#c0392b" font-size="7">fatty acid (kink at C=C)</text>
+    <!-- H2O release labels -->
+    <text x="78" y="200" text-anchor="middle" fill="#555" font-size="7.5" font-style="italic">× 3 H₂O released (condensation)</text>
+  </svg>`,
+
+  "1.3": `<svg viewBox="0 0 280 200" xmlns="http://www.w3.org/2000/svg" font-family="inherit">
+    <!-- Axes -->
+    <line x1="40" y1="15" x2="40" y2="170" stroke="#333" stroke-width="1.5"/>
+    <line x1="40" y1="170" x2="270" y2="170" stroke="#333" stroke-width="1.5"/>
+    <!-- Y ticks -->
+    <line x1="35" y1="170" x2="40" y2="170" stroke="#333"/>
+    <text x="30" y="173" font-size="8" text-anchor="end" fill="#555">0</text>
+    <line x1="35" y1="130" x2="40" y2="130" stroke="#333"/>
+    <text x="30" y="133" font-size="8" text-anchor="end" fill="#555">25</text>
+    <line x1="35" y1="90" x2="40" y2="90" stroke="#333"/>
+    <text x="30" y="93" font-size="8" text-anchor="end" fill="#555">50</text>
+    <line x1="35" y1="50" x2="40" y2="50" stroke="#333"/>
+    <text x="30" y="53" font-size="8" text-anchor="end" fill="#555">75</text>
+    <line x1="35" y1="25" x2="40" y2="25" stroke="#333"/>
+    <text x="30" y="28" font-size="8" text-anchor="end" fill="#555">100</text>
+    <!-- X ticks -->
+    <line x1="80" y1="170" x2="80" y2="175" stroke="#333"/>
+    <text x="80" y="184" font-size="8" text-anchor="middle" fill="#555">10</text>
+    <line x1="120" y1="170" x2="120" y2="175" stroke="#333"/>
+    <text x="120" y="184" font-size="8" text-anchor="middle" fill="#555">20</text>
+    <line x1="160" y1="170" x2="160" y2="175" stroke="#333"/>
+    <text x="160" y="184" font-size="8" text-anchor="middle" fill="#555">30</text>
+    <line x1="200" y1="170" x2="200" y2="175" stroke="#333"/>
+    <text x="200" y="184" font-size="8" text-anchor="middle" fill="#555">40</text>
+    <line x1="240" y1="170" x2="240" y2="175" stroke="#333"/>
+    <text x="240" y="184" font-size="8" text-anchor="middle" fill="#555">50</text>
+    <line x1="260" y1="170" x2="260" y2="175" stroke="#333"/>
+    <text x="260" y="184" font-size="8" text-anchor="middle" fill="#555">55</text>
+    <!-- Bell curve: rises 10→37°C, peaks at 37, falls steeply 37→50 -->
+    <path d="M40,170 C60,168 70,140 100,90 C120,60 140,30 160,25 C180,28 195,42 200,50 C210,80 225,155 260,168 C262,169 265,170 270,170"
+          fill="none" stroke="#0d2e4a" stroke-width="2.5"/>
+    <!-- Optimum marker -->
+    <line x1="160" y1="25" x2="160" y2="170" stroke="#e6a817" stroke-width="1.2" stroke-dasharray="4,3"/>
+    <line x1="40" y1="25" x2="160" y2="25" stroke="#e6a817" stroke-width="1.2" stroke-dasharray="4,3"/>
+    <text x="162" y="38" font-size="8" fill="#c07d00" font-weight="bold">Optimum ~37°C</text>
+    <!-- Denaturation annotation -->
+    <text x="215" y="100" font-size="8" fill="#c0392b" font-weight="bold">Denaturation</text>
+    <text x="215" y="111" font-size="7.5" fill="#c0392b">active site shape</text>
+    <text x="215" y="122" font-size="7.5" fill="#c0392b">permanently changed</text>
+    <line x1="213" y1="95" x2="240" y2="145" stroke="#c0392b" stroke-width="0.8" stroke-dasharray="3,2"/>
+    <!-- Axis labels -->
+    <text x="155" y="198" font-size="8.5" text-anchor="middle" fill="#333">Temperature (°C)</text>
+    <text x="9" y="100" font-size="8" text-anchor="middle" fill="#333" transform="rotate(-90,9,100)">Rate of reaction (% max)</text>
+  </svg>`,
+
+  "2.3": `<svg viewBox="0 0 280 210" xmlns="http://www.w3.org/2000/svg" font-family="inherit" font-size="8">
+    <!-- Four stage boxes -->
+    <!-- PROPHASE -->
+    <rect x="5" y="22" width="60" height="70" rx="6" fill="#eef4ff" stroke="#3a9ad9" stroke-width="1.5"/>
+    <text x="35" y="18" text-anchor="middle" font-weight="bold" fill="#0d2e4a" font-size="9">Prophase</text>
+    <!-- Condensed chromosomes (4 as X shapes) -->
+    <path d="M20,47 L30,57 M30,47 L20,57" stroke="#0d2137" stroke-width="3" stroke-linecap="round"/>
+    <path d="M38,44 L48,54 M48,44 L38,54" stroke="#0d2137" stroke-width="3" stroke-linecap="round"/>
+    <path d="M18,62 L28,72 M28,62 L18,72" stroke="#c0392b" stroke-width="3" stroke-linecap="round"/>
+    <path d="M38,62 L48,72 M48,62 L38,72" stroke="#c0392b" stroke-width="3" stroke-linecap="round"/>
+    <!-- Nuclear envelope breaking -->
+    <path d="M10,85 Q20,80 30,85 Q40,90 50,85 Q58,81 63,85" fill="none" stroke="#888" stroke-width="1" stroke-dasharray="3,2"/>
+    <text x="35" y="99" text-anchor="middle" fill="#555" font-size="7">Nuclear envelope</text>
+    <text x="35" y="108" text-anchor="middle" fill="#555" font-size="7">breaks down</text>
+    <!-- METAPHASE -->
+    <rect x="74" y="22" width="60" height="70" rx="6" fill="#eef4ff" stroke="#3a9ad9" stroke-width="1.5"/>
+    <text x="104" y="18" text-anchor="middle" font-weight="bold" fill="#0d2e4a" font-size="9">Metaphase</text>
+    <!-- Equator line -->
+    <line x1="74" y1="57" x2="134" y2="57" stroke="#27ae60" stroke-width="1" stroke-dasharray="3,2"/>
+    <text x="136" y="58" fill="#27ae60" font-size="7">equator</text>
+    <!-- Chromosomes on equator -->
+    <path d="M89,47 L99,57 M99,47 L89,57" stroke="#0d2137" stroke-width="3" stroke-linecap="round"/>
+    <path d="M107,47 L117,57 M117,47 L107,57" stroke="#c0392b" stroke-width="3" stroke-linecap="round"/>
+    <path d="M89,57 L99,67 M99,57 L89,67" stroke="#0d2137" stroke-width="3" stroke-linecap="round"/>
+    <path d="M107,57 L117,67 M117,57 L107,67" stroke="#c0392b" stroke-width="3" stroke-linecap="round"/>
+    <!-- Spindle fibres -->
+    <line x1="104" y1="22" x2="94" y2="52" stroke="#888" stroke-width="0.8"/>
+    <line x1="104" y1="22" x2="112" y2="52" stroke="#888" stroke-width="0.8"/>
+    <line x1="104" y1="92" x2="94" y2="62" stroke="#888" stroke-width="0.8"/>
+    <line x1="104" y1="92" x2="112" y2="62" stroke="#888" stroke-width="0.8"/>
+    <text x="104" y="108" text-anchor="middle" fill="#555" font-size="7">Chromosomes at</text>
+    <text x="104" y="117" text-anchor="middle" fill="#555" font-size="7">equator</text>
+    <!-- ANAPHASE -->
+    <rect x="143" y="22" width="60" height="70" rx="6" fill="#eef4ff" stroke="#3a9ad9" stroke-width="1.5"/>
+    <text x="173" y="18" text-anchor="middle" font-weight="bold" fill="#0d2e4a" font-size="9">Anaphase</text>
+    <!-- Chromatids pulled apart -->
+    <line x1="152" y1="30" x2="162" y2="50" stroke="#888" stroke-width="0.8"/>
+    <line x1="194" y1="30" x2="184" y2="50" stroke="#888" stroke-width="0.8"/>
+    <path d="M155,34 L163,42 M163,34 L155,42" stroke="#0d2137" stroke-width="2.5" stroke-linecap="round"/>
+    <path d="M181,34 L189,42 M189,34 L181,42" stroke="#c0392b" stroke-width="2.5" stroke-linecap="round"/>
+    <line x1="152" y1="84" x2="162" y2="64" stroke="#888" stroke-width="0.8"/>
+    <line x1="194" y1="84" x2="184" y2="64" stroke="#888" stroke-width="0.8"/>
+    <path d="M155,68 L163,76 M163,68 L155,76" stroke="#0d2137" stroke-width="2.5" stroke-linecap="round"/>
+    <path d="M181,68 L189,76 M189,68 L181,76" stroke="#c0392b" stroke-width="2.5" stroke-linecap="round"/>
+    <text x="173" y="102" text-anchor="middle" fill="#555" font-size="7">Chromatids pulled</text>
+    <text x="173" y="111" text-anchor="middle" fill="#555" font-size="7">to opposite poles</text>
+    <!-- TELOPHASE -->
+    <rect x="212" y="22" width="60" height="70" rx="6" fill="#eef4ff" stroke="#3a9ad9" stroke-width="1.5"/>
+    <text x="242" y="18" text-anchor="middle" font-weight="bold" fill="#0d2e4a" font-size="9">Telophase</text>
+    <!-- Two nuclei forming -->
+    <ellipse cx="242" cy="40" rx="18" ry="12" fill="none" stroke="#888" stroke-width="1" stroke-dasharray="2,2"/>
+    <ellipse cx="242" cy="74" rx="18" ry="12" fill="none" stroke="#888" stroke-width="1" stroke-dasharray="2,2"/>
+    <path d="M234,36 L240,42 M240,36 L234,42" stroke="#0d2137" stroke-width="2" stroke-linecap="round"/>
+    <path d="M246,36 L252,42 M252,36 L246,42" stroke="#c0392b" stroke-width="2" stroke-linecap="round"/>
+    <path d="M234,70 L240,76 M240,70 L234,76" stroke="#0d2137" stroke-width="2" stroke-linecap="round"/>
+    <path d="M246,70 L252,76 M252,70 L246,76" stroke="#c0392b" stroke-width="2" stroke-linecap="round"/>
+    <!-- Cleavage furrow -->
+    <line x1="212" y1="57" x2="272" y2="57" stroke="#27ae60" stroke-width="1.5" stroke-dasharray="4,2"/>
+    <text x="242" y="100" text-anchor="middle" fill="#555" font-size="7">Two nuclei reform;</text>
+    <text x="242" y="109" text-anchor="middle" fill="#555" font-size="7">cell divides</text>
+    <!-- Stage arrows -->
+    <text x="69" y="60" text-anchor="middle" fill="#3a9ad9" font-size="11" font-weight="bold">→</text>
+    <text x="138" y="60" text-anchor="middle" fill="#3a9ad9" font-size="11" font-weight="bold">→</text>
+    <text x="207" y="60" text-anchor="middle" fill="#3a9ad9" font-size="11" font-weight="bold">→</text>
+    <!-- Key -->
+    <text x="5" y="130" fill="#0d2137" font-size="7.5" font-weight="bold">Key:</text>
+    <line x1="30" y1="128" x2="50" y2="128" stroke="#0d2137" stroke-width="3" stroke-linecap="round"/>
+    <text x="53" y="131" fill="#555" font-size="7">Chromatid pair 1</text>
+    <line x1="120" y1="128" x2="140" y2="128" stroke="#c0392b" stroke-width="3" stroke-linecap="round"/>
+    <text x="143" y="131" fill="#555" font-size="7">Chromatid pair 2</text>
+    <text x="140" y="145" text-anchor="middle" fill="#555" font-size="7" font-style="italic">NB: simplified to 4 chromosomes (2n=4) for clarity</text>
+  </svg>`,
+
+  "3.1": `<svg viewBox="0 0 290 200" xmlns="http://www.w3.org/2000/svg" font-family="inherit">
+    <!-- Left info cards -->
+    <rect x="4" y="6" width="140" height="54" rx="6" fill="#e8f5ee" stroke="#27ae60" stroke-width="1.5"/>
+    <text x="74" y="23" text-anchor="middle" font-weight="bold" fill="#0d3d22" font-size="9">Magnification formula</text>
+    <line x1="11" y1="28" x2="137" y2="28" stroke="#88d4aa" stroke-width="1"/>
+    <text x="74" y="44" text-anchor="middle" font-size="14" font-weight="bold" fill="#0d3d22">M = I ÷ A</text>
+    <text x="74" y="55" text-anchor="middle" font-size="7" fill="#555">M = magnification · I = image size · A = actual size</text>
+    <rect x="4" y="68" width="140" height="62" rx="6" fill="#fff9c4" stroke="#f9a825" stroke-width="1.5"/>
+    <text x="74" y="85" text-anchor="middle" font-weight="bold" fill="#6d4c00" font-size="9">Unit conversions</text>
+    <line x1="11" y1="90" x2="137" y2="90" stroke="#f9a825" stroke-width="1"/>
+    <text x="74" y="104" text-anchor="middle" fill="#444" font-size="8.5">1 cm = 10 000 μm</text>
+    <text x="74" y="117" text-anchor="middle" fill="#444" font-size="8.5">1 mm = 1 000 μm</text>
+    <text x="74" y="130" text-anchor="middle" fill="#444" font-size="8.5">1 μm = 1 000 nm</text>
+    <rect x="4" y="138" width="140" height="55" rx="6" fill="#ddeef8" stroke="#3a9ad9" stroke-width="1.5"/>
+    <text x="74" y="155" text-anchor="middle" font-weight="bold" fill="#0d2e4a" font-size="9">Resolution limits</text>
+    <line x1="11" y1="160" x2="137" y2="160" stroke="#3a9ad9" stroke-width="1"/>
+    <text x="74" y="173" text-anchor="middle" fill="#444" font-size="8">Light microscope:  ~200 nm</text>
+    <text x="74" y="186" text-anchor="middle" fill="#444" font-size="8">Electron microscope:  ~0.1 nm</text>
+    <!-- Microscope illustration (right side) -->
+    <ellipse cx="234" cy="191" rx="30" ry="7" fill="#555" stroke="#333" stroke-width="1"/>
+    <rect x="225" y="162" width="18" height="30" rx="2" fill="#666" stroke="#333" stroke-width="1"/>
+    <rect x="207" y="153" width="54" height="9" rx="3" fill="#777" stroke="#333" stroke-width="1"/>
+    <rect x="215" y="118" width="38" height="38" rx="2" fill="#666" stroke="#333" stroke-width="1"/>
+    <rect x="222" y="105" width="24" height="16" rx="2" fill="#888" stroke="#333" stroke-width="1"/>
+    <rect x="228" y="83" width="12" height="25" rx="2" fill="#aaa" stroke="#333" stroke-width="1"/>
+    <ellipse cx="234" cy="83" rx="9" ry="5" fill="#ccc" stroke="#333" stroke-width="1"/>
+    <line x1="234" y1="118" x2="234" y2="153" stroke="#444" stroke-width="4"/>
+    <ellipse cx="234" cy="154" rx="6" ry="3" fill="#333"/>
+    <rect x="209" y="153" width="50" height="4" rx="1" fill="#b2dfdb" stroke="#00796b" stroke-width="0.8"/>
+  </svg>`
+};
+
+// ── Data ──────────────────────────────────────────────────────────────────
+const specPoints = [
+  // ======================= UNIT 1 =======================
+  {
+    id: "1.1", unit: 1, paper: 1,
+    topic: "Topic 1: Lifestyle, Health and Risk",
+    statement: "Know the structure of triglycerides and phospholipids, including ester bond formation by condensation, and understand their different functions in living organisms",
+    totalMarks: 6, hasDiagram: true,
+    questionSlide: {
+      title: "Lipid Structure & Function",
+      questions: [
+        { ref:"(a)", ao:"AO1", marks:2, stem:"Fig. 1 shows the structure of a triglyceride. (i) Identify the molecule labelled X. (ii) Name the bond formed at each attachment point and state the type of chemical reaction by which it is formed." },
+        { ref:"(b)", ao:"AO1", marks:2, stem:"State two structural differences between a triglyceride and a phospholipid." },
+        { ref:"(c)", ao:"AO2", marks:2, stem:"Explain how the amphipathic nature of a phospholipid molecule suits its role as the main component of the cell surface membrane." }
+      ]
+    },
+    markSchemeSlide: {
+      markScheme: [
+        { ref:"(a)", total:2,
+          points:["(i) Glycerol ✓ (1)","(ii) Ester bond; formed by a condensation reaction ✓ (1)"],
+          notes:["Both 'ester bond' AND 'condensation reaction' needed for 1 mark in (ii)"] },
+        { ref:"(b)", total:2,
+          points:["Phospholipid has a phosphate group replacing one fatty acid chain ✓ (1)","Triglyceride has three fatty acid chains; phospholipid has only two ✓ (1)"],
+          notes:["Accept any two correct structural differences; do not credit functional differences"] },
+        { ref:"(c)", total:2,
+          points:["The phosphate head is hydrophilic (polar) so faces the aqueous environment inside/outside the cell ✓ (1)","The fatty acid tails are hydrophobic (non-polar) so point inward forming the bilayer interior, making the membrane selectively permeable ✓ (1)"],
+          notes:["Must link structural feature to functional consequence for each mark"] }
+      ]
+    }
+  },
+
+  {
+    id: "1.2", unit: 1, paper: 1,
+    topic: "Topic 2: Genes and Health",
+    statement: "Know the structure of amino acids and understand how condensation reactions form peptide bonds, producing polypeptides with primary, secondary, tertiary and quaternary structure",
+    totalMarks: 6, hasDiagram: false,
+    questionSlide: {
+      title: "Amino Acids & Protein Structure",
+      questions: [
+        { ref:"(a)", ao:"AO1", marks:2, stem:"State the four chemical groups attached to the central carbon of all amino acid molecules." },
+        { ref:"(b)", ao:"AO1", marks:2, stem:"Describe what is meant by the secondary structure of a protein. Name the two main types and the bond that stabilises them." },
+        { ref:"(c)", ao:"AO2", marks:1, stem:"Haemoglobin has quaternary structure. State what this means." },
+        { ref:"(d)", ao:"AO3", marks:1, stem:"In sickle cell anaemia, glutamic acid is replaced by valine at one position in the β-globin chain. Suggest how this single amino acid change causes the tertiary structure of the haemoglobin molecule to differ from normal." }
+      ]
+    },
+    markSchemeSlide: {
+      markScheme: [
+        { ref:"(a)", total:2,
+          points:["Amino group (–NH₂) ✓","Carboxyl group (–COOH) ✓","Hydrogen atom (–H) ✓","Variable R group ✓"],
+          notes:["Any two groups correctly named scores 1 mark each; accept chemical formulae"] },
+        { ref:"(b)", total:2,
+          points:["Regular, repeating folding of the polypeptide backbone ✓ (1)","α-helix and β-pleated sheet; stabilised by hydrogen bonds between C=O and N–H groups along the backbone ✓ (1)"],
+          notes:["Must name both types AND the bond for second mark"] },
+        { ref:"(c)", total:1,
+          points:["Quaternary structure = two or more polypeptide chains (subunits) joined together to form the complete, functional protein ✓"],
+          notes:["'Two or more polypeptide chains' is essential; do not accept 'large protein'"] },
+        { ref:"(d)", total:1,
+          points:["Valine is non-polar/hydrophobic whereas glutamic acid is polar/charged; this changes the R-group interactions in that region, causing the chain to fold differently / altering the tertiary structure ✓"],
+          notes:["Must reference the chemical nature of the R groups to score the mark"] }
+      ]
+    }
+  },
+
+  {
+    id: "1.3", unit: 1, paper: 1,
+    topic: "Topic 2: Genes and Health",
+    statement: "Understand the induced fit model of enzyme action and be able to explain the effects of temperature, pH, substrate concentration and inhibitors on enzyme activity",
+    totalMarks: 6, hasDiagram: true,
+    questionSlide: {
+      title: "Enzyme Action & Kinetics",
+      questions: [
+        { ref:"(a)", ao:"AO1", marks:2, stem:"Describe the induced fit model of enzyme action. Explain how an enzyme lowers the activation energy of a reaction." },
+        { ref:"(b)", ao:"AO2", marks:2, stem:"The graph shows the effect of temperature on the rate of an enzyme-controlled reaction. Explain why the rate falls sharply at temperatures above the optimum." },
+        { ref:"(c)", ao:"AO3", marks:2, stem:"A competitive inhibitor is added to an enzyme-catalysed reaction at low substrate concentration. Predict how increasing the substrate concentration would affect the inhibitor's impact on the reaction rate. Justify your answer." }
+      ]
+    },
+    markSchemeSlide: {
+      markScheme: [
+        { ref:"(a)", total:2,
+          points:["The substrate binds to the active site; the enzyme's active site changes shape (induced fit) to fit the substrate precisely, forming an enzyme-substrate complex ✓ (1)","The enzyme holds substrate(s) in the correct orientation / strains chemical bonds in the substrate, lowering the activation energy needed for the reaction ✓ (1)"],
+          notes:["Do not accept 'lock and key' alone — must reference shape change for full credit"] },
+        { ref:"(b)", total:2,
+          points:["At temperatures above the optimum, hydrogen bonds (and other bonds) maintaining the tertiary structure of the enzyme break ✓ (1)","The active site changes shape permanently (enzyme is denatured); substrate can no longer bind / form enzyme-substrate complex ✓ (1)"],
+          notes:["Do not accept 'enzymes are killed'; do not accept denaturation explanation for temperatures below optimum"] },
+        { ref:"(c)", total:2,
+          points:["Increasing substrate concentration reduces the inhibitor's effect / rate increases towards the uninhibited maximum ✓ (1)","Because substrate and inhibitor compete for the same active site; as [substrate] increases, substrate is more likely to occupy the active site than the inhibitor ✓ (1)"],
+          notes:["Both prediction AND justification required for full marks"] }
+      ]
+    }
+  },
+
+  {
+    id: "1.4", unit: 1, paper: 1,
+    topic: "Topic 1: Lifestyle, Health and Risk",
+    statement: "Understand the risk factors associated with cardiovascular disease (CVD) and describe the sequence of events leading from endothelial damage to thrombosis",
+    totalMarks: 5, hasDiagram: false,
+    questionSlide: {
+      title: "CVD Risk Factors & Atheroma Formation",
+      questions: [
+        { ref:"(a)", ao:"AO1", marks:2, stem:"State one modifiable and one non-modifiable risk factor for cardiovascular disease. For each, briefly explain how it contributes to CVD risk." },
+        { ref:"(b)", ao:"AO2", marks:2, stem:"Describe the sequence of events from damage to the arterial endothelium to the formation of an atheroma (fibrous plaque)." },
+        { ref:"(c)", ao:"AO3", marks:1, stem:"Studies show a positive correlation between dietary saturated fat intake and CVD incidence. Explain why this correlation does not prove that saturated fat causes CVD." }
+      ]
+    },
+    markSchemeSlide: {
+      markScheme: [
+        { ref:"(a)", total:2,
+          points:["Modifiable: e.g. smoking — nicotine raises blood pressure / CO reduces O₂-carrying capacity / chemicals damage endothelium ✓ (1) OR high-fat diet / inactivity / obesity — raises LDL cholesterol / raises BP ✓ (1)","Non-modifiable: e.g. age — arteries become less elastic, plaque accumulates over time ✓ (1) OR genetics / family history — inherited tendency towards high LDL or hypertension ✓ (1)"],
+          notes:["One modifiable + one non-modifiable required; accept other valid examples with correct mechanisms"] },
+        { ref:"(b)", total:2,
+          points:["Endothelium is damaged (e.g. by high BP, smoking chemicals) → inflammatory response; white blood cells and lipids (LDL) accumulate beneath the endothelium ✓ (1)","Cholesterol/foam cells form a fatty streak; smooth muscle cells migrate in; fibrous cap forms over the lipid core → atheroma (plaque) narrows the artery lumen ✓ (1)"],
+          notes:["Award 1 for early stages (damage → lipid accumulation) and 1 for plaque development; full sequence not required for each mark"] },
+        { ref:"(c)", total:1,
+          points:["Correlation does not establish causation — a third (confounding) variable may explain both (e.g. people who eat high saturated fat may also be less active / smoke more) ✓"],
+          notes:["Accept: the relationship may be coincidental; a randomised controlled trial would be needed to establish causation"] }
+      ]
+    }
+  },
+
+  {
+    id: "1.5", unit: 1, paper: 1,
+    topic: "Topic 1: Lifestyle, Health and Risk",
+    statement: "Know the structure and function of the heart and understand the events of the cardiac cycle, including the roles of valves and the control of heart rate",
+    totalMarks: 6, hasDiagram: false,
+    questionSlide: {
+      title: "The Heart & Cardiac Cycle",
+      questions: [
+        { ref:"(a)", ao:"AO1", marks:3, stem:"Describe the events of the cardiac cycle. In your answer, state what happens to the AV (atrioventricular) valves and the semi-lunar valves during (i) atrial systole, (ii) ventricular systole, and (iii) diastole." },
+        { ref:"(b)", ao:"AO2", marks:2, stem:"Explain why the wall of the left ventricle is thicker than the wall of the right ventricle, even though both ventricles contract at the same time and eject the same volume of blood." },
+        { ref:"(c)", ao:"AO3", marks:1, stem:"A patient has a defective mitral (bicuspid) valve that fails to close fully during ventricular systole. Predict the consequence for blood circulation and explain your reasoning." }
+      ]
+    },
+    markSchemeSlide: {
+      markScheme: [
+        { ref:"(a)", total:3,
+          points:["(i) Atrial systole: atria contract, pressure rises in atria; AV valves open (blood flows into ventricles); semi-lunar valves closed ✓ (1)","(ii) Ventricular systole: ventricles contract, pressure rises above atria; AV valves close (preventing backflow); semi-lunar valves open; blood ejected into aorta/pulmonary artery ✓ (1)","(iii) Diastole: all chambers relax; AV valves open as atria refill from veins; semi-lunar valves closed (back-pressure from arteries) ✓ (1)"],
+          notes:["1 mark per phase; must mention at least one valve state for each phase"] },
+        { ref:"(b)", total:2,
+          points:["The left ventricle pumps blood around the entire systemic circulation (whole body), which requires much higher pressure than the pulmonary circulation ✓ (1)","A thicker muscular wall generates greater force of contraction, producing the higher pressure needed to drive blood through the longer, higher-resistance systemic circuit ✓ (1)"],
+          notes:["Must distinguish systemic vs pulmonary resistance/distance for full marks"] },
+        { ref:"(c)", total:1,
+          points:["Blood would flow back from the left ventricle into the left atrium during ventricular systole (regurgitation) ✓; less blood would be ejected into the aorta, reducing cardiac output and blood pressure in the systemic circulation ✓"],
+          notes:["Award 1 for consequence + mechanism; either alone scores 0"] }
+      ]
+    }
+  },
+
+  // ======================= UNIT 2 =======================
+  {
+    id: "2.1", unit: 2, paper: 2,
+    topic: "Topic 3: Voice of the Genome",
+    statement: "Know the ultrastructure of eukaryotic cells as seen under an electron microscope, including the structure and function of organelles",
+    totalMarks: 6, hasDiagram: false,
+    questionSlide: {
+      title: "Eukaryotic Cell Ultrastructure",
+      questions: [
+        { ref:"(a)", ao:"AO1", marks:4, stem:"Name the organelle responsible for each function: (i) site of aerobic respiration / ATP synthesis; (ii) synthesis of proteins on its surface and transport of these proteins; (iii) modification, sorting and packaging of proteins for secretion; (iv) contains hydrolytic enzymes for digestion of old organelles and foreign material." },
+        { ref:"(b)", ao:"AO2", marks:2, stem:"A goblet cell secretes large quantities of mucus glycoprotein. Describe the route taken by the glycoprotein from synthesis to release at the cell surface, naming the organelles in order." }
+      ]
+    },
+    markSchemeSlide: {
+      markScheme: [
+        { ref:"(a)", total:4,
+          points:["(i) Mitochondrion ✓","(ii) Rough endoplasmic reticulum (RER) ✓","(iii) Golgi apparatus (Golgi body) ✓","(iv) Lysosome ✓"],
+          notes:["1 mark each; accept full names or clear abbreviations; do not accept 'smooth ER' for (ii)"] },
+        { ref:"(b)", total:2,
+          points:["Ribosomes (on RER) → rough endoplasmic reticulum (protein synthesised and enters RER lumen for folding) → Golgi apparatus (modification, e.g. glycosylation; packaged into vesicles) → vesicles fuse with cell surface membrane → exocytosis ✓ (1 mark for correct order of ribosomes/RER and Golgi; 1 mark for exocytosis/vesicle fusion)"],
+          notes:["Must include Golgi and exocytosis; RER alone without Golgi = max 1; do not penalise if mitochondria mentioned as energy source"] }
+      ]
+    }
+  },
+
+  {
+    id: "2.2", unit: 2, paper: 2,
+    topic: "Topic 3: Voice of the Genome",
+    statement: "Know the structure of prokaryotic cells and be able to compare prokaryotic and eukaryotic cells, identifying key similarities and differences",
+    totalMarks: 5, hasDiagram: false,
+    questionSlide: {
+      title: "Prokaryotic vs Eukaryotic Cells",
+      questions: [
+        { ref:"(a)", ao:"AO1", marks:3, stem:"State three structural features present in a prokaryotic cell that are absent in a eukaryotic animal cell." },
+        { ref:"(b)", ao:"AO2", marks:2, stem:"Many antibiotics work by binding to 70S ribosomes and blocking protein synthesis. Explain why these antibiotics can be used to treat bacterial infections without causing significant harm to human cells." }
+      ]
+    },
+    markSchemeSlide: {
+      markScheme: [
+        { ref:"(a)", total:3,
+          points:["Cell wall made of peptidoglycan (murein) ✓","Circular DNA / DNA not associated with histone proteins / DNA not enclosed in a membrane-bound nucleus ✓","70S (smaller) ribosomes ✓","Plasmids ✓","Capsule (slime layer) ✓","Pili (fimbriae) ✓","Flagella with different structure to eukaryotic flagella ✓","Mesosomes ✓"],
+          notes:["Any three from above; 1 mark each; do not accept 'no nucleus' alone — must specify 'no membrane-bound nucleus'"] },
+        { ref:"(b)", total:2,
+          points:["Human (eukaryotic) cells contain 80S ribosomes, which are structurally different from the 70S ribosomes in bacteria ✓ (1)","The antibiotic binds specifically to the 70S ribosome only, so does not inhibit the 80S ribosomes in human cells, leaving human protein synthesis unaffected ✓ (1)"],
+          notes:["Must contrast 70S (prokaryote) with 80S (eukaryote) for full marks; 'different ribosomes' without specifying sizes = max 1"] }
+      ]
+    }
+  },
+
+  {
+    id: "2.3", unit: 2, paper: 2,
+    topic: "Topic 3: Voice of the Genome",
+    statement: "Understand the stages of mitosis and cytokinesis and explain the significance of mitosis in growth, repair and asexual reproduction",
+    totalMarks: 6, hasDiagram: true,
+    questionSlide: {
+      title: "Mitosis & Cell Division",
+      questions: [
+        { ref:"(a)", ao:"AO1", marks:4, stem:"The diagram shows four stages of mitosis. For each stage labelled Prophase, Metaphase, Anaphase and Telophase, give one key event involving the chromosomes or spindle fibres." },
+        { ref:"(b)", ao:"AO2", marks:1, stem:"A cell containing 46 chromosomes undergoes mitosis. State the number of chromosomes in each daughter cell produced and explain why." },
+        { ref:"(c)", ao:"AO3", marks:1, stem:"Colchicine is a drug that prevents spindle fibre formation. Predict what would happen to a cell treated with colchicine at the start of mitosis and explain why." }
+      ]
+    },
+    markSchemeSlide: {
+      markScheme: [
+        { ref:"(a)", total:4,
+          points:["Prophase: chromosomes condense / become visible; nuclear envelope breaks down; spindle begins to form ✓ (1)","Metaphase: chromosomes align at the cell equator / metaphase plate; spindle fibres attach to centromeres ✓ (1)","Anaphase: sister chromatids are pulled to opposite poles by shortening spindle fibres / centromeres split ✓ (1)","Telophase: chromatids reach poles; nuclear envelope reforms around each set; chromosomes decondense; cytokinesis may begin ✓ (1)"],
+          notes:["1 mark per stage; accept any one valid key event per stage"] },
+        { ref:"(b)", total:1,
+          points:["46 chromosomes ✓; because mitosis is preceded by DNA replication and produces genetically identical cells — each daughter cell receives a complete copy of all chromosomes ✓"],
+          notes:["Number alone = 0; must include reason; accept 'same number as parent cell'"] },
+        { ref:"(c)", total:1,
+          points:["The cell would not be able to separate the chromatids to opposite poles; the cell would become polyploid / have double the number of chromosomes (92) as chromatids cannot be pulled apart ✓"],
+          notes:["Must explain mechanism (spindle failure → no separation) for the mark"] }
+      ]
+    }
+  },
+
+  {
+    id: "2.4", unit: 2, paper: 2,
+    topic: "Topic 4: Biodiversity and Natural Resources",
+    statement: "Understand how biodiversity can be measured using species richness and abundance, including the use of Simpson's Diversity Index (D = 1 – Σ(n/N)²), and appreciate the value of biodiversity",
+    totalMarks: 6, hasDiagram: false,
+    questionSlide: {
+      title: "Biodiversity & Simpson's Index",
+      questions: [
+        { ref:"(a)", ao:"AO1", marks:1, stem:"Explain what is meant by the term 'biodiversity'. Your answer should refer to more than one component of biodiversity." },
+        { ref:"(b)", ao:"AO2", marks:3, stem:"A survey of ground-dwelling invertebrates in a meadow gave the following results. Use Simpson's Diversity Index (D = 1 – Σ(n/N)²) to calculate D for this meadow. Show all your working.",
+          table: { headers:["Species","Number found (n)"], rows:[["Earthworm","24"],["Ground beetle","18"],["Woodlouse","10"],["Centipede","6"],["Slug","2"],["Total (N)","60"]] } },
+        { ref:"(c)", ao:"AO3", marks:2, stem:"A second meadow, sampled with the same method, gives a Simpson's Index of D = 0.28. Compare the biodiversity of the two meadows and suggest two reasons why one meadow might have a lower D value than the other." }
+      ]
+    },
+    markSchemeSlide: {
+      markScheme: [
+        { ref:"(a)", total:1,
+          points:["Biodiversity includes: the number of different species in an area (species richness) AND the relative abundance of individuals of each species (species evenness) ✓"],
+          notes:["Both components needed for 1 mark; do not accept species richness alone"] },
+        { ref:"(b)", total:3,
+          points:["Σ(n/N)² = (24/60)² + (18/60)² + (10/60)² + (6/60)² + (2/60)² ✓ (1 — correct setup)","= 0.16 + 0.09 + 0.0278 + 0.01 + 0.00111 = 0.2889 ✓ (1 — correct calculation, allow ±0.01)","D = 1 – 0.289 = 0.711 ✓ (1 — correct final answer, allow ±0.01)"],
+          notes:["Accept D = 0.71 ± 0.01; award ECF from correct method with arithmetical error; must show working for marks 1 and 2"] },
+        { ref:"(c)", total:2,
+          points:["The meadow calculated above (D ≈ 0.71) has substantially higher biodiversity than the second meadow (D = 0.28) — a higher D value indicates greater evenness and/or more species ✓ (1)","Reasons for lower D: over-dominance by one or few species (low evenness); fewer species present; habitat degradation / agricultural intensification / pesticide use / invasive species reducing diversity ✓ (1 — any two valid reasons)"],
+          notes:["Must compare values to score comparison mark; accept any two ecologically valid reasons"] }
+      ]
+    }
+  },
+
+  // ======================= UNIT 1 (continued) =======================
+  {
+    id: "1.6", unit: 1, paper: 1,
+    topic: "Topic 2: Genes and Health",
+    statement: "Understand the process of semi-conservative DNA replication, including the roles of helicase, DNA polymerase and DNA ligase, and the evidence from the Meselson–Stahl experiment",
+    totalMarks: 6, hasDiagram: false,
+    questionSlide: {
+      title: "DNA Replication",
+      questions: [
+        { ref:"(a)", ao:"AO1", marks:3, stem:"Describe the process of semi-conservative DNA replication. State the specific role of: (i) helicase; (ii) DNA polymerase; (iii) DNA ligase." },
+        { ref:"(b)", ao:"AO1", marks:1, stem:"Explain what is meant by the term ‘semi-conservative’ in the context of DNA replication." },
+        { ref:"(c)", ao:"AO3", marks:2, stem:"Meselson and Stahl grew bacteria in heavy (¹⁵N) medium then transferred them to normal (¹⁴N) medium. After one round of replication all DNA was intermediate density; after two rounds, 50% was intermediate and 50% was light. Explain how these results support semi-conservative replication and rule out the conservative model." }
+      ]
+    },
+    markSchemeSlide: {
+      markScheme: [
+        { ref:"(a)", total:3,
+          points:["(i) Helicase unwinds the double helix and breaks hydrogen bonds between complementary base pairs, separating the two template strands ✓ (1)","(ii) DNA polymerase adds free deoxyribonucleoside triphosphates to the 3’ end of the growing strand, following complementary base pairing (A–T, G–C); synthesises new strand in the 5’→3’ direction ✓ (1)","(iii) DNA ligase joins adjacent Okazaki fragments on the lagging strand by sealing nicks in the sugar–phosphate backbone ✓ (1)"],
+          notes:["1 mark per enzyme role; strand direction not required for (ii); 'joins fragments on lagging strand' acceptable for (iii)"] },
+        { ref:"(b)", total:1,
+          points:["Each daughter DNA molecule retains one original (parental) strand; the other strand is newly synthesised — each molecule is therefore half old, half new ✓"],
+          notes:["'Two new strands form' alone = 0; must reference retention of one parental strand per daughter molecule"] },
+        { ref:"(c)", total:2,
+          points:["Round 1 — all molecules have one ¹⁵N strand and one ¹⁴N strand → intermediate density for all; consistent with semi-conservative (each daughter inherits one parental strand) ✓ (1); conservative replication would produce some fully heavy molecules after round 1 — none were observed, ruling it out","Round 2 — the ¹⁵N template strands each produce one intermediate molecule; the ¹⁴N strands each produce one light molecule → 50% intermediate, 50% light, matching the result ✓ (1)"],
+          notes:["1 mark per round; must state what conservative model would predict to 'rule it out' for full marks on mark 1"] }
+      ]
+    }
+  },
+
+  // ======================= UNIT 2 (continued) =======================
+  {
+    id: "2.5", unit: 2, paper: 2,
+    topic: "Topic 3: Voice of the Genome",
+    statement: "Understand how meiosis produces haploid gametes from diploid cells and generates genetic variation through independent assortment of homologous chromosomes and crossing over during prophase I",
+    totalMarks: 6, hasDiagram: false,
+    questionSlide: {
+      title: "Meiosis & Genetic Variation",
+      questions: [
+        { ref:"(a)", ao:"AO1", marks:2, stem:"State two mechanisms by which meiosis generates genetic variation. For each, name the stage of meiosis at which it occurs." },
+        { ref:"(b)", ao:"AO1", marks:2, stem:"State two differences between the daughter cells produced by mitosis and those produced by meiosis." },
+        { ref:"(c)", ao:"AO2", marks:2, stem:"A diploid organism has 2n = 6 (three pairs of homologous chromosomes). (i) Use the formula 2ⁿ to calculate the number of genetically different gametes possible through independent assortment alone. Show your working. (ii) Explain why the actual number of unique gametes is greater than this value." }
+      ]
+    },
+    markSchemeSlide: {
+      markScheme: [
+        { ref:"(a)", total:2,
+          points:["Crossing over (recombination): non-sister chromatids exchange segments at chiasmata; occurs during prophase I ✓ (1)","Independent assortment: homologous pairs orientate randomly at the equator; each gamete receives a random mix of maternal and paternal chromosomes; occurs during metaphase I ✓ (1)"],
+          notes:["Must name the stage for each mark; mechanism without stage = max 1 for that point; accept 'meiosis I' if the correct sub-stage is not specified"] },
+        { ref:"(b)", total:2,
+          points:["Mitosis produces 2 daughter cells; meiosis produces 4 ✓ (1)","Mitosis produces diploid (2n) cells genetically identical to each other and the parent; meiosis produces haploid (n) cells that are genetically different ✓ (1)","Meiosis involves two divisions (meiosis I and II); mitosis involves one ✓","Pairing of homologous chromosomes (synapsis / bivalent formation) occurs only in meiosis ✓"],
+          notes:["Any two distinct differences; 1 mark each; must contrast both processes, not just describe one"] },
+        { ref:"(c)", total:2,
+          points:["(i) n = 3; 2³ = 8 different gamete types ✓ (1 — must show working)","(ii) Crossing over during prophase I creates new allele combinations within individual chromosomes (recombinant chromosomes), producing variation beyond what whole-chromosome assortment alone can generate ✓ (1)"],
+          notes:["(i): answer without showing n = 3 and calculation = 0; (ii): must specifically reference crossing over producing new intra-chromosomal allele combinations"] }
+      ]
+    }
+  },
+
+  // ======================= UNIT 3 (Paper 3 — Practical Skills) =======================
+  {
+    id: "3.1", unit: 3, paper: 3,
+    topic: "Unit 3: Practical Skills in Biology I",
+    statement: "Be able to use a light microscope to observe and draw biological specimens, calculate magnification and actual size using M = I ÷ A (with correct unit conversions), and compare the resolution of light and electron microscopes",
+    totalMarks: 6, hasDiagram: true,
+    questionSlide: {
+      title: "Microscopy & Magnification",
+      questions: [
+        { ref:"(a)", ao:"AO1", marks:1, stem:"State the formula used to calculate the magnification of a drawing or micrograph, given the image size and the actual size of the specimen." },
+        { ref:"(b)", ao:"AO2", marks:3, stem:"A student draws a cheek cell under a microscope. The diameter of the drawing is 3.0 cm and the magnification used is ×400. (i) Calculate the actual diameter of the cheek cell in micrometres (µm). Show all working, including unit conversions. (ii) A textbook states the average cheek cell is 60 µm in diameter. Calculate the student’s percentage error." },
+        { ref:"(c)", ao:"AO3", marks:2, stem:"A researcher wants to study the detailed internal membrane structure of a mitochondrion. Explain why a transmission electron microscope (TEM) is more suitable than a light microscope for this purpose." }
+      ]
+    },
+    markSchemeSlide: {
+      markScheme: [
+        { ref:"(a)", total:1,
+          points:["Magnification (M) = Image size (I) ÷ Actual size (A) ✓"],
+          notes:["Accept M = I/A; all three terms or the relationship must be clear"] },
+        { ref:"(b)", total:3,
+          points:["(i) Rearrange: A = I ÷ M; convert image: 3.0 cm = 30 000 µm ✓ (1 for correct unit conversion shown)","Actual size = 30 000 ÷ 400 = 75 µm ✓ (1)","(ii) % error = |75 − 60| ÷ 60 × 100 = 15 ÷ 60 × 100 = 25% ✓ (1)"],
+          notes:["(i): unit conversion step must be shown for the mark; (ii): ECF from (i) if method is correct; accept 'percentage error = 25%' without working if (i) answer is 75 µm"] },
+        { ref:"(c)", total:2,
+          points:["The TEM has far greater resolving power than the light microscope (TEM ∼0.1 nm vs ∼200 nm for light) ✓ (1)","The internal membranes of mitochondria (cristae) are smaller than the resolution limit of the light microscope and cannot be distinguished; electrons have a much shorter wavelength than visible light, allowing the TEM to resolve these structures ✓ (1)"],
+          notes:["Must use 'resolution' or 'resolving power' (not just 'magnification') for at least 1 mark; approximate values helpful but not required"] }
+      ]
+    }
+  }
+];
+
+// ── State ─────────────────────────────────────────────────────────────────
+let current = 0;
+const done = new Set();
+
+// ── Helpers ───────────────────────────────────────────────────────────────
+function isNote(line) {
+  return /^(NOTE|Do not|Accept|Allow|Award|Must|Any |Both|Either|E\.g\.|Number alone|approx|ecf|mark\s+alone)/i.test(line.trim());
+}
+function cleanPoint(pt) {
+  return pt.replace(/\s*✓\s*\(\d+\)/g, '').replace(/\s*✓/g, '').trim();
+}
+function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function unitClass(u) { return 'u' + u; }
+
+// ── Render question face ──────────────────────────────────────────────────
+function buildQuestion(sp) {
+  const qs = sp.questionSlide;
+  const uc = unitClass(sp.unit);
+  let qsHTML = '';
+  for (const q of qs.questions) {
+    let tableHTML = '';
+    if (q.table) {
+      const th = q.table.headers.map(h=>`<th>${esc(h)}</th>`).join('');
+      const trs = q.table.rows.map(r=>'<tr>'+r.map(c=>`<td>${esc(c)}</td>`).join('')+'</tr>').join('');
+      tableHTML = `<div class="data-table-wrap"><table class="data-table"><thead><tr>${th}</tr></thead><tbody>${trs}</tbody></table></div>`;
+    }
+    qsHTML += `
+      <div class="q-item">
+        <div class="q-ref">${esc(q.ref)}</div>
+        <div class="q-content">
+          <div class="q-stem">${esc(q.stem)}</div>
+          ${tableHTML}
+          <div class="q-meta">
+            <span class="marks-pill">[${q.marks}]</span>
+            <span class="ao-pill">${esc(q.ao)}</span>
+          </div>
+        </div>
+      </div>`;
+  }
+  const diagHTML = sp.hasDiagram ? `
+    <div class="diagram-col">
+      <div class="diagram-box">
+        ${diagrams[sp.id] || ''}
+        <div class="diagram-caption">Fig. 1 — refer to diagram when answering</div>
+      </div>
+    </div>` : '';
+  return `
+    <div class="q-header ${uc}">
+      <span class="unit-badge ${uc}">Unit ${sp.unit} · P${sp.paper}</span>
+      <span class="spec-badge">${esc(sp.id)}</span>
+      <span class="q-header-title">${esc(qs.title)}</span>
+      <span class="marks-badge">${sp.totalMarks} marks</span>
+    </div>
+    <div class="spec-stmt ${uc}"><strong>Spec ${esc(sp.id)}:</strong> ${esc(sp.statement)}</div>
+    <div class="q-body">
+      <div class="questions-col">${qsHTML}</div>
+      ${diagHTML}
+    </div>`;
+}
+
+// ── Render mark scheme face ───────────────────────────────────────────────
+function buildMarkScheme(sp) {
+  const ms = sp.markSchemeSlide;
+  const uc = unitClass(sp.unit);
+  const numQ = ms.markScheme.length;
+  const singleCol = numQ <= 2;
+  let itemsHTML = '';
+  for (const item of ms.markScheme) {
+    const pureAnswers = item.points.filter(p => !isNote(p));
+    const pureNotes = item.points.filter(p => isNote(p));
+    const allNotes = [...pureNotes, ...(item.notes || [])];
+    const pointsHTML = pureAnswers.map(pt => {
+      const hasCheck = pt.includes('✓');
+      const cleaned = cleanPoint(pt);
+      return `<div class="ms-point">${hasCheck ? '<span class="ms-tick">✓</span>' : '<span class="ms-tick" style="opacity:0">·</span>'}<span>${esc(cleaned)}</span></div>`;
+    }).join('');
+    const notesHTML = allNotes.map(n => `<div class="ms-note">${esc(n)}</div>`).join('');
+    itemsHTML += `
+      <div class="ms-item">
+        <div class="ms-item-hdr">
+          <span class="ms-ref">${esc(item.ref)}</span>
+          <span class="ms-total">[${item.total} mark${item.total > 1 ? 's' : ''}]</span>
+        </div>
+        <div class="ms-points">${pointsHTML}${notesHTML}</div>
+      </div>`;
+  }
+  return `
+    <div class="ms-header ${uc}">
+      <span class="unit-badge ${uc}">Unit ${sp.unit} · P${sp.paper}</span>
+      <span class="ms-badge">✓ Mark Scheme</span>
+      <span class="ms-header-title">${esc(sp.id)} — ${esc(sp.questionSlide.title)}</span>
+    </div>
+    <div class="spec-stmt ${uc}"><strong>Spec ${esc(sp.id)}:</strong> ${esc(sp.statement)}</div>
+    <div class="ms-body ${singleCol ? 'cols-1' : ''}">
+      ${itemsHTML}
+    </div>`;
+}
+
+// ── Nav dots ─────────────────────────────────────────────────────────────
+function renderNav() {
+  document.getElementById('specNav').innerHTML = specPoints.map((sp, i) => {
+    const cls = i === current ? 'active' : done.has(i) ? 'done' : '';
+    return `<div class="spec-dot ${cls}" data-unit="${sp.unit}" onclick="goTo(${i})" title="Spec ${sp.id}: ${sp.questionSlide.title}">${sp.id}</div>`;
+  }).join('');
+}
+
+// ── Main render ───────────────────────────────────────────────────────────
+function render() {
+  const sp = specPoints[current];
+  document.getElementById('cardScene').classList.remove('revealed');
+  document.getElementById('progressPill').textContent = `Card ${current + 1} of ${specPoints.length}`;
+  document.getElementById('progressFill').style.width = `${(current + 1) / specPoints.length * 100}%`;
+  document.getElementById('hintText').textContent = 'Answer the questions, then tap "Reveal Answers"';
+  document.getElementById('btnReveal').disabled = false;
+  document.getElementById('btnReveal').textContent = 'Reveal Answers ✓';
+  document.getElementById('btnNext').disabled = true;
+  document.getElementById('btnPrev').disabled = current === 0;
+  document.getElementById('completeBanner').classList.remove('show');
+  document.getElementById('qFace').innerHTML  = buildQuestion(sp);
+  document.getElementById('msFace').innerHTML = buildMarkScheme(sp);
+  renderNav();
+}
+
+// ── Actions ───────────────────────────────────────────────────────────────
+function revealAnswers() {
+  const scene = document.getElementById('cardScene');
+  const btn = document.getElementById('btnReveal');
+  if (scene.classList.contains('revealed')) {
+    scene.classList.remove('revealed');
+    btn.textContent = 'Reveal Answers ✓';
+    document.getElementById('hintText').textContent = 'Answer the questions, then tap "Reveal Answers"';
+  } else {
+    scene.classList.add('revealed');
+    btn.textContent = 'Hide Answers ↩';
+    document.getElementById('btnNext').disabled = (current === specPoints.length - 1);
+    document.getElementById('hintText').textContent = 'Check your answers carefully, then move on';
+    done.add(current);
+    renderNav();
+  }
+}
+function navigate(dir) {
+  const next = current + dir;
+  if (next >= 0 && next < specPoints.length) {
+    current = next;
+    render();
+  } else if (dir === 1 && current === specPoints.length - 1) {
+    document.getElementById('completeBanner').classList.add('show');
+    document.getElementById('hintText').textContent = '';
+  }
+}
+function goTo(idx) { current = idx; render(); }
+
+// ── Init ──────────────────────────────────────────────────────────────────
+render();
+</script>
+</body>
+</html>
