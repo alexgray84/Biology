@@ -3,137 +3,619 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Unit 2: Cells, Development, Biodiversity and Conservation</title>
+    <title>Unit 2: Cells, Development, Biodiversity and Conservation | IAL Biology</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --bg: #FAF7F2;
+            --bg-warm: #F3EDE3;
+            --card: #FFFFFF;
+            --green-dark: #2D5016;
+            --green-mid: #4A7C2F;
+            --green-light: #7AAD52;
+            --green-pale: #E0EBD0;
+            --green-ultra: #F0F5E8;
+            --amber: #C17D2A;
+            --amber-pale: #FDF3E3;
+            --blue: #2E6BA8;
+            --blue-pale: #E8F0F8;
+            --purple: #7B4B94;
+            --purple-pale: #F0E8F5;
+            --text: #2C2C2C;
+            --text-mid: #4A4A4A;
+            --text-light: #7A7A7A;
+            --border: #D8D0C4;
+            --shadow: 0 2px 12px rgba(45,80,22,0.08);
+            --shadow-hover: 0 6px 24px rgba(45,80,22,0.15);
+            --radius: 10px;
+            --nav-h: 64px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        html, body { overflow-x: hidden; }
         body {
-            font-family: 'Segoe UI', system-ui, sans-serif;
-            background: linear-gradient(135deg, #E8F5E9 0%, #E3F2FD 100%);
+            font-family: 'Lato', sans-serif;
+            background: var(--bg);
+            color: var(--text);
             min-height: 100vh;
+            padding-top: var(--nav-h);
+            padding-bottom: 60px;
             line-height: 1.6;
         }
-        .container { max-width: 1100px; margin: 0 auto; padding: 40px 20px; }
-        .columns { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px; }
-        @media (max-width: 900px) { .columns { grid-template-columns: 1fr; } }
-        
-        header {
-            background: linear-gradient(135deg, #2E7D32 0%, #1B5E20 100%);
-            color: white;
-            padding: 30px;
-            border-radius: 20px;
-            margin-bottom: 30px;
+
+        .hidden { display: none !important; }
+
+        nav {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            height: var(--nav-h);
+            background: rgba(250,247,242,0.94);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border);
+            z-index: 100;
         }
-        .back-link { color: rgba(255,255,255,0.8); text-decoration: none; font-size: 0.9rem; }
-        .back-link:hover { color: white; }
-        h1 { font-size: 1.8rem; margin: 15px 0 10px 0; }
-        .subtitle { opacity: 0.9; }
-        
-        .lessons-section {
-            background: white;
-            border-radius: 20px;
-            padding: 30px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        .nav-inner {
+            max-width: 1400px;
+            margin: 0 auto;
+            height: 100%;
+            padding: 0 24px;
+            display: flex;
+            align-items: center;
+            gap: 18px;
         }
-        .lessons-section h2 {
-            color: #2E7D32;
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid #E8F5E9;
+        .nav-brand {
+            font-family: 'Fraunces', serif;
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: var(--green-dark);
+            white-space: nowrap;
         }
-        
-        /* LESSON LIST - Just add <li><a href="filename.html">Lesson Name</a></li> */
-        .lesson-list {
-            list-style: none;
+        .nav-brand span {
+            font-family: 'Lato', sans-serif;
+            font-weight: 400;
+            color: var(--text-light);
+            font-size: 0.85rem;
+            margin-left: 6px;
         }
-        .lesson-list li {
+        .nav-back {
+            font-size: 0.85rem;
+            color: var(--text-mid);
+            text-decoration: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            white-space: nowrap;
+            transition: background 0.15s, color 0.15s;
+        }
+        .nav-back:hover { background: var(--bg-warm); color: var(--green-dark); }
+        .nav-divider {
+            width: 1px;
+            height: 26px;
+            background: var(--border);
+        }
+        .nav-jumps {
+            display: flex;
+            gap: 2px;
+            flex: 1;
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+        .nav-jumps::-webkit-scrollbar { display: none; }
+        .nav-jump {
+            padding: 6px 12px;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            border-radius: 6px;
+            font-family: 'Lato', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--text-mid);
+            white-space: nowrap;
+            text-decoration: none;
+            transition: background 0.15s, color 0.15s;
+        }
+        .nav-jump:hover { background: var(--bg-warm); color: var(--green-dark); }
+        .nav-jump:focus-visible { outline: 2px solid var(--green-mid); outline-offset: 2px; }
+
+        .container { max-width: 1100px; margin: 0 auto; padding: 36px 24px 60px; }
+
+        header.hero { margin-bottom: 28px; }
+        .hero-tag {
+            display: inline-block;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--green-mid);
             margin-bottom: 10px;
         }
-        .lesson-list a {
-            display: block;
-            padding: 15px 20px;
-            background: linear-gradient(135deg, #f8fdf8 0%, #f0f8ff 100%);
-            border: 1px solid #e0e0e0;
-            border-radius: 10px;
-            color: #1565C0;
+        .hero h1 {
+            font-family: 'Fraunces', serif;
+            font-size: 2.4rem;
+            font-weight: 600;
+            color: var(--green-dark);
+            letter-spacing: -0.02em;
+            line-height: 1.15;
+            margin-bottom: 10px;
+        }
+        .hero-meta {
+            color: var(--text-mid);
+            font-size: 1rem;
+        }
+        .hero-meta strong { color: var(--text); font-weight: 700; }
+
+        .search-bar {
+            margin: 24px 0 32px;
+            position: relative;
+            max-width: 540px;
+        }
+        .search-bar input {
+            width: 100%;
+            padding: 13px 18px 13px 44px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            background: var(--card);
+            font-family: 'Lato', sans-serif;
+            font-size: 15px;
+            color: var(--text);
+            box-shadow: var(--shadow);
+            transition: border-color 0.15s, box-shadow 0.15s;
+        }
+        .search-bar input::placeholder { color: var(--text-light); }
+        .search-bar input:focus {
+            outline: none;
+            border-color: var(--green-mid);
+            box-shadow: 0 0 0 3px rgba(74,124,47,0.18);
+        }
+        .search-bar svg {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-light);
+            pointer-events: none;
+        }
+
+        .topic {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 26px 28px;
+            margin-bottom: 18px;
+            box-shadow: var(--shadow);
+            scroll-margin-top: calc(var(--nav-h) + 16px);
+        }
+        .topic-header {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border);
+        }
+        .topic-code {
+            display: inline-block;
+            font-size: 0.78rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            color: var(--green-mid);
+            text-transform: uppercase;
+            margin-right: 10px;
+        }
+        .topic-title {
+            font-family: 'Fraunces', serif;
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: var(--green-dark);
+            display: inline;
+        }
+        .topic-count {
+            font-size: 0.78rem;
+            color: var(--text-light);
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+        }
+
+        .lesson-list { list-style: none; }
+        .lesson-row {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 12px 14px;
+            border-radius: 8px;
             text-decoration: none;
-            transition: all 0.3s ease;
+            color: inherit;
+            transition: background 0.15s ease, transform 0.15s ease;
         }
-        .lesson-list a:hover {
-            transform: translateX(10px);
-            border-color: #4CAF50;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        .lesson-row + .lesson-row { margin-top: 4px; }
+        .lesson-row:hover {
+            background: var(--green-ultra);
+            transform: translateX(4px);
         }
-        .lesson-list a::before {
-            content: "📄 ";
+        .lesson-row:focus-visible {
+            outline: 2px solid var(--green-mid);
+            outline-offset: 2px;
         }
-        
-        .empty-message {
-            color: #999;
-            font-style: italic;
-            padding: 20px;
+        .lesson-num {
+            flex-shrink: 0;
+            width: 38px;
+            height: 38px;
+            border-radius: 8px;
+            background: var(--green-pale);
+            color: var(--green-dark);
+            font-size: 0.85rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .lesson-row.is-review .lesson-num { background: var(--amber-pale); color: var(--amber); }
+        .lesson-row.is-practical .lesson-num { background: var(--blue-pale); color: var(--blue); }
+        .lesson-row.is-exam .lesson-num { background: var(--purple-pale); color: var(--purple); }
+
+        .lesson-body {
+            flex: 1;
+            min-width: 0;
+        }
+        .lesson-title {
+            font-family: 'Fraunces', serif;
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: var(--text);
+            line-height: 1.3;
+        }
+        .lesson-spec {
+            font-size: 0.78rem;
+            color: var(--text-light);
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            margin-right: 8px;
+        }
+        .lesson-tag {
+            flex-shrink: 0;
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            padding: 4px 10px;
+            border-radius: 999px;
+            background: var(--bg-warm);
+            color: var(--text-mid);
+        }
+        .lesson-tag.review { background: var(--amber-pale); color: var(--amber); }
+        .lesson-tag.practical { background: var(--blue-pale); color: var(--blue); }
+        .lesson-tag.exam { background: var(--purple-pale); color: var(--purple); }
+        .lesson-tag.mock { background: var(--green-pale); color: var(--green-dark); }
+        .lesson-row .lesson-tag.external::after {
+            content: ' ↗';
+            margin-left: 2px;
+        }
+
+        .no-results {
             text-align: center;
+            padding: 50px 20px;
+            color: var(--text-light);
+            font-style: italic;
+            background: var(--card);
+            border: 1px dashed var(--border);
+            border-radius: 12px;
+            margin-top: 16px;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 24px;
+            border-top: 1px solid var(--border);
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+        footer a { color: var(--green-mid); text-decoration: none; font-weight: 600; }
+        footer a:hover { text-decoration: underline; }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after { transition: none !important; animation: none !important; }
+        }
+
+        @media (max-width: 700px) {
+            .hero h1 { font-size: 1.8rem; }
+            .nav-inner { padding: 0 14px; gap: 12px; }
+            .nav-brand { font-size: 0.95rem; }
+            .nav-brand span { display: none; }
+            .nav-jump { padding: 6px 10px; font-size: 0.8rem; }
+            .topic { padding: 22px 18px; }
+            .container { padding: 24px 14px 40px; }
+            .lesson-row { padding: 10px 8px; gap: 10px; }
+            .lesson-num { width: 34px; height: 34px; font-size: 0.78rem; }
+            .lesson-title { font-size: 0.98rem; }
+            .lesson-tag { padding: 3px 8px; font-size: 0.65rem; }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <a href="../../index.html" class="back-link">← Back to all units</a>
-            <h1>Unit 2: Cells, Development, Biodiversity and Conservation</h1>
-            <p class="subtitle">Topics 3 & 4 | IAL Biology</p>
-        </header>
-
-        <div class="columns">
-            <div class="lessons-section">
-                <h2>Lessons 1–9</h2>
-                <ul class="lesson-list">
-                    <li><a href="microscope-calibration.html">Calibrating an Eyepiece Graticule</a></li>
-                    <li><a href="eukaryotic-cell-structure.html">Eukaryotic Cell Structure & Protein Synthesis</a></li>
-                    <li><a href="Prokaryotic-Cells.html">Prokaryotic Cells</a></li>
-                    <li><a href="The Organisation of Cells.html">The Organisation of Cells</a></li>
-                    <li><a href="Cell cycle lesson.html">The Cell Cycle</a></li>
-                    <li><a href="Mitosis.html">Mitosis</a></li>
-                    <li><a href="meiosis.html">Meiosis</a></li>
-                    <li><a href="Gametes & Fertilisation.html">Gametes & Fertilisation</a></li>
-                    <li><a href="topic-review-cell-division.html">Topic Review: Cell Division, Meiosis & Reproduction</a></li>
-                </ul>
-            </div>
-            <div class="lessons-section">
-                <h2>Lessons 10–14</h2>
-                <ul class="lesson-list">
-                    <li><a href="cell-differentiation.html">3C.1 Cell Differentiation</a></li>
-                    <li><a href="genes-and-environment.html">3C.2 Genes & Environment</a></li>
-                    <li><a href="controlling-gene-expression.html">3C.3 Controlling Gene Expression</a></li>
-                    <li><a href="topic-3c-review.html">Topic 3C Review: Cell Differentiation & Gene Expression</a></li>
-                    <li><a href="stem-cells-and-applications.html">3C.4 Stem Cells & Their Applications</a></li>
-                    <!-- Add more lessons here -->
-                </ul>
-            </div>
-            <div class="lessons-section">
-                <h2>Topic 4: Plant Structure & Function</h2>
-                <ul class="lesson-list">
-                    <li><a href="the-cell-wall.html">4A: The Cell Wall</a></li>
-                    <li><a href="the-cell-wall-revision.html">4A: The Cell Wall — Revision Sheet</a></li>
-                    <li><a href="plant_stems_lesson.html">Plant Stems</a></li>
-                    <li><a href="water-minerals-lesson.html">4A: Water & Minerals in Plants</a></li>
-                    <li><a href="4A5-plant-starch-fibres-IAL.html">4A.5: Using Plant Starch & Fibres</a></li>
-                    <li><a href="4a6-plant-based-medicines-v2.html">4A.6: Plant-Based Medicines</a></li>
-                    <li><a href="4A7 developing-new-drugs.html">4A.7: Developing New Drugs</a></li>
-                    <li><a href="4B1-principles-of-classification.html">4B.1: Principles of Classification</a></li>
-                    <li><a href="4B2-what-is-a-species.html">4B.2: What is a Species?</a></li>
-                    <li><a href="4B3-domains-kingdoms-or-both.html">4B.3: Domains, Kingdoms or Both?</a></li>
-                    <li><a href="4c1-biodiversity-endemism.html">4C.1: Biodiversity & Endemism</a></li>
-                    <li><a href="4c2-measuring-biodiversity.html">4C.2: Measuring Biodiversity</a></li>
-                    <li><a href="4c3-adaptation-to-a-niche.html">4C.3: Adaptation to a Niche</a></li>
-                    <li><a href="4c4-gene-pool-genetic-diversity.html">4C.4: Gene Pool & Genetic Diversity</a></li>
-                    <li><a href="4c5-reproductive-isolation-speciation.html">4C.5: Reproductive Isolation & Speciation</a></li>
-                    <li><a href="4c6-conservation-why-and-how.html">4C.6: Conservation — Why and How?</a></li>
-                    <li><a href="4c-exam-practice-development.html">4C Exam Practice Development</a></li>
-                    <li><a href="https://ais-pre-mwd47vwc7j3o5vemozw3h5-20817447741.europe-west1.run.app/">Topic 4 Mock Exam (40 marks)</a></li>
-                    <!-- Add more lessons here -->
-                </ul>
+    <nav aria-label="Unit navigation">
+        <div class="nav-inner">
+            <div class="nav-brand">Unit 2 <span>· IAL Biology</span></div>
+            <a href="../../index.html" class="nav-back">← All courses</a>
+            <div class="nav-divider"></div>
+            <div class="nav-jumps">
+                <a href="#topic-3a" class="nav-jump">3A Cell Structure</a>
+                <a href="#topic-3b" class="nav-jump">3B Cell Division</a>
+                <a href="#topic-3c" class="nav-jump">3C Differentiation</a>
+                <a href="#topic-4a" class="nav-jump">4A Plants</a>
+                <a href="#topic-4b" class="nav-jump">4B Classification</a>
+                <a href="#topic-4c" class="nav-jump">4C Biodiversity</a>
             </div>
         </div>
+    </nav>
+
+    <div class="container">
+        <header class="hero">
+            <div class="hero-tag">IAL Biology · Pearson Edexcel</div>
+            <h1>Unit 2: Cells, Development, Biodiversity and Conservation</h1>
+            <p class="hero-meta"><strong>Topics 3 &amp; 4</strong> · 30 lessons across 6 spec sections</p>
+        </header>
+
+        <div class="search-bar">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+            <input type="search" id="search" placeholder="Search lessons — e.g. mitosis, stem cells, classification…" autocomplete="off" aria-label="Search lessons">
+        </div>
+
+        <!-- Topic 3A -->
+        <section class="topic" id="topic-3a" data-topic="3a">
+            <div class="topic-header">
+                <div><span class="topic-code">Topic 3A</span><h2 class="topic-title">Cell Structure</h2></div>
+                <span class="topic-count">4 lessons</span>
+            </div>
+            <ul class="lesson-list">
+                <li><a href="microscope-calibration.html" class="lesson-row is-practical" data-keywords="microscope graticule calibration eyepiece practical">
+                    <span class="lesson-num">1</span>
+                    <span class="lesson-body"><span class="lesson-title">Calibrating an Eyepiece Graticule</span></span>
+                    <span class="lesson-tag practical">Practical</span>
+                </a></li>
+                <li><a href="eukaryotic-cell-structure.html" class="lesson-row" data-keywords="eukaryotic cell structure organelles protein synthesis">
+                    <span class="lesson-num">2</span>
+                    <span class="lesson-body"><span class="lesson-title">Eukaryotic Cell Structure &amp; Protein Synthesis</span></span>
+                </a></li>
+                <li><a href="Prokaryotic-Cells.html" class="lesson-row" data-keywords="prokaryotic cells bacteria">
+                    <span class="lesson-num">3</span>
+                    <span class="lesson-body"><span class="lesson-title">Prokaryotic Cells</span></span>
+                </a></li>
+                <li><a href="The Organisation of Cells.html" class="lesson-row" data-keywords="organisation cells tissues organs systems">
+                    <span class="lesson-num">4</span>
+                    <span class="lesson-body"><span class="lesson-title">The Organisation of Cells</span></span>
+                </a></li>
+            </ul>
+        </section>
+
+        <!-- Topic 3B -->
+        <section class="topic" id="topic-3b" data-topic="3b">
+            <div class="topic-header">
+                <div><span class="topic-code">Topic 3B</span><h2 class="topic-title">Cell Division &amp; Reproduction</h2></div>
+                <span class="topic-count">5 lessons</span>
+            </div>
+            <ul class="lesson-list">
+                <li><a href="Cell cycle lesson.html" class="lesson-row" data-keywords="cell cycle interphase mitosis">
+                    <span class="lesson-num">1</span>
+                    <span class="lesson-body"><span class="lesson-title">The Cell Cycle</span></span>
+                </a></li>
+                <li><a href="Mitosis.html" class="lesson-row" data-keywords="mitosis cell division chromosomes">
+                    <span class="lesson-num">2</span>
+                    <span class="lesson-body"><span class="lesson-title">Mitosis</span></span>
+                </a></li>
+                <li><a href="meiosis.html" class="lesson-row" data-keywords="meiosis gametes chromosomes variation">
+                    <span class="lesson-num">3</span>
+                    <span class="lesson-body"><span class="lesson-title">Meiosis</span></span>
+                </a></li>
+                <li><a href="Gametes & Fertilisation.html" class="lesson-row" data-keywords="gametes fertilisation sperm egg sexual reproduction">
+                    <span class="lesson-num">4</span>
+                    <span class="lesson-body"><span class="lesson-title">Gametes &amp; Fertilisation</span></span>
+                </a></li>
+                <li><a href="topic-review-cell-division.html" class="lesson-row is-review" data-keywords="review cell division meiosis reproduction recap">
+                    <span class="lesson-num">R</span>
+                    <span class="lesson-body"><span class="lesson-title">Topic Review: Cell Division, Meiosis &amp; Reproduction</span></span>
+                    <span class="lesson-tag review">Review</span>
+                </a></li>
+            </ul>
+        </section>
+
+        <!-- Topic 3C -->
+        <section class="topic" id="topic-3c" data-topic="3c">
+            <div class="topic-header">
+                <div><span class="topic-code">Topic 3C</span><h2 class="topic-title">Cell Differentiation &amp; Gene Expression</h2></div>
+                <span class="topic-count">5 lessons</span>
+            </div>
+            <ul class="lesson-list">
+                <li><a href="cell-differentiation.html" class="lesson-row" data-keywords="cell differentiation specialisation stem">
+                    <span class="lesson-num">1</span>
+                    <span class="lesson-body"><span class="lesson-spec">3C.1</span><span class="lesson-title">Cell Differentiation</span></span>
+                </a></li>
+                <li><a href="genes-and-environment.html" class="lesson-row" data-keywords="genes environment phenotype variation epigenetic">
+                    <span class="lesson-num">2</span>
+                    <span class="lesson-body"><span class="lesson-spec">3C.2</span><span class="lesson-title">Genes &amp; Environment</span></span>
+                </a></li>
+                <li><a href="controlling-gene-expression.html" class="lesson-row" data-keywords="gene expression transcription factors regulation">
+                    <span class="lesson-num">3</span>
+                    <span class="lesson-body"><span class="lesson-spec">3C.3</span><span class="lesson-title">Controlling Gene Expression</span></span>
+                </a></li>
+                <li><a href="stem-cells-and-applications.html" class="lesson-row" data-keywords="stem cells applications totipotent pluripotent medicine">
+                    <span class="lesson-num">4</span>
+                    <span class="lesson-body"><span class="lesson-spec">3C.4</span><span class="lesson-title">Stem Cells &amp; Their Applications</span></span>
+                </a></li>
+                <li><a href="topic-3c-review.html" class="lesson-row is-review" data-keywords="review differentiation gene expression recap">
+                    <span class="lesson-num">R</span>
+                    <span class="lesson-body"><span class="lesson-title">Topic 3C Review: Cell Differentiation &amp; Gene Expression</span></span>
+                    <span class="lesson-tag review">Review</span>
+                </a></li>
+            </ul>
+        </section>
+
+        <!-- Topic 4A -->
+        <section class="topic" id="topic-4a" data-topic="4a">
+            <div class="topic-header">
+                <div><span class="topic-code">Topic 4A</span><h2 class="topic-title">Plant Structure &amp; Function</h2></div>
+                <span class="topic-count">7 lessons</span>
+            </div>
+            <ul class="lesson-list">
+                <li><a href="the-cell-wall.html" class="lesson-row" data-keywords="cell wall cellulose plants">
+                    <span class="lesson-num">1</span>
+                    <span class="lesson-body"><span class="lesson-spec">4A</span><span class="lesson-title">The Cell Wall</span></span>
+                </a></li>
+                <li><a href="the-cell-wall-revision.html" class="lesson-row is-review" data-keywords="cell wall revision recap">
+                    <span class="lesson-num">R</span>
+                    <span class="lesson-body"><span class="lesson-spec">4A</span><span class="lesson-title">The Cell Wall — Revision Sheet</span></span>
+                    <span class="lesson-tag review">Review</span>
+                </a></li>
+                <li><a href="plant_stems_lesson.html" class="lesson-row" data-keywords="plant stems xylem phloem vascular">
+                    <span class="lesson-num">2</span>
+                    <span class="lesson-body"><span class="lesson-title">Plant Stems</span></span>
+                </a></li>
+                <li><a href="water-minerals-lesson.html" class="lesson-row" data-keywords="water minerals plants transpiration uptake">
+                    <span class="lesson-num">3</span>
+                    <span class="lesson-body"><span class="lesson-spec">4A</span><span class="lesson-title">Water &amp; Minerals in Plants</span></span>
+                </a></li>
+                <li><a href="4A5-plant-starch-fibres-IAL.html" class="lesson-row" data-keywords="plant starch fibres uses materials">
+                    <span class="lesson-num">5</span>
+                    <span class="lesson-body"><span class="lesson-spec">4A.5</span><span class="lesson-title">Using Plant Starch &amp; Fibres</span></span>
+                </a></li>
+                <li><a href="4a6-plant-based-medicines-v2.html" class="lesson-row" data-keywords="plant medicines drugs phytochemicals">
+                    <span class="lesson-num">6</span>
+                    <span class="lesson-body"><span class="lesson-spec">4A.6</span><span class="lesson-title">Plant-Based Medicines</span></span>
+                </a></li>
+                <li><a href="4A7 developing-new-drugs.html" class="lesson-row" data-keywords="developing new drugs trials testing pharmaceutical">
+                    <span class="lesson-num">7</span>
+                    <span class="lesson-body"><span class="lesson-spec">4A.7</span><span class="lesson-title">Developing New Drugs</span></span>
+                </a></li>
+            </ul>
+        </section>
+
+        <!-- Topic 4B -->
+        <section class="topic" id="topic-4b" data-topic="4b">
+            <div class="topic-header">
+                <div><span class="topic-code">Topic 4B</span><h2 class="topic-title">Classification</h2></div>
+                <span class="topic-count">3 lessons</span>
+            </div>
+            <ul class="lesson-list">
+                <li><a href="4B1-principles-of-classification.html" class="lesson-row" data-keywords="principles classification taxonomy">
+                    <span class="lesson-num">1</span>
+                    <span class="lesson-body"><span class="lesson-spec">4B.1</span><span class="lesson-title">Principles of Classification</span></span>
+                </a></li>
+                <li><a href="4B2-what-is-a-species.html" class="lesson-row" data-keywords="species concept biological definition">
+                    <span class="lesson-num">2</span>
+                    <span class="lesson-body"><span class="lesson-spec">4B.2</span><span class="lesson-title">What is a Species?</span></span>
+                </a></li>
+                <li><a href="4B3-domains-kingdoms-or-both.html" class="lesson-row" data-keywords="domains kingdoms three domain system classification">
+                    <span class="lesson-num">3</span>
+                    <span class="lesson-body"><span class="lesson-spec">4B.3</span><span class="lesson-title">Domains, Kingdoms or Both?</span></span>
+                </a></li>
+            </ul>
+        </section>
+
+        <!-- Topic 4C -->
+        <section class="topic" id="topic-4c" data-topic="4c">
+            <div class="topic-header">
+                <div><span class="topic-code">Topic 4C</span><h2 class="topic-title">Biodiversity &amp; Conservation</h2></div>
+                <span class="topic-count">8 lessons</span>
+            </div>
+            <ul class="lesson-list">
+                <li><a href="4c1-biodiversity-endemism.html" class="lesson-row" data-keywords="biodiversity endemism species richness evenness">
+                    <span class="lesson-num">1</span>
+                    <span class="lesson-body"><span class="lesson-spec">4C.1</span><span class="lesson-title">Biodiversity &amp; Endemism</span></span>
+                </a></li>
+                <li><a href="4c2-measuring-biodiversity.html" class="lesson-row" data-keywords="measuring biodiversity simpson index sampling">
+                    <span class="lesson-num">2</span>
+                    <span class="lesson-body"><span class="lesson-spec">4C.2</span><span class="lesson-title">Measuring Biodiversity</span></span>
+                </a></li>
+                <li><a href="4c3-adaptation-to-a-niche.html" class="lesson-row" data-keywords="adaptation niche behavioural physiological anatomical">
+                    <span class="lesson-num">3</span>
+                    <span class="lesson-body"><span class="lesson-spec">4C.3</span><span class="lesson-title">Adaptation to a Niche</span></span>
+                </a></li>
+                <li><a href="4c4-gene-pool-genetic-diversity.html" class="lesson-row" data-keywords="gene pool genetic diversity allele frequency">
+                    <span class="lesson-num">4</span>
+                    <span class="lesson-body"><span class="lesson-spec">4C.4</span><span class="lesson-title">Gene Pool &amp; Genetic Diversity</span></span>
+                </a></li>
+                <li><a href="4c5-reproductive-isolation-speciation.html" class="lesson-row" data-keywords="reproductive isolation speciation allopatric sympatric">
+                    <span class="lesson-num">5</span>
+                    <span class="lesson-body"><span class="lesson-spec">4C.5</span><span class="lesson-title">Reproductive Isolation &amp; Speciation</span></span>
+                </a></li>
+                <li><a href="4c6-conservation-why-and-how.html" class="lesson-row" data-keywords="conservation why how protected areas zoos seed banks">
+                    <span class="lesson-num">6</span>
+                    <span class="lesson-body"><span class="lesson-spec">4C.6</span><span class="lesson-title">Conservation — Why and How?</span></span>
+                </a></li>
+                <li><a href="4c-exam-practice-development.html" class="lesson-row is-exam" data-keywords="exam practice development questions">
+                    <span class="lesson-num">E</span>
+                    <span class="lesson-body"><span class="lesson-spec">4C</span><span class="lesson-title">Exam Practice — Development</span></span>
+                    <span class="lesson-tag exam">Exam Practice</span>
+                </a></li>
+                <li><a href="https://ais-pre-mwd47vwc7j3o5vemozw3h5-20817447741.europe-west1.run.app/" class="lesson-row is-exam" target="_blank" rel="noopener" data-keywords="topic 4 mock exam 40 marks">
+                    <span class="lesson-num">M</span>
+                    <span class="lesson-body"><span class="lesson-spec">Topic 4</span><span class="lesson-title">Mock Exam (40 marks)</span></span>
+                    <span class="lesson-tag mock external">Mock Exam</span>
+                </a></li>
+            </ul>
+        </section>
+
+        <div class="no-results hidden" id="no-results" role="status">No lessons match your search.</div>
+
+        <footer>
+            <p><a href="../../index.html">← Back to all courses</a></p>
+        </footer>
     </div>
+
+    <script>
+        const lessons = document.querySelectorAll('.lesson-row');
+        const topics = document.querySelectorAll('.topic');
+        const searchInput = document.getElementById('search');
+        const noResults = document.getElementById('no-results');
+
+        function applyFilter() {
+            const q = searchInput.value.trim().toLowerCase();
+            let matches = 0;
+
+            lessons.forEach(row => {
+                if (!q) {
+                    row.parentElement.classList.remove('hidden');
+                    return;
+                }
+                const haystack = ((row.dataset.keywords || '') + ' ' + row.textContent).toLowerCase();
+                const hit = haystack.includes(q);
+                row.parentElement.classList.toggle('hidden', !hit);
+                if (hit) matches++;
+            });
+
+            topics.forEach(topic => {
+                if (!q) {
+                    topic.classList.remove('hidden');
+                    return;
+                }
+                const visible = topic.querySelectorAll('.lesson-list > li:not(.hidden)').length;
+                topic.classList.toggle('hidden', visible === 0);
+            });
+
+            noResults.classList.toggle('hidden', !q || matches > 0);
+        }
+
+        searchInput.addEventListener('input', applyFilter);
+        searchInput.addEventListener('keydown', e => {
+            if (e.key === 'Escape') {
+                searchInput.value = '';
+                applyFilter();
+            }
+        });
+
+        // Smooth scroll for jump links
+        document.querySelectorAll('.nav-jump').forEach(link => {
+            link.addEventListener('click', e => {
+                e.preventDefault();
+                const target = document.querySelector(link.getAttribute('href'));
+                if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+        });
+    </script>
 </body>
 </html>
