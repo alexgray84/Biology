@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Genetic Modification — Y11 Biology Lesson</title>
+<style>
+  :root {
+    --green: #1a6b3c;
+    --green-light: #e8f5ee;
+    --green-mid: #c3e6d0;
+    --amber: #b45309;
+    --amber-light: #fef3c7;
+    --blue: #1d4ed8;
+    --blue-light: #eff6ff;
+    --blue-mid: #bfdbfe;
+    --red: #b91c1c;
+    --red-light: #fef2f2;
+    --gray: #374151;
+    --gray-light: #f9fafb;
+    --gray-mid: #e5e7eb;
+    --text: #111827;
+    --text-muted: #6b7280;
+    --border: #d1d5db;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: Georgia, 'Times New Roman', serif; color: var(--text); background: #f3f4f6; font-size: 16px; line-height: 1.7; }
+  .page-wrap { max-width: 860px; margin: 0 auto; padding: 32px 20px 60px; }
+
+  /* Header */
+  .lesson-header { background: var(--green); color: white; border-radius: 12px; padding: 32px 36px; margin-bottom: 32px; }
+  .lesson-header .tag { font-family: Arial, sans-serif; font-size: 12px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; opacity: 0.75; margin-bottom: 10px; }
+  .lesson-header h1 { font-size: 28px; font-weight: normal; margin-bottom: 10px; }
+  .lesson-header .subtitle { font-size: 15px; opacity: 0.85; font-family: Arial, sans-serif; }
+  .obj-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 20px; }
+  .obj-badge { background: rgba(255,255,255,0.18); border: 1px solid rgba(255,255,255,0.3); border-radius: 6px; padding: 5px 12px; font-size: 12px; font-family: Arial, sans-serif; }
+
+  /* Nav tabs */
+  .nav { display: flex; gap: 4px; background: white; border-radius: 10px; padding: 6px; margin-bottom: 24px; border: 1px solid var(--border); flex-wrap: wrap; }
+  .nav-btn { font-family: Arial, sans-serif; font-size: 13px; padding: 8px 14px; border: none; background: transparent; border-radius: 7px; cursor: pointer; color: var(--text-muted); transition: all 0.15s; }
+  .nav-btn:hover { background: var(--gray-light); color: var(--text); }
+  .nav-btn.active { background: var(--green); color: white; }
+
+  /* Sections */
+  .lesson-section { display: none; }
+  .lesson-section.active { display: block; }
+
+  /* Cards */
+  .card { background: white; border: 1px solid var(--border); border-radius: 10px; padding: 24px 28px; margin-bottom: 20px; }
+  .card h2 { font-size: 20px; font-weight: normal; margin-bottom: 6px; color: var(--green); }
+  .card h3 { font-family: Arial, sans-serif; font-size: 15px; font-weight: 700; margin: 18px 0 8px; }
+  .card p { margin-bottom: 12px; font-size: 15px; }
+  .card p:last-child { margin-bottom: 0; }
+
+  /* Analogy box */
+  .analogy { background: var(--amber-light); border-left: 4px solid var(--amber); border-radius: 0 8px 8px 0; padding: 14px 18px; margin: 14px 0; }
+  .analogy-label { font-family: Arial, sans-serif; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: var(--amber); margin-bottom: 6px; }
+  .analogy p { font-size: 14px; margin-bottom: 0; }
+
+  /* Key point */
+  .keypoint { background: var(--blue-light); border-left: 4px solid var(--blue); border-radius: 0 8px 8px 0; padding: 14px 18px; margin: 14px 0; }
+  .keypoint-label { font-family: Arial, sans-serif; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: var(--blue); margin-bottom: 6px; }
+  .keypoint p { font-size: 14px; margin-bottom: 0; }
+
+  /* Warning */
+  .warning { background: var(--red-light); border-left: 4px solid var(--red); border-radius: 0 8px 8px 0; padding: 14px 18px; margin: 14px 0; }
+  .warning-label { font-family: Arial, sans-serif; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: var(--red); margin-bottom: 6px; }
+  .warning p { font-size: 14px; margin-bottom: 0; }
+
+  /* Enzyme tabs */
+  .tab-row { display: flex; gap: 6px; margin-bottom: 16px; flex-wrap: wrap; }
+  .tab-btn { font-family: Arial, sans-serif; font-size: 13px; padding: 7px 16px; border: 1px solid var(--border); border-radius: 6px; cursor: pointer; background: white; transition: all 0.15s; }
+  .tab-btn:hover { background: var(--gray-light); }
+  .tab-btn.active { background: var(--green); color: white; border-color: var(--green); }
+  .tab-pane { display: none; padding: 16px; background: var(--gray-light); border-radius: 8px; font-size: 14px; line-height: 1.7; }
+  .tab-pane.active { display: block; }
+  .tab-pane p { margin-bottom: 10px; }
+  .tab-pane p:last-child { margin-bottom: 0; }
+
+  /* Vocab chips */
+  .vocab-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+  .vocab-chip { font-family: Arial, sans-serif; font-size: 13px; padding: 6px 14px; border: 1px solid var(--border); border-radius: 20px; cursor: pointer; background: white; transition: all 0.15s; }
+  .vocab-chip:hover { border-color: var(--green); color: var(--green); }
+  .vocab-chip.active { background: var(--green); color: white; border-color: var(--green); }
+  .vocab-reveal { background: var(--green-light); border: 1px solid var(--green-mid); border-radius: 8px; padding: 12px 16px; font-size: 14px; display: none; margin-top: 4px; }
+  .vocab-reveal.show { display: block; }
+
+  /* Flip cards */
+  .flip-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 16px 0; }
+  .flip-card { perspective: 800px; height: 110px; cursor: pointer; }
+  .flip-inner { position: relative; width: 100%; height: 100%; transition: transform 0.4s; transform-style: preserve-3d; }
+  .flip-card.flipped .flip-inner { transform: rotateY(180deg); }
+  .flip-front, .flip-back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 12px; text-align: center; border: 1px solid var(--border); }
+  .flip-front { background: white; }
+  .flip-back { background: var(--green-light); border-color: var(--green-mid); transform: rotateY(180deg); }
+  .flip-term { font-family: Arial, sans-serif; font-size: 13px; font-weight: 700; margin-bottom: 4px; }
+  .flip-hint { font-size: 12px; color: var(--text-muted); font-family: Arial, sans-serif; }
+  .flip-def { font-size: 12px; line-height: 1.5; color: var(--green); }
+
+  /* Sequence drag */
+  .seq-list { display: flex; flex-direction: column; gap: 8px; margin: 12px 0; }
+  .seq-item { display: flex; align-items: flex-start; gap: 12px; padding: 12px 16px; border: 1px solid var(--border); border-radius: 8px; background: white; cursor: grab; font-size: 14px; user-select: none; transition: all 0.15s; }
+  .seq-item:hover { border-color: var(--green); }
+  .seq-item.dragging { opacity: 0.4; }
+  .seq-item.drag-over { border-color: var(--green); background: var(--green-light); }
+  .seq-num { min-width: 28px; height: 28px; border-radius: 50%; background: var(--gray-mid); display: flex; align-items: center; justify-content: center; font-family: Arial, sans-serif; font-size: 13px; font-weight: 700; color: var(--text-muted); flex-shrink: 0; margin-top: 1px; }
+  .seq-item.correct .seq-num { background: #dcfce7; color: #166534; }
+  .seq-item.incorrect .seq-num { background: #fee2e2; color: #991b1b; }
+  .btn { font-family: Arial, sans-serif; font-size: 14px; padding: 9px 22px; border-radius: 7px; cursor: pointer; border: 1px solid var(--border); background: white; transition: all 0.15s; }
+  .btn:hover { background: var(--gray-light); }
+  .btn.primary { background: var(--green); color: white; border-color: var(--green); }
+  .btn.primary:hover { background: #145e33; }
+  .btn-row { display: flex; gap: 8px; margin-top: 12px; }
+  .result-msg { margin-top: 12px; padding: 12px 16px; border-radius: 8px; font-size: 14px; display: none; }
+  .result-msg.show { display: block; }
+  .result-msg.ok { background: #dcfce7; color: #166534; border: 1px solid #a7f3d0; }
+  .result-msg.fail { background: #fee2e2; color: #991b1b; border: 1px solid #fca5a5; }
+
+  /* Quiz */
+  .q-block { margin-bottom: 24px; }
+  .q-text { font-family: Arial, sans-serif; font-size: 15px; font-weight: 700; margin-bottom: 10px; line-height: 1.5; }
+  .q-opts { display: flex; flex-direction: column; gap: 7px; }
+  .q-opt { text-align: left; font-family: Arial, sans-serif; font-size: 14px; padding: 10px 16px; border: 1px solid var(--border); border-radius: 7px; background: white; cursor: pointer; transition: all 0.15s; }
+  .q-opt:hover:not(:disabled) { border-color: var(--green); background: var(--green-light); }
+  .q-opt.correct { background: #dcfce7; border-color: #4ade80; color: #166534; }
+  .q-opt.wrong { background: #fee2e2; border-color: #f87171; color: #991b1b; }
+  .q-feedback { font-size: 13px; line-height: 1.6; padding: 10px 14px; border-radius: 7px; margin-top: 8px; display: none; }
+  .q-feedback.show { display: block; }
+  .q-feedback.ok { background: #dcfce7; color: #166534; }
+  .q-feedback.fail { background: #fee2e2; color: #991b1b; }
+
+  /* Plant cards */
+  .plant-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 16px 0; }
+  .plant-card { border: 1px solid var(--border); border-radius: 8px; padding: 16px; background: white; }
+  .plant-tag { font-family: Arial, sans-serif; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--green); margin-bottom: 6px; }
+  .plant-title { font-family: Arial, sans-serif; font-size: 14px; font-weight: 700; margin-bottom: 6px; }
+  .plant-desc { font-size: 13px; color: var(--text-muted); line-height: 1.55; }
+
+  /* Match activity */
+  .match-terms { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+  .match-chip { font-family: Arial, sans-serif; font-size: 13px; padding: 7px 14px; border: 1px solid var(--border); border-radius: 7px; cursor: pointer; background: white; transition: all 0.15s; }
+  .match-chip.selected { background: var(--green); color: white; border-color: var(--green); }
+  .match-chip.used { opacity: 0.4; pointer-events: none; }
+  .match-defs { display: flex; flex-direction: column; gap: 8px; }
+  .match-def-row { display: flex; align-items: center; gap: 10px; }
+  .match-def-text { flex: 1; font-size: 13px; background: var(--gray-light); border-radius: 7px; padding: 10px 14px; line-height: 1.5; cursor: pointer; border: 1px solid var(--border); transition: all 0.15s; }
+  .match-def-text:hover { border-color: var(--green); background: var(--green-light); }
+  .match-def-text.matched { background: var(--blue-light); border-color: var(--blue-mid); cursor: default; }
+  .match-def-text.correct-ans { background: #dcfce7; border-color: #4ade80; }
+  .match-def-text.wrong-ans { background: #fee2e2; border-color: #f87171; }
+  .match-tag { font-family: Arial, sans-serif; font-size: 12px; color: var(--text-muted); min-width: 80px; }
+
+  /* Summary table */
+  .sum-table { width: 100%; border-collapse: collapse; margin-top: 12px; font-size: 14px; }
+  .sum-table th { background: var(--green); color: white; padding: 10px 14px; text-align: left; font-family: Arial, sans-serif; font-size: 13px; }
+  .sum-table td { padding: 10px 14px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  .sum-table tr:nth-child(even) td { background: var(--gray-light); }
+  .sum-code { font-family: Arial, sans-serif; font-size: 12px; font-weight: 700; color: var(--blue); white-space: nowrap; }
+
+  @media (max-width: 600px) {
+    .flip-grid { grid-template-columns: 1fr 1fr; }
+    .plant-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="page-wrap">
+
+  <div class="lesson-header">
+    <div class="tag">Y11 Biology · Microorganisms and Genetic Modification</div>
+    <h1>Genetic Engineering and Transgenic Organisms</h1>
+    <div class="subtitle">An interactive lesson covering objectives 5.12 – 5.16</div>
+    <div class="obj-row">
+      <div class="obj-badge">5.12 Restriction &amp; Ligase Enzymes</div>
+      <div class="obj-badge">5.13 Vectors</div>
+      <div class="obj-badge">5.14 GM Insulin</div>
+      <div class="obj-badge">5.15 GM Plants</div>
+      <div class="obj-badge">5.16 Transgenic</div>
+    </div>
+  </div>
+
+  <div class="nav">
+    <button class="nav-btn active" onclick="showSection('vocab')">1. Vocabulary</button>
+    <button class="nav-btn" onclick="showSection('enzymes')">2. Enzymes (5.12)</button>
+    <button class="nav-btn" onclick="showSection('vectors')">3. Vectors (5.13)</button>
+    <button class="nav-btn" onclick="showSection('insulin')">4. Insulin (5.14)</button>
+    <button class="nav-btn" onclick="showSection('plants')">5. GM Plants (5.15)</button>
+    <button class="nav-btn" onclick="showSection('transgenic')">6. Transgenic (5.16)</button>
+    <button class="nav-btn" onclick="showSection('summary')">7. Summary</button>
+  </div>
+
+  <!-- SECTION 1: VOCAB -->
+  <div id="sec-vocab" class="lesson-section active">
+    <div class="card">
+      <h2>Key Vocabulary</h2>
+      <p style="font-size:14px;color:var(--text-muted)">Click a term to reveal its definition. Work through all ten before moving on.</p>
+      <div class="vocab-chips" id="vocab-chips"></div>
+      <div class="vocab-reveal" id="vocab-reveal"></div>
+    </div>
+    <div class="card">
+      <h3>Flashcards — click to flip</h3>
+      <p style="font-size:13px;color:var(--text-muted);margin-bottom:0">Cover the hint and try to recall the definition before flipping.</p>
+      <div class="flip-grid" id="flip-grid"></div>
+    </div>
+  </div>
+
+  <!-- SECTION 2: ENZYMES -->
+  <div id="sec-enzymes" class="lesson-section">
+    <div class="card">
+      <h2>Restriction &amp; Ligase Enzymes (5.12)</h2>
+      <p>To move a gene from one organism to another, scientists need two molecular tools — one to cut DNA at precisely the right place, and one to seal the new gene in permanently.</p>
+      <div class="analogy">
+        <div class="analogy-label">Analogy — Scissors and sellotape</div>
+        <p>Imagine DNA as a very long roll of ticker tape with coded instructions on it. <strong>Restriction enzymes</strong> are a special pair of scissors that only cut the tape at one specific pattern of letters — they recognise a sequence like GAATTC and cut only there. <strong>Ligase</strong> is the sellotape — it sticks the cut ends back together, permanently and precisely.</p>
+      </div>
+      <div class="tab-row">
+        <button class="tab-btn active" onclick="switchTab('rest')">Restriction enzymes</button>
+        <button class="tab-btn" onclick="switchTab('sticky')">Sticky ends</button>
+        <button class="tab-btn" onclick="switchTab('lig')">Ligase</button>
+      </div>
+      <div id="tab-rest" class="tab-pane active">
+        <p><strong>Restriction endonucleases</strong> are enzymes that recognise a specific, short base sequence in a DNA strand — called a <em>recognition site</em>. Every time the enzyme encounters that exact sequence, it cuts the DNA molecule. Different restriction enzymes recognise different sequences.</p>
+        <p>This means scientists can choose which enzyme to use depending on <em>where</em> in the DNA they need to cut. For example, an enzyme recognising the sequence GAATTC will only cut at every point where GAATTC occurs — nowhere else.</p>
+      </div>
+      <div id="tab-sticky" class="tab-pane">
+        <p>Some restriction enzymes make a <strong>staggered cut</strong> — instead of cutting straight across both strands, they cut at slightly offset positions. This leaves short, single-stranded overhangs called <strong>sticky ends</strong>.</p>
+        <p>These sticky ends are important because they are <em>complementary</em> to any other sticky end produced by the same restriction enzyme. This means the donor gene and the opened plasmid (both cut with the same enzyme) have matching sticky ends that will naturally hydrogen-bond together before ligase seals them.</p>
+      </div>
+      <div id="tab-lig" class="tab-pane">
+        <p><strong>DNA ligase</strong> forms permanent covalent bonds (phosphodiester bonds) between the sugar-phosphate backbone of joined DNA fragments. It acts after the sticky ends have come together via hydrogen bonding.</p>
+        <div class="analogy" style="margin-top:10px">
+          <div class="analogy-label">Analogy</div>
+          <p>If sticky ends are the temporary handshake holding two fragments together, ligase is the permanent weld that makes the join last. Without ligase, the gene would simply fall out again.</p>
+        </div>
+      </div>
+      <div class="keypoint" style="margin-top:16px">
+        <div class="keypoint-label">Key Point</div>
+        <p>The same restriction enzyme must be used to cut both the donor DNA and the plasmid. This ensures matching sticky ends — which means the gene can be inserted precisely and joins easily.</p>
+      </div>
+    </div>
+    <div class="card">
+      <h3>Check your understanding</h3>
+      <div id="quiz-enzymes"></div>
+    </div>
+  </div>
+
+  <!-- SECTION 3: VECTORS -->
+  <div id="sec-vectors" class="lesson-section">
+    <div class="card">
+      <h2>Vectors — Delivery Vehicles (5.13)</h2>
+      <p>Once the target gene has been cut from donor DNA and has sticky ends, it must be carried into the host bacterium. The carrier molecule is called a <strong>vector</strong>.</p>
+      <div class="analogy">
+        <div class="analogy-label">Analogy — the delivery van and the syringe</div>
+        <p>Think of the gene as a parcel. On its own, a parcel cannot enter a building — it needs delivery. A <strong>plasmid</strong> is like a delivery van: it enters the bacterium carrying the gene inside. A <strong>bacteriophage</strong> is like a syringe: it attaches to the cell wall and physically injects the DNA directly into the bacterium.</p>
+      </div>
+      <h3>Plasmids</h3>
+      <p>Bacteria naturally contain small, circular pieces of DNA called <strong>plasmids</strong>, separate from their main chromosome. Scientists cut open a plasmid with a restriction enzyme, insert the desired gene (sticky ends bond → ligase seals), and mix the <em>recombinant plasmid</em> with bacteria. Some bacteria take up the plasmid — this process is called <strong>transformation</strong>.</p>
+      <h3>Bacteriophages</h3>
+      <p>A <strong>bacteriophage</strong> is a virus that infects bacteria. It attaches to the cell wall and injects its DNA. If the foreign gene has been incorporated into the phage DNA, it is injected too and becomes part of the bacterium's genome. Phages were used as vectors in early genetic engineering but plasmids are more common today.</p>
+      <div class="keypoint">
+        <div class="keypoint-label">Key Point</div>
+        <p>The DNA that results from joining the donor gene to the plasmid is called <strong>recombinant DNA</strong> — DNA made by combining genetic material from two different organisms.</p>
+      </div>
+    </div>
+    <div class="card">
+      <h3>Activity: Put the steps in the correct order</h3>
+      <p style="font-size:14px;color:var(--text-muted);margin-bottom:8px">Drag the steps to show how a transgenic bacterium is produced using a plasmid vector.</p>
+      <div class="seq-list" id="seq-list"></div>
+      <div class="btn-row">
+        <button class="btn primary" onclick="checkSeq()">Check order</button>
+        <button class="btn" onclick="resetSeq()">Shuffle</button>
+      </div>
+      <div class="result-msg" id="seq-result"></div>
+    </div>
+    <div class="card">
+      <h3>Check your understanding</h3>
+      <div id="quiz-vectors"></div>
+    </div>
+  </div>
+
+  <!-- SECTION 4: INSULIN -->
+  <div id="sec-insulin" class="lesson-section">
+    <div class="card">
+      <h2>Manufacturing Human Insulin (5.14)</h2>
+      <h3>Why insulin matters</h3>
+      <p>People with Type 1 diabetes cannot produce sufficient insulin — the hormone that regulates blood glucose. Before genetic engineering, insulin had to be extracted from the pancreases of pigs and cattle. This animal insulin is slightly different in structure to human insulin and caused immune reactions in some patients.</p>
+      <h3>How GM bacteria produce human insulin</h3>
+      <p>The human insulin gene is isolated from human DNA and inserted into <em>E. coli</em> bacteria using a plasmid vector. These bacteria are then grown in enormous industrial containers called <strong>fermenters</strong>, where conditions (temperature, pH, oxygen, nutrients) are carefully controlled. Because bacteria reproduce every 20 minutes, billions of insulin-producing bacteria are generated rapidly.</p>
+      <div class="analogy">
+        <div class="analogy-label">Analogy — the biological factory</div>
+        <p>Each GM bacterium is like a worker handed a new instruction manual (the insulin gene). The fermenter is the factory building. One worker becomes billions within hours, all producing the same product — pure human insulin.</p>
+      </div>
+      <div class="keypoint">
+        <div class="keypoint-label">Advantages of GM insulin</div>
+        <p><strong>1.</strong> Chemically identical to human insulin — no immune side effects. <strong>2.</strong> Produced in unlimited, consistent quantities. <strong>3.</strong> No animal slaughter required. <strong>4.</strong> Faster and cleaner than extraction from animal tissue.</p>
+      </div>
+    </div>
+    <div class="card">
+      <h3>Check your understanding</h3>
+      <div id="quiz-insulin"></div>
+    </div>
+  </div>
+
+  <!-- SECTION 5: GM PLANTS -->
+  <div id="sec-plants" class="lesson-section">
+    <div class="card">
+      <h2>Genetically Modified Plants (5.15)</h2>
+      <h3>The challenge with plants</h3>
+      <p>Unlike bacteria (a single cell), a plant contains billions of cells. To produce a GM plant, <em>every cell</em> must carry the new gene. This means inserting the gene into a single cell, then growing a whole plant from that cell using <strong>micropropagation</strong>.</p>
+      <h3>Method 1: Agrobacterium tumefaciens</h3>
+      <p>This soil bacterium naturally inserts its plasmid into plant cells. Scientists replace the bacteria's harmful genes with the desired gene. Leaf discs from the target plant are floated on a solution containing the modified bacteria — some cells take up the recombinant plasmid. These cells are then cultivated on nutrient medium and grown into whole plants.</p>
+      <p><em>Limitation:</em> Agrobacterium cannot infect cereal crops (monocots like wheat, rice, maize).</p>
+      <h3>Method 2: The Gene Gun</h3>
+      <p>For cereals and other plants where Agrobacterium fails, a gene gun fires tiny pellets of gold coated with the target DNA at high velocity directly into plant tissue. Some pellets penetrate cells and the DNA is incorporated into the genome. Modified cells are then grown into whole plants by micropropagation.</p>
+      <div class="keypoint">
+        <div class="keypoint-label">Key Point — Micropropagation</div>
+        <p>In both methods, once a single cell has taken up the new gene, micropropagation (growing tissue in nutrient medium) allows scientists to produce thousands of identical GM plants from that one cell.</p>
+      </div>
+      <h3>Examples of GM plants</h3>
+      <div class="plant-grid" id="plant-grid"></div>
+    </div>
+    <div class="card">
+      <h3>Check your understanding</h3>
+      <div id="quiz-plants"></div>
+    </div>
+  </div>
+
+  <!-- SECTION 6: TRANSGENIC -->
+  <div id="sec-transgenic" class="lesson-section">
+    <div class="card">
+      <h2>Transgenic Organisms (5.16)</h2>
+      <h3>Definition</h3>
+      <p>A <strong>transgenic</strong> organism is one that has had genetic material from a <em>different species</em> transferred into its genome. The prefix <em>trans-</em> means "across".</p>
+      <div class="analogy">
+        <div class="analogy-label">Remember the word</div>
+        <p><strong>Trans</strong> (across) + <strong>genic</strong> (genes) = genes moved across species. A bacterium containing the human insulin gene is transgenic. Golden rice (genes from daffodils + a bacterium) is transgenic. A sheep producing a human protein in its milk is transgenic.</p>
+      </div>
+      <div class="warning">
+        <div class="warning-label">Common Exam Trap</div>
+        <p>Selective breeding stays within the same species — it is <strong>not</strong> transgenic. Transgenic requires the gene to cross the species boundary. If a student says "all GM organisms are transgenic", remind them that not all genetic modification crosses species (e.g. knocking out a gene within the same species is not transgenic).</p>
+      </div>
+      <h3>Examples</h3>
+      <ul style="margin-left:20px;font-size:15px;line-height:2">
+        <li><em>E. coli</em> producing human insulin — bacterium with a human gene</li>
+        <li>Sheep producing alpha-1-antitrypsin (AAT) in milk — mammal with a human gene</li>
+        <li>Golden rice — plant with genes from daffodil and bacterium</li>
+        <li>Bt cotton — plant with a gene from <em>Bacillus thuringiensis</em> bacteria</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Matching activity</h3>
+      <p style="font-size:14px;color:var(--text-muted);margin-bottom:12px">Click a term on the left, then click its matching description on the right.</p>
+      <div id="match-area"></div>
+      <div class="btn-row">
+        <button class="btn primary" onclick="checkMatch()">Check answers</button>
+        <button class="btn" onclick="resetMatch()">Reset</button>
+      </div>
+      <div class="result-msg" id="match-result"></div>
+    </div>
+    <div class="card">
+      <h3>Check your understanding</h3>
+      <div id="quiz-transgenic"></div>
+    </div>
+  </div>
+
+  <!-- SECTION 7: SUMMARY -->
+  <div id="sec-summary" class="lesson-section">
+    <div class="card">
+      <h2>Revision Summary — Objectives 5.12–5.16</h2>
+      <p style="font-size:14px;color:var(--text-muted)">Use this table as a final checklist. For each objective, can you explain it in your own words?</p>
+      <table class="sum-table">
+        <thead>
+          <tr><th style="width:60px">Ref.</th><th style="width:180px">Topic</th><th>Key points to know</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="sum-code">5.12</td><td style="font-weight:700">Restriction &amp; Ligase Enzymes</td><td>Restriction enzymes cut DNA at specific recognition sequences, producing sticky ends. Ligase joins DNA fragments by forming permanent covalent bonds. The same restriction enzyme is used for both donor DNA and vector to create matching sticky ends.</td></tr>
+          <tr><td class="sum-code">5.13</td><td style="font-weight:700">Vectors</td><td>Vectors (plasmids or bacteriophages) carry recombinant DNA into host cells. Plasmids are small circular bacterial DNA. Bacteriophages inject DNA into bacteria. Transformation = uptake of a plasmid by a bacterium.</td></tr>
+          <tr><td class="sum-code">5.14</td><td style="font-weight:700">GM Insulin</td><td>Human insulin gene inserted into E. coli via plasmid. Bacteria grown in fermenters produce human-identical insulin in industrial quantities. Advantages: no side effects, unlimited supply, no animal slaughter.</td></tr>
+          <tr><td class="sum-code">5.15</td><td style="font-weight:700">GM Plants</td><td>Agrobacterium tumefaciens used as vector for most plants. Gene gun fires DNA-coated gold pellets for cereals. Micropropagation grows whole plants from modified cells. Examples: golden rice (Vitamin A), Bt cotton, herbicide-resistant crops.</td></tr>
+          <tr><td class="sum-code">5.16</td><td style="font-weight:700">Transgenic</td><td>Transgenic = genetic material transferred FROM one species TO a different species. Not the same as selective breeding (same species). All GM organisms with cross-species genes are transgenic.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="card">
+      <h3>Final mixed quiz — all objectives</h3>
+      <div id="quiz-final"></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const vocabData = [
+  { term: 'Recombinant DNA', def: 'DNA formed by combining genetic material from two different organisms or species. It is the basis of genetic engineering.' },
+  { term: 'Restriction enzyme', def: 'An enzyme that recognises and cuts DNA at a specific short base sequence (recognition site). Acts as molecular scissors.' },
+  { term: 'Ligase', def: 'An enzyme that joins cut ends of DNA fragments by forming permanent covalent (phosphodiester) bonds. Acts as molecular glue.' },
+  { term: 'Sticky ends', def: 'Short, single-stranded overhangs produced by staggered restriction enzyme cuts. Complementary to sticky ends from the same enzyme.' },
+  { term: 'Vector', def: 'A carrier molecule — usually a plasmid or virus — used to transfer a gene into a host cell.' },
+  { term: 'Plasmid', def: 'A small, circular piece of DNA found in bacteria, separate from the main chromosome. The most common vector in genetic engineering.' },
+  { term: 'Bacteriophage', def: 'A virus that infects bacteria. Attaches to the cell wall and injects its DNA — including any inserted foreign gene — into the bacterium.' },
+  { term: 'Transformation', def: 'The uptake of foreign DNA (e.g. a recombinant plasmid) by a bacterial cell.' },
+  { term: 'Transgenic', def: 'Describes an organism that has had genetic material from a different species inserted into its genome.' },
+  { term: 'Fermenter', def: 'A large vessel in which microorganisms are grown in controlled conditions to produce useful products such as human insulin.' },
+];
+
+const flipData = [
+  { term: 'Restriction enzyme', hint: 'Cuts DNA', def: 'Recognises and cuts DNA at a specific recognition sequence, leaving sticky ends.' },
+  { term: 'Ligase', hint: 'Joins DNA', def: 'Forms permanent covalent bonds to seal DNA fragments together after sticky ends pair up.' },
+  { term: 'Vector', hint: 'Carries DNA', def: 'A plasmid or virus used to deliver a gene into a host cell.' },
+  { term: 'Plasmid', hint: 'Circular DNA', def: 'Small circular bacterial DNA — the most commonly used vector in GM work.' },
+  { term: 'Transgenic', hint: 'Cross-species', def: 'An organism containing genetic material transferred from a different species.' },
+  { term: 'Fermenter', hint: 'GM factory', def: 'Large vessel for growing billions of GM bacteria to produce protein products like insulin.' },
+];
+
+function buildVocab() {
+  const chips = document.getElementById('vocab-chips');
+  const reveal = document.getElementById('vocab-reveal');
+  let active = null;
+  vocabData.forEach(v => {
+    const el = document.createElement('div');
+    el.className = 'vocab-chip';
+    el.textContent = v.term;
+    el.onclick = () => {
+      if (active === v.term) {
+        el.classList.remove('active');
+        reveal.classList.remove('show');
+        reveal.textContent = '';
+        active = null;
+      } else {
+        chips.querySelectorAll('.vocab-chip').forEach(c => c.classList.remove('active'));
+        el.classList.add('active');
+        reveal.textContent = v.def;
+        reveal.classList.add('show');
+        active = v.term;
+      }
+    };
+    chips.appendChild(el);
+  });
+}
+
+function buildFlips() {
+  const grid = document.getElementById('flip-grid');
+  flipData.forEach(f => {
+    const card = document.createElement('div');
+    card.className = 'flip-card';
+    card.innerHTML = `<div class="flip-inner"><div class="flip-front"><div class="flip-term">${f.term}</div><div class="flip-hint">${f.hint}</div></div><div class="flip-back"><div class="flip-def">${f.def}</div></div></div>`;
+    card.onclick = () => card.classList.toggle('flipped');
+    grid.appendChild(card);
+  });
+}
+
+function switchTab(id) {
+  document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-'+id).classList.add('active');
+  event.target.classList.add('active');
+}
+
+function showSection(id) {
+  document.querySelectorAll('.lesson-section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('sec-'+id).classList.add('active');
+  event.target.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+const seqSteps = [
+  { id: 0, text: 'Isolate plasmids from a bacterium' },
+  { id: 1, text: 'Cut the plasmid open with a specific restriction enzyme, producing sticky ends' },
+  { id: 2, text: 'Cut the target gene from donor DNA using the same restriction enzyme' },
+  { id: 3, text: 'Mix the opened plasmid and target gene with DNA ligase' },
+  { id: 4, text: 'Ligase seals the gene into the plasmid — recombinant DNA is formed' },
+  { id: 5, text: 'Incubate bacteria with the recombinant plasmids; some bacteria take up the plasmid (transformation)' },
+  { id: 6, text: 'Grow the transformed bacteria in a fermenter to produce the desired protein in large quantities' },
+];
+let seqOrder = [];
+let dragSrc = null;
+
+function buildSeq() {
+  seqOrder = [...seqSteps].sort(() => Math.random() - 0.5);
+  renderSeq();
+}
+
+function renderSeq() {
+  const list = document.getElementById('seq-list');
+  list.innerHTML = '';
+  const res = document.getElementById('seq-result');
+  res.classList.remove('show');
+  seqOrder.forEach((step, i) => {
+    const el = document.createElement('div');
+    el.className = 'seq-item';
+    el.draggable = true;
+    el.dataset.i = i;
+    el.innerHTML = `<div class="seq-num">${i+1}</div><div style="line-height:1.5">${step.text}</div>`;
+    el.ondragstart = () => { dragSrc = i; el.classList.add('dragging'); };
+    el.ondragend = () => el.classList.remove('dragging');
+    el.ondragover = e => { e.preventDefault(); el.classList.add('drag-over'); };
+    el.ondragleave = () => el.classList.remove('drag-over');
+    el.ondrop = e => {
+      e.preventDefault();
+      el.classList.remove('drag-over');
+      if (dragSrc !== i) {
+        const tmp = seqOrder[dragSrc];
+        seqOrder[dragSrc] = seqOrder[i];
+        seqOrder[i] = tmp;
+        renderSeq();
+      }
+    };
+    list.appendChild(el);
+  });
+}
+
+function checkSeq() {
+  const items = document.querySelectorAll('.seq-item');
+  let correct = 0;
+  seqOrder.forEach((s, i) => {
+    items[i].classList.remove('correct', 'incorrect');
+    if (s.id === i) { items[i].classList.add('correct'); correct++; }
+    else items[i].classList.add('incorrect');
+    items[i].querySelector('.seq-num').textContent = i+1;
+  });
+  const res = document.getElementById('seq-result');
+  res.classList.add('show');
+  if (correct === seqSteps.length) {
+    res.className = 'result-msg show ok';
+    res.textContent = 'Excellent! All 7 steps are in the correct order.';
+  } else {
+    res.className = 'result-msg show fail';
+    res.textContent = `${correct} of ${seqSteps.length} steps correct. Green = correct position, red = needs moving.`;
+  }
+}
+
+function resetSeq() { buildSeq(); }
+
+const plantExamples = [
+  { tag: 'Pest resistance', title: 'Bt cotton', desc: 'Contains a gene from Bacillus thuringiensis that produces an insecticidal protein, killing insects that feed on the plant without chemical pesticides.' },
+  { tag: 'Herbicide tolerance', title: 'Herbicide-resistant crops', desc: 'Engineered to survive herbicide application, allowing farmers to spray weeds without damaging the crop.' },
+  { tag: 'Nutritional improvement', title: 'Golden rice', desc: 'Three genes added (two from daffodil, one from bacteria) allow it to produce beta-carotene, which converts to Vitamin A — potentially preventing childhood blindness.' },
+  { tag: 'Frost resistance', title: 'Frost-tolerant plants', desc: 'Genes from Arctic fish coding for antifreeze proteins have been inserted into plants to give them tolerance to freezing temperatures.' },
+];
+
+function buildPlants() {
+  const grid = document.getElementById('plant-grid');
+  plantExamples.forEach(p => {
+    const el = document.createElement('div');
+    el.className = 'plant-card';
+    el.innerHTML = `<div class="plant-tag">${p.tag}</div><div class="plant-title">${p.title}</div><div class="plant-desc">${p.desc}</div>`;
+    grid.appendChild(el);
+  });
+}
+
+const matchData = [
+  { term: 'E. coli + human insulin gene', def: 'Transgenic bacterium — different species gene inserted' },
+  { term: 'Sheep producing human AAT in milk', def: 'Transgenic mammal — contains a human gene for a therapeutic protein' },
+  { term: 'Golden rice', def: 'Transgenic plant — contains genes from daffodil and a bacterium' },
+  { term: 'Selective breeding in cattle', def: 'NOT transgenic — genes remain within the same species' },
+];
+let selectedMatch = null;
+let matchAnswers = {};
+
+function buildMatch() {
+  const area = document.getElementById('match-area');
+  area.innerHTML = '';
+  const terms = document.createElement('div');
+  terms.className = 'match-terms';
+  matchData.forEach(m => {
+    const chip = document.createElement('div');
+    chip.className = 'match-chip';
+    chip.id = 'mchip-' + m.term;
+    chip.textContent = m.term;
+    chip.onclick = () => {
+      if (chip.classList.contains('used')) return;
+      document.querySelectorAll('.match-chip').forEach(c => c.classList.remove('selected'));
+      if (selectedMatch === m.term) { selectedMatch = null; return; }
+      chip.classList.add('selected');
+      selectedMatch = m.term;
+    };
+    terms.appendChild(chip);
+  });
+  area.appendChild(terms);
+
+  const defs = document.createElement('div');
+  defs.className = 'match-defs';
+  const shuffled = [...matchData].sort(() => Math.random() - 0.5);
+  shuffled.forEach(m => {
+    const row = document.createElement('div');
+    row.className = 'match-def-row';
+    const defEl = document.createElement('div');
+    defEl.className = 'match-def-text';
+    defEl.dataset.def = m.def;
+    defEl.textContent = m.def;
+    defEl.onclick = () => {
+      if (!selectedMatch || defEl.classList.contains('matched')) return;
+      matchAnswers[selectedMatch] = m.def;
+      defEl.classList.add('matched');
+      const chip = document.getElementById('mchip-' + selectedMatch);
+      if (chip) chip.classList.add('used');
+      selectedMatch = null;
+      document.querySelectorAll('.match-chip').forEach(c => c.classList.remove('selected'));
+    };
+    row.appendChild(defEl);
+    defs.appendChild(row);
+  });
+  area.appendChild(defs);
+}
+
+function checkMatch() {
+  let correct = 0;
+  matchData.forEach(m => {
+    if (matchAnswers[m.term] === m.def) correct++;
+  });
+  const res = document.getElementById('match-result');
+  res.classList.add('show');
+  if (correct === matchData.length) {
+    res.className = 'result-msg show ok';
+    res.textContent = 'All matched correctly — well done!';
+  } else {
+    res.className = 'result-msg show fail';
+    res.textContent = `${correct} of ${matchData.length} correct. Review the definitions above.`;
+  }
+}
+
+function resetMatch() {
+  matchAnswers = {};
+  selectedMatch = null;
+  document.getElementById('match-result').classList.remove('show');
+  buildMatch();
+}
+
+const allQuizzes = {
+  enzymes: [
+    { q: 'What is the role of a restriction enzyme in genetic engineering?', opts: ['It joins two DNA fragments together','It carries DNA into a host cell','It recognises and cuts DNA at a specific base sequence','It replicates the target gene'], ans: 2, fb: 'Correct. Restriction endonucleases recognise a specific recognition site and cut the DNA molecule there.', fb2: 'Not quite. Restriction enzymes cut DNA at specific recognition sequences. Ligase is the enzyme that joins.' },
+    { q: 'Why must the same restriction enzyme be used to cut both the donor DNA and the plasmid?', opts: ['To make the cutting reaction faster','So that both pieces have complementary sticky ends that can join together','To prevent the gene being damaged','Different enzymes always produce blunt ends'], ans: 1, fb: 'Exactly. Using the same enzyme ensures both the donor gene and the plasmid have matching complementary sticky ends.', fb2: 'Think about sticky ends — what happens to the ends when the same enzyme cuts both pieces?' },
+    { q: 'A student states: "Ligase enzymes cut DNA at specific base sequences." What error has the student made?', opts: ['Nothing — the statement is correct','Ligase joins DNA; it is restriction enzymes that cut at specific sequences','Ligase only works on single-stranded DNA','The sequences do not need to be specific'], ans: 1, fb: 'Well identified. Ligase joins DNA; restriction enzymes cut. This is a very common exam confusion.', fb2: 'Check which enzyme does which job — one cuts and one joins.' },
+  ],
+  vectors: [
+    { q: 'What is a vector in genetic engineering?', opts: ['An enzyme that cuts DNA at a recognition site','A carrier molecule used to transfer a gene into a host cell','The organism that donates the gene','The base sequence recognised by a restriction enzyme'], ans: 1, fb: 'Correct. Vectors (plasmids or phages) carry the recombinant DNA into the host organism.', fb2: 'A vector is the delivery vehicle — usually a plasmid or bacteriophage — that transports the gene.' },
+    { q: 'How does a bacteriophage act as a vector?', opts: ['It forms a plasmid inside the bacterium','It attaches to the cell wall and injects its DNA (including the foreign gene) into the bacterium','It fuses its membrane with the bacterium','It produces sticky ends for the foreign gene'], ans: 1, fb: 'Correct. The phage injects its DNA directly through the cell wall into the bacterium.', fb2: 'A bacteriophage is a virus. How does a virus normally get its genetic material into a host cell?' },
+  ],
+  insulin: [
+    { q: 'Before genetic engineering, where was insulin for diabetics obtained?', opts: ['Synthesised from simple chemicals in a lab','Extracted from the pancreases of pigs and cattle','Produced by genetically modified yeast','Taken from human volunteers'], ans: 1, fb: 'Correct. Animal-derived insulin was the only option before GM bacteria were developed.', fb2: 'Insulin was obtained from animal sources — primarily pig and cattle pancreases.' },
+    { q: 'Why is GM human insulin clinically superior to animal-derived insulin?', opts: ['It is far less expensive to produce','It is chemically identical to human insulin, reducing immune reactions','Animal insulin is toxic in large doses','GM insulin does not require injection'], ans: 1, fb: 'Exactly. GM insulin is the same protein the human body produces, making it more effective and better tolerated.', fb2: 'What is the key structural difference between human insulin and animal insulin — and why does that matter clinically?' },
+    { q: 'What is the purpose of the fermenter in insulin production?', opts: ['To insert the insulin gene into bacteria','To purify insulin from bacterial culture','To provide controlled conditions for growing billions of GM bacteria to produce large quantities of insulin','To kill off non-GM bacteria in the mixture'], ans: 2, fb: 'Correct. The fermenter allows industrial-scale growth of GM bacteria under optimal conditions.', fb2: 'The gene insertion happens before the fermenter. What does culturing bacteria in huge numbers allow the process to achieve?' },
+  ],
+  plants: [
+    { q: 'Why cannot Agrobacterium tumefaciens be used to modify cereal crops?', opts: ['It only works on animal cells','It cannot infect cereal plants (monocots)','Cereals do not have cell walls','Cereals already naturally produce the proteins required'], ans: 1, fb: 'Correct. Agrobacterium is effective on dicotyledonous plants but cannot infect cereals (monocots).', fb2: 'Agrobacterium is a very effective tool — but which group of plants is it limited to?' },
+    { q: 'Why is golden rice considered important for global health?', opts: ['It grows faster and produces more yield','Beta-carotene it produces is converted to Vitamin A, potentially preventing blindness in children with vitamin-poor diets','It is resistant to most fungal diseases','It requires less water than conventional rice'], ans: 1, fb: 'Excellent. Vitamin A deficiency is a leading cause of childhood blindness in developing countries where rice is the staple diet.', fb2: 'What does the body do with beta-carotene? Think about what vitamin it converts to, and who it might help.' },
+  ],
+  transgenic: [
+    { q: 'What is the correct definition of a transgenic organism?', opts: ['An organism produced by selective breeding','An organism with a gene from a different species inserted into its genome','An organism produced by cloning','An organism with one of its own genes switched off'], ans: 1, fb: 'Correct. Transgenic = genes transferred across species ("trans" = across).', fb2: 'Think about the word parts: "trans" means across, "genic" relates to genes. What does the combination imply?' },
+    { q: 'Which of the following is NOT an example of a transgenic organism?', opts: ['E. coli bacteria producing human insulin','A cow selectively bred over generations for higher milk yield','Sheep producing human AAT in their milk','Golden rice containing daffodil and bacterial genes'], ans: 1, fb: 'Correct. Selective breeding operates within the same species — no genes cross a species barrier, so it is not transgenic.', fb2: 'Which example involves genes that never cross from one species to a different species?' },
+  ],
+  final: [
+    { q: 'Which enzyme is responsible for joining two pieces of DNA together?', opts: ['Restriction endonuclease','Polymerase','Ligase','Transcriptase'], ans: 2, fb: 'Correct! Ligase joins DNA fragments by forming covalent phosphodiester bonds.', fb2: 'Remember: one enzyme cuts, another joins. Which one forms the permanent covalent bonds?' },
+    { q: 'A plasmid is cut with restriction enzyme EcoRI and a gene is cut from donor DNA with the same enzyme. Why are these then easier to join together?', opts: ['EcoRI makes blunt ends which are perfectly smooth','Both pieces have matching complementary sticky ends that can base pair','EcoRI activates ligase automatically','The plasmid and gene are the same size'], ans: 1, fb: 'Perfect. Matching sticky ends allow complementary base pairing before ligase seals the bond.', fb2: 'What does using the same restriction enzyme guarantee about the ends of each cut fragment?' },
+    { q: 'In insulin production, what happens to GM bacteria after the insulin gene has been inserted?', opts: ['They are immediately destroyed to release the insulin','They are grown in fermenters to produce large quantities of insulin','They are injected directly into diabetic patients','They pass the gene to non-GM bacteria by transformation'], ans: 1, fb: 'Correct. GM bacteria are cultured in fermenters under controlled conditions for industrial-scale production.', fb2: 'The key step after gene insertion is scaling up. How do scientists produce enough insulin for millions of patients?' },
+    { q: 'What technique is used to grow whole GM plants from a single modified cell?', opts: ['Selective breeding','In vitro fertilisation','Micropropagation','Clonal selection'], ans: 2, fb: 'Correct. Micropropagation grows plant cells on nutrient medium into whole plants.', fb2: 'Remember — once one cell has been successfully modified, how is an entire plant produced from it?' },
+    { q: 'An organism contains a gene transferred from a bacterium into a plant. Which term correctly describes this plant?', opts: ['Selectively bred','Cloned','Transgenic','Mutant'], ans: 2, fb: 'Exactly right. A gene has crossed the species barrier — from bacterium to plant — making the plant transgenic.', fb2: 'The gene has crossed from one species (bacterium) into a completely different one (plant). Which term applies?' },
+  ],
+};
+
+function buildQuiz(containerId, quizKey) {
+  const container = document.getElementById('quiz-' + containerId);
+  if (!container) return;
+  const qs = allQuizzes[quizKey];
+  qs.forEach((q, qi) => {
+    const block = document.createElement('div');
+    block.className = 'q-block';
+    const optsHtml = q.opts.map((o, oi) => `<button class="q-opt" data-qi="${qi}" data-oi="${oi}" onclick="answerQ(this,'${containerId}',${qi},${oi},${q.ans},'${encodeURIComponent(q.fb)}','${encodeURIComponent(q.fb2)}')">${o}</button>`).join('');
+    block.innerHTML = `<div class="q-text">${qi+1}. ${q.q}</div><div class="q-opts" id="qopts-${containerId}-${qi}">${optsHtml}</div><div class="q-feedback" id="qfb-${containerId}-${qi}"></div>`;
+    container.appendChild(block);
+  });
+}
+
+function answerQ(btn, cid, qi, oi, correct, fb, fb2) {
+  const opts = document.querySelectorAll(`#qopts-${cid}-${qi} .q-opt`);
+  opts.forEach(o => o.disabled = true);
+  const isRight = oi === correct;
+  btn.classList.add(isRight ? 'correct' : 'wrong');
+  if (!isRight) opts[correct].classList.add('correct');
+  const fbEl = document.getElementById(`qfb-${cid}-${qi}`);
+  fbEl.textContent = isRight ? decodeURIComponent(fb) : decodeURIComponent(fb2);
+  fbEl.className = `q-feedback show ${isRight ? 'ok' : 'fail'}`;
+}
+
+buildVocab();
+buildFlips();
+buildSeq();
+buildPlants();
+buildMatch();
+['enzymes','vectors','insulin','plants','transgenic','final'].forEach(k => buildQuiz(k, k));
+</script>
+</body>
+</html>

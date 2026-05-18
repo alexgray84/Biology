@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>4A: The Cell Wall — Exam Practice Paper</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #F7F5F0;
+  --fg: #1A1A1A;
+  --accent: #2D6A4F;
+  --accent-light: #D8F3DC;
+  --highlight: #E76F51;
+  --card: #FFFFFF;
+  --muted: #6B7280;
+  --border: #E5E1DA;
+  --red: #C0392B;
+  --serif: 'Instrument Serif', Georgia, serif;
+  --sans: 'DM Sans', system-ui, sans-serif;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family: var(--sans); background: var(--bg); color: var(--fg); font-size:15px; line-height:1.7; }
+.page { max-width:760px; margin:0 auto; padding:32px 28px 80px; }
+
+/* PAPER HEADER */
+.paper-header { border:2px solid var(--fg); padding:20px 24px; margin-bottom:32px; background:#fff; }
+.paper-header .board { font-size:11px; font-weight:700; letter-spacing:3px; text-transform:uppercase; color:var(--muted); margin-bottom:4px; }
+.paper-header h1 { font-family:var(--serif); font-size:1.5rem; color:var(--fg); margin-bottom:6px; }
+.paper-header .subtitle { font-size:13px; color:var(--muted); }
+.paper-meta { display:flex; gap:32px; margin-top:14px; padding-top:14px; border-top:1px solid var(--border); flex-wrap:wrap; }
+.paper-meta div { font-size:12px; }
+.paper-meta strong { display:block; font-size:13px; }
+.instructions { background:#F0FDF4; border:1px solid var(--accent); border-radius:8px; padding:14px 18px; margin-bottom:28px; font-size:13.5px; }
+.instructions ul { padding-left:18px; margin-top:6px; }
+.instructions li { margin-bottom:4px; }
+
+/* SCORE TRACKER */
+.score-bar { background:#fff; border:1px solid var(--border); border-radius:10px; padding:16px 20px; margin-bottom:28px; display:flex; align-items:center; gap:20px; flex-wrap:wrap; }
+.score-bar .label { font-size:13px; font-weight:600; color:var(--accent); white-space:nowrap; }
+.score-bar .tally { display:flex; gap:6px; flex-wrap:wrap; }
+.mark-chip { width:32px; height:32px; border-radius:6px; border:2px solid var(--border); display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700; cursor:pointer; transition:all .15s; color:var(--muted); }
+.mark-chip.earned { background:var(--accent); color:#fff; border-color:var(--accent); }
+.score-display { font-family:var(--serif); font-size:1.4rem; margin-left:auto; }
+.score-display span { color:var(--accent); font-weight:700; }
+
+/* SECTION LABEL */
+.section-label { font-size:11px; font-weight:700; letter-spacing:3px; text-transform:uppercase; color:var(--muted); margin:32px 0 8px; }
+
+/* QUESTION BLOCK */
+.q-block { margin-bottom:28px; }
+.q-header { display:flex; align-items:baseline; gap:12px; margin-bottom:8px; }
+.q-num { font-family:var(--serif); font-size:1.3rem; color:var(--accent); min-width:32px; }
+.q-stem { font-size:15px; line-height:1.6; }
+.q-stem em { font-style:italic; }
+.q-stem strong { font-weight:700; }
+.q-marks { margin-left:auto; font-size:12px; font-weight:700; color:var(--muted); white-space:nowrap; border:1px solid var(--border); padding:3px 10px; border-radius:20px; }
+.q-indent { margin-left:32px; }
+
+/* SUB-QUESTIONS */
+.sub-q { margin:12px 0 12px 32px; }
+.sub-q-label { font-size:14px; margin-bottom:6px; display:flex; align-items:baseline; gap:10px; }
+.sub-q-label .alpha { color:var(--accent); font-weight:700; min-width:20px; }
+.sub-q-label .sub-marks { margin-left:auto; font-size:12px; color:var(--muted); font-weight:600; white-space:nowrap; }
+
+/* ANSWER SPACE */
+.answer-lines { margin:8px 0 4px 32px; }
+.answer-line { border-bottom:1px solid #ccc; height:28px; margin:0; }
+.answer-box { border:1px solid #ccc; background:#fff; border-radius:6px; min-height:60px; margin:8px 0 4px 32px; padding:8px 10px; font-size:14px; color:#aaa; }
+.answer-box-tall { min-height:110px; }
+
+/* MCQ */
+.mcq-options { margin:10px 0 4px 32px; display:flex; flex-direction:column; gap:6px; }
+.mcq-option { display:flex; align-items:center; gap:10px; padding:8px 12px; border:1px solid var(--border); border-radius:8px; cursor:pointer; font-size:14px; transition:all .15s; background:#fff; }
+.mcq-option:hover { border-color:var(--accent); background:#F0FDF4; }
+.mcq-option.selected { border-color:var(--accent); background:var(--accent-light); }
+.mcq-option.correct { border-color:var(--accent); background:#D1FAE5; }
+.mcq-option.wrong { border-color:var(--red); background:#FEE2E2; }
+.mcq-option.disabled { pointer-events:none; }
+.mcq-option .opt-letter { min-width:26px; height:26px; border-radius:50%; border:2px solid var(--border); display:flex; align-items:center; justify-content:center; font-weight:700; font-size:12px; flex-shrink:0; }
+.mcq-option.selected .opt-letter { background:var(--accent); color:#fff; border-color:var(--accent); }
+.mcq-option.correct .opt-letter { background:var(--accent); color:#fff; border-color:var(--accent); }
+.mcq-option.wrong .opt-letter { background:var(--red); color:#fff; border-color:var(--red); }
+.mcq-feedback { margin:6px 0 0 32px; font-size:13px; padding:10px 14px; border-radius:8px; display:none; }
+.mcq-feedback.show { display:block; }
+.mcq-feedback.correct { background:#D1FAE5; color:#065F46; }
+.mcq-feedback.wrong { background:#FEE2E2; color:#991B1B; }
+
+/* DATA / DIAGRAM BOX */
+.fig-box { margin:12px 0 8px 32px; background:#fff; border:1px solid var(--border); border-radius:8px; padding:20px; }
+.fig-box svg { width:100%; height:auto; }
+.fig-caption { font-size:12px; color:var(--muted); margin-top:8px; text-align:center; font-style:italic; }
+.data-table { width:100%; border-collapse:collapse; font-size:13.5px; margin:8px 0; }
+.data-table th { background:var(--fg); color:#fff; padding:8px 12px; text-align:left; font-size:12px; }
+.data-table td { padding:8px 12px; border-bottom:1px solid var(--border); }
+.data-table tr:last-child td { border-bottom:none; }
+
+/* MARKS INDICATOR */
+.marks-right { float:right; font-size:12px; color:var(--muted); font-weight:600; }
+
+/* MARK SCHEME */
+.ms-wrapper { margin-top:48px; padding-top:24px; border-top:3px double var(--accent); }
+.ms-title { font-family:var(--serif); font-size:1.6rem; color:var(--accent); margin-bottom:20px; }
+.ms-block { margin-bottom:20px; padding:16px 18px; background:#fff; border:1px solid var(--border); border-radius:10px; }
+.ms-block .ms-q { font-size:12px; font-weight:700; letter-spacing:1px; text-transform:uppercase; color:var(--muted); margin-bottom:6px; }
+.ms-block .ms-content { font-size:13.5px; line-height:1.7; }
+.ms-block .ms-content .point { padding:2px 0 2px 18px; position:relative; }
+.ms-block .ms-content .point::before { content:'•'; position:absolute; left:4px; color:var(--accent); }
+.ms-block .ms-content .accept { font-size:12px; color:var(--muted); font-style:italic; }
+.ms-block .ms-content .reject { font-size:12px; color:var(--red); }
+.ms-block .ms-content .mark-val { font-weight:700; color:var(--accent); }
+
+/* TOGGLE BUTTONS */
+.toggle-btn { display:inline-flex; align-items:center; gap:6px; padding:8px 18px; background:var(--accent); color:#fff; border:none; border-radius:6px; font-family:var(--sans); font-size:13px; font-weight:600; cursor:pointer; transition:all .2s; margin:12px 0 0 32px; }
+.toggle-btn:hover { background:#245A42; }
+.toggle-btn.alt { background:var(--highlight); }
+.toggle-btn.alt:hover { background:#D4623F; }
+
+/* TOTAL */
+.total-box { border:2px solid var(--accent); border-radius:10px; padding:18px 22px; margin-top:32px; display:flex; align-items:center; justify-content:space-between; background:#F0FDF4; }
+.total-box .t-label { font-weight:700; font-size:14px; color:var(--accent); }
+.total-box .t-score { font-family:var(--serif); font-size:2rem; color:var(--accent); }
+
+/* DIVIDER */
+.q-divider { border:none; border-top:1px solid var(--border); margin:28px 0; }
+
+/* SHOW-MS */
+.ms-hidden { display:none; }
+.ms-visible { display:block; }
+
+@media print {
+  .score-bar, .toggle-btn, .mcq-options { display:none; }
+  .answer-line { border-bottom:1px solid #999; }
+  .ms-wrapper { page-break-before:always; }
+}
+@media (max-width:600px) {
+  .paper-meta { gap:16px; }
+  .q-indent, .sub-q, .answer-lines, .answer-box, .mcq-options, .fig-box { margin-left:0; }
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+<!-- PAPER HEADER -->
+<div class="paper-header">
+  <div class="board">Edexcel IAL Biology · Unit 2 · Topic 4A</div>
+  <h1>The Cell Wall — Practice Questions</h1>
+  <div class="subtitle">Plant Cell Ultrastructure · Electron Microscopy · Cellulose Structure</div>
+  <div class="paper-meta">
+    <div><strong>Spec refs</strong>4.1(i) · 4.1(ii) · 4.2 · 4.3</div>
+    <div><strong>Total marks</strong>25</div>
+    <div><strong>Suggested time</strong>30–35 minutes</div>
+    <div><strong>Command words</strong>State · Describe · Explain · Identify · Compare</div>
+  </div>
+</div>
+
+<div class="instructions">
+  <strong>Instructions</strong>
+  <ul>
+    <li>Answer <strong>all</strong> questions.</li>
+    <li>For multiple-choice questions, click the option you think is correct.</li>
+    <li>For written questions, use the answer lines — write or type your answer, then reveal the mark scheme.</li>
+    <li>The number of marks available is shown in brackets at the end of each question.</li>
+  </ul>
+</div>
+
+<!-- SCORE TRACKER -->
+<div class="score-bar">
+  <div class="label">Marks tracker</div>
+  <div class="tally" id="tally">
+    <!-- chips filled by JS -->
+  </div>
+  <div class="score-display">Score: <span id="scoreNum">0</span> / 25</div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- Q1 — MCQ (1 mark) -->
+<!-- ══════════════════════════════════════════════════════ -->
+<div class="section-label">Section A — Multiple Choice &nbsp;(Questions 1–2)</div>
+
+<div class="q-block" id="qblock1">
+  <div class="q-header">
+    <span class="q-num">1</span>
+    <span class="q-stem">Which of the following is found in animal cells but <em>not</em> in plant cells?</span>
+    <span class="q-marks">(1)</span>
+  </div>
+  <div class="mcq-options">
+    <div class="mcq-option" onclick="checkMCQ(this, false, 'q1', 'Ribosomes are found in all living cells — both prokaryotic and eukaryotic — including plant and animal cells.')">
+      <span class="opt-letter">A</span><span>Ribosomes</span>
+    </div>
+    <div class="mcq-option" onclick="checkMCQ(this, false, 'q1', 'The Golgi apparatus is present in all eukaryotic cells, including both plant and animal cells.')">
+      <span class="opt-letter">B</span><span>Golgi apparatus</span>
+    </div>
+    <div class="mcq-option" onclick="checkMCQ(this, true, 'q1', 'Correct! Centrioles are found in animal cells (and some lower plant cells) but are absent in most flowering plant cells. They are involved in organising the spindle during cell division.')">
+      <span class="opt-letter">C</span><span>Centrioles</span>
+    </div>
+    <div class="mcq-option" onclick="checkMCQ(this, false, 'q1', 'Mitochondria are present in all eukaryotic cells, including plants, where they produce ATP by aerobic respiration.')">
+      <span class="opt-letter">D</span><span>Mitochondria</span>
+    </div>
+  </div>
+  <div class="mcq-feedback" id="q1-feedback"></div>
+</div>
+
+<hr class="q-divider">
+
+<!-- Q2 — MCQ (1 mark) -->
+<div class="q-block" id="qblock2">
+  <div class="q-header">
+    <span class="q-num">2</span>
+    <span class="q-stem">A cell contains a double outer membrane, no internal thylakoid membrane system, and large electron-dense granules in its interior. Under a transmission electron microscope, this organelle is most likely to be:</span>
+    <span class="q-marks">(1)</span>
+  </div>
+  <div class="mcq-options">
+    <div class="mcq-option" onclick="checkMCQ(this, false, 'q2', 'A chloroplast has a double outer membrane AND an internal thylakoid membrane system (grana). The question states no internal membrane system is present.')">
+      <span class="opt-letter">A</span><span>Chloroplast</span>
+    </div>
+    <div class="mcq-option" onclick="checkMCQ(this, false, 'q2', 'A mitochondrion has a double membrane, but its inner membrane is highly folded into cristae — these would be visible as internal membranes. It does not contain starch granules.')">
+      <span class="opt-letter">B</span><span>Mitochondrion</span>
+    </div>
+    <div class="mcq-option" onclick="checkMCQ(this, true, 'q2', 'Correct! An amyloplast has a double outer membrane but no internal thylakoid system. It stores starch, which appears as very electron-dense (dark) granules in a TEM image.')">
+      <span class="opt-letter">C</span><span>Amyloplast</span>
+    </div>
+    <div class="mcq-option" onclick="checkMCQ(this, false, 'q2', 'The nucleus has a double membrane (nuclear envelope) with nuclear pores, and contains chromatin and a nucleolus — not electron-dense starch granules.')">
+      <span class="opt-letter">D</span><span>Nucleus</span>
+    </div>
+  </div>
+  <div class="mcq-feedback" id="q2-feedback"></div>
+</div>
+
+<hr class="q-divider">
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- Section B — Short Answer -->
+<!-- ══════════════════════════════════════════════════════ -->
+<div class="section-label">Section B — Short Answer &nbsp;(Questions 3–5)</div>
+
+<!-- Q3 — 3 marks -->
+<div class="q-block">
+  <div class="q-header">
+    <span class="q-num">3</span>
+    <span class="q-stem">Name <strong>three</strong> structures found in a plant cell that are absent from an animal cell, and for each one, state its function.</span>
+    <span class="q-marks">(3)</span>
+  </div>
+  <div class="q-indent" style="font-size:13px; color:var(--muted); margin-bottom:4px; margin-left:32px;">One mark per correct structure + function pair.</div>
+  <div class="answer-lines" style="margin-left:32px;">
+    <div style="display:flex; gap:10px; align-items:baseline; margin:10px 0 4px;">
+      <span style="font-weight:700; min-width:10px;">1.</span>
+      <div style="flex:1; border-bottom:1px solid #ccc; height:28px;"></div>
+    </div>
+    <div style="display:flex; gap:10px; align-items:baseline; margin:10px 0 4px;">
+      <span style="font-weight:700; min-width:10px;">2.</span>
+      <div style="flex:1; border-bottom:1px solid #ccc; height:28px;"></div>
+    </div>
+    <div style="display:flex; gap:10px; align-items:baseline; margin:10px 0 4px;">
+      <span style="font-weight:700; min-width:10px;">3.</span>
+      <div style="flex:1; border-bottom:1px solid #ccc; height:28px;"></div>
+    </div>
+  </div>
+  <button class="toggle-btn" onclick="toggleMS('ms3')">Show Mark Scheme</button>
+  <div id="ms3" class="ms-hidden" style="margin:10px 0 0 32px; background:#EDE9FE; border-radius:8px; padding:14px 16px; font-size:13.5px; color:#3730A3; line-height:1.8;">
+    <strong>Award 1 mark per correct structure + function pair. Any three of:</strong><br>
+    • Cell wall — structural support / prevents excess water uptake (1)<br>
+    • Middle lamella — cements / holds adjacent cells together [accept: made of calcium pectate] (1)<br>
+    • Plasmodesmata — allow transport / communication between adjacent cells (1)<br>
+    • Pits — allow water movement between cells (1)<br>
+    • Vacuole (large, permanent) — stores cell sap / maintains turgor pressure (1)<br>
+    • Tonoplast — controls movement of substances into/out of the vacuole (1)<br>
+    • Chloroplast — site of photosynthesis (1)<br>
+    • Amyloplast — stores starch (1)
+  </div>
+</div>
+
+<hr class="q-divider">
+
+<!-- Q4 — 2 marks -->
+<div class="q-block">
+  <div class="q-header">
+    <span class="q-num">4</span>
+    <span class="q-stem">State <strong>two</strong> differences between how carbohydrate is stored in plant cells compared with animal cells.</span>
+    <span class="q-marks">(2)</span>
+  </div>
+  <div class="answer-lines">
+    <div class="answer-line"></div>
+    <div class="answer-line" style="margin-top:28px;"></div>
+    <div class="answer-line" style="margin-top:28px;"></div>
+    <div class="answer-line" style="margin-top:28px;"></div>
+  </div>
+  <button class="toggle-btn" onclick="toggleMS('ms4')">Show Mark Scheme</button>
+  <div id="ms4" class="ms-hidden" style="margin:10px 0 0 32px; background:#EDE9FE; border-radius:8px; padding:14px 16px; font-size:13.5px; color:#3730A3; line-height:1.8;">
+    <strong>Award 1 mark each for any two of:</strong><br>
+    • Plant cells store starch; animal cells store glycogen (1)<br>
+    • Plant cells store carbohydrate inside amyloplasts / membrane-bound organelles; animal cells store glycogen granules in the cytoplasm (not in a membrane-bound organelle) (1)<br>
+    • Starch is a polymer of α-glucose; glycogen is also a polymer of α-glucose but more highly branched (1) — <em>accept for second difference if first difference given</em>
+  </div>
+</div>
+
+<hr class="q-divider">
+
+<!-- Q5 — 3 marks -->
+<div class="q-block">
+  <div class="q-header">
+    <span class="q-num">5</span>
+    <span class="q-stem">The diagram below shows the structure of part of a plant cell wall.</span>
+    <span class="q-marks">(3)</span>
+  </div>
+  <!-- Simplified wall diagram -->
+  <div class="fig-box">
+    <svg viewBox="0 0 600 220" xmlns="http://www.w3.org/2000/svg">
+      <!-- Cell 1 cytoplasm region -->
+      <rect x="0" y="0" width="600" height="220" fill="#F0FDF4"/>
+      <!-- Cell 1 wall -->
+      <rect x="50" y="0" width="35" height="220" fill="#D4A574" opacity="0.7"/>
+      <!-- Middle lamella -->
+      <rect x="85" y="0" width="10" height="220" fill="#A0522D" opacity="0.9"/>
+      <!-- Cell 2 wall -->
+      <rect x="95" y="0" width="35" height="220" fill="#D4A574" opacity="0.7"/>
+      <!-- Plasmodesmata channels (3 of them) -->
+      <ellipse cx="105" cy="60" rx="3" ry="14" fill="#2D6A4F" opacity="0.9"/>
+      <ellipse cx="105" cy="110" rx="3" ry="14" fill="#2D6A4F" opacity="0.9"/>
+      <ellipse cx="105" cy="160" rx="3" ry="14" fill="#2D6A4F" opacity="0.9"/>
+      <!-- Arrows and labels -->
+      <!-- Arrow to wall -->
+      <line x1="60" y1="30" x2="60" y2="5" stroke="#374151" stroke-width="1.5"/>
+      <polygon points="60,0 56,8 64,8" fill="#374151"/>
+      <!-- Arrow to middle lamella -->
+      <line x1="215" y1="60" x2="95" y2="60" stroke="#374151" stroke-width="1.5"/>
+      <polygon points="90,60 98,56 98,64" fill="#374151"/>
+      <!-- Arrow to plasmodesmata -->
+      <line x1="215" y1="110" x2="112" y2="110" stroke="#374151" stroke-width="1.5"/>
+      <polygon points="107,110 115,106 115,114" fill="#374151"/>
+      <!-- Labels -->
+      <text x="220" y="64" font-size="13" font-family="sans-serif" fill="#374151" font-weight="600">X</text>
+      <text x="220" y="114" font-size="13" font-family="sans-serif" fill="#374151" font-weight="600">Y</text>
+      <text x="65" y="14" font-size="13" font-family="sans-serif" fill="#374151" font-weight="600">Cell wall</text>
+      <!-- Cell labels -->
+      <text x="10" y="115" font-size="11" font-family="sans-serif" fill="#2D6A4F" font-weight="700" transform="rotate(-90,10,115)">Cell 1</text>
+      <text x="145" y="115" font-size="11" font-family="sans-serif" fill="#2D6A4F" font-weight="700" transform="rotate(-90,145,115)">Cell 2</text>
+      <!-- Microfibril texture lines in wall -->
+      <line x1="55" y1="40" x2="80" y2="40" stroke="#fff" stroke-width="1" opacity="0.4"/>
+      <line x1="55" y1="60" x2="80" y2="60" stroke="#fff" stroke-width="1" opacity="0.4"/>
+      <line x1="55" y1="80" x2="80" y2="80" stroke="#fff" stroke-width="1" opacity="0.4"/>
+      <line x1="55" y1="100" x2="80" y2="100" stroke="#fff" stroke-width="1" opacity="0.4"/>
+      <line x1="55" y1="120" x2="80" y2="120" stroke="#fff" stroke-width="1" opacity="0.4"/>
+      <line x1="55" y1="140" x2="80" y2="140" stroke="#fff" stroke-width="1" opacity="0.4"/>
+      <line x1="55" y1="160" x2="80" y2="160" stroke="#fff" stroke-width="1" opacity="0.4"/>
+      <line x1="55" y1="180" x2="80" y2="180" stroke="#fff" stroke-width="1" opacity="0.4"/>
+      <line x1="100" y1="40" x2="125" y2="40" stroke="#fff" stroke-width="1" opacity="0.4"/>
+      <line x1="100" y1="60" x2="125" y2="60" stroke="#fff" stroke-width="1" opacity="0.4"/>
+      <line x1="100" y1="80" x2="125" y2="80" stroke="#fff" stroke-width="1" opacity="0.4"/>
+      <line x1="100" y1="100" x2="125" y2="100" stroke="#fff" stroke-width="1" opacity="0.4"/>
+      <line x1="100" y1="120" x2="125" y2="120" stroke="#fff" stroke-width="1" opacity="0.4"/>
+      <line x1="100" y1="140" x2="125" y2="140" stroke="#fff" stroke-width="1" opacity="0.4"/>
+      <line x1="100" y1="160" x2="125" y2="160" stroke="#fff" stroke-width="1" opacity="0.4"/>
+      <line x1="100" y1="180" x2="125" y2="180" stroke="#fff" stroke-width="1" opacity="0.4"/>
+    </svg>
+    <div class="fig-caption">Fig. 1 — Diagram of the junction between two adjacent plant cell walls (not to scale)</div>
+  </div>
+
+  <div class="sub-q">
+    <div class="sub-q-label">
+      <span class="alpha">(a)</span>
+      <span>Identify structures X and Y.</span>
+      <span class="sub-marks">(2)</span>
+    </div>
+    <div class="answer-lines" style="margin-left:20px;">
+      <div style="display:flex; gap:8px; align-items:center; margin-bottom:10px;"><span>X:</span><div style="flex:1; border-bottom:1px solid #ccc; height:24px;"></div></div>
+      <div style="display:flex; gap:8px; align-items:center;"><span>Y:</span><div style="flex:1; border-bottom:1px solid #ccc; height:24px;"></div></div>
+    </div>
+  </div>
+
+  <div class="sub-q">
+    <div class="sub-q-label">
+      <span class="alpha">(b)</span>
+      <span>State the function of structure Y.</span>
+      <span class="sub-marks">(1)</span>
+    </div>
+    <div class="answer-lines" style="margin-left:20px;">
+      <div class="answer-line"></div>
+      <div class="answer-line" style="margin-top:28px;"></div>
+    </div>
+  </div>
+
+  <button class="toggle-btn" onclick="toggleMS('ms5')">Show Mark Scheme</button>
+  <div id="ms5" class="ms-hidden" style="margin:10px 0 0 32px; background:#EDE9FE; border-radius:8px; padding:14px 16px; font-size:13.5px; color:#3730A3; line-height:1.8;">
+    <strong>(a)</strong><br>
+    X = Middle lamella (1) — <em>accept: pectin layer / calcium pectate layer</em><br>
+    Y = Plasmodesmata (1) — <em>accept: plasmodesma (singular)</em><br><br>
+    <strong>(b)</strong><br>
+    • Allow transport of water / small molecules / signals between adjacent cells (1) — <em>accept: connect cytoplasm of neighbouring cells; allow cell-to-cell communication</em><br>
+    <em>Do not accept: "allow exchange" without specifying what is being exchanged</em>
+  </div>
+</div>
+
+<hr class="q-divider">
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- Section C — Structured Questions -->
+<!-- ══════════════════════════════════════════════════════ -->
+<div class="section-label">Section C — Structured Questions &nbsp;(Questions 6–8)</div>
+
+<!-- Q6 — 4 marks -->
+<div class="q-block">
+  <div class="q-header">
+    <span class="q-num">6</span>
+    <span class="q-stem">A student examines a plant cell under a transmission electron microscope (TEM) and identifies two organelles: one oval with grana, and one irregular with electron-dense granules.</span>
+    <span class="q-marks">(4)</span>
+  </div>
+
+  <div class="sub-q">
+    <div class="sub-q-label">
+      <span class="alpha">(a)</span>
+      <span>Name the two organelles and state one piece of evidence from the TEM image for each identification.</span>
+      <span class="sub-marks">(2)</span>
+    </div>
+    <div style="margin-left:20px;">
+      <div style="margin-bottom:10px; font-size:14px;"><strong>Organelle 1 (oval, with grana):</strong></div>
+      <div style="display:flex; gap:8px; align-items:center; margin-bottom:8px;"><span style="min-width:55px; font-size:13px;">Name:</span><div style="flex:1; border-bottom:1px solid #ccc; height:24px;"></div></div>
+      <div style="display:flex; gap:8px; align-items:center; margin-bottom:18px;"><span style="min-width:55px; font-size:13px;">Evidence:</span><div style="flex:1; border-bottom:1px solid #ccc; height:24px;"></div></div>
+      <div style="margin-bottom:10px; font-size:14px;"><strong>Organelle 2 (irregular, electron-dense granules):</strong></div>
+      <div style="display:flex; gap:8px; align-items:center; margin-bottom:8px;"><span style="min-width:55px; font-size:13px;">Name:</span><div style="flex:1; border-bottom:1px solid #ccc; height:24px;"></div></div>
+      <div style="display:flex; gap:8px; align-items:center;"><span style="min-width:55px; font-size:13px;">Evidence:</span><div style="flex:1; border-bottom:1px solid #ccc; height:24px;"></div></div>
+    </div>
+  </div>
+
+  <div class="sub-q" style="margin-top:16px;">
+    <div class="sub-q-label">
+      <span class="alpha">(b)</span>
+      <span>Describe the appearance of the tonoplast in a TEM image, and state where it would be located within the plant cell.</span>
+      <span class="sub-marks">(2)</span>
+    </div>
+    <div class="answer-lines" style="margin-left:20px;">
+      <div class="answer-line"></div>
+      <div class="answer-line" style="margin-top:28px;"></div>
+      <div class="answer-line" style="margin-top:28px;"></div>
+    </div>
+  </div>
+
+  <button class="toggle-btn" onclick="toggleMS('ms6')">Show Mark Scheme</button>
+  <div id="ms6" class="ms-hidden" style="margin:10px 0 0 32px; background:#EDE9FE; border-radius:8px; padding:14px 16px; font-size:13.5px; color:#3730A3; line-height:1.8;">
+    <strong>(a)</strong><br>
+    Organelle 1: Chloroplast (1); evidence = grana / stacked thylakoid membranes visible as parallel electron-dense lines (1) — <em>accept: double outer membrane visible / pale stroma present</em><br>
+    Organelle 2: Amyloplast (1); evidence = large, very electron-dense starch granules inside / no internal membrane system (1)<br><br>
+    <strong>(b)</strong><br>
+    • The tonoplast appears as a single, electron-dense membrane line (1)<br>
+    • It surrounds / borders the large central vacuole (1) — <em>accept: located between the cytoplasm and the vacuole</em>
+  </div>
+</div>
+
+<hr class="q-divider">
+
+<!-- Q7 — 5 marks -->
+<div class="q-block">
+  <div class="q-header">
+    <span class="q-num">7</span>
+    <span class="q-stem">The table below shows some features of two types of polysaccharide, P and Q, found in plant cells.</span>
+    <span class="q-marks">(5)</span>
+  </div>
+  <div style="margin-left:32px;">
+    <table class="data-table" style="margin:12px 0 16px;">
+      <thead>
+        <tr>
+          <th>Feature</th>
+          <th>Polysaccharide P</th>
+          <th>Polysaccharide Q</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Monomer</td><td>β-glucose</td><td>α-glucose</td></tr>
+        <tr><td>Glycosidic bond</td><td>1,4</td><td>1,4</td></tr>
+        <tr><td>Chain conformation</td><td>Straight, unbranched</td><td>Helical</td></tr>
+        <tr><td>Location in cell</td><td>Cell wall</td><td>Amyloplast</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="sub-q">
+    <div class="sub-q-label">
+      <span class="alpha">(a)</span>
+      <span>Identify polysaccharides P and Q.</span>
+      <span class="sub-marks">(2)</span>
+    </div>
+    <div style="margin-left:20px;">
+      <div style="display:flex; gap:8px; align-items:center; margin-bottom:8px;"><span>P:</span><div style="flex:1; border-bottom:1px solid #ccc; height:24px;"></div></div>
+      <div style="display:flex; gap:8px; align-items:center;"><span>Q:</span><div style="flex:1; border-bottom:1px solid #ccc; height:24px;"></div></div>
+    </div>
+  </div>
+
+  <div class="sub-q" style="margin-top:16px;">
+    <div class="sub-q-label">
+      <span class="alpha">(b)</span>
+      <span>Use the information in the table to explain why polysaccharide P is able to form microfibrils, whereas polysaccharide Q does not.</span>
+      <span class="sub-marks">(3)</span>
+    </div>
+    <div class="answer-lines" style="margin-left:20px;">
+      <div class="answer-line"></div>
+      <div class="answer-line" style="margin-top:28px;"></div>
+      <div class="answer-line" style="margin-top:28px;"></div>
+      <div class="answer-line" style="margin-top:28px;"></div>
+      <div class="answer-line" style="margin-top:28px;"></div>
+    </div>
+  </div>
+
+  <button class="toggle-btn" onclick="toggleMS('ms7')">Show Mark Scheme</button>
+  <div id="ms7" class="ms-hidden" style="margin:10px 0 0 32px; background:#EDE9FE; border-radius:8px; padding:14px 16px; font-size:13.5px; color:#3730A3; line-height:1.8;">
+    <strong>(a)</strong><br>
+    P = Cellulose (1)<br>
+    Q = Starch / amylose (1) — <em>accept: amylose specifically</em><br><br>
+    <strong>(b) Award 1 mark each for any three of:</strong><br>
+    • Polysaccharide P (cellulose) has straight / unbranched chains, so parallel chains can lie close together (1)<br>
+    • Parallel chains allow hydrogen bonds to form between –OH groups on adjacent chains (1)<br>
+    • Many hydrogen bonds across the length of the chains hold them together as microfibrils / gives tensile strength (1)<br>
+    • Polysaccharide Q (amylose) has a helical chain conformation (from table), so chains cannot run parallel / cannot pack closely (1)<br>
+    • Therefore Q cannot form inter-chain hydrogen bonds in the same way (1)<br>
+    <em>Note: candidates do not need to use the term "microfibril" in their explanation as long as the mechanism is correct.</em>
+  </div>
+</div>
+
+<hr class="q-divider">
+
+<!-- Q8 — Extended, 6 marks -->
+<div class="q-block">
+  <div class="q-header">
+    <span class="q-num">8</span>
+    <span class="q-stem">Explain how the structure of cellulose is related to its function as a structural component of the plant cell wall. <em>In your answer, refer to the role of β-glucose, glycosidic bonds, and hydrogen bonds.</em></span>
+    <span class="q-marks">(6)</span>
+  </div>
+  <div class="q-indent" style="font-size:13px; color:var(--muted); margin-bottom:8px; margin-left:32px;">This question assesses your ability to construct a coherent, sequential explanation (AO1/AO2).</div>
+  <div class="answer-box answer-box-tall" style="min-height:160px;"></div>
+
+  <button class="toggle-btn" onclick="toggleMS('ms8')">Show Mark Scheme</button>
+  <div id="ms8" class="ms-hidden" style="margin:10px 0 0 32px; background:#EDE9FE; border-radius:8px; padding:16px 18px; font-size:13.5px; color:#3730A3; line-height:1.9;">
+    <strong>Award 1 mark each for any six of the following points (max 6):</strong><br>
+    • Cellulose is made of β-glucose monomers (1)<br>
+    • β-glucose has its –OH group on C1 pointing in the opposite direction to the –CH₂OH group (opposite orientation to α-glucose) (1)<br>
+    • Adjacent β-glucose monomers are joined by 1,4-glycosidic bonds via condensation reactions (1)<br>
+    • Every alternate β-glucose is rotated 180° to allow bond formation (1)<br>
+    • This results in a long, straight, unbranched chain (1)<br>
+    • Straight chains can lie parallel to each other / run alongside each other (1)<br>
+    • Hydrogen bonds form between the –OH groups of parallel adjacent chains (1)<br>
+    • Large numbers of hydrogen bonds / collectively strong despite individual weakness (1)<br>
+    • Multiple parallel chains held together form a cellulose microfibril (1)<br>
+    • Microfibrils are arranged in layers at different angles in the cell wall (1)<br>
+    • This gives the cell wall high tensile strength / resistance to stretching in multiple directions (1)<br><br>
+    <strong>Indicative quality of response (6 marks):</strong> A full-mark answer should follow the logical sequence — monomer → chain shape (why) → parallel chains → H-bonds → microfibril → cell wall strength. Answers that jump to "H-bonds give strength" without explaining <em>why</em> the chains can form H-bonds (i.e. straight chain) should be awarded a maximum of 4 marks.
+  </div>
+</div>
+
+<hr class="q-divider">
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- Section D — Synoptic -->
+<!-- ══════════════════════════════════════════════════════ -->
+<div class="section-label">Section D — Synoptic / Stretch &nbsp;(Question 9)</div>
+
+<!-- Q9 — 3 marks -->
+<div class="q-block">
+  <div class="q-header">
+    <span class="q-num">9</span>
+    <span class="q-stem">A student states: <em>"The cell walls of plants and the cell walls of bacteria are both rigid structures, so they must have the same composition."</em><br><br>
+    Evaluate this statement.</span>
+    <span class="q-marks">(3)</span>
+  </div>
+  <div class="q-indent" style="font-size:13px; color:var(--muted); margin-bottom:8px; margin-left:32px;">Hint: Recall the composition of prokaryotic cell walls from Topic 3B (spec 3.5).</div>
+  <div class="answer-box answer-box-tall"></div>
+
+  <button class="toggle-btn" onclick="toggleMS('ms9')">Show Mark Scheme</button>
+  <div id="ms9" class="ms-hidden" style="margin:10px 0 0 32px; background:#EDE9FE; border-radius:8px; padding:14px 16px; font-size:13.5px; color:#3730A3; line-height:1.8;">
+    <strong>Award 1 mark each for any three of:</strong><br>
+    • The statement is <strong>incorrect</strong> — both types of cell wall are rigid, but they have different compositions (1)<br>
+    • Plant cell walls are made of <strong>cellulose</strong> (a polysaccharide of β-glucose) (1)<br>
+    • Bacterial cell walls are made of <strong>murein / peptidoglycan</strong> (a glycoprotein / polysaccharide–peptide complex) (1)<br>
+    • They are therefore <strong>chemically different</strong> despite both being rigid (1)<br>
+    • This difference is exploited by antibiotics (e.g. penicillin targets murein synthesis but does not affect plant cell walls) — <em>credit if stated, not required</em> (1)<br><br>
+    <em>The student's error is assuming that the same function (rigidity) requires the same structure. This is not a valid inference — different molecules can produce similar mechanical properties.</em>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- TOTAL -->
+<!-- ══════════════════════════════════════════════════════ -->
+<div class="total-box" style="margin-top:40px;">
+  <div>
+    <div class="t-label">Total marks available</div>
+    <div style="font-size:13px; color:var(--muted);">Q1–2 (2) + Q3–5 (8) + Q6–8 (15) + Q9 (3) — accounts for full coverage of 4.1, 4.2 and 4.3</div>
+  </div>
+  <div class="t-score">25</div>
+</div>
+
+<p style="font-size:13px; color:var(--muted); margin-top:16px; text-align:center;">🔗 Return to the interactive lesson: <em>the-cell-wall.html</em> · Revision sheet: <em>the-cell-wall-revision.html</em></p>
+
+</div><!-- end page -->
+
+<script>
+// Mark chips
+const total = 25;
+const tally = document.getElementById('tally');
+for (let i = 1; i <= total; i++) {
+  const chip = document.createElement('div');
+  chip.className = 'mark-chip';
+  chip.textContent = i;
+  chip.id = 'chip' + i;
+  chip.onclick = () => {
+    chip.classList.toggle('earned');
+    updateScore();
+  };
+  tally.appendChild(chip);
+}
+
+function updateScore() {
+  const earned = document.querySelectorAll('.mark-chip.earned').length;
+  document.getElementById('scoreNum').textContent = earned;
+}
+
+// MCQ
+function checkMCQ(optEl, isCorrect, qId, feedback) {
+  const opts = optEl.parentElement.querySelectorAll('.mcq-option');
+  opts.forEach(o => o.classList.add('disabled'));
+  optEl.classList.add(isCorrect ? 'correct' : 'wrong');
+  if (!isCorrect) {
+    opts.forEach(o => {
+      if (o.getAttribute('onclick') && o.getAttribute('onclick').includes(', true,')) {
+        o.classList.add('correct');
+      }
+    });
+  }
+  const fb = document.getElementById(qId + '-feedback');
+  if (fb) {
+    fb.textContent = feedback;
+    fb.className = 'mcq-feedback show ' + (isCorrect ? 'correct' : 'wrong');
+  }
+}
+
+// Toggle mark schemes
+function toggleMS(id) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const isHidden = el.classList.contains('ms-hidden');
+  el.classList.toggle('ms-hidden', !isHidden);
+  el.classList.toggle('ms-visible', isHidden);
+  // Update button text
+  const btns = document.querySelectorAll(`button[onclick="toggleMS('${id}')"]`);
+  btns.forEach(btn => { btn.textContent = isHidden ? 'Hide Mark Scheme' : 'Show Mark Scheme'; });
+}
+</script>
+</body>
+</html>
