@@ -133,12 +133,19 @@ h1{font-size:2.1rem;color:#0D47A1;margin-bottom:6px;}
 .discuss-box{background:#FFF8E1;border-radius:10px;padding:12px 14px;border-left:4px solid #FFC107;font-size:.86rem;color:#5D4037;display:none;margin-bottom:12px;}
 .discuss-box.show{display:block;animation:fadeIn .3s ease;}
 .discuss-box strong{display:block;margin-bottom:3px;color:#E65100;}
-.sankey-visual{display:flex;align-items:center;justify-content:center;gap:0;margin-bottom:14px;height:60px;}
-.sv-in{background:#1976D2;color:#fff;font-size:.8rem;font-weight:700;padding:8px 10px;border-radius:8px 0 0 8px;display:flex;align-items:center;}
-.sv-mid{background:#90CAF9;width:40px;height:60px;display:flex;align-items:center;justify-content:center;}
-.sv-out{display:flex;flex-direction:column;gap:2px;}
-.sv-useful{background:#4CAF50;color:#fff;font-size:.75rem;font-weight:700;padding:6px 8px;border-radius:0 6px 0 0;display:flex;align-items:center;}
-.sv-waste{background:#FF7043;color:#fff;font-size:.75rem;font-weight:700;padding:6px 8px;border-radius:0 0 6px 0;display:flex;align-items:center;}
+.sankey-visual{display:none;align-items:stretch;justify-content:center;gap:0;margin-bottom:14px;height:90px;}
+.sankey-visual.show{display:flex;animation:fadeIn .3s ease;}
+.sv-in{background:#1976D2;color:#fff;font-size:.8rem;font-weight:700;padding:8px 12px;border-radius:8px 0 0 8px;display:flex;align-items:center;}
+.sv-mid{background:#90CAF9;width:28px;}
+.sv-out{display:flex;flex-direction:column;min-width:140px;}
+.sv-useful{background:#4CAF50;color:#fff;font-size:.72rem;font-weight:700;padding:4px 10px;border-radius:0 6px 0 0;display:flex;align-items:center;overflow:hidden;white-space:nowrap;min-height:14px;}
+.sv-waste{background:#FF7043;color:#fff;font-size:.72rem;font-weight:700;padding:4px 10px;border-radius:0 0 6px 0;display:flex;align-items:center;overflow:hidden;white-space:nowrap;min-height:14px;}
+.calc-box{background:#E3F2FD;border-radius:10px;padding:12px 14px;border-left:4px solid #1976D2;font-size:.86rem;color:#0D47A1;display:none;margin-bottom:12px;}
+.calc-box.show{display:block;animation:fadeIn .3s ease;}
+.calc-box strong{display:block;margin-bottom:6px;color:#1565C0;font-size:.9rem;}
+.calc-line{margin-bottom:3px;}
+.calc-line b{color:#0D47A1;}
+.calc-formula{margin-top:8px;padding:8px 10px;background:#fff;border-radius:6px;border:1px solid #BBDEFB;font-weight:700;color:#1565C0;font-family:'Courier New',monospace;font-size:.9rem;text-align:center;}
 
 /* ══ ACTIVITY 4: RENEWABLES SORT ══ */
 .sort-bank{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:14px;justify-content:center;min-height:40px;}
@@ -267,9 +274,9 @@ footer a{color:#1976D2;text-decoration:none;}
       <span class="act-icon">📊</span>
       <div class="act-title">Sankey Showdown</div>
       <div class="act-topic">Energy Efficiency</div>
-      <div class="act-desc">Estimate the efficiency of three devices, then discuss — why does wasted energy matter for the planet?</div>
+      <div class="act-desc">Estimate the efficiency of eight everyday devices and energy sources, then see the Sankey diagram and the efficiency calculation for each.</div>
       <div class="act-meta">
-        <span class="abadge ab-time">⏱ 8 min</span>
+        <span class="abadge ab-time">⏱ 12 min</span>
         <span class="abadge ab-group">👥 Group</span>
       </div>
     </div>
@@ -419,10 +426,10 @@ footer a{color:#1976D2;text-decoration:none;}
   </div>
 
   <div class="timer-row">
-    <div class="timer-num" id="t3">8:00</div>
+    <div class="timer-num" id="t3">12:00</div>
     <div class="timer-btns">
-      <button class="tbtn tbtn-start" onclick="startTimer(3,480)">▶ Start</button>
-      <button class="tbtn tbtn-reset" onclick="resetTimer(3,480)">↺ Reset</button>
+      <button class="tbtn tbtn-start" onclick="startTimer(3,720)">▶ Start</button>
+      <button class="tbtn tbtn-reset" onclick="resetTimer(3,720)">↺ Reset</button>
     </div>
   </div>
 
@@ -436,6 +443,23 @@ footer a{color:#1976D2;text-decoration:none;}
 
   <div style="font-size:.82rem;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:.4px;margin-bottom:9px;">Which efficiency is closest to the truth?</div>
   <div class="sankey-grid" id="sankey-opts"></div>
+
+  <div class="sankey-visual" id="sankey-visual">
+    <div class="sv-in" id="sv-in"></div>
+    <div class="sv-mid"></div>
+    <div class="sv-out">
+      <div class="sv-useful" id="sv-useful"></div>
+      <div class="sv-waste" id="sv-waste"></div>
+    </div>
+  </div>
+
+  <div class="calc-box" id="calc-box">
+    <strong>📐 Working out</strong>
+    <div class="calc-line">Total energy in: <b id="calc-in"></b></div>
+    <div class="calc-line">Useful energy out: <b id="calc-useful"></b></div>
+    <div class="calc-line">Wasted energy: <b id="calc-waste"></b></div>
+    <div class="calc-formula" id="calc-formula"></div>
+  </div>
 
   <div class="discuss-box" id="discuss-box">
     <strong>💬 Group discussion</strong>
@@ -811,27 +835,75 @@ renderChain();
 const sankeyData=[
   {
     emoji:'💡', name:'Old filament light bulb',
-    sub:'100 J of electrical energy in → some light, lots of heat out',
+    sub:'100 J of electrical energy in → a little light, lots of heat out.',
+    inputJ:100, usefulJ:5, wasteJ:95,
+    usefulLabel:'light', wasteLabel:'heat',
     opts:['5%','25%','50%','75%'],
     correct:'5%',
-    useful:'5 J light',waste:'95 J heat',
     discussion:'Why do you think most countries have now banned filament bulbs? What did we replace them with, and why is that better for the environment?'
   },
   {
+    emoji:'🔆', name:'LED light bulb',
+    sub:'100 J of electrical energy in → mostly light, very little heat.',
+    inputJ:100, usefulJ:90, wasteJ:10,
+    usefulLabel:'light', wasteLabel:'heat',
+    opts:['10%','50%','75%','90%'],
+    correct:'90%',
+    discussion:'Compared to a filament bulb, the LED gives 18 times more light from the same energy. If a school replaced every bulb with LEDs, how would that change its energy bill and carbon emissions?'
+  },
+  {
     emoji:'🔥', name:'Modern gas boiler',
-    sub:'Used to heat a home. Much of the energy goes into the water, but some is lost.',
+    sub:'100 J of chemical energy from gas → heats water in a home. Some is lost up the flue.',
+    inputJ:100, usefulJ:80, wasteJ:20,
+    usefulLabel:'heating water', wasteLabel:'lost through flue',
     opts:['25%','50%','80%','99%'],
     correct:'80%',
-    useful:'80 J heating water',waste:'20 J lost through flue',
     discussion:'Even at 80% efficient, 20% is wasted. Over a year of heating a house, how might this wasted energy affect a family\'s bills and carbon footprint?'
   },
   {
     emoji:'🚗', name:'Petrol car engine',
-    sub:'Only a small fraction of the fuel energy actually moves the car.',
+    sub:'100 J of chemical energy from petrol → only a small fraction actually moves the car.',
+    inputJ:100, usefulJ:30, wasteJ:70,
+    usefulLabel:'kinetic / motion', wasteLabel:'heat + sound',
     opts:['15%','30%','55%','75%'],
     correct:'30%',
-    useful:'30 J kinetic / motion',waste:'70 J heat + sound',
     discussion:'Where does all that wasted energy go? Think about what you can feel and hear when a car engine is running. How does this compare to an electric car?'
+  },
+  {
+    emoji:'⚙️', name:'Electric motor (in a fan)',
+    sub:'200 J of electrical energy in → mostly turns the blades, with a little heat and sound.',
+    inputJ:200, usefulJ:180, wasteJ:20,
+    usefulLabel:'kinetic / motion', wasteLabel:'heat + sound',
+    opts:['40%','65%','90%','99%'],
+    correct:'90%',
+    discussion:'Why are electric motors so much more efficient than petrol engines? What does this mean for the long-term future of transport?'
+  },
+  {
+    emoji:'🏭', name:'Coal power station',
+    sub:'1000 J of chemical energy from coal → most is lost as heat through the cooling towers.',
+    inputJ:1000, usefulJ:350, wasteJ:650,
+    usefulLabel:'electrical energy', wasteLabel:'heat lost to atmosphere',
+    opts:['15%','35%','60%','85%'],
+    correct:'35%',
+    discussion:'Almost two-thirds of the coal\'s energy is wasted before it even reaches your plug. How could a power station use some of that lost heat instead of throwing it away?'
+  },
+  {
+    emoji:'☀️', name:'Solar panel',
+    sub:'500 J of light energy from the Sun hits the panel → only a fraction becomes electricity.',
+    inputJ:500, usefulJ:100, wasteJ:400,
+    usefulLabel:'electrical energy', wasteLabel:'heat + reflected light',
+    opts:['20%','45%','70%','90%'],
+    correct:'20%',
+    discussion:'Only a fifth of the sunlight becomes electricity. Why is solar still worth using even at this efficiency? What about its fuel cost compared to coal?'
+  },
+  {
+    emoji:'🌬️', name:'Wind turbine',
+    sub:'200 J of kinetic energy from the wind → blades spin a generator. Some wind escapes past.',
+    inputJ:200, usefulJ:90, wasteJ:110,
+    usefulLabel:'electrical energy', wasteLabel:'remaining wind + heat + sound',
+    opts:['15%','45%','70%','95%'],
+    correct:'45%',
+    discussion:'Why can\'t a wind turbine take 100% of the wind\'s energy? What would happen to the air on the other side of the blades if it did?'
   }
 ];
 let sankeyIdx=0;
@@ -842,6 +914,8 @@ function renderSankey(){
   document.getElementById('dev-name').textContent=d.name;
   document.getElementById('dev-sub').textContent=d.sub;
   document.getElementById('discuss-box').classList.remove('show');
+  document.getElementById('sankey-visual').classList.remove('show');
+  document.getElementById('calc-box').classList.remove('show');
   // dots
   const dots=document.getElementById('dots3');
   dots.innerHTML='';
@@ -870,6 +944,20 @@ function pickSankey(el,opt,d){
   document.querySelectorAll('.sopt').forEach(o=>{
     if(o.querySelector('.eff').textContent===d.correct) o.classList.add('correct');
   });
+  // Sankey visual (proportional)
+  document.getElementById('sv-in').textContent=`${d.inputJ} J in`;
+  document.getElementById('sv-useful').textContent=`${d.usefulJ} J ${d.usefulLabel}`;
+  document.getElementById('sv-waste').textContent=`${d.wasteJ} J ${d.wasteLabel}`;
+  document.getElementById('sv-useful').style.flex=d.usefulJ;
+  document.getElementById('sv-waste').style.flex=d.wasteJ;
+  document.getElementById('sankey-visual').classList.add('show');
+  // Calculation working
+  document.getElementById('calc-in').textContent=`${d.inputJ} J`;
+  document.getElementById('calc-useful').textContent=`${d.usefulJ} J (${d.usefulLabel})`;
+  document.getElementById('calc-waste').textContent=`${d.wasteJ} J (${d.wasteLabel})`;
+  document.getElementById('calc-formula').textContent=`Efficiency = ${d.usefulJ} ÷ ${d.inputJ} × 100% = ${d.correct}`;
+  document.getElementById('calc-box').classList.add('show');
+  // Discussion
   const discuss=document.getElementById('discuss-box');
   document.getElementById('discuss-text').textContent=d.discussion;
   discuss.classList.add('show');
