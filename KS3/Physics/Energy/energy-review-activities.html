@@ -936,14 +936,15 @@ function renderSankey(){
   });
 }
 function pickSankey(el,opt,d){
+  // Once the correct answer has been revealed, no more changes.
   if(document.querySelector('#sankey-opts .correct')) return;
-  document.querySelectorAll('.sopt').forEach(o=>{
-    o.classList.add(o===el ? (opt===d.correct?'correct':'wrong') : (o.querySelector('.eff').textContent===d.correct?'correct':''));
-  });
-  // mark correct if not clicked
-  document.querySelectorAll('.sopt').forEach(o=>{
-    if(o.querySelector('.eff').textContent===d.correct) o.classList.add('correct');
-  });
+  if(opt!==d.correct){
+    // Wrong answer: mark this one red, leave the rest clickable so the group can keep trying.
+    el.classList.add('wrong');
+    return;
+  }
+  // Correct answer: mark green and reveal the full answer.
+  el.classList.add('correct');
   // Sankey visual (proportional)
   document.getElementById('sv-in').textContent=`${d.inputJ} J in`;
   document.getElementById('sv-useful').textContent=`${d.usefulJ} J ${d.usefulLabel}`;
