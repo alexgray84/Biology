@@ -1,0 +1,1332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AS Biology Knowledge Organiser | IAL Biology</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;0,9..144,700;1,9..144,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #FAF7F2;
+  --bg-warm: #F3EDE3;
+  --card: #FFFFFF;
+  --green-dark: #2D5016;
+  --green-mid: #4A7C2F;
+  --green-light: #7AAD52;
+  --green-pale: #E0EBD0;
+  --green-ultra: #F0F5E8;
+  --text: #2C2C2C;
+  --text-mid: #4A4A4A;
+  --text-light: #7A7A7A;
+  --amber: #C17D2A;
+  --amber-pale: #FDF3E3;
+  --red: #C0392B;
+  --red-pale: #FDECEA;
+  --border: #D8D0C4;
+  --border-green: #B0C898;
+  --shadow: 0 2px 12px rgba(45,80,22,0.08);
+  --radius: 10px;
+  --nav-h: 64px;
+  --success: #2D7A1F;
+  --success-bg: #EAF5E4;
+  --error: #C0392B;
+  --error-bg: #FDECEA;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Lato', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; padding-top: var(--nav-h); }
+
+/* NAV */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; height: var(--nav-h);
+  background: rgba(250,247,242,0.96); backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--border); z-index: 100;
+  display: flex; align-items: center; padding: 0 20px; gap: 0;
+}
+.nav-brand {
+  font-family: 'Fraunces', serif; font-size: 13px; font-weight: 600;
+  color: var(--green-dark); white-space: nowrap; margin-right: 16px;
+  padding-right: 16px; border-right: 1px solid var(--border);
+}
+.nav-brand span { display: block; font-family: 'Lato', sans-serif; font-weight: 300; font-size: 10px; color: var(--text-light); letter-spacing: 0.05em; text-transform: uppercase; }
+.nav-stations { display: flex; gap: 2px; flex: 1; overflow-x: auto; scrollbar-width: none; }
+.nav-stations::-webkit-scrollbar { display: none; }
+.nav-btn {
+  display: flex; flex-direction: column; align-items: center; gap: 2px;
+  padding: 6px 10px; border: none; background: transparent; cursor: pointer;
+  border-radius: 6px; transition: all 0.2s; white-space: nowrap; position: relative;
+}
+.nav-btn:hover { background: var(--green-ultra); }
+.nav-btn .nav-label { font-size: 10px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-light); transition: color 0.2s; }
+.nav-btn .nav-title { font-size: 10px; color: var(--text-light); transition: color 0.2s; }
+.nav-btn.active .nav-label, .nav-btn.active .nav-title { color: var(--green-dark); }
+.nav-btn::after { content: ''; position: absolute; bottom: 0; left: 10px; right: 10px; height: 2px; background: var(--green-mid); border-radius: 2px; transform: scaleX(0); transition: transform 0.2s; }
+.nav-btn.active::after { transform: scaleX(1); }
+.nav-progress { margin-left: auto; padding-left: 16px; border-left: 1px solid var(--border); display: flex; align-items: center; gap: 8px; }
+.progress-dots { display: flex; gap: 4px; }
+.progress-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--border); transition: background 0.3s; }
+.progress-dot.done { background: var(--green-mid); }
+.progress-dot.active { background: var(--green-dark); }
+
+/* SECTIONS */
+section { display: none; max-width: 880px; margin: 0 auto; padding: 44px 24px 80px; animation: fadeUp 0.35s ease both; }
+section.active { display: block; }
+@keyframes fadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+
+/* TYPOGRAPHY */
+h1 { font-family: 'Fraunces', serif; font-size: 38px; font-weight: 700; color: var(--green-dark); line-height: 1.1; margin-bottom: 6px; }
+h2 { font-family: 'Fraunces', serif; font-size: 24px; font-weight: 600; color: var(--green-dark); margin-bottom: 14px; }
+h3 { font-family: 'Fraunces', serif; font-size: 17px; font-weight: 600; color: var(--green-dark); margin-bottom: 8px; }
+p { line-height: 1.75; color: var(--text-mid); margin-bottom: 10px; }
+.lesson-meta { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--green-mid); margin-bottom: 4px; }
+.lesson-subtitle { font-size: 15px; color: var(--text-light); margin-bottom: 28px; font-weight: 300; }
+.spec-tag { display: inline-block; background: var(--green-ultra); border: 1px solid var(--border-green); color: var(--green-mid); font-size: 11px; font-weight: 700; letter-spacing: 0.05em; padding: 3px 8px; border-radius: 4px; margin-right: 6px; margin-bottom: 4px; }
+
+/* CARDS */
+.card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 22px; margin-bottom: 18px; box-shadow: var(--shadow); }
+.card-green { background: var(--green-ultra); border: 1px solid var(--border-green); border-left: 4px solid var(--green-mid); border-radius: var(--radius); padding: 18px 22px; margin-bottom: 18px; }
+.card-amber { background: var(--amber-pale); border: 1px solid #E8C88A; border-left: 4px solid var(--amber); border-radius: var(--radius); padding: 18px 22px; margin-bottom: 18px; }
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+
+/* OBJECTIVES */
+.obj-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 28px; }
+.obj-item { background: var(--green-ultra); border: 1px solid var(--border-green); border-radius: 8px; padding: 12px 14px; font-size: 13px; color: var(--text-mid); display: flex; gap: 8px; align-items: flex-start; }
+.obj-item::before { content: '◆'; color: var(--green-mid); font-size: 9px; margin-top: 3px; flex-shrink: 0; }
+
+/* TERM GRID */
+.term-grid { width: 100%; border-collapse: collapse; margin-bottom: 18px; }
+.term-grid thead th { background: var(--green-dark); color: #fff; font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; padding: 10px 14px; text-align: left; }
+.term-grid tbody tr:nth-child(even) { background: var(--green-ultra); }
+.term-grid tbody tr:hover { background: var(--green-pale); }
+.term-grid td { padding: 9px 14px; font-size: 13.5px; line-height: 1.55; border-bottom: 1px solid var(--border); vertical-align: top; }
+.term-key { font-weight: 700; color: var(--green-dark); min-width: 160px; }
+
+/* COMPARISON TABLE */
+.comp-table { width: 100%; border-collapse: collapse; margin-bottom: 18px; font-size: 13.5px; }
+.comp-table th { background: var(--green-dark); color: #fff; padding: 10px 14px; text-align: left; font-size: 12px; font-weight: 700; letter-spacing: 0.05em; }
+.comp-table td { padding: 9px 14px; border: 1px solid var(--border); line-height: 1.5; vertical-align: top; }
+.comp-table tr:nth-child(even) td { background: var(--bg-warm); }
+.comp-table .row-head { font-weight: 700; color: var(--green-dark); background: var(--green-ultra) !important; }
+
+/* PROCESS STEPS */
+.steps { display: flex; flex-direction: column; gap: 0; margin-bottom: 18px; }
+.step { display: flex; gap: 14px; align-items: flex-start; padding: 12px 0; border-bottom: 1px solid var(--border); }
+.step:last-child { border-bottom: none; }
+.step-num { width: 28px; height: 28px; background: var(--green-dark); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; flex-shrink: 0; margin-top: 1px; }
+.step-text { font-size: 14px; color: var(--text-mid); line-height: 1.6; }
+.step-text strong { color: var(--green-dark); }
+
+/* SVG DIAGRAMS */
+.diagram-wrap { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; margin-bottom: 18px; box-shadow: var(--shadow); }
+.diagram-wrap svg { display: block; margin: 0 auto; }
+.diagram-caption { text-align: center; font-size: 12px; color: var(--text-light); margin-top: 10px; font-style: italic; }
+
+/* FLASHCARDS */
+.fc-deck { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 18px; }
+.fc { height: 150px; perspective: 900px; cursor: pointer; }
+.fc-inner { position: relative; width: 100%; height: 100%; transform-style: preserve-3d; transition: transform 0.5s cubic-bezier(0.4,0,0.2,1); }
+.fc.flipped .fc-inner { transform: rotateY(180deg); }
+.fc-front, .fc-back { position: absolute; inset: 0; backface-visibility: hidden; border-radius: var(--radius); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 16px; text-align: center; }
+.fc-front { background: var(--green-ultra); border: 1.5px solid var(--border-green); }
+.fc-back { background: var(--green-pale); border: 1.5px solid var(--border-green); transform: rotateY(180deg); }
+.fc-q-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--green-mid); margin-bottom: 8px; }
+.fc-q-text { font-size: 13.5px; color: var(--green-dark); font-weight: 700; font-family: 'Fraunces', serif; line-height: 1.4; }
+.fc-a-text { font-size: 12.5px; color: var(--text-mid); line-height: 1.5; }
+.fc-hint { font-size: 11px; color: var(--text-light); margin-top: 10px; }
+
+/* FILL-IN-THE-BLANK */
+.fitb-para { font-size: 15px; line-height: 2.2; color: var(--text-mid); background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px 22px; margin-bottom: 14px; box-shadow: var(--shadow); }
+.fitb { border: none; border-bottom: 2px solid var(--green-mid); background: transparent; font-family: 'Lato', sans-serif; font-size: 15px; color: var(--green-dark); font-weight: 700; width: 120px; text-align: center; outline: none; padding: 2px 4px; transition: border-color 0.2s, color 0.2s; }
+.fitb.correct { border-bottom-color: var(--success); color: var(--success); background: var(--success-bg); border-radius: 4px; }
+.fitb.wrong { border-bottom-color: var(--error); color: var(--error); background: var(--error-bg); border-radius: 4px; }
+.fitb-result { font-size: 13px; color: var(--text-light); margin-bottom: 16px; }
+
+/* LABEL DIAGRAM */
+.label-zone { display: grid; grid-template-columns: 1fr 260px; gap: 20px; align-items: start; margin-bottom: 18px; }
+.label-inputs { display: flex; flex-direction: column; gap: 8px; }
+.label-row { display: flex; align-items: center; gap: 10px; }
+.label-num { width: 24px; height: 24px; background: var(--green-dark); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; flex-shrink: 0; }
+.label-input { flex: 1; border: 1px solid var(--border); border-radius: 6px; padding: 6px 10px; font-family: 'Lato', sans-serif; font-size: 13px; background: var(--bg); outline: none; transition: border-color 0.2s; }
+.label-input:focus { border-color: var(--green-mid); }
+.label-input.correct { border-color: var(--success); background: var(--success-bg); color: var(--success); }
+.label-input.wrong { border-color: var(--error); background: var(--error-bg); color: var(--error); }
+
+/* RETRIEVAL */
+.retrieval-q { background: var(--card); border: 1px solid var(--border); border-left: 4px solid var(--green-mid); border-radius: var(--radius); padding: 18px 22px; margin-bottom: 14px; }
+.q-label { font-size: 10px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--green-mid); margin-bottom: 6px; }
+.q-text { font-size: 15px; color: var(--text); font-weight: 400; margin-bottom: 12px; line-height: 1.6; }
+.q-marks { font-size: 11px; color: var(--text-light); float: right; font-style: italic; }
+textarea { width: 100%; min-height: 72px; border: 1px solid var(--border); border-radius: 6px; padding: 10px 14px; font-family: 'Lato', sans-serif; font-size: 14px; color: var(--text); background: var(--bg); resize: vertical; transition: border-color 0.2s; line-height: 1.6; outline: none; }
+textarea:focus { border-color: var(--green-mid); }
+.mark-scheme { display: none; background: var(--green-ultra); border: 1px solid var(--border-green); border-radius: 8px; padding: 14px 16px; margin-top: 10px; font-size: 13.5px; color: var(--text-mid); line-height: 1.6; }
+.mark-scheme.visible { display: block; }
+.mark-scheme strong { color: var(--green-dark); }
+
+/* MIXED RETRIEVAL */
+.mq-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 22px; margin-bottom: 14px; box-shadow: var(--shadow); }
+.mq-topic { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 6px; }
+.topic-prot { color: #7B5E9A; }
+.topic-flow { color: #C44B8A; }
+.topic-plant { color: var(--green-mid); }
+.mq-q { font-size: 15px; color: var(--text); line-height: 1.6; margin-bottom: 12px; }
+.self-mark { display: none; gap: 8px; margin-top: 10px; }
+.self-mark.visible { display: flex; }
+.sm-btn { flex: 1; padding: 8px; border: 1.5px solid; border-radius: 6px; font-family: 'Lato', sans-serif; font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.2s; }
+.sm-got { border-color: var(--success); color: var(--success); background: transparent; }
+.sm-got:hover, .sm-got.selected { background: var(--success); color: #fff; }
+.sm-missed { border-color: var(--error); color: var(--error); background: transparent; }
+.sm-missed:hover, .sm-missed.selected { background: var(--error); color: #fff; }
+.score-box { background: var(--green-ultra); border: 2px solid var(--border-green); border-radius: var(--radius); padding: 28px; text-align: center; margin-top: 24px; display: none; }
+.score-box.visible { display: block; }
+.score-num { font-family: 'Fraunces', serif; font-size: 52px; font-weight: 700; color: var(--green-dark); line-height: 1; }
+.score-label { font-size: 13px; color: var(--text-light); margin-top: 6px; }
+
+/* BUTTONS */
+.btn { display: inline-flex; align-items: center; gap: 6px; padding: 9px 18px; border: none; border-radius: 6px; font-family: 'Lato', sans-serif; font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.2s; }
+.btn-primary { background: var(--green-dark); color: #fff; }
+.btn-primary:hover { background: var(--green-mid); }
+.btn-outline { background: transparent; color: var(--green-dark); border: 1.5px solid var(--green-dark); }
+.btn-outline:hover { background: var(--green-ultra); }
+.btn-sm { padding: 6px 12px; font-size: 12px; }
+.btn-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+
+/* PLANT FEATURE BADGES */
+.badge { display: inline-block; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 20px; margin: 2px; }
+.badge-yes { background: var(--green-pale); color: var(--green-dark); }
+.badge-no { background: var(--red-pale); color: var(--red); }
+
+/* PROTEIN LEVELS VISUAL */
+.protein-levels { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; margin-bottom: 18px; }
+.pl-box { background: var(--card); border: 1px solid var(--border); padding: 16px 12px; text-align: center; position: relative; }
+.pl-box:first-child { border-radius: var(--radius) 0 0 var(--radius); }
+.pl-box:last-child { border-radius: 0 var(--radius) var(--radius) 0; }
+.pl-box + .pl-box::before { content: '→'; position: absolute; left: -12px; top: 50%; transform: translateY(-50%); color: var(--green-mid); font-size: 18px; font-weight: 700; }
+.pl-title { font-family: 'Fraunces', serif; font-size: 14px; font-weight: 700; color: var(--green-dark); margin-bottom: 6px; }
+.pl-desc { font-size: 12px; color: var(--text-mid); line-height: 1.4; }
+.pl-bond { font-size: 11px; font-weight: 700; color: var(--amber); margin-top: 6px; }
+
+/* SECTION DIVIDERS */
+.section-rule { border: none; border-top: 2px solid var(--border); margin: 28px 0; }
+
+/* HIGHLIGHT */
+.hl { background: var(--green-pale); color: var(--green-dark); padding: 1px 5px; border-radius: 3px; font-weight: 700; }
+
+/* RESPONSIVE */
+@media (max-width: 640px) {
+  .two-col, .three-col, .obj-grid, .fc-deck, .label-zone, .protein-levels { grid-template-columns: 1fr; }
+  h1 { font-size: 28px; }
+  .label-zone { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-brand">IAL Biology<span>AS Revision</span></div>
+  <div class="nav-stations">
+    <button class="nav-btn active" onclick="goTo(0)"><span class="nav-label">Intro</span><span class="nav-title">Overview</span></button>
+    <button class="nav-btn" onclick="goTo(1)"><span class="nav-label">Proteins</span><span class="nav-title">Reference</span></button>
+    <button class="nav-btn" onclick="goTo(2)"><span class="nav-label">Proteins</span><span class="nav-title">Practice</span></button>
+    <button class="nav-btn" onclick="goTo(3)"><span class="nav-label">Flowers</span><span class="nav-title">Reference</span></button>
+    <button class="nav-btn" onclick="goTo(4)"><span class="nav-label">Flowers</span><span class="nav-title">Practice</span></button>
+    <button class="nav-btn" onclick="goTo(5)"><span class="nav-label">Plants</span><span class="nav-title">Reference</span></button>
+    <button class="nav-btn" onclick="goTo(6)"><span class="nav-label">Plants</span><span class="nav-title">Practice</span></button>
+    <button class="nav-btn" onclick="goTo(7)"><span class="nav-label">Mixed</span><span class="nav-title">Retrieval</span></button>
+  </div>
+  <div class="nav-progress">
+    <div class="progress-dots" id="dots"></div>
+  </div>
+</nav>
+
+<!-- ══════════════════════════════════════════════════════════
+     SECTION 1 — OVERVIEW
+══════════════════════════════════════════════════════════ -->
+<section class="active" id="s0">
+  <div class="lesson-meta">IAL Biology · AS Content · Knowledge Organiser</div>
+  <h1>AS Biology<br>Knowledge Organiser</h1>
+  <p class="lesson-subtitle">Proteins · Reproduction in Flowering Plants · Plant Biodiversity</p>
+
+  <div class="card-green">
+    <h3>How to use this organiser</h3>
+    <p style="margin-bottom:0">Each topic has a <strong>Reference</strong> tab with key terms, diagrams and facts to study — then a <strong>Practice</strong> tab with activities to test your recall from memory. Work through the reference first, then close your notes and try the practice.</p>
+  </div>
+
+  <h2>Learning Objectives</h2>
+  <div class="obj-grid">
+    <div class="obj-item">Know the basic structure of an amino acid and how polypeptides form by condensation</div>
+    <div class="obj-item">Understand how primary structure determines secondary and tertiary structure</div>
+    <div class="obj-item">Compare globular and fibrous proteins using haemoglobin and collagen as examples</div>
+    <div class="obj-item">Explain enzyme specificity in terms of active site structure</div>
+    <div class="obj-item">Describe the structure of a flower and distinguish insect from wind pollination</div>
+    <div class="obj-item">Describe fertilisation in flowering plants from pollen tube growth to nuclear fusion</div>
+    <div class="obj-item">Know the features of bryophytes, ferns, conifers and angiosperms</div>
+    <div class="obj-item">Understand how molecular evidence supports taxonomic classification</div>
+  </div>
+
+  <h2>Specification References</h2>
+  <p>
+    <span class="spec-tag">2.6(i–iv) Proteins</span>
+    <span class="spec-tag">2.7(i–iii) Enzymes</span>
+    <span class="spec-tag">3.13 Fertilisation in plants</span>
+    <span class="spec-tag">4.14 Classification</span>
+    <span class="spec-tag">4.15–4.16 Biodiversity</span>
+  </p>
+
+  <div class="btn-row" style="margin-top:28px">
+    <button class="btn btn-primary" onclick="goTo(1)">Start with Proteins →</button>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════
+     SECTION 2 — PROTEINS REFERENCE
+══════════════════════════════════════════════════════════ -->
+<section id="s1">
+  <div class="lesson-meta">Proteins · Reference</div>
+  <h1>Proteins</h1>
+  <p class="lesson-subtitle">Spec refs: 2.6(i–iv) · 2.7(i–iii)</p>
+
+  <h2>Key Terms</h2>
+  <table class="term-grid">
+    <thead><tr><th>Term</th><th>Definition</th></tr></thead>
+    <tbody>
+      <tr><td class="term-key">Amino acid</td><td>Monomer of proteins. Central carbon bonded to an amine group (–NH₂), a carboxyl group (–COOH), a hydrogen atom and a variable R group. There are 20 different amino acids — the R group determines their properties.</td></tr>
+      <tr><td class="term-key">Condensation reaction</td><td>A reaction joining two monomers with the release of a water molecule. Used to form peptide bonds between amino acids.</td></tr>
+      <tr><td class="term-key">Peptide bond</td><td>A covalent bond formed between the –COOH of one amino acid and the –NH₂ of the next, releasing water. Written –CO–NH–.</td></tr>
+      <tr><td class="term-key">Dipeptide / Polypeptide</td><td>Dipeptide = 2 amino acids joined. Polypeptide = many amino acids joined in a chain by peptide bonds.</td></tr>
+      <tr><td class="term-key">Primary structure</td><td>The specific sequence of amino acids in a polypeptide chain. Determined by the gene. Dictates all higher levels of structure.</td></tr>
+      <tr><td class="term-key">Secondary structure</td><td>Regular, repeated folding of the polypeptide chain held by hydrogen bonds between –C=O and –N–H groups. Forms α-helices or β-pleated sheets.</td></tr>
+      <tr><td class="term-key">Tertiary structure</td><td>The overall 3D shape of a single polypeptide, formed by further folding. Held by hydrogen bonds, ionic bonds, disulfide bridges and hydrophobic interactions.</td></tr>
+      <tr><td class="term-key">Quaternary structure</td><td>Two or more polypeptide chains associated together. E.g. haemoglobin has 4 subunits.</td></tr>
+      <tr><td class="term-key">Globular protein</td><td>Spherical, water-soluble, metabolically active protein. E.g. haemoglobin (O₂ transport), enzymes (catalysis).</td></tr>
+      <tr><td class="term-key">Fibrous protein</td><td>Long, insoluble, structural protein with a regular repeating structure. E.g. collagen (in tendons, bone, skin).</td></tr>
+      <tr><td class="term-key">Active site</td><td>A specific region on an enzyme with a shape complementary to its substrate. Where the enzyme–substrate complex forms.</td></tr>
+      <tr><td class="term-key">Enzyme</td><td>A biological catalyst made of protein. Reduces activation energy and is highly specific due to its active site shape.</td></tr>
+      <tr><td class="term-key">Induced fit</td><td>Model of enzyme action: the active site changes shape slightly when the substrate binds, improving the fit and speeding up the reaction.</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Amino Acid Structure</h2>
+  <div class="diagram-wrap">
+    <svg viewBox="0 0 340 180" width="340" height="180" aria-label="Amino acid structure diagram">
+      <!-- Central carbon -->
+      <circle cx="170" cy="90" r="20" fill="#E0EBD0" stroke="#2D5016" stroke-width="2"/>
+      <text x="170" y="95" text-anchor="middle" font-family="'Lato',sans-serif" font-size="16" font-weight="700" fill="#2D5016">C</text>
+      <!-- Bond to H (top) -->
+      <line x1="170" y1="70" x2="170" y2="24" stroke="#4A7C2F" stroke-width="2"/>
+      <text x="170" y="18" text-anchor="middle" font-family="'Lato',sans-serif" font-size="15" fill="#2C2C2C" font-weight="700">H</text>
+      <!-- Bond to NH2 (left) -->
+      <line x1="150" y1="90" x2="62" y2="90" stroke="#4A7C2F" stroke-width="2"/>
+      <rect x="0" y="76" width="64" height="28" rx="5" fill="#F0F5E8" stroke="#B0C898" stroke-width="1.5"/>
+      <text x="32" y="94" text-anchor="middle" font-family="'Lato',sans-serif" font-size="14" fill="#2D5016" font-weight="700">H₂N–</text>
+      <!-- Bond to COOH (right) -->
+      <line x1="190" y1="90" x2="276" y2="90" stroke="#4A7C2F" stroke-width="2"/>
+      <rect x="276" y="76" width="64" height="28" rx="5" fill="#F0F5E8" stroke="#B0C898" stroke-width="1.5"/>
+      <text x="308" y="94" text-anchor="middle" font-family="'Lato',sans-serif" font-size="14" fill="#2D5016" font-weight="700">–COOH</text>
+      <!-- Bond to R (bottom) -->
+      <line x1="170" y1="110" x2="170" y2="152" stroke="#4A7C2F" stroke-width="2"/>
+      <rect x="136" y="152" width="68" height="28" rx="5" fill="#FDF3E3" stroke="#E8C88A" stroke-width="1.5"/>
+      <text x="170" y="170" text-anchor="middle" font-family="'Lato',sans-serif" font-size="14" fill="#C17D2A" font-weight="700">R group</text>
+      <!-- Labels -->
+      <text x="170" y="10" text-anchor="middle" font-size="11" fill="#7A7A7A" font-family="'Lato',sans-serif">hydrogen</text>
+      <text x="0" y="70" font-size="11" fill="#7A7A7A" font-family="'Lato',sans-serif">amine group</text>
+      <text x="276" y="70" font-size="11" fill="#7A7A7A" font-family="'Lato',sans-serif">carboxyl group</text>
+      <text x="170" y="148" text-anchor="middle" font-size="11" fill="#7A7A7A" font-family="'Lato',sans-serif">variable group</text>
+    </svg>
+    <p class="diagram-caption">Figure 1 — General structure of an amino acid. The R group varies between the 20 amino acids.</p>
+  </div>
+
+  <h2>Levels of Protein Structure</h2>
+  <div class="protein-levels">
+    <div class="pl-box">
+      <div class="pl-title">Primary</div>
+      <div class="pl-desc">Sequence of amino acids in the chain</div>
+      <div class="pl-bond">Peptide bonds (covalent)</div>
+    </div>
+    <div class="pl-box">
+      <div class="pl-title">Secondary</div>
+      <div class="pl-desc">α-helix or β-pleated sheet</div>
+      <div class="pl-bond">Hydrogen bonds</div>
+    </div>
+    <div class="pl-box">
+      <div class="pl-title">Tertiary</div>
+      <div class="pl-desc">Overall 3D shape of one chain</div>
+      <div class="pl-bond">H-bonds · ionic · disulfide · hydrophobic</div>
+    </div>
+    <div class="pl-box">
+      <div class="pl-title">Quaternary</div>
+      <div class="pl-desc">Multiple polypeptide chains joined</div>
+      <div class="pl-bond">Same as tertiary</div>
+    </div>
+  </div>
+
+  <h2>Collagen vs Haemoglobin</h2>
+  <table class="comp-table">
+    <thead><tr><th>Feature</th><th>Collagen</th><th>Haemoglobin</th></tr></thead>
+    <tbody>
+      <tr><td class="row-head">Type</td><td>Fibrous protein</td><td>Globular protein</td></tr>
+      <tr><td class="row-head">Solubility</td><td>Insoluble</td><td>Soluble</td></tr>
+      <tr><td class="row-head">Structure</td><td>3 polypeptide chains wound in a triple helix; every 3rd amino acid is glycine</td><td>4 polypeptide subunits (2α + 2β) — has quaternary structure</td></tr>
+      <tr><td class="row-head">Prosthetic group</td><td>None</td><td>4 haem groups, each with an Fe²⁺ ion</td></tr>
+      <tr><td class="row-head">Function</td><td>Structural: tensile strength in tendons, bone and skin</td><td>Transport: carries O₂ from lungs to respiring tissues</td></tr>
+      <tr><td class="row-head">Found in</td><td>Tendons, cartilage, skin, bone</td><td>Red blood cells</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Enzymes</h2>
+  <div class="card">
+    <p><strong>Enzymes are biological catalysts</strong> — they speed up reactions by lowering activation energy. They are not used up in reactions.</p>
+    <p><strong>Specificity:</strong> Each enzyme has an active site with a shape complementary to one specific substrate. This is due to the tertiary structure of the protein.</p>
+    <p><strong>Induced fit model:</strong> The active site is not rigid — it flexes slightly to fit the substrate, forming a more stable enzyme–substrate complex.</p>
+    <p style="margin-bottom:0"><strong>Intracellular vs extracellular:</strong> Intracellular enzymes work inside cells (e.g. enzymes of respiration). Extracellular enzymes are secreted and work outside cells (e.g. digestive enzymes like amylase, lipase).</p>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn btn-primary" onclick="goTo(2)">Go to Practice →</button>
+    <button class="btn btn-outline" onclick="goTo(3)">Skip to Flowers</button>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════
+     SECTION 3 — PROTEINS PRACTICE
+══════════════════════════════════════════════════════════ -->
+<section id="s2">
+  <div class="lesson-meta">Proteins · Practice</div>
+  <h1>Proteins — Activities</h1>
+  <p class="lesson-subtitle">Close your notes and test yourself from memory</p>
+
+  <!-- ACTIVITY 1: Fill-in-the-blank -->
+  <h2>Activity 1 — Fill in the Blanks</h2>
+  <div class="card-amber" style="margin-bottom:10px"><p style="margin:0;font-size:13px">Type the missing word directly into each box. Then click <strong>Check Answers</strong>.</p></div>
+
+  <div class="fitb-para" id="fitb-prot">
+    Amino acids are the <input class="fitb" data-answer="monomers" placeholder="?"> of proteins. They are joined by <input class="fitb" data-answer="condensation" placeholder="?"> reactions, which form <input class="fitb" data-answer="peptide" placeholder="?"> bonds and release a molecule of <input class="fitb" data-answer="water" placeholder="?">. The <input class="fitb" data-answer="primary" placeholder="?"> structure is the sequence of amino acids; this determines the <input class="fitb" data-answer="secondary" placeholder="?"> structure, which is held by <input class="fitb" data-answer="hydrogen" placeholder="?"> bonds and can form an α-helix or a β-pleated sheet. The overall 3D shape is the <input class="fitb" data-answer="tertiary" placeholder="?"> structure, maintained by hydrogen bonds, ionic bonds, <input class="fitb" data-answer="disulfide" placeholder="?"> bridges and hydrophobic interactions.
+  </div>
+  <div class="fitb-result" id="fitb-prot-result"></div>
+  <div class="btn-row">
+    <button class="btn btn-primary btn-sm" onclick="checkFitb('fitb-prot','fitb-prot-result')">Check Answers</button>
+    <button class="btn btn-outline btn-sm" onclick="resetFitb('fitb-prot','fitb-prot-result')">Reset</button>
+  </div>
+
+  <hr class="section-rule">
+
+  <!-- ACTIVITY 2: Label the amino acid -->
+  <h2>Activity 2 — Label the Diagram</h2>
+  <div class="card-amber" style="margin-bottom:10px"><p style="margin:0;font-size:13px">Type the name of each numbered part of the amino acid. Then click <strong>Check Labels</strong>.</p></div>
+
+  <div class="label-zone">
+    <div class="diagram-wrap" style="margin-bottom:0">
+      <svg viewBox="0 0 340 180" width="100%" style="max-width:320px">
+        <circle cx="170" cy="90" r="20" fill="#E0EBD0" stroke="#2D5016" stroke-width="2"/>
+        <text x="170" y="95" text-anchor="middle" font-size="16" font-weight="700" fill="#2D5016" font-family="'Lato',sans-serif">C</text>
+        <line x1="170" y1="70" x2="170" y2="28" stroke="#4A7C2F" stroke-width="2"/>
+        <!-- Number circles -->
+        <circle cx="170" cy="20" r="11" fill="#2D5016"/>
+        <text x="170" y="24" text-anchor="middle" font-size="11" font-weight="700" fill="white" font-family="'Lato',sans-serif">1</text>
+        <line x1="150" y1="90" x2="68" y2="90" stroke="#4A7C2F" stroke-width="2"/>
+        <circle cx="56" cy="90" r="11" fill="#2D5016"/>
+        <text x="56" y="94" text-anchor="middle" font-size="11" font-weight="700" fill="white" font-family="'Lato',sans-serif">2</text>
+        <line x1="190" y1="90" x2="272" y2="90" stroke="#4A7C2F" stroke-width="2"/>
+        <circle cx="284" cy="90" r="11" fill="#2D5016"/>
+        <text x="284" y="94" text-anchor="middle" font-size="11" font-weight="700" fill="white" font-family="'Lato',sans-serif">3</text>
+        <line x1="170" y1="110" x2="170" y2="154" stroke="#4A7C2F" stroke-width="2"/>
+        <circle cx="170" cy="164" r="11" fill="#C17D2A"/>
+        <text x="170" y="168" text-anchor="middle" font-size="11" font-weight="700" fill="white" font-family="'Lato',sans-serif">4</text>
+      </svg>
+    </div>
+    <div class="label-inputs" id="label-aa">
+      <div class="label-row"><div class="label-num">1</div><input class="label-input" data-answer="hydrogen" placeholder="Part 1…" id="laa1"></div>
+      <div class="label-row"><div class="label-num">2</div><input class="label-input" data-answer="amine group" placeholder="Part 2…" id="laa2" data-alt="amino group"></div>
+      <div class="label-row"><div class="label-num">3</div><input class="label-input" data-answer="carboxyl group" placeholder="Part 3…" id="laa3"></div>
+      <div class="label-row"><div class="label-num">4</div><input class="label-input" data-answer="r group" placeholder="Part 4…" id="laa4" data-alt="variable group"></div>
+      <div class="btn-row" style="margin-top:6px">
+        <button class="btn btn-primary btn-sm" onclick="checkLabels('label-aa')">Check Labels</button>
+        <button class="btn btn-outline btn-sm" onclick="resetLabels('label-aa')">Reset</button>
+      </div>
+    </div>
+  </div>
+
+  <hr class="section-rule">
+
+  <!-- ACTIVITY 3: Flashcards -->
+  <h2>Activity 3 — Flashcards</h2>
+  <div class="card-amber" style="margin-bottom:10px"><p style="margin:0;font-size:13px">Read the question, try to recall the answer, then click the card to reveal it.</p></div>
+
+  <div class="fc-deck">
+    <div class="fc" onclick="this.classList.toggle('flipped')">
+      <div class="fc-inner">
+        <div class="fc-front"><div class="fc-q-label">Question</div><div class="fc-q-text">What is a peptide bond and how is it formed?</div><div class="fc-hint">Click to reveal</div></div>
+        <div class="fc-back"><div class="fc-q-label">Answer</div><div class="fc-a-text">A covalent bond between the –COOH of one amino acid and the –NH₂ of the next. Formed by a <strong>condensation reaction</strong>, releasing water.</div></div>
+      </div>
+    </div>
+    <div class="fc" onclick="this.classList.toggle('flipped')">
+      <div class="fc-inner">
+        <div class="fc-front"><div class="fc-q-label">Question</div><div class="fc-q-text">What bonds maintain tertiary structure?</div><div class="fc-hint">Click to reveal</div></div>
+        <div class="fc-back"><div class="fc-q-label">Answer</div><div class="fc-a-text">Hydrogen bonds · Ionic bonds · Disulfide bridges · Hydrophobic interactions</div></div>
+      </div>
+    </div>
+    <div class="fc" onclick="this.classList.toggle('flipped')">
+      <div class="fc-inner">
+        <div class="fc-front"><div class="fc-q-label">Question</div><div class="fc-q-text">Why is haemoglobin described as having quaternary structure?</div><div class="fc-hint">Click to reveal</div></div>
+        <div class="fc-back"><div class="fc-q-label">Answer</div><div class="fc-a-text">It is composed of <strong>4 polypeptide subunits</strong> (2α + 2β chains), each with a haem group — more than one polypeptide chain.</div></div>
+      </div>
+    </div>
+    <div class="fc" onclick="this.classList.toggle('flipped')">
+      <div class="fc-inner">
+        <div class="fc-front"><div class="fc-q-label">Question</div><div class="fc-q-text">How does collagen differ structurally from haemoglobin?</div><div class="fc-hint">Click to reveal</div></div>
+        <div class="fc-back"><div class="fc-q-label">Answer</div><div class="fc-a-text">Collagen is <strong>fibrous</strong> (triple helix, insoluble, structural) vs haemoglobin which is <strong>globular</strong> (spherical, soluble, metabolically active).</div></div>
+      </div>
+    </div>
+    <div class="fc" onclick="this.classList.toggle('flipped')">
+      <div class="fc-inner">
+        <div class="fc-front"><div class="fc-q-label">Question</div><div class="fc-q-text">How does an enzyme's structure relate to its specificity?</div><div class="fc-hint">Click to reveal</div></div>
+        <div class="fc-back"><div class="fc-q-label">Answer</div><div class="fc-a-text">The <strong>active site</strong> has a shape complementary to one specific substrate only, due to the protein's tertiary structure. Only the correct substrate can bind.</div></div>
+      </div>
+    </div>
+    <div class="fc" onclick="this.classList.toggle('flipped')">
+      <div class="fc-inner">
+        <div class="fc-front"><div class="fc-q-label">Question</div><div class="fc-q-text">What is the induced fit model?</div><div class="fc-hint">Click to reveal</div></div>
+        <div class="fc-back"><div class="fc-q-label">Answer</div><div class="fc-a-text">The active site is not rigid — it <strong>changes shape slightly</strong> when the substrate binds, improving the fit and lowering activation energy more effectively.</div></div>
+      </div>
+    </div>
+    <div class="fc" onclick="this.classList.toggle('flipped')">
+      <div class="fc-inner">
+        <div class="fc-front"><div class="fc-q-label">Question</div><div class="fc-q-text">What is the difference between intracellular and extracellular enzymes?</div><div class="fc-hint">Click to reveal</div></div>
+        <div class="fc-back"><div class="fc-q-label">Answer</div><div class="fc-a-text"><strong>Intracellular</strong> = work inside cells (e.g. respiratory enzymes). <strong>Extracellular</strong> = secreted, work outside cells (e.g. amylase in saliva).</div></div>
+      </div>
+    </div>
+    <div class="fc" onclick="this.classList.toggle('flipped')">
+      <div class="fc-inner">
+        <div class="fc-front"><div class="fc-q-label">Question</div><div class="fc-q-text">What is the role of the R group in an amino acid?</div><div class="fc-hint">Click to reveal</div></div>
+        <div class="fc-back"><div class="fc-q-label">Answer</div><div class="fc-a-text">The R group is the <strong>variable side chain</strong> that differs between the 20 amino acids. It determines the properties and interactions of each amino acid.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="section-rule">
+
+  <!-- ACTIVITY 4: Retrieval questions -->
+  <h2>Activity 4 — Retrieval Questions</h2>
+  <div class="card-amber" style="margin-bottom:10px"><p style="margin:0;font-size:13px">Write your answer, then click <strong>Reveal Mark Scheme</strong> to check it.</p></div>
+
+  <div class="retrieval-q">
+    <div class="q-label">Question 1 <span class="q-marks">[4 marks]</span></div>
+    <div class="q-text">Describe the four levels of protein structure. For each level, state the bonds involved.</div>
+    <textarea placeholder="Write your answer here…"></textarea>
+    <div class="btn-row"><button class="btn btn-outline btn-sm" onclick="revealMS(this)">Reveal Mark Scheme</button></div>
+    <div class="mark-scheme"><strong>Mark scheme (1 mark each):</strong><br>
+      • <strong>Primary</strong> — sequence of amino acids joined by peptide bonds (covalent)<br>
+      • <strong>Secondary</strong> — α-helix or β-pleated sheet; held by hydrogen bonds<br>
+      • <strong>Tertiary</strong> — overall 3D shape of one polypeptide; held by hydrogen bonds, ionic bonds, disulfide bridges, hydrophobic interactions<br>
+      • <strong>Quaternary</strong> — two or more polypeptide chains associated together (same bonds as tertiary)
+    </div>
+  </div>
+
+  <div class="retrieval-q">
+    <div class="q-label">Question 2 <span class="q-marks">[4 marks]</span></div>
+    <div class="q-text">Compare the structure and function of collagen and haemoglobin.</div>
+    <textarea placeholder="Write your answer here…"></textarea>
+    <div class="btn-row"><button class="btn btn-outline btn-sm" onclick="revealMS(this)">Reveal Mark Scheme</button></div>
+    <div class="mark-scheme"><strong>Mark scheme (one mark per valid comparative point, max 4):</strong><br>
+      • Collagen is fibrous / haemoglobin is globular<br>
+      • Collagen is insoluble / haemoglobin is soluble<br>
+      • Collagen has 3 polypeptides in a triple helix / haemoglobin has 4 subunits (2α + 2β)<br>
+      • Haemoglobin has 4 haem groups (with Fe²⁺) / collagen has no prosthetic group<br>
+      • Collagen is structural (tensile strength) / haemoglobin transports oxygen
+    </div>
+  </div>
+
+  <div class="retrieval-q">
+    <div class="q-label">Question 3 <span class="q-marks">[3 marks]</span></div>
+    <div class="q-text">Explain why enzymes are described as specific, using the concept of active site.</div>
+    <textarea placeholder="Write your answer here…"></textarea>
+    <div class="btn-row"><button class="btn btn-outline btn-sm" onclick="revealMS(this)">Reveal Mark Scheme</button></div>
+    <div class="mark-scheme"><strong>Mark scheme (any 3):</strong><br>
+      • Active site has a specific/complementary shape to one substrate<br>
+      • Shape determined by tertiary structure of the protein<br>
+      • Only the correct substrate can bind to form an enzyme–substrate complex<br>
+      • Induced fit — active site changes shape slightly on substrate binding<br>
+      • Different amino acid sequences → different tertiary structures → different active sites
+    </div>
+  </div>
+
+  <div class="btn-row" style="margin-top:20px">
+    <button class="btn btn-primary" onclick="goTo(3)">Continue to Flowers →</button>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════
+     SECTION 4 — FLOWERS REFERENCE
+══════════════════════════════════════════════════════════ -->
+<section id="s3">
+  <div class="lesson-meta">Flower Reproduction · Reference</div>
+  <h1>Reproduction in<br>Flowering Plants</h1>
+  <p class="lesson-subtitle">Spec ref: 3.13 · Fertilisation in flowering plants</p>
+
+  <h2>Key Terms</h2>
+  <table class="term-grid">
+    <thead><tr><th>Term</th><th>Definition</th></tr></thead>
+    <tbody>
+      <tr><td class="term-key">Sepal</td><td>Leaf-like structure at the base of a flower, usually green. Protects the developing flower bud. Collectively called the calyx.</td></tr>
+      <tr><td class="term-key">Petal</td><td>Modified leaf, often brightly coloured and/or scented to attract insect pollinators. Collectively the corolla.</td></tr>
+      <tr><td class="term-key">Stamen</td><td>Male reproductive organ. Consists of an anther (produces pollen) and a filament (stalk).</td></tr>
+      <tr><td class="term-key">Anther</td><td>The structure at the top of the stamen that produces and releases pollen grains containing the male gametes.</td></tr>
+      <tr><td class="term-key">Filament</td><td>The stalk of the stamen that supports the anther and positions it for pollen dispersal.</td></tr>
+      <tr><td class="term-key">Carpel (Pistil)</td><td>Female reproductive organ. Consists of the stigma, style and ovary.</td></tr>
+      <tr><td class="term-key">Stigma</td><td>Sticky surface at the top of the carpel that receives pollen grains during pollination.</td></tr>
+      <tr><td class="term-key">Style</td><td>The stalk connecting the stigma to the ovary. The pollen tube grows down the style.</td></tr>
+      <tr><td class="term-key">Ovary</td><td>Encloses the ovules. After fertilisation it develops into the fruit.</td></tr>
+      <tr><td class="term-key">Ovule</td><td>Contains the female gamete (egg cell). After fertilisation it develops into the seed.</td></tr>
+      <tr><td class="term-key">Pollination</td><td>Transfer of pollen from an anther to a stigma. Self-pollination = same plant; cross-pollination = different plant.</td></tr>
+      <tr><td class="term-key">Pollen tube</td><td>Grows from the pollen grain down through the style to the ovule. Carries the male nuclei to the egg cell.</td></tr>
+      <tr><td class="term-key">Double fertilisation</td><td>Unique to angiosperms. One sperm + egg cell → zygote (diploid). Second sperm + 2 polar nuclei → endosperm (triploid, food store).</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Flower Structure</h2>
+  <div class="diagram-wrap">
+    <svg viewBox="0 0 500 340" width="100%" style="max-width:500px" aria-label="Flower cross-section diagram">
+      <!-- Receptacle -->
+      <rect x="215" y="310" width="70" height="22" rx="4" fill="#8B7355"/>
+      <text x="250" y="324" text-anchor="middle" font-size="11" fill="white" font-family="'Lato',sans-serif" font-weight="700">receptacle</text>
+      <!-- Sepals -->
+      <ellipse cx="148" cy="290" rx="52" ry="17" fill="#4A7C2F" transform="rotate(-28 148 290)" opacity="0.9"/>
+      <ellipse cx="352" cy="290" rx="52" ry="17" fill="#4A7C2F" transform="rotate(28 352 290)" opacity="0.9"/>
+      <!-- Petals -->
+      <ellipse cx="95" cy="195" rx="80" ry="32" fill="#E8B4C8" stroke="#C478A0" stroke-width="1" transform="rotate(-18 95 195)" opacity="0.85"/>
+      <ellipse cx="405" cy="195" rx="80" ry="32" fill="#E8B4C8" stroke="#C478A0" stroke-width="1" transform="rotate(18 405 195)" opacity="0.85"/>
+      <!-- Ovary -->
+      <ellipse cx="250" cy="258" rx="36" ry="32" fill="#C8E89A" stroke="#4A7C2F" stroke-width="2"/>
+      <!-- Ovule inside ovary -->
+      <ellipse cx="250" cy="260" rx="14" ry="12" fill="#FFE4B5" stroke="#C17D2A" stroke-width="1.5"/>
+      <text x="250" y="264" text-anchor="middle" font-size="9" fill="#8B5E00" font-family="'Lato',sans-serif" font-weight="700">ovule</text>
+      <!-- Style -->
+      <rect x="243" y="198" width="14" height="60" fill="#A0C060" stroke="#4A7C2F" stroke-width="1"/>
+      <!-- Stigma -->
+      <ellipse cx="250" cy="192" rx="26" ry="11" fill="#7AAD52" stroke="#2D5016" stroke-width="1.5"/>
+      <!-- Stamens -->
+      <line x1="172" y1="308" x2="162" y2="230" stroke="#2D5016" stroke-width="2.5"/>
+      <ellipse cx="162" cy="223" rx="18" ry="7" fill="#FFD700" stroke="#B8860B" stroke-width="1.5"/>
+      <line x1="328" y1="308" x2="338" y2="230" stroke="#2D5016" stroke-width="2.5"/>
+      <ellipse cx="338" cy="223" rx="18" ry="7" fill="#FFD700" stroke="#B8860B" stroke-width="1.5"/>
+      <!-- Labels with lines -->
+      <!-- Sepal label -->
+      <line x1="148" y1="282" x2="80" y2="268" stroke="#999" stroke-width="1" stroke-dasharray="3,2"/>
+      <text x="76" y="264" text-anchor="end" font-size="12" fill="#2D5016" font-family="'Lato',sans-serif" font-weight="700">sepal</text>
+      <!-- Petal label -->
+      <line x1="95" y1="175" x2="50" y2="155" stroke="#999" stroke-width="1" stroke-dasharray="3,2"/>
+      <text x="46" y="151" text-anchor="end" font-size="12" fill="#2D5016" font-family="'Lato',sans-serif" font-weight="700">petal</text>
+      <!-- Anther label -->
+      <line x1="162" y1="218" x2="110" y2="205" stroke="#999" stroke-width="1" stroke-dasharray="3,2"/>
+      <text x="106" y="201" text-anchor="end" font-size="12" fill="#2D5016" font-family="'Lato',sans-serif" font-weight="700">anther</text>
+      <!-- Filament label -->
+      <line x1="167" y1="270" x2="120" y2="278" stroke="#999" stroke-width="1" stroke-dasharray="3,2"/>
+      <text x="116" y="282" text-anchor="end" font-size="12" fill="#2D5016" font-family="'Lato',sans-serif" font-weight="700">filament</text>
+      <!-- Stigma label -->
+      <line x1="276" y1="192" x2="330" y2="175" stroke="#999" stroke-width="1" stroke-dasharray="3,2"/>
+      <text x="334" y="179" font-size="12" fill="#2D5016" font-family="'Lato',sans-serif" font-weight="700">stigma</text>
+      <!-- Style label -->
+      <line x1="257" y1="228" x2="310" y2="218" stroke="#999" stroke-width="1" stroke-dasharray="3,2"/>
+      <text x="314" y="222" font-size="12" fill="#2D5016" font-family="'Lato',sans-serif" font-weight="700">style</text>
+      <!-- Ovary label -->
+      <line x1="286" y1="258" x2="330" y2="255" stroke="#999" stroke-width="1" stroke-dasharray="3,2"/>
+      <text x="334" y="259" font-size="12" fill="#2D5016" font-family="'Lato',sans-serif" font-weight="700">ovary</text>
+    </svg>
+    <p class="diagram-caption">Figure 2 — Generalised flower cross-section. Stamens = male; carpel (stigma + style + ovary) = female.</p>
+  </div>
+
+  <h2>Insect vs Wind Pollination</h2>
+  <table class="comp-table">
+    <thead><tr><th>Feature</th><th>Insect-pollinated</th><th>Wind-pollinated</th></tr></thead>
+    <tbody>
+      <tr><td class="row-head">Petals</td><td>Large, brightly coloured, scented</td><td>Small, dull, or absent</td></tr>
+      <tr><td class="row-head">Nectar / nectaries</td><td>Present (reward for insects)</td><td>Absent</td></tr>
+      <tr><td class="row-head">Pollen</td><td>Large, sticky, often spiky — attaches to insects</td><td>Small, light, smooth — carried by air currents</td></tr>
+      <tr><td class="row-head">Anthers</td><td>Inside flower, firm attachment</td><td>Large, loose/dangling outside flower</td></tr>
+      <tr><td class="row-head">Stigma</td><td>Inside flower, sticky surface</td><td>Large, feathery, hangs outside — maximises pollen capture</td></tr>
+      <tr><td class="row-head">Pollen produced</td><td>Small amounts (precise delivery)</td><td>Very large amounts (wasteful dispersal)</td></tr>
+      <tr><td class="row-head">Examples</td><td>Roses, tulips, sunflowers</td><td>Grasses, maize, oak trees</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Fertilisation — Step by Step</h2>
+  <p class="card-green" style="padding:12px 16px;font-size:13.5px;color:var(--text-mid);margin-bottom:14px">Spec 3.13: <em>"Know the process of fertilisation in flowering plants, starting with the growth of a pollen tube and ending with the fusion of nuclei."</em></p>
+  <div class="steps">
+    <div class="step"><div class="step-num">1</div><div class="step-text"><strong>Pollination</strong> — pollen grain lands on the stigma of a compatible flower and germinates.</div></div>
+    <div class="step"><div class="step-num">2</div><div class="step-text"><strong>Pollen tube growth</strong> — a pollen tube grows down the style, digesting its way through the style tissue. Controlled by the pollen tube nucleus.</div></div>
+    <div class="step"><div class="step-num">3</div><div class="step-text"><strong>Generative nucleus divides</strong> — the generative nucleus in the pollen grain divides by mitosis to produce <strong>two sperm nuclei</strong>.</div></div>
+    <div class="step"><div class="step-num">4</div><div class="step-text"><strong>Pollen tube reaches ovule</strong> — the tube enters the ovule through the micropyle.</div></div>
+    <div class="step"><div class="step-num">5</div><div class="step-text"><strong>Double fertilisation</strong> — <strong>Sperm 1 + egg cell → zygote</strong> (diploid; develops into embryo). <strong>Sperm 2 + two polar nuclei → endosperm nucleus</strong> (triploid; develops into food store for seed).</div></div>
+    <div class="step"><div class="step-num">6</div><div class="step-text"><strong>Seed and fruit formation</strong> — the ovule develops into the seed; the ovary wall develops into the fruit.</div></div>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn btn-primary" onclick="goTo(4)">Go to Practice →</button>
+    <button class="btn btn-outline" onclick="goTo(5)">Skip to Plants</button>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════
+     SECTION 5 — FLOWERS PRACTICE
+══════════════════════════════════════════════════════════ -->
+<section id="s4">
+  <div class="lesson-meta">Flower Reproduction · Practice</div>
+  <h1>Flowers — Activities</h1>
+  <p class="lesson-subtitle">Close your notes and test yourself from memory</p>
+
+  <!-- Label the flower -->
+  <h2>Activity 1 — Label the Flower</h2>
+  <div class="card-amber" style="margin-bottom:10px"><p style="margin:0;font-size:13px">Type the name of each numbered part. Then click <strong>Check Labels</strong>.</p></div>
+
+  <div class="label-zone">
+    <div class="diagram-wrap" style="margin-bottom:0">
+      <svg viewBox="0 0 500 340" width="100%" style="max-width:460px">
+        <rect x="215" y="310" width="70" height="22" rx="4" fill="#8B7355"/>
+        <ellipse cx="148" cy="290" rx="52" ry="17" fill="#4A7C2F" transform="rotate(-28 148 290)" opacity="0.9"/>
+        <ellipse cx="352" cy="290" rx="52" ry="17" fill="#4A7C2F" transform="rotate(28 352 290)" opacity="0.9"/>
+        <ellipse cx="95" cy="195" rx="80" ry="32" fill="#E8B4C8" stroke="#C478A0" stroke-width="1" transform="rotate(-18 95 195)" opacity="0.85"/>
+        <ellipse cx="405" cy="195" rx="80" ry="32" fill="#E8B4C8" stroke="#C478A0" stroke-width="1" transform="rotate(18 405 195)" opacity="0.85"/>
+        <ellipse cx="250" cy="258" rx="36" ry="32" fill="#C8E89A" stroke="#4A7C2F" stroke-width="2"/>
+        <ellipse cx="250" cy="260" rx="14" ry="12" fill="#FFE4B5" stroke="#C17D2A" stroke-width="1.5"/>
+        <rect x="243" y="198" width="14" height="60" fill="#A0C060" stroke="#4A7C2F" stroke-width="1"/>
+        <ellipse cx="250" cy="192" rx="26" ry="11" fill="#7AAD52" stroke="#2D5016" stroke-width="1.5"/>
+        <line x1="172" y1="308" x2="162" y2="230" stroke="#2D5016" stroke-width="2.5"/>
+        <ellipse cx="162" cy="223" rx="18" ry="7" fill="#FFD700" stroke="#B8860B" stroke-width="1.5"/>
+        <line x1="328" y1="308" x2="338" y2="230" stroke="#2D5016" stroke-width="2.5"/>
+        <ellipse cx="338" cy="223" rx="18" ry="7" fill="#FFD700" stroke="#B8860B" stroke-width="1.5"/>
+        <!-- Number markers only (no text labels) -->
+        <circle cx="148" cy="282" r="11" fill="#2D5016"/>
+        <text x="148" y="286" text-anchor="middle" font-size="11" font-weight="700" fill="white" font-family="'Lato',sans-serif">1</text>
+        <circle cx="50" cy="170" r="11" fill="#2D5016"/>
+        <text x="50" y="174" text-anchor="middle" font-size="11" font-weight="700" fill="white" font-family="'Lato',sans-serif">2</text>
+        <circle cx="148" cy="220" r="11" fill="#2D5016"/>
+        <text x="148" y="224" text-anchor="middle" font-size="11" font-weight="700" fill="white" font-family="'Lato',sans-serif">3</text>
+        <circle cx="148" cy="278" r="11" fill="#2D5016"/>
+        <!-- Avoid overlap: reposition filament -->
+        <circle cx="130" cy="290" r="11" fill="#C17D2A"/>
+        <text x="130" y="294" text-anchor="middle" font-size="11" font-weight="700" fill="white" font-family="'Lato',sans-serif">4</text>
+        <circle cx="290" cy="185" r="11" fill="#2D5016"/>
+        <text x="290" y="189" text-anchor="middle" font-size="11" font-weight="700" fill="white" font-family="'Lato',sans-serif">5</text>
+        <circle cx="295" cy="225" r="11" fill="#2D5016"/>
+        <text x="295" y="229" text-anchor="middle" font-size="11" font-weight="700" fill="white" font-family="'Lato',sans-serif">6</text>
+        <circle cx="300" cy="260" r="11" fill="#2D5016"/>
+        <text x="300" y="264" text-anchor="middle" font-size="11" font-weight="700" fill="white" font-family="'Lato',sans-serif">7</text>
+        <circle cx="250" cy="258" r="9" fill="#C17D2A"/>
+        <text x="250" y="262" text-anchor="middle" font-size="10" font-weight="700" fill="white" font-family="'Lato',sans-serif">8</text>
+      </svg>
+    </div>
+    <div class="label-inputs" id="label-flower">
+      <div class="label-row"><div class="label-num">1</div><input class="label-input" data-answer="sepal" placeholder="Part 1…"></div>
+      <div class="label-row"><div class="label-num">2</div><input class="label-input" data-answer="petal" placeholder="Part 2…"></div>
+      <div class="label-row"><div class="label-num">3</div><input class="label-input" data-answer="anther" placeholder="Part 3…"></div>
+      <div class="label-row"><div class="label-num">4</div><input class="label-input" data-answer="filament" placeholder="Part 4…"></div>
+      <div class="label-row"><div class="label-num">5</div><input class="label-input" data-answer="stigma" placeholder="Part 5…"></div>
+      <div class="label-row"><div class="label-num">6</div><input class="label-input" data-answer="style" placeholder="Part 6…"></div>
+      <div class="label-row"><div class="label-num">7</div><input class="label-input" data-answer="ovary" placeholder="Part 7…"></div>
+      <div class="label-row"><div class="label-num">8</div><input class="label-input" data-answer="ovule" placeholder="Part 8…"></div>
+      <div class="btn-row" style="margin-top:6px">
+        <button class="btn btn-primary btn-sm" onclick="checkLabels('label-flower')">Check Labels</button>
+        <button class="btn btn-outline btn-sm" onclick="resetLabels('label-flower')">Reset</button>
+      </div>
+    </div>
+  </div>
+
+  <hr class="section-rule">
+
+  <!-- Fill-in-the-blank: Fertilisation -->
+  <h2>Activity 2 — Fill in the Blanks: Fertilisation</h2>
+  <div class="fitb-para" id="fitb-flow">
+    After a pollen grain lands on the <input class="fitb" data-answer="stigma" placeholder="?"> and germinates, a <input class="fitb" data-answer="pollen tube" placeholder="?" style="width:110px"> grows down through the <input class="fitb" data-answer="style" placeholder="?"> towards the <input class="fitb" data-answer="ovule" placeholder="?">. The <input class="fitb" data-answer="generative" placeholder="?"> nucleus divides to form two <input class="fitb" data-answer="sperm" placeholder="?"> nuclei. One sperm nucleus fuses with the <input class="fitb" data-answer="egg" placeholder="?"> cell, forming a <input class="fitb" data-answer="zygote" placeholder="?"> that develops into the embryo. The second sperm nucleus fuses with the <input class="fitb" data-answer="polar" placeholder="?"> nuclei to form the <input class="fitb" data-answer="endosperm" placeholder="?"> (the food store). This is called <input class="fitb" data-answer="double" placeholder="?"> fertilisation. After fertilisation, the ovule becomes the <input class="fitb" data-answer="seed" placeholder="?"> and the ovary becomes the <input class="fitb" data-answer="fruit" placeholder="?">.
+  </div>
+  <div class="fitb-result" id="fitb-flow-result"></div>
+  <div class="btn-row">
+    <button class="btn btn-primary btn-sm" onclick="checkFitb('fitb-flow','fitb-flow-result')">Check Answers</button>
+    <button class="btn btn-outline btn-sm" onclick="resetFitb('fitb-flow','fitb-flow-result')">Reset</button>
+  </div>
+
+  <hr class="section-rule">
+
+  <!-- Flashcards -->
+  <h2>Activity 3 — Flashcards</h2>
+  <div class="fc-deck">
+    <div class="fc" onclick="this.classList.toggle('flipped')">
+      <div class="fc-inner">
+        <div class="fc-front"><div class="fc-q-label">Question</div><div class="fc-q-text">What is the difference between pollination and fertilisation?</div><div class="fc-hint">Click to reveal</div></div>
+        <div class="fc-back"><div class="fc-q-label">Answer</div><div class="fc-a-text"><strong>Pollination</strong> = transfer of pollen from anther to stigma. <strong>Fertilisation</strong> = fusion of male and female gamete nuclei inside the ovule.</div></div>
+      </div>
+    </div>
+    <div class="fc" onclick="this.classList.toggle('flipped')">
+      <div class="fc-inner">
+        <div class="fc-front"><div class="fc-q-label">Question</div><div class="fc-q-text">Give three features of an insect-pollinated flower.</div><div class="fc-hint">Click to reveal</div></div>
+        <div class="fc-back"><div class="fc-q-label">Answer</div><div class="fc-a-text">Any 3: large/brightly coloured petals · scent · nectaries present · sticky/large pollen · stigma inside flower</div></div>
+      </div>
+    </div>
+    <div class="fc" onclick="this.classList.toggle('flipped')">
+      <div class="fc-inner">
+        <div class="fc-front"><div class="fc-q-label">Question</div><div class="fc-q-text">Give three features of a wind-pollinated flower.</div><div class="fc-hint">Click to reveal</div></div>
+        <div class="fc-back"><div class="fc-q-label">Answer</div><div class="fc-a-text">Any 3: no/small petals · no nectaries · small light smooth pollen · large feathery stigmas that hang out · abundant pollen produced</div></div>
+      </div>
+    </div>
+    <div class="fc" onclick="this.classList.toggle('flipped')">
+      <div class="fc-inner">
+        <div class="fc-front"><div class="fc-q-label">Question</div><div class="fc-q-text">What is double fertilisation? Why is it called "double"?</div><div class="fc-hint">Click to reveal</div></div>
+        <div class="fc-back"><div class="fc-q-label">Answer</div><div class="fc-a-text">Two fusion events: <strong>sperm 1 + egg → zygote</strong> (embryo) and <strong>sperm 2 + polar nuclei → endosperm</strong> (food store). Unique to angiosperms.</div></div>
+      </div>
+    </div>
+    <div class="fc" onclick="this.classList.toggle('flipped')">
+      <div class="fc-inner">
+        <div class="fc-front"><div class="fc-q-label">Question</div><div class="fc-q-text">What happens to the ovule and ovary after fertilisation?</div><div class="fc-hint">Click to reveal</div></div>
+        <div class="fc-back"><div class="fc-q-label">Answer</div><div class="fc-a-text"><strong>Ovule → seed</strong> · <strong>Ovary → fruit</strong></div></div>
+      </div>
+    </div>
+    <div class="fc" onclick="this.classList.toggle('flipped')">
+      <div class="fc-inner">
+        <div class="fc-front"><div class="fc-q-label">Question</div><div class="fc-q-text">What is the function of the style in a flower?</div><div class="fc-hint">Click to reveal</div></div>
+        <div class="fc-back"><div class="fc-q-label">Answer</div><div class="fc-a-text">Connects stigma to ovary. The <strong>pollen tube grows down the style</strong> to reach the ovule after pollination.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="section-rule">
+
+  <!-- Retrieval questions -->
+  <h2>Activity 4 — Retrieval Questions</h2>
+  <div class="retrieval-q">
+    <div class="q-label">Question 1 <span class="q-marks">[4 marks]</span></div>
+    <div class="q-text">Describe the process of fertilisation in a flowering plant, starting from the landing of a pollen grain on the stigma.</div>
+    <textarea placeholder="Write your answer here…"></textarea>
+    <div class="btn-row"><button class="btn btn-outline btn-sm" onclick="revealMS(this)">Reveal Mark Scheme</button></div>
+    <div class="mark-scheme"><strong>Mark scheme (any 4):</strong><br>
+      • Pollen grain germinates on stigma<br>
+      • Pollen tube grows down the style towards the ovule<br>
+      • Generative nucleus divides (by mitosis) to form two sperm nuclei<br>
+      • Pollen tube enters ovule through the micropyle<br>
+      • One sperm nucleus fuses with egg cell → zygote (diploid) → embryo<br>
+      • Second sperm nucleus fuses with polar nuclei → endosperm (triploid) / food store<br>
+      • Ovule → seed; ovary → fruit
+    </div>
+  </div>
+
+  <div class="retrieval-q">
+    <div class="q-label">Question 2 <span class="q-marks">[4 marks]</span></div>
+    <div class="q-text">Compare the features of insect-pollinated and wind-pollinated flowers. Refer to pollen, stigma and petals in your answer.</div>
+    <textarea placeholder="Write your answer here…"></textarea>
+    <div class="btn-row"><button class="btn btn-outline btn-sm" onclick="revealMS(this)">Reveal Mark Scheme</button></div>
+    <div class="mark-scheme"><strong>Mark scheme (1 mark per valid comparison, max 4):</strong><br>
+      • Insect: large, sticky/heavy pollen vs Wind: small, light, smooth pollen<br>
+      • Insect: stigma inside flower, sticky vs Wind: large, feathery stigma hanging outside<br>
+      • Insect: large, bright, scented petals vs Wind: small, dull or absent petals<br>
+      • Insect: nectaries present vs Wind: nectaries absent<br>
+      • Insect: small amounts of pollen vs Wind: large amounts of pollen produced
+    </div>
+  </div>
+
+  <div class="btn-row" style="margin-top:20px">
+    <button class="btn btn-primary" onclick="goTo(5)">Continue to Plants →</button>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════
+     SECTION 6 — PLANT BIODIVERSITY REFERENCE
+══════════════════════════════════════════════════════════ -->
+<section id="s5">
+  <div class="lesson-meta">Plant Biodiversity · Reference</div>
+  <h1>Plant Biodiversity</h1>
+  <p class="lesson-subtitle">Spec refs: 4.14 Classification · 4.15–4.16 Biodiversity</p>
+
+  <h2>The Four Plant Groups</h2>
+  <table class="comp-table">
+    <thead>
+      <tr>
+        <th>Feature</th>
+        <th>Bryophytes<br><small style="font-weight:300">(mosses, liverworts)</small></th>
+        <th>Filicinophyta<br><small style="font-weight:300">(ferns)</small></th>
+        <th>Coniferophyta<br><small style="font-weight:300">(conifers)</small></th>
+        <th>Angiospermophyta<br><small style="font-weight:300">(flowering plants)</small></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="row-head">Vascular tissue</td>
+        <td><span class="badge badge-no">✗ None</span></td>
+        <td><span class="badge badge-yes">✓ Yes</span></td>
+        <td><span class="badge badge-yes">✓ Yes</span></td>
+        <td><span class="badge badge-yes">✓ Yes</span></td>
+      </tr>
+      <tr>
+        <td class="row-head">True roots</td>
+        <td><span class="badge badge-no">✗ No (rhizoids)</span></td>
+        <td><span class="badge badge-yes">✓ Yes</span></td>
+        <td><span class="badge badge-yes">✓ Yes</span></td>
+        <td><span class="badge badge-yes">✓ Yes</span></td>
+      </tr>
+      <tr>
+        <td class="row-head">Reproduction</td>
+        <td>Spores</td>
+        <td>Spores</td>
+        <td>Seeds (in cones)</td>
+        <td>Seeds (in fruit)</td>
+      </tr>
+      <tr>
+        <td class="row-head">Flowers</td>
+        <td><span class="badge badge-no">✗ No</span></td>
+        <td><span class="badge badge-no">✗ No</span></td>
+        <td><span class="badge badge-no">✗ No</span></td>
+        <td><span class="badge badge-yes">✓ Yes</span></td>
+      </tr>
+      <tr>
+        <td class="row-head">Seeds enclosed in fruit?</td>
+        <td>—</td>
+        <td>—</td>
+        <td><span class="badge badge-no">✗ Gymnosperm<br>(naked seeds)</span></td>
+        <td><span class="badge badge-yes">✓ Angiosperm<br>(enclosed seeds)</span></td>
+      </tr>
+      <tr>
+        <td class="row-head">Dominant generation</td>
+        <td>Gametophyte</td>
+        <td>Sporophyte</td>
+        <td>Sporophyte</td>
+        <td>Sporophyte</td>
+      </tr>
+      <tr>
+        <td class="row-head">Need water to fertilise?</td>
+        <td><span class="badge badge-yes">✓ Yes (motile sperm)</span></td>
+        <td><span class="badge badge-yes">✓ Yes (motile sperm)</span></td>
+        <td><span class="badge badge-no">✗ No (pollen tube)</span></td>
+        <td><span class="badge badge-no">✗ No (pollen tube)</span></td>
+      </tr>
+      <tr>
+        <td class="row-head">Key examples</td>
+        <td>Sphagnum moss, Pellia</td>
+        <td>Dryopteris (male fern)</td>
+        <td>Pine, spruce, fir</td>
+        <td>All flowering plants</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>Key Terms</h2>
+  <table class="term-grid">
+    <thead><tr><th>Term</th><th>Definition</th></tr></thead>
+    <tbody>
+      <tr><td class="term-key">Gymnosperm</td><td>"Naked seed" — seeds not enclosed in a fruit; produced in cones. E.g. conifers.</td></tr>
+      <tr><td class="term-key">Angiosperm</td><td>"Enclosed seed" — seeds enclosed within a fruit (developed from the ovary). E.g. all flowering plants.</td></tr>
+      <tr><td class="term-key">Vascular tissue</td><td>Internal transport tissue (xylem and phloem). Allows plants to grow taller and survive in drier conditions.</td></tr>
+      <tr><td class="term-key">Rhizoid</td><td>Hair-like structure anchoring bryophytes to the substrate; not a true root — no vascular tissue.</td></tr>
+      <tr><td class="term-key">Gametophyte</td><td>The haploid generation of a plant that produces gametes by mitosis.</td></tr>
+      <tr><td class="term-key">Sporophyte</td><td>The diploid generation of a plant that produces spores by meiosis.</td></tr>
+      <tr><td class="term-key">Biodiversity</td><td>The variety of life in an area — includes species richness, genetic diversity, and habitat diversity.</td></tr>
+      <tr><td class="term-key">Endemism</td><td>A species found only in a specific geographic area and nowhere else on Earth.</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Classification (Spec 4.14)</h2>
+  <div class="card">
+    <h3>What is classification?</h3>
+    <p>Classification organises the variety of life based on <strong>similarities and differences in phenotypes and genotypes</strong>. It is built around the species concept.</p>
+    <h3 style="margin-top:14px">Three-domain system</h3>
+    <p>Based on <strong>molecular evidence</strong> (rRNA sequences, DNA base sequences), life is divided into three domains: <span class="hl">Archaea</span>, <span class="hl">Bacteria</span>, and <span class="hl">Eukarya</span>. Plants belong to Eukarya.</p>
+    <h3 style="margin-top:14px">Why does classification change?</h3>
+    <p style="margin-bottom:0">New molecular evidence — e.g. DNA and protein sequences — reveals evolutionary relationships that cannot be seen from anatomy alone. New data is <strong>critically evaluated by the scientific community</strong> before changing taxonomic groupings.</p>
+  </div>
+
+  <div class="two-col">
+    <div class="card-green">
+      <h3>Why does biodiversity matter?</h3>
+      <p style="margin-bottom:0">Species-rich habitats are more stable, more productive, and provide more ecosystem services. Human activity (habitat destruction, pollution, over-exploitation) is reducing biodiversity at an unprecedented rate (Spec 4.15).</p>
+    </div>
+    <div class="card-amber">
+      <h3>Endemism</h3>
+      <p style="margin-bottom:0">Endemic species are uniquely vulnerable to extinction because they have no other population elsewhere. Islands and isolated habitats tend to have high endemism (e.g. Madagascar, Galápagos).</p>
+    </div>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn btn-primary" onclick="goTo(6)">Go to Practice →</button>
+    <button class="btn btn-outline" onclick="goTo(7)">Skip to Mixed Retrieval</button>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════
+     SECTION 7 — PLANT BIODIVERSITY PRACTICE
+══════════════════════════════════════════════════════════ -->
+<section id="s6">
+  <div class="lesson-meta">Plant Biodiversity · Practice</div>
+  <h1>Plants — Activities</h1>
+  <p class="lesson-subtitle">Close your notes and test yourself from memory</p>
+
+  <!-- Fill-in-the-blank -->
+  <h2>Activity 1 — Fill in the Blanks</h2>
+  <div class="fitb-para" id="fitb-plant">
+    Plants are divided into four main groups. <input class="fitb" data-answer="bryophytes" placeholder="?" style="width:110px"> such as mosses lack <input class="fitb" data-answer="vascular" placeholder="?"> tissue and reproduce by <input class="fitb" data-answer="spores" placeholder="?">; they anchor using <input class="fitb" data-answer="rhizoids" placeholder="?"> rather than true roots. Ferns also reproduce by spores but do have <input class="fitb" data-answer="vascular" placeholder="?"> tissue; their leaves are called <input class="fitb" data-answer="fronds" placeholder="?">. Conifers produce seeds in <input class="fitb" data-answer="cones" placeholder="?"> — they are called <input class="fitb" data-answer="gymnosperms" placeholder="?"> because the seeds are "naked" (not enclosed). Flowering plants are <input class="fitb" data-answer="angiosperms" placeholder="?"> — their seeds are enclosed within a <input class="fitb" data-answer="fruit" placeholder="?">. They are the most <input class="fitb" data-answer="diverse" placeholder="?"> group of plants on Earth.
+  </div>
+  <div class="fitb-result" id="fitb-plant-result"></div>
+  <div class="btn-row">
+    <button class="btn btn-primary btn-sm" onclick="checkFitb('fitb-plant','fitb-plant-result')">Check Answers</button>
+    <button class="btn btn-outline btn-sm" onclick="resetFitb('fitb-plant','fitb-plant-result')">Reset</button>
+  </div>
+
+  <hr class="section-rule">
+
+  <!-- Flashcards -->
+  <h2>Activity 2 — Flashcards</h2>
+  <div class="fc-deck">
+    <div class="fc" onclick="this.classList.toggle('flipped')">
+      <div class="fc-inner">
+        <div class="fc-front"><div class="fc-q-label">Question</div><div class="fc-q-text">What is the difference between a gymnosperm and an angiosperm?</div><div class="fc-hint">Click to reveal</div></div>
+        <div class="fc-back"><div class="fc-q-label">Answer</div><div class="fc-a-text"><strong>Gymnosperm</strong> = naked seeds in cones (e.g. conifers). <strong>Angiosperm</strong> = seeds enclosed in fruit, produced in flowers.</div></div>
+      </div>
+    </div>
+    <div class="fc" onclick="this.classList.toggle('flipped')">
+      <div class="fc-inner">
+        <div class="fc-front"><div class="fc-q-label">Question</div><div class="fc-q-text">Why do bryophytes need to live in moist habitats?</div><div class="fc-hint">Click to reveal</div></div>
+        <div class="fc-back"><div class="fc-q-label">Answer</div><div class="fc-a-text">They have no vascular tissue and no waxy cuticle (lose water easily), and their sperm must <strong>swim through water</strong> to reach egg cells for fertilisation.</div></div>
+      </div>
+    </div>
+    <div class="fc" onclick="this.classList.toggle('flipped')">
+      <div class="fc-inner">
+        <div class="fc-front"><div class="fc-q-label">Question</div><div class="fc-q-text">Which plant groups reproduce by spores? Which by seeds?</div><div class="fc-hint">Click to reveal</div></div>
+        <div class="fc-back"><div class="fc-q-label">Answer</div><div class="fc-a-text"><strong>Spores:</strong> Bryophytes and Ferns. <strong>Seeds:</strong> Conifers (in cones) and Flowering plants (in fruit).</div></div>
+      </div>
+    </div>
+    <div class="fc" onclick="this.classList.toggle('flipped')">
+      <div class="fc-inner">
+        <div class="fc-front"><div class="fc-q-label">Question</div><div class="fc-q-text">What is the three-domain system and what evidence supports it?</div><div class="fc-hint">Click to reveal</div></div>
+        <div class="fc-back"><div class="fc-q-label">Answer</div><div class="fc-a-text">Divides life into <strong>Archaea, Bacteria, Eukarya</strong>. Supported by <strong>molecular evidence</strong> — rRNA and DNA base sequence comparisons.</div></div>
+      </div>
+    </div>
+    <div class="fc" onclick="this.classList.toggle('flipped')">
+      <div class="fc-inner">
+        <div class="fc-front"><div class="fc-q-label">Question</div><div class="fc-q-text">What is endemism? Give an example of a region with high endemism.</div><div class="fc-hint">Click to reveal</div></div>
+        <div class="fc-back"><div class="fc-q-label">Answer</div><div class="fc-a-text">A species found <strong>only in one specific geographic area</strong>. High endemism examples: Madagascar, Galápagos Islands, Australia.</div></div>
+      </div>
+    </div>
+    <div class="fc" onclick="this.classList.toggle('flipped')">
+      <div class="fc-inner">
+        <div class="fc-front"><div class="fc-q-label">Question</div><div class="fc-q-text">Why might molecular evidence change the classification of an organism?</div><div class="fc-hint">Click to reveal</div></div>
+        <div class="fc-back"><div class="fc-q-label">Answer</div><div class="fc-a-text">DNA/protein sequences reveal <strong>true evolutionary relationships</strong>. Organisms that look similar may not be closely related (convergent evolution); molecular data is more reliable than anatomy alone.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="section-rule">
+
+  <!-- Retrieval questions -->
+  <h2>Activity 3 — Retrieval Questions</h2>
+  <div class="retrieval-q">
+    <div class="q-label">Question 1 <span class="q-marks">[4 marks]</span></div>
+    <div class="q-text">Compare the features of bryophytes and angiosperms. Include reference to vascular tissue, roots, reproduction and seeds.</div>
+    <textarea placeholder="Write your answer here…"></textarea>
+    <div class="btn-row"><button class="btn btn-outline btn-sm" onclick="revealMS(this)">Reveal Mark Scheme</button></div>
+    <div class="mark-scheme"><strong>Mark scheme (1 mark per valid comparison, max 4):</strong><br>
+      • Bryophytes lack vascular tissue / angiosperms have xylem and phloem<br>
+      • Bryophytes have rhizoids, not true roots / angiosperms have true roots<br>
+      • Bryophytes reproduce by spores / angiosperms reproduce by seeds<br>
+      • Bryophytes have no seeds or fruit / angiosperms have seeds enclosed in fruit<br>
+      • Bryophytes need water for fertilisation (motile sperm) / angiosperms use pollen tubes<br>
+      • Bryophytes have dominant gametophyte / angiosperms have dominant sporophyte
+    </div>
+  </div>
+
+  <div class="retrieval-q">
+    <div class="q-label">Question 2 <span class="q-marks">[3 marks]</span></div>
+    <div class="q-text">Explain how the use of molecular evidence has improved the classification of organisms.</div>
+    <textarea placeholder="Write your answer here…"></textarea>
+    <div class="btn-row"><button class="btn btn-outline btn-sm" onclick="revealMS(this)">Reveal Mark Scheme</button></div>
+    <div class="mark-scheme"><strong>Mark scheme (any 3):</strong><br>
+      • DNA base sequences / rRNA sequences / protein sequences compared between organisms<br>
+      • Reveals evolutionary/phylogenetic relationships more accurately than morphology<br>
+      • Can show organisms that look similar are not closely related (convergent evolution)<br>
+      • Led to three-domain system (Archaea, Bacteria, Eukarya)<br>
+      • New data critically evaluated by the scientific community before changing taxonomy
+    </div>
+  </div>
+
+  <div class="btn-row" style="margin-top:20px">
+    <button class="btn btn-primary" onclick="goTo(7)">Go to Mixed Retrieval →</button>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════
+     SECTION 8 — MIXED RETRIEVAL
+══════════════════════════════════════════════════════════ -->
+<section id="s7">
+  <div class="lesson-meta">Mixed Retrieval · All Three Topics</div>
+  <h1>Mixed Retrieval</h1>
+  <p class="lesson-subtitle">Answer from memory, then reveal and self-mark. Be honest!</p>
+
+  <div class="card-amber" style="margin-bottom:24px">
+    <p style="margin-bottom:0;font-size:13px">Write a quick answer for each question, then click <strong>Reveal</strong>. Use the ✓ / ✗ buttons to track your score. Your total will appear when you've marked all 10 questions.</p>
+  </div>
+
+  <div id="mq-container">
+
+    <div class="mq-card" data-id="1">
+      <div class="mq-topic topic-prot">🔬 Proteins</div>
+      <div class="mq-q">What is a condensation reaction?</div>
+      <textarea placeholder="Your answer…" style="min-height:56px"></textarea>
+      <div class="btn-row"><button class="btn btn-outline btn-sm" onclick="revealMQ(this)">Reveal Answer</button></div>
+      <div class="mark-scheme">A reaction that joins two molecules together with the <strong>release of a water molecule</strong>. Used to form peptide bonds between amino acids.</div>
+      <div class="self-mark"><button class="sm-btn sm-got" onclick="markMQ(this,true)">✓ Got it</button><button class="sm-btn sm-missed" onclick="markMQ(this,false)">✗ Missed</button></div>
+    </div>
+
+    <div class="mq-card" data-id="2">
+      <div class="mq-topic topic-prot">🔬 Proteins</div>
+      <div class="mq-q">Name the two types of secondary structure found in proteins.</div>
+      <textarea placeholder="Your answer…" style="min-height:56px"></textarea>
+      <div class="btn-row"><button class="btn btn-outline btn-sm" onclick="revealMQ(this)">Reveal Answer</button></div>
+      <div class="mark-scheme"><strong>α-helix</strong> and <strong>β-pleated sheet</strong>. Both are held by hydrogen bonds.</div>
+      <div class="self-mark"><button class="sm-btn sm-got" onclick="markMQ(this,true)">✓ Got it</button><button class="sm-btn sm-missed" onclick="markMQ(this,false)">✗ Missed</button></div>
+    </div>
+
+    <div class="mq-card" data-id="3">
+      <div class="mq-topic topic-prot">🔬 Proteins</div>
+      <div class="mq-q">Why is haemoglobin classified as a globular protein? Name one structural feature that supports this.</div>
+      <textarea placeholder="Your answer…" style="min-height:56px"></textarea>
+      <div class="btn-row"><button class="btn btn-outline btn-sm" onclick="revealMQ(this)">Reveal Answer</button></div>
+      <div class="mark-scheme">Globular = <strong>spherical and water-soluble</strong>, metabolically active. Structural feature: 4 polypeptide subunits (quaternary structure) / has haem prosthetic groups / R groups folded inward (hydrophobic) keeping it soluble.</div>
+      <div class="self-mark"><button class="sm-btn sm-got" onclick="markMQ(this,true)">✓ Got it</button><button class="sm-btn sm-missed" onclick="markMQ(this,false)">✗ Missed</button></div>
+    </div>
+
+    <div class="mq-card" data-id="4">
+      <div class="mq-topic topic-flow">🌸 Flowers</div>
+      <div class="mq-q">What is the function of the filament in a flower?</div>
+      <textarea placeholder="Your answer…" style="min-height:56px"></textarea>
+      <div class="btn-row"><button class="btn btn-outline btn-sm" onclick="revealMQ(this)">Reveal Answer</button></div>
+      <div class="mark-scheme">The stalk of the stamen that <strong>supports and positions the anther</strong> for effective pollen dispersal.</div>
+      <div class="self-mark"><button class="sm-btn sm-got" onclick="markMQ(this,true)">✓ Got it</button><button class="sm-btn sm-missed" onclick="markMQ(this,false)">✗ Missed</button></div>
+    </div>
+
+    <div class="mq-card" data-id="5">
+      <div class="mq-topic topic-flow">🌸 Flowers</div>
+      <div class="mq-q">After a pollen grain germinates on the stigma, describe what happens next. Include reference to nuclear events.</div>
+      <textarea placeholder="Your answer…" style="min-height:72px"></textarea>
+      <div class="btn-row"><button class="btn btn-outline btn-sm" onclick="revealMQ(this)">Reveal Answer</button></div>
+      <div class="mark-scheme">Pollen tube grows down the style → generative nucleus divides to form 2 sperm nuclei → pollen tube enters ovule via micropyle → sperm 1 fuses with egg cell → zygote (embryo) → sperm 2 fuses with polar nuclei → endosperm (food store).</div>
+      <div class="self-mark"><button class="sm-btn sm-got" onclick="markMQ(this,true)">✓ Got it</button><button class="sm-btn sm-missed" onclick="markMQ(this,false)">✗ Missed</button></div>
+    </div>
+
+    <div class="mq-card" data-id="6">
+      <div class="mq-topic topic-flow">🌸 Flowers</div>
+      <div class="mq-q">A plant has small, dull petals and large feathery stigmas that hang outside the flower. Is it insect or wind pollinated? Justify your answer.</div>
+      <textarea placeholder="Your answer…" style="min-height:56px"></textarea>
+      <div class="btn-row"><button class="btn btn-outline btn-sm" onclick="revealMQ(this)">Reveal Answer</button></div>
+      <div class="mark-scheme"><strong>Wind pollinated.</strong> Small/dull petals (no need to attract insects) and large feathery stigmas hanging outside (maximise capture of airborne pollen).</div>
+      <div class="self-mark"><button class="sm-btn sm-got" onclick="markMQ(this,true)">✓ Got it</button><button class="sm-btn sm-missed" onclick="markMQ(this,false)">✗ Missed</button></div>
+    </div>
+
+    <div class="mq-card" data-id="7">
+      <div class="mq-topic topic-plant">🌿 Plant Biodiversity</div>
+      <div class="mq-q">Give two features of bryophytes that distinguish them from ferns.</div>
+      <textarea placeholder="Your answer…" style="min-height:56px"></textarea>
+      <div class="btn-row"><button class="btn btn-outline btn-sm" onclick="revealMQ(this)">Reveal Answer</button></div>
+      <div class="mark-scheme">Any 2: Bryophytes have <strong>no vascular tissue</strong> (ferns do) · Bryophytes have <strong>rhizoids not true roots</strong> (ferns have true roots) · Bryophytes have a <strong>dominant gametophyte</strong> (ferns have dominant sporophyte)</div>
+      <div class="self-mark"><button class="sm-btn sm-got" onclick="markMQ(this,true)">✓ Got it</button><button class="sm-btn sm-missed" onclick="markMQ(this,false)">✗ Missed</button></div>
+    </div>
+
+    <div class="mq-card" data-id="8">
+      <div class="mq-topic topic-plant">🌿 Plant Biodiversity</div>
+      <div class="mq-q">What does the term 'angiosperm' mean, and which plant group does it describe?</div>
+      <textarea placeholder="Your answer…" style="min-height:56px"></textarea>
+      <div class="btn-row"><button class="btn btn-outline btn-sm" onclick="revealMQ(this)">Reveal Answer</button></div>
+      <div class="mark-scheme"><strong>"Enclosed seed"</strong> — describes <strong>flowering plants</strong> (angiospermophyta), where seeds develop inside a fruit (modified ovary).</div>
+      <div class="self-mark"><button class="sm-btn sm-got" onclick="markMQ(this,true)">✓ Got it</button><button class="sm-btn sm-missed" onclick="markMQ(this,false)">✗ Missed</button></div>
+    </div>
+
+    <div class="mq-card" data-id="9">
+      <div class="mq-topic topic-plant">🌿 Plant Biodiversity</div>
+      <div class="mq-q">State the three domains in the three-domain system and explain why it replaced a two-kingdom system.</div>
+      <textarea placeholder="Your answer…" style="min-height:56px"></textarea>
+      <div class="btn-row"><button class="btn btn-outline btn-sm" onclick="revealMQ(this)">Reveal Answer</button></div>
+      <div class="mark-scheme">Three domains: <strong>Archaea, Bacteria, Eukarya</strong>. Replaced earlier systems because <strong>molecular evidence</strong> (rRNA/DNA sequences) showed Archaea are more distinct from Bacteria than previously thought, and more closely related to Eukarya.</div>
+      <div class="self-mark"><button class="sm-btn sm-got" onclick="markMQ(this,true)">✓ Got it</button><button class="sm-btn sm-missed" onclick="markMQ(this,false)">✗ Missed</button></div>
+    </div>
+
+    <div class="mq-card" data-id="10">
+      <div class="mq-topic topic-prot">🔬 Proteins</div>
+      <div class="mq-q">Collagen fibres have very high tensile strength. How does the molecular structure of collagen account for this property?</div>
+      <textarea placeholder="Your answer…" style="min-height:72px"></textarea>
+      <div class="btn-row"><button class="btn btn-outline btn-sm" onclick="revealMQ(this)">Reveal Answer</button></div>
+      <div class="mark-scheme">Collagen has <strong>three polypeptide chains wound into a triple helix</strong> — a very regular, tightly coiled structure. The chains are cross-linked to each other. Helices bundle into fibrils, and fibrils into fibres. This regular, reinforced structure resists stretching forces.</div>
+      <div class="self-mark"><button class="sm-btn sm-got" onclick="markMQ(this,true)">✓ Got it</button><button class="sm-btn sm-missed" onclick="markMQ(this,false)">✗ Missed</button></div>
+    </div>
+
+  </div>
+
+  <div class="score-box" id="score-box">
+    <div class="score-num" id="score-display">—</div>
+    <div class="score-label" id="score-label">out of 10</div>
+    <p style="margin-top:16px;font-size:14px;color:var(--text-mid)" id="score-msg"></p>
+    <div class="btn-row" style="justify-content:center;margin-top:16px">
+      <button class="btn btn-outline" onclick="goTo(0)">Back to Overview</button>
+      <button class="btn btn-primary" onclick="resetMixed()">Reset Mixed Retrieval</button>
+    </div>
+  </div>
+</section>
+
+<script>
+// ── NAVIGATION ─────────────────────────────────────────────
+const sections = document.querySelectorAll('section');
+const navBtns = document.querySelectorAll('.nav-btn');
+const dotsContainer = document.getElementById('dots');
+let completedSections = new Set();
+
+function buildDots() {
+  dotsContainer.innerHTML = '';
+  sections.forEach((_, i) => {
+    const d = document.createElement('div');
+    d.className = 'progress-dot' + (i === 0 ? ' active' : '');
+    dotsContainer.appendChild(d);
+  });
+}
+
+function goTo(idx) {
+  sections.forEach((s, i) => s.classList.toggle('active', i === idx));
+  navBtns.forEach((b, i) => b.classList.toggle('active', i === idx));
+  const dots = dotsContainer.querySelectorAll('.progress-dot');
+  dots.forEach((d, i) => {
+    d.classList.remove('active', 'done');
+    if (i < idx) d.classList.add('done');
+    else if (i === idx) d.classList.add('active');
+  });
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  completedSections.add(idx);
+}
+
+// ── FILL-IN-THE-BLANK ──────────────────────────────────────
+function normalize(str) {
+  return str.trim().toLowerCase().replace(/[^a-z0-9\s]/g, '').replace(/\s+/g, ' ');
+}
+
+function checkFitb(containerId, resultId) {
+  const container = document.getElementById(containerId);
+  const inputs = container.querySelectorAll('.fitb');
+  let correct = 0;
+  inputs.forEach(inp => {
+    const expected = normalize(inp.dataset.answer);
+    const alt = inp.dataset.alt ? normalize(inp.dataset.alt) : null;
+    const given = normalize(inp.value);
+    inp.classList.remove('correct', 'wrong');
+    if (given === expected || (alt && given === alt)) {
+      inp.classList.add('correct');
+      correct++;
+    } else if (given.length > 0) {
+      inp.classList.add('wrong');
+    }
+  });
+  const result = document.getElementById(resultId);
+  result.textContent = `${correct} / ${inputs.length} correct`;
+  result.style.color = correct === inputs.length ? 'var(--success)' : 'var(--text-light)';
+}
+
+function resetFitb(containerId, resultId) {
+  const container = document.getElementById(containerId);
+  container.querySelectorAll('.fitb').forEach(inp => {
+    inp.value = '';
+    inp.classList.remove('correct', 'wrong');
+  });
+  document.getElementById(resultId).textContent = '';
+}
+
+// ── LABEL DIAGRAM ──────────────────────────────────────────
+function checkLabels(containerId) {
+  const container = document.getElementById(containerId);
+  container.querySelectorAll('.label-input').forEach(inp => {
+    const expected = normalize(inp.dataset.answer);
+    const alt = inp.dataset.alt ? normalize(inp.dataset.alt) : null;
+    const given = normalize(inp.value);
+    inp.classList.remove('correct', 'wrong');
+    if (given === expected || (alt && given === alt)) {
+      inp.classList.add('correct');
+    } else if (given.length > 0) {
+      inp.classList.add('wrong');
+    }
+  });
+}
+
+function resetLabels(containerId) {
+  const container = document.getElementById(containerId);
+  container.querySelectorAll('.label-input').forEach(inp => {
+    inp.value = '';
+    inp.classList.remove('correct', 'wrong');
+  });
+}
+
+// ── MARK SCHEME REVEAL ─────────────────────────────────────
+function revealMS(btn) {
+  const ms = btn.closest('.retrieval-q').querySelector('.mark-scheme');
+  ms.classList.add('visible');
+  btn.textContent = 'Mark Scheme Shown';
+  btn.disabled = true;
+  btn.style.opacity = '0.5';
+}
+
+// ── MIXED RETRIEVAL ────────────────────────────────────────
+let mqScores = {};
+let mqTotal = 10;
+
+function revealMQ(btn) {
+  const card = btn.closest('.mq-card');
+  const ms = card.querySelector('.mark-scheme');
+  const selfMark = card.querySelector('.self-mark');
+  ms.classList.add('visible');
+  selfMark.classList.add('visible');
+  btn.textContent = '✓ Revealed';
+  btn.disabled = true;
+  btn.style.opacity = '0.5';
+}
+
+function markMQ(btn, got) {
+  const card = btn.closest('.mq-card');
+  const id = card.dataset.id;
+  mqScores[id] = got;
+  const allBtns = card.querySelectorAll('.sm-btn');
+  allBtns.forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  allBtns.forEach(b => b.disabled = true);
+  updateScore();
+}
+
+function updateScore() {
+  const marked = Object.keys(mqScores).length;
+  if (marked === mqTotal) {
+    const score = Object.values(mqScores).filter(v => v).length;
+    const box = document.getElementById('score-box');
+    document.getElementById('score-display').textContent = score;
+    let msg = '';
+    if (score >= 9) msg = 'Excellent recall! You are well prepared on all three topics.';
+    else if (score >= 7) msg = 'Strong performance — a couple of areas to revisit.';
+    else if (score >= 5) msg = 'Good effort. Go back to the reference sections for the topics you missed.';
+    else msg = 'Keep practising! Use the flashcards and FITB activities to reinforce the key terms.';
+    document.getElementById('score-msg').textContent = msg;
+    box.classList.add('visible');
+    box.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+}
+
+function resetMixed() {
+  mqScores = {};
+  document.getElementById('score-box').classList.remove('visible');
+  document.querySelectorAll('.mq-card').forEach(card => {
+    card.querySelector('textarea').value = '';
+    const ms = card.querySelector('.mark-scheme');
+    ms.classList.remove('visible');
+    const sm = card.querySelector('.self-mark');
+    sm.classList.remove('visible');
+    sm.querySelectorAll('.sm-btn').forEach(b => {
+      b.classList.remove('selected');
+      b.disabled = false;
+    });
+    const revBtn = card.querySelector('.btn-outline');
+    revBtn.textContent = 'Reveal Answer';
+    revBtn.disabled = false;
+    revBtn.style.opacity = '1';
+  });
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ── INIT ───────────────────────────────────────────────────
+buildDots();
+completedSections.add(0);
+</script>
+</body>
+</html>
