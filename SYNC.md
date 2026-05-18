@@ -102,6 +102,10 @@ If Syncthing ever does produce a `*.sync-conflict-*` file, it's already ignored 
 - `~/CodeBackups/science-site-prerepo-2026-05-18.tar.gz` on this laptop is the pre-Git snapshot of the folder. Keep it for a few weeks then delete.
 - `Science Site.local-backup-2026-05-18/` next to the project is the same content as a folder. Delete once you're confident nothing's missing from the repo. **Do not** let this folder get synced to the NAS as-is — it'll just be dead weight. Either move it to `~/CodeBackups/` or delete it.
 
+## Setup verification log
+
+- 2026-05-18: Laptop-side smoke test. Edit + commit + push round trip from `/Applications/Coding Projects/Science Site/` confirmed working.
+
 ## Remote
 
 ```
