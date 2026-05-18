@@ -4,534 +4,556 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Science Interactive Lessons</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        :root {
+            --bg: #FAF7F2;
+            --bg-warm: #F3EDE3;
+            --card: #FFFFFF;
+            --green-dark: #2D5016;
+            --green-mid: #4A7C2F;
+            --green-light: #7AAD52;
+            --green-pale: #E0EBD0;
+            --amber: #C17D2A;
+            --amber-pale: #FDF3E3;
+            --blue: #2E6BA8;
+            --blue-pale: #E8F0F8;
+            --purple: #7B4B94;
+            --purple-pale: #F0E8F5;
+            --text: #2C2C2C;
+            --text-mid: #4A4A4A;
+            --text-light: #7A7A7A;
+            --border: #D8D0C4;
+            --shadow: 0 2px 12px rgba(45,80,22,0.08);
+            --shadow-hover: 0 6px 24px rgba(45,80,22,0.15);
+            --radius: 10px;
+            --nav-h: 64px;
         }
 
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        html, body { overflow-x: hidden; }
         body {
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-            background: linear-gradient(135deg, #E8F5E9 0%, #E3F2FD 100%);
+            font-family: 'Lato', sans-serif;
+            background: var(--bg);
+            color: var(--text);
             min-height: 100vh;
+            padding-top: var(--nav-h);
+            padding-bottom: 40px;
             line-height: 1.6;
         }
 
-        .container {
-            max-width: 1000px;
+        .hidden { display: none !important; }
+
+        nav {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            height: var(--nav-h);
+            background: rgba(250,247,242,0.94);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border);
+            z-index: 100;
+        }
+        .nav-inner {
+            max-width: 1400px;
             margin: 0 auto;
-            padding: 40px 20px;
+            height: 100%;
+            padding: 0 24px;
+            display: flex;
+            align-items: center;
         }
 
-        header {
-            text-align: center;
-            margin-bottom: 50px;
+        .nav-brand {
+            font-family: 'Fraunces', serif;
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: var(--green-dark);
+            margin-right: 28px;
+            white-space: nowrap;
         }
 
-        .logo {
-            font-size: 4rem;
+        .nav-tabs {
+            display: flex;
+            gap: 4px;
+            flex: 1;
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+        .nav-tabs::-webkit-scrollbar { display: none; }
+
+        .nav-tab {
+            padding: 8px 16px;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            border-radius: 8px;
+            font-family: 'Lato', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--text-mid);
+            transition: background 0.15s ease, color 0.15s ease;
+            white-space: nowrap;
+        }
+        .nav-tab:hover { background: var(--bg-warm); color: var(--green-dark); }
+        .nav-tab.active { background: var(--green-dark); color: white; }
+        .nav-tab:focus-visible { outline: 2px solid var(--green-mid); outline-offset: 2px; }
+
+        .container { max-width: 1400px; margin: 0 auto; padding: 36px 24px 60px; }
+
+        header.hero { text-align: center; margin-bottom: 28px; }
+        .hero h1 {
+            font-family: 'Fraunces', serif;
+            font-size: 2.75rem;
+            font-weight: 600;
+            color: var(--green-dark);
+            letter-spacing: -0.02em;
+            line-height: 1.1;
             margin-bottom: 10px;
         }
+        .hero p { color: var(--text-mid); font-size: 1.05rem; }
 
-        h1 {
-            font-size: 2.5rem;
-            color: #1B5E20;
-            margin-bottom: 10px;
+        .search-bar {
+            max-width: 540px;
+            margin: 0 auto 36px;
+            position: relative;
         }
-
-        .subtitle {
-            font-size: 1.2rem;
-            color: #666;
+        .search-bar input {
+            width: 100%;
+            padding: 14px 18px 14px 46px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            background: var(--card);
+            font-family: 'Lato', sans-serif;
+            font-size: 15px;
+            color: var(--text);
+            box-shadow: var(--shadow);
+            transition: border-color 0.15s, box-shadow 0.15s;
+        }
+        .search-bar input::placeholder { color: var(--text-light); }
+        .search-bar input:focus {
+            outline: none;
+            border-color: var(--green-mid);
+            box-shadow: 0 0 0 3px rgba(74,124,47,0.18);
+        }
+        .search-bar svg {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-light);
+            pointer-events: none;
         }
 
         .course-section {
-            background: white;
-            border-radius: 20px;
-            padding: 30px;
-            margin-bottom: 30px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 28px;
+            margin-bottom: 22px;
+            box-shadow: var(--shadow);
         }
 
         .course-header {
             display: flex;
-            align-items: center;
-            gap: 15px;
-            margin-bottom: 25px;
-            padding-bottom: 15px;
-            border-bottom: 2px solid #E8F5E9;
+            align-items: baseline;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 22px;
+            padding-bottom: 14px;
+            border-bottom: 1px solid var(--border);
         }
-
-        .course-icon {
-            font-size: 2rem;
-        }
-
         .course-title {
-            font-size: 1.5rem;
-            color: #2E7D32;
-        }
-
-        .level-divider {
-            background: linear-gradient(90deg, #4CAF50, #2196F3);
-            color: white;
-            padding: 8px 16px;
-            border-radius: 8px;
+            font-family: 'Fraunces', serif;
+            font-size: 1.65rem;
             font-weight: 600;
-            margin: 20px 0 15px 0;
+            color: var(--green-dark);
+        }
+        .course-title .course-board {
+            font-family: 'Lato', sans-serif;
+            font-weight: 400;
+            font-size: 0.9rem;
+            color: var(--text-light);
+            margin-left: 6px;
+        }
+        .course-meta {
+            font-size: 0.78rem;
+            color: var(--text-light);
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .subject-label {
             display: inline-block;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--text-mid);
+            margin: 22px 0 12px;
+            padding: 5px 14px;
+            background: var(--bg-warm);
+            border-radius: 999px;
         }
-
-        .level-divider.biology {
-            background: linear-gradient(90deg, #4CAF50, #81C784);
-        }
-
-        .level-divider.chemistry {
-            background: linear-gradient(90deg, #9C27B0, #BA68C8);
-        }
-
-        .level-divider.physics {
-            background: linear-gradient(90deg, #2196F3, #64B5F6);
-        }
+        .subject-label.biology { background: var(--green-pale); color: var(--green-dark); }
+        .subject-label.chemistry { background: var(--purple-pale); color: var(--purple); }
+        .subject-label.physics { background: var(--blue-pale); color: var(--blue); }
 
         .units-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 14px;
         }
 
         .unit-card {
-            background: linear-gradient(135deg, #f8fdf8 0%, #f0f8ff 100%);
-            border: 1px solid #e0e0e0;
-            border-radius: 15px;
-            padding: 20px;
-            transition: all 0.3s ease;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 18px 20px;
             text-decoration: none;
             color: inherit;
             display: block;
+            transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
         }
-
         .unit-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 20px rgba(0,0,0,0.1);
-            border-color: #4CAF50;
+            transform: translateY(-2px);
+            border-color: var(--green-light);
+            box-shadow: var(--shadow-hover);
         }
-
-        .unit-card.practical {
-            background: linear-gradient(135deg, #fff8e1 0%, #fff3e0 100%);
-            border-color: #FFB74D;
-        }
-
-        .unit-card.practical:hover {
-            border-color: #FF9800;
-        }
-
-        .unit-card.chemistry {
-            background: linear-gradient(135deg, #f3e5f5 0%, #ede7f6 100%);
-        }
-
-        .unit-card.chemistry:hover {
-            border-color: #9C27B0;
-        }
-
-        .unit-card.physics {
-            background: linear-gradient(135deg, #e3f2fd 0%, #e1f5fe 100%);
-        }
-
-        .unit-card.physics:hover {
-            border-color: #2196F3;
-        }
-
-        .unit-card.coming-soon {
-            opacity: 0.6;
-            cursor: not-allowed;
-        }
-
-        .unit-card.coming-soon:hover {
-            transform: none;
-            box-shadow: none;
+        .unit-card:focus-visible {
+            outline: 2px solid var(--green-mid);
+            outline-offset: 2px;
         }
 
         .unit-number {
             display: inline-block;
-            background: #2E7D32;
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            padding: 3px 10px;
+            border-radius: 4px;
+            background: var(--green-dark);
             color: white;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: 600;
             margin-bottom: 10px;
+            text-transform: uppercase;
         }
-
-        .unit-card.practical .unit-number {
-            background: #F57C00;
-        }
-
-        .unit-card.chemistry .unit-number {
-            background: #7B1FA2;
-        }
-
-        .unit-card.physics .unit-number {
-            background: #1976D2;
-        }
+        .unit-card.chemistry .unit-number { background: var(--purple); }
+        .unit-card.physics .unit-number { background: var(--blue); }
+        .unit-card.practical .unit-number { background: var(--amber); }
 
         .unit-name {
-            font-size: 1.1rem;
-            color: #333;
-            margin-bottom: 8px;
+            font-family: 'Fraunces', serif;
+            font-size: 1.15rem;
             font-weight: 600;
+            color: var(--text);
+            margin-bottom: 4px;
+            line-height: 1.25;
         }
-
         .topic-label {
-            font-size: 0.85rem;
-            color: #666;
-            font-style: italic;
+            font-size: 0.88rem;
+            color: var(--text-light);
+            margin-bottom: 10px;
         }
-
         .status-badge {
             display: inline-block;
-            background: #E0E0E0;
-            color: #666;
-            padding: 2px 8px;
-            border-radius: 10px;
-            font-size: 0.75rem;
-            margin-top: 10px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: var(--green-mid);
+            letter-spacing: 0.03em;
+        }
+        .status-badge::before { content: '● '; }
+        .unit-card.practical .status-badge { color: var(--amber); }
+
+        .coming-soon-row {
+            margin-top: 18px;
+            padding: 12px 16px;
+            background: var(--bg-warm);
+            border-radius: 8px;
+            font-size: 0.86rem;
+            color: var(--text-light);
+            line-height: 1.8;
+        }
+        .coming-soon-row strong {
+            color: var(--text-mid);
+            font-weight: 700;
+            margin-right: 8px;
+        }
+        .coming-soon-row span {
+            display: inline-block;
+            margin-right: 16px;
         }
 
-        .status-badge.active {
-            background: #C8E6C9;
-            color: #2E7D32;
+        .no-results {
+            text-align: center;
+            padding: 50px 20px;
+            color: var(--text-light);
+            font-style: italic;
+            background: var(--card);
+            border: 1px dashed var(--border);
+            border-radius: 12px;
         }
 
         .features {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            margin-top: 40px;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 16px;
+            margin-top: 36px;
         }
-
         .feature {
             text-align: center;
-            padding: 25px;
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            padding: 26px 20px;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            text-decoration: none;
+            color: inherit;
+            display: block;
+            transition: transform 0.15s, box-shadow 0.15s, border-color 0.15s;
         }
-
-        .feature-icon {
-            font-size: 2.5rem;
-            margin-bottom: 10px;
+        a.feature:hover {
+            transform: translateY(-2px);
+            border-color: var(--green-light);
+            box-shadow: var(--shadow-hover);
         }
-
+        .feature-icon { font-size: 2rem; margin-bottom: 6px; }
         .feature h3 {
-            color: #2E7D32;
-            margin-bottom: 8px;
+            font-family: 'Fraunces', serif;
+            color: var(--green-dark);
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 4px;
         }
-
-        .feature p {
-            color: #666;
-            font-size: 0.9rem;
-        }
+        .feature p { color: var(--text-mid); font-size: 0.9rem; }
 
         footer {
             text-align: center;
             margin-top: 50px;
-            padding-top: 30px;
-            border-top: 1px solid #ddd;
-            color: #666;
+            padding-top: 24px;
+            border-top: 1px solid var(--border);
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+        footer a { color: var(--green-mid); text-decoration: none; font-weight: 600; }
+        footer a:hover { text-decoration: underline; }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after { transition: none !important; animation: none !important; }
         }
 
-        footer a {
-            color: #2E7D32;
-            text-decoration: none;
-        }
-
-        @media (max-width: 600px) {
-            h1 { font-size: 1.8rem; }
-            .logo { font-size: 3rem; }
-            .container { padding: 20px 15px; }
+        @media (max-width: 700px) {
+            .hero h1 { font-size: 2rem; }
+            .nav-inner { padding: 0 14px; }
+            .nav-brand { font-size: 0.95rem; margin-right: 14px; padding-right: 0; }
+            .nav-tab { padding: 8px 12px; font-size: 0.85rem; }
+            .course-section { padding: 22px 18px; }
+            .container { padding: 24px 14px 40px; }
+            .course-header { flex-direction: column; align-items: flex-start; gap: 4px; }
         }
     </style>
 </head>
 <body>
+    <nav aria-label="Course navigation">
+        <div class="nav-inner">
+            <div class="nav-brand">Science Lessons</div>
+            <div class="nav-tabs" role="tablist">
+                <button class="nav-tab active" data-tab="all" role="tab" aria-selected="true">All</button>
+                <button class="nav-tab" data-tab="ks3" role="tab" aria-selected="false">KS3</button>
+                <button class="nav-tab" data-tab="igcse" role="tab" aria-selected="false">IGCSE</button>
+                <button class="nav-tab" data-tab="ial" role="tab" aria-selected="false">IAL</button>
+            </div>
+        </div>
+    </nav>
+
     <div class="container">
-        <header>
-            <div class="logo">🔬</div>
+        <header class="hero">
             <h1>Science Interactive Lessons</h1>
-            <p class="subtitle">Evidence-informed resources for KS3, IGCSE & IAL Science</p>
+            <p>Evidence-informed resources for KS3, IGCSE &amp; IAL Science</p>
         </header>
 
-        <!-- KS3 Science Section -->
-        <section class="course-section">
+        <div class="search-bar">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+            <input type="search" id="search" placeholder="Search lessons — e.g. cells, mitosis, waves…" autocomplete="off" aria-label="Search lessons">
+        </div>
+
+        <section class="course-section" data-course="ks3">
             <div class="course-header">
-                <span class="course-icon">🧪</span>
                 <h2 class="course-title">Key Stage 3 Science</h2>
+                <span class="course-meta">9 lessons · 3 subjects</span>
             </div>
 
-            <!-- Biology -->
-            <span class="level-divider biology">🌱 Biology</span>
-
+            <span class="subject-label biology">Biology</span>
             <div class="units-grid">
-                <a href="KS3/Biology/Cells/index.html" class="unit-card">
+                <a href="KS3/Biology/Cells/index.html" class="unit-card" data-keywords="cells microscopy structure organisation biology">
                     <span class="unit-number">B1</span>
                     <div class="unit-name">Cells</div>
-                    <div class="topic-label">Structure, microscopy & organisation</div>
-                    <span class="status-badge active">1 lesson</span>
+                    <div class="topic-label">Structure, microscopy &amp; organisation</div>
+                    <span class="status-badge">1 lesson</span>
                 </a>
-
-                <a href="KS3/Biology/Body-Systems/index.html" class="unit-card coming-soon">
-                    <span class="unit-number">B2</span>
-                    <div class="unit-name">Body Systems</div>
-                    <div class="topic-label">Digestion, circulation & gas exchange</div>
-                    <span class="status-badge">Coming soon</span>
-                </a>
-
-                <a href="KS3/Biology/Reproduction/index.html" class="unit-card coming-soon">
-                    <span class="unit-number">B3</span>
-                    <div class="unit-name">Reproduction</div>
-                    <div class="topic-label">Human & plant reproduction</div>
-                    <span class="status-badge">Coming soon</span>
-                </a>
-
-                <a href="KS3/Biology/Health/index.html" class="unit-card coming-soon">
-                    <span class="unit-number">B4</span>
-                    <div class="unit-name">Health & Lifestyle</div>
-                    <div class="topic-label">Nutrients, drugs & disease</div>
-                    <span class="status-badge">Coming soon</span>
-                </a>
-
-                <a href="KS3/Biology/Ecosystems/index.html" class="unit-card">
+                <a href="KS3/Biology/Ecosystems/index.html" class="unit-card" data-keywords="ecosystems food webs habitats biodiversity biology">
                     <span class="unit-number">B5</span>
                     <div class="unit-name">Ecosystems</div>
-                    <div class="topic-label">Food webs, habitats & biodiversity</div>
-                    <span class="status-badge active">1 lesson</span>
-                </a>
-
-                <a href="KS3/Biology/Genetics/index.html" class="unit-card coming-soon">
-                    <span class="unit-number">B6</span>
-                    <div class="unit-name">Genetics & Evolution</div>
-                    <div class="topic-label">Inheritance, variation & natural selection</div>
-                    <span class="status-badge">Coming soon</span>
+                    <div class="topic-label">Food webs, habitats &amp; biodiversity</div>
+                    <span class="status-badge">1 lesson</span>
                 </a>
             </div>
+            <div class="coming-soon-row" data-coming-soon>
+                <strong>Coming soon:</strong>
+                <span>B2 Body Systems</span>
+                <span>B3 Reproduction</span>
+                <span>B4 Health &amp; Lifestyle</span>
+                <span>B6 Genetics &amp; Evolution</span>
+            </div>
 
-            <!-- Chemistry -->
-            <span class="level-divider chemistry">⚗️ Chemistry</span>
-
+            <span class="subject-label chemistry">Chemistry</span>
             <div class="units-grid">
-                <a href="KS3/Chemistry/Particles/index.html" class="unit-card chemistry coming-soon">
-                    <span class="unit-number">C1</span>
-                    <div class="unit-name">Particles & Matter</div>
-                    <div class="topic-label">States of matter & particle model</div>
-                    <span class="status-badge">Coming soon</span>
-                </a>
-
-                <a href="KS3/Chemistry/covalent-bonding-missions.html" class="unit-card chemistry">
+                <a href="KS3/Chemistry/covalent-bonding-missions.html" class="unit-card chemistry" data-keywords="atoms elements covalent bonding missions chemistry">
                     <span class="unit-number">C2</span>
-                    <div class="unit-name">Atoms & Elements</div>
+                    <div class="unit-name">Atoms &amp; Elements</div>
                     <div class="topic-label">Covalent bonding mission folders</div>
-                    <span class="status-badge active">1 lesson</span>
+                    <span class="status-badge">1 lesson</span>
                 </a>
-
-                <!-- NEW: Ionic & Covalent Bonding Station Rotation -->
-                <a href="KS3/Chemistry/bonding-stations-v2.html" class="unit-card chemistry">
+                <a href="KS3/Chemistry/bonding-stations-v2.html" class="unit-card chemistry" data-keywords="ionic covalent bonding stations revision year 9 chemistry">
                     <span class="unit-number">C2</span>
-                    <div class="unit-name">Ionic & Covalent Bonding</div>
+                    <div class="unit-name">Ionic &amp; Covalent Bonding</div>
                     <div class="topic-label">Station rotation revision lesson — Y9</div>
-                    <span class="status-badge active">1 lesson</span>
+                    <span class="status-badge">1 lesson</span>
                 </a>
-
-                <a href="KS3/Chemistry/cover-lesson-bonding.html" class="unit-card chemistry">
+                <a href="KS3/Chemistry/cover-lesson-bonding.html" class="unit-card chemistry" data-keywords="bonding cover lesson ionic covalent chemistry">
                     <span class="unit-number">C2</span>
                     <div class="unit-name">Bonding — Cover Lesson</div>
-                    <div class="topic-label">Ionic & covalent bonding cover task</div>
-                    <span class="status-badge active">1 lesson</span>
-                </a>
-
-                <a href="KS3/Chemistry/Reactions/index.html" class="unit-card chemistry coming-soon">
-                    <span class="unit-number">C3</span>
-                    <div class="unit-name">Chemical Reactions</div>
-                    <div class="topic-label">Types of reactions & equations</div>
-                    <span class="status-badge">Coming soon</span>
-                </a>
-
-                <a href="KS3/Chemistry/Acids/index.html" class="unit-card chemistry coming-soon">
-                    <span class="unit-number">C4</span>
-                    <div class="unit-name">Acids & Alkalis</div>
-                    <div class="topic-label">pH, neutralisation & indicators</div>
-                    <span class="status-badge">Coming soon</span>
-                </a>
-
-                <a href="KS3/Chemistry/Materials/index.html" class="unit-card chemistry coming-soon">
-                    <span class="unit-number">C5</span>
-                    <div class="unit-name">Materials & Earth</div>
-                    <div class="topic-label">Rocks, metals & the carbon cycle</div>
-                    <span class="status-badge">Coming soon</span>
+                    <div class="topic-label">Ionic &amp; covalent bonding cover task</div>
+                    <span class="status-badge">1 lesson</span>
                 </a>
             </div>
+            <div class="coming-soon-row" data-coming-soon>
+                <strong>Coming soon:</strong>
+                <span>C1 Particles &amp; Matter</span>
+                <span>C3 Chemical Reactions</span>
+                <span>C4 Acids &amp; Alkalis</span>
+                <span>C5 Materials &amp; Earth</span>
+            </div>
 
-            <!-- Physics -->
-            <span class="level-divider physics">⚡ Physics</span>
-
+            <span class="subject-label physics">Physics</span>
             <div class="units-grid">
-                <a href="KS3/Physics/forces-topic-index.html" class="unit-card physics">
+                <a href="KS3/Physics/forces-topic-index.html" class="unit-card physics" data-keywords="forces contact gravity pressure physics">
                     <span class="unit-number">P1</span>
                     <div class="unit-name">Forces</div>
-                    <div class="topic-label">Contact forces, gravity & pressure</div>
-                    <span class="status-badge active">2 lessons</span>
+                    <div class="topic-label">Contact forces, gravity &amp; pressure</div>
+                    <span class="status-badge">2 lessons</span>
                 </a>
-
-                <a href="KS3/Physics/Motion/index.html" class="unit-card physics">
+                <a href="KS3/Physics/Motion/index.html" class="unit-card physics" data-keywords="motion speed acceleration graphs physics">
                     <span class="unit-number">P2</span>
                     <div class="unit-name">Motion</div>
-                    <div class="topic-label">Speed, acceleration & graphs</div>
-                    <span class="status-badge active">1 lesson</span>
+                    <div class="topic-label">Speed, acceleration &amp; graphs</div>
+                    <span class="status-badge">1 lesson</span>
                 </a>
-
-                <a href="KS3/Physics/Energy/index.html" class="unit-card physics coming-soon">
-                    <span class="unit-number">P3</span>
-                    <div class="unit-name">Energy</div>
-                    <div class="topic-label">Stores, transfers & efficiency</div>
-                    <span class="status-badge">Coming soon</span>
-                </a>
-
-                <a href="KS3/Physics/waves-topic-index.html" class="unit-card physics">
+                <a href="KS3/Physics/waves-topic-index.html" class="unit-card physics" data-keywords="waves sound light electromagnetic spectrum physics">
                     <span class="unit-number">P4</span>
                     <div class="unit-name">Waves</div>
-                    <div class="topic-label">Sound, light & the EM spectrum</div>
-                    <span class="status-badge active">1 lesson</span>
+                    <div class="topic-label">Sound, light &amp; the EM spectrum</div>
+                    <span class="status-badge">1 lesson</span>
                 </a>
-
-                <a href="KS3/Physics/Electricity/index.html" class="unit-card physics coming-soon">
-                    <span class="unit-number">P5</span>
-                    <div class="unit-name">Electricity & Magnetism</div>
-                    <div class="topic-label">Circuits, current & electromagnets</div>
-                    <span class="status-badge">Coming soon</span>
-                </a>
-
-                <a href="KS3/Physics/Space/index.html" class="unit-card physics">
+                <a href="KS3/Physics/Space/index.html" class="unit-card physics" data-keywords="space solar system gravity universe astronomy physics">
                     <span class="unit-number">P6</span>
                     <div class="unit-name">Space</div>
-                    <div class="topic-label">Solar system, gravity & the universe</div>
-                    <span class="status-badge active">2 lessons</span>
+                    <div class="topic-label">Solar system, gravity &amp; the universe</div>
+                    <span class="status-badge">2 lessons</span>
                 </a>
+            </div>
+            <div class="coming-soon-row" data-coming-soon>
+                <strong>Coming soon:</strong>
+                <span>P3 Energy</span>
+                <span>P5 Electricity &amp; Magnetism</span>
             </div>
         </section>
 
-        <!-- IAL Biology Section -->
-        <section class="course-section">
+        <section class="course-section" data-course="igcse">
             <div class="course-header">
-                <span class="course-icon">🎓</span>
-                <h2 class="course-title">IAL Biology (Pearson Edexcel)</h2>
-            </div>
-
-            <!-- IAS Level -->
-            <span class="level-divider">📘 IAS (AS Level) — Units 1–3</span>
-
-            <div class="units-grid">
-                <a href="ial/unit-1/index.html" class="unit-card coming-soon">
-                    <span class="unit-number">Unit 1</span>
-                    <div class="unit-name">Molecules, Diet, Transport and Health</div>
-                    <div class="topic-label">Topics 1 & 2</div>
-                    <span class="status-badge">Coming soon</span>
-                </a>
-
-                <a href="ial/unit-2/index.html" class="unit-card">
-                    <span class="unit-number">Unit 2</span>
-                    <div class="unit-name">Cells, Development, Biodiversity and Conservation</div>
-                    <div class="topic-label">Topics 3 & 4</div>
-                    <span class="status-badge active">1 lesson</span>
-                </a>
-
-                <a href="ial/unit-3/index.html" class="unit-card practical">
-                    <span class="unit-number">Unit 3</span>
-                    <div class="unit-name">Practical Skills in Biology I</div>
-                    <div class="topic-label">Core Practicals 1–9</div>
-                    <span class="status-badge active">2 lessons</span>
-                </a>
-            </div>
-
-            <!-- IA2 Level -->
-            <span class="level-divider">📗 IA2 (A2 Level) — Units 4–6</span>
-
-            <div class="units-grid">
-                <a href="ial/unit-4/index.html" class="unit-card coming-soon">
-                    <span class="unit-number">Unit 4</span>
-                    <div class="unit-name">Energy, Environment, Microbiology and Immunity</div>
-                    <div class="topic-label">Topics 5 & 6</div>
-                    <span class="status-badge">Coming soon</span>
-                </a>
-
-                <a href="ial/unit-5/index.html" class="unit-card">
-                    <span class="unit-number">Unit 5</span>
-                    <div class="unit-name">Respiration, Internal Environment, Coordination and Gene Technology</div>
-                    <div class="topic-label">Topics 7 & 8</div>
-                    <span class="status-badge active">1 lesson</span>
-                </a>
-
-                <a href="ial/unit-6/index.html" class="unit-card practical coming-soon">
-                    <span class="unit-number">Unit 6</span>
-                    <div class="unit-name">Practical Skills in Biology II</div>
-                    <div class="topic-label">Core Practicals 10–18</div>
-                    <span class="status-badge">Coming soon</span>
-                </a>
-            </div>
-        </section>
-
-        <!-- IGCSE Section -->
-        <section class="course-section">
-            <div class="course-header">
-                <span class="course-icon">📚</span>
-                <h2 class="course-title">IGCSE Biology (Pearson Edexcel)</h2>
+                <h2 class="course-title">IGCSE Biology <span class="course-board">· Pearson Edexcel</span></h2>
+                <span class="course-meta">4 lessons</span>
             </div>
 
             <div class="units-grid">
-                <a href="IGCSE/topic-1/index.html" class="unit-card coming-soon">
-                    <span class="unit-number">Topic 1</span>
-                    <div class="unit-name">The Nature & Variety of Living Organisms</div>
-                    <span class="status-badge">Coming soon</span>
-                </a>
-
-                <a href="IGCSE/topic-2/index.html" class="unit-card">
+                <a href="IGCSE/topic-2/index.html" class="unit-card" data-keywords="topic 2 structure functions living organisms igcse">
                     <span class="unit-number">Topic 2</span>
-                    <div class="unit-name">Structure & Functions in Living Organisms</div>
-                    <span class="status-badge active">1 lesson</span>
+                    <div class="unit-name">Structure &amp; Functions in Living Organisms</div>
+                    <span class="status-badge">1 lesson</span>
                 </a>
-
-                <a href="IGCSE/topic-3/index.html" class="unit-card coming-soon">
-                    <span class="unit-number">Topic 3</span>
-                    <div class="unit-name">Reproduction & Inheritance</div>
-                    <span class="status-badge">Coming soon</span>
-                </a>
-
-                <a href="IGCSE/index.html" class="unit-card">
+                <a href="IGCSE/index.html" class="unit-card" data-keywords="topic 4 ecology environment igcse">
                     <span class="unit-number">Topic 4</span>
-                    <div class="unit-name">Ecology & the Environment</div>
-                    <span class="status-badge active">1 lesson</span>
+                    <div class="unit-name">Ecology &amp; the Environment</div>
+                    <span class="status-badge">1 lesson</span>
                 </a>
-
-                <a href="IGCSE/index5.html" class="unit-card">
+                <a href="IGCSE/index5.html" class="unit-card" data-keywords="topic 5 biological resources selective breeding igcse">
                     <span class="unit-number">Topic 5</span>
                     <div class="unit-name">Use of Biological Resources</div>
-                    <span class="status-badge active">1 lesson</span>
+                    <span class="status-badge">1 lesson</span>
                 </a>
-
-                <a href="IGCSE/revision-index.html" class="unit-card practical">
+                <a href="IGCSE/revision-index.html" class="unit-card practical" data-keywords="revision plan 6 week weekly tasks igcse">
                     <span class="unit-number">Revision</span>
                     <div class="unit-name">6-Week Revision Plan</div>
                     <div class="topic-label">Structured weekly revision tasks</div>
-                    <span class="status-badge active">Week 1</span>
+                    <span class="status-badge">Week 1</span>
                 </a>
+            </div>
+            <div class="coming-soon-row" data-coming-soon>
+                <strong>Coming soon:</strong>
+                <span>Topic 1 Nature &amp; Variety of Living Organisms</span>
+                <span>Topic 3 Reproduction &amp; Inheritance</span>
             </div>
         </section>
 
-        <!-- Features -->
-        <a href="revision/index.html" class="unit-card">
+        <section class="course-section" data-course="ial">
+            <div class="course-header">
+                <h2 class="course-title">IAL Biology <span class="course-board">· Pearson Edexcel · A-Level</span></h2>
+                <span class="course-meta">4 lessons</span>
+            </div>
+
+            <span class="subject-label">IAS (AS Level) — Units 1–3</span>
+            <div class="units-grid">
+                <a href="ial/unit-2/index.html" class="unit-card" data-keywords="unit 2 cells development biodiversity conservation ial as">
+                    <span class="unit-number">Unit 2</span>
+                    <div class="unit-name">Cells, Development, Biodiversity and Conservation</div>
+                    <div class="topic-label">Topics 3 &amp; 4</div>
+                    <span class="status-badge">1 lesson</span>
+                </a>
+                <a href="ial/unit-3/index.html" class="unit-card practical" data-keywords="unit 3 practical skills biology core practicals ial as">
+                    <span class="unit-number">Unit 3</span>
+                    <div class="unit-name">Practical Skills in Biology I</div>
+                    <div class="topic-label">Core Practicals 1–9</div>
+                    <span class="status-badge">2 lessons</span>
+                </a>
+            </div>
+
+            <span class="subject-label">IA2 (A2 Level) — Units 4–6</span>
+            <div class="units-grid">
+                <a href="ial/unit-5/index.html" class="unit-card" data-keywords="unit 5 respiration internal environment coordination gene technology ial a2">
+                    <span class="unit-number">Unit 5</span>
+                    <div class="unit-name">Respiration, Internal Environment, Coordination and Gene Technology</div>
+                    <div class="topic-label">Topics 7 &amp; 8</div>
+                    <span class="status-badge">1 lesson</span>
+                </a>
+            </div>
+
+            <div class="coming-soon-row" data-coming-soon>
+                <strong>Coming soon:</strong>
+                <span>Unit 1 Molecules, Diet, Transport &amp; Health</span>
+                <span>Unit 4 Energy, Environment, Microbiology &amp; Immunity</span>
+                <span>Unit 6 Practical Skills in Biology II</span>
+            </div>
+        </section>
+
+        <div class="no-results hidden" id="no-results" role="status">No lessons match your search.</div>
+
         <div class="features">
-            <div class="feature">
+            <a href="revision/index.html" class="feature">
                 <div class="feature-icon">🧠</div>
                 <h3>Revision</h3>
                 <p>Spaced questions to strengthen memory</p>
-            </div>
+            </a>
             <div class="feature">
                 <div class="feature-icon">🎯</div>
                 <h3>Interactive</h3>
@@ -540,8 +562,100 @@
         </div>
 
         <footer>
-            <p>Created by Alex Gray | <a href="https://github.com/alexgray84/Biology">View on GitHub</a></p>
+            <p>Created by Alex Gray · <a href="https://github.com/alexgray84/Biology">View on GitHub</a></p>
         </footer>
     </div>
+
+    <script>
+        const tabs = document.querySelectorAll('.nav-tab');
+        const sections = document.querySelectorAll('.course-section');
+        const allCards = document.querySelectorAll('.unit-card');
+        const allGrids = document.querySelectorAll('.units-grid');
+        const allSubjectLabels = document.querySelectorAll('.subject-label');
+        const allComingSoonRows = document.querySelectorAll('[data-coming-soon]');
+        const searchInput = document.getElementById('search');
+        const noResults = document.getElementById('no-results');
+
+        function activeTab() {
+            return document.querySelector('.nav-tab.active')?.dataset.tab || 'all';
+        }
+
+        function applyFilters() {
+            const q = searchInput.value.trim().toLowerCase();
+            const tab = activeTab();
+
+            allCards.forEach(c => c.classList.remove('hidden'));
+            allGrids.forEach(g => g.classList.remove('hidden'));
+            allSubjectLabels.forEach(l => l.classList.remove('hidden'));
+            allComingSoonRows.forEach(r => r.classList.remove('hidden'));
+            sections.forEach(s => s.classList.remove('hidden'));
+
+            sections.forEach(s => {
+                if (tab !== 'all' && s.dataset.course !== tab) s.classList.add('hidden');
+            });
+
+            if (!q) {
+                noResults.classList.add('hidden');
+                return;
+            }
+
+            let matches = 0;
+            allCards.forEach(card => {
+                const haystack = ((card.dataset.keywords || '') + ' ' + card.textContent).toLowerCase();
+                if (haystack.includes(q)) {
+                    matches++;
+                } else {
+                    card.classList.add('hidden');
+                }
+            });
+
+            allComingSoonRows.forEach(r => r.classList.add('hidden'));
+
+            allGrids.forEach(g => {
+                const visible = g.querySelectorAll('.unit-card:not(.hidden)').length;
+                if (!visible) g.classList.add('hidden');
+            });
+
+            allSubjectLabels.forEach(label => {
+                const grid = label.nextElementSibling;
+                if (grid && grid.classList.contains('units-grid') && grid.classList.contains('hidden')) {
+                    label.classList.add('hidden');
+                }
+            });
+
+            sections.forEach(s => {
+                if (s.classList.contains('hidden')) return;
+                const visible = s.querySelectorAll('.unit-card:not(.hidden)').length;
+                if (!visible) s.classList.add('hidden');
+            });
+
+            noResults.classList.toggle('hidden', matches > 0);
+        }
+
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                tabs.forEach(t => {
+                    const isActive = t === tab;
+                    t.classList.toggle('active', isActive);
+                    t.setAttribute('aria-selected', isActive ? 'true' : 'false');
+                });
+                applyFilters();
+                if (tab.dataset.tab !== 'all') {
+                    const section = document.querySelector(`.course-section[data-course="${tab.dataset.tab}"]`);
+                    if (section) window.scrollTo({ top: section.offsetTop - 80, behavior: 'smooth' });
+                } else {
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
+            });
+        });
+
+        searchInput.addEventListener('input', applyFilters);
+        searchInput.addEventListener('keydown', e => {
+            if (e.key === 'Escape') {
+                searchInput.value = '';
+                applyFilters();
+            }
+        });
+    </script>
 </body>
 </html>
