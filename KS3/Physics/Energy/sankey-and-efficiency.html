@@ -1,0 +1,1305 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Y7 Energy · Sankey Diagrams &amp; Efficiency · KS3 Physics</title>
+<style>
+/* ── RESET ── */
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:linear-gradient(135deg,#E3F2FD 0%,#e1f5fe 100%);min-height:100vh;color:#1a1a2a;line-height:1.6;}
+
+/* ── HEADER ── */
+.site-header{background:#fff;border-bottom:1px solid #dde8f5;padding:16px 24px;position:sticky;top:0;z-index:200;box-shadow:0 2px 8px rgba(0,60,120,.06);}
+.crumbs{font-size:.78rem;color:#888;margin-bottom:4px;}
+.crumbs a{color:#1976D2;text-decoration:none;}
+.crumbs a:hover{text-decoration:underline;}
+.hdr-row{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;}
+.hdr-left h1{font-size:1.25rem;font-weight:700;color:#0D47A1;margin-bottom:2px;}
+.hdr-left .meta{font-size:.78rem;color:#888;}
+.badge{display:inline-block;padding:3px 10px;border-radius:14px;font-size:.7rem;font-weight:700;letter-spacing:.3px;}
+.badge-ks3{background:#E3F2FD;color:#1565C0;}
+.badge-y7{background:#E8F5E9;color:#2E7D32;}
+.badge-review{background:#FFF3E0;color:#E65100;}
+
+/* ── PROGRESS BAR ── */
+.prog-bar-wrap{background:#f0f6ff;border-bottom:1px solid #dde8f5;padding:6px 24px;display:flex;align-items:center;gap:10px;}
+.prog-track{flex:1;height:6px;background:#C5DCF5;border-radius:3px;overflow:hidden;}
+.prog-fill{height:100%;background:linear-gradient(90deg,#1976D2,#42A5F5);border-radius:3px;transition:width .4s ease;}
+.prog-label{font-size:.75rem;color:#1976D2;font-weight:700;white-space:nowrap;min-width:60px;text-align:right;}
+
+/* ── TAB NAV ── */
+.tab-nav{background:#fff;border-bottom:2px solid #E3F2FD;padding:0 16px;display:flex;gap:2px;overflow-x:auto;position:sticky;top:87px;z-index:190;scrollbar-width:none;}
+.tab-nav::-webkit-scrollbar{display:none;}
+.tab-btn{padding:10px 14px;background:none;border:none;border-bottom:3px solid transparent;cursor:pointer;font-size:.82rem;font-weight:600;color:#888;white-space:nowrap;transition:all .2s;margin-bottom:-2px;}
+.tab-btn:hover{color:#1976D2;background:#F0F7FF;}
+.tab-btn.active{color:#1976D2;border-bottom-color:#1976D2;}
+.tab-btn.done{color:#388E3C;}
+.tab-btn.done::after{content:' ✓';font-size:.7rem;}
+
+/* ── MAIN CONTENT ── */
+.main{max-width:840px;margin:0 auto;padding:28px 20px 60px;}
+.section{display:none;animation:fadeUp .3s ease;}
+.section.active{display:block;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+
+.sec-title{font-size:1.45rem;font-weight:700;color:#0D47A1;margin-bottom:4px;}
+.sec-sub{font-size:.9rem;color:#666;margin-bottom:20px;}
+
+/* ── TIER BADGES ── */
+.tier{display:inline-flex;align-items:center;gap:5px;padding:4px 11px;border-radius:12px;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.4px;margin-bottom:10px;}
+.tier-f{background:#E8F5E9;color:#2E7D32;border:1px solid #A5D6A7;}
+.tier-c{background:#E3F2FD;color:#1565C0;border:1px solid #90CAF9;}
+.tier-h{background:#F3E5F5;color:#6A1B9A;border:1px solid #CE93D8;}
+
+/* ── CARDS ── */
+.card{background:#fff;border-radius:14px;padding:20px 22px;margin-bottom:18px;box-shadow:0 2px 10px rgba(0,60,120,.06);border:1px solid #E3F2FD;}
+.card-blue{border-left:4px solid #1976D2;}
+.card-green{border-left:4px solid #388E3C;}
+.card-orange{border-left:4px solid #F57C00;}
+.card-purple{border-left:4px solid #7B1FA2;}
+
+/* ── FORMULA BOX ── */
+.formula-box{background:linear-gradient(135deg,#E3F2FD,#BBDEFB);border-radius:12px;padding:16px 20px;margin:14px 0;text-align:center;}
+.formula-text{font-size:1.15rem;font-weight:700;color:#0D47A1;font-style:italic;}
+.formula-sub{font-size:.84rem;color:#444;margin-top:6px;}
+
+/* ── SANKEY SVG CONTAINERS ── */
+.sankey-wrap{background:#f8fbff;border-radius:12px;border:1.5px solid #C5DCF5;padding:16px 12px 8px;margin:14px 0;overflow:visible;}
+.sankey-wrap svg{width:100%;height:auto;display:block;overflow:visible;}
+.sankey-legend{display:flex;gap:14px;flex-wrap:wrap;margin-top:8px;justify-content:center;}
+.leg-item{display:flex;align-items:center;gap:5px;font-size:.77rem;color:#555;}
+.leg-dot{width:12px;height:12px;border-radius:3px;flex-shrink:0;}
+
+/* ── QUESTION BLOCKS ── */
+.q-block{background:#fff;border-radius:12px;padding:16px 18px;margin-bottom:12px;border:1.5px solid #E3F2FD;}
+.q-block.tier-f-bg{border-color:#A5D6A7;background:#FAFFFA;}
+.q-block.tier-c-bg{border-color:#90CAF9;background:#F8FBFF;}
+.q-block.tier-h-bg{border-color:#CE93D8;background:#FDF5FF;}
+.q-text{font-size:.95rem;color:#222;margin-bottom:10px;line-height:1.5;}
+.q-text strong{color:#0D47A1;}
+
+/* ── INPUTS + BUTTONS ── */
+.ans-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.ans-input{padding:7px 12px;border:2px solid #C5DCF5;border-radius:9px;font-size:.9rem;width:130px;outline:none;transition:border-color .2s;}
+.ans-input:focus{border-color:#1976D2;}
+.ans-unit{font-size:.85rem;color:#666;}
+.btn{padding:8px 18px;border-radius:10px;border:none;cursor:pointer;font-size:.85rem;font-weight:700;transition:all .2s;}
+.btn-check{background:#1976D2;color:#fff;} .btn-check:hover{background:#1565C0;}
+.btn-reveal{background:#F57C00;color:#fff;} .btn-reveal:hover{background:#E65100;}
+.btn-next{background:#1976D2;color:#fff;} .btn-next:hover{background:#1565C0;}
+.btn-prev{background:#f0f0f0;color:#555;} .btn-prev:hover{background:#e0e0e0;}
+.btn-green{background:#388E3C;color:#fff;} .btn-green:hover{background:#2E7D32;}
+.btn-reset{background:#f0f0f0;color:#666;} .btn-reset:hover{background:#e0e0e0;}
+
+/* ── FEEDBACK ── */
+.feedback{border-radius:10px;padding:11px 14px;display:none;margin-top:10px;font-size:.87rem;line-height:1.5;}
+.feedback.show{display:block;animation:fadeUp .25s ease;}
+.fb-correct{background:#E8F5E9;border:1.5px solid #4CAF50;color:#1B5E20;}
+.fb-wrong{background:#FFEBEE;border:1.5px solid #EF5350;color:#B71C1C;}
+.fb-neutral{background:#E3F2FD;border:1.5px solid #42A5F5;color:#1A237E;}
+.fb-title{font-weight:700;margin-bottom:3px;}
+
+/* ── MCQ OPTIONS ── */
+.mcq-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;}
+.mcq-opt{padding:10px 12px;border-radius:10px;border:2px solid #e0e0e0;cursor:pointer;font-size:.88rem;transition:all .2s;background:#fff;text-align:center;}
+.mcq-opt:hover{border-color:#1976D2;background:#EFF7FF;}
+.mcq-opt.selected{border-color:#1976D2;background:#DCEEFB;}
+.mcq-opt.correct{border-color:#4CAF50;background:#E8F5E9;color:#2E7D32;font-weight:700;pointer-events:none;}
+.mcq-opt.wrong{border-color:#F44336;background:#FFEBEE;color:#B71C1C;text-decoration:line-through;pointer-events:none;}
+
+/* ── KEY FACTS SECTION ── */
+.fact-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px;}
+.fact-card{background:#fff;border-radius:12px;padding:16px;border:1.5px solid #E3F2FD;}
+.fact-card h3{font-size:.88rem;font-weight:700;color:#0D47A1;margin-bottom:8px;}
+.fact-card p, .fact-card li{font-size:.85rem;color:#444;line-height:1.6;}
+.fact-card ul{padding-left:16px;}
+.rule-row{display:flex;gap:10px;align-items:flex-start;margin-bottom:6px;}
+.rule-num{width:22px;height:22px;background:#1976D2;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;flex-shrink:0;margin-top:1px;}
+.worked-box{background:#F8FBFF;border-radius:12px;padding:16px 18px;border:1.5px solid #90CAF9;margin-top:14px;}
+.worked-box h3{font-size:.88rem;color:#1565C0;font-weight:700;margin-bottom:10px;}
+.step-row{display:flex;gap:8px;margin-bottom:7px;font-size:.86rem;}
+.step-num{width:20px;height:20px;background:#1976D2;color:#fff;border-radius:50%;font-size:.7rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+
+/* ── BUILDER SECTION ── */
+.builder-scenario{background:linear-gradient(135deg,#1976D2,#42A5F5);border-radius:14px;padding:18px 20px;color:#fff;margin-bottom:16px;}
+.builder-scenario h3{font-size:1.05rem;margin-bottom:4px;}
+.builder-scenario p{font-size:.88rem;opacity:.9;}
+.builder-inputs{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:14px;}
+.build-field{background:#fff;border-radius:10px;padding:12px 14px;border:2px solid #E3F2FD;}
+.build-field label{display:block;font-size:.74rem;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:#888;margin-bottom:5px;}
+.build-field input{width:100%;border:none;outline:none;font-size:1.1rem;font-weight:700;color:#0D47A1;background:transparent;}
+.build-field .build-val{font-size:1.1rem;font-weight:700;color:#0D47A1;}
+.build-field.auto{background:#f5f5f5;}
+.build-field.eff-field .build-val{font-size:1.3rem;}
+.builder-hint{font-size:.82rem;color:#888;font-style:italic;margin-bottom:12px;}
+.eff-result{text-align:center;padding:12px;background:linear-gradient(135deg,#E8F5E9,#C8E6C9);border-radius:12px;margin:10px 0 16px;display:none;}
+.eff-result.show{display:block;}
+.eff-result .eff-num{font-size:1.8rem;font-weight:700;color:#2E7D32;}
+.eff-result .eff-label{font-size:.82rem;color:#555;margin-top:2px;}
+.builder-nav{display:flex;gap:9px;align-items:center;flex-wrap:wrap;}
+.scenario-counter{font-size:.82rem;color:#888;}
+
+/* ── CHALLENGE SECTION ── */
+.challenge-intro{background:linear-gradient(135deg,#7B1FA2,#AB47BC);border-radius:14px;padding:18px 20px;color:#fff;margin-bottom:18px;}
+.challenge-intro h3{font-size:1.05rem;margin-bottom:4px;}
+.challenge-intro p{font-size:.88rem;opacity:.9;}
+.boiler-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px;}
+.boiler-card{background:#fff;border-radius:12px;padding:16px;border:2px solid #E3F2FD;text-align:center;}
+.boiler-card h4{font-size:.9rem;font-weight:700;color:#333;margin-bottom:10px;}
+.boiler-val{font-size:1.4rem;font-weight:700;color:#0D47A1;margin:4px 0;}
+.boiler-val-label{font-size:.75rem;color:#888;}
+.textarea-q{width:100%;min-height:80px;border:2px solid #C5DCF5;border-radius:10px;padding:10px 12px;font-size:.87rem;font-family:'Segoe UI',sans-serif;resize:vertical;outline:none;}
+.textarea-q:focus{border-color:#1976D2;}
+
+/* ── EXIT TICKET ── */
+.exit-score{text-align:center;padding:20px;background:#fff;border-radius:14px;margin-bottom:18px;box-shadow:0 2px 10px rgba(0,60,120,.06);}
+.score-num{font-size:2.5rem;font-weight:700;color:#1976D2;}
+.score-label{font-size:.9rem;color:#666;margin-top:4px;}
+
+/* ── NAV FOOTER ── */
+.section-nav{display:flex;justify-content:space-between;align-items:center;margin-top:24px;padding-top:18px;border-top:1px solid #dde8f5;flex-wrap:wrap;gap:10px;}
+.nav-note{font-size:.8rem;color:#aaa;text-align:center;flex:1;}
+
+/* ── INLINE HIGHLIGHT ── */
+.hl{background:#FFF9C4;padding:1px 4px;border-radius:4px;font-weight:600;}
+.definition{background:#E3F2FD;border-radius:8px;padding:10px 14px;font-size:.87rem;color:#1A237E;border-left:3px solid #1976D2;margin:10px 0;}
+
+/* ── RESPONSIVE ── */
+@media(max-width:600px){
+  .fact-grid,.builder-inputs,.boiler-grid,.mcq-grid{grid-template-columns:1fr;}
+  .tab-btn{font-size:.75rem;padding:9px 10px;}
+  .hdr-left h1{font-size:1.1rem;}
+  .main{padding:18px 14px 50px;}
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════ HEADER ═══════ -->
+<header class="site-header">
+  <div class="crumbs">
+    <a href="../../../index.html">Home</a> /
+    <a href="../../../index.html">KS3 Science</a> /
+    Physics / <a href="index.html">Energy</a> /
+    <strong>Sankey Diagrams &amp; Efficiency</strong>
+  </div>
+  <div class="hdr-row">
+    <div class="hdr-left">
+      <h1>📊 Sankey Diagrams &amp; Efficiency</h1>
+      <div class="meta">Review lesson &nbsp;·&nbsp; Lots of practice &nbsp;·&nbsp; Work through at your own pace</div>
+    </div>
+    <div style="display:flex;gap:5px;flex-wrap:wrap;">
+      <span class="badge badge-ks3">KS3 Physics</span>
+      <span class="badge badge-y7">Y7</span>
+      <span class="badge badge-review">Review</span>
+    </div>
+  </div>
+</header>
+
+<!-- ═══════ PROGRESS BAR ═══════ -->
+<div class="prog-bar-wrap">
+  <div class="prog-track"><div class="prog-fill" id="prog-fill" style="width:14%;"></div></div>
+  <div class="prog-label" id="prog-label">1 / 7</div>
+</div>
+
+<!-- ═══════ TAB NAV ═══════ -->
+<nav class="tab-nav" id="tab-nav">
+  <button class="tab-btn active" onclick="showSection(0)" id="tab0">🎯 Do Now</button>
+  <button class="tab-btn" onclick="showSection(1)" id="tab1">📖 Key Facts</button>
+  <button class="tab-btn" onclick="showSection(2)" id="tab2">📊 A: Interpret</button>
+  <button class="tab-btn" onclick="showSection(3)" id="tab3">✏️ B: Build</button>
+  <button class="tab-btn" onclick="showSection(4)" id="tab4">🔢 C: Calculate</button>
+  <button class="tab-btn" onclick="showSection(5)" id="tab5">🏆 D: Challenge</button>
+  <button class="tab-btn" onclick="showSection(6)" id="tab6">🎫 Exit Ticket</button>
+</nav>
+
+<main class="main">
+
+
+<!-- ══════════════════════════════════════════
+     SECTION 0 — DO NOW
+══════════════════════════════════════════ -->
+<div class="section active" id="sec0">
+  <div class="sec-title">🎯 Do Now</div>
+  <div class="sec-sub">Three quick questions. Think before you answer — no peeking at notes yet.</div>
+
+  <!-- Q1 -->
+  <div class="card card-blue">
+    <div class="tier tier-f">🟢 Foundation</div>
+    <div class="q-text">
+      <strong>Q1.</strong> Complete the sentence: <em>"Energy cannot be created or destroyed — it can only be __________ from one store to another."</em>
+    </div>
+    <div class="mcq-grid" id="q1-opts">
+      <div class="mcq-opt" onclick="mcqAnswer('q1',this,false)">created</div>
+      <div class="mcq-opt" onclick="mcqAnswer('q1',this,true)">transferred</div>
+      <div class="mcq-opt" onclick="mcqAnswer('q1',this,false)">destroyed</div>
+      <div class="mcq-opt" onclick="mcqAnswer('q1',this,false)">duplicated</div>
+    </div>
+    <div class="feedback fb-neutral" id="q1-fb">
+      <div class="fb-title">✅ Transferred!</div>
+      This is the <strong>Law of Conservation of Energy</strong>. Energy is always conserved — the total input always equals the total output. Sankey diagrams are a way of showing this visually.
+    </div>
+  </div>
+
+  <!-- Q2 -->
+  <div class="card card-blue">
+    <div class="tier tier-f">🟢 Foundation</div>
+    <div class="q-text">
+      <strong>Q2.</strong> In a Sankey diagram, what does the <strong>thickness (width) of an arrow</strong> represent?
+    </div>
+    <div class="mcq-grid" id="q2-opts">
+      <div class="mcq-opt" onclick="mcqAnswer('q2',this,false)">The speed of the energy transfer</div>
+      <div class="mcq-opt" onclick="mcqAnswer('q2',this,true)">The amount of energy transferred</div>
+      <div class="mcq-opt" onclick="mcqAnswer('q2',this,false)">The direction of energy flow</div>
+      <div class="mcq-opt" onclick="mcqAnswer('q2',this,false)">The type of energy store</div>
+    </div>
+    <div class="feedback fb-neutral" id="q2-fb">
+      <div class="fb-title">✅ The amount of energy transferred</div>
+      A thick arrow = lots of energy. A thin arrow = less energy. The total thickness in must always equal the total thickness out — because energy is conserved.
+    </div>
+  </div>
+
+  <!-- Q3 -->
+  <div class="card card-blue">
+    <div class="tier tier-c">🔵 Core</div>
+    <div class="q-text">
+      <strong>Q3.</strong> A device uses <strong>400 J</strong> of energy. It wastes <strong>100 J</strong>. How much energy is transferred <em>usefully</em>?
+    </div>
+    <div class="ans-row">
+      <input class="ans-input" type="number" id="q3-ans" placeholder="your answer">
+      <span class="ans-unit">J</span>
+      <button class="btn btn-check" onclick="checkNumeric('q3',300,null,'300 J — because 400 J in − 100 J wasted = 300 J useful. The total always adds up (conservation of energy).',null,true)">Check</button>
+    </div>
+    <div class="feedback" id="q3-fb"></div>
+  </div>
+
+  <div class="section-nav">
+    <span></span>
+    <span class="nav-note">When you're done, move on →</span>
+    <button class="btn btn-next" onclick="showSection(1)">Key Facts →</button>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════
+     SECTION 1 — KEY FACTS
+══════════════════════════════════════════ -->
+<div class="section" id="sec1">
+  <div class="sec-title">📖 Key Facts</div>
+  <div class="sec-sub">A reference card — come back here any time during the activities.</div>
+
+  <div class="fact-grid">
+    <div class="fact-card">
+      <h3>⚖️ Law of Conservation of Energy</h3>
+      <p>Energy cannot be created or destroyed. It can only be <strong>transferred</strong> from one store to another.</p>
+      <p style="margin-top:8px;">In any device: <strong>Total Input = Useful Output + Wasted Output</strong></p>
+    </div>
+    <div class="fact-card">
+      <h3>📊 Sankey Diagram Rules</h3>
+      <div class="rule-row"><div class="rule-num">1</div><div>Arrow thickness is <strong>proportional</strong> to the amount of energy.</div></div>
+      <div class="rule-row"><div class="rule-num">2</div><div>Input arrow comes from the left. Output arrows split right (useful) and down (wasted).</div></div>
+      <div class="rule-row"><div class="rule-num">3</div><div>All output arrows together must equal the input arrow — energy is conserved.</div></div>
+    </div>
+  </div>
+
+  <div class="formula-box">
+    <div class="formula-text">Efficiency (%) = (Useful Energy Output ÷ Total Energy Input) × 100</div>
+    <div class="formula-sub">Efficiency has no units. It is always between 0% and 100%.</div>
+  </div>
+
+  <div class="worked-box">
+    <h3>🔧 Worked example — Electric kettle</h3>
+    <div class="step-row"><div class="step-num">1</div><div><strong>Identify values:</strong> Total input = 2000 J &nbsp;·&nbsp; Useful output (heating water) = 1800 J &nbsp;·&nbsp; Wasted (thermal to surroundings + sound) = 200 J</div></div>
+    <div class="step-row"><div class="step-num">2</div><div><strong>Check conservation:</strong> 1800 + 200 = 2000 ✓ (inputs must equal outputs)</div></div>
+    <div class="step-row"><div class="step-num">3</div><div><strong>Calculate efficiency:</strong> (1800 ÷ 2000) × 100 = <strong>90%</strong></div></div>
+    <div class="step-row"><div class="step-num">4</div><div><strong>Interpret:</strong> 90 p in every £1 of energy used goes into heating the water. A very efficient device!</div></div>
+    <div class="sankey-wrap" style="margin-top:12px;">
+      <svg id="sankey-worked" viewBox="0 0 520 200" preserveAspectRatio="xMidYMid meet"></svg>
+      <div class="sankey-legend">
+        <div class="leg-item"><div class="leg-dot" style="background:#1565C0;"></div>Input: 2000 J</div>
+        <div class="leg-item"><div class="leg-dot" style="background:#2E7D32;"></div>Useful: 1800 J (heating water)</div>
+        <div class="leg-item"><div class="leg-dot" style="background:#C62828;"></div>Wasted: 200 J (thermal + sound)</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-nav">
+    <button class="btn btn-prev" onclick="showSection(0)">← Do Now</button>
+    <span class="nav-note">You can return here during any activity</span>
+    <button class="btn btn-next" onclick="showSection(2)">A: Interpret →</button>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════
+     SECTION 2 — INTERPRET
+══════════════════════════════════════════ -->
+<div class="section" id="sec2">
+  <div class="sec-title">📊 A: Read &amp; Interpret</div>
+  <div class="sec-sub">Three real devices. Read the Sankey diagrams and answer the questions below each one.</div>
+
+  <!-- Device 1: Filament bulb -->
+  <div class="card card-green">
+    <div class="tier tier-f">🟢 Foundation</div>
+    <h3 style="font-size:1rem;color:#333;margin-bottom:6px;">💡 Device 1 — Filament Light Bulb</h3>
+    <div class="sankey-wrap">
+      <svg id="sankey-bulb" viewBox="0 0 520 200" preserveAspectRatio="xMidYMid meet"></svg>
+      <div class="sankey-legend">
+        <div class="leg-item"><div class="leg-dot" style="background:#1565C0;"></div>Electrical energy in</div>
+        <div class="leg-item"><div class="leg-dot" style="background:#2E7D32;"></div>Light energy (useful)</div>
+        <div class="leg-item"><div class="leg-dot" style="background:#C62828;"></div>Thermal energy (wasted)</div>
+      </div>
+    </div>
+
+    <div class="q-block tier-f-bg">
+      <div class="q-text"><strong>Q1a.</strong> How much total energy goes into the bulb?</div>
+      <div class="ans-row">
+        <input class="ans-input" type="number" id="i1a" placeholder="answer">
+        <span class="ans-unit">J</span>
+        <button class="btn btn-check" onclick="checkNumeric('i1a',100,null,'100 J — this is the full width of the input arrow.',null,true)">Check</button>
+      </div>
+      <div class="feedback" id="i1a-fb"></div>
+    </div>
+
+    <div class="q-block tier-f-bg">
+      <div class="q-text"><strong>Q1b.</strong> How much energy is transferred usefully as <em>light</em>?</div>
+      <div class="ans-row">
+        <input class="ans-input" type="number" id="i1b" placeholder="answer">
+        <span class="ans-unit">J</span>
+        <button class="btn btn-check" onclick="checkNumeric('i1b',5,null,'5 J — the useful (light) arrow is very thin, showing very little useful output.',null,true)">Check</button>
+      </div>
+      <div class="feedback" id="i1b-fb"></div>
+    </div>
+
+    <div class="q-block tier-f-bg">
+      <div class="q-text"><strong>Q1c.</strong> How much energy is wasted?</div>
+      <div class="ans-row">
+        <input class="ans-input" type="number" id="i1c" placeholder="answer">
+        <span class="ans-unit">J</span>
+        <button class="btn btn-check" onclick="checkNumeric('i1c',95,null,'95 J — 100 − 5 = 95 J. The wasted arrow is very thick because most energy is lost as heat.',null,true)">Check</button>
+      </div>
+      <div class="feedback" id="i1c-fb"></div>
+    </div>
+
+    <div class="q-block tier-c-bg">
+      <div class="tier tier-c">🔵 Core</div>
+      <div class="q-text"><strong>Q1d.</strong> Calculate the efficiency of the filament bulb. Use: Efficiency = (Useful ÷ Total) × 100</div>
+      <div class="ans-row">
+        <input class="ans-input" type="number" id="i1d" placeholder="answer">
+        <span class="ans-unit">%</span>
+        <button class="btn btn-check" onclick="checkNumeric('i1d',5,null,'5% — (5 ÷ 100) × 100 = 5%. This is extremely inefficient! 95p in every £1 is wasted.',null,true)">Check</button>
+      </div>
+      <div class="feedback" id="i1d-fb"></div>
+    </div>
+
+    <div class="q-block tier-h-bg">
+      <div class="tier tier-h">🟣 Challenge</div>
+      <div class="q-text"><strong>Q1e.</strong> Most countries have banned filament bulbs. Using your efficiency calculation, explain <em>why</em> they are a poor choice — and what this means for a family's energy bills and carbon footprint.</div>
+      <textarea class="textarea-q" id="i1e" placeholder="Write 2–3 sentences…"></textarea>
+      <button class="btn btn-reveal" onclick="revealFb('i1e-reveal')">Show model answer</button>
+      <div class="feedback fb-neutral" id="i1e-reveal">
+        <div class="fb-title">Model answer</div>
+        A filament bulb is only 5% efficient, meaning 95% of all electrical energy is wasted as thermal energy. This means a family pays for energy that does almost no useful work — heating the air rather than the room. Higher energy use also means greater CO₂ emissions from the power station, increasing the family's carbon footprint. LED bulbs, with efficiencies around 75–85%, transfer far more energy usefully and reduce both bills and emissions significantly.
+      </div>
+    </div>
+  </div>
+
+  <!-- Device 2: Hair dryer -->
+  <div class="card card-green">
+    <div class="tier tier-f">🟢 Foundation → Core</div>
+    <h3 style="font-size:1rem;color:#333;margin-bottom:6px;">💨 Device 2 — Hair Dryer</h3>
+    <div class="sankey-wrap">
+      <svg id="sankey-hair" viewBox="0 0 520 200" preserveAspectRatio="xMidYMid meet"></svg>
+      <div class="sankey-legend">
+        <div class="leg-item"><div class="leg-dot" style="background:#1565C0;"></div>Electrical energy in: 2000 J</div>
+        <div class="leg-item"><div class="leg-dot" style="background:#2E7D32;"></div>Useful: thermal + kinetic</div>
+        <div class="leg-item"><div class="leg-dot" style="background:#C62828;"></div>Wasted: thermal to surroundings</div>
+      </div>
+    </div>
+
+    <div class="q-block tier-f-bg">
+      <div class="q-text"><strong>Q2a.</strong> The hair dryer receives 2000 J. It transfers 1600 J usefully (heating air and moving it). How much is wasted?</div>
+      <div class="ans-row">
+        <input class="ans-input" type="number" id="i2a" placeholder="answer">
+        <span class="ans-unit">J</span>
+        <button class="btn btn-check" onclick="checkNumeric('i2a',400,null,'400 J — 2000 − 1600 = 400 J wasted. Conservation of energy: input = useful + wasted.',null,true)">Check</button>
+      </div>
+      <div class="feedback" id="i2a-fb"></div>
+    </div>
+
+    <div class="q-block tier-c-bg">
+      <div class="q-text"><strong>Q2b.</strong> Calculate the efficiency of the hair dryer.</div>
+      <div class="ans-row">
+        <input class="ans-input" type="number" id="i2b" placeholder="answer">
+        <span class="ans-unit">%</span>
+        <button class="btn btn-check" onclick="checkNumeric('i2b',80,null,'80% — (1600 ÷ 2000) × 100 = 80%. Much more efficient than the filament bulb!',null,true)">Check</button>
+      </div>
+      <div class="feedback" id="i2b-fb"></div>
+    </div>
+
+    <div class="q-block tier-c-bg">
+      <div class="q-text"><strong>Q2c.</strong> Compare the Sankey diagrams for the bulb and the hair dryer. What is the visual difference that shows the hair dryer is more efficient?</div>
+      <textarea class="textarea-q" id="i2c" placeholder="Write 1–2 sentences…" style="min-height:60px;"></textarea>
+      <button class="btn btn-reveal" onclick="revealFb('i2c-reveal')">Show answer</button>
+      <div class="feedback fb-neutral" id="i2c-reveal">
+        The useful arrow in the hair dryer's Sankey diagram is much <strong>thicker</strong> (relative to the input) than in the bulb's diagram. The wasted arrow is much thinner. The ratio of useful arrow width to total input width shows the efficiency at a glance.
+      </div>
+    </div>
+  </div>
+
+  <!-- Device 3: Car engine -->
+  <div class="card card-green">
+    <div class="tier tier-c">🔵 Core → Challenge</div>
+    <h3 style="font-size:1rem;color:#333;margin-bottom:6px;">🚗 Device 3 — Petrol Car Engine</h3>
+    <div class="sankey-wrap">
+      <svg id="sankey-car" viewBox="0 0 520 200" preserveAspectRatio="xMidYMid meet"></svg>
+      <div class="sankey-legend">
+        <div class="leg-item"><div class="leg-dot" style="background:#1565C0;"></div>Chemical energy in (petrol): 5000 J</div>
+        <div class="leg-item"><div class="leg-dot" style="background:#2E7D32;"></div>Useful: kinetic energy</div>
+        <div class="leg-item"><div class="leg-dot" style="background:#C62828;"></div>Wasted: thermal + sound</div>
+      </div>
+    </div>
+
+    <div class="q-block tier-c-bg">
+      <div class="q-text"><strong>Q3a.</strong> The car engine takes in 5000 J. Only 1500 J is transferred as useful kinetic energy. Calculate the efficiency.</div>
+      <div class="ans-row">
+        <input class="ans-input" type="number" id="i3a" placeholder="answer">
+        <span class="ans-unit">%</span>
+        <button class="btn btn-check" onclick="checkNumeric('i3a',30,null,'30% — (1500 ÷ 5000) × 100 = 30%. This means 70% of petrol energy is wasted, mostly as heat in the engine and exhaust.',null,true)">Check</button>
+      </div>
+      <div class="feedback" id="i3a-fb"></div>
+    </div>
+
+    <div class="q-block tier-c-bg">
+      <div class="q-text"><strong>Q3b.</strong> How much energy is wasted in the car engine?</div>
+      <div class="ans-row">
+        <input class="ans-input" type="number" id="i3b" placeholder="answer">
+        <span class="ans-unit">J</span>
+        <button class="btn btn-check" onclick="checkNumeric('i3b',3500,null,'3500 J — 5000 − 1500 = 3500 J. This is why a running engine feels hot and makes noise.',null,true)">Check</button>
+      </div>
+      <div class="feedback" id="i3b-fb"></div>
+    </div>
+
+    <div class="q-block tier-h-bg">
+      <div class="tier tier-h">🟣 Challenge</div>
+      <div class="q-text"><strong>Q3c.</strong> An electric car converts 5000 J of electrical energy with 85% efficiency. How much useful kinetic energy does it produce? Compare this to the petrol engine — what are the implications for climate change?</div>
+      <div class="ans-row" style="margin-bottom:10px;">
+        <input class="ans-input" type="number" id="i3c" placeholder="kinetic energy">
+        <span class="ans-unit">J</span>
+        <button class="btn btn-check" onclick="checkNumeric('i3c',4250,null,'4250 J — (85 ÷ 100) × 5000 = 4250 J. The electric car produces 2750 J more useful energy from the same input.',null,true)">Check</button>
+      </div>
+      <div class="feedback" id="i3c-fb" style="margin-bottom:10px;"></div>
+      <textarea class="textarea-q" id="i3c-text" placeholder="Write your comparison and climate implication…"></textarea>
+      <button class="btn btn-reveal" onclick="revealFb('i3c-reveal')" style="margin-top:8px;">Show model answer</button>
+      <div class="feedback fb-neutral" id="i3c-reveal">
+        The electric car produces 4250 J of kinetic energy vs 1500 J from the petrol engine — nearly three times more useful work from the same energy input. Less energy wasted means less heat dissipated to the environment. Additionally, if the electricity comes from renewable sources, no CO₂ is produced at all during driving, compared to the direct combustion of fossil fuels in a petrol engine. Even charged from the grid, the higher efficiency reduces overall fuel use and emissions.
+      </div>
+    </div>
+  </div>
+
+  <div class="section-nav">
+    <button class="btn btn-prev" onclick="showSection(1)">← Key Facts</button>
+    <span class="nav-note">Great work — now try drawing your own</span>
+    <button class="btn btn-next" onclick="showSection(3)">B: Build →</button>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════
+     SECTION 3 — BUILD
+══════════════════════════════════════════ -->
+<div class="section" id="sec3">
+  <div class="sec-title">✏️ B: Build Your Own Sankey</div>
+  <div class="sec-sub">Type in the energy values — the diagram draws itself to scale. Then calculate the efficiency.</div>
+
+  <div class="builder-scenario" id="build-scenario">
+    <h3 id="build-title">Loading…</h3>
+    <p id="build-desc"></p>
+  </div>
+
+  <div class="builder-inputs">
+    <div class="build-field">
+      <label>Total Energy Input</label>
+      <input type="number" id="build-total" placeholder="e.g. 2000" oninput="updateBuilder()">
+      <div style="font-size:.75rem;color:#aaa;margin-top:3px;">J</div>
+    </div>
+    <div class="build-field">
+      <label>Useful Energy Output</label>
+      <input type="number" id="build-useful" placeholder="e.g. 1600" oninput="updateBuilder()">
+      <div style="font-size:.75rem;color:#aaa;margin-top:3px;">J</div>
+    </div>
+    <div class="build-field auto">
+      <label>Wasted Energy</label>
+      <div class="build-val" id="build-wasted">—</div>
+      <div style="font-size:.75rem;color:#aaa;margin-top:3px;">J (auto-calculated)</div>
+    </div>
+  </div>
+
+  <div class="builder-hint" id="build-hint"></div>
+
+  <div class="sankey-wrap">
+    <svg id="sankey-builder" viewBox="0 0 520 210" preserveAspectRatio="xMidYMid meet"></svg>
+  </div>
+
+  <div class="eff-result" id="build-eff-result">
+    <div class="eff-num" id="build-eff-num">—</div>
+    <div class="eff-label">Efficiency</div>
+  </div>
+
+  <div class="q-block tier-c-bg" style="margin-top:10px;">
+    <div class="q-text"><strong>Check your diagram:</strong> What is the efficiency of this device? (Calculate from your values, then compare to the auto-display above.)</div>
+    <div class="ans-row">
+      <input class="ans-input" type="number" id="build-eff-check" placeholder="your answer">
+      <span class="ans-unit">%</span>
+      <button class="btn btn-check" id="build-eff-btn" onclick="checkBuilderEff()">Check</button>
+    </div>
+    <div class="feedback" id="build-eff-fb"></div>
+  </div>
+
+  <div class="builder-nav">
+    <button class="btn btn-prev" onclick="builderNav(-1)">← Prev</button>
+    <span class="scenario-counter" id="build-counter">Scenario 1 of 3</span>
+    <button class="btn btn-next" onclick="builderNav(1)">Next →</button>
+    <button class="btn btn-reset" onclick="resetBuilder()" style="margin-left:8px;">↺ Reset</button>
+  </div>
+
+  <div class="section-nav">
+    <button class="btn btn-prev" onclick="showSection(2)">← Interpret</button>
+    <span class="nav-note">Good — now for some calculations</span>
+    <button class="btn btn-next" onclick="showSection(4)">C: Calculate →</button>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════
+     SECTION 4 — CALCULATE
+══════════════════════════════════════════ -->
+<div class="section" id="sec4">
+  <div class="sec-title">🔢 C: Efficiency Calculations</div>
+  <div class="sec-sub">Tiered practice — start at Foundation and work up. Formula card is on the Key Facts tab.</div>
+
+  <!-- FOUNDATION -->
+  <div class="card card-blue">
+    <div class="tier tier-f">🟢 Foundation — formula shown</div>
+    <div class="formula-box" style="margin-bottom:16px;padding:10px 14px;">
+      <div class="formula-text" style="font-size:1rem;">Efficiency (%) = (Useful ÷ Total) × 100</div>
+    </div>
+
+    <div class="q-block tier-f-bg">
+      <div class="q-text"><strong>F1.</strong> A torch uses <strong>50 J</strong>. It produces <strong>10 J</strong> of light. Calculate its efficiency.</div>
+      <div class="ans-row">
+        <input class="ans-input" type="number" id="f1" placeholder="answer">
+        <span class="ans-unit">%</span>
+        <button class="btn btn-check" onclick="checkNumeric('f1',20,null,'20% — (10 ÷ 50) × 100 = 20%. The remaining 80 J (80%) is wasted as thermal energy (heat).')">Check</button>
+      </div>
+      <div class="feedback" id="f1-fb"></div>
+    </div>
+
+    <div class="q-block tier-f-bg">
+      <div class="q-text"><strong>F2.</strong> A TV uses <strong>200 J</strong> of electrical energy. It transfers <strong>160 J</strong> usefully as light and sound. Calculate its efficiency.</div>
+      <div class="ans-row">
+        <input class="ans-input" type="number" id="f2" placeholder="answer">
+        <span class="ans-unit">%</span>
+        <button class="btn btn-check" onclick="checkNumeric('f2',80,null,'80% — (160 ÷ 200) × 100 = 80%.')">Check</button>
+      </div>
+      <div class="feedback" id="f2-fb"></div>
+    </div>
+
+    <div class="q-block tier-f-bg">
+      <div class="q-text"><strong>F3.</strong> A boiler uses <strong>10 000 J</strong>. It wastes <strong>1500 J</strong>. How much is useful? Then calculate efficiency.</div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:6px;">
+        <div>
+          <div style="font-size:.78rem;color:#888;margin-bottom:3px;">Useful energy (J)</div>
+          <div class="ans-row">
+            <input class="ans-input" type="number" id="f3a" placeholder="useful J" style="width:110px;">
+            <button class="btn btn-check" style="padding:7px 12px;" onclick="checkNumeric('f3a',8500,null,'8500 J — 10 000 − 1500 = 8500 J')">✓</button>
+          </div>
+          <div class="feedback" id="f3a-fb"></div>
+        </div>
+        <div>
+          <div style="font-size:.78rem;color:#888;margin-bottom:3px;">Efficiency (%)</div>
+          <div class="ans-row">
+            <input class="ans-input" type="number" id="f3b" placeholder="eff %" style="width:110px;">
+            <button class="btn btn-check" style="padding:7px 12px;" onclick="checkNumeric('f3b',85,null,'85% — (8500 ÷ 10 000) × 100 = 85%')">✓</button>
+          </div>
+          <div class="feedback" id="f3b-fb"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CORE -->
+  <div class="card card-blue">
+    <div class="tier tier-c">🔵 Core — formula not shown (use Key Facts if needed)</div>
+
+    <div class="q-block tier-c-bg">
+      <div class="q-text"><strong>C1.</strong> An electric fan motor converts <strong>800 J</strong> of electrical energy. <strong>560 J</strong> is transferred as useful kinetic energy. What is the efficiency?</div>
+      <div class="ans-row">
+        <input class="ans-input" type="number" id="c1" placeholder="answer">
+        <span class="ans-unit">%</span>
+        <button class="btn btn-check" onclick="checkNumeric('c1',70,null,'70% — (560 ÷ 800) × 100 = 70%. 240 J is wasted as thermal energy and sound.')">Check</button>
+      </div>
+      <div class="feedback" id="c1-fb"></div>
+    </div>
+
+    <div class="q-block tier-c-bg">
+      <div class="q-text"><strong>C2.</strong> A solar panel is <strong>20% efficient</strong>. It receives <strong>3000 J</strong> of light energy. How much electrical energy is produced?</div>
+      <div class="ans-row">
+        <input class="ans-input" type="number" id="c2" placeholder="answer">
+        <span class="ans-unit">J</span>
+        <button class="btn btn-check" onclick="checkNumeric('c2',600,null,'600 J — 20% of 3000 = (20 ÷ 100) × 3000 = 600 J. The remaining 2400 J is reflected or converted to heat.')">Check</button>
+      </div>
+      <div class="feedback" id="c2-fb"></div>
+    </div>
+
+    <div class="q-block tier-c-bg">
+      <div class="q-text"><strong>C3.</strong> A speaker produces <strong>12 J</strong> of useful sound energy from every <strong>100 J</strong> input. What percentage is wasted?</div>
+      <div class="ans-row">
+        <input class="ans-input" type="number" id="c3" placeholder="answer">
+        <span class="ans-unit">%</span>
+        <button class="btn btn-check" onclick="checkNumeric('c3',88,null,'88% — efficiency is 12%, so 100% − 12% = 88% wasted. Most energy is lost as thermal energy (heat from the coil).')">Check</button>
+      </div>
+      <div class="feedback" id="c3-fb"></div>
+    </div>
+
+    <div class="q-block tier-c-bg">
+      <div class="q-text"><strong>C4.</strong> A gas hob is <strong>60% efficient</strong> and transfers <strong>1200 J</strong> usefully to the pan. What was the total energy input?</div>
+      <div class="definition" style="margin-bottom:10px;">💡 Hint: Efficiency = Useful ÷ Total × 100, so Total = Useful ÷ (Efficiency ÷ 100)</div>
+      <div class="ans-row">
+        <input class="ans-input" type="number" id="c4" placeholder="answer">
+        <span class="ans-unit">J</span>
+        <button class="btn btn-check" onclick="checkNumeric('c4',2000,null,'2000 J — Total = 1200 ÷ (60 ÷ 100) = 1200 ÷ 0.6 = 2000 J. This is rearranging the efficiency equation.')">Check</button>
+      </div>
+      <div class="feedback" id="c4-fb"></div>
+    </div>
+  </div>
+
+  <!-- CHALLENGE CALCULATIONS -->
+  <div class="card card-blue">
+    <div class="tier tier-h">🟣 Challenge</div>
+
+    <div class="q-block tier-h-bg">
+      <div class="q-text"><strong>H1.</strong> A filament bulb uses <strong>100 J per second</strong> and is <strong>5% efficient</strong>. An LED uses <strong>12 J per second</strong> and is <strong>75% efficient</strong>. Calculate the light energy output per second for each. Which produces more light? By how much?</div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:8px;">
+        <div>
+          <div style="font-size:.78rem;color:#888;margin-bottom:3px;">Filament bulb: light output</div>
+          <div class="ans-row">
+            <input class="ans-input" type="number" id="h1a" placeholder="J/s" style="width:100px;">
+            <span class="ans-unit">J/s</span>
+            <button class="btn btn-check" style="padding:7px 11px;" onclick="checkNumeric('h1a',5,null,'5 J/s — 5% of 100 = 5 J/s of light.')">✓</button>
+          </div>
+          <div class="feedback" id="h1a-fb"></div>
+        </div>
+        <div>
+          <div style="font-size:.78rem;color:#888;margin-bottom:3px;">LED: light output</div>
+          <div class="ans-row">
+            <input class="ans-input" type="number" id="h1b" placeholder="J/s" style="width:100px;">
+            <span class="ans-unit">J/s</span>
+            <button class="btn btn-check" style="padding:7px 11px;" onclick="checkNumeric('h1b',9,null,'9 J/s — 75% of 12 = 9 J/s of light.')">✓</button>
+          </div>
+          <div class="feedback" id="h1b-fb"></div>
+        </div>
+      </div>
+      <button class="btn btn-reveal" onclick="revealFb('h1-conclude')">Show conclusion</button>
+      <div class="feedback fb-neutral" id="h1-conclude">
+        The LED produces <strong>9 J/s of light</strong> vs the filament's <strong>5 J/s</strong> — the LED gives <strong>80% more light</strong> while using 88% less energy. This is why replacing filament bulbs with LEDs saves money and reduces carbon emissions so dramatically.
+      </div>
+    </div>
+
+    <div class="q-block tier-h-bg">
+      <div class="q-text"><strong>H2.</strong> A car engine takes in <strong>10 000 J</strong> and has <strong>25% efficiency</strong>. The wasted energy is shared: <strong>75%</strong> lost as thermal energy (heat), <strong>25%</strong> lost as sound. Calculate the heat and sound energy wasted.</div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:8px;">
+        <div>
+          <div style="font-size:.78rem;color:#888;margin-bottom:3px;">Total wasted energy (J)</div>
+          <div class="ans-row">
+            <input class="ans-input" type="number" id="h2a" style="width:110px;" placeholder="">
+            <button class="btn btn-check" style="padding:7px 11px;" onclick="checkNumeric('h2a',7500,null,'7500 J — 75% of 10 000 = 7500 J wasted total.')">✓</button>
+          </div>
+          <div class="feedback" id="h2a-fb"></div>
+        </div>
+        <div>
+          <div style="font-size:.78rem;color:#888;margin-bottom:3px;">Heat wasted (J)</div>
+          <div class="ans-row">
+            <input class="ans-input" type="number" id="h2b" style="width:110px;" placeholder="">
+            <button class="btn btn-check" style="padding:7px 11px;" onclick="checkNumeric('h2b',5625,null,'5625 J — 75% of 7500 = 5625 J as heat.')">✓</button>
+          </div>
+          <div class="feedback" id="h2b-fb"></div>
+        </div>
+        <div>
+          <div style="font-size:.78rem;color:#888;margin-bottom:3px;">Sound wasted (J)</div>
+          <div class="ans-row">
+            <input class="ans-input" type="number" id="h2c" style="width:110px;" placeholder="">
+            <button class="btn btn-check" style="padding:7px 11px;" onclick="checkNumeric('h2c',1875,null,'1875 J — 25% of 7500 = 1875 J as sound.')">✓</button>
+          </div>
+          <div class="feedback" id="h2c-fb"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-nav">
+    <button class="btn btn-prev" onclick="showSection(3)">← Build</button>
+    <span class="nav-note">Almost there — one big challenge left</span>
+    <button class="btn btn-next" onclick="showSection(5)">D: Challenge →</button>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════
+     SECTION 5 — CHALLENGE
+══════════════════════════════════════════ -->
+<div class="section" id="sec5">
+  <div class="sec-title">🏆 D: The Boiler Challenge</div>
+  <div class="sec-sub">Apply everything you know to make a real decision.</div>
+
+  <div class="challenge-intro">
+    <h3>🏫 A school needs to replace its boiler</h3>
+    <p>Two models are available. Both run on the same fuel and receive the same input energy. Your job is to compare them scientifically and write a recommendation to the head teacher.</p>
+  </div>
+
+  <div class="boiler-grid">
+    <div class="boiler-card">
+      <h4>🔵 Boiler A — EcoHeat Standard</h4>
+      <div class="boiler-val">12 000 J</div><div class="boiler-val-label">Total energy input</div>
+      <div class="boiler-val" style="margin-top:10px;">9 600 J</div><div class="boiler-val-label">Useful energy output (heating)</div>
+      <div style="font-size:.78rem;color:#aaa;margin-top:8px;">Purchase price: same as Boiler B</div>
+    </div>
+    <div class="boiler-card" style="border-color:#7B1FA2;">
+      <h4>🟣 Boiler B — EcoHeat Premium</h4>
+      <div class="boiler-val">12 000 J</div><div class="boiler-val-label">Total energy input</div>
+      <div class="boiler-val" style="margin-top:10px;">10 200 J</div><div class="boiler-val-label">Useful energy output (heating)</div>
+      <div style="font-size:.78rem;color:#aaa;margin-top:8px;">Purchase price: 10% more than Boiler A</div>
+    </div>
+  </div>
+
+  <!-- Step 1 -->
+  <div class="card card-purple">
+    <div class="tier tier-h">Step 1 — Calculate</div>
+    <div class="q-block tier-h-bg">
+      <div class="q-text"><strong>1a.</strong> Calculate the efficiency of <em>Boiler A</em>.</div>
+      <div class="ans-row">
+        <input class="ans-input" type="number" id="ch1a" placeholder="%">
+        <span class="ans-unit">%</span>
+        <button class="btn btn-check" onclick="checkNumeric('ch1a',80,null,'80% — (9600 ÷ 12000) × 100 = 80%.')">Check</button>
+      </div>
+      <div class="feedback" id="ch1a-fb"></div>
+    </div>
+    <div class="q-block tier-h-bg">
+      <div class="q-text"><strong>1b.</strong> Calculate the efficiency of <em>Boiler B</em>.</div>
+      <div class="ans-row">
+        <input class="ans-input" type="number" id="ch1b" placeholder="%">
+        <span class="ans-unit">%</span>
+        <button class="btn btn-check" onclick="checkNumeric('ch1b',85,null,'85% — (10200 ÷ 12000) × 100 = 85%.')">Check</button>
+      </div>
+      <div class="feedback" id="ch1b-fb"></div>
+    </div>
+    <div class="q-block tier-h-bg">
+      <div class="q-text"><strong>1c.</strong> How much energy does each boiler <em>waste</em> per cycle?</div>
+      <div style="display:flex;gap:12px;flex-wrap:wrap;">
+        <div>
+          <div style="font-size:.78rem;color:#888;margin-bottom:3px;">Boiler A wasted (J)</div>
+          <div class="ans-row">
+            <input class="ans-input" type="number" id="ch1c1" style="width:100px;">
+            <button class="btn btn-check" style="padding:7px 11px;" onclick="checkNumeric('ch1c1',2400,null,'2400 J — 12000 − 9600 = 2400 J.')">✓</button>
+          </div>
+          <div class="feedback" id="ch1c1-fb"></div>
+        </div>
+        <div>
+          <div style="font-size:.78rem;color:#888;margin-bottom:3px;">Boiler B wasted (J)</div>
+          <div class="ans-row">
+            <input class="ans-input" type="number" id="ch1c2" style="width:100px;">
+            <button class="btn btn-check" style="padding:7px 11px;" onclick="checkNumeric('ch1c2',1800,null,'1800 J — 12000 − 10200 = 1800 J.')">✓</button>
+          </div>
+          <div class="feedback" id="ch1c2-fb"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step 2: Draw -->
+  <div class="card card-purple">
+    <div class="tier tier-h">Step 2 — Draw Sankey diagrams</div>
+    <p style="font-size:.88rem;color:#555;margin-bottom:12px;">Use the builder below. Enter the values for each boiler and sketch what the diagram looks like. Compare the two diagrams — what do you notice about the arrow widths?</p>
+
+    <div style="font-size:.85rem;font-weight:700;color:#333;margin-bottom:6px;">🔵 Boiler A</div>
+    <div class="sankey-wrap">
+      <svg id="sankey-ba" viewBox="0 0 520 200" preserveAspectRatio="xMidYMid meet"></svg>
+    </div>
+    <div style="font-size:.85rem;font-weight:700;color:#333;margin:14px 0 6px;">🟣 Boiler B</div>
+    <div class="sankey-wrap">
+      <svg id="sankey-bb" viewBox="0 0 520 200" preserveAspectRatio="xMidYMid meet"></svg>
+    </div>
+  </div>
+
+  <!-- Step 3: Recommend -->
+  <div class="card card-purple">
+    <div class="tier tier-h">Step 3 — Recommend</div>
+    <div class="q-block tier-h-bg">
+      <div class="q-text"><strong>3a.</strong> If both boilers cost the same to buy, which would you recommend to the head teacher? Justify your answer using your efficiency calculations.</div>
+      <textarea class="textarea-q" id="ch3a" placeholder="Write 2–3 sentences with evidence from your calculations…"></textarea>
+    </div>
+    <div class="q-block tier-h-bg">
+      <div class="q-text"><strong>3b.</strong> Boiler B actually costs <strong>10% more to purchase</strong>. It will be used for 10 years. Does this change your recommendation? Think about running costs and energy savings over time.</div>
+      <textarea class="textarea-q" id="ch3b" placeholder="Consider: does the energy saving over 10 years justify the extra purchase cost?"></textarea>
+    </div>
+    <button class="btn btn-reveal" onclick="revealFb('ch-model')" style="margin-top:8px;">Show model answers</button>
+    <div class="feedback fb-neutral" id="ch-model">
+      <div class="fb-title">Model answers</div>
+      <p style="margin-bottom:8px;"><strong>3a:</strong> Boiler B should be recommended. At 85% efficiency it transfers 10 200 J usefully compared to Boiler A's 9 600 J — 600 J more per cycle. With the same running cost, Boiler B delivers more heat per unit of fuel, reducing both energy bills and the school's carbon footprint.</p>
+      <p><strong>3b:</strong> Yes — the 10% extra purchase cost is likely worth it over 10 years. Each cycle, Boiler B saves 600 J of wasted energy. Over thousands of heating cycles per year, these savings accumulate: the school uses less fuel, paying less per year in running costs. Over a decade, the running cost savings would almost certainly exceed the extra purchase price, making Boiler B the better long-term investment.</p>
+    </div>
+  </div>
+
+  <div class="section-nav">
+    <button class="btn btn-prev" onclick="showSection(4)">← Calculate</button>
+    <span class="nav-note">One last section</span>
+    <button class="btn btn-next" onclick="showSection(6)">Exit Ticket →</button>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════
+     SECTION 6 — EXIT TICKET
+══════════════════════════════════════════ -->
+<div class="section" id="sec6">
+  <div class="sec-title">🎫 Exit Ticket</div>
+  <div class="sec-sub">One question per tier. Complete independently — this is your final check-in.</div>
+
+  <div class="card card-green">
+    <div class="tier tier-f">🟢 Foundation</div>
+    <div class="q-block tier-f-bg">
+      <div class="q-text"><strong>ET1.</strong> A device uses 500 J of energy. It transfers 300 J usefully. How much is wasted?</div>
+      <div class="ans-row">
+        <input class="ans-input" type="number" id="et1" placeholder="">
+        <span class="ans-unit">J</span>
+        <button class="btn btn-check" onclick="checkNumeric('et1',200,null,'200 J — 500 − 300 = 200 J wasted. Energy is always conserved.',null,true)">Check</button>
+      </div>
+      <div class="feedback" id="et1-fb"></div>
+    </div>
+    <div class="q-block tier-f-bg">
+      <div class="q-text"><strong>ET2.</strong> Below is a Sankey diagram for a device. The input is 200 J, useful output is 120 J. Draw or describe what the diagram should look like — which arrow is thicker?</div>
+      <div class="sankey-wrap" style="margin-bottom:10px;">
+        <svg id="sankey-et" viewBox="0 0 520 200" preserveAspectRatio="xMidYMid meet"></svg>
+      </div>
+      <div class="q-text" style="margin-top:10px;">Is the useful arrow or the wasted arrow thicker? Why?</div>
+      <div class="mcq-grid" style="grid-template-columns:1fr;">
+        <div class="mcq-opt" onclick="mcqAnswer('et2',this,true)">The useful arrow is thicker (120 J &gt; 80 J wasted)</div>
+        <div class="mcq-opt" onclick="mcqAnswer('et2',this,false)">The wasted arrow is thicker</div>
+        <div class="mcq-opt" onclick="mcqAnswer('et2',this,false)">Both arrows are the same thickness</div>
+      </div>
+      <div class="feedback fb-neutral" id="et2-fb">
+        ✅ Correct. 120 J useful &gt; 80 J wasted, so the useful (green) arrow is thicker. Arrow width always represents the amount of energy.
+      </div>
+    </div>
+  </div>
+
+  <div class="card card-blue">
+    <div class="tier tier-c">🔵 Core</div>
+    <div class="q-block tier-c-bg">
+      <div class="q-text"><strong>ET3.</strong> A motor uses <strong>600 J</strong> of electrical energy and does <strong>240 J</strong> of useful mechanical work. Calculate its efficiency. Show your working.</div>
+      <div class="ans-row">
+        <input class="ans-input" type="number" id="et3" placeholder="">
+        <span class="ans-unit">%</span>
+        <button class="btn btn-check" onclick="checkNumeric('et3',40,null,'40% — Efficiency = (240 ÷ 600) × 100 = 40%. 360 J is wasted as thermal energy.',null,true)">Check</button>
+      </div>
+      <div class="feedback" id="et3-fb"></div>
+    </div>
+  </div>
+
+  <div class="card card-purple">
+    <div class="tier tier-h">🟣 Challenge</div>
+    <div class="q-block tier-h-bg">
+      <div class="q-text"><strong>ET4.</strong> A coal power station burns fuel releasing <strong>50 000 J</strong> and is <strong>35% efficient</strong>.<br><br>
+        (a) Calculate the electrical energy output.<br>
+        (b) Calculate the total wasted energy.<br>
+        (c) Suggest <em>two</em> ways a power engineer could improve efficiency.</div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:8px;">
+        <div>
+          <div style="font-size:.78rem;color:#888;margin-bottom:3px;">(a) Electrical output (J)</div>
+          <div class="ans-row">
+            <input class="ans-input" type="number" id="et4a" style="width:110px;">
+            <button class="btn btn-check" style="padding:7px 11px;" onclick="checkNumeric('et4a',17500,null,'17 500 J — 35% of 50 000 = 17 500 J.')">✓</button>
+          </div>
+          <div class="feedback" id="et4a-fb"></div>
+        </div>
+        <div>
+          <div style="font-size:.78rem;color:#888;margin-bottom:3px;">(b) Total wasted (J)</div>
+          <div class="ans-row">
+            <input class="ans-input" type="number" id="et4b" style="width:110px;">
+            <button class="btn btn-check" style="padding:7px 11px;" onclick="checkNumeric('et4b',32500,null,'32 500 J — 50 000 − 17 500 = 32 500 J wasted.')">✓</button>
+          </div>
+          <div class="feedback" id="et4b-fb"></div>
+        </div>
+      </div>
+      <div class="q-text">(c) Suggest two ways to improve efficiency:</div>
+      <textarea class="textarea-q" id="et4c" placeholder="1. …&#10;2. …" style="min-height:60px;"></textarea>
+      <button class="btn btn-reveal" onclick="revealFb('et4c-model')" style="margin-top:8px;">Show ideas</button>
+      <div class="feedback fb-neutral" id="et4c-model">
+        Ideas include: use combined heat and power (CHP) to capture waste heat for local heating schemes; improve insulation on pipes and turbines to reduce heat loss; use more efficient turbine designs; switch to a higher-efficiency fuel source (e.g. natural gas, which burns more cleanly); use supercritical steam at higher temperatures and pressures.
+      </div>
+    </div>
+  </div>
+
+  <!-- Score display -->
+  <div class="exit-score">
+    <div class="score-num" id="exit-score-display">—</div>
+    <div class="score-label">questions answered correctly (auto-marked only)</div>
+    <div style="font-size:.8rem;color:#aaa;margin-top:8px;">Open-response questions are not counted here — share your written answers with your teacher.</div>
+  </div>
+
+  <div class="section-nav">
+    <button class="btn btn-prev" onclick="showSection(5)">← Challenge</button>
+    <span class="nav-note">Lesson complete 🎉</span>
+    <button class="btn btn-next" onclick="showSection(0)">↺ Start over</button>
+  </div>
+</div>
+
+</main>
+
+
+<script>
+/* ════════════════════════════════════════
+   SANKEY SVG DRAWING ENGINE
+════════════════════════════════════════ */
+function drawSankey(svgId, total, useful, labels = {}) {
+  const svg = document.getElementById(svgId);
+  if (!svg || total <= 0) return;
+  const wasted = total - useful;
+  const W = 520, H = 200;
+  const maxH = 104;
+  const scale = maxH / total;
+  const HT = maxH;
+  const HU = useful * scale;
+  const HW = wasted * scale;
+
+  const inputX = 18, splitX = 192, usefulEndX = W - 18;
+  const topY = 40; // space for labels
+  const wastedEndY = H - 12;
+  const uTop = topY, uBot = topY + HU;
+  const wTop = topY + HU;
+
+  const f = (tag, attrs, inner='') => {
+    const a = Object.entries(attrs).map(([k,v])=>`${k}="${v}"`).join(' ');
+    return `<${tag} ${a}>${inner}</${tag}>`;
+  };
+  const ff = 'font-family="Segoe UI,Arial,sans-serif"';
+
+  let h = '';
+
+  // Input rectangle
+  h += `<rect x="${inputX}" y="${topY}" width="${splitX-inputX}" height="${HT}" fill="#1565C0" rx="3" opacity="0.92"/>`;
+
+  // Useful arrow
+  if (HU > 0.5) {
+    const tip = Math.min(14, HU / 2);
+    h += `<polygon fill="#2E7D32" opacity="0.92" points="${splitX},${uTop} ${usefulEndX-tip},${uTop} ${usefulEndX},${uTop+HU/2} ${usefulEndX-tip},${uBot} ${splitX},${uBot}"/>`;
+  }
+
+  // Wasted arrow (downward)
+  if (HW > 0.5) {
+    const wL = splitX, wR = splitX + HW;
+    const wMid = (wL + wR) / 2;
+    const tip = Math.min(12, HW / 2);
+    const wEnd = Math.min(wastedEndY, wTop + 130);
+    h += `<polygon fill="#C62828" opacity="0.9" points="${wL},${wTop} ${wR},${wTop} ${wR},${wEnd-tip} ${wMid+tip},${wEnd} ${wMid-tip},${wEnd} ${wL},${wEnd-tip}"/>`;
+  }
+
+  // Labels — input
+  h += `<text x="${(inputX+splitX)/2}" y="${topY-7}" text-anchor="middle" ${ff} font-size="12" font-weight="bold" fill="#0D47A1">${total} J</text>`;
+  if (labels.input) h += `<text x="${(inputX+splitX)/2}" y="${topY-19}" text-anchor="middle" ${ff} font-size="10" fill="#666">${labels.input}</text>`;
+
+  // Labels — useful
+  if (HU > 0.5) {
+    h += `<text x="${(splitX+usefulEndX)/2}" y="${topY-7}" text-anchor="middle" ${ff} font-size="12" font-weight="bold" fill="#1B5E20">${useful} J</text>`;
+    if (labels.useful) h += `<text x="${(splitX+usefulEndX)/2}" y="${topY-19}" text-anchor="middle" ${ff} font-size="10" fill="#555">${labels.useful}</text>`;
+  }
+
+  // Labels — wasted
+  if (HW > 0.5) {
+    const wR = splitX + HW;
+    const wTop2 = topY + HU;
+    const wEnd2 = Math.min(wastedEndY, wTop2 + 130);
+    const midY = (wTop2 + wEnd2) / 2;
+    h += `<text x="${wR+8}" y="${midY-3}" ${ff} font-size="12" font-weight="bold" fill="#B71C1C">${wasted} J</text>`;
+    if (labels.wasted) h += `<text x="${wR+8}" y="${midY+11}" ${ff} font-size="10" fill="#555">${labels.wasted}</text>`;
+  }
+
+  svg.innerHTML = h;
+}
+
+/* ════════════════════════════════════════
+   TAB / SECTION NAVIGATION
+════════════════════════════════════════ */
+let currentSection = 0;
+const totalSections = 7;
+const sectionVisited = new Array(totalSections).fill(false);
+sectionVisited[0] = true;
+
+function showSection(idx) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(`sec${idx}`).classList.add('active');
+  document.getElementById(`tab${idx}`).classList.add('active');
+  currentSection = idx;
+  sectionVisited[idx] = true;
+  updateProgress();
+  window.scrollTo({top: 0, behavior: 'smooth'});
+  // Draw static Sankeys when their section becomes visible
+  if (idx === 1) drawWorkedSankey();
+  if (idx === 2) drawInterpretSankeys();
+  if (idx === 3) { initBuilder(); updateBuilder(); }
+  if (idx === 5) drawBoilerSankeys();
+  if (idx === 6) drawExitSankey();
+}
+
+function updateProgress() {
+  const visited = sectionVisited.filter(Boolean).length;
+  const pct = Math.round((currentSection + 1) / totalSections * 100);
+  document.getElementById('prog-fill').style.width = pct + '%';
+  document.getElementById('prog-label').textContent = `${currentSection + 1} / ${totalSections}`;
+  // Mark visited tabs
+  sectionVisited.forEach((v, i) => {
+    if (v && i !== currentSection) document.getElementById(`tab${i}`).classList.add('done');
+  });
+}
+
+/* ════════════════════════════════════════
+   MCQ ANSWER HANDLER
+════════════════════════════════════════ */
+function mcqAnswer(qId, el, isCorrect) {
+  const container = el.parentElement;
+  if (container.querySelector('.correct')) return; // already answered
+  el.classList.add(isCorrect ? 'correct' : 'wrong');
+  if (!isCorrect) {
+    container.querySelectorAll('.mcq-opt').forEach(o => {
+      // find the correct one via its onclick attribute
+    });
+  }
+  const fb = document.getElementById(qId + '-fb');
+  if (fb) {
+    fb.style.display = 'block';
+    if (isCorrect) { fb.classList.add('fb-neutral','show'); trackScore(true); }
+    else { fb.className = 'feedback fb-wrong show'; fb.innerHTML = '<div class="fb-title">❌ Not quite</div>Have another look at the options.'; trackScore(false); }
+  }
+}
+
+/* ════════════════════════════════════════
+   NUMERIC ANSWER CHECKER
+════════════════════════════════════════ */
+let totalCorrect = 0, totalAttempted = 0;
+
+function trackScore(correct) {
+  totalAttempted++;
+  if (correct) totalCorrect++;
+  const disp = document.getElementById('exit-score-display');
+  if (disp) disp.textContent = `${totalCorrect} / ${totalAttempted}`;
+}
+
+function checkNumeric(inputId, correctVal, tolerance, explanation, unit, track) {
+  const input = document.getElementById(inputId);
+  const fb = document.getElementById(inputId + '-fb');
+  if (!input || !fb) return;
+  const val = parseFloat(input.value);
+  const tol = tolerance || 1;
+  const isCorrect = Math.abs(val - correctVal) <= tol;
+  fb.classList.add('show');
+  if (isNaN(val)) {
+    fb.className = 'feedback fb-wrong show';
+    fb.innerHTML = '<div class="fb-title">⚠️ Enter a number</div>';
+    return;
+  }
+  if (isCorrect) {
+    fb.className = 'feedback fb-correct show';
+    fb.innerHTML = `<div class="fb-title">✅ Correct!</div>${explanation}`;
+    input.style.borderColor = '#4CAF50';
+    if (track) trackScore(true);
+  } else {
+    fb.className = 'feedback fb-wrong show';
+    fb.innerHTML = `<div class="fb-title">❌ Not quite</div>You entered ${val}${unit||''}. Check your calculation — remember the formula. Look at Key Facts if you need it.`;
+    input.style.borderColor = '#EF5350';
+    if (track) trackScore(false);
+  }
+}
+
+function revealFb(fbId) {
+  const fb = document.getElementById(fbId);
+  if (fb) fb.classList.add('show');
+}
+
+/* ════════════════════════════════════════
+   SECTION 1 — WORKED SANKEY
+════════════════════════════════════════ */
+function drawWorkedSankey() {
+  drawSankey('sankey-worked', 2000, 1800, {
+    input: 'Electrical energy in',
+    useful: 'Thermal energy (heating water)',
+    wasted: 'Thermal + sound (surroundings)'
+  });
+}
+
+/* ════════════════════════════════════════
+   SECTION 2 — INTERPRET SANKEYS
+════════════════════════════════════════ */
+function drawInterpretSankeys() {
+  drawSankey('sankey-bulb', 100, 5, {
+    input: 'Electrical energy in',
+    useful: 'Light energy',
+    wasted: 'Thermal energy (heat)'
+  });
+  drawSankey('sankey-hair', 2000, 1600, {
+    input: 'Electrical energy in',
+    useful: 'Thermal + kinetic (useful)',
+    wasted: 'Thermal (surroundings)'
+  });
+  drawSankey('sankey-car', 5000, 1500, {
+    input: 'Chemical energy (petrol)',
+    useful: 'Kinetic energy (motion)',
+    wasted: 'Thermal + sound'
+  });
+}
+
+/* ════════════════════════════════════════
+   SECTION 3 — INTERACTIVE BUILDER
+════════════════════════════════════════ */
+const builderScenarios = [
+  {
+    title: 'Wind Turbine',
+    desc: 'A wind turbine receives 5000 J of kinetic energy from the wind. It generates 1500 J of electrical energy. Enter the values and draw the Sankey diagram.',
+    total: 5000,
+    useful: 1500,
+    hint: 'Think: useful = electrical energy out. Wasted = energy dissipated to the surroundings as heat (friction in bearings) and sound.',
+    effLabel: 'generating electricity',
+    wasteLabel: 'Thermal + sound (friction)'
+  },
+  {
+    title: 'Phone Charger',
+    desc: 'A phone charger uses 100 J of electrical energy from the mains. It stores 85 J in the phone\'s battery. Enter the values to complete the diagram.',
+    total: 100,
+    useful: 85,
+    hint: 'Think: useful = energy stored chemically in the battery. Wasted = heat given off by the charger (you can feel it when charging).',
+    effLabel: 'stored in battery',
+    wasteLabel: 'Thermal (charger heat)'
+  },
+  {
+    title: 'Gas Boiler',
+    desc: 'A gas boiler burns fuel releasing 8000 J. It transfers 6400 J usefully to heat the water in the central heating system. Enter the values.',
+    total: 8000,
+    useful: 6400,
+    hint: 'Think: useful = thermal energy transferred to the hot water. Wasted = heat lost through the boiler casing and up the flue (chimney).',
+    effLabel: 'heating water',
+    wasteLabel: 'Thermal (flue + casing)'
+  }
+];
+let builderIdx = 0;
+
+function initBuilder() {
+  renderBuilderScenario();
+}
+
+function renderBuilderScenario() {
+  const s = builderScenarios[builderIdx];
+  document.getElementById('build-title').textContent = s.title;
+  document.getElementById('build-desc').textContent = s.desc;
+  document.getElementById('build-hint').textContent = '💡 ' + s.hint;
+  document.getElementById('build-counter').textContent = `Scenario ${builderIdx + 1} of ${builderScenarios.length}`;
+  document.getElementById('build-total').value = '';
+  document.getElementById('build-useful').value = '';
+  document.getElementById('build-wasted').textContent = '—';
+  document.getElementById('build-eff-result').classList.remove('show');
+  document.getElementById('build-eff-num').textContent = '—';
+  document.getElementById('build-eff-check').value = '';
+  const fb = document.getElementById('build-eff-fb');
+  fb.className = 'feedback'; fb.innerHTML = '';
+  // Clear svg
+  const svg = document.getElementById('sankey-builder');
+  if (svg) svg.innerHTML = '';
+}
+
+function updateBuilder() {
+  const total = parseFloat(document.getElementById('build-total').value);
+  const useful = parseFloat(document.getElementById('build-useful').value);
+  if (isNaN(total) || isNaN(useful) || total <= 0 || useful < 0 || useful > total) {
+    document.getElementById('build-wasted').textContent = '—';
+    document.getElementById('build-eff-result').classList.remove('show');
+    if (!isNaN(total) && !isNaN(useful) && useful > total) {
+      document.getElementById('build-wasted').textContent = '⚠️ Useful > Total!';
+    }
+    return;
+  }
+  const wasted = total - useful;
+  const eff = Math.round(useful / total * 100 * 10) / 10;
+  document.getElementById('build-wasted').textContent = wasted;
+  document.getElementById('build-eff-num').textContent = eff + '%';
+  document.getElementById('build-eff-result').classList.add('show');
+  const s = builderScenarios[builderIdx];
+  drawSankey('sankey-builder', total, useful, {
+    input: 'Energy in',
+    useful: s.effLabel,
+    wasted: s.wasteLabel
+  });
+}
+
+function checkBuilderEff() {
+  const s = builderScenarios[builderIdx];
+  const correctEff = Math.round(s.useful / s.total * 100 * 10) / 10;
+  const input = document.getElementById('build-eff-check');
+  const fb = document.getElementById('build-eff-fb');
+  const val = parseFloat(input.value);
+  if (isNaN(val)) { fb.className='feedback fb-wrong show'; fb.innerHTML='Enter a number.'; return; }
+  const isOk = Math.abs(val - correctEff) <= 1;
+  fb.classList.add('show');
+  if (isOk) {
+    fb.className = 'feedback fb-correct show';
+    fb.innerHTML = `<div class="fb-title">✅ Correct — ${correctEff}%!</div>(${s.useful} ÷ ${s.total}) × 100 = ${correctEff}%`;
+  } else {
+    fb.className = 'feedback fb-wrong show';
+    fb.innerHTML = `<div class="fb-title">❌ Not quite</div>Remember: Efficiency = (Useful ÷ Total) × 100. Try again.`;
+  }
+}
+
+function builderNav(dir) {
+  builderIdx = Math.max(0, Math.min(builderScenarios.length - 1, builderIdx + dir));
+  renderBuilderScenario();
+}
+
+function resetBuilder() {
+  renderBuilderScenario();
+}
+
+/* ════════════════════════════════════════
+   SECTION 5 — BOILER CHALLENGE SANKEYS
+════════════════════════════════════════ */
+function drawBoilerSankeys() {
+  drawSankey('sankey-ba', 12000, 9600, {
+    input: 'Energy in',
+    useful: 'Heating (Boiler A)',
+    wasted: 'Wasted'
+  });
+  drawSankey('sankey-bb', 12000, 10200, {
+    input: 'Energy in',
+    useful: 'Heating (Boiler B)',
+    wasted: 'Wasted'
+  });
+}
+
+/* ════════════════════════════════════════
+   SECTION 6 — EXIT TICKET SANKEY
+════════════════════════════════════════ */
+function drawExitSankey() {
+  drawSankey('sankey-et', 200, 120, {
+    input: 'Energy in',
+    useful: 'Useful output',
+    wasted: 'Wasted'
+  });
+}
+
+/* ════════════════════════════════════════
+   INIT ON LOAD
+════════════════════════════════════════ */
+document.addEventListener('DOMContentLoaded', () => {
+  showSection(0);
+});
+</script>
+</body>
+</html>
