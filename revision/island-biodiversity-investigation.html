@@ -1,0 +1,3202 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Island Biodiversity Investigation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Source+Sans+3:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0f1a;
+    --bg-2: #111827;
+    --card: #1a2235;
+    --card-2: #202a44;
+    --border: rgba(255,255,255,0.08);
+    --border-strong: rgba(255,255,255,0.16);
+    --text: #e5e7eb;
+    --text-muted: #94a3b8;
+    --text-dim: #64748b;
+    --green: #10b981;
+    --green-soft: rgba(16,185,129,0.12);
+    --amber: #f59e0b;
+    --amber-soft: rgba(245,158,11,0.12);
+    --rose: #f43f5e;
+    --rose-soft: rgba(244,63,94,0.12);
+    --blue: #3b82f6;
+    --blue-soft: rgba(59,130,246,0.12);
+    --purple: #8b5cf6;
+    --purple-soft: rgba(139,92,246,0.12);
+    --radius: 14px;
+    --radius-sm: 10px;
+    --shadow: 0 8px 32px rgba(0,0,0,0.4);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Source Sans 3', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    min-height: 100vh;
+    padding-bottom: 4rem;
+  }
+  .container { max-width: 1100px; margin: 0 auto; padding: 2rem 1.5rem; }
+
+  /* Header */
+  .lesson-header {
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 1.5rem;
+    margin-bottom: 2rem;
+  }
+  .back-link {
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 0.9rem;
+    display: inline-block;
+    margin-bottom: 1rem;
+  }
+  .back-link:hover { color: var(--green); }
+  .lesson-meta {
+    display: inline-block;
+    background: var(--card);
+    color: var(--text-muted);
+    padding: 0.3rem 0.75rem;
+    border-radius: 999px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    border: 1px solid var(--border);
+    margin-bottom: 1rem;
+  }
+  h1 {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: clamp(1.9rem, 4vw, 2.8rem);
+    line-height: 1.15;
+    background: linear-gradient(135deg, #10b981 0%, #3b82f6 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 0.5rem;
+  }
+  .lesson-subtitle {
+    color: var(--text-muted);
+    font-size: 1rem;
+  }
+  .lesson-subtitle code {
+    background: var(--card);
+    padding: 0.1rem 0.4rem;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    color: var(--green);
+  }
+
+  /* Mission role */
+  .role-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.25rem 1.5rem;
+    margin: 1.5rem 0;
+    border-left: 3px solid var(--green);
+  }
+  .role-card h3 {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 1.1rem;
+    color: var(--green);
+    margin-bottom: 0.5rem;
+  }
+  .role-card ol { padding-left: 1.5rem; margin-top: 0.5rem; }
+  .role-card ol li { margin-bottom: 0.25rem; }
+
+  /* Progress bar */
+  .progress-rail {
+    position: sticky;
+    top: 0;
+    background: rgba(10,15,26,0.92);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--border);
+    padding: 0.75rem 0;
+    margin: 0 -1.5rem 2rem -1.5rem;
+    z-index: 50;
+  }
+  .progress-track {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+    display: flex;
+    gap: 0.4rem;
+    align-items: center;
+  }
+  .progress-step {
+    flex: 1;
+    height: 6px;
+    background: var(--card);
+    border-radius: 3px;
+    position: relative;
+    cursor: pointer;
+    transition: background 0.25s;
+  }
+  .progress-step.done { background: var(--green); }
+  .progress-step.current { background: var(--amber); }
+  .progress-step:hover { background: var(--border-strong); }
+  .progress-step.done:hover { background: #34d399; }
+  .progress-step.current:hover { background: #fbbf24; }
+  .progress-label {
+    color: var(--text-muted);
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    min-width: max-content;
+  }
+
+  /* Section card */
+  .lesson-section {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.75rem;
+    margin-bottom: 1.5rem;
+    position: relative;
+    transition: opacity 0.3s, filter 0.3s;
+  }
+  .lesson-section.locked {
+    opacity: 0.4;
+    filter: blur(2px);
+    pointer-events: none;
+    user-select: none;
+  }
+  .lock-badge {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: var(--card-2);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-sm);
+    padding: 0.75rem 1.25rem;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    font-weight: 500;
+    backdrop-filter: blur(4px);
+    z-index: 10;
+    display: none;
+    pointer-events: auto;
+  }
+  .lesson-section.locked .lock-badge { display: block; }
+
+  .section-header {
+    display: flex;
+    align-items: baseline;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+  }
+  .section-number {
+    font-family: 'Fraunces', serif;
+    font-weight: 700;
+    font-size: 0.85rem;
+    color: var(--green);
+    letter-spacing: 0.1em;
+  }
+  .section-title {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 1.5rem;
+    color: var(--text);
+    flex: 1;
+  }
+  .section-time {
+    color: var(--text-dim);
+    font-size: 0.8rem;
+    font-weight: 500;
+    background: var(--card-2);
+    padding: 0.2rem 0.6rem;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+  }
+  .section-intro {
+    color: var(--text-muted);
+    margin-bottom: 1.25rem;
+  }
+
+  /* Sub-blocks */
+  .task-block {
+    background: var(--card-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 1.25rem;
+    margin: 1rem 0;
+  }
+  .task-label {
+    color: var(--amber);
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+  }
+  .task-prompt {
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: 0.75rem;
+  }
+  .task-prompt em { color: var(--text-muted); font-style: italic; }
+
+  /* Evidence card */
+  .evidence-card {
+    background: var(--bg-2);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--blue);
+    border-radius: var(--radius-sm);
+    padding: 1.25rem;
+    margin: 1rem 0;
+  }
+  .evidence-card .evidence-label {
+    color: var(--blue);
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+    display: block;
+  }
+
+  .formula-card {
+    background: var(--bg-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 1rem 1.25rem;
+    margin: 1rem 0;
+    text-align: center;
+  }
+  .formula {
+    font-family: 'Fraunces', serif;
+    font-size: 1.25rem;
+    color: var(--text);
+    line-height: 1.8;
+  }
+  .formula .frac {
+    display: inline-flex;
+    flex-direction: column;
+    vertical-align: middle;
+    text-align: center;
+    margin: 0 0.3rem;
+  }
+  .formula .frac > span:first-child {
+    border-bottom: 1.5px solid var(--text);
+    padding: 0 0.4rem 0.1rem;
+  }
+  .formula .frac > span:last-child { padding: 0.1rem 0.4rem 0; }
+  .formula sup { font-size: 0.7em; }
+  .formula .var { font-style: italic; }
+  .formula-key {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+    text-align: left;
+    line-height: 1.7;
+  }
+  .formula-key code {
+    background: var(--card);
+    padding: 0.05rem 0.3rem;
+    border-radius: 3px;
+    color: var(--green);
+    font-style: italic;
+  }
+
+  /* Tables */
+  table.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0.75rem 0;
+    background: var(--bg-2);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+  }
+  table.data-table th, table.data-table td {
+    padding: 0.6rem 0.8rem;
+    border-bottom: 1px solid var(--border);
+    text-align: left;
+  }
+  table.data-table th {
+    background: var(--card-2);
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+  }
+  table.data-table td.num { text-align: right; font-variant-numeric: tabular-nums; }
+  table.data-table tr:last-child td { border-bottom: none; }
+  table.data-table tr.total td { background: var(--card); font-weight: 600; }
+
+  /* Inputs */
+  input.fitb, input.num-input {
+    background: var(--bg);
+    border: 1px solid var(--border-strong);
+    border-radius: 6px;
+    padding: 0.4rem 0.65rem;
+    color: var(--text);
+    font-family: inherit;
+    font-size: 0.95rem;
+    width: 5rem;
+    text-align: center;
+    transition: border-color 0.2s, background 0.2s;
+  }
+  input.fitb:focus, input.num-input:focus {
+    outline: none;
+    border-color: var(--blue);
+    background: var(--card);
+  }
+  input.fitb.correct, input.num-input.correct {
+    border-color: var(--green);
+    background: var(--green-soft);
+    color: var(--green);
+  }
+  input.fitb.wrong, input.num-input.wrong {
+    border-color: var(--rose);
+    background: var(--rose-soft);
+    color: var(--rose);
+  }
+  input.fitb.wide { width: 100%; max-width: 28rem; text-align: left; }
+
+  textarea.long-input {
+    width: 100%;
+    min-height: 5rem;
+    background: var(--bg);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-sm);
+    padding: 0.75rem;
+    color: var(--text);
+    font-family: inherit;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    resize: vertical;
+  }
+  textarea.long-input:focus { outline: none; border-color: var(--blue); }
+  textarea.long-input.taller { min-height: 8rem; }
+  textarea.long-input.tallest { min-height: 12rem; }
+
+  /* Buttons */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: var(--card);
+    border: 1px solid var(--border-strong);
+    color: var(--text);
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: all 0.2s;
+  }
+  .btn:hover { background: var(--card-2); border-color: var(--border-strong); }
+  .btn-primary {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    border-color: transparent;
+    color: white;
+  }
+  .btn-primary:hover { background: linear-gradient(135deg, #34d399 0%, #10b981 100%); }
+  .btn-primary:disabled { background: var(--card-2); color: var(--text-dim); cursor: not-allowed; }
+  .btn-outline {
+    background: transparent;
+    border-color: var(--border-strong);
+    color: var(--text-muted);
+  }
+  .btn-outline:hover { color: var(--text); border-color: var(--text-muted); }
+  .btn-sm { padding: 0.3rem 0.65rem; font-size: 0.82rem; }
+  .btn-ghost {
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    padding: 0.3rem 0.5rem;
+  }
+  .btn-ghost:hover { color: var(--text); background: var(--card-2); }
+  .btn-row { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.75rem; }
+
+  /* Feedback panels */
+  .feedback {
+    margin-top: 0.75rem;
+    padding: 0.75rem 1rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.92rem;
+    display: none;
+    border-left: 3px solid transparent;
+  }
+  .feedback.show { display: block; }
+  .feedback.correct { background: var(--green-soft); border-left-color: var(--green); color: #6ee7b7; }
+  .feedback.partial { background: var(--amber-soft); border-left-color: var(--amber); color: #fcd34d; }
+  .feedback.wrong { background: var(--rose-soft); border-left-color: var(--rose); color: #fda4af; }
+  .feedback.info { background: var(--blue-soft); border-left-color: var(--blue); color: #93c5fd; }
+  .feedback.misconception {
+    background: var(--purple-soft);
+    border-left-color: var(--purple);
+    color: #c4b5fd;
+  }
+  .feedback .feedback-title { font-weight: 700; margin-bottom: 0.25rem; }
+  .feedback ul { margin: 0.4rem 0 0 1.25rem; }
+
+  .model-answer {
+    margin-top: 0.75rem;
+    padding: 0.75rem 1rem;
+    background: var(--green-soft);
+    border-left: 3px solid var(--green);
+    border-radius: var(--radius-sm);
+    font-size: 0.92rem;
+    display: none;
+  }
+  .model-answer.show { display: block; }
+  .model-answer-title {
+    font-weight: 700;
+    color: var(--green);
+    margin-bottom: 0.4rem;
+    font-size: 0.85rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  /* Mission Brief specific */
+  .island-map {
+    background: linear-gradient(180deg, #0c2740 0%, #1a3a5c 60%, #d2b48c 100%);
+    border-radius: var(--radius);
+    padding: 0;
+    height: 220px;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    margin: 1rem 0;
+  }
+  .island-shape {
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 70%;
+    height: 60%;
+    background: linear-gradient(180deg, #2d5a3f 0%, #4a7c5a 50%, #c2a878 100%);
+    border-radius: 50% 60% 45% 55%;
+    border: 2px solid rgba(255,255,255,0.1);
+  }
+  .island-label {
+    position: absolute;
+    top: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: white;
+    font-family: 'Fraunces', serif;
+    font-size: 1.1rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-shadow: 0 2px 6px rgba(0,0,0,0.6);
+  }
+  .habitat-pin {
+    position: absolute;
+    font-size: 0.75rem;
+    font-weight: 600;
+    background: rgba(0,0,0,0.6);
+    color: white;
+    padding: 0.25rem 0.5rem;
+    border-radius: 999px;
+    border: 1px solid rgba(255,255,255,0.3);
+  }
+  .pin-forest { top: 100px; left: 38%; }
+  .pin-scrub { bottom: 55px; right: 25%; }
+
+  .habitat-choices {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+    margin: 1rem 0;
+  }
+  .habitat-choice {
+    background: var(--bg-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 1rem;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .habitat-choice:hover { border-color: var(--green); transform: translateY(-2px); }
+  .habitat-choice.selected { border-color: var(--green); background: var(--green-soft); }
+  .habitat-choice h4 {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    color: var(--green);
+    margin-bottom: 0.4rem;
+  }
+  .habitat-choice p { color: var(--text-muted); font-size: 0.9rem; }
+
+  /* Species selection */
+  .species-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 0.75rem;
+    margin: 0.75rem 0;
+  }
+  .species-tile {
+    background: var(--bg-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 0.75rem 1rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+  .species-tile:hover { border-color: var(--border-strong); }
+  .species-tile.selected { border-color: var(--green); background: var(--green-soft); }
+  .species-tile.correct-reveal { border-color: var(--green); background: var(--green-soft); }
+  .species-tile.wrong-reveal { border-color: var(--rose); background: var(--rose-soft); }
+  .species-tile .check {
+    width: 18px;
+    height: 18px;
+    border-radius: 4px;
+    border: 1.5px solid var(--text-muted);
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    color: transparent;
+  }
+  .species-tile.selected .check { background: var(--green); border-color: var(--green); color: white; }
+
+  .species-list {
+    background: var(--bg-2);
+    border-radius: var(--radius-sm);
+    padding: 0.75rem 1.25rem;
+    margin: 0.5rem 0;
+  }
+  .species-list-title {
+    font-family: 'Fraunces', serif;
+    color: var(--blue);
+    font-size: 0.95rem;
+    font-weight: 600;
+    margin-bottom: 0.4rem;
+  }
+  .species-list ul { list-style: none; }
+  .species-list li {
+    padding: 0.2rem 0;
+    color: var(--text);
+    font-size: 0.92rem;
+  }
+  .species-list li::before { content: "• "; color: var(--green); margin-right: 0.3rem; }
+
+  /* Drag and drop */
+  .drag-zone {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 0.75rem;
+    margin: 1rem 0;
+  }
+  .drop-column {
+    background: var(--bg-2);
+    border: 1.5px dashed var(--border-strong);
+    border-radius: var(--radius-sm);
+    padding: 0.75rem;
+    min-height: 140px;
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .drop-column.drag-over {
+    border-color: var(--blue);
+    background: var(--blue-soft);
+  }
+  .drop-column h4 {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: var(--text);
+    margin-bottom: 0.5rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .drag-pool {
+    background: var(--bg-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 0.75rem;
+    margin: 0.5rem 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    min-height: 60px;
+  }
+  .drag-item {
+    background: var(--card);
+    border: 1px solid var(--border-strong);
+    border-radius: 999px;
+    padding: 0.4rem 0.85rem;
+    cursor: grab;
+    user-select: none;
+    font-size: 0.88rem;
+    transition: all 0.2s;
+  }
+  .drag-item:hover { border-color: var(--text-muted); }
+  .drag-item:active, .drag-item.dragging { cursor: grabbing; opacity: 0.5; }
+  .drag-item.correct-placed { border-color: var(--green); background: var(--green-soft); color: #6ee7b7; }
+  .drag-item.wrong-placed { border-color: var(--rose); background: var(--rose-soft); color: #fda4af; }
+
+  /* Sequence task */
+  .sequence-list {
+    list-style: none;
+    margin: 1rem 0;
+  }
+  .sequence-item {
+    background: var(--card-2);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-sm);
+    padding: 0.75rem 1rem;
+    margin-bottom: 0.5rem;
+    cursor: grab;
+    user-select: none;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    transition: all 0.2s;
+  }
+  .sequence-item:hover { border-color: var(--text-muted); }
+  .sequence-item.dragging { opacity: 0.4; }
+  .sequence-item.drag-over { border-color: var(--blue); }
+  .sequence-item.correct { border-color: var(--green); background: var(--green-soft); }
+  .sequence-item.wrong { border-color: var(--rose); background: var(--rose-soft); }
+  .sequence-num {
+    background: var(--bg);
+    border-radius: 6px;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    flex-shrink: 0;
+  }
+  .sequence-handle { color: var(--text-dim); flex-shrink: 0; }
+
+  /* Organism profile */
+  .organism-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1rem;
+    margin: 1rem 0;
+  }
+  .organism-card {
+    background: var(--bg-2);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--blue);
+    border-radius: var(--radius-sm);
+    padding: 1rem 1.25rem;
+  }
+  .organism-card h4 {
+    font-family: 'Fraunces', serif;
+    color: var(--blue);
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+  }
+  .organism-card ul { list-style: none; padding: 0; }
+  .organism-card li {
+    padding: 0.2rem 0;
+    color: var(--text);
+    font-size: 0.9rem;
+  }
+  .organism-card li::before { content: "▸ "; color: var(--blue); margin-right: 0.3rem; }
+
+  /* MCQ */
+  .mcq-options {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin: 0.75rem 0;
+  }
+  .mcq-option {
+    background: var(--bg-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 0.75rem 1rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+  .mcq-option:hover { border-color: var(--border-strong); }
+  .mcq-option .radio {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    border: 1.5px solid var(--text-muted);
+    flex-shrink: 0;
+    position: relative;
+  }
+  .mcq-option.selected .radio::after {
+    content: '';
+    position: absolute;
+    top: 3px; left: 3px;
+    width: 9px; height: 9px;
+    background: var(--green);
+    border-radius: 50%;
+  }
+  .mcq-option.selected { border-color: var(--green); background: var(--green-soft); }
+  .mcq-option.correct-reveal { border-color: var(--green); background: var(--green-soft); }
+  .mcq-option.wrong-reveal { border-color: var(--rose); background: var(--rose-soft); }
+
+  /* Allele frequency graph */
+  .allele-graph {
+    background: var(--bg-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 1rem;
+    margin: 1rem 0;
+  }
+  .allele-graph svg { width: 100%; height: 240px; display: block; }
+
+  /* Comparison bar */
+  .compare-bars {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin: 1rem 0;
+  }
+  .compare-bar {
+    background: var(--bg-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 0.85rem 1rem;
+  }
+  .compare-bar h5 {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 0.95rem;
+    margin-bottom: 0.5rem;
+  }
+  .compare-bar.forest h5 { color: #6ee7b7; }
+  .compare-bar.scrub h5 { color: #fcd34d; }
+  .compare-value {
+    font-family: 'Fraunces', serif;
+    font-weight: 700;
+    font-size: 1.6rem;
+    margin-bottom: 0.4rem;
+  }
+  .bar-track {
+    height: 8px;
+    background: var(--bg);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .bar-fill {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.6s ease;
+  }
+  .bar-fill.forest { background: var(--green); }
+  .bar-fill.scrub { background: var(--amber); }
+
+  /* Sentence builder */
+  .sentence-frame {
+    background: var(--bg-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 0.85rem 1rem;
+    margin: 0.75rem 0;
+    color: var(--text-muted);
+    font-style: italic;
+    line-height: 2;
+  }
+  .sentence-frame .blank {
+    display: inline-block;
+    border-bottom: 1.5px solid var(--text-muted);
+    min-width: 100px;
+    padding: 0 0.3rem;
+    color: var(--text);
+    font-style: normal;
+  }
+
+  /* Continue gate */
+  .section-gate {
+    margin-top: 1.5rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+  .gate-status {
+    color: var(--text-muted);
+    font-size: 0.88rem;
+  }
+  .gate-status.ready { color: var(--green); }
+
+  /* Whiteboard */
+  .whiteboard-wrap {
+    background: var(--bg-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 0.6rem;
+    margin: 1rem 0;
+  }
+  .wb-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem;
+    padding: 0.4rem 0.5rem;
+    background: var(--card-2);
+    border-radius: 8px;
+    margin-bottom: 0.4rem;
+    align-items: center;
+  }
+  .wb-tool {
+    background: transparent;
+    border: 1px solid transparent;
+    color: var(--text-muted);
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s;
+    font-size: 1rem;
+  }
+  .wb-tool:hover { color: var(--text); background: var(--bg); }
+  .wb-tool.active { background: var(--blue-soft); color: var(--blue); border-color: var(--blue); }
+  .wb-sep { width: 1px; height: 22px; background: var(--border); margin: 0 0.2rem; }
+  .wb-swatch {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: border-color 0.15s, transform 0.15s;
+  }
+  .wb-swatch:hover { transform: scale(1.1); }
+  .wb-swatch.active { border-color: var(--text); }
+  .wb-width {
+    background: transparent;
+    border: 1px solid var(--border-strong);
+    color: var(--text-muted);
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s;
+  }
+  .wb-width:hover { color: var(--text); }
+  .wb-width.active { background: var(--blue-soft); border-color: var(--blue); }
+  .wb-width .dot { background: var(--text-muted); border-radius: 50%; }
+  .wb-width.active .dot { background: var(--blue); }
+  .wb-spacer { flex: 1; }
+  .wb-canvas-wrap {
+    position: relative;
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .wb-canvas-wrap.dark { background: #f4f4f5; }
+  .wb-canvas-wrap.grid {
+    background-image:
+      radial-gradient(circle, rgba(0,0,0,0.18) 1px, transparent 1px);
+    background-size: 20px 20px;
+    background-position: 10px 10px;
+  }
+  .wb-canvas {
+    display: block;
+    width: 100%;
+    height: 360px;
+    cursor: crosshair;
+    touch-action: none;
+  }
+  .wb-text-input {
+    position: absolute;
+    background: transparent;
+    border: 1px dashed #888;
+    color: #111;
+    font-family: 'Source Sans 3', sans-serif;
+    padding: 2px 4px;
+    outline: none;
+    font-size: 16px;
+    min-width: 60px;
+  }
+  .wb-prompt {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    margin-bottom: 0.4rem;
+    padding: 0 0.2rem;
+  }
+  .wb-status {
+    color: var(--text-dim);
+    font-size: 0.78rem;
+    padding: 0.3rem 0.5rem;
+    text-align: right;
+  }
+
+  /* Final report */
+  .report-mode-toggle {
+    display: flex;
+    gap: 0;
+    background: var(--bg-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 0.25rem;
+    margin: 1rem 0;
+    max-width: 420px;
+  }
+  .report-mode-toggle button {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    padding: 0.5rem 0.75rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 0.88rem;
+    font-weight: 500;
+    transition: all 0.2s;
+  }
+  .report-mode-toggle button.active {
+    background: var(--green);
+    color: white;
+    font-weight: 600;
+  }
+  .report-paragraph { margin-bottom: 1rem; }
+  .report-paragraph .scaffold {
+    color: var(--text-muted);
+    font-size: 0.88rem;
+    font-style: italic;
+    margin-bottom: 0.4rem;
+  }
+  .term-checklist {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin: 0.75rem 0;
+    padding: 0.85rem 1rem;
+    background: var(--bg-2);
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+  }
+  .term-chip {
+    background: var(--card);
+    border: 1px solid var(--border-strong);
+    border-radius: 999px;
+    padding: 0.25rem 0.7rem;
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    transition: all 0.25s;
+  }
+  .term-chip.used {
+    background: var(--green-soft);
+    border-color: var(--green);
+    color: #6ee7b7;
+  }
+
+  /* Reveal helpers */
+  .reveal-prompt {
+    font-size: 0.85rem;
+    color: var(--text-dim);
+    margin-top: 0.3rem;
+  }
+
+  /* Confirm dialog */
+  .confirm-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.6);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    backdrop-filter: blur(4px);
+  }
+  .confirm-backdrop.show { display: flex; }
+  .confirm-box {
+    background: var(--card);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    max-width: 380px;
+    box-shadow: var(--shadow);
+  }
+  .confirm-box h3 {
+    font-family: 'Fraunces', serif;
+    margin-bottom: 0.5rem;
+  }
+  .confirm-box p { color: var(--text-muted); margin-bottom: 1rem; }
+  .confirm-actions { display: flex; gap: 0.5rem; justify-content: flex-end; }
+
+  /* Toast */
+  .toast {
+    position: fixed;
+    bottom: 1.5rem;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: var(--card);
+    border: 1px solid var(--border-strong);
+    border-left: 3px solid var(--green);
+    border-radius: var(--radius-sm);
+    padding: 0.7rem 1.2rem;
+    font-size: 0.9rem;
+    box-shadow: var(--shadow);
+    opacity: 0;
+    transition: all 0.3s;
+    pointer-events: none;
+    z-index: 200;
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  /* Misc */
+  ul.bullets { list-style: none; padding: 0; }
+  ul.bullets li { padding: 0.2rem 0; padding-left: 1rem; position: relative; }
+  ul.bullets li::before {
+    content: "—";
+    position: absolute;
+    left: 0;
+    color: var(--text-dim);
+  }
+  p { margin-bottom: 0.6rem; }
+  p:last-child { margin-bottom: 0; }
+  strong { color: var(--text); font-weight: 600; }
+  em { color: var(--text-muted); }
+
+  /* Print */
+  @media print {
+    .progress-rail, .lock-badge, .wb-toolbar, .section-gate { display: none !important; }
+    .lesson-section.locked { opacity: 1; filter: none; }
+    body { background: white; color: black; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <header class="lesson-header">
+    <a href="index.html" class="back-link">← Back to revision</a>
+    <span class="lesson-meta">IAL Biology · Topic 4 · Revision Lesson</span>
+    <h1>Island biodiversity investigation</h1>
+    <p class="lesson-subtitle">Specification points <code>4.16</code> <code>4.17</code> <code>4.18</code> <code>4.19</code> <code>4.20</code></p>
+  </header>
+
+  <div class="progress-rail">
+    <div class="progress-track">
+      <span class="progress-label" id="progress-label">Section 1 of 9</span>
+      <div class="progress-step current" data-step="1" title="Mission Brief"></div>
+      <div class="progress-step" data-step="2" title="Biodiversity and endemism"></div>
+      <div class="progress-step" data-step="3" title="Species richness"></div>
+      <div class="progress-step" data-step="4" title="Index of diversity"></div>
+      <div class="progress-step" data-step="5" title="Genetic diversity"></div>
+      <div class="progress-step" data-step="6" title="Niches and adaptations"></div>
+      <div class="progress-step" data-step="7" title="Allele frequency"></div>
+      <div class="progress-step" data-step="8" title="Speciation"></div>
+      <div class="progress-step" data-step="9" title="Final report"></div>
+    </div>
+  </div>
+
+  <!-- =================== SECTION 1 — MISSION BRIEF =================== -->
+  <section class="lesson-section" data-section="1" id="section-1">
+    <div class="lock-badge">🔒 Locked</div>
+    <div class="section-header">
+      <span class="section-number">SECTION 01</span>
+      <h2 class="section-title">Mission brief</h2>
+      <span class="section-time">~5 min</span>
+    </div>
+
+    <p class="section-intro">You are a trainee conservation biologist. Your team has been sent to investigate two habitats on <strong>Isla Verde</strong>, an isolated island with several unusual species. By the end of this lesson you will produce a conservation report covering biodiversity, genetic diversity, adaptation, allele frequency change and possible speciation.</p>
+
+    <div class="role-card">
+      <h3>Your investigation must answer</h3>
+      <ol>
+        <li>Which habitat has higher biodiversity?</li>
+        <li>Which population has higher genetic diversity?</li>
+        <li>How are organisms adapted to their niches?</li>
+        <li>Are allele frequencies changing over time?</li>
+        <li>Could reproductive isolation lead to new species?</li>
+      </ol>
+    </div>
+
+    <div class="island-map">
+      <span class="island-label">Isla Verde</span>
+      <div class="island-shape"></div>
+      <span class="habitat-pin pin-forest">Cloud forest</span>
+      <span class="habitat-pin pin-scrub">Dry scrubland</span>
+    </div>
+
+    <div class="task-block">
+      <div class="task-label">Task A — Initial prediction</div>
+      <p class="task-prompt">Which habitat do you think will have higher biodiversity?</p>
+      <div class="habitat-choices">
+        <div class="habitat-choice" data-habitat="forest">
+          <h4>Cloud forest</h4>
+          <p>Wet, misty mountains with dense plant growth and many possible niches.</p>
+        </div>
+        <div class="habitat-choice" data-habitat="scrubland">
+          <h4>Dry scrubland</h4>
+          <p>Hot, low rainfall coastal area dominated by hardy species.</p>
+        </div>
+      </div>
+      <p class="task-prompt" style="margin-top: 0.75rem;">Explain your prediction:</p>
+      <textarea class="long-input" id="s1-prediction" placeholder="My initial prediction is..."></textarea>
+    </div>
+
+    <div class="task-block">
+      <div class="task-label">Task B — Sketch the island (whiteboard)</div>
+      <p class="task-prompt">Sketch a quick map of Isla Verde. Mark where you predict higher biodiversity and any features you think matter.</p>
+      <div class="whiteboard-wrap" id="wb-section-1"></div>
+    </div>
+
+    <div class="section-gate">
+      <div class="gate-status" id="gate-status-1">Choose a habitat and write a prediction to continue.</div>
+      <button class="btn btn-primary" data-complete="1" disabled>Complete and continue →</button>
+    </div>
+  </section>
+
+  <!-- =================== SECTION 2 — BIODIVERSITY AND ENDEMISM =================== -->
+  <section class="lesson-section locked" data-section="2" id="section-2">
+    <div class="lock-badge">🔒 Complete section 1 to unlock</div>
+    <div class="section-header">
+      <span class="section-number">SECTION 02</span>
+      <h2 class="section-title">Evidence 1 — Island life</h2>
+      <span class="section-time">~6 min</span>
+    </div>
+
+    <p class="section-intro">Spec point <code style="background:var(--card);padding:0.1rem 0.4rem;border-radius:4px;font-size:0.85rem;color:var(--green);">4.16</code> — biodiversity and endemism.</p>
+
+    <div class="evidence-card">
+      <span class="evidence-label">Survey log</span>
+      <p>The first survey records the following organisms in each habitat. Scientists note that two species are found <strong>only on Isla Verde</strong>.</p>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:0.75rem;margin-top:0.75rem;">
+        <div class="species-list">
+          <div class="species-list-title">Cloud forest</div>
+          <ul>
+            <li>Emerald tree frog</li>
+            <li>Mist orchid</li>
+            <li>Cloud beetle</li>
+            <li>Silver fern</li>
+            <li>Night-pollinating moth</li>
+            <li>Isla Verde tree snail</li>
+          </ul>
+        </div>
+        <div class="species-list">
+          <div class="species-list-title">Dry scrubland</div>
+          <ul>
+            <li>Sand lizard</li>
+            <li>Thorn grass</li>
+            <li>Ground beetle</li>
+            <li>Coastal cactus</li>
+            <li>Scrub mouse</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="task-block">
+      <div class="task-label">Task A — Define the key terms</div>
+      <p class="task-prompt">Complete each definition in your own words.</p>
+      <p><strong>Biodiversity</strong> means:</p>
+      <textarea class="long-input" id="s2-def-bio" rows="2" placeholder="Biodiversity means..."></textarea>
+      <p style="margin-top:0.75rem;"><strong>Endemism</strong> means:</p>
+      <textarea class="long-input" id="s2-def-end" rows="2" placeholder="Endemism means..."></textarea>
+      <div class="btn-row">
+        <button class="btn btn-sm" data-reveal="s2-models">Reveal model definitions</button>
+      </div>
+      <div class="model-answer" id="s2-models">
+        <div class="model-answer-title">Model answers</div>
+        <p><strong>Biodiversity:</strong> the variety of living organisms in an area, including the number of different species and the genetic variation within species.</p>
+        <p><strong>Endemism:</strong> when a species is found naturally in only one geographical area and nowhere else.</p>
+      </div>
+    </div>
+
+    <div class="task-block">
+      <div class="task-label">Task B — Identify the endemic species</div>
+      <p class="task-prompt">Two species on Isla Verde are endemic. Select them.</p>
+      <div class="species-grid" id="s2-endemic-grid">
+        <div class="species-tile" data-id="frog" data-endemic="true"><span class="check">✓</span><span>Emerald tree frog</span></div>
+        <div class="species-tile" data-id="orchid"><span class="check">✓</span><span>Mist orchid</span></div>
+        <div class="species-tile" data-id="beetle"><span class="check">✓</span><span>Cloud beetle</span></div>
+        <div class="species-tile" data-id="fern"><span class="check">✓</span><span>Silver fern</span></div>
+        <div class="species-tile" data-id="snail" data-endemic="true"><span class="check">✓</span><span>Isla Verde tree snail</span></div>
+        <div class="species-tile" data-id="lizard"><span class="check">✓</span><span>Sand lizard</span></div>
+        <div class="species-tile" data-id="cactus"><span class="check">✓</span><span>Coastal cactus</span></div>
+        <div class="species-tile" data-id="mouse"><span class="check">✓</span><span>Scrub mouse</span></div>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-primary btn-sm" id="s2-check-endemic">Check selection</button>
+        <button class="btn btn-outline btn-sm" id="s2-reset-endemic">Reset</button>
+      </div>
+      <div class="feedback" id="s2-endemic-feedback"></div>
+      <div class="feedback misconception" id="s2-endemic-misc">
+        <div class="feedback-title">Watch out</div>
+        Endemic does not mean endangered. It means naturally found only in one area. An endemic species may or may not be at risk.
+      </div>
+    </div>
+
+    <div class="task-block">
+      <div class="task-label">Task C — Why endemic species matter</div>
+      <p class="task-prompt">Why might endemic species be especially important for conservation?</p>
+      <textarea class="long-input" id="s2-importance" rows="3" placeholder="Endemic species are important because..."></textarea>
+      <div class="btn-row">
+        <button class="btn btn-sm" data-reveal="s2-importance-model">Reveal model answer</button>
+      </div>
+      <div class="model-answer" id="s2-importance-model">
+        <div class="model-answer-title">Model answer</div>
+        <p>Endemic species are found naturally only in one area. If they are lost from that area they may become extinct globally, so protecting that habitat is the only way to protect the species.</p>
+      </div>
+    </div>
+
+    <div class="section-gate">
+      <div class="gate-status" id="gate-status-2">Identify the endemic species and write your responses to continue.</div>
+      <button class="btn btn-primary" data-complete="2" disabled>Complete and continue →</button>
+    </div>
+  </section>
+
+  <!-- =================== SECTION 3 — SPECIES RICHNESS =================== -->
+  <section class="lesson-section locked" data-section="3" id="section-3">
+    <div class="lock-badge">🔒 Complete section 2 to unlock</div>
+    <div class="section-header">
+      <span class="section-number">SECTION 03</span>
+      <h2 class="section-title">Evidence 2 — Habitat survey</h2>
+      <span class="section-time">~5 min</span>
+    </div>
+
+    <p class="section-intro">Spec point <code style="background:var(--card);padding:0.1rem 0.4rem;border-radius:4px;font-size:0.85rem;color:var(--green);">4.17</code> — measuring biodiversity within a habitat using species richness.</p>
+
+    <div class="evidence-card">
+      <span class="evidence-label">Quadrat and transect survey</span>
+      <p>Your team runs quadrats in each habitat. <em>Both samples contain the same total number of organisms so the comparison is fair.</em></p>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:0.75rem;margin-top:0.75rem;">
+        <div>
+          <h4 style="font-family:Fraunces;color:#6ee7b7;font-weight:600;margin-bottom:0.4rem;">Cloud forest sample</h4>
+          <table class="data-table">
+            <thead><tr><th>Species</th><th class="num">Individuals</th></tr></thead>
+            <tbody>
+              <tr><td>Emerald tree frog</td><td class="num">12</td></tr>
+              <tr><td>Mist orchid</td><td class="num">8</td></tr>
+              <tr><td>Cloud beetle</td><td class="num">6</td></tr>
+              <tr><td>Silver fern</td><td class="num">5</td></tr>
+              <tr><td>Tree snail</td><td class="num">4</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div>
+          <h4 style="font-family:Fraunces;color:#fcd34d;font-weight:600;margin-bottom:0.4rem;">Dry scrubland sample</h4>
+          <table class="data-table">
+            <thead><tr><th>Species</th><th class="num">Individuals</th></tr></thead>
+            <tbody>
+              <tr><td>Sand lizard</td><td class="num">30</td></tr>
+              <tr><td>Thorn grass</td><td class="num">3</td></tr>
+              <tr><td>Ground beetle</td><td class="num">2</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="task-block">
+      <div class="task-label">Task A — Calculate species richness</div>
+      <p class="task-prompt">Count the number of different species in each habitat.</p>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:0.75rem;">
+        <div>
+          <p>Cloud forest species richness =
+            <input type="number" class="num-input" data-answer="5" id="s3-richness-forest">
+          </p>
+        </div>
+        <div>
+          <p>Dry scrubland species richness =
+            <input type="number" class="num-input" data-answer="3" id="s3-richness-scrub">
+          </p>
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-primary btn-sm" id="s3-check-richness">Check answers</button>
+      </div>
+      <div class="feedback" id="s3-richness-feedback"></div>
+    </div>
+
+    <div class="task-block">
+      <div class="task-label">Task B — Interpret</div>
+      <p class="task-prompt">Which habitat has greater species richness, and why?</p>
+      <textarea class="long-input" id="s3-interpret" rows="2" placeholder="The habitat with greater species richness is..."></textarea>
+      <div class="btn-row">
+        <button class="btn btn-sm" data-reveal="s3-interpret-model">Reveal model answer</button>
+      </div>
+      <div class="model-answer" id="s3-interpret-model">
+        <div class="model-answer-title">Model answer</div>
+        <p>The cloud forest has greater species richness because it contains five different species compared with three in the dry scrubland.</p>
+      </div>
+    </div>
+
+    <div class="task-block">
+      <div class="task-label">Task C — Spot the limitation</div>
+      <p class="task-prompt">Why might species richness <strong>on its own</strong> not give a complete picture of biodiversity?</p>
+      <textarea class="long-input" id="s3-limitation" rows="3" placeholder="Species richness alone is limited because..."></textarea>
+      <div class="btn-row">
+        <button class="btn btn-sm" data-reveal="s3-limitation-model">Reveal model answer</button>
+      </div>
+      <div class="model-answer" id="s3-limitation-model">
+        <div class="model-answer-title">Model answer</div>
+        <p>Species richness counts the number of different species but does not show how evenly individuals are distributed between species. A habitat dominated by one species can have the same richness as one where individuals are spread evenly, but the dominated habitat has lower biodiversity in practice. This is why we also use the <strong>index of diversity</strong>.</p>
+      </div>
+    </div>
+
+    <div class="section-gate">
+      <div class="gate-status" id="gate-status-3">Calculate both values and write your responses to continue.</div>
+      <button class="btn btn-primary" data-complete="3" disabled>Complete and continue →</button>
+    </div>
+  </section>
+
+  <!-- =================== SECTION 4 — INDEX OF DIVERSITY =================== -->
+  <section class="lesson-section locked" data-section="4" id="section-4">
+    <div class="lock-badge">🔒 Complete section 3 to unlock</div>
+    <div class="section-header">
+      <span class="section-number">SECTION 04</span>
+      <h2 class="section-title">Evidence 3 — Index of diversity</h2>
+      <span class="section-time">~10 min</span>
+    </div>
+
+    <p class="section-intro">Spec point <code style="background:var(--card);padding:0.1rem 0.4rem;border-radius:4px;font-size:0.85rem;color:var(--green);">4.18</code> — comparing biodiversity in different habitats using the index of diversity.</p>
+
+    <div class="formula-card">
+      <div class="formula"><span class="var">D</span> = <span class="frac"><span><span class="var">N</span>(<span class="var">N</span>−1)</span><span>Σ <span class="var">n</span>(<span class="var">n</span>−1)</span></span></div>
+      <div class="formula-key">
+        <code>N</code> = total number of organisms of all species &nbsp; · &nbsp;
+        <code>n</code> = number of organisms of each species &nbsp; · &nbsp;
+        <code>Σ</code> = sum of all calculated values
+      </div>
+    </div>
+
+    <div class="task-block">
+      <div class="task-label">Task A — Complete the calculation</div>
+      <p class="task-prompt">For each habitat, fill in <em>n</em>(<em>n</em>−1) for each species, then calculate <em>D</em>.</p>
+
+      <h4 style="font-family:Fraunces;color:#6ee7b7;margin:1rem 0 0.4rem;">Cloud forest</h4>
+      <table class="data-table">
+        <thead><tr><th>Species</th><th class="num"><em>n</em></th><th class="num"><em>n</em>(<em>n</em>−1)</th></tr></thead>
+        <tbody>
+          <tr><td>Emerald tree frog</td><td class="num">12</td><td class="num"><input type="number" class="num-input" data-answer="132" data-set="forest"></td></tr>
+          <tr><td>Mist orchid</td><td class="num">8</td><td class="num"><input type="number" class="num-input" data-answer="56" data-set="forest"></td></tr>
+          <tr><td>Cloud beetle</td><td class="num">6</td><td class="num"><input type="number" class="num-input" data-answer="30" data-set="forest"></td></tr>
+          <tr><td>Silver fern</td><td class="num">5</td><td class="num"><input type="number" class="num-input" data-answer="20" data-set="forest"></td></tr>
+          <tr><td>Tree snail</td><td class="num">4</td><td class="num"><input type="number" class="num-input" data-answer="12" data-set="forest"></td></tr>
+          <tr class="total"><td>Total</td><td class="num">N = 35</td><td class="num">Σ = <span id="s4-forest-sum">—</span></td></tr>
+        </tbody>
+      </table>
+      <p>
+        <em>D</em> for cloud forest =
+        <input type="number" step="0.01" class="num-input" data-answer="4.76" data-tol="0.05" id="s4-D-forest">
+      </p>
+
+      <h4 style="font-family:Fraunces;color:#fcd34d;margin:1.25rem 0 0.4rem;">Dry scrubland</h4>
+      <table class="data-table">
+        <thead><tr><th>Species</th><th class="num"><em>n</em></th><th class="num"><em>n</em>(<em>n</em>−1)</th></tr></thead>
+        <tbody>
+          <tr><td>Sand lizard</td><td class="num">30</td><td class="num"><input type="number" class="num-input" data-answer="870" data-set="scrub"></td></tr>
+          <tr><td>Thorn grass</td><td class="num">3</td><td class="num"><input type="number" class="num-input" data-answer="6" data-set="scrub"></td></tr>
+          <tr><td>Ground beetle</td><td class="num">2</td><td class="num"><input type="number" class="num-input" data-answer="2" data-set="scrub"></td></tr>
+          <tr class="total"><td>Total</td><td class="num">N = 35</td><td class="num">Σ = <span id="s4-scrub-sum">—</span></td></tr>
+        </tbody>
+      </table>
+      <p>
+        <em>D</em> for dry scrubland =
+        <input type="number" step="0.01" class="num-input" data-answer="1.36" data-tol="0.05" id="s4-D-scrub">
+      </p>
+
+      <div class="btn-row">
+        <button class="btn btn-primary btn-sm" id="s4-check-all">Check all calculations</button>
+        <button class="btn btn-outline btn-sm" id="s4-reset">Reset</button>
+      </div>
+      <div class="feedback" id="s4-feedback"></div>
+
+      <div class="compare-bars" id="s4-compare" style="display:none;">
+        <div class="compare-bar forest">
+          <h5>Cloud forest</h5>
+          <div class="compare-value">D = 4.76</div>
+          <div class="bar-track"><div class="bar-fill forest" style="width:100%;"></div></div>
+        </div>
+        <div class="compare-bar scrub">
+          <h5>Dry scrubland</h5>
+          <div class="compare-value">D = 1.36</div>
+          <div class="bar-track"><div class="bar-fill scrub" style="width:28.6%;"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="task-block">
+      <div class="task-label">Task B — Workings space (whiteboard)</div>
+      <p class="task-prompt">Use the whiteboard for any rough working. Turn on the dot grid if you find it easier.</p>
+      <div class="whiteboard-wrap" id="wb-section-4"></div>
+    </div>
+
+    <div class="task-block">
+      <div class="task-label">Task C — Interpret</div>
+      <p class="task-prompt">What does this suggest about the biodiversity of the two habitats?</p>
+      <textarea class="long-input" id="s4-interpret" rows="4" placeholder="The cloud forest has..."></textarea>
+      <div class="btn-row">
+        <button class="btn btn-sm" data-reveal="s4-interpret-model">Reveal model answer</button>
+      </div>
+      <div class="model-answer" id="s4-interpret-model">
+        <div class="model-answer-title">Model answer</div>
+        <p>The cloud forest has greater biodiversity because it has more species and the individuals are more evenly distributed between species. The dry scrubland is dominated by sand lizards, so its index of diversity is much lower. The higher the value of <em>D</em>, the greater the biodiversity.</p>
+      </div>
+    </div>
+
+    <div class="feedback misconception show" style="margin-top:0.5rem;">
+      <div class="feedback-title">Common misconception</div>
+      With this index, <strong>higher <em>D</em> means higher diversity</strong>. This is the opposite direction to Simpson's index (1−D), so be careful which one you are using.
+    </div>
+
+    <div class="section-gate">
+      <div class="gate-status" id="gate-status-4">Complete the calculations and interpretation to continue.</div>
+      <button class="btn btn-primary" data-complete="4" disabled>Complete and continue →</button>
+    </div>
+  </section>
+
+  <!-- =================== SECTION 5 — GENETIC DIVERSITY =================== -->
+  <section class="lesson-section locked" data-section="5" id="section-5">
+    <div class="lock-badge">🔒 Complete section 4 to unlock</div>
+    <div class="section-header">
+      <span class="section-number">SECTION 05</span>
+      <h2 class="section-title">Evidence 4 — Genetic diversity in the sand lizard</h2>
+      <span class="section-time">~6 min</span>
+    </div>
+
+    <p class="section-intro">Spec point <code style="background:var(--card);padding:0.1rem 0.4rem;border-radius:4px;font-size:0.85rem;color:var(--green);">4.17</code> — measuring biodiversity <em>within</em> a species using the heterozygosity index.</p>
+
+    <div class="evidence-card">
+      <span class="evidence-label">Population genetics report</span>
+      <p>The dry scrubland sand lizard population has been split into two groups by a new road and dry valley. Scientists test one gene involved in scale colour.</p>
+      <table class="data-table" style="margin-top:0.5rem;">
+        <thead><tr><th>Population</th><th class="num">Individuals sampled</th><th class="num">Heterozygotes</th></tr></thead>
+        <tbody>
+          <tr><td>North population</td><td class="num">80</td><td class="num">40</td></tr>
+          <tr><td>South population</td><td class="num">80</td><td class="num">16</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="formula-card">
+      <div class="formula">Heterozygosity index = <span class="frac"><span>number of heterozygotes</span><span>number of individuals in the population</span></span></div>
+    </div>
+
+    <div class="task-block">
+      <div class="task-label">Task A — Calculate</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:0.75rem;">
+        <div>
+          <p>North population =
+            <input type="number" step="0.01" class="num-input" data-answer="0.5" data-tol="0.005" id="s5-h-north">
+          </p>
+        </div>
+        <div>
+          <p>South population =
+            <input type="number" step="0.01" class="num-input" data-answer="0.2" data-tol="0.005" id="s5-h-south">
+          </p>
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-primary btn-sm" id="s5-check">Check answers</button>
+      </div>
+      <div class="feedback" id="s5-feedback"></div>
+    </div>
+
+    <div class="task-block">
+      <div class="task-label">Task B — Compare</div>
+      <p class="task-prompt">Which population has greater genetic diversity?</p>
+      <div class="mcq-options" data-mcq="s5-mcq" data-correct="north">
+        <div class="mcq-option" data-value="north"><span class="radio"></span><span>North population — it has a higher heterozygosity index</span></div>
+        <div class="mcq-option" data-value="south"><span class="radio"></span><span>South population — it has a lower heterozygosity index</span></div>
+        <div class="mcq-option" data-value="equal"><span class="radio"></span><span>They have equal genetic diversity</span></div>
+      </div>
+      <div class="feedback" id="s5-mcq-feedback"></div>
+    </div>
+
+    <div class="task-block">
+      <div class="task-label">Task C — Explain the risk</div>
+      <p class="task-prompt">Why might a population with lower genetic diversity be more vulnerable to environmental change?</p>
+      <textarea class="long-input" id="s5-risk" rows="4" placeholder="A population with lower genetic diversity..."></textarea>
+      <div class="btn-row">
+        <button class="btn btn-sm" data-reveal="s5-risk-model">Reveal model answer</button>
+      </div>
+      <div class="model-answer" id="s5-risk-model">
+        <div class="model-answer-title">Model answer</div>
+        <p>A population with lower genetic diversity has fewer different alleles, so there is less variation. If the environment changes, it is less likely that some individuals will have alleles that give an advantage under the new conditions. Fewer individuals survive and reproduce, so the population is more vulnerable.</p>
+      </div>
+    </div>
+
+    <div class="feedback misconception show" style="margin-top:0.5rem;">
+      <div class="feedback-title">Common misconception</div>
+      The heterozygosity index measures <strong>genetic diversity within a single species</strong>. It is not a count of how many species there are.
+    </div>
+
+    <div class="section-gate">
+      <div class="gate-status" id="gate-status-5">Calculate, compare and explain to continue.</div>
+      <button class="btn btn-primary" data-complete="5" disabled>Complete and continue →</button>
+    </div>
+  </section>
+
+  <!-- =================== SECTION 6 — NICHES AND ADAPTATIONS =================== -->
+  <section class="lesson-section locked" data-section="6" id="section-6">
+    <div class="lock-badge">🔒 Complete section 5 to unlock</div>
+    <div class="section-header">
+      <span class="section-number">SECTION 06</span>
+      <h2 class="section-title">Evidence 5 — Niches and adaptations</h2>
+      <span class="section-time">~10 min</span>
+    </div>
+
+    <p class="section-intro">Spec point <code style="background:var(--card);padding:0.1rem 0.4rem;border-radius:4px;font-size:0.85rem;color:var(--green);">4.19</code> — niches and behavioural, anatomical and physiological adaptations.</p>
+
+    <div class="evidence-card">
+      <span class="evidence-label">Concept reminder</span>
+      <p>A <strong>niche</strong> is the role of an organism in its ecosystem. It includes where it lives, what it eats, when it is active, how it gets resources and how it interacts with other organisms.</p>
+    </div>
+
+    <div class="organism-grid">
+      <div class="organism-card">
+        <h4>Emerald tree frog</h4>
+        <ul>
+          <li>Lives on wet leaves near streams</li>
+          <li>Active at night</li>
+          <li>Eats small insects</li>
+          <li>Has sticky toe pads</li>
+          <li>Produces mucus to reduce water loss</li>
+          <li>Calls loudly during the breeding season</li>
+        </ul>
+      </div>
+      <div class="organism-card">
+        <h4>Sand lizard</h4>
+        <ul>
+          <li>Lives on hot, open ground</li>
+          <li>Basks in sunlight in the morning</li>
+          <li>Burrows during the hottest part of the day</li>
+          <li>Has sandy coloured scales</li>
+          <li>Produces concentrated urine to reduce water loss</li>
+          <li>Eats insects and small invertebrates</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="task-block">
+      <div class="task-label">Task A — Describe a niche</div>
+      <p class="task-prompt">Describe the niche of <strong>one</strong> of these organisms in 1–2 sentences.</p>
+      <textarea class="long-input" id="s6-niche" rows="3" placeholder="The [organism] is a..."></textarea>
+      <div class="btn-row">
+        <button class="btn btn-sm" data-reveal="s6-niche-model">Reveal model answers</button>
+      </div>
+      <div class="model-answer" id="s6-niche-model">
+        <div class="model-answer-title">Model answers</div>
+        <p><strong>Emerald tree frog:</strong> a nocturnal insect predator that lives on wet leaves near streams in the cloud forest and breeds during the rainy season.</p>
+        <p><strong>Sand lizard:</strong> a daytime predator of insects and small invertebrates that lives on hot open scrubland and uses basking and burrowing to regulate its body temperature.</p>
+      </div>
+    </div>
+
+    <div class="task-block">
+      <div class="task-label">Task B — Classify the adaptations</div>
+      <p class="task-prompt">Drag each feature into the correct adaptation type.</p>
+      <div class="drag-pool" id="s6-pool">
+        <div class="drag-item" draggable="true" data-id="toepads" data-type="anatomical">Sticky toe pads</div>
+        <div class="drag-item" draggable="true" data-id="mucus" data-type="physiological">Mucus to reduce water loss</div>
+        <div class="drag-item" draggable="true" data-id="calling" data-type="behavioural">Calling during breeding season</div>
+        <div class="drag-item" draggable="true" data-id="burrowing" data-type="behavioural">Burrowing in hottest part of day</div>
+        <div class="drag-item" draggable="true" data-id="scales" data-type="anatomical">Sandy coloured scales</div>
+        <div class="drag-item" draggable="true" data-id="urine" data-type="physiological">Concentrated urine</div>
+      </div>
+      <div class="drag-zone">
+        <div class="drop-column" data-accept="behavioural"><h4>Behavioural</h4></div>
+        <div class="drop-column" data-accept="anatomical"><h4>Anatomical</h4></div>
+        <div class="drop-column" data-accept="physiological"><h4>Physiological</h4></div>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-primary btn-sm" id="s6-check-drag">Check classification</button>
+        <button class="btn btn-outline btn-sm" id="s6-reset-drag">Reset</button>
+      </div>
+      <div class="feedback" id="s6-drag-feedback"></div>
+    </div>
+
+    <div class="task-block">
+      <div class="task-label">Task C — Explain one adaptation</div>
+      <p class="task-prompt">Pick one feature and complete the sentence frame.</p>
+      <div class="sentence-frame">
+        This is a <span class="blank">type</span> adaptation. It helps the organism by <span class="blank">function</span>. Therefore the organism is more likely to survive or reproduce because <span class="blank">consequence</span>.
+      </div>
+      <textarea class="long-input" id="s6-explain" rows="4" placeholder="Producing concentrated urine is a physiological adaptation. It helps the sand lizard..."></textarea>
+      <div class="btn-row">
+        <button class="btn btn-sm" data-reveal="s6-explain-model">Reveal model answer</button>
+      </div>
+      <div class="model-answer" id="s6-explain-model">
+        <div class="model-answer-title">Model answer</div>
+        <p>Producing concentrated urine is a <strong>physiological adaptation</strong>. It helps the sand lizard reduce water loss in a dry habitat. Therefore the lizard is more likely to survive periods of low water availability and reproduce.</p>
+      </div>
+    </div>
+
+    <div class="task-block">
+      <div class="task-label">Task D — Sketch an organism (whiteboard)</div>
+      <p class="task-prompt">Sketch one organism and label at least three adaptations. Tag each label with <strong>B</strong>, <strong>A</strong> or <strong>P</strong> for behavioural, anatomical or physiological.</p>
+      <div class="whiteboard-wrap" id="wb-section-6"></div>
+    </div>
+
+    <div class="feedback misconception show" style="margin-top:0.5rem;">
+      <div class="feedback-title">Common misconception</div>
+      Adaptations are not always physical structures. A behaviour (such as burrowing) can be just as much an adaptation as an anatomical feature.
+    </div>
+
+    <div class="section-gate">
+      <div class="gate-status" id="gate-status-6">Classify the adaptations and complete the tasks to continue.</div>
+      <button class="btn btn-primary" data-complete="6" disabled>Complete and continue →</button>
+    </div>
+  </section>
+
+  <!-- =================== SECTION 7 — ALLELE FREQUENCY =================== -->
+  <section class="lesson-section locked" data-section="7" id="section-7">
+    <div class="lock-badge">🔒 Complete section 6 to unlock</div>
+    <div class="section-header">
+      <span class="section-number">SECTION 07</span>
+      <h2 class="section-title">Evidence 6 — Are allele frequencies changing?</h2>
+      <span class="section-time">~10 min</span>
+    </div>
+
+    <p class="section-intro">Spec point <code style="background:var(--card);padding:0.1rem 0.4rem;border-radius:4px;font-size:0.85rem;color:var(--green);">4.20</code> — Hardy-Weinberg, mutation and natural selection.</p>
+
+    <div class="formula-card">
+      <div class="formula"><span class="var">p</span> + <span class="var">q</span> = 1 &nbsp;·&nbsp; <span class="var">p</span><sup>2</sup> + 2<span class="var">pq</span> + <span class="var">q</span><sup>2</sup> = 1</div>
+      <div class="formula-key">
+        <code>p</code>, <code>q</code> = frequencies of the two alleles &nbsp;·&nbsp;
+        <code>p²</code> = homozygous dominant &nbsp;·&nbsp;
+        <code>2pq</code> = heterozygous &nbsp;·&nbsp;
+        <code>q²</code> = homozygous recessive
+      </div>
+    </div>
+
+    <div class="evidence-card">
+      <span class="evidence-label">Allele tracking — north population, 10 generations</span>
+      <p>Allele <strong>A</strong> produces lighter scales. Allele <strong>a</strong> produces darker scales.</p>
+      <table class="data-table" style="margin-top:0.5rem;">
+        <thead><tr><th>Generation</th><th class="num">Frequency of A</th><th class="num">Frequency of a</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td class="num">0.70</td><td class="num">0.30</td></tr>
+          <tr><td>5</td><td class="num">0.55</td><td class="num">0.45</td></tr>
+          <tr><td>10</td><td class="num">0.40</td><td class="num">0.60</td></tr>
+        </tbody>
+      </table>
+      <div class="allele-graph">
+        <svg viewBox="0 0 500 240" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+          <!-- axes -->
+          <line x1="50" y1="200" x2="470" y2="200" stroke="#94a3b8" stroke-width="1"/>
+          <line x1="50" y1="20" x2="50" y2="200" stroke="#94a3b8" stroke-width="1"/>
+          <!-- gridlines -->
+          <line x1="50" y1="56" x2="470" y2="56" stroke="rgba(255,255,255,0.05)"/>
+          <line x1="50" y1="92" x2="470" y2="92" stroke="rgba(255,255,255,0.05)"/>
+          <line x1="50" y1="128" x2="470" y2="128" stroke="rgba(255,255,255,0.05)"/>
+          <line x1="50" y1="164" x2="470" y2="164" stroke="rgba(255,255,255,0.05)"/>
+          <!-- y labels -->
+          <text x="42" y="204" fill="#94a3b8" font-size="10" text-anchor="end">0</text>
+          <text x="42" y="168" fill="#94a3b8" font-size="10" text-anchor="end">0.2</text>
+          <text x="42" y="132" fill="#94a3b8" font-size="10" text-anchor="end">0.4</text>
+          <text x="42" y="96" fill="#94a3b8" font-size="10" text-anchor="end">0.6</text>
+          <text x="42" y="60" fill="#94a3b8" font-size="10" text-anchor="end">0.8</text>
+          <text x="42" y="24" fill="#94a3b8" font-size="10" text-anchor="end">1.0</text>
+          <!-- x labels -->
+          <text x="50" y="218" fill="#94a3b8" font-size="10" text-anchor="middle">Gen 1</text>
+          <text x="260" y="218" fill="#94a3b8" font-size="10" text-anchor="middle">Gen 5</text>
+          <text x="470" y="218" fill="#94a3b8" font-size="10" text-anchor="middle">Gen 10</text>
+          <text x="260" y="234" fill="#94a3b8" font-size="11" text-anchor="middle">Generation</text>
+          <text x="20" y="115" fill="#94a3b8" font-size="11" text-anchor="middle" transform="rotate(-90 20 115)">Allele frequency</text>
+          <!-- A line: 0.70, 0.55, 0.40 -->
+          <polyline points="50,74 260,119 470,164" fill="none" stroke="#3b82f6" stroke-width="2.5"/>
+          <circle cx="50" cy="74" r="4" fill="#3b82f6"/>
+          <circle cx="260" cy="119" r="4" fill="#3b82f6"/>
+          <circle cx="470" cy="164" r="4" fill="#3b82f6"/>
+          <!-- a line: 0.30, 0.45, 0.60 -->
+          <polyline points="50,146 260,119 470,92" fill="none" stroke="#f43f5e" stroke-width="2.5"/>
+          <circle cx="50" cy="146" r="4" fill="#f43f5e"/>
+          <circle cx="260" cy="119" r="4" fill="#f43f5e"/>
+          <circle cx="470" cy="92" r="4" fill="#f43f5e"/>
+          <!-- legend -->
+          <rect x="370" y="28" width="95" height="38" fill="rgba(255,255,255,0.04)" rx="4"/>
+          <line x1="378" y1="40" x2="395" y2="40" stroke="#3b82f6" stroke-width="2.5"/>
+          <text x="400" y="44" fill="#e5e7eb" font-size="11">allele A</text>
+          <line x1="378" y1="56" x2="395" y2="56" stroke="#f43f5e" stroke-width="2.5"/>
+          <text x="400" y="60" fill="#e5e7eb" font-size="11">allele a</text>
+        </svg>
+      </div>
+    </div>
+
+    <div class="task-block">
+      <div class="task-label">Task A — Identify the change</div>
+      <p>The frequency of allele A
+        <input type="text" class="fitb" data-answer="decreases" id="s7-A-trend" style="width:7rem;" placeholder="—">
+        from 0.70 to 0.40.</p>
+      <p>The frequency of allele a
+        <input type="text" class="fitb" data-answer="increases" id="s7-a-trend" style="width:7rem;" placeholder="—">
+        from 0.30 to 0.60.</p>
+      <div class="btn-row">
+        <button class="btn btn-primary btn-sm" id="s7-check-trend">Check answers</button>
+      </div>
+      <div class="feedback" id="s7-trend-feedback"></div>
+    </div>
+
+    <div class="task-block">
+      <div class="task-label">Task B — Hardy-Weinberg judgement</div>
+      <p class="task-prompt">Is the population likely to be in Hardy-Weinberg equilibrium?</p>
+      <div class="mcq-options" data-mcq="s7-hw" data-correct="no">
+        <div class="mcq-option" data-value="yes"><span class="radio"></span><span>Yes — the equation can always be applied</span></div>
+        <div class="mcq-option" data-value="no"><span class="radio"></span><span>No — the allele frequencies are changing over time</span></div>
+        <div class="mcq-option" data-value="unknown"><span class="radio"></span><span>We cannot tell from the data given</span></div>
+      </div>
+      <div class="feedback" id="s7-hw-feedback"></div>
+      <div class="feedback misconception" id="s7-hw-misc">
+        <div class="feedback-title">Watch out</div>
+        Hardy-Weinberg equilibrium means allele frequencies are <strong>not</strong> changing. If we see them changing over time, evolution is happening and the equilibrium does not hold.
+      </div>
+    </div>
+
+    <div class="evidence-card" id="s7-reveal" style="display:none;border-left-color:var(--rose);">
+      <span class="evidence-label" style="color:var(--rose);">New evidence</span>
+      <p>A new bird predator has arrived on Isla Verde. The north population lives on <strong>dark volcanic rock</strong>. Lizards with darker scales are less visible to predators.</p>
+    </div>
+
+    <div class="task-block" id="s7-task-c" style="display:none;">
+      <div class="task-label">Task C — Explain natural selection</div>
+      <p class="task-prompt">Explain how natural selection could cause the frequency of allele a to increase.</p>
+      <textarea class="long-input taller" id="s7-selection" placeholder="Lizards with allele a have darker scales..."></textarea>
+      <div class="btn-row">
+        <button class="btn btn-sm" data-reveal="s7-selection-model">Reveal model answer</button>
+      </div>
+      <div class="model-answer" id="s7-selection-model">
+        <div class="model-answer-title">Model answer</div>
+        <p>Lizards with allele a have darker scales and are better camouflaged on the dark volcanic rock. They are less likely to be eaten by the new bird predator, so they are more likely to survive and reproduce. They pass allele a to their offspring, so the frequency of allele a increases over generations.</p>
+      </div>
+    </div>
+
+    <div class="task-block" id="s7-task-d" style="display:none;">
+      <div class="task-label">Task D — Spot the wrong statement about mutation</div>
+      <p class="task-prompt">Which statement about mutation is <strong>wrong</strong>?</p>
+      <div class="mcq-options" data-mcq="s7-mut" data-correct="caused">
+        <div class="mcq-option" data-value="creates"><span class="radio"></span><span>Mutation creates new alleles</span></div>
+        <div class="mcq-option" data-value="caused"><span class="radio"></span><span>Mutations are caused by natural selection acting on the population</span></div>
+        <div class="mcq-option" data-value="random"><span class="radio"></span><span>Mutations happen at random, regardless of whether they are useful</span></div>
+        <div class="mcq-option" data-value="selection"><span class="radio"></span><span>If a new mutation is advantageous, natural selection may increase its frequency</span></div>
+      </div>
+      <div class="feedback" id="s7-mut-feedback"></div>
+      <div class="feedback misconception" id="s7-mut-misc">
+        <div class="feedback-title">Why this matters</div>
+        Mutation and natural selection are <strong>separate</strong> processes. Mutation creates the variation at random; natural selection then decides which variants increase in frequency. Selection does not cause mutations to happen.
+      </div>
+    </div>
+
+    <div class="task-block" id="s7-task-e" style="display:none;">
+      <div class="task-label">Task E — Draw the graph yourself (whiteboard)</div>
+      <p class="task-prompt">Before you scroll back to the data, sketch the line graph showing how allele A and allele a change over the ten generations. Then check against the diagram above.</p>
+      <div class="whiteboard-wrap" id="wb-section-7"></div>
+    </div>
+
+    <div class="section-gate">
+      <div class="gate-status" id="gate-status-7">Work through tasks A to D to continue.</div>
+      <button class="btn btn-primary" data-complete="7" disabled>Complete and continue →</button>
+    </div>
+  </section>
+
+  <!-- =================== SECTION 8 — SPECIATION =================== -->
+  <section class="lesson-section locked" data-section="8" id="section-8">
+    <div class="lock-badge">🔒 Complete section 7 to unlock</div>
+    <div class="section-header">
+      <span class="section-number">SECTION 08</span>
+      <h2 class="section-title">Evidence 7 — Could this lead to a new species?</h2>
+      <span class="section-time">~10 min</span>
+    </div>
+
+    <p class="section-intro">Spec point <code style="background:var(--card);padding:0.1rem 0.4rem;border-radius:4px;font-size:0.85rem;color:var(--green);">4.20</code> — reproductive isolation and speciation.</p>
+
+    <div class="evidence-card">
+      <span class="evidence-label">Lizard population comparison</span>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:0.75rem;margin-top:0.5rem;">
+        <div class="organism-card" style="border-left-color:var(--rose);">
+          <h4 style="color:#fda4af;">North population</h4>
+          <ul>
+            <li>Lives on dark volcanic rock</li>
+            <li>Darker scales improve camouflage</li>
+            <li>Mating displays: head bobbing on open rocks</li>
+            <li>Allele a is increasing</li>
+          </ul>
+        </div>
+        <div class="organism-card" style="border-left-color:var(--amber);">
+          <h4 style="color:#fcd34d;">South population</h4>
+          <ul>
+            <li>Lives on pale sand</li>
+            <li>Lighter scales improve camouflage</li>
+            <li>Mating displays: near burrows at dusk</li>
+            <li>Allele A remains more common</li>
+          </ul>
+        </div>
+      </div>
+      <p style="margin-top:0.5rem;"><em>The two populations rarely meet and rarely interbreed.</em></p>
+    </div>
+
+    <div class="task-block">
+      <div class="task-label">Task A — Sequence the explanation</div>
+      <p class="task-prompt">Drag the steps into the correct order. <em>Note: mutations happen continuously, not only after isolation.</em></p>
+      <ul class="sequence-list" id="s8-sequence">
+        <!-- shuffled order -->
+        <li class="sequence-item" draggable="true" data-correct="6"><span class="sequence-num">?</span><span>Genetic differences accumulate over many generations.</span><span class="sequence-handle">⋮⋮</span></li>
+        <li class="sequence-item" draggable="true" data-correct="1"><span class="sequence-num">?</span><span>One population becomes separated into two groups.</span><span class="sequence-handle">⋮⋮</span></li>
+        <li class="sequence-item" draggable="true" data-correct="4"><span class="sequence-num">?</span><span>Different selection pressures act on each population, and different mutations arise and persist in each.</span><span class="sequence-handle">⋮⋮</span></li>
+        <li class="sequence-item" draggable="true" data-correct="8"><span class="sequence-num">?</span><span>A new species may form.</span><span class="sequence-handle">⋮⋮</span></li>
+        <li class="sequence-item" draggable="true" data-correct="2"><span class="sequence-num">?</span><span>Reproductive isolation reduces gene flow between the groups.</span><span class="sequence-handle">⋮⋮</span></li>
+        <li class="sequence-item" draggable="true" data-correct="7"><span class="sequence-num">?</span><span>The populations may become unable to interbreed and produce fertile offspring.</span><span class="sequence-handle">⋮⋮</span></li>
+        <li class="sequence-item" draggable="true" data-correct="5"><span class="sequence-num">?</span><span>Allele frequencies change differently in each population.</span><span class="sequence-handle">⋮⋮</span></li>
+      </ul>
+      <div class="btn-row">
+        <button class="btn btn-primary btn-sm" id="s8-check-seq">Check sequence</button>
+        <button class="btn btn-outline btn-sm" id="s8-reset-seq">Reset</button>
+      </div>
+      <div class="feedback" id="s8-seq-feedback"></div>
+    </div>
+
+    <div class="task-block">
+      <div class="task-label">Task B — Sketch the flow (whiteboard)</div>
+      <p class="task-prompt">Draw a flow diagram showing how isolation could lead to speciation in the sand lizard. Use arrows to connect the stages.</p>
+      <div class="whiteboard-wrap" id="wb-section-8"></div>
+    </div>
+
+    <div class="task-block">
+      <div class="task-label">Task C — Explain in writing</div>
+      <p class="task-prompt">Explain how reproductive isolation could lead to the formation of a new species in the sand lizard.</p>
+      <textarea class="long-input tallest" id="s8-explain" placeholder="If the north and south sand lizard populations become reproductively isolated..."></textarea>
+      <div class="btn-row">
+        <button class="btn btn-sm" data-reveal="s8-explain-model">Reveal model answer</button>
+      </div>
+      <div class="model-answer" id="s8-explain-model">
+        <div class="model-answer-title">Model answer</div>
+        <p>If the north and south sand lizard populations become reproductively isolated, gene flow between them is reduced or stopped. Different mutations may arise in each population and different selection pressures act on them — darker scales are favoured on volcanic rock in the north, lighter scales on pale sand in the south. Over many generations, allele frequencies change differently and genetic differences accumulate. Eventually the two populations may become so different that they can no longer interbreed to produce fertile offspring, so they form separate species.</p>
+      </div>
+    </div>
+
+    <div class="feedback misconception show" style="margin-top:0.5rem;">
+      <div class="feedback-title">Common misconception</div>
+      Reproductive isolation does not immediately create a new species. It allows genetic differences to <strong>accumulate over many generations</strong> before the populations become unable to interbreed.
+    </div>
+
+    <div class="section-gate">
+      <div class="gate-status" id="gate-status-8">Sequence the steps and complete the explanation to continue.</div>
+      <button class="btn btn-primary" data-complete="8" disabled>Complete and continue →</button>
+    </div>
+  </section>
+
+  <!-- =================== SECTION 9 — FINAL REPORT =================== -->
+  <section class="lesson-section locked" data-section="9" id="section-9">
+    <div class="lock-badge">🔒 Complete section 8 to unlock</div>
+    <div class="section-header">
+      <span class="section-number">SECTION 09</span>
+      <h2 class="section-title">Final conservation report</h2>
+      <span class="section-time">~15 min</span>
+    </div>
+
+    <p class="section-intro">Write a report for the Isla Verde Conservation Board synthesising your investigation.</p>
+
+    <div class="report-mode-toggle" id="s9-mode">
+      <button class="active" data-mode="full">Full report (5 paragraphs)</button>
+      <button data-mode="exam">9-mark exam version</button>
+    </div>
+
+    <div class="task-block">
+      <div class="task-label">Task A — Plan it first (whiteboard)</div>
+      <p class="task-prompt">Mind-map the connections between the key terms before writing. Cluster related ideas and draw arrows between them.</p>
+      <div class="whiteboard-wrap" id="wb-section-9"></div>
+    </div>
+
+    <!-- FULL REPORT MODE -->
+    <div id="s9-full-mode">
+      <div class="task-block">
+        <div class="task-label">Task B — Write the report</div>
+
+        <div class="report-paragraph">
+          <p class="scaffold">Paragraph 1 — Biodiversity comparison</p>
+          <p style="font-size:0.88rem;color:var(--text-muted);">Frame: The habitat with higher biodiversity is... This is supported by species richness because... It is also supported by the index of diversity because...</p>
+          <textarea class="long-input taller report-text" data-section="p1" placeholder="The habitat with higher biodiversity is..."></textarea>
+        </div>
+
+        <div class="report-paragraph">
+          <p class="scaffold">Paragraph 2 — Genetic diversity</p>
+          <p style="font-size:0.88rem;color:var(--text-muted);">Frame: The population with greater genetic diversity is... This is shown by the heterozygosity index because... Lower genetic diversity means...</p>
+          <textarea class="long-input taller report-text" data-section="p2" placeholder="The population with greater genetic diversity is..."></textarea>
+        </div>
+
+        <div class="report-paragraph">
+          <p class="scaffold">Paragraph 3 — Niche and adaptation</p>
+          <p style="font-size:0.88rem;color:var(--text-muted);">Frame: One organism on Isla Verde is... Its niche is... One adaptation is... This is a (behavioural/anatomical/physiological) adaptation because...</p>
+          <textarea class="long-input taller report-text" data-section="p3" placeholder="One organism on Isla Verde is..."></textarea>
+        </div>
+
+        <div class="report-paragraph">
+          <p class="scaffold">Paragraph 4 — Allele frequency and natural selection</p>
+          <p style="font-size:0.88rem;color:var(--text-muted);">Frame: The allele frequency data shows that... This suggests... Natural selection could explain this because... Mutation also contributes by...</p>
+          <textarea class="long-input taller report-text" data-section="p4" placeholder="The allele frequency data shows that..."></textarea>
+        </div>
+
+        <div class="report-paragraph">
+          <p class="scaffold">Paragraph 5 — Reproductive isolation and speciation</p>
+          <p style="font-size:0.88rem;color:var(--text-muted);">Frame: If the north and south populations remain reproductively isolated... Different selection pressures may... Over many generations this could lead to...</p>
+          <textarea class="long-input taller report-text" data-section="p5" placeholder="If the north and south populations remain reproductively isolated..."></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- EXAM MODE -->
+    <div id="s9-exam-mode" style="display:none;">
+      <div class="task-block">
+        <div class="task-label">Exam-style synthesis · 9 marks</div>
+        <p class="task-prompt"><strong>Using the evidence from your investigation</strong>, explain how the data on biodiversity, genetic diversity and allele frequency on Isla Verde could lead to the formation of new species. <em>[9]</em></p>
+
+        <div class="report-paragraph">
+          <p class="scaffold">Paragraph 1 — What the evidence shows (3 marks)</p>
+          <textarea class="long-input taller report-text" data-section="e1" placeholder="The evidence shows..."></textarea>
+        </div>
+
+        <div class="report-paragraph">
+          <p class="scaffold">Paragraph 2 — Mechanism (3 marks)</p>
+          <textarea class="long-input taller report-text" data-section="e2" placeholder="Natural selection and mutation can change allele frequencies because..."></textarea>
+        </div>
+
+        <div class="report-paragraph">
+          <p class="scaffold">Paragraph 3 — Outcome (3 marks)</p>
+          <textarea class="long-input taller report-text" data-section="e3" placeholder="If the populations remain reproductively isolated..."></textarea>
+        </div>
+      </div>
+    </div>
+
+    <div class="task-block">
+      <div class="task-label">Term checklist — used in your report</div>
+      <p class="task-prompt">Chips light up as you use each key term in your writing.</p>
+      <div class="term-checklist" id="s9-terms">
+        <span class="term-chip" data-term="biodiversity">biodiversity</span>
+        <span class="term-chip" data-term="endemism">endemism / endemic</span>
+        <span class="term-chip" data-term="species richness">species richness</span>
+        <span class="term-chip" data-term="index of diversity">index of diversity</span>
+        <span class="term-chip" data-term="genetic diversity">genetic diversity</span>
+        <span class="term-chip" data-term="heterozygosity">heterozygosity</span>
+        <span class="term-chip" data-term="niche">niche</span>
+        <span class="term-chip" data-term="adaptation">adaptation</span>
+        <span class="term-chip" data-term="behavioural">behavioural</span>
+        <span class="term-chip" data-term="anatomical">anatomical</span>
+        <span class="term-chip" data-term="physiological">physiological</span>
+        <span class="term-chip" data-term="allele frequency">allele frequency</span>
+        <span class="term-chip" data-term="hardy-weinberg">Hardy-Weinberg</span>
+        <span class="term-chip" data-term="mutation">mutation</span>
+        <span class="term-chip" data-term="natural selection">natural selection</span>
+        <span class="term-chip" data-term="reproductive isolation">reproductive isolation</span>
+        <span class="term-chip" data-term="speciation">speciation</span>
+      </div>
+      <p class="reveal-prompt" id="s9-term-count">0 / 17 terms used</p>
+    </div>
+
+    <div class="task-block">
+      <div class="task-label">Export</div>
+      <p class="task-prompt">Save your report as a text file or copy it to the clipboard.</p>
+      <div class="btn-row">
+        <button class="btn btn-primary btn-sm" id="s9-copy">Copy report to clipboard</button>
+        <button class="btn btn-sm" id="s9-download">Download as .txt</button>
+        <button class="btn btn-outline btn-sm" id="s9-clear">Clear report</button>
+      </div>
+    </div>
+
+    <div class="section-gate" style="border-top-color:var(--green);">
+      <div class="gate-status ready">Well done. Your conservation report covers all five spec points.</div>
+      <button class="btn btn-primary" id="s9-finish">Finish lesson ✓</button>
+    </div>
+  </section>
+
+</div>
+
+<!-- Confirm dialog -->
+<div class="confirm-backdrop" id="confirm-dialog">
+  <div class="confirm-box">
+    <h3 id="confirm-title">Are you sure?</h3>
+    <p id="confirm-body">This cannot be undone.</p>
+    <div class="confirm-actions">
+      <button class="btn btn-outline btn-sm" id="confirm-cancel">Cancel</button>
+      <button class="btn btn-primary btn-sm" id="confirm-ok">Confirm</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+'use strict';
+
+/* ====================================================================
+   UTILITIES
+==================================================================== */
+const $ = (sel, ctx = document) => ctx.querySelector(sel);
+const $$ = (sel, ctx = document) => Array.from(ctx.querySelectorAll(sel));
+
+function showToast(message) {
+  const t = $('#toast');
+  t.textContent = message;
+  t.classList.add('show');
+  clearTimeout(showToast._t);
+  showToast._t = setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+function confirmAction(title, body) {
+  return new Promise(resolve => {
+    const dlg = $('#confirm-dialog');
+    $('#confirm-title').textContent = title;
+    $('#confirm-body').textContent = body;
+    dlg.classList.add('show');
+    const ok = () => { dlg.classList.remove('show'); cleanup(); resolve(true); };
+    const cancel = () => { dlg.classList.remove('show'); cleanup(); resolve(false); };
+    const cleanup = () => {
+      $('#confirm-ok').removeEventListener('click', ok);
+      $('#confirm-cancel').removeEventListener('click', cancel);
+    };
+    $('#confirm-ok').addEventListener('click', ok);
+    $('#confirm-cancel').addEventListener('click', cancel);
+  });
+}
+
+function approx(a, b, tol = 0.05) {
+  return Math.abs(a - b) <= tol;
+}
+
+/* ====================================================================
+   PROGRESSIVE UNLOCK
+==================================================================== */
+const TOTAL_SECTIONS = 9;
+let currentSection = 1;
+const completed = new Set();
+
+function unlockSection(n) {
+  const sec = $('#section-' + n);
+  if (sec) sec.classList.remove('locked');
+}
+
+function lockSection(n) {
+  const sec = $('#section-' + n);
+  if (sec) sec.classList.add('locked');
+}
+
+function updateProgressBar() {
+  $$('.progress-step').forEach(step => {
+    const n = +step.dataset.step;
+    step.classList.remove('done', 'current');
+    if (completed.has(n)) step.classList.add('done');
+    else if (n === currentSection) step.classList.add('current');
+  });
+  $('#progress-label').textContent = `Section ${currentSection} of ${TOTAL_SECTIONS}`;
+}
+
+function completeSection(n) {
+  completed.add(n);
+  if (n < TOTAL_SECTIONS) {
+    currentSection = n + 1;
+    unlockSection(currentSection);
+    setTimeout(() => {
+      const next = $('#section-' + (n + 1));
+      if (next) next.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 200);
+  }
+  updateProgressBar();
+}
+
+$$('.progress-step').forEach(step => {
+  step.addEventListener('click', () => {
+    const n = +step.dataset.step;
+    if (completed.has(n) || n === currentSection) {
+      $('#section-' + n)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  });
+});
+
+$$('[data-complete]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const n = +btn.dataset.complete;
+    completeSection(n);
+  });
+});
+
+/* ====================================================================
+   REVEAL BUTTONS (model answers)
+==================================================================== */
+$$('[data-reveal]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const target = $('#' + btn.dataset.reveal);
+    if (target) {
+      target.classList.toggle('show');
+      btn.textContent = target.classList.contains('show')
+        ? btn.textContent.replace(/^Reveal/, 'Hide')
+        : btn.textContent.replace(/^Hide/, 'Reveal');
+    }
+  });
+});
+
+/* ====================================================================
+   MCQ HANDLING
+==================================================================== */
+function setupMCQ(groupName) {
+  const groups = $$('[data-mcq="' + groupName + '"]');
+  groups.forEach(group => {
+    const correct = group.dataset.correct;
+    $$('.mcq-option', group).forEach(opt => {
+      opt.addEventListener('click', () => {
+        $$('.mcq-option', group).forEach(o => o.classList.remove('selected', 'correct-reveal', 'wrong-reveal'));
+        opt.classList.add('selected');
+        const value = opt.dataset.value;
+        const fbId = groupName.replace(/-mcq.*$/, '') + '-feedback';
+        const feedbackEl = $('#' + groupName + '-feedback') || $('#' + fbId);
+        const isCorrect = value === correct;
+        if (isCorrect) opt.classList.add('correct-reveal');
+        else opt.classList.add('wrong-reveal');
+        group.dataset.answered = value;
+        group.dispatchEvent(new CustomEvent('mcq-answered', { detail: { value, isCorrect } }));
+      });
+    });
+  });
+}
+setupMCQ('s5-mcq');
+setupMCQ('s7-hw');
+setupMCQ('s7-mut');
+
+/* ====================================================================
+   SECTION 1 — Mission brief
+==================================================================== */
+const s1Choices = $$('#section-1 .habitat-choice');
+let s1Habitat = null;
+s1Choices.forEach(card => {
+  card.addEventListener('click', () => {
+    s1Choices.forEach(c => c.classList.remove('selected'));
+    card.classList.add('selected');
+    s1Habitat = card.dataset.habitat;
+    checkS1Gate();
+  });
+});
+$('#s1-prediction').addEventListener('input', checkS1Gate);
+
+function checkS1Gate() {
+  const ready = s1Habitat && $('#s1-prediction').value.trim().length >= 10;
+  const btn = $('[data-complete="1"]');
+  btn.disabled = !ready;
+  $('#gate-status-1').textContent = ready
+    ? 'Ready. Hit continue to unlock the next section.'
+    : 'Choose a habitat and write a prediction (at least one sentence) to continue.';
+  $('#gate-status-1').classList.toggle('ready', ready);
+}
+
+/* ====================================================================
+   SECTION 2 — Biodiversity & endemism
+==================================================================== */
+const s2Tiles = $$('#s2-endemic-grid .species-tile');
+s2Tiles.forEach(tile => {
+  tile.addEventListener('click', () => {
+    tile.classList.toggle('selected');
+    s2Tiles.forEach(t => t.classList.remove('correct-reveal', 'wrong-reveal'));
+    $('#s2-endemic-feedback').classList.remove('show');
+    $('#s2-endemic-misc').classList.remove('show');
+  });
+});
+
+let s2EndemicCorrect = false;
+
+$('#s2-check-endemic').addEventListener('click', () => {
+  let correctCount = 0;
+  let wrongCount = 0;
+  s2Tiles.forEach(tile => {
+    const isEndemic = tile.dataset.endemic === 'true';
+    const isSelected = tile.classList.contains('selected');
+    if (isSelected && isEndemic) { tile.classList.add('correct-reveal'); correctCount++; }
+    else if (isSelected && !isEndemic) { tile.classList.add('wrong-reveal'); wrongCount++; }
+    else if (!isSelected && isEndemic) { tile.classList.add('wrong-reveal'); }
+  });
+  const fb = $('#s2-endemic-feedback');
+  fb.classList.add('show');
+  if (correctCount === 2 && wrongCount === 0) {
+    fb.className = 'feedback show correct';
+    fb.innerHTML = '<div class="feedback-title">Correct ✓</div>The emerald tree frog and the Isla Verde tree snail are found naturally only on Isla Verde.';
+    s2EndemicCorrect = true;
+  } else {
+    fb.className = 'feedback show wrong';
+    fb.innerHTML = `<div class="feedback-title">Not quite</div>Correct answers are the <strong>emerald tree frog</strong> and the <strong>Isla Verde tree snail</strong>. Endemic means found naturally only in one area.`;
+    s2EndemicCorrect = correctCount === 2 && wrongCount === 0;
+  }
+  $('#s2-endemic-misc').classList.add('show');
+  checkS2Gate();
+});
+
+$('#s2-reset-endemic').addEventListener('click', () => {
+  s2Tiles.forEach(t => t.classList.remove('selected', 'correct-reveal', 'wrong-reveal'));
+  $('#s2-endemic-feedback').classList.remove('show');
+  $('#s2-endemic-misc').classList.remove('show');
+  s2EndemicCorrect = false;
+  checkS2Gate();
+});
+
+['s2-def-bio', 's2-def-end', 's2-importance'].forEach(id => {
+  $('#' + id).addEventListener('input', checkS2Gate);
+});
+
+function checkS2Gate() {
+  const bio = $('#s2-def-bio').value.trim().length >= 10;
+  const end = $('#s2-def-end').value.trim().length >= 10;
+  const imp = $('#s2-importance').value.trim().length >= 10;
+  const ready = s2EndemicCorrect && bio && end && imp;
+  $('[data-complete="2"]').disabled = !ready;
+  $('#gate-status-2').textContent = ready
+    ? 'Ready. Hit continue to unlock the next section.'
+    : 'Identify the endemic species and write your responses to continue.';
+  $('#gate-status-2').classList.toggle('ready', ready);
+}
+
+/* ====================================================================
+   SECTION 3 — Species richness
+==================================================================== */
+$('#s3-check-richness').addEventListener('click', () => {
+  const inputs = [$('#s3-richness-forest'), $('#s3-richness-scrub')];
+  let allCorrect = true;
+  inputs.forEach(inp => {
+    inp.classList.remove('correct', 'wrong');
+    const val = parseFloat(inp.value);
+    const ans = parseFloat(inp.dataset.answer);
+    if (val === ans) inp.classList.add('correct');
+    else { inp.classList.add('wrong'); allCorrect = false; }
+  });
+  const fb = $('#s3-richness-feedback');
+  fb.classList.add('show');
+  if (allCorrect) {
+    fb.className = 'feedback show correct';
+    fb.innerHTML = '<div class="feedback-title">Correct ✓</div>Cloud forest = 5 species; dry scrubland = 3 species.';
+  } else {
+    fb.className = 'feedback show wrong';
+    fb.innerHTML = '<div class="feedback-title">Count again</div>Just count the number of different species (rows in each table), not the individuals.';
+  }
+  checkS3Gate();
+});
+
+['s3-richness-forest', 's3-richness-scrub', 's3-interpret', 's3-limitation'].forEach(id => {
+  $('#' + id).addEventListener('input', checkS3Gate);
+});
+
+function checkS3Gate() {
+  const r1 = parseFloat($('#s3-richness-forest').value) === 5;
+  const r2 = parseFloat($('#s3-richness-scrub').value) === 3;
+  const t1 = $('#s3-interpret').value.trim().length >= 10;
+  const t2 = $('#s3-limitation').value.trim().length >= 10;
+  const ready = r1 && r2 && t1 && t2;
+  $('[data-complete="3"]').disabled = !ready;
+  $('#gate-status-3').textContent = ready
+    ? 'Ready. Hit continue to unlock the next section.'
+    : 'Calculate both values and write your responses to continue.';
+  $('#gate-status-3').classList.toggle('ready', ready);
+}
+
+/* ====================================================================
+   SECTION 4 — Index of diversity
+==================================================================== */
+function s4SumOf(set) {
+  return $$('#section-4 input[data-set="' + set + '"]')
+    .reduce((acc, inp) => acc + (parseFloat(inp.dataset.answer) || 0), 0);
+}
+
+$('#s4-forest-sum').textContent = s4SumOf('forest');
+$('#s4-scrub-sum').textContent = s4SumOf('scrub');
+
+$('#s4-check-all').addEventListener('click', () => {
+  let allCorrect = true;
+  $$('#section-4 input.num-input').forEach(inp => {
+    inp.classList.remove('correct', 'wrong');
+    const val = parseFloat(inp.value);
+    const ans = parseFloat(inp.dataset.answer);
+    const tol = parseFloat(inp.dataset.tol || 0);
+    if (!isNaN(val) && approx(val, ans, tol)) inp.classList.add('correct');
+    else { inp.classList.add('wrong'); allCorrect = false; }
+  });
+  const fb = $('#s4-feedback');
+  fb.classList.add('show');
+  if (allCorrect) {
+    fb.className = 'feedback show correct';
+    fb.innerHTML = '<div class="feedback-title">All correct ✓</div>D = 4.76 for the cloud forest, D = 1.36 for the dry scrubland. The cloud forest is roughly 3.5× more diverse using this index.';
+    $('#s4-compare').style.display = 'grid';
+  } else {
+    fb.className = 'feedback show partial';
+    fb.innerHTML = '<div class="feedback-title">Check the highlighted cells</div>Reminder: n(n−1) is calculated separately for each species, then summed. Then D = N(N−1) ÷ Σn(n−1), where N = 35 for both habitats.';
+  }
+  checkS4Gate();
+});
+
+$('#s4-reset').addEventListener('click', () => {
+  $$('#section-4 input.num-input').forEach(inp => {
+    inp.value = '';
+    inp.classList.remove('correct', 'wrong');
+  });
+  $('#s4-feedback').classList.remove('show');
+  $('#s4-compare').style.display = 'none';
+  checkS4Gate();
+});
+
+$$('#section-4 input.num-input, #s4-interpret').forEach(el => {
+  el.addEventListener('input', checkS4Gate);
+});
+
+function checkS4Gate() {
+  const inputs = $$('#section-4 input.num-input');
+  const allInputsCorrect = inputs.every(inp => inp.classList.contains('correct'));
+  const interp = $('#s4-interpret').value.trim().length >= 10;
+  const ready = allInputsCorrect && interp;
+  $('[data-complete="4"]').disabled = !ready;
+  $('#gate-status-4').textContent = ready
+    ? 'Ready. Hit continue to unlock the next section.'
+    : 'Complete all calculations and write your interpretation to continue.';
+  $('#gate-status-4').classList.toggle('ready', ready);
+}
+
+/* ====================================================================
+   SECTION 5 — Heterozygosity
+==================================================================== */
+$('#s5-check').addEventListener('click', () => {
+  let allCorrect = true;
+  $$('#section-5 input.num-input').forEach(inp => {
+    inp.classList.remove('correct', 'wrong');
+    const val = parseFloat(inp.value);
+    const ans = parseFloat(inp.dataset.answer);
+    const tol = parseFloat(inp.dataset.tol || 0.005);
+    if (!isNaN(val) && approx(val, ans, tol)) inp.classList.add('correct');
+    else { inp.classList.add('wrong'); allCorrect = false; }
+  });
+  const fb = $('#s5-feedback');
+  fb.classList.add('show');
+  if (allCorrect) {
+    fb.className = 'feedback show correct';
+    fb.innerHTML = '<div class="feedback-title">Correct ✓</div>North = 40/80 = 0.50, South = 16/80 = 0.20. The north has 2.5× the heterozygosity of the south.';
+  } else {
+    fb.className = 'feedback show wrong';
+    fb.innerHTML = '<div class="feedback-title">Try again</div>Heterozygosity index = number of heterozygotes ÷ number of individuals in the population.';
+  }
+  checkS5Gate();
+});
+
+let s5MCQCorrect = false;
+$$('[data-mcq="s5-mcq"]').forEach(g => {
+  g.addEventListener('mcq-answered', e => {
+    const fb = $('#s5-mcq-feedback');
+    fb.classList.add('show');
+    if (e.detail.isCorrect) {
+      fb.className = 'feedback show correct';
+      fb.innerHTML = '<div class="feedback-title">Correct ✓</div>A higher heterozygosity index means more individuals carry two different alleles at that gene, so there is more variation.';
+      s5MCQCorrect = true;
+    } else {
+      fb.className = 'feedback show wrong';
+      fb.innerHTML = '<div class="feedback-title">Re-read the data</div>Higher heterozygosity = more variation = greater genetic diversity. North = 0.50 vs South = 0.20.';
+      s5MCQCorrect = false;
+    }
+    checkS5Gate();
+  });
+});
+
+['s5-h-north', 's5-h-south', 's5-risk'].forEach(id => {
+  $('#' + id).addEventListener('input', checkS5Gate);
+});
+
+function checkS5Gate() {
+  const inputs = $$('#section-5 input.num-input');
+  const inputsOK = inputs.every(inp => inp.classList.contains('correct'));
+  const risk = $('#s5-risk').value.trim().length >= 10;
+  const ready = inputsOK && s5MCQCorrect && risk;
+  $('[data-complete="5"]').disabled = !ready;
+  $('#gate-status-5').textContent = ready
+    ? 'Ready. Hit continue to unlock the next section.'
+    : 'Calculate, answer the MCQ correctly, and explain the risk to continue.';
+  $('#gate-status-5').classList.toggle('ready', ready);
+}
+
+/* ====================================================================
+   SECTION 6 — Adaptations (drag and drop)
+==================================================================== */
+let s6DragCorrect = false;
+
+function setupDragDrop() {
+  const pool = $('#s6-pool');
+  const columns = $$('#section-6 .drop-column');
+  const items = $$('#section-6 .drag-item');
+
+  items.forEach(item => {
+    item.addEventListener('dragstart', e => {
+      e.dataTransfer.effectAllowed = 'move';
+      e.dataTransfer.setData('text/plain', item.dataset.id);
+      item.classList.add('dragging');
+    });
+    item.addEventListener('dragend', () => item.classList.remove('dragging'));
+  });
+
+  [pool, ...columns].forEach(zone => {
+    zone.addEventListener('dragover', e => {
+      e.preventDefault();
+      e.dataTransfer.dropEffect = 'move';
+      if (zone.classList.contains('drop-column')) zone.classList.add('drag-over');
+    });
+    zone.addEventListener('dragleave', () => zone.classList.remove('drag-over'));
+    zone.addEventListener('drop', e => {
+      e.preventDefault();
+      zone.classList.remove('drag-over');
+      const id = e.dataTransfer.getData('text/plain');
+      const dragged = $('.drag-item[data-id="' + id + '"]');
+      if (dragged) {
+        zone.appendChild(dragged);
+        dragged.classList.remove('correct-placed', 'wrong-placed');
+      }
+    });
+  });
+}
+setupDragDrop();
+
+$('#s6-check-drag').addEventListener('click', () => {
+  const columns = $$('#section-6 .drop-column');
+  let placed = 0, correctlyPlaced = 0;
+  columns.forEach(col => {
+    const accept = col.dataset.accept;
+    $$('.drag-item', col).forEach(item => {
+      placed++;
+      item.classList.remove('correct-placed', 'wrong-placed');
+      if (item.dataset.type === accept) { item.classList.add('correct-placed'); correctlyPlaced++; }
+      else item.classList.add('wrong-placed');
+    });
+  });
+  const fb = $('#s6-drag-feedback');
+  fb.classList.add('show');
+  if (placed < 6) {
+    fb.className = 'feedback show partial';
+    fb.innerHTML = `<div class="feedback-title">Keep going</div>${placed} of 6 features placed. Drag the remaining items into the correct column.`;
+    s6DragCorrect = false;
+  } else if (correctlyPlaced === 6) {
+    fb.className = 'feedback show correct';
+    fb.innerHTML = '<div class="feedback-title">All correct ✓</div>Behavioural = what the organism does. Anatomical = its structures. Physiological = how its body processes work.';
+    s6DragCorrect = true;
+  } else {
+    fb.className = 'feedback show wrong';
+    fb.innerHTML = `<div class="feedback-title">${correctlyPlaced} of 6 correct</div>Wrongly placed items are highlighted in red. Reread the organism profiles and try moving the red items.`;
+    s6DragCorrect = false;
+  }
+  checkS6Gate();
+});
+
+$('#s6-reset-drag').addEventListener('click', () => {
+  const pool = $('#s6-pool');
+  $$('#section-6 .drag-item').forEach(item => {
+    pool.appendChild(item);
+    item.classList.remove('correct-placed', 'wrong-placed');
+  });
+  $('#s6-drag-feedback').classList.remove('show');
+  s6DragCorrect = false;
+  checkS6Gate();
+});
+
+['s6-niche', 's6-explain'].forEach(id => {
+  $('#' + id).addEventListener('input', checkS6Gate);
+});
+
+function checkS6Gate() {
+  const niche = $('#s6-niche').value.trim().length >= 10;
+  const explain = $('#s6-explain').value.trim().length >= 10;
+  const ready = s6DragCorrect && niche && explain;
+  $('[data-complete="6"]').disabled = !ready;
+  $('#gate-status-6').textContent = ready
+    ? 'Ready. Hit continue to unlock the next section.'
+    : 'Classify all six adaptations correctly and write your responses to continue.';
+  $('#gate-status-6').classList.toggle('ready', ready);
+}
+
+/* ====================================================================
+   SECTION 7 — Allele frequency
+==================================================================== */
+function checkS7Trend() {
+  const inputs = [$('#s7-A-trend'), $('#s7-a-trend')];
+  let allCorrect = true;
+  inputs.forEach(inp => {
+    inp.classList.remove('correct', 'wrong');
+    const val = inp.value.trim().toLowerCase();
+    if (val === inp.dataset.answer) inp.classList.add('correct');
+    else { inp.classList.add('wrong'); allCorrect = false; }
+  });
+  const fb = $('#s7-trend-feedback');
+  fb.classList.add('show');
+  if (allCorrect) {
+    fb.className = 'feedback show correct';
+    fb.innerHTML = '<div class="feedback-title">Correct ✓</div>A goes down by 0.30, a goes up by 0.30. The two must always add to 1.';
+  } else {
+    fb.className = 'feedback show wrong';
+    fb.innerHTML = '<div class="feedback-title">Use a single word</div>Try "decreases" or "increases".';
+  }
+  checkS7Gate();
+}
+$('#s7-check-trend').addEventListener('click', checkS7Trend);
+
+let s7HWCorrect = false, s7MutCorrect = false;
+
+$$('[data-mcq="s7-hw"]').forEach(g => {
+  g.addEventListener('mcq-answered', e => {
+    const fb = $('#s7-hw-feedback');
+    fb.classList.add('show');
+    if (e.detail.isCorrect) {
+      fb.className = 'feedback show correct';
+      fb.innerHTML = '<div class="feedback-title">Correct ✓</div>Changing allele frequencies mean the population is <strong>not</strong> in Hardy-Weinberg equilibrium. Something is acting on the population.';
+      s7HWCorrect = true;
+      $('#s7-hw-misc').classList.add('show');
+      $('#s7-reveal').style.display = 'block';
+      $('#s7-task-c').style.display = 'block';
+      $('#s7-task-d').style.display = 'block';
+      $('#s7-task-e').style.display = 'block';
+      initWhiteboard('wb-section-7');
+    } else {
+      fb.className = 'feedback show wrong';
+      fb.innerHTML = '<div class="feedback-title">Look at the data</div>The frequencies of A and a are different in each generation. What does that tell you about equilibrium?';
+      s7HWCorrect = false;
+    }
+    checkS7Gate();
+  });
+});
+
+$$('[data-mcq="s7-mut"]').forEach(g => {
+  g.addEventListener('mcq-answered', e => {
+    const fb = $('#s7-mut-feedback');
+    fb.classList.add('show');
+    if (e.detail.isCorrect) {
+      fb.className = 'feedback show correct';
+      fb.innerHTML = '<div class="feedback-title">Correct ✓</div>Mutations are random changes to DNA. Natural selection acts <em>after</em> mutations have happened, by favouring or disfavouring the variants.';
+      s7MutCorrect = true;
+    } else {
+      fb.className = 'feedback show wrong';
+      fb.innerHTML = '<div class="feedback-title">Re-read the statements</div>The wrong one says selection causes mutations — but mutations happen at random, independently of whether they would be useful.';
+      s7MutCorrect = false;
+    }
+    $('#s7-mut-misc').classList.add('show');
+    checkS7Gate();
+  });
+});
+
+['s7-A-trend', 's7-a-trend', 's7-selection'].forEach(id => {
+  $('#' + id).addEventListener('input', checkS7Gate);
+});
+
+function checkS7Gate() {
+  const trendsOK = $('#s7-A-trend').classList.contains('correct') && $('#s7-a-trend').classList.contains('correct');
+  const sel = $('#s7-selection').value.trim().length >= 10;
+  const ready = trendsOK && s7HWCorrect && s7MutCorrect && sel;
+  $('[data-complete="7"]').disabled = !ready;
+  $('#gate-status-7').textContent = ready
+    ? 'Ready. Hit continue to unlock the next section.'
+    : 'Complete tasks A to D to continue.';
+  $('#gate-status-7').classList.toggle('ready', ready);
+}
+
+/* ====================================================================
+   SECTION 8 — Speciation sequence
+==================================================================== */
+let s8SeqCorrect = false;
+
+function setupSequenceDragDrop() {
+  const list = $('#s8-sequence');
+  let dragSrc = null;
+
+  $$('.sequence-item', list).forEach(item => {
+    item.addEventListener('dragstart', e => {
+      dragSrc = item;
+      item.classList.add('dragging');
+      e.dataTransfer.effectAllowed = 'move';
+    });
+    item.addEventListener('dragend', () => {
+      item.classList.remove('dragging');
+      $$('.sequence-item', list).forEach(i => i.classList.remove('drag-over'));
+    });
+    item.addEventListener('dragover', e => {
+      e.preventDefault();
+      e.dataTransfer.dropEffect = 'move';
+      if (dragSrc && dragSrc !== item) item.classList.add('drag-over');
+    });
+    item.addEventListener('dragleave', () => item.classList.remove('drag-over'));
+    item.addEventListener('drop', e => {
+      e.preventDefault();
+      if (!dragSrc || dragSrc === item) return;
+      const rect = item.getBoundingClientRect();
+      const after = (e.clientY - rect.top) > rect.height / 2;
+      if (after) list.insertBefore(dragSrc, item.nextSibling);
+      else list.insertBefore(dragSrc, item);
+      renumberSequence();
+    });
+  });
+  renumberSequence();
+}
+
+function renumberSequence() {
+  $$('#s8-sequence .sequence-item').forEach((item, i) => {
+    item.querySelector('.sequence-num').textContent = i + 1;
+    item.classList.remove('correct', 'wrong');
+  });
+}
+
+setupSequenceDragDrop();
+
+$('#s8-check-seq').addEventListener('click', () => {
+  const items = $$('#s8-sequence .sequence-item');
+  let correctCount = 0;
+  items.forEach((item, i) => {
+    const correct = +item.dataset.correct === i + 1;
+    item.classList.add(correct ? 'correct' : 'wrong');
+    if (correct) correctCount++;
+  });
+  const fb = $('#s8-seq-feedback');
+  fb.classList.add('show');
+  if (correctCount === items.length) {
+    fb.className = 'feedback show correct';
+    fb.innerHTML = '<div class="feedback-title">Sequence correct ✓</div>Separation → reduced gene flow → different selection/mutation → allele frequency change → genetic differences accumulate → reproductive incompatibility → new species.';
+    s8SeqCorrect = true;
+  } else {
+    fb.className = 'feedback show partial';
+    fb.innerHTML = `<div class="feedback-title">${correctCount} of ${items.length} in the right place</div>The first event must come first (separation). The last must come last (new species). Reorder the rest by what causes what.`;
+    s8SeqCorrect = false;
+  }
+  checkS8Gate();
+});
+
+$('#s8-reset-seq').addEventListener('click', () => {
+  const list = $('#s8-sequence');
+  const items = $$('.sequence-item', list);
+  // Shuffle
+  for (let i = items.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    list.appendChild(items[j]);
+  }
+  renumberSequence();
+  $('#s8-seq-feedback').classList.remove('show');
+  s8SeqCorrect = false;
+  checkS8Gate();
+});
+
+$('#s8-explain').addEventListener('input', checkS8Gate);
+
+function checkS8Gate() {
+  const explain = $('#s8-explain').value.trim().length >= 30;
+  const ready = s8SeqCorrect && explain;
+  $('[data-complete="8"]').disabled = !ready;
+  $('#gate-status-8').textContent = ready
+    ? 'Ready. Hit continue to unlock the final report.'
+    : 'Sequence the steps and write a fuller explanation (3+ sentences) to continue.';
+  $('#gate-status-8').classList.toggle('ready', ready);
+}
+
+/* ====================================================================
+   SECTION 9 — Final report
+==================================================================== */
+$$('#s9-mode button').forEach(btn => {
+  btn.addEventListener('click', () => {
+    $$('#s9-mode button').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const mode = btn.dataset.mode;
+    $('#s9-full-mode').style.display = mode === 'full' ? 'block' : 'none';
+    $('#s9-exam-mode').style.display = mode === 'exam' ? 'block' : 'none';
+    updateTermChips();
+  });
+});
+
+function updateTermChips() {
+  const visibleMode = $('#s9-full-mode').style.display !== 'none' ? 'full' : 'exam';
+  const texts = $$('.report-text').filter(t =>
+    visibleMode === 'full'
+      ? t.closest('#s9-full-mode')
+      : t.closest('#s9-exam-mode')
+  );
+  const combined = texts.map(t => t.value.toLowerCase()).join(' ');
+  let used = 0;
+  $$('#s9-terms .term-chip').forEach(chip => {
+    const terms = chip.dataset.term.split(/\s*\/\s*|\s+/).filter(Boolean);
+    const term = chip.dataset.term.split(/\s*\/\s*/)[0].toLowerCase();
+    const altTerms = chip.dataset.term.split(/\s*\/\s*/).map(t => t.trim().toLowerCase());
+    const found = altTerms.some(t => combined.includes(t));
+    chip.classList.toggle('used', found);
+    if (found) used++;
+  });
+  const total = $$('#s9-terms .term-chip').length;
+  $('#s9-term-count').textContent = `${used} / ${total} terms used`;
+}
+
+$$('.report-text').forEach(t => t.addEventListener('input', updateTermChips));
+
+function buildReportText() {
+  const visibleMode = $('#s9-full-mode').style.display !== 'none' ? 'full' : 'exam';
+  if (visibleMode === 'full') {
+    const headers = [
+      'PARAGRAPH 1 — Biodiversity comparison',
+      'PARAGRAPH 2 — Genetic diversity',
+      'PARAGRAPH 3 — Niche and adaptation',
+      'PARAGRAPH 4 — Allele frequency and natural selection',
+      'PARAGRAPH 5 — Reproductive isolation and speciation'
+    ];
+    const texts = ['p1', 'p2', 'p3', 'p4', 'p5'].map(s =>
+      $('.report-text[data-section="' + s + '"]')?.value.trim() || ''
+    );
+    return [
+      'ISLA VERDE CONSERVATION REPORT',
+      '================================',
+      '',
+      ...headers.flatMap((h, i) => [h, '', texts[i], ''])
+    ].join('\n');
+  } else {
+    const texts = ['e1', 'e2', 'e3'].map(s =>
+      $('.report-text[data-section="' + s + '"]')?.value.trim() || ''
+    );
+    return [
+      'ISLA VERDE — 9-MARK EXAM ANSWER',
+      '================================',
+      '',
+      'Question: Using the evidence from your investigation, explain how the data on biodiversity, genetic diversity and allele frequency on Isla Verde could lead to the formation of new species. [9]',
+      '',
+      'PART 1 — What the evidence shows', '', texts[0], '',
+      'PART 2 — Mechanism', '', texts[1], '',
+      'PART 3 — Outcome', '', texts[2], ''
+    ].join('\n');
+  }
+}
+
+$('#s9-copy').addEventListener('click', async () => {
+  const text = buildReportText();
+  try {
+    await navigator.clipboard.writeText(text);
+    showToast('Report copied to clipboard');
+  } catch {
+    showToast('Could not copy — your browser blocked it');
+  }
+});
+
+$('#s9-download').addEventListener('click', () => {
+  const text = buildReportText();
+  const blob = new Blob([text], { type: 'text/plain' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'isla-verde-report.txt';
+  a.click();
+  URL.revokeObjectURL(url);
+  showToast('Downloaded isla-verde-report.txt');
+});
+
+$('#s9-clear').addEventListener('click', async () => {
+  const ok = await confirmAction('Clear the report?', 'This will erase everything you have written in the final report.');
+  if (!ok) return;
+  $$('.report-text').forEach(t => t.value = '');
+  updateTermChips();
+  showToast('Report cleared');
+});
+
+$('#s9-finish').addEventListener('click', () => {
+  completed.add(9);
+  updateProgressBar();
+  showToast('Lesson complete ✓ Well done.');
+});
+
+/* ====================================================================
+   WHITEBOARD COMPONENT
+   ------------------------------------------------------------------
+   Per-task canvas with pen, eraser, shapes, text, undo/redo, clear,
+   dot-grid toggle, download/copy and per-task persistence.
+==================================================================== */
+
+const TOOLS = {
+  PEN: 'pen', ERASER: 'eraser', LINE: 'line',
+  ARROW: 'arrow', RECT: 'rect', CIRCLE: 'circle', TEXT: 'text'
+};
+const COLOURS = ['#111111', '#dc2626', '#2563eb', '#15803d'];
+const WIDTHS = [2, 4, 8];
+
+function initWhiteboard(containerId) {
+  const container = document.getElementById(containerId);
+  if (!container || container.dataset.initialised) return;
+  container.dataset.initialised = 'true';
+
+  const state = {
+    tool: TOOLS.PEN,
+    colour: COLOURS[0],
+    width: WIDTHS[0],
+    showGrid: false,
+    operations: [],
+    redoStack: [],
+    drawing: false,
+    current: null,
+    startPt: null
+  };
+
+  container.innerHTML = `
+    <div class="wb-prompt">Whiteboard · drawings persist while you have the lesson open</div>
+    <div class="wb-toolbar">
+      <button class="wb-tool active" data-tool="pen" title="Pen">✎</button>
+      <button class="wb-tool" data-tool="eraser" title="Eraser">⌫</button>
+      <button class="wb-tool" data-tool="line" title="Line">／</button>
+      <button class="wb-tool" data-tool="arrow" title="Arrow">→</button>
+      <button class="wb-tool" data-tool="rect" title="Rectangle">▭</button>
+      <button class="wb-tool" data-tool="circle" title="Circle">○</button>
+      <button class="wb-tool" data-tool="text" title="Text">T</button>
+      <span class="wb-sep"></span>
+      ${COLOURS.map((c, i) => `<span class="wb-swatch ${i===0?'active':''}" data-colour="${c}" style="background:${c};"></span>`).join('')}
+      <span class="wb-sep"></span>
+      ${WIDTHS.map((w, i) => `<button class="wb-width ${i===0?'active':''}" data-width="${w}" title="Stroke ${w}px"><span class="dot" style="width:${Math.min(w*1.5,14)}px;height:${Math.min(w*1.5,14)}px;"></span></button>`).join('')}
+      <span class="wb-sep"></span>
+      <button class="wb-tool" data-action="grid" title="Toggle dot grid">⠿</button>
+      <span class="wb-spacer"></span>
+      <button class="wb-tool" data-action="undo" title="Undo">↶</button>
+      <button class="wb-tool" data-action="redo" title="Redo">↷</button>
+      <button class="wb-tool" data-action="clear" title="Clear">🗑</button>
+      <button class="wb-tool" data-action="download" title="Download PNG">⤓</button>
+      <button class="wb-tool" data-action="copy" title="Copy to clipboard">⎘</button>
+    </div>
+    <div class="wb-canvas-wrap">
+      <canvas class="wb-canvas"></canvas>
+    </div>
+    <div class="wb-status"></div>
+  `;
+
+  const canvas = container.querySelector('.wb-canvas');
+  const wrap = container.querySelector('.wb-canvas-wrap');
+  const ctx = canvas.getContext('2d');
+  const status = container.querySelector('.wb-status');
+
+  function resizeCanvas() {
+    const ratio = window.devicePixelRatio || 1;
+    const rect = wrap.getBoundingClientRect();
+    canvas.width = rect.width * ratio;
+    canvas.height = 360 * ratio;
+    canvas.style.height = '360px';
+    ctx.scale(ratio, ratio);
+    render();
+  }
+
+  // Use ResizeObserver to handle responsive sizing
+  const ro = new ResizeObserver(() => {
+    const ratio = window.devicePixelRatio || 1;
+    const rect = wrap.getBoundingClientRect();
+    const newWidth = rect.width * ratio;
+    const newHeight = 360 * ratio;
+    if (canvas.width !== newWidth || canvas.height !== newHeight) {
+      canvas.width = newWidth;
+      canvas.height = newHeight;
+      ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+      render();
+    }
+  });
+  ro.observe(wrap);
+
+  // Initial size
+  setTimeout(resizeCanvas, 0);
+
+  function getPos(e) {
+    const rect = canvas.getBoundingClientRect();
+    const x = (e.touches ? e.touches[0].clientX : e.clientX) - rect.left;
+    const y = (e.touches ? e.touches[0].clientY : e.clientY) - rect.top;
+    return { x, y };
+  }
+
+  function drawOp(op) {
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    ctx.strokeStyle = op.colour;
+    ctx.fillStyle = op.colour;
+    ctx.lineWidth = op.width;
+
+    if (op.type === 'pen' || op.type === 'eraser') {
+      if (op.type === 'eraser') {
+        ctx.globalCompositeOperation = 'destination-out';
+        ctx.lineWidth = op.width * 2;
+      } else {
+        ctx.globalCompositeOperation = 'source-over';
+      }
+      const pts = op.points;
+      if (pts.length < 2) {
+        ctx.beginPath();
+        ctx.arc(pts[0].x, pts[0].y, op.width / 2, 0, Math.PI * 2);
+        ctx.fill();
+      } else {
+        ctx.beginPath();
+        ctx.moveTo(pts[0].x, pts[0].y);
+        for (let i = 1; i < pts.length; i++) ctx.lineTo(pts[i].x, pts[i].y);
+        ctx.stroke();
+      }
+      ctx.globalCompositeOperation = 'source-over';
+    }
+    else if (op.type === 'line') {
+      ctx.beginPath();
+      ctx.moveTo(op.x1, op.y1);
+      ctx.lineTo(op.x2, op.y2);
+      ctx.stroke();
+    }
+    else if (op.type === 'arrow') {
+      ctx.beginPath();
+      ctx.moveTo(op.x1, op.y1);
+      ctx.lineTo(op.x2, op.y2);
+      ctx.stroke();
+      const angle = Math.atan2(op.y2 - op.y1, op.x2 - op.x1);
+      const head = 12;
+      ctx.beginPath();
+      ctx.moveTo(op.x2, op.y2);
+      ctx.lineTo(op.x2 - head * Math.cos(angle - Math.PI / 7), op.y2 - head * Math.sin(angle - Math.PI / 7));
+      ctx.lineTo(op.x2 - head * Math.cos(angle + Math.PI / 7), op.y2 - head * Math.sin(angle + Math.PI / 7));
+      ctx.closePath();
+      ctx.fill();
+    }
+    else if (op.type === 'rect') {
+      ctx.strokeRect(op.x1, op.y1, op.x2 - op.x1, op.y2 - op.y1);
+    }
+    else if (op.type === 'circle') {
+      const cx = (op.x1 + op.x2) / 2;
+      const cy = (op.y1 + op.y2) / 2;
+      const rx = Math.abs(op.x2 - op.x1) / 2;
+      const ry = Math.abs(op.y2 - op.y1) / 2;
+      ctx.beginPath();
+      ctx.ellipse(cx, cy, rx, ry, 0, 0, Math.PI * 2);
+      ctx.stroke();
+    }
+    else if (op.type === 'text') {
+      ctx.font = `${op.size}px 'Source Sans 3', sans-serif`;
+      ctx.textBaseline = 'top';
+      ctx.fillText(op.text, op.x, op.y);
+    }
+  }
+
+  function render() {
+    const rect = wrap.getBoundingClientRect();
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    state.operations.forEach(drawOp);
+    if (state.current) drawOp(state.current);
+    updateStatus();
+  }
+
+  function updateStatus() {
+    status.textContent = `${state.operations.length} marks · ${state.redoStack.length > 0 ? state.redoStack.length + ' redo · ' : ''}tool: ${state.tool}`;
+  }
+
+  function commit(op) {
+    state.operations.push(op);
+    state.redoStack = [];
+    render();
+  }
+
+  // Toolbar handlers
+  container.querySelectorAll('.wb-tool[data-tool]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      container.querySelectorAll('.wb-tool[data-tool]').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      state.tool = btn.dataset.tool;
+      canvas.style.cursor = (state.tool === TOOLS.TEXT) ? 'text' : 'crosshair';
+      updateStatus();
+    });
+  });
+
+  container.querySelectorAll('.wb-swatch').forEach(sw => {
+    sw.addEventListener('click', () => {
+      container.querySelectorAll('.wb-swatch').forEach(s => s.classList.remove('active'));
+      sw.classList.add('active');
+      state.colour = sw.dataset.colour;
+    });
+  });
+
+  container.querySelectorAll('.wb-width').forEach(w => {
+    w.addEventListener('click', () => {
+      container.querySelectorAll('.wb-width').forEach(b => b.classList.remove('active'));
+      w.classList.add('active');
+      state.width = +w.dataset.width;
+    });
+  });
+
+  container.querySelectorAll('[data-action]').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const a = btn.dataset.action;
+      if (a === 'grid') {
+        state.showGrid = !state.showGrid;
+        wrap.classList.toggle('grid', state.showGrid);
+        btn.classList.toggle('active', state.showGrid);
+      }
+      if (a === 'undo') {
+        if (state.operations.length) {
+          state.redoStack.push(state.operations.pop());
+          render();
+        }
+      }
+      if (a === 'redo') {
+        if (state.redoStack.length) {
+          state.operations.push(state.redoStack.pop());
+          render();
+        }
+      }
+      if (a === 'clear') {
+        if (!state.operations.length) return;
+        const ok = await confirmAction('Clear the whiteboard?', 'This will erase all your drawings on this canvas. You cannot undo a clear.');
+        if (!ok) return;
+        state.operations = [];
+        state.redoStack = [];
+        render();
+      }
+      if (a === 'download') {
+        // Composite onto white background for export
+        const out = document.createElement('canvas');
+        out.width = canvas.width;
+        out.height = canvas.height;
+        const octx = out.getContext('2d');
+        octx.fillStyle = 'white';
+        octx.fillRect(0, 0, out.width, out.height);
+        octx.drawImage(canvas, 0, 0);
+        const link = document.createElement('a');
+        link.download = `${containerId}.png`;
+        link.href = out.toDataURL('image/png');
+        link.click();
+        showToast('Whiteboard downloaded');
+      }
+      if (a === 'copy') {
+        try {
+          const out = document.createElement('canvas');
+          out.width = canvas.width;
+          out.height = canvas.height;
+          const octx = out.getContext('2d');
+          octx.fillStyle = 'white';
+          octx.fillRect(0, 0, out.width, out.height);
+          octx.drawImage(canvas, 0, 0);
+          out.toBlob(async blob => {
+            try {
+              await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]);
+              showToast('Whiteboard copied to clipboard');
+            } catch {
+              showToast('Your browser blocked clipboard image copying');
+            }
+          });
+        } catch {
+          showToast('Could not copy');
+        }
+      }
+    });
+  });
+
+  // Drawing
+  function startDraw(e) {
+    e.preventDefault();
+    const pos = getPos(e);
+    if (state.tool === TOOLS.TEXT) {
+      promptText(pos);
+      return;
+    }
+    state.drawing = true;
+    state.startPt = pos;
+    if (state.tool === TOOLS.PEN || state.tool === TOOLS.ERASER) {
+      state.current = {
+        type: state.tool,
+        colour: state.colour,
+        width: state.width,
+        points: [pos]
+      };
+    } else {
+      state.current = {
+        type: state.tool,
+        colour: state.colour,
+        width: state.width,
+        x1: pos.x, y1: pos.y, x2: pos.x, y2: pos.y
+      };
+    }
+  }
+
+  function moveDraw(e) {
+    if (!state.drawing) return;
+    e.preventDefault();
+    const pos = getPos(e);
+    if (state.tool === TOOLS.PEN || state.tool === TOOLS.ERASER) {
+      state.current.points.push(pos);
+    } else {
+      state.current.x2 = pos.x;
+      state.current.y2 = pos.y;
+    }
+    render();
+  }
+
+  function endDraw(e) {
+    if (!state.drawing) return;
+    state.drawing = false;
+    if (state.current) {
+      if (state.tool === TOOLS.PEN || state.tool === TOOLS.ERASER) {
+        if (state.current.points.length) state.operations.push(state.current);
+      } else {
+        const dx = Math.abs(state.current.x2 - state.current.x1);
+        const dy = Math.abs(state.current.y2 - state.current.y1);
+        if (dx > 2 || dy > 2) state.operations.push(state.current);
+      }
+      state.redoStack = [];
+      state.current = null;
+    }
+    render();
+  }
+
+  function promptText(pos) {
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.className = 'wb-text-input';
+    const wrapRect = wrap.getBoundingClientRect();
+    const scale = 1;
+    input.style.left = (pos.x * scale) + 'px';
+    input.style.top = (pos.y * scale) + 'px';
+    input.style.color = state.colour;
+    const size = state.width === WIDTHS[0] ? 14 : state.width === WIDTHS[1] ? 20 : 28;
+    input.style.fontSize = size + 'px';
+    wrap.appendChild(input);
+    input.focus();
+
+    const finish = (commit) => {
+      if (commit && input.value.trim()) {
+        state.operations.push({
+          type: 'text',
+          colour: state.colour,
+          size: size,
+          text: input.value,
+          x: pos.x,
+          y: pos.y
+        });
+        state.redoStack = [];
+      }
+      input.remove();
+      render();
+    };
+
+    input.addEventListener('keydown', e => {
+      if (e.key === 'Enter') finish(true);
+      else if (e.key === 'Escape') finish(false);
+    });
+    input.addEventListener('blur', () => finish(true));
+  }
+
+  canvas.addEventListener('pointerdown', startDraw);
+  canvas.addEventListener('pointermove', moveDraw);
+  canvas.addEventListener('pointerup', endDraw);
+  canvas.addEventListener('pointerleave', endDraw);
+}
+
+// Initialise whiteboards in unlocked sections; section 7 boards init on unlock
+['wb-section-1', 'wb-section-4', 'wb-section-6', 'wb-section-8', 'wb-section-9'].forEach(initWhiteboard);
+
+// Re-init whiteboards that were behind locked sections when they unlock
+const originalCompleteSection = completeSection;
+completeSection = function (n) {
+  originalCompleteSection(n);
+  setTimeout(() => {
+    const wb = document.getElementById('wb-section-' + (n + 1));
+    if (wb) initWhiteboard('wb-section-' + (n + 1));
+  }, 320);
+};
+
+// Boot
+updateProgressBar();
+updateTermChips();
+</script>
+</body>
+</html>
