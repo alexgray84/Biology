@@ -1,0 +1,981 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KS3 Energy quiz</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,600;0,800;1,300&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #07090f;
+    --surface: #0f1623;
+    --surface2: #161f30;
+    --border: rgba(255,255,255,0.07);
+    --green: #00e5a0;
+    --green-dim: rgba(0,229,160,0.12);
+    --blue: #4da6ff;
+    --blue-dim: rgba(77,166,255,0.12);
+    --amber: #fbbf24;
+    --amber-dim: rgba(251,191,36,0.12);
+    --red: #f87171;
+    --red-dim: rgba(248,113,113,0.1);
+    --text: #e8edf8;
+    --muted: #6b7a99;
+    --heading-font: 'Fraunces', Georgia, serif;
+    --body-font: 'DM Sans', sans-serif;
+    --mono: 'DM Mono', monospace;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--body-font);
+    font-size: 16px;
+    line-height: 1.6;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(7,9,15,0.85);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 2rem;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 56px;
+  }
+  .nav-logo { font-family: var(--heading-font); font-weight: 600; font-size: 1rem; color: var(--green); letter-spacing: 0.01em; }
+  .nav-meta { font-family: var(--mono); font-size: 0.72rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; }
+
+  main {
+    flex: 1;
+    width: 100%;
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 3rem 1.5rem 4rem;
+  }
+
+  .screen { display: none; }
+  .screen.active { display: block; animation: fadeUp 0.4s ease both; }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+  /* Hero / start screen */
+  .hero-tag { font-family: var(--mono); font-size: 0.72rem; color: var(--green); letter-spacing: 0.15em; text-transform: uppercase; background: var(--green-dim); border: 1px solid rgba(0,229,160,0.2); padding: 0.3rem 0.8rem; border-radius: 4px; display: inline-block; margin-bottom: 1.5rem; }
+  h1.hero-title { font-family: var(--heading-font); font-weight: 800; font-size: clamp(2.4rem, 6vw, 3.6rem); line-height: 1.05; letter-spacing: -0.02em; margin-bottom: 1.25rem; }
+  h1.hero-title em { font-style: italic; font-weight: 300; color: var(--green); }
+  .hero-sub { color: var(--muted); font-size: 1rem; max-width: 540px; margin-bottom: 2.5rem; }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 2rem;
+  }
+  .card + .card { margin-top: 1.25rem; }
+
+  .field { display: flex; flex-direction: column; gap: 0.4rem; margin-bottom: 1.25rem; }
+  .field label { font-family: var(--mono); font-size: 0.72rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; }
+  .field input {
+    width: 100%;
+    padding: 0.7rem 0.9rem;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    font-family: var(--body-font);
+    font-size: 0.95rem;
+    transition: border-color 0.15s;
+  }
+  .field input:focus { outline: none; border-color: var(--green); }
+
+  .instructions { color: var(--muted); font-size: 0.9rem; margin-bottom: 1.5rem; }
+  .instructions ul { list-style: none; display: flex; flex-direction: column; gap: 0.45rem; }
+  .instructions li { padding-left: 1.25rem; position: relative; }
+  .instructions li::before { content: '·'; position: absolute; left: 0.4rem; color: var(--green); font-weight: 700; }
+
+  .btn { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.7rem 1.5rem; border-radius: 8px; border: none; cursor: pointer; font-family: var(--body-font); font-size: 0.9rem; font-weight: 500; transition: all 0.2s; text-decoration: none; }
+  .btn-green { background: var(--green); color: #07090f; }
+  .btn-green:hover { background: #00ffb3; transform: translateY(-1px); }
+  .btn-green:disabled { background: var(--surface2); color: var(--muted); cursor: not-allowed; transform: none; }
+  .btn-outline { background: transparent; color: var(--text); border: 1px solid var(--border); }
+  .btn-outline:hover { background: var(--surface2); border-color: rgba(255,255,255,0.15); }
+  .btn-outline:disabled { color: var(--muted); cursor: not-allowed; }
+
+  .btn-row { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+
+  .resume-banner {
+    background: var(--amber-dim);
+    border: 1px solid rgba(251,191,36,0.25);
+    border-radius: 10px;
+    padding: 1rem 1.25rem;
+    margin-bottom: 1.5rem;
+    font-size: 0.875rem;
+    color: var(--amber);
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .resume-banner .resume-text { flex: 1; min-width: 200px; }
+  .resume-banner button { background: transparent; border: 1px solid rgba(251,191,36,0.4); color: var(--amber); padding: 0.35rem 0.8rem; border-radius: 6px; font-family: var(--body-font); font-size: 0.8rem; cursor: pointer; }
+  .resume-banner button:hover { background: rgba(251,191,36,0.08); }
+
+  /* Quiz screen */
+  .quiz-progress {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+  }
+  .progress-label { font-family: var(--mono); font-size: 0.78rem; color: var(--muted); letter-spacing: 0.05em; }
+  .progress-label span { color: var(--green); }
+  .progress-track { flex: 1; min-width: 140px; height: 4px; background: var(--surface2); border-radius: 2px; overflow: hidden; }
+  .progress-fill { height: 100%; background: var(--green); width: 0%; transition: width 0.3s ease; box-shadow: 0 0 8px var(--green); }
+
+  .question-card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; }
+  .question-header { padding: 1.25rem 1.5rem 0; display: flex; gap: 0.6rem; flex-wrap: wrap; align-items: center; }
+  .tier-badge { font-family: var(--mono); font-size: 0.65rem; padding: 0.18rem 0.55rem; border-radius: 3px; font-weight: 500; letter-spacing: 0.05em; text-transform: uppercase; }
+  .tier-foundation { background: var(--green-dim); color: var(--green); }
+  .tier-challenge { background: var(--amber-dim); color: var(--amber); }
+  .topic-badge { font-family: var(--mono); font-size: 0.65rem; padding: 0.18rem 0.55rem; border-radius: 3px; background: var(--surface2); color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; }
+
+  .question-stem {
+    font-family: var(--heading-font);
+    font-weight: 600;
+    font-size: 1.2rem;
+    line-height: 1.4;
+    padding: 1rem 1.5rem 1.5rem;
+    color: var(--text);
+  }
+
+  .options { padding: 0 1.5rem 1.5rem; display: flex; flex-direction: column; gap: 0.55rem; }
+  .option {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 0.85rem 1rem;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.15s;
+    font-size: 0.92rem;
+    line-height: 1.4;
+  }
+  .option:hover { border-color: rgba(0,229,160,0.4); background: var(--surface2); }
+  .option input { position: absolute; opacity: 0; pointer-events: none; }
+  .option .opt-letter {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    color: var(--muted);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    width: 22px;
+    height: 22px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 0.05rem;
+    transition: all 0.15s;
+  }
+  .option.selected { border-color: var(--green); background: var(--green-dim); }
+  .option.selected .opt-letter { background: var(--green); color: var(--bg); border-color: var(--green); }
+
+  .numeric-wrap { padding: 0 1.5rem 1.5rem; }
+  .numeric-wrap label { font-family: var(--mono); font-size: 0.72rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; display: block; margin-bottom: 0.5rem; }
+  .numeric-input {
+    width: 100%;
+    padding: 0.9rem 1rem;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: 1.05rem;
+    transition: border-color 0.15s;
+  }
+  .numeric-input:focus { outline: none; border-color: var(--green); }
+  .numeric-hint { font-size: 0.78rem; color: var(--muted); margin-top: 0.5rem; }
+
+  .nav-row { display: flex; justify-content: space-between; gap: 0.75rem; margin-top: 1.5rem; flex-wrap: wrap; }
+
+  /* Results screen */
+  .results-hero { text-align: center; padding: 1rem 0 2rem; }
+  .score-num { font-family: var(--heading-font); font-size: 4.5rem; font-weight: 800; color: var(--green); line-height: 1; }
+  .score-out-of { color: var(--muted); font-family: var(--heading-font); font-size: 2rem; font-weight: 300; }
+  .score-percent { font-family: var(--mono); font-size: 0.85rem; color: var(--muted); margin-top: 0.5rem; letter-spacing: 0.1em; }
+  .score-msg { font-family: var(--heading-font); font-style: italic; font-size: 1.2rem; color: var(--text); margin-top: 1.25rem; max-width: 480px; margin-left: auto; margin-right: auto; }
+
+  .submit-status { text-align: center; margin-top: 1.25rem; font-family: var(--mono); font-size: 0.78rem; letter-spacing: 0.05em; text-transform: uppercase; }
+  .submit-status.ok { color: var(--green); }
+  .submit-status.warn { color: var(--amber); }
+  .submit-status.pending { color: var(--muted); }
+
+  .breakdown-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 2rem; }
+  @media (max-width: 600px) { .breakdown-grid { grid-template-columns: 1fr; } }
+
+  .breakdown-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 1.25rem 1.5rem; }
+  .breakdown-title { font-family: var(--mono); font-size: 0.72rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 1rem; }
+
+  .tier-row { display: flex; align-items: center; gap: 0.75rem; padding: 0.6rem 0; border-bottom: 1px solid var(--border); }
+  .tier-row:last-child { border-bottom: none; padding-bottom: 0; }
+  .tier-row:first-child { padding-top: 0; }
+  .tier-row .tier-label { font-family: var(--mono); font-size: 0.7rem; padding: 0.2rem 0.5rem; border-radius: 4px; min-width: 60px; text-align: center; }
+  .tier-row.foundation .tier-label { background: var(--green-dim); color: var(--green); border: 1px solid rgba(0,229,160,0.25); }
+  .tier-row.challenge .tier-label { background: var(--amber-dim); color: var(--amber); border: 1px solid rgba(251,191,36,0.25); }
+  .tier-bar-wrap { flex: 1; height: 6px; background: var(--surface2); border-radius: 3px; overflow: hidden; }
+  .tier-bar { height: 100%; border-radius: 3px; transition: width 0.6s ease; }
+  .tier-row.foundation .tier-bar { background: var(--green); }
+  .tier-row.challenge .tier-bar { background: var(--amber); }
+  .tier-score { font-family: var(--mono); font-size: 0.85rem; color: var(--text); min-width: 56px; text-align: right; }
+
+  .topic-row { display: flex; align-items: center; gap: 0.75rem; padding: 0.55rem 0; border-bottom: 1px solid var(--border); }
+  .topic-row:last-child { border-bottom: none; padding-bottom: 0; }
+  .topic-row:first-child { padding-top: 0; }
+  .topic-name { flex: 1; font-size: 0.9rem; text-transform: capitalize; }
+  .topic-bar-wrap { width: 90px; height: 5px; background: var(--surface2); border-radius: 3px; overflow: hidden; }
+  .topic-bar { height: 100%; background: var(--blue); border-radius: 3px; transition: width 0.6s ease; }
+  .topic-score { font-family: var(--mono); font-size: 0.8rem; color: var(--text); min-width: 36px; text-align: right; }
+
+  .review-list { margin-top: 2rem; }
+  .review-list summary {
+    cursor: pointer;
+    padding: 1rem 1.25rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    list-style: none;
+  }
+  .review-list summary::-webkit-details-marker { display: none; }
+  .review-list summary::after { content: '+'; float: right; font-size: 1.1rem; color: var(--green); }
+  .review-list[open] summary::after { content: '−'; }
+  .review-list[open] summary { border-radius: 10px 10px 0 0; border-bottom: none; }
+  .review-body { background: var(--surface); border: 1px solid var(--border); border-top: none; border-radius: 0 0 10px 10px; padding: 0.5rem 1.25rem 1rem; }
+  .review-item { display: flex; gap: 0.75rem; padding: 0.65rem 0; border-bottom: 1px solid var(--border); font-size: 0.86rem; align-items: flex-start; }
+  .review-item:last-child { border-bottom: none; }
+  .review-id { font-family: var(--mono); font-size: 0.75rem; color: var(--muted); min-width: 36px; flex-shrink: 0; }
+  .review-mark { font-family: var(--mono); font-size: 0.78rem; min-width: 22px; text-align: center; flex-shrink: 0; }
+  .review-mark.tick { color: var(--green); }
+  .review-mark.cross { color: var(--red); }
+  .review-text { flex: 1; color: var(--muted); }
+  .review-text strong { color: var(--text); font-weight: 500; }
+
+  footer { text-align: center; padding: 2rem 1rem; border-top: 1px solid var(--border); color: var(--muted); font-size: 0.78rem; margin-top: auto; }
+
+  @media (max-width: 600px) {
+    main { padding: 2rem 1rem 3rem; }
+    .card { padding: 1.5rem; }
+    .question-stem { font-size: 1.05rem; padding: 1rem 1.25rem 1.25rem; }
+    .question-header { padding: 1rem 1.25rem 0; }
+    .options, .numeric-wrap { padding: 0 1.25rem 1.25rem; }
+    nav { padding: 0 1rem; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <span class="nav-logo">KS3 · Energy quiz</span>
+  <span class="nav-meta" id="nav-meta">30 questions · 30 marks</span>
+</nav>
+
+<main>
+
+  <!-- ===== START SCREEN ===== -->
+  <section class="screen active" id="screen-start">
+    <span class="hero-tag">KS3 Science · Revision</span>
+    <h1 class="hero-title">Energy <em>quiz</em></h1>
+    <p class="hero-sub">Thirty questions on energy stores, transfers, resources, efficiency and power. The quiz marks itself at the end and sends your score to your teacher.</p>
+
+    <div class="card">
+      <div id="resume-banner" class="resume-banner" style="display:none;">
+        <span class="resume-text"><strong>You have an unfinished attempt.</strong> Pick up where you left off, or start again from question one.</span>
+        <button type="button" onclick="resumeAttempt()">Resume</button>
+        <button type="button" onclick="discardAttempt()">Start again</button>
+      </div>
+
+      <div class="field">
+        <label for="input-name">Your name</label>
+        <input id="input-name" type="text" autocomplete="off" placeholder="First name and surname">
+      </div>
+      <div class="field">
+        <label for="input-class">Your class</label>
+        <input id="input-class" type="text" autocomplete="off" placeholder="e.g. 8X1">
+      </div>
+
+      <div class="instructions">
+        <ul>
+          <li>One mark per question, thirty marks in total.</li>
+          <li>Most questions are multiple choice. A few ask for a number.</li>
+          <li>You can use Previous and Next to move between questions.</li>
+          <li>Your answers save automatically in this browser as you go.</li>
+        </ul>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-green" id="btn-start" type="button" onclick="startQuiz()">Start quiz →</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== QUIZ SCREEN ===== -->
+  <section class="screen" id="screen-quiz">
+    <div class="quiz-progress">
+      <span class="progress-label">Question <span id="q-current">1</span> of <span id="q-total">30</span></span>
+      <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+    </div>
+
+    <div class="question-card" id="question-card">
+      <!-- Rendered by JS -->
+    </div>
+
+    <div class="nav-row">
+      <button class="btn btn-outline" id="btn-prev" type="button" onclick="prevQuestion()">← Previous</button>
+      <button class="btn btn-green" id="btn-next" type="button" onclick="nextQuestion()">Next →</button>
+    </div>
+  </section>
+
+  <!-- ===== RESULTS SCREEN ===== -->
+  <section class="screen" id="screen-results">
+    <div class="card">
+      <div class="results-hero">
+        <div>
+          <span class="score-num" id="score-num">0</span><span class="score-out-of"> / 30</span>
+        </div>
+        <div class="score-percent" id="score-percent">0%</div>
+        <p class="score-msg" id="score-msg"></p>
+      </div>
+      <div class="submit-status pending" id="submit-status">Sending your result to your teacher…</div>
+    </div>
+
+    <div class="breakdown-grid">
+      <div class="breakdown-card">
+        <p class="breakdown-title">By level</p>
+        <div class="tier-row foundation">
+          <span class="tier-label">3 – 6</span>
+          <div class="tier-bar-wrap"><div class="tier-bar" id="bar-level-foundation"></div></div>
+          <span class="tier-score" id="score-level-foundation">0 / 15</span>
+        </div>
+        <div class="tier-row challenge">
+          <span class="tier-label">5 – 7</span>
+          <div class="tier-bar-wrap"><div class="tier-bar" id="bar-level-challenge"></div></div>
+          <span class="tier-score" id="score-level-challenge">0 / 15</span>
+        </div>
+      </div>
+
+      <div class="breakdown-card">
+        <p class="breakdown-title">By topic</p>
+        <div id="topic-breakdown"></div>
+      </div>
+    </div>
+
+    <details class="review-list">
+      <summary>See every question and your answer</summary>
+      <div class="review-body" id="review-body"></div>
+    </details>
+
+    <div class="nav-row" style="margin-top: 2rem;">
+      <button class="btn btn-outline" type="button" onclick="restartQuiz()">↺ Take it again</button>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <p>KS3 Energy quiz · Arcadia British School Dubai</p>
+</footer>
+
+<script>
+  /* =========================================================
+     CONFIG
+     ========================================================= */
+  const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzjZh1eYljr3oSMIdY_xgwnKWN0a-WOfP6raEqzQWrfL9lB0tcyqFkxzAX57nuheyWO/exec';
+  const FORM_TOKEN = 'ks3-energy-7a3f9d2c';
+  const STORAGE_KEY = 'ks3-energy-quiz-progress';
+
+  /* =========================================================
+     QUESTIONS — transcribed from ks3-energy-quiz-questions-v1.md
+     ========================================================= */
+  const QUESTIONS = [
+    { id: 1, topic: 'stores', level: '3-6', type: 'mcq',
+      stem: 'A moving football has energy in which store?',
+      options: { A: 'thermal', B: 'kinetic', C: 'chemical', D: 'elastic' },
+      answer: 'B' },
+
+    { id: 2, topic: 'stores', level: '3-6', type: 'mcq',
+      stem: 'A battery stores energy mainly in which store?',
+      options: { A: 'kinetic', B: 'gravitational potential', C: 'chemical', D: 'elastic' },
+      answer: 'C' },
+
+    { id: 3, topic: 'stores', level: '3-6', type: 'mcq',
+      stem: 'A book rests on a shelf. Which change increases the energy in its gravitational potential store the most?',
+      options: { A: 'moving the book to a lower shelf', B: 'moving the book to a higher shelf', C: 'opening the book', D: 'cooling the book' },
+      answer: 'B' },
+
+    { id: 4, topic: 'stores', level: '5-7', type: 'mcq',
+      stem: 'A stretched elastic band is released and fires across the room. Which describes the main energy change?',
+      options: { A: 'kinetic store to elastic store', B: 'elastic store to kinetic store', C: 'chemical store to thermal store', D: 'thermal store to kinetic store' },
+      answer: 'B' },
+
+    { id: 5, topic: 'stores', level: '5-7', type: 'mcq',
+      stem: 'Which of these is NOT an energy store?',
+      options: { A: 'chemical', B: 'kinetic', C: 'light', D: 'gravitational potential' },
+      answer: 'C' },
+
+    { id: 6, topic: 'stores', level: '5-7', type: 'mcq',
+      stem: 'As a roller coaster car speeds down the first hill, the main energy transfer is from the:',
+      options: { A: 'kinetic store to the gravitational potential store', B: 'gravitational potential store to the kinetic store', C: 'chemical store to the elastic store', D: 'thermal store to the kinetic store' },
+      answer: 'B' },
+
+    { id: 7, topic: 'stores', level: '5-7', type: 'mcq',
+      stem: 'Two balls are lifted to the same height. Ball X has a greater mass than ball Y. Which statement is correct?',
+      options: { A: 'Ball X has more energy in its gravitational potential store', B: 'Ball Y has more energy in its gravitational potential store', C: 'They have equal gravitational potential stores', D: 'Neither ball has a gravitational potential store' },
+      answer: 'A' },
+
+    { id: 8, topic: 'transfers', level: '3-6', type: 'mcq',
+      stem: 'When a torch is switched on, energy leaves the chemical store of the battery. Which pathway carries it to the bulb?',
+      options: { A: 'by heating', B: 'electrically', C: 'mechanically', D: 'by radiation' },
+      answer: 'B' },
+
+    { id: 9, topic: 'transfers', level: '3-6', type: 'mcq',
+      stem: 'A chef pushes a heavy trolley across a kitchen. Energy is transferred:',
+      options: { A: 'electrically', B: 'by radiation', C: 'mechanically', D: 'by heating' },
+      answer: 'C' },
+
+    { id: 10, topic: 'transfers', level: '3-6', type: 'mcq',
+      stem: 'The Sun warms your face on a sunny day. Energy from the Sun reaches you mainly:',
+      options: { A: 'by heating the air', B: 'mechanically', C: 'electrically', D: 'by radiation' },
+      answer: 'D' },
+
+    { id: 11, topic: 'transfers', level: '5-7', type: 'mcq',
+      stem: 'Which sequence best describes a kettle heating water?',
+      options: {
+        A: 'thermal store, transferred electrically, to a kinetic store',
+        B: 'mains supply, transferred electrically, raising the thermal store of the water',
+        C: 'chemical store of the water, transferred by heating, to a kinetic store',
+        D: 'gravitational store, transferred mechanically, to a thermal store' },
+      answer: 'B' },
+
+    { id: 12, topic: 'transfers', level: '5-7', type: 'mcq',
+      stem: 'A wind-up radio is wound by hand, then plays music. While the handle is being turned, the energy pathway is:',
+      options: { A: 'electrically', B: 'mechanically', C: 'by radiation', D: 'by heating' },
+      answer: 'B' },
+
+    { id: 13, topic: 'transfers', level: '5-7', type: 'mcq',
+      stem: 'Which statement about energy transfer is correct?',
+      options: {
+        A: 'Energy can be transferred but the total amount is always conserved',
+        B: 'Energy is used up and disappears when a device is switched on',
+        C: 'Energy can be created by an electric motor',
+        D: 'Energy is destroyed when it becomes heat' },
+      answer: 'A' },
+
+    { id: 14, topic: 'resources', level: '3-6', type: 'mcq',
+      stem: 'Which of these is a fossil fuel?',
+      options: { A: 'wind', B: 'coal', C: 'sunlight', D: 'hydroelectricity' },
+      answer: 'B' },
+
+    { id: 15, topic: 'resources', level: '3-6', type: 'mcq',
+      stem: 'Which energy resource is renewable?',
+      options: { A: 'oil', B: 'coal', C: 'wind', D: 'natural gas' },
+      answer: 'C' },
+
+    { id: 16, topic: 'resources', level: '3-6', type: 'mcq',
+      stem: 'Fossil fuels were formed from:',
+      options: { A: 'melted rocks', B: 'the remains of dead organisms over millions of years', C: 'water and sunlight', D: 'recycled plastic' },
+      answer: 'B' },
+
+    { id: 17, topic: 'resources', level: '5-7', type: 'mcq',
+      stem: 'Which is a disadvantage of burning fossil fuels?',
+      options: { A: 'they are renewable', B: 'they release carbon dioxide, a greenhouse gas', C: 'they never run out', D: 'they produce no waste' },
+      answer: 'B' },
+
+    { id: 18, topic: 'resources', level: '5-7', type: 'mcq',
+      stem: 'A student says, "Nuclear power is renewable because there is lots of uranium." Which is the best response?',
+      options: {
+        A: 'correct, uranium is renewable',
+        B: 'incorrect, nuclear fuel is non-renewable because the uranium is used up and not replaced',
+        C: 'correct, nuclear power uses sunlight',
+        D: 'incorrect, nuclear power is a fossil fuel' },
+      answer: 'B' },
+
+    { id: 19, topic: 'resources', level: '5-7', type: 'mcq',
+      stem: 'Which renewable resource depends on the gravitational pull of the Moon?',
+      options: { A: 'solar', B: 'wind', C: 'tidal', D: 'geothermal' },
+      answer: 'C' },
+
+    { id: 20, topic: 'efficiency', level: '3-6', type: 'mcq',
+      stem: 'In every energy transfer, some energy spreads out to the surroundings, usually to the:',
+      options: { A: 'chemical store', B: 'thermal store', C: 'elastic store', D: 'nuclear store' },
+      answer: 'B' },
+
+    { id: 21, topic: 'efficiency', level: '3-6', type: 'mcq',
+      stem: 'An old filament lamp gives out light but also gets very hot. The energy that heats the room is:',
+      options: { A: 'useful energy', B: 'wasted (dissipated) energy', C: 'stored energy', D: 'created energy' },
+      answer: 'B' },
+
+    { id: 22, topic: 'efficiency', level: '3-6', type: 'numeric',
+      stem: 'A device takes in 100 J of energy and usefully transfers 80 J. How much energy is wasted? Give your answer in joules.',
+      unit_hint: 'joules (J)',
+      answer: 20 },
+
+    { id: 23, topic: 'efficiency', level: '5-7', type: 'numeric',
+      stem: 'A motor is supplied with 200 J electrically and usefully transfers 150 J to a load. Calculate its efficiency as a percentage.',
+      unit_hint: 'per cent (%)',
+      answer: 75 },
+
+    { id: 24, topic: 'efficiency', level: '5-7', type: 'mcq',
+      stem: 'A Sankey diagram shows 60 J going in and 24 J usefully transferred out. The efficiency is:',
+      options: { A: '24%', B: '40%', C: '60%', D: '84%' },
+      answer: 'B' },
+
+    { id: 25, topic: 'efficiency', level: '5-7', type: 'mcq',
+      stem: 'Why can no real device ever be 100% efficient?',
+      options: {
+        A: 'because energy is destroyed',
+        B: 'because some energy is always dissipated to the surroundings, usually as thermal energy',
+        C: 'because energy is created',
+        D: 'because devices are switched off' },
+      answer: 'B' },
+
+    { id: 26, topic: 'power', level: '3-6', type: 'mcq',
+      stem: 'What is the unit of energy?',
+      options: { A: 'watt', B: 'joule', C: 'newton', D: 'volt' },
+      answer: 'B' },
+
+    { id: 27, topic: 'power', level: '3-6', type: 'mcq',
+      stem: 'What is the unit of power?',
+      options: { A: 'joule', B: 'watt', C: 'ampere', D: 'metre' },
+      answer: 'B' },
+
+    { id: 28, topic: 'power', level: '3-6', type: 'mcq',
+      stem: 'A 60 W bulb and a 100 W bulb are compared. Which transfers energy faster?',
+      options: { A: 'the 60 W bulb', B: 'the 100 W bulb', C: 'they transfer at the same rate', D: 'neither transfers energy' },
+      answer: 'B' },
+
+    { id: 29, topic: 'power', level: '5-7', type: 'numeric',
+      stem: 'A lamp transfers 600 J of energy in 30 s. Calculate its power in watts. (power = energy ÷ time)',
+      unit_hint: 'watts (W)',
+      answer: 20 },
+
+    { id: 30, topic: 'power', level: '5-7', type: 'numeric',
+      stem: 'A kettle has a power of 2000 W. How much energy does it transfer in 60 s? Give your answer in joules. (energy = power × time)',
+      unit_hint: 'joules (J)',
+      answer: 120000 }
+  ];
+
+  /* =========================================================
+     STATE
+     ========================================================= */
+  const state = {
+    name: '',
+    class: '',
+    answers: {},     // { [id]: 'A' | 'string-numeric' }
+    current: 0       // index into QUESTIONS
+  };
+
+  /* =========================================================
+     STORAGE
+     ========================================================= */
+  function saveProgress() {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({
+        name: state.name,
+        class: state.class,
+        answers: state.answers,
+        current: state.current
+      }));
+    } catch (err) {
+      // localStorage may be unavailable (private mode, artifact previews).
+      // Persistence is best-effort, not load-bearing.
+    }
+  }
+
+  function clearProgress() {
+    try { localStorage.removeItem(STORAGE_KEY); } catch (err) { /* noop */ }
+  }
+
+  function loadProgress() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return null;
+      const data = JSON.parse(raw);
+      if (!data || typeof data !== 'object') return null;
+      return data;
+    } catch (err) {
+      return null;
+    }
+  }
+
+  /* =========================================================
+     MARKING
+     ========================================================= */
+  function normaliseNumeric(input) {
+    // Strips units, spaces, thousands separators. "120,000 J" -> 120000
+    return parseFloat(String(input).replace(/[^0-9.\-]/g, ''));
+  }
+
+  function isCorrect(q, response) {
+    if (response == null || response === '') return false;
+    if (q.type === 'mcq') return response === q.answer;
+    if (q.type === 'numeric') {
+      const n = normaliseNumeric(response);
+      if (isNaN(n)) return false;
+      return n === q.answer;
+    }
+    return false;
+  }
+
+  function buildResult() {
+    const byTopic = { stores: 0, transfers: 0, resources: 0, efficiency: 0, power: 0 };
+    const byLevel = { '3-6': 0, '5-7': 0 };
+    const responses = [];
+    let total = 0;
+
+    QUESTIONS.forEach(q => {
+      const answer = state.answers[q.id];
+      const correct = isCorrect(q, answer);
+      if (correct) {
+        total++;
+        byTopic[q.topic]++;
+        byLevel[q.level]++;
+      }
+      responses.push({
+        id: q.id,
+        answer: (answer == null ? '' : answer),
+        correct: !!correct
+      });
+    });
+
+    return {
+      name: state.name,
+      class: state.class,
+      total,
+      percent: Math.round((total / QUESTIONS.length) * 100),
+      byLevel,
+      byTopic,
+      responses
+    };
+  }
+
+  /* =========================================================
+     SUBMIT
+     ========================================================= */
+  async function submitResults(payload) {
+    if (!APPS_SCRIPT_URL || APPS_SCRIPT_URL.indexOf('PASTE_') === 0) {
+      console.warn('APPS_SCRIPT_URL not configured.');
+      return false;
+    }
+    try {
+      const res = await fetch(APPS_SCRIPT_URL, {
+        method: 'POST',
+        // text/plain avoids the CORS preflight that Apps Script cannot answer.
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({ ...payload, token: FORM_TOKEN })
+      });
+      const json = await res.json();
+      return json.status === 'ok';
+    } catch (err) {
+      console.error('Submit failed', err);
+      return false;
+    }
+  }
+
+  /* =========================================================
+     RENDER
+     ========================================================= */
+  function showScreen(id) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function escapeHtml(s) {
+    return String(s)
+      .replaceAll('&', '&amp;')
+      .replaceAll('<', '&lt;')
+      .replaceAll('>', '&gt;')
+      .replaceAll('"', '&quot;')
+      .replaceAll("'", '&#39;');
+  }
+
+  function tierClassFor(level) {
+    return level === '3-6' ? 'tier-foundation' : 'tier-challenge';
+  }
+
+  function tierLabelFor(level) {
+    return level === '3-6' ? 'Level 3 – 6' : 'Level 5 – 7';
+  }
+
+  function renderQuestion() {
+    const i = state.current;
+    const q = QUESTIONS[i];
+    const card = document.getElementById('question-card');
+    const current = state.answers[q.id];
+
+    let body = '';
+    if (q.type === 'mcq') {
+      body = '<div class="options" role="radiogroup" aria-label="Answer options">';
+      ['A', 'B', 'C', 'D'].forEach(letter => {
+        const text = q.options[letter];
+        if (text == null) return;
+        const selected = current === letter ? ' selected' : '';
+        body += `
+          <label class="option${selected}" data-letter="${letter}">
+            <input type="radio" name="q${q.id}" value="${letter}"${current === letter ? ' checked' : ''}>
+            <span class="opt-letter">${letter}</span>
+            <span>${escapeHtml(text)}</span>
+          </label>`;
+      });
+      body += '</div>';
+    } else if (q.type === 'numeric') {
+      const val = current == null ? '' : escapeHtml(current);
+      body = `
+        <div class="numeric-wrap">
+          <label for="numeric-${q.id}">Your answer in ${escapeHtml(q.unit_hint || '')}</label>
+          <input id="numeric-${q.id}" class="numeric-input" type="text" inputmode="decimal" autocomplete="off" value="${val}" placeholder="Type your number">
+          <p class="numeric-hint">You can write the unit too — for example, "20 W" or "120,000 J".</p>
+        </div>`;
+    }
+
+    card.innerHTML = `
+      <div class="question-header">
+        <span class="tier-badge ${tierClassFor(q.level)}">${tierLabelFor(q.level)}</span>
+        <span class="topic-badge">${escapeHtml(q.topic)}</span>
+      </div>
+      <p class="question-stem">${escapeHtml(q.stem)}</p>
+      ${body}
+    `;
+
+    // Wire up option clicks for MCQ
+    if (q.type === 'mcq') {
+      card.querySelectorAll('.option').forEach(opt => {
+        opt.addEventListener('click', (e) => {
+          e.preventDefault();
+          const letter = opt.dataset.letter;
+          state.answers[q.id] = letter;
+          card.querySelectorAll('.option').forEach(o => o.classList.toggle('selected', o.dataset.letter === letter));
+          const radio = opt.querySelector('input');
+          if (radio) radio.checked = true;
+          saveProgress();
+          updateNextButton();
+        });
+      });
+    } else if (q.type === 'numeric') {
+      const input = card.querySelector('.numeric-input');
+      input.addEventListener('input', () => {
+        state.answers[q.id] = input.value;
+        saveProgress();
+        updateNextButton();
+      });
+    }
+
+    // Progress display
+    document.getElementById('q-current').textContent = (i + 1);
+    document.getElementById('q-total').textContent = QUESTIONS.length;
+    document.getElementById('progress-fill').style.width = ((i / (QUESTIONS.length - 1)) * 100) + '%';
+
+    // Nav buttons
+    document.getElementById('btn-prev').disabled = (i === 0);
+    const nextBtn = document.getElementById('btn-next');
+    nextBtn.textContent = (i === QUESTIONS.length - 1) ? 'Submit quiz' : 'Next →';
+
+    updateNextButton();
+  }
+
+  function updateNextButton() {
+    // Allow advancing even without an answer (don't trap students),
+    // but on the final question, only allow submit once they've answered the last item.
+    // (Brief allows blank answers — they just mark wrong.)
+    const nextBtn = document.getElementById('btn-next');
+    nextBtn.disabled = false;
+  }
+
+  /* =========================================================
+     NAVIGATION
+     ========================================================= */
+  function startQuiz() {
+    const nameEl = document.getElementById('input-name');
+    const classEl = document.getElementById('input-class');
+    const name = nameEl.value.trim();
+    const klass = classEl.value.trim();
+    if (!name) { nameEl.focus(); nameEl.style.borderColor = 'var(--red)'; return; }
+    if (!klass) { classEl.focus(); classEl.style.borderColor = 'var(--red)'; return; }
+
+    state.name = name;
+    state.class = klass;
+    // Only reset answers/current if this is a fresh start (not a resume)
+    if (state.current === 0 && Object.keys(state.answers).length === 0) {
+      // already empty, nothing to do
+    }
+    saveProgress();
+    showScreen('screen-quiz');
+    renderQuestion();
+  }
+
+  function prevQuestion() {
+    if (state.current > 0) {
+      state.current--;
+      saveProgress();
+      renderQuestion();
+    }
+  }
+
+  function nextQuestion() {
+    if (state.current < QUESTIONS.length - 1) {
+      state.current++;
+      saveProgress();
+      renderQuestion();
+    } else {
+      finishQuiz();
+    }
+  }
+
+  function finishQuiz() {
+    const payload = buildResult();
+    renderResults(payload);
+    showScreen('screen-results');
+
+    // Fire-and-show: try to submit but never block the result reveal.
+    submitResults(payload).then(ok => {
+      const el = document.getElementById('submit-status');
+      if (ok) {
+        el.textContent = '✓ Result sent to your teacher';
+        el.className = 'submit-status ok';
+        clearProgress();
+      } else {
+        el.textContent = '⚠ Your result could not be sent. Please tell your teacher your score.';
+        el.className = 'submit-status warn';
+        // Keep localStorage so the result is not lost.
+      }
+    });
+  }
+
+  /* =========================================================
+     RESULTS RENDER
+     ========================================================= */
+  function renderResults(r) {
+    document.getElementById('score-num').textContent = r.total;
+    document.getElementById('score-percent').textContent = r.percent + '%';
+
+    // Encouragement message
+    const msg = (
+      r.percent >= 90 ? 'Outstanding. You have a secure grasp of energy.' :
+      r.percent >= 75 ? 'Strong work. A few specific points to polish.' :
+      r.percent >= 50 ? 'A solid start. Review the topics where you dropped marks.' :
+      r.percent >= 25 ? 'Worth another look. Re-read the notes, then try again.' :
+                        'Re-read the notes carefully, then take this again.'
+    );
+    document.getElementById('score-msg').textContent = msg;
+
+    // By level
+    const lvlFoundationMax = QUESTIONS.filter(q => q.level === '3-6').length;
+    const lvlChallengeMax = QUESTIONS.filter(q => q.level === '5-7').length;
+    document.getElementById('score-level-foundation').textContent = r.byLevel['3-6'] + ' / ' + lvlFoundationMax;
+    document.getElementById('score-level-challenge').textContent = r.byLevel['5-7'] + ' / ' + lvlChallengeMax;
+    document.getElementById('bar-level-foundation').style.width = ((r.byLevel['3-6'] / lvlFoundationMax) * 100) + '%';
+    document.getElementById('bar-level-challenge').style.width = ((r.byLevel['5-7'] / lvlChallengeMax) * 100) + '%';
+
+    // By topic
+    const topicOrder = ['stores', 'transfers', 'resources', 'efficiency', 'power'];
+    const topicMax = {};
+    topicOrder.forEach(t => { topicMax[t] = QUESTIONS.filter(q => q.topic === t).length; });
+    const topicContainer = document.getElementById('topic-breakdown');
+    topicContainer.innerHTML = topicOrder.map(t => {
+      const got = r.byTopic[t];
+      const max = topicMax[t];
+      const pct = (got / max) * 100;
+      return `
+        <div class="topic-row">
+          <span class="topic-name">${t}</span>
+          <div class="topic-bar-wrap"><div class="topic-bar" style="width:${pct}%"></div></div>
+          <span class="topic-score">${got}/${max}</span>
+        </div>`;
+    }).join('');
+
+    // Per-question review
+    const reviewBody = document.getElementById('review-body');
+    reviewBody.innerHTML = QUESTIONS.map(q => {
+      const resp = r.responses.find(x => x.id === q.id);
+      const correct = resp.correct;
+      const given = resp.answer === '' ? 'no answer' : (q.type === 'mcq' ? resp.answer + ' — ' + (q.options[resp.answer] || '') : resp.answer);
+      const expected = q.type === 'mcq' ? q.answer + ' — ' + q.options[q.answer] : q.answer;
+      const mark = correct ? '<span class="review-mark tick">✓</span>' : '<span class="review-mark cross">✗</span>';
+      return `
+        <div class="review-item">
+          <span class="review-id">Q${q.id}</span>
+          ${mark}
+          <span class="review-text">
+            <strong>${escapeHtml(q.stem)}</strong><br>
+            Your answer: ${escapeHtml(String(given))}${correct ? '' : ' · Correct: ' + escapeHtml(String(expected))}
+          </span>
+        </div>`;
+    }).join('');
+  }
+
+  /* =========================================================
+     RESUME / RESTART
+     ========================================================= */
+  function resumeAttempt() {
+    const data = loadProgress();
+    if (!data) return;
+    state.name = data.name || '';
+    state.class = data.class || '';
+    state.answers = data.answers || {};
+    state.current = Math.min(Math.max(0, data.current || 0), QUESTIONS.length - 1);
+    document.getElementById('input-name').value = state.name;
+    document.getElementById('input-class').value = state.class;
+    showScreen('screen-quiz');
+    renderQuestion();
+  }
+
+  function discardAttempt() {
+    clearProgress();
+    state.name = '';
+    state.class = '';
+    state.answers = {};
+    state.current = 0;
+    document.getElementById('resume-banner').style.display = 'none';
+  }
+
+  function restartQuiz() {
+    discardAttempt();
+    showScreen('screen-start');
+    document.getElementById('input-name').focus();
+  }
+
+  /* =========================================================
+     INIT
+     ========================================================= */
+  (function init() {
+    const data = loadProgress();
+    if (data && data.answers && Object.keys(data.answers).length > 0) {
+      // Pre-fill name/class and show resume banner
+      document.getElementById('input-name').value = data.name || '';
+      document.getElementById('input-class').value = data.class || '';
+      document.getElementById('resume-banner').style.display = 'flex';
+    }
+    // Reset borders on input
+    ['input-name', 'input-class'].forEach(id => {
+      document.getElementById(id).addEventListener('input', e => { e.target.style.borderColor = ''; });
+    });
+  })();
+</script>
+
+</body>
+</html>
