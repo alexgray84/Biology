@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chemical Bonding – Lesson Activities</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  background: #f5f0ff;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── Header ──────────────────────────────────────────── */
+.header {
+  background: #2d1b69;
+  color: white;
+  padding: 14px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.header-left h1 { font-size: 1.05rem; font-weight: 700; letter-spacing: 0.01em; }
+.header-left .sub { font-size: 0.78rem; opacity: 0.68; margin-top: 2px; }
+.progress-pill {
+  background: rgba(255,255,255,0.15);
+  border: 1px solid rgba(255,255,255,0.25);
+  padding: 5px 14px;
+  border-radius: 20px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.progress-track { height: 4px; background: #ddd6fe; }
+.progress-fill { height: 100%; background: #7c3aed; transition: width 0.5s ease; }
+
+/* ── Main ────────────────────────────────────────────── */
+.main {
+  flex: 1;
+  padding: 20px 16px 4px;
+  max-width: 880px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* ── Card ─────────────────────────────────────────────── */
+.card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+  overflow: hidden;
+  margin-bottom: 12px;
+}
+.card-header {
+  background: #f3f0ff;
+  border-bottom: 1px solid #ddd6fe;
+  padding: 12px 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.card-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #2d1b69;
+  flex: 1;
+  min-width: 160px;
+}
+.badge {
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 20px;
+  white-space: nowrap;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+.badge-activity { background: #fef3c7; color: #92400e; }
+.badge-exam     { background: #dbeafe; color: #1e3a8a; }
+.badge-spec     { background: #ede9fe; color: #4c1d95; text-transform: none; font-size: 0.75rem; }
+.badge-time     { background: #f3f4f6; color: #374151; text-transform: none; font-size: 0.75rem; }
+.badge-marks    { background: #2d1b69; color: white; margin-left: auto; }
+
+.card-body { padding: 18px 20px; }
+
+/* ── Instructions ─────────────────────────────────────── */
+.instructions {
+  background: #f3f0ff;
+  border-left: 3px solid #7c3aed;
+  padding: 10px 14px;
+  border-radius: 0 6px 6px 0;
+  font-size: 0.88rem;
+  color: #2d1b69;
+  margin-bottom: 16px;
+  line-height: 1.55;
+}
+
+/* ── Ion sprint table ─────────────────────────────────── */
+.table-wrap { overflow-x: auto; margin-bottom: 14px; }
+.data-table { width: 100%; border-collapse: collapse; font-size: 0.86rem; }
+.data-table th {
+  background: #2d1b69; color: white;
+  padding: 8px 12px; text-align: left; font-weight: 600;
+}
+.data-table td {
+  padding: 7px 12px; border-bottom: 1px solid #e5e7eb; color: #374151;
+}
+.data-table tr:nth-child(even) td { background: #faf8ff; }
+.data-table td.blank-cell { color: #d1d5db; font-style: italic; }
+.data-table td.answer-cell { color: #4c1d95; font-weight: 600; }
+.data-table td.work-cell { font-family: 'Courier New', monospace; font-size: 0.82rem; color: #2d1b69; }
+
+/* ── Task steps ───────────────────────────────────────── */
+.task-steps {
+  list-style: none; counter-reset: step;
+  display: flex; flex-direction: column; gap: 8px;
+  margin-bottom: 4px;
+}
+.task-steps li {
+  counter-increment: step;
+  display: flex; gap: 10px; align-items: flex-start;
+  font-size: 0.88rem; color: #374151; line-height: 1.55;
+}
+.task-steps li::before {
+  content: counter(step);
+  background: #7c3aed; color: white;
+  font-size: 0.74rem; font-weight: 700;
+  min-width: 20px; height: 20px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; margin-top: 2px;
+}
+
+/* ── Dot-and-cross grid ───────────────────────────────── */
+.dc-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 4px;
+}
+.dc-group-hdr {
+  font-size: 0.8rem; font-weight: 700; color: white;
+  padding: 5px 12px; border-radius: 6px 6px 0 0;
+  text-transform: uppercase; letter-spacing: 0.05em;
+}
+.dc-group-hdr.ionic   { background: #2d1b69; }
+.dc-group-hdr.covalent { background: #7c3aed; }
+.dc-item {
+  border: 1.5px solid #ddd6fe;
+  border-radius: 8px;
+  overflow: hidden;
+}
+.dc-item-hdr {
+  padding: 6px 12px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #2d1b69;
+  background: #ede9fe;
+  border-bottom: 1px solid #ddd6fe;
+}
+.dc-draw-box {
+  height: 70px;
+  background: #fdfcff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #c4b5fd;
+  font-size: 0.78rem;
+  font-style: italic;
+}
+.dc-answer-box {
+  padding: 8px 12px;
+  font-size: 0.83rem;
+  line-height: 1.5;
+  color: #374151;
+  background: #faf8ff;
+}
+
+/* ── Properties grid ──────────────────────────────────── */
+.prop-table { width: 100%; border-collapse: collapse; font-size: 0.83rem; }
+.prop-table th {
+  background: #2d1b69; color: white;
+  padding: 8px 10px; text-align: left; font-weight: 600; font-size: 0.8rem;
+}
+.prop-table td {
+  padding: 8px 10px; border: 1px solid #e5e7eb; vertical-align: top; line-height: 1.45;
+}
+.prop-table tr:nth-child(even) td { background: #faf8ff; }
+.prop-table td.n { text-align: center; font-weight: 700; color: #9ca3af; width: 28px; }
+.prop-table td.subst { min-width: 90px; font-weight: 600; color: #2d1b69; font-size: 0.83rem; }
+.prop-table td.blank { color: #d1d5db; font-style: italic; font-size: 0.8rem; min-width: 100px; }
+.prop-table td.answer { color: #4c1d95; font-size: 0.82rem; min-width: 100px; }
+
+/* ── Answer blocks ────────────────────────────────────── */
+.answer-section { display: flex; flex-direction: column; gap: 12px; }
+.answer-block { border: 1px solid #ddd6fe; border-radius: 8px; overflow: hidden; }
+.answer-block-hdr {
+  background: #ede9fe; border-bottom: 1px solid #ddd6fe;
+  padding: 7px 14px; font-size: 0.82rem; font-weight: 700; color: #4c1d95;
+}
+.answer-block-body {
+  padding: 10px 14px; font-size: 0.87rem; color: #374151; line-height: 1.6;
+}
+
+/* ── Exam questions ───────────────────────────────────── */
+.exam-qs { display: flex; flex-direction: column; gap: 18px; }
+.exam-q { }
+.exam-q-num {
+  font-size: 0.95rem; font-weight: 700; color: #2d1b69;
+  border-bottom: 1px solid #ddd6fe; padding-bottom: 5px; margin-bottom: 10px;
+}
+.exam-context {
+  font-size: 0.87rem; color: #374151; line-height: 1.55;
+  padding: 8px 12px; background: #faf8ff;
+  border-left: 3px solid #ddd6fe; border-radius: 0 6px 6px 0;
+  margin-bottom: 10px;
+}
+.exam-parts { display: flex; flex-direction: column; gap: 10px; }
+.exam-part { display: flex; gap: 10px; align-items: flex-start; }
+.exam-part-ref { font-weight: 700; color: #374151; min-width: 28px; font-size: 0.9rem; padding-top: 2px; }
+.exam-part-body { flex: 1; }
+.exam-stem { font-size: 0.9rem; color: #1a1a2e; line-height: 1.55; }
+.exam-marks { font-size: 0.8rem; color: #6b7280; font-weight: 600; margin-left: 4px; }
+.write-line { border-bottom: 1px solid #e5e7eb; height: 22px; margin-top: 5px; }
+
+/* ── Mark scheme ──────────────────────────────────────── */
+.ms-section { display: flex; flex-direction: column; gap: 14px; }
+.ms-q { }
+.ms-q-hdr {
+  background: #ede9fe; border-radius: 6px;
+  padding: 6px 12px; font-size: 0.85rem; font-weight: 700; color: #4c1d95;
+  margin-bottom: 8px;
+}
+.ms-part { display: flex; gap: 10px; margin-bottom: 8px; padding-left: 8px; }
+.ms-ref { font-weight: 700; color: #374151; min-width: 28px; font-size: 0.85rem; padding-top: 1px; }
+.ms-body { flex: 1; }
+.ms-pt {
+  display: flex; gap: 7px; align-items: flex-start;
+  font-size: 0.86rem; color: #1a1a2e; line-height: 1.5; margin-bottom: 3px;
+}
+.ms-pt-tick { color: #7c3aed; font-weight: 700; flex-shrink: 0; }
+.ms-note { font-size: 0.8rem; color: #6b7280; font-style: italic; margin-top: 3px; line-height: 1.4; }
+
+/* ── Hint & Nav ───────────────────────────────────────── */
+.hint-wrap { padding: 4px 16px 0; max-width: 880px; margin: 0 auto; width: 100%; }
+.hint-text {
+  text-align: center; font-size: 0.82rem; color: #6b7280;
+  font-style: italic; padding: 6px 0;
+}
+.nav-bar {
+  background: white; border-top: 1px solid #e5e7eb;
+  padding: 11px 20px;
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+}
+.nav-dots { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; justify-content: center; }
+.nav-dot {
+  width: 11px; height: 11px; border-radius: 50%;
+  background: #ddd6fe; border: none; cursor: pointer;
+  transition: background 0.2s; padding: 0;
+}
+.nav-dot.active { background: #2d1b69; }
+.nav-dot.done   { background: #7c3aed; }
+.btn {
+  padding: 9px 18px; border-radius: 8px;
+  font-size: 0.88rem; font-weight: 600; border: none; cursor: pointer;
+  transition: background 0.15s, opacity 0.15s;
+}
+.btn-prev   { background: #f3f4f6; color: #374151; }
+.btn-prev:hover:not(:disabled)   { background: #e5e7eb; }
+.btn-reveal { background: #7c3aed; color: white; }
+.btn-reveal:hover { background: #5b21b6; }
+.btn-next   { background: #2d1b69; color: white; }
+.btn-next:hover:not(:disabled)   { background: #3730a3; }
+.btn:disabled { opacity: 0.35; cursor: default; }
+
+/* ── Complete banner ──────────────────────────────────── */
+.complete-banner {
+  background: #2d1b69; color: white;
+  text-align: center; padding: 24px 20px;
+  border-radius: 12px; margin: 0 16px 20px;
+  max-width: 848px; margin-left: auto; margin-right: auto;
+}
+.complete-banner h2 { font-size: 1.25rem; margin-bottom: 8px; }
+.complete-banner p  { opacity: 0.8; font-size: 0.9rem; }
+
+/* ── Mobile ───────────────────────────────────────────── */
+@media (max-width: 640px) {
+  .header { padding: 10px 14px; }
+  .main { padding: 12px 10px 4px; }
+  .card-body { padding: 14px; }
+  .card-header { padding: 10px 14px; }
+  .nav-bar { flex-wrap: wrap; padding: 10px 12px; gap: 8px; }
+  .btn { padding: 8px 13px; font-size: 0.83rem; }
+  .data-table th, .data-table td { padding: 6px 8px; font-size: 0.8rem; }
+  .prop-table th, .prop-table td { padding: 6px 8px; font-size: 0.78rem; }
+  .dc-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-left">
+    <h1>⚗️ Chemical Bonding</h1>
+    <div class="sub">Lesson activities &nbsp;·&nbsp; Specs 1.37–1.51</div>
+  </div>
+  <div class="progress-pill" id="progressPill">Activity 1 of 3</div>
+</div>
+<div class="progress-track"><div class="progress-fill" id="progFill"></div></div>
+
+<div class="main" id="mainArea"></div>
+
+<div class="hint-wrap">
+  <p class="hint-text" id="hintText">Work through the activity on paper, then reveal the model answers.</p>
+</div>
+
+<div class="nav-bar">
+  <button class="btn btn-prev"    id="btnPrev"   onclick="navigate(-1)" disabled>&#8592; Back</button>
+  <div class="nav-dots" id="navDots"></div>
+  <button class="btn btn-reveal"  id="btnReveal" onclick="toggleReveal()">Reveal Answers ✓</button>
+  <button class="btn btn-next"    id="btnNext"   onclick="navigate(1)"  disabled>Next &#8594;</button>
+</div>
+
+<div class="complete-banner" id="completeBanner" style="display:none">
+  <h2>🎉 Lesson complete!</h2>
+  <p>3 activities + 25 marks of exam practice. Use the dots above to revisit any section.</p>
+</div>
+
+<script>
+// ─────────────────────────────────────────────────────────────
+// Card data
+// ─────────────────────────────────────────────────────────────
+const cards = [
+
+  // ── Activity 1: Ion Charge & Formula Sprint ────────────────
+  {
+    id: "act1", type: "activity",
+    title: "Ion Charge & Formula Sprint",
+    spec: "1.37–1.39", duration: "10",
+    instructions: "The table below lists eight pairs of ions. For each pair: (1) write the formula of the compound they form, and (2) show your cross-multiplication working. Complete on paper, then reveal the answers.",
+    ionRows: [
+      { n:1, ion1:"Na⁺",  ion2:"Cl⁻",    formula:"NaCl",         working:"Na⁺ × Cl⁻ → charges ±1, so 1:1 ratio → NaCl" },
+      { n:2, ion1:"Mg²⁺", ion2:"O²⁻",    formula:"MgO",          working:"Mg²⁺ × O²⁻ → same magnitude, so 1:1 ratio → Mg₂O₂ → simplify → MgO" },
+      { n:3, ion1:"Al³⁺", ion2:"O²⁻",    formula:"Al₂O₃",        working:"Al³⁺ × O²⁻ → swap: Al₂ O₃ → Al₂O₃" },
+      { n:4, ion1:"Fe³⁺", ion2:"OH⁻",    formula:"Fe(OH)₃",      working:"Fe³⁺ × OH⁻ → swap: Fe₁(OH)₃ → Fe(OH)₃" },
+      { n:5, ion1:"NH₄⁺", ion2:"SO₄²⁻",  formula:"(NH₄)₂SO₄",   working:"NH₄⁺ × SO₄²⁻ → swap: (NH₄)₂(SO₄)₁ → (NH₄)₂SO₄" },
+      { n:6, ion1:"Pb²⁺", ion2:"NO₃⁻",   formula:"Pb(NO₃)₂",    working:"Pb²⁺ × NO₃⁻ → swap: Pb₁(NO₃)₂ → Pb(NO₃)₂" },
+      { n:7, ion1:"Cu²⁺", ion2:"CO₃²⁻",  formula:"CuCO₃",        working:"Cu²⁺ × CO₃²⁻ → same magnitude, 1:1 ratio → Cu₂(CO₃)₂ → simplify → CuCO₃" },
+      { n:8, ion1:"Zn²⁺", ion2:"Cl⁻",    formula:"ZnCl₂",        working:"Zn²⁺ × Cl⁻ → swap: Zn₁Cl₂ → ZnCl₂" }
+    ]
+  },
+
+  // ── Activity 2: Dot-and-Cross Diagram Challenge ────────────
+  {
+    id: "act2", type: "activity",
+    title: "Dot-and-Cross Diagram Challenge",
+    spec: "1.40, 1.44, 1.46", duration: "10",
+    instructions: "Draw dot-and-cross diagrams on paper for all six substances. For ionic compounds, show the charges on each ion and the electron configurations in square brackets. For covalent molecules, show all bonding pairs and lone pairs on the outer shells only.",
+    dotCrossItems: [
+      {
+        type: "ionic", name: "NaCl",
+        answer: "Na• gives its one outer electron to •Cl. Na⁺: electron configuration 2,8 (shown in brackets, no outer electrons). Cl⁻: electron configuration 2,8,8 (shown in brackets, 8 electrons in outer shell). One ionic bond shown by the electron transfer."
+      },
+      {
+        type: "ionic", name: "MgO",
+        answer: "Mg•• gives both outer electrons to O. Mg²⁺: configuration 2,8 (no outer electrons). O²⁻: configuration 2,8 (full outer shell). Both ions shown in square brackets with charges."
+      },
+      {
+        type: "ionic", name: "MgCl₂",
+        answer: "Mg•• gives one electron to each of two Cl atoms. Mg²⁺: configuration 2,8. Each Cl⁻: configuration 2,8,8. Draw Mg²⁺ at the centre with two separate [Cl⁻] ions, each labelled with its charge."
+      },
+      {
+        type: "covalent", name: "H₂O",
+        answer: "O has 6 outer electrons. Each H contributes 1 electron. Two bonding pairs (O–H bonds) and two lone pairs on O. Each H has a complete duet (2 electrons). O achieves a full outer shell of 8."
+      },
+      {
+        type: "covalent", name: "NH₃",
+        answer: "N has 5 outer electrons. Each H contributes 1 electron. Three bonding pairs (N–H bonds) and one lone pair on N. Each H has a complete duet. N achieves a full outer shell of 8."
+      },
+      {
+        type: "covalent", name: "CO₂",
+        answer: "C has 4 outer electrons. Each O has 6 outer electrons. C forms a double bond with each O (two shared pairs per bond). C: 4 bonding pairs, no lone pairs (full outer shell of 8). Each O: 2 bonding pairs + 2 lone pairs (full outer shell of 8). Linear molecule."
+      }
+    ]
+  },
+
+  // ── Activity 3: Structure & Properties Sorting Grid ────────
+  {
+    id: "act3", type: "activity",
+    title: "Structure & Properties Sorting Grid",
+    spec: "1.41–1.43, 1.47–1.51", duration: "10",
+    instructions: "For each of the six substances in the table, fill in: the type of structure, whether the melting/boiling point is high or low (with a brief reason), and whether it conducts electricity (solid and/or molten/in solution). Complete on paper, then reveal the model answers.",
+    propRows: [
+      {
+        n: 1, substance: "NaCl",
+        structure: "Giant ionic lattice",
+        mpbp: "Very high — strong electrostatic attractions between ions require large energy to overcome",
+        conduct: "Solid: no (ions fixed). Molten or aqueous: yes (ions free to move)"
+      },
+      {
+        n: 2, substance: "HCl (gas)",
+        structure: "Simple molecular (covalent)",
+        mpbp: "Very low — only weak intermolecular forces between HCl molecules",
+        conduct: "No — no ions or free electrons"
+      },
+      {
+        n: 3, substance: "Diamond",
+        structure: "Giant covalent (3D tetrahedral lattice)",
+        mpbp: "Extremely high — many strong covalent C–C bonds must be broken",
+        conduct: "No — all electrons in covalent bonds, none free to move"
+      },
+      {
+        n: 4, substance: "Graphite",
+        structure: "Giant covalent (layered hexagonal lattice)",
+        mpbp: "Very high — strong covalent bonds within layers require large energy to break",
+        conduct: "Yes — one delocalised electron per carbon is free to move through the layers"
+      },
+      {
+        n: 5, substance: "C₆₀ (fullerene)",
+        structure: "Simple molecular (covalent)",
+        mpbp: "Relatively low — only weak intermolecular forces between C₆₀ molecules",
+        conduct: "No (solid form) — no free electrons"
+      },
+      {
+        n: 6, substance: "SiO₂ (silica)",
+        structure: "Giant covalent (like diamond — 3D lattice)",
+        mpbp: "Very high — many strong covalent Si–O bonds must be broken",
+        conduct: "No — all electrons in covalent bonds, none free to move"
+      }
+    ]
+  },
+
+  // ── Exam Questions ─────────────────────────────────────────
+  {
+    id: "exam", type: "exam",
+    title: "Exam Questions",
+    spec: "1.37–1.51", duration: "25", totalMarks: 25,
+    questions: [
+      {
+        num: "Q1", marks: 5, context: null,
+        parts: [
+          { ref:"(a)", marks:2, stem:"Potassium and sulfur react to form an ionic compound. State the formula of the ion formed by potassium and the formula of the ion formed by sulfur.", lines:2 },
+          { ref:"(b)", marks:2, stem:"Write the formula of iron(II) hydroxide. Show your working using the cross-multiplication method.", lines:3 },
+          { ref:"(c)", marks:1, stem:"State the systematic name of the compound with formula (NH₄)₂SO₄.", lines:1 }
+        ]
+      },
+      {
+        num: "Q2", marks: 5,
+        context: "Calcium chloride (CaCl₂) is an ionic compound used to de-ice roads.",
+        parts: [
+          { ref:"(a)", marks:3, stem:"Describe, using the idea of electron transfer, how the ionic bond forms between calcium and chlorine. Include the formulae of the ions formed.", lines:5 },
+          { ref:"(b)", marks:1, stem:"Explain why ionic compounds such as CaCl₂ have high melting points.", lines:2 },
+          { ref:"(c)", marks:1, stem:"Explain why solid CaCl₂ does not conduct electricity but molten CaCl₂ does.", lines:3 }
+        ]
+      },
+      {
+        num: "Q3", marks: 5, context: null,
+        parts: [
+          { ref:"(a)", marks:1, stem:"State what is meant by a covalent bond in terms of electrostatic attraction.", lines:2 },
+          { ref:"(b)", marks:2, stem:"Bromine (Br₂) has a higher boiling point than chlorine (Cl₂). Both are simple covalent molecules. Explain why Br₂ has a higher boiling point.", lines:3 },
+          { ref:"(c)", marks:1, stem:"State the number of lone pairs of electrons on the nitrogen atom in an NH₃ molecule.", lines:1 },
+          { ref:"(d)", marks:1, stem:"Explain why neither Cl₂ nor HCl can conduct electricity.", lines:2 }
+        ]
+      },
+      {
+        num: "Q4", marks: 5, context: null,
+        parts: [
+          { ref:"(a)", marks:2, stem:"Describe the structure of silicon dioxide (SiO₂), referring to the type of bonding and the arrangement of atoms.", lines:3 },
+          { ref:"(b)", marks:1, stem:"Explain why SiO₂ has a very high melting point.", lines:2 },
+          { ref:"(c)", marks:1, stem:"Diamond is used in cutting tools. Explain why, in terms of its structure.", lines:2 },
+          { ref:"(d)", marks:1, stem:"State one similarity and one difference between the structures of diamond and silicon dioxide.", lines:2 }
+        ]
+      },
+      {
+        num: "Q5", marks: 5,
+        context: "Carbon exists in several structural forms, including diamond, graphite, and C₆₀.",
+        parts: [
+          { ref:"(a)(i)", marks:2, stem:"Explain why C₆₀ has a much lower melting point than diamond.", lines:3 },
+          { ref:"(a)(ii)", marks:1, stem:"C₆₀ and SiO₂ both contain covalent bonds. Suggest why their melting points are so different.", lines:2 },
+          { ref:"(b)", marks:2, stem:"Explain why diamond does not conduct electricity but graphite does.", lines:4 }
+        ]
+      }
+    ],
+    markScheme: [
+      {
+        num: "Q1",
+        parts: [
+          { ref:"(a)", total:2,
+            points:["K⁺ ✓ (1)", "S²⁻ ✓ (1)"],
+            notes:["Do not accept K¹⁺ or S²; formula notation required"] },
+          { ref:"(b)", total:2,
+            points:["Fe²⁺ and OH⁻ identified / cross-multiplication shown: Fe₁(OH)₂ ✓ (1)", "Correct formula: Fe(OH)₂ ✓ (1)"],
+            notes:["Award 1 mark for correct formula without working if formula is correct; both marks require working shown to score 2"] },
+          { ref:"(c)", total:1,
+            points:["Ammonium sulfate ✓"],
+            notes:["Do not accept 'ammonium sulphate' as incorrect spelling; accept either spelling in this case — both are used in UK schools"] }
+        ]
+      },
+      {
+        num: "Q2",
+        parts: [
+          { ref:"(a)", total:3,
+            points:["Each calcium atom loses 2 electrons ✓ (1)", "Ca becomes Ca²⁺ and each Cl atom gains 1 electron to become Cl⁻ ✓ (1)", "The oppositely charged ions are attracted by strong electrostatic forces of attraction ✓ (1)"],
+            notes:["Award marks in any order; reference to Ca²⁺ and Cl⁻ required for second mark"] },
+          { ref:"(b)", total:1,
+            points:["Strong electrostatic attractions between oppositely charged ions require a large amount of energy to overcome ✓"],
+            notes:[] },
+          { ref:"(c)", total:1,
+            points:["In solid CaCl₂ the ions are held in fixed lattice positions and cannot move to carry charge; in molten CaCl₂ the ions are free to move and carry an electric current ✓"],
+            notes:["Must contrast solid vs molten for the mark; award if both parts addressed even if in separate sentences"] }
+        ]
+      },
+      {
+        num: "Q3",
+        parts: [
+          { ref:"(a)", total:1,
+            points:["A covalent bond is a shared pair of electrons held in place by the electrostatic attraction between the electrons and the nuclei of both bonded atoms ✓"],
+            notes:[] },
+          { ref:"(b)", total:2,
+            points:["Both are simple molecular so only intermolecular forces need to be overcome ✓ (1)", "Br₂ molecules are larger / have more electrons, so the intermolecular forces between them are stronger, requiring more energy to break ✓ (1)"],
+            notes:["Do not award marks for references to covalent bond strength — the question is about boiling point (intermolecular forces), not bond breaking"] },
+          { ref:"(c)", total:1,
+            points:["1 lone pair ✓"],
+            notes:[] },
+          { ref:"(d)", total:1,
+            points:["Neither Cl₂ nor HCl contains ions or free/delocalised electrons, so they cannot carry an electric current ✓"],
+            notes:[] }
+        ]
+      },
+      {
+        num: "Q4",
+        parts: [
+          { ref:"(a)", total:2,
+            points:["Each Si atom is covalently bonded to 4 O atoms (tetrahedral arrangement) ✓ (1)", "The O atoms bridge between Si atoms, forming a giant 3D covalent lattice extending throughout the solid ✓ (1)"],
+            notes:[] },
+          { ref:"(b)", total:1,
+            points:["Many strong covalent Si–O bonds must be broken to melt SiO₂, requiring a very large amount of energy ✓"],
+            notes:[] },
+          { ref:"(c)", total:1,
+            points:["Diamond has an extremely rigid, hard structure because each C is covalently bonded to 4 others in a tetrahedral arrangement, with no planes of weakness ✓"],
+            notes:["Accept: very hard because of strong 3D network of covalent bonds"] },
+          { ref:"(d)", total:1,
+            points:["Similarity: both are giant covalent structures / both have very high melting points ✓; Difference: diamond contains only C–C bonds / SiO₂ contains Si–O bonds between two different elements ✓ (both parts required for 1 mark)"],
+            notes:[] }
+        ]
+      },
+      {
+        num: "Q5",
+        parts: [
+          { ref:"(a)(i)", total:2,
+            points:["C₆₀ is a simple molecular substance; only weak intermolecular forces exist between the C₆₀ molecules ✓ (1)", "Diamond is a giant covalent structure; many strong covalent C–C bonds must be broken to melt it, requiring far more energy ✓ (1)"],
+            notes:[] },
+          { ref:"(a)(ii)", total:1,
+            points:["SiO₂ is a giant covalent structure with many strong covalent bonds throughout; C₆₀ is simple molecular with only weak intermolecular forces between molecules, which require much less energy to overcome ✓"],
+            notes:[] },
+          { ref:"(b)", total:2,
+            points:["In diamond, all 4 outer electrons of each carbon are used in covalent bonds, so there are no free electrons to carry a current ✓ (1)", "In graphite, each carbon uses only 3 electrons for bonding; the fourth electron is delocalised and free to move through the layers, carrying an electric current ✓ (1)"],
+            notes:[] }
+        ]
+      }
+    ]
+  }
+];
+
+// ─────────────────────────────────────────────────────────────
+// State
+// ─────────────────────────────────────────────────────────────
+let current  = 0;
+let revealed = false;
+const done   = new Set();
+
+// ─────────────────────────────────────────────────────────────
+// Build: activity question face
+// ─────────────────────────────────────────────────────────────
+function buildActivityFace(card) {
+  let html = `<div class="instructions">${card.instructions}</div>`;
+
+  // Ion sprint table
+  if (card.ionRows) {
+    html += `<div class="table-wrap"><table class="data-table">
+      <thead><tr>
+        <th>#</th><th>Ion 1</th><th>Ion 2</th>
+        <th>Formula (write here)</th><th>Working (write here)</th>
+      </tr></thead>
+      <tbody>`;
+    for (const r of card.ionRows) {
+      html += `<tr>
+        <td style="text-align:center;font-weight:700;color:#9ca3af">${r.n}</td>
+        <td style="font-weight:600;color:#2d1b69">${r.ion1}</td>
+        <td style="font-weight:600;color:#2d1b69">${r.ion2}</td>
+        <td class="blank-cell">…</td>
+        <td class="blank-cell">…</td>
+      </tr>`;
+    }
+    html += '</tbody></table></div>';
+  }
+
+  // Dot-and-cross grid
+  if (card.dotCrossItems) {
+    const ionic    = card.dotCrossItems.filter(d => d.type === 'ionic');
+    const covalent = card.dotCrossItems.filter(d => d.type === 'covalent');
+    html += '<div class="dc-grid">';
+    html += '<div>';
+    html += '<div class="dc-group-hdr ionic">Ionic compounds</div>';
+    for (const d of ionic) {
+      html += `<div class="dc-item" style="margin-top:8px">
+        <div class="dc-item-hdr">${d.name}</div>
+        <div class="dc-draw-box">draw dot-and-cross diagram here</div>
+      </div>`;
+    }
+    html += '</div>';
+    html += '<div>';
+    html += '<div class="dc-group-hdr covalent">Covalent molecules</div>';
+    for (const d of covalent) {
+      html += `<div class="dc-item" style="margin-top:8px">
+        <div class="dc-item-hdr">${d.name}</div>
+        <div class="dc-draw-box">draw dot-and-cross diagram here</div>
+      </div>`;
+    }
+    html += '</div>';
+    html += '</div>';
+  }
+
+  // Properties sorting grid
+  if (card.propRows) {
+    html += `<div class="table-wrap"><table class="prop-table">
+      <thead><tr>
+        <th>#</th><th>Substance</th>
+        <th>Structure type</th><th>MP/BP — high or low? Why?</th>
+        <th>Conducts electricity?</th>
+      </tr></thead>
+      <tbody>`;
+    for (const r of card.propRows) {
+      html += `<tr>
+        <td class="n">${r.n}</td>
+        <td class="subst">${r.substance}</td>
+        <td class="blank">write here…</td>
+        <td class="blank">write here…</td>
+        <td class="blank">write here…</td>
+      </tr>`;
+    }
+    html += '</tbody></table></div>';
+  }
+
+  return html;
+}
+
+// ─────────────────────────────────────────────────────────────
+// Build: activity answer face
+// ─────────────────────────────────────────────────────────────
+function buildActivityAnswers(card) {
+  let html = '<div class="answer-section">';
+
+  // Ion sprint answers
+  if (card.ionRows) {
+    html += `<div class="answer-block">
+      <div class="answer-block-hdr">Model Answers</div>
+      <div class="answer-block-body" style="padding:0">
+        <div class="table-wrap" style="margin:0"><table class="data-table">
+          <thead><tr>
+            <th>#</th><th>Ion 1</th><th>Ion 2</th>
+            <th>Formula</th><th>Cross-multiplication working</th>
+          </tr></thead>
+          <tbody>`;
+    for (const r of card.ionRows) {
+      html += `<tr>
+        <td style="text-align:center;font-weight:700;color:#9ca3af">${r.n}</td>
+        <td style="font-weight:600;color:#2d1b69">${r.ion1}</td>
+        <td style="font-weight:600;color:#2d1b69">${r.ion2}</td>
+        <td class="answer-cell">${r.formula}</td>
+        <td class="work-cell">${r.working}</td>
+      </tr>`;
+    }
+    html += '</tbody></table></div></div></div>';
+  }
+
+  // Dot-and-cross answers
+  if (card.dotCrossItems) {
+    const ionic    = card.dotCrossItems.filter(d => d.type === 'ionic');
+    const covalent = card.dotCrossItems.filter(d => d.type === 'covalent');
+    html += '<div class="answer-block"><div class="answer-block-hdr">Ionic compounds — key features</div><div class="answer-block-body"><div class="dc-grid">';
+    for (const d of ionic) {
+      html += `<div class="dc-item">
+        <div class="dc-item-hdr">${d.name}</div>
+        <div class="dc-answer-box">${d.answer}</div>
+      </div>`;
+    }
+    html += '</div></div></div>';
+    html += '<div class="answer-block"><div class="answer-block-hdr">Covalent molecules — key features</div><div class="answer-block-body"><div class="dc-grid">';
+    for (const d of covalent) {
+      html += `<div class="dc-item">
+        <div class="dc-item-hdr">${d.name}</div>
+        <div class="dc-answer-box">${d.answer}</div>
+      </div>`;
+    }
+    html += '</div></div></div>';
+  }
+
+  // Properties grid answers
+  if (card.propRows) {
+    html += `<div class="answer-block">
+      <div class="answer-block-hdr">Model Answers</div>
+      <div class="answer-block-body" style="padding:0">
+        <div class="table-wrap" style="margin:0"><table class="prop-table">
+          <thead><tr>
+            <th>#</th><th>Substance</th>
+            <th>Structure type</th><th>MP/BP</th>
+            <th>Conducts electricity?</th>
+          </tr></thead>
+          <tbody>`;
+    for (const r of card.propRows) {
+      html += `<tr>
+        <td class="n">${r.n}</td>
+        <td class="subst">${r.substance}</td>
+        <td class="answer">${r.structure}</td>
+        <td class="answer">${r.mpbp}</td>
+        <td class="answer">${r.conduct}</td>
+      </tr>`;
+    }
+    html += '</tbody></table></div></div></div>';
+  }
+
+  html += '</div>';
+  return html;
+}
+
+// ─────────────────────────────────────────────────────────────
+// Build: exam question face
+// ─────────────────────────────────────────────────────────────
+function buildExamFace(card) {
+  let html = '<div class="exam-qs">';
+  for (const q of card.questions) {
+    html += `<div class="exam-q">
+      <div class="exam-q-num">${q.num} <span style="font-size:0.8rem;font-weight:400;color:#6b7280">[${q.marks} marks]</span></div>`;
+    if (q.context) {
+      html += `<div class="exam-context">${q.context}</div>`;
+    }
+    html += '<div class="exam-parts">';
+    for (const p of q.parts) {
+      const lines = Array(p.lines).fill('<div class="write-line"></div>').join('');
+      html += `<div class="exam-part">
+        <div class="exam-part-ref">${p.ref}</div>
+        <div class="exam-part-body">
+          <div class="exam-stem">${p.stem} <span class="exam-marks">[${p.marks}]</span></div>
+          ${lines}
+        </div>
+      </div>`;
+    }
+    html += '</div></div>';
+  }
+  html += '</div>';
+  return html;
+}
+
+// ─────────────────────────────────────────────────────────────
+// Build: mark scheme face
+// ─────────────────────────────────────────────────────────────
+function buildMarkScheme(card) {
+  let html = '<div class="ms-section">';
+  for (const q of card.markScheme) {
+    html += `<div class="ms-q"><div class="ms-q-hdr">${q.num}</div>`;
+    for (const part of q.parts) {
+      html += `<div class="ms-part">
+        <div class="ms-ref">${part.ref}</div>
+        <div class="ms-body">`;
+      for (const pt of part.points) {
+        html += `<div class="ms-pt"><span class="ms-pt-tick">›</span><span>${pt}</span></div>`;
+      }
+      for (const note of part.notes) {
+        html += `<div class="ms-note">${note}</div>`;
+      }
+      html += `</div></div>`;
+    }
+    html += '</div>';
+  }
+  html += '</div>';
+  return html;
+}
+
+// ─────────────────────────────────────────────────────────────
+// Render current card
+// ─────────────────────────────────────────────────────────────
+function render() {
+  const card = cards[current];
+  revealed = false;
+
+  // Progress bar
+  document.getElementById('progFill').style.width = `${((current + 1) / cards.length) * 100}%`;
+
+  // Pill
+  if (card.type === 'activity') {
+    document.getElementById('progressPill').textContent = `Activity ${current + 1} of 3`;
+  } else {
+    document.getElementById('progressPill').textContent = 'Exam Questions';
+  }
+
+  // Nav buttons
+  document.getElementById('btnPrev').disabled   = (current === 0);
+  document.getElementById('btnNext').disabled   = !done.has(current) || (current === cards.length - 1);
+  document.getElementById('btnReveal').textContent = 'Reveal Answers ✓';
+
+  // Hint
+  document.getElementById('hintText').textContent = card.type === 'exam'
+    ? 'Complete the exam questions on paper, then reveal the mark scheme.'
+    : 'Work through the activity on paper, then reveal the model answers.';
+
+  // Nav dots
+  renderDots();
+
+  // Card HTML
+  const isAct = card.type === 'activity';
+  const badgeHTML = isAct
+    ? `<span class="badge badge-activity">Activity</span>`
+    : `<span class="badge badge-exam">Exam Practice</span>`;
+  const marksHTML = isAct ? '' : `<span class="badge badge-marks">${card.totalMarks} marks</span>`;
+
+  const bodyHTML = isAct ? buildActivityFace(card) : buildExamFace(card);
+
+  document.getElementById('mainArea').innerHTML = `
+    <div class="card">
+      <div class="card-header">
+        ${badgeHTML}
+        <span class="badge badge-spec">${card.spec}</span>
+        <span class="badge badge-time">⏱ ${card.duration} min</span>
+        <span class="card-title">${card.title}</span>
+        ${marksHTML}
+      </div>
+      <div class="card-body">
+        <div id="cardContent">${bodyHTML}</div>
+      </div>
+    </div>`;
+
+  // Complete banner
+  document.getElementById('completeBanner').style.display =
+    (done.size === cards.length && current === cards.length - 1) ? 'block' : 'none';
+}
+
+// ─────────────────────────────────────────────────────────────
+// Toggle reveal / hide
+// ─────────────────────────────────────────────────────────────
+function toggleReveal() {
+  const card = cards[current];
+  const btn  = document.getElementById('btnReveal');
+  const contentEl = document.getElementById('cardContent');
+
+  if (revealed) {
+    revealed = false;
+    btn.textContent = 'Reveal Answers ✓';
+    document.getElementById('hintText').textContent = card.type === 'exam'
+      ? 'Complete the exam questions on paper, then reveal the mark scheme.'
+      : 'Work through the activity on paper, then reveal the model answers.';
+    contentEl.innerHTML = card.type === 'activity' ? buildActivityFace(card) : buildExamFace(card);
+  } else {
+    revealed = true;
+    done.add(current);
+    btn.textContent = 'Hide Answers ↩';
+    document.getElementById('hintText').textContent = card.type === 'exam'
+      ? 'Check your answers carefully against the mark scheme.'
+      : 'Check your answers against the model answers below.';
+    contentEl.innerHTML = card.type === 'activity' ? buildActivityAnswers(card) : buildMarkScheme(card);
+    document.getElementById('btnNext').disabled = (current === cards.length - 1);
+    renderDots();
+    if (done.size === cards.length && current === cards.length - 1) {
+      document.getElementById('completeBanner').style.display = 'block';
+    }
+  }
+}
+
+// ─────────────────────────────────────────────────────────────
+// Navigate
+// ─────────────────────────────────────────────────────────────
+function navigate(dir) {
+  current += dir;
+  render();
+  window.scrollTo(0, 0);
+}
+
+// ─────────────────────────────────────────────────────────────
+// Render nav dots
+// ─────────────────────────────────────────────────────────────
+function renderDots() {
+  const dotsEl = document.getElementById('navDots');
+  dotsEl.innerHTML = '';
+  for (let i = 0; i < cards.length; i++) {
+    const dot = document.createElement('button');
+    dot.className = 'nav-dot' + (i === current ? ' active' : (done.has(i) ? ' done' : ''));
+    dot.setAttribute('aria-label', `Card ${i + 1}`);
+    dot.onclick = () => { current = i; render(); };
+    dotsEl.appendChild(dot);
+  }
+}
+
+// ─────────────────────────────────────────────────────────────
+// Init
+// ─────────────────────────────────────────────────────────────
+render();
+</script>
+</body>
+</html>
