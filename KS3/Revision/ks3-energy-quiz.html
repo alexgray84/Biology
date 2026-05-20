@@ -682,11 +682,14 @@
       return false;
     }
     try {
+      // Form-encoded body: still a CORS simple request (no preflight), and
+      // the Apps Script frontend redirect handles it more reliably than a
+      // text/plain body across the 302 hop. The script reads e.parameter.payload.
+      const body = new URLSearchParams();
+      body.append('payload', JSON.stringify({ ...payload, token: FORM_TOKEN }));
       const res = await fetch(APPS_SCRIPT_URL, {
         method: 'POST',
-        // text/plain avoids the CORS preflight that Apps Script cannot answer.
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify({ ...payload, token: FORM_TOKEN })
+        body: body
       });
       const json = await res.json();
       return json.status === 'ok';

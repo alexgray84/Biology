@@ -34,7 +34,19 @@ const FORM_TOKEN = 'ks3-energy-7a3f9d2c';
 
 function doPost(e) {
   try {
-    const data = JSON.parse(e.postData.contents);
+    // Client sends payload as a form field (form-urlencoded) for reliable
+    // delivery through Google's 302 redirect. Fall back to raw body for
+    // older clients posting JSON in the body directly.
+    let raw = null;
+    if (e && e.parameter && e.parameter.payload) {
+      raw = e.parameter.payload;
+    } else if (e && e.postData && e.postData.contents) {
+      raw = e.postData.contents;
+    }
+    if (!raw) {
+      return jsonOut({ status: 'error', message: 'no payload' });
+    }
+    const data = JSON.parse(raw);
 
     if (data.token !== FORM_TOKEN) {
       return jsonOut({ status: 'error', message: 'unauthorised' });
