@@ -404,8 +404,24 @@
   /* =========================================================
      CONFIG
      ========================================================= */
-  const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzjZh1eYljr3oSMIdY_xgwnKWN0a-WOfP6raEqzQWrfL9lB0tcyqFkxzAX57nuheyWO/exec';
-  const FORM_TOKEN = 'ks3-energy-7a3f9d2c';
+  // Submission goes to a Google Form whose responses feed a Sheet in Arcadia
+  // Drive. Forms accept anonymous POSTs reliably across browsers and Workspace
+  // tenants, which Apps Script web apps did not in this deployment.
+  const FORM_ACTION = 'https://docs.google.com/forms/d/e/1FAIpQLSfxp6F1IiTTO5AYE4jaLP3lBqxCQK959sGPHKJIb8ZiF5LMzQ/formResponse';
+  const FORM_FIELDS = {
+    name:       'entry.414882307',
+    class_:     'entry.500664680',
+    total:      'entry.178759895',
+    percent:    'entry.205220139',
+    tier36:     'entry.1828453602',
+    tier57:     'entry.1528093747',
+    stores:     'entry.133885579',
+    transfers:  'entry.451295527',
+    resources:  'entry.1546106955',
+    efficiency: 'entry.328369198',
+    power:      'entry.1126935901',
+    responses:  'entry.165054768'
+  };
   const STORAGE_KEY = 'ks3-energy-quiz-progress';
 
   /* =========================================================
@@ -677,22 +693,29 @@
      SUBMIT
      ========================================================= */
   async function submitResults(payload) {
-    if (!APPS_SCRIPT_URL || APPS_SCRIPT_URL.indexOf('PASTE_') === 0) {
-      console.warn('APPS_SCRIPT_URL not configured.');
-      return false;
-    }
     try {
-      // Form-encoded body: still a CORS simple request (no preflight), and
-      // the Apps Script frontend redirect handles it more reliably than a
-      // text/plain body across the 302 hop. The script reads e.parameter.payload.
       const body = new URLSearchParams();
-      body.append('payload', JSON.stringify({ ...payload, token: FORM_TOKEN }));
-      const res = await fetch(APPS_SCRIPT_URL, {
+      body.append(FORM_FIELDS.name,       payload.name  || '');
+      body.append(FORM_FIELDS.class_,     payload.class || '');
+      body.append(FORM_FIELDS.total,      String(payload.total));
+      body.append(FORM_FIELDS.percent,    String(payload.percent));
+      body.append(FORM_FIELDS.tier36,     String(payload.byLevel['3-6']));
+      body.append(FORM_FIELDS.tier57,     String(payload.byLevel['5-7']));
+      body.append(FORM_FIELDS.stores,     String(payload.byTopic.stores));
+      body.append(FORM_FIELDS.transfers,  String(payload.byTopic.transfers));
+      body.append(FORM_FIELDS.resources,  String(payload.byTopic.resources));
+      body.append(FORM_FIELDS.efficiency, String(payload.byTopic.efficiency));
+      body.append(FORM_FIELDS.power,      String(payload.byTopic.power));
+      body.append(FORM_FIELDS.responses,  JSON.stringify(payload.responses));
+
+      // no-cors: Google Forms accepts the POST cross-origin but the response
+      // is opaque to JS. We treat absence of a thrown error as success.
+      await fetch(FORM_ACTION, {
         method: 'POST',
+        mode: 'no-cors',
         body: body
       });
-      const json = await res.json();
-      return json.status === 'ok';
+      return true;
     } catch (err) {
       console.error('Submit failed', err);
       return false;
