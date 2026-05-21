@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Motion &amp; Forces – Lesson Activities</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  background: #f0f4ff;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── Header ──────────────────────────────────────────── */
+.header {
+  background: #0c2340;
+  color: white;
+  padding: 14px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.header-left h1 { font-size: 1.05rem; font-weight: 700; letter-spacing: 0.01em; }
+.header-left .sub { font-size: 0.78rem; opacity: 0.68; margin-top: 2px; }
+.progress-pill {
+  background: rgba(255,255,255,0.15);
+  border: 1px solid rgba(255,255,255,0.25);
+  padding: 5px 14px;
+  border-radius: 20px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.progress-track { height: 4px; background: #bfdbfe; }
+.progress-fill { height: 100%; background: #3b82f6; transition: width 0.5s ease; }
+
+/* ── Main ────────────────────────────────────────────── */
+.main {
+  flex: 1;
+  padding: 20px 16px 4px;
+  max-width: 880px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* ── Card ─────────────────────────────────────────────── */
+.card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+  overflow: hidden;
+  margin-bottom: 12px;
+}
+.card-header {
+  background: #eff6ff;
+  border-bottom: 1px solid #bfdbfe;
+  padding: 12px 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.card-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #0c2340;
+  flex: 1;
+  min-width: 160px;
+}
+.badge {
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 20px;
+  white-space: nowrap;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+.badge-activity { background: #fef3c7; color: #92400e; }
+.badge-exam     { background: #dbeafe; color: #1e3a8a; }
+.badge-spec     { background: #dbeafe; color: #1e3a5f; text-transform: none; font-size: 0.75rem; }
+.badge-time     { background: #f3f4f6; color: #374151; text-transform: none; font-size: 0.75rem; }
+.badge-marks    { background: #0c2340; color: white; margin-left: auto; }
+
+.card-body { padding: 18px 20px; }
+
+/* ── Instructions ─────────────────────────────────────── */
+.instructions {
+  background: #eff6ff;
+  border-left: 3px solid #3b82f6;
+  padding: 10px 14px;
+  border-radius: 0 6px 6px 0;
+  font-size: 0.88rem;
+  color: #1e3a5f;
+  margin-bottom: 16px;
+  line-height: 1.55;
+}
+
+/* ── Calculation sprint table ─────────────────────────── */
+.table-wrap { overflow-x: auto; margin-bottom: 14px; }
+.data-table { width: 100%; border-collapse: collapse; font-size: 0.86rem; }
+.data-table th {
+  background: #0c2340; color: white;
+  padding: 8px 12px; text-align: left; font-weight: 600;
+}
+.data-table td {
+  padding: 7px 12px; border-bottom: 1px solid #e5e7eb; color: #374151;
+}
+.data-table tr:nth-child(even) td { background: #f8faff; }
+.data-table td.blank-cell { color: #d1d5db; font-style: italic; }
+.data-table td.answer-cell { color: #1e3a5f; font-weight: 600; }
+.data-table td.eq-cell { font-family: 'Courier New', monospace; font-size: 0.82rem; color: #0c2340; }
+
+/* ── Graph grid ───────────────────────────────────────── */
+.graph-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 14px;
+}
+.graph-panel {
+  border: 2px dashed #93c5fd;
+  border-radius: 10px;
+  background: #f8faff;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+.graph-panel svg { width: 100%; height: auto; }
+.graph-label {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #0c2340;
+  text-align: center;
+  margin-bottom: 4px;
+}
+
+/* ── Graph questions ──────────────────────────────────── */
+.graph-qs { display: flex; flex-direction: column; gap: 8px; margin-bottom: 4px; }
+.graph-q {
+  display: flex; gap: 10px; align-items: flex-start;
+  font-size: 0.88rem; color: #374151; line-height: 1.55;
+}
+.graph-q-ref { font-weight: 700; color: #0c2340; min-width: 28px; flex-shrink: 0; padding-top: 1px; }
+.graph-q-marks { font-size: 0.78rem; color: #6b7280; font-weight: 600; margin-left: 4px; }
+
+/* ── Forces table ─────────────────────────────────────── */
+.forces-table { width: 100%; border-collapse: collapse; font-size: 0.86rem; margin-bottom: 14px; }
+.forces-table th {
+  background: #0c2340; color: white;
+  padding: 8px 12px; text-align: center; font-weight: 600;
+}
+.forces-table td {
+  padding: 7px 12px; border: 1px solid #e5e7eb; text-align: center; color: #374151;
+}
+.forces-table tr:nth-child(even) td { background: #f8faff; }
+.forces-table td.blank-cell { color: #d1d5db; font-style: italic; }
+.forces-table td.answer-cell { color: #1e3a5f; font-weight: 600; }
+.forces-table td.find-cell { background: #dbeafe; color: #1e3a8a; font-weight: 700; font-style: italic; font-size: 0.8rem; }
+
+/* ── Answer blocks ────────────────────────────────────── */
+.answer-section { display: flex; flex-direction: column; gap: 12px; }
+.answer-block { border: 1px solid #bfdbfe; border-radius: 8px; overflow: hidden; }
+.answer-block-hdr {
+  background: #dbeafe; border-bottom: 1px solid #bfdbfe;
+  padding: 7px 14px; font-size: 0.82rem; font-weight: 700; color: #1e3a5f;
+}
+.answer-block-body {
+  padding: 10px 14px; font-size: 0.87rem; color: #374151; line-height: 1.6;
+}
+
+/* ── Answer rows ──────────────────────────────────────── */
+.ans-row {
+  display: flex; gap: 8px; align-items: flex-start;
+  font-size: 0.86rem; color: #1a2e4f; line-height: 1.5;
+  padding: 5px 0; border-bottom: 1px solid #eff6ff;
+}
+.ans-row:last-child { border-bottom: none; }
+.ans-ref { font-weight: 700; color: #0c2340; min-width: 28px; flex-shrink: 0; }
+.ans-tick { color: #2563eb; font-weight: 800; flex-shrink: 0; }
+
+/* ── Exam questions ───────────────────────────────────── */
+.exam-qs { display: flex; flex-direction: column; gap: 18px; }
+.exam-q { }
+.exam-q-num {
+  font-size: 0.95rem; font-weight: 700; color: #0c2340;
+  border-bottom: 1px solid #bfdbfe; padding-bottom: 5px; margin-bottom: 10px;
+}
+.exam-context {
+  font-size: 0.87rem; color: #374151; line-height: 1.55;
+  padding: 8px 12px; background: #f8faff;
+  border-left: 3px solid #93c5fd; border-radius: 0 6px 6px 0;
+  margin-bottom: 10px;
+}
+.exam-parts { display: flex; flex-direction: column; gap: 10px; }
+.exam-part { display: flex; gap: 10px; align-items: flex-start; }
+.exam-part-ref { font-weight: 700; color: #374151; min-width: 28px; font-size: 0.9rem; padding-top: 2px; }
+.exam-part-body { flex: 1; }
+.exam-stem { font-size: 0.9rem; color: #1a2e4f; line-height: 1.55; }
+.exam-marks { font-size: 0.8rem; color: #6b7280; font-weight: 600; margin-left: 4px; }
+.write-line { border-bottom: 1px solid #e5e7eb; height: 22px; margin-top: 5px; }
+
+/* ── Mark scheme ──────────────────────────────────────── */
+.ms-section { display: flex; flex-direction: column; gap: 14px; }
+.ms-q { }
+.ms-q-hdr {
+  background: #dbeafe; border-radius: 6px;
+  padding: 6px 12px; font-size: 0.85rem; font-weight: 700; color: #1e3a5f;
+  margin-bottom: 8px;
+}
+.ms-part { display: flex; gap: 10px; margin-bottom: 8px; padding-left: 8px; }
+.ms-ref { font-weight: 700; color: #374151; min-width: 28px; font-size: 0.85rem; padding-top: 1px; }
+.ms-body { flex: 1; }
+.ms-pt {
+  display: flex; gap: 7px; align-items: flex-start;
+  font-size: 0.86rem; color: #1a2e4f; line-height: 1.5; margin-bottom: 3px;
+}
+.ms-pt-tick { color: #2563eb; font-weight: 700; flex-shrink: 0; }
+.ms-note { font-size: 0.8rem; color: #6b7280; font-style: italic; margin-top: 3px; line-height: 1.4; }
+
+/* ── Hint & Nav ───────────────────────────────────────── */
+.hint-wrap { padding: 4px 16px 0; max-width: 880px; margin: 0 auto; width: 100%; }
+.hint-text {
+  text-align: center; font-size: 0.82rem; color: #6b7280;
+  font-style: italic; padding: 6px 0;
+}
+.nav-bar {
+  background: white; border-top: 1px solid #e5e7eb;
+  padding: 11px 20px;
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+}
+.nav-dots { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; justify-content: center; }
+.nav-dot {
+  width: 11px; height: 11px; border-radius: 50%;
+  background: #bfdbfe; border: none; cursor: pointer;
+  transition: background 0.2s; padding: 0;
+}
+.nav-dot.active { background: #0c2340; }
+.nav-dot.done   { background: #3b82f6; }
+.btn {
+  padding: 9px 18px; border-radius: 8px;
+  font-size: 0.88rem; font-weight: 600; border: none; cursor: pointer;
+  transition: background 0.15s, opacity 0.15s;
+}
+.btn-prev   { background: #f3f4f6; color: #374151; }
+.btn-prev:hover:not(:disabled)   { background: #e5e7eb; }
+.btn-reveal { background: #3b82f6; color: white; }
+.btn-reveal:hover { background: #2563eb; }
+.btn-next   { background: #0c2340; color: white; }
+.btn-next:hover:not(:disabled)   { background: #1e3a5f; }
+.btn:disabled { opacity: 0.35; cursor: default; }
+
+/* ── Complete banner ──────────────────────────────────── */
+.complete-banner {
+  background: #0c2340; color: white;
+  text-align: center; padding: 24px 20px;
+  border-radius: 12px; margin: 0 16px 20px;
+  max-width: 848px; margin-left: auto; margin-right: auto;
+}
+.complete-banner h2 { font-size: 1.25rem; margin-bottom: 8px; }
+.complete-banner p  { opacity: 0.8; font-size: 0.9rem; }
+
+/* ── Mobile ───────────────────────────────────────────── */
+@media (max-width: 640px) {
+  .header { padding: 10px 14px; }
+  .main { padding: 12px 10px 4px; }
+  .card-body { padding: 14px; }
+  .card-header { padding: 10px 14px; }
+  .nav-bar { flex-wrap: wrap; padding: 10px 12px; gap: 8px; }
+  .btn { padding: 8px 13px; font-size: 0.83rem; }
+  .data-table th, .data-table td { padding: 6px 8px; font-size: 0.8rem; }
+  .graph-grid { grid-template-columns: 1fr; }
+  .forces-table th, .forces-table td { padding: 6px 8px; font-size: 0.8rem; }
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-left">
+    <h1>⚡ Motion &amp; Forces</h1>
+    <div class="sub">Lesson activities &nbsp;·&nbsp; Specs 1.1–1.21</div>
+  </div>
+  <div class="progress-pill" id="progressPill">Activity 1 of 3</div>
+</div>
+<div class="progress-track"><div class="progress-fill" id="progFill"></div></div>
+
+<div class="main" id="mainArea"></div>
+
+<div class="hint-wrap">
+  <p class="hint-text" id="hintText">Work through the activity on paper, then reveal the model answers.</p>
+</div>
+
+<div class="nav-bar">
+  <button class="btn btn-prev"    id="btnPrev"   onclick="navigate(-1)" disabled>&#8592; Back</button>
+  <div class="nav-dots" id="navDots"></div>
+  <button class="btn btn-reveal"  id="btnReveal" onclick="toggleReveal()">Reveal Answers ✓</button>
+  <button class="btn btn-next"    id="btnNext"   onclick="navigate(1)"  disabled>Next &#8594;</button>
+</div>
+
+<div class="complete-banner" id="completeBanner" style="display:none">
+  <h2>🎉 Lesson complete!</h2>
+  <p>3 activities + 25 marks of exam practice. Use the dots above to revisit any section.</p>
+</div>
+
+<script>
+
+// ─────────────────────────────────────────────────────────────
+// SVG Diagrams
+// ─────────────────────────────────────────────────────────────
+const dtSVG = `<svg viewBox="0 0 290 210" xmlns="http://www.w3.org/2000/svg" font-family="inherit">
+  <rect x="48" y="20" width="220" height="162" fill="#f8faff" stroke="#bfdbfe" stroke-width="1" rx="2"/>
+  <line x1="48" y1="128" x2="268" y2="128" stroke="#e0e8f8" stroke-width="0.8"/>
+  <line x1="48" y1="74"  x2="268" y2="74"  stroke="#e0e8f8" stroke-width="0.8"/>
+  <line x1="103" y1="20" x2="103" y2="182" stroke="#e0e8f8" stroke-width="0.8"/>
+  <line x1="158" y1="20" x2="158" y2="182" stroke="#e0e8f8" stroke-width="0.8"/>
+  <line x1="213" y1="20" x2="213" y2="182" stroke="#e0e8f8" stroke-width="0.8"/>
+  <line x1="48" y1="182" x2="268" y2="182" stroke="#0c2340" stroke-width="1.8"/>
+  <line x1="48" y1="20"  x2="48"  y2="182" stroke="#0c2340" stroke-width="1.8"/>
+  <text x="103" y="196" text-anchor="middle" font-size="9" fill="#334155">10</text>
+  <text x="158" y="196" text-anchor="middle" font-size="9" fill="#334155">20</text>
+  <text x="213" y="196" text-anchor="middle" font-size="9" fill="#334155">30</text>
+  <text x="268" y="196" text-anchor="middle" font-size="9" fill="#334155">40</text>
+  <text x="44" y="131" text-anchor="end" font-size="9" fill="#334155">20</text>
+  <text x="44" y="77"  text-anchor="end" font-size="9" fill="#334155">40</text>
+  <text x="44" y="23"  text-anchor="end" font-size="9" fill="#334155">60</text>
+  <text x="158" y="207" text-anchor="middle" font-size="9.5" fill="#1e3a5f">Time / s</text>
+  <text x="14" y="101" text-anchor="middle" font-size="9.5" fill="#1e3a5f" transform="rotate(-90,14,101)">Distance / m</text>
+  <!-- A→B: rising, B→C: flat, C→D: steeper rise -->
+  <polyline points="48,182 103,128 183,128 268,20" fill="none" stroke="#1d4ed8" stroke-width="2.5" stroke-linejoin="round"/>
+  <circle cx="48"  cy="182" r="4" fill="#dc2626" stroke="white" stroke-width="1.5"/>
+  <circle cx="103" cy="128" r="4" fill="#dc2626" stroke="white" stroke-width="1.5"/>
+  <circle cx="183" cy="128" r="4" fill="#dc2626" stroke="white" stroke-width="1.5"/>
+  <circle cx="268" cy="20"  r="4" fill="#dc2626" stroke="white" stroke-width="1.5"/>
+  <text x="42"  y="176" font-size="10" font-weight="700" fill="#dc2626">A</text>
+  <text x="97"  y="122" font-size="10" font-weight="700" fill="#dc2626">B</text>
+  <text x="177" y="122" font-size="10" font-weight="700" fill="#dc2626">C</text>
+  <text x="262" y="14"  font-size="10" font-weight="700" fill="#dc2626">D</text>
+</svg>`;
+
+const vtSVG = `<svg viewBox="0 0 290 210" xmlns="http://www.w3.org/2000/svg" font-family="inherit">
+  <rect x="48" y="20" width="220" height="162" fill="#f8faff" stroke="#bfdbfe" stroke-width="1" rx="2"/>
+  <!-- shaded areas -->
+  <polygon points="48,182 103,20 103,182" fill="rgba(59,130,246,0.12)"/>
+  <polygon points="103,20 213,20 213,182 103,182" fill="rgba(59,130,246,0.08)"/>
+  <polygon points="213,20 268,182 213,182" fill="rgba(59,130,246,0.12)"/>
+  <line x1="48" y1="142" x2="268" y2="142" stroke="#e0e8f8" stroke-width="0.8"/>
+  <line x1="48" y1="101" x2="268" y2="101" stroke="#e0e8f8" stroke-width="0.8"/>
+  <line x1="48" y1="61"  x2="268" y2="61"  stroke="#e0e8f8" stroke-width="0.8"/>
+  <line x1="103" y1="20" x2="103" y2="182" stroke="#93c5fd" stroke-width="0.8" stroke-dasharray="3,3"/>
+  <line x1="213" y1="20" x2="213" y2="182" stroke="#93c5fd" stroke-width="0.8" stroke-dasharray="3,3"/>
+  <line x1="48" y1="182" x2="268" y2="182" stroke="#0c2340" stroke-width="1.8"/>
+  <line x1="48" y1="20"  x2="48"  y2="182" stroke="#0c2340" stroke-width="1.8"/>
+  <text x="103" y="196" text-anchor="middle" font-size="9" fill="#334155">10</text>
+  <text x="158" y="196" text-anchor="middle" font-size="9" fill="#334155">20</text>
+  <text x="213" y="196" text-anchor="middle" font-size="9" fill="#334155">30</text>
+  <text x="268" y="196" text-anchor="middle" font-size="9" fill="#334155">40</text>
+  <text x="44" y="144" text-anchor="end" font-size="9" fill="#334155">5</text>
+  <text x="44" y="104" text-anchor="end" font-size="9" fill="#334155">10</text>
+  <text x="44" y="64"  text-anchor="end" font-size="9" fill="#334155">15</text>
+  <text x="44" y="23"  text-anchor="end" font-size="9" fill="#334155">20</text>
+  <text x="158" y="207" text-anchor="middle" font-size="9.5" fill="#1e3a5f">Time / s</text>
+  <text x="14" y="101" text-anchor="middle" font-size="9.5" fill="#1e3a5f" transform="rotate(-90,14,101)">Velocity / m s⁻¹</text>
+  <polyline points="48,182 103,20 213,20 268,182" fill="none" stroke="#1d4ed8" stroke-width="2.5" stroke-linejoin="round"/>
+  <text x="72"  y="165" font-size="8.5" fill="#1d4ed8" text-anchor="middle" font-style="italic">A–B</text>
+  <text x="158" y="120" font-size="8.5" fill="#1d4ed8" text-anchor="middle" font-style="italic">B–C</text>
+  <text x="244" y="165" font-size="8.5" fill="#1d4ed8" text-anchor="middle" font-style="italic">C–D</text>
+  <circle cx="48"  cy="182" r="4" fill="#dc2626" stroke="white" stroke-width="1.5"/>
+  <circle cx="103" cy="20"  r="4" fill="#dc2626" stroke="white" stroke-width="1.5"/>
+  <circle cx="213" cy="20"  r="4" fill="#dc2626" stroke="white" stroke-width="1.5"/>
+  <circle cx="268" cy="182" r="4" fill="#dc2626" stroke="white" stroke-width="1.5"/>
+  <text x="42"  y="176" font-size="10" font-weight="700" fill="#dc2626">A</text>
+  <text x="97"  y="14"  font-size="10" font-weight="700" fill="#dc2626">B</text>
+  <text x="207" y="14"  font-size="10" font-weight="700" fill="#dc2626">C</text>
+  <text x="262" y="176" font-size="10" font-weight="700" fill="#dc2626">D</text>
+</svg>`;
+
+// ─────────────────────────────────────────────────────────────
+// Card data
+// ─────────────────────────────────────────────────────────────
+const cards = [
+
+  // ── Activity 1: Speed & Acceleration Calculation Sprint ────
+  {
+    id: "act1", type: "activity",
+    title: "Speed &amp; Acceleration Calculation Sprint",
+    spec: "1.1, 1.4, 1.6, 1.18", duration: "10",
+    instructions: "Use the three equations below to complete the table. Show your working on paper for each row, then reveal the answers to check.<br><br><strong>Equations:</strong> &nbsp; <em>v = d / t</em> &nbsp;|&nbsp; <em>a = (v − u) / t</em> &nbsp;|&nbsp; <em>W = m × g</em> &nbsp;(use g = 10 N/kg)",
+    calcRows: [
+      { n:1, equation:"v = d / t",       given:"d = 120 m, t = 15 s",              find:"v",  answer:"v = 120 ÷ 15 = 8 m/s" },
+      { n:2, equation:"v = d / t",       given:"d = 400 m, t = 50 s",              find:"v",  answer:"v = 400 ÷ 50 = 8 m/s" },
+      { n:3, equation:"v = d / t",       given:"v = 12 m/s, t = 30 s",             find:"d",  answer:"d = 12 × 30 = 360 m" },
+      { n:4, equation:"v = d / t",       given:"v = 5 m/s, d = 200 m",             find:"t",  answer:"t = 200 ÷ 5 = 40 s" },
+      { n:5, equation:"a = (v−u) / t",   given:"u = 0, v = 24 m/s, t = 8 s",      find:"a",  answer:"a = (24 − 0) ÷ 8 = 3 m/s²" },
+      { n:6, equation:"a = (v−u) / t",   given:"u = 10 m/s, v = 40 m/s, t = 5 s", find:"a",  answer:"a = (40 − 10) ÷ 5 = 6 m/s²" },
+      { n:7, equation:"a = (v−u) / t",   given:"u = 20 m/s, v = 0, t = 4 s",      find:"a",  answer:"a = (0 − 20) ÷ 4 = −5 m/s² (deceleration)" },
+      { n:8, equation:"W = m × g",       given:"m = 45 kg, g = 10 N/kg",           find:"W",  answer:"W = 45 × 10 = 450 N" }
+    ]
+  },
+
+  // ── Activity 2: Graph Interpretation Challenge ─────────────
+  {
+    id: "act2", type: "graph",
+    title: "Graph Interpretation Challenge",
+    spec: "1.3, 1.7, 1.8, 1.9", duration: "10",
+    instructions: "Study the two graphs carefully. Answer all six questions on paper — describe motion, calculate values, and refer to specific labelled points. Then reveal the model answers.",
+    graphQs: [
+      {
+        graphLabel: "Graph 1 — Distance-Time",
+        svg: "dtSVG",
+        qs: [
+          { ref:"(a)", marks:1, stem:"What is the motion of the object between points B and C?" },
+          { ref:"(b)", marks:2, stem:"Calculate the speed of the object between points A and B. Show your working." },
+          { ref:"(c)", marks:1, stem:"What does a steeper gradient on a distance-time graph tell you about the speed of an object?" }
+        ]
+      },
+      {
+        graphLabel: "Graph 2 — Velocity-Time",
+        svg: "vtSVG",
+        qs: [
+          { ref:"(d)", marks:2, stem:"Describe the motion of the object during each segment: A→B, B→C, and C→D." },
+          { ref:"(e)", marks:2, stem:"Calculate the acceleration during segment A→B. Show your working. (A = 0 s, 0 m/s; B = 10 s, 20 m/s)" },
+          { ref:"(f)", marks:2, stem:"Calculate the total distance travelled from A to D. Show your working using the area under the graph. (B = 10 s, C = 30 s, D = 40 s, peak velocity = 20 m/s)" }
+        ]
+      }
+    ],
+    graphAnswers: [
+      { ref:"(a)", text:"The object is stationary — the distance is not changing / the line is horizontal." },
+      { ref:"(b)", text:"Speed = distance ÷ time. From A(0 s, 0 m) to B(10 s, 20 m): speed = (20 − 0) ÷ (10 − 0) = 2 m/s." },
+      { ref:"(c)", text:"A steeper gradient means a greater (faster) speed." },
+      { ref:"(d)", text:"A→B: uniformly accelerating (velocity increases at constant rate). B→C: constant velocity / zero acceleration. C→D: decelerating (velocity decreasing uniformly back to zero)." },
+      { ref:"(e)", text:"a = (v − u) ÷ t = (20 − 0) ÷ 10 = 2 m/s²." },
+      { ref:"(f)", text:"Triangle A→B: ½ × 10 × 20 = 100 m. Rectangle B→C: 20 × 20 = 400 m. Triangle C→D: ½ × 10 × 20 = 100 m. Total = 100 + 400 + 100 = 600 m." }
+    ]
+  },
+
+  // ── Activity 3: Forces, F=ma & Stopping Distances ──────────
+  {
+    id: "act3", type: "forces",
+    title: "Forces, F = ma &amp; Stopping Distances",
+    spec: "1.13–1.17, 1.19–1.21", duration: "10",
+    instructions: "Part A: complete the forces table — find the missing quantity in each row using F = ma (or a rearrangement). Part B: answer the stopping distance questions. Work on paper then reveal.",
+    forceRows: [
+      { n:1, F:"600 N",    m:"30 kg",   a:"?",         find:"a",  answer:"a = F ÷ m = 600 ÷ 30 = 20 m/s²" },
+      { n:2, F:"?",        m:"50 kg",   a:"4 m/s²",    find:"F",  answer:"F = m × a = 50 × 4 = 200 N" },
+      { n:3, F:"1200 N",   m:"?",       a:"3 m/s²",    find:"m",  answer:"m = F ÷ a = 1200 ÷ 3 = 400 kg" },
+      { n:4, F:"0 N",      m:"70 kg",   a:"?",         find:"a",  answer:"a = 0 m/s² — balanced forces, constant velocity (or rest)" },
+      { n:5, F:"?",        m:"1500 kg", a:"2.5 m/s²",  find:"F",  answer:"F = 1500 × 2.5 = 3750 N" },
+      { n:6, F:"500 N",    m:"25 kg",   a:"?",         find:"a",  answer:"a = 500 ÷ 25 = 20 m/s²" }
+    ],
+    stoppingQs: [
+      {
+        ref:"(a)",
+        stem:"A car is travelling at 30 m/s. The driver's reaction time is 0.5 s. The brakes produce a deceleration of 7.5 m/s². Calculate the thinking distance and the braking distance. Then find the total stopping distance.",
+        answer:"Thinking distance = speed × reaction time = 30 × 0.5 = 15 m. Braking: use v² = u² + 2as → 0 = 900 + 2(−7.5)s → s = 900 ÷ 15 = 60 m. Stopping distance = 15 + 60 = 75 m."
+      },
+      {
+        ref:"(b)",
+        stem:"State two factors that increase braking distance and two factors that increase thinking distance.",
+        answer:"Braking distance: higher speed / heavier mass / wet or icy road conditions / worn tyres or brakes (any 2). Thinking distance: tiredness / alcohol or drugs / distractions e.g. mobile phone / slower reaction time (any 2)."
+      }
+    ]
+  },
+
+  // ── Exam Questions ─────────────────────────────────────────
+  {
+    id: "exam", type: "exam",
+    title: "Exam Questions",
+    spec: "1.1–1.21", duration: "25", totalMarks: 25,
+    questions: [
+      {
+        num: "Q1", marks: 5, context: null,
+        parts: [
+          { ref:"(a)", marks:2, stem:"State the correct SI unit for each of the following: (i) force &nbsp; (ii) acceleration", lines:2 },
+          { ref:"(b)", marks:3, stem:"A cyclist travels 540 m in 1.5 minutes. Calculate the average speed of the cyclist in m/s. Show your working.", lines:4 }
+        ]
+      },
+      {
+        num: "Q2", marks: 5,
+        context: "A bus accelerates from rest to 18 m/s. The velocity-time graph for its journey shows three stages: it accelerates uniformly for 12 s, then travels at constant velocity for 30 s, then decelerates uniformly to rest in 6 s.",
+        parts: [
+          { ref:"(a)", marks:2, stem:"Calculate the acceleration of the bus during the first 12 seconds.", lines:3 },
+          { ref:"(b)", marks:1, stem:"Describe the motion of the bus between t = 12 s and t = 42 s.", lines:2 },
+          { ref:"(c)", marks:2, stem:"Calculate the total distance the bus travels. Show your working using areas under the graph.", lines:4 }
+        ]
+      },
+      {
+        num: "Q3", marks: 5, context: null,
+        parts: [
+          { ref:"(a)", marks:1, stem:"Write down the equation that links final speed (v), initial speed (u), acceleration (a) and distance (s).", lines:1 },
+          { ref:"(b)", marks:3, stem:"A car accelerates from 10 m/s to 30 m/s over a distance of 200 m. Calculate the acceleration of the car. Show your working.", lines:5 },
+          { ref:"(c)", marks:1, stem:"Explain the difference between a vector quantity and a scalar quantity. Give one example of each from mechanics.", lines:3 }
+        ]
+      },
+      {
+        num: "Q4", marks: 5, context: null,
+        parts: [
+          { ref:"(a)", marks:1, stem:"Write down the equation that links force, mass and acceleration.", lines:1 },
+          { ref:"(b)", marks:2, stem:"A resultant force of 840 N acts on a car of mass 1200 kg. Calculate the acceleration of the car.", lines:3 },
+          { ref:"(c)", marks:2, stem:"The gravitational field strength on Mars is 3.7 N/kg. An astronaut has a mass of 80 kg. Calculate the astronaut's weight on Mars, and state their mass on Mars.", lines:3 }
+        ]
+      },
+      {
+        num: "Q5", marks: 5,
+        context: "A skydiver jumps from an aircraft and falls through the air before opening their parachute.",
+        parts: [
+          { ref:"(a)", marks:2, stem:"Name the two forces acting on the skydiver as they fall. State the direction of each force.", lines:2 },
+          { ref:"(b)", marks:3, stem:"Explain why the skydiver reaches a terminal velocity before opening the parachute. Your answer should refer to the forces and resultant force acting on the skydiver.", lines:6 }
+        ]
+      }
+    ],
+    markScheme: [
+      {
+        num: "Q1",
+        parts: [
+          { ref:"(a)", total:2,
+            points:["(i) newton / N ✓ (1)", "(ii) metre per second squared / m/s² ✓ (1)"],
+            notes:["Accept m s⁻² for acceleration."] },
+          { ref:"(b)", total:3,
+            points:["Converts time: 1.5 min = 90 s ✓ (1)", "speed = 540 ÷ 90 ✓ (1)", "= 6 m/s ✓ (1)"],
+            notes:["Award 2 marks for correct method if time conversion error is the only mistake. Unit must be present for third mark."] }
+        ]
+      },
+      {
+        num: "Q2",
+        parts: [
+          { ref:"(a)", total:2,
+            points:["a = (v − u) ÷ t = (18 − 0) ÷ 12 ✓ (1)", "= 1.5 m/s² ✓ (1)"],
+            notes:[] },
+          { ref:"(b)", total:1,
+            points:["Constant velocity / moves at 18 m/s / zero acceleration ✓ (1)"],
+            notes:[] },
+          { ref:"(c)", total:2,
+            points:["Triangle (0–12 s): ½ × 12 × 18 = 108 m; Rectangle (12–42 s): 30 × 18 = 540 m; Triangle (42–48 s): ½ × 6 × 18 = 54 m ✓ (1)", "Total = 108 + 540 + 54 = 702 m ✓ (1)"],
+            notes:["Award 1 mark if at least two areas are correctly calculated. Award both marks for correct total even if method is not fully shown, provided areas are identifiable."] }
+        ]
+      },
+      {
+        num: "Q3",
+        parts: [
+          { ref:"(a)", total:1,
+            points:["v² = u² + (2 × a × s) ✓ (1)"],
+            notes:[] },
+          { ref:"(b)", total:3,
+            points:["Substitutes correctly: 30² = 10² + (2 × a × 200) ✓ (1)", "900 = 100 + 400a → 400a = 800 ✓ (1)", "a = 2 m/s² ✓ (1)"],
+            notes:["Award 2 marks for correct rearrangement with arithmetic error. Must show substitution for full marks."] },
+          { ref:"(c)", total:1,
+            points:["Vector has both magnitude and direction; scalar has only magnitude ✓; example: force / velocity / acceleration (vector); speed / distance / mass (scalar) ✓ — both parts required for 1 mark"],
+            notes:[] }
+        ]
+      },
+      {
+        num: "Q4",
+        parts: [
+          { ref:"(a)", total:1,
+            points:["F = m × a ✓ (1)"],
+            notes:[] },
+          { ref:"(b)", total:2,
+            points:["a = F ÷ m = 840 ÷ 1200 ✓ (1)", "= 0.7 m/s² ✓ (1)"],
+            notes:[] },
+          { ref:"(c)", total:2,
+            points:["W = m × g = 80 × 3.7 = 296 N ✓ (1)", "Mass on Mars = 80 kg (mass does not change) ✓ (1)"],
+            notes:["Penalise once only if mass and weight are confused throughout."] }
+        ]
+      },
+      {
+        num: "Q5",
+        parts: [
+          { ref:"(a)", total:2,
+            points:["Weight / gravitational force acting downwards ✓ (1)", "Air resistance / drag acting upwards ✓ (1)"],
+            notes:[] },
+          { ref:"(b)", total:3,
+            points:["Initially weight > air resistance, so resultant force acts downwards and the skydiver accelerates ✓ (1)", "As speed increases, air resistance increases ✓ (1)", "Eventually air resistance = weight; resultant force = 0; acceleration = 0; skydiver moves at constant (terminal) velocity ✓ (1)"],
+            notes:["All three marking points must be present for full marks. Accept 'drag' for 'air resistance'. Award marks in any order."] }
+        ]
+      }
+    ]
+  }
+];
+
+// ─────────────────────────────────────────────────────────────
+// State
+// ─────────────────────────────────────────────────────────────
+let current  = 0;
+let revealed = false;
+const done   = new Set();
+
+// ─────────────────────────────────────────────────────────────
+// Build: Activity 1 — Calculation Sprint
+// ─────────────────────────────────────────────────────────────
+function buildCalcFace(card) {
+  let html = `<div class="instructions">${card.instructions}</div>`;
+  html += `<div class="table-wrap"><table class="data-table">
+    <thead><tr>
+      <th>#</th><th>Equation</th><th>Given</th><th>Find</th><th>Your answer</th>
+    </tr></thead><tbody>`;
+  for (const r of card.calcRows) {
+    html += `<tr>
+      <td style="text-align:center;font-weight:700;color:#9ca3af;width:28px">${r.n}</td>
+      <td class="eq-cell">${r.equation}</td>
+      <td style="color:#374151;font-size:0.83rem">${r.given}</td>
+      <td style="font-weight:700;color:#1d4ed8;text-align:center;width:50px">${r.find}</td>
+      <td class="blank-cell">…</td>
+    </tr>`;
+  }
+  html += '</tbody></table></div>';
+  return html;
+}
+
+function buildCalcAnswers(card) {
+  let html = `<div class="answer-section"><div class="answer-block">
+    <div class="answer-block-hdr">Model Answers</div>
+    <div class="answer-block-body" style="padding:0">
+      <div class="table-wrap" style="margin:0"><table class="data-table">
+        <thead><tr>
+          <th>#</th><th>Equation</th><th>Given</th><th>Find</th><th>Answer</th>
+        </tr></thead><tbody>`;
+  for (const r of card.calcRows) {
+    html += `<tr>
+      <td style="text-align:center;font-weight:700;color:#9ca3af;width:28px">${r.n}</td>
+      <td class="eq-cell">${r.equation}</td>
+      <td style="color:#374151;font-size:0.83rem">${r.given}</td>
+      <td style="font-weight:700;color:#1d4ed8;text-align:center;width:50px">${r.find}</td>
+      <td class="answer-cell">${r.answer}</td>
+    </tr>`;
+  }
+  html += '</tbody></table></div></div></div></div>';
+  return html;
+}
+
+// ─────────────────────────────────────────────────────────────
+// Build: Activity 2 — Graph Interpretation
+// ─────────────────────────────────────────────────────────────
+function buildGraphFace(card) {
+  let html = `<div class="instructions">${card.instructions}</div>`;
+  for (const g of card.graphQs) {
+    const svgData = g.svg === 'dtSVG' ? dtSVG : vtSVG;
+    html += `<div class="graph-grid" style="margin-bottom:18px">
+      <div class="graph-panel">
+        <div class="graph-label">${g.graphLabel}</div>
+        ${svgData}
+      </div>
+      <div style="display:flex;flex-direction:column;justify-content:center;gap:10px">
+        <div class="graph-qs">`;
+    for (const q of g.qs) {
+      html += `<div class="graph-q">
+        <div class="graph-q-ref">${q.ref}</div>
+        <div>${q.stem} <span class="graph-q-marks">[${q.marks}]</span></div>
+      </div>`;
+    }
+    html += `</div></div></div>`;
+  }
+  return html;
+}
+
+function buildGraphAnswers(card) {
+  let html = `<div class="answer-section"><div class="answer-block">
+    <div class="answer-block-hdr">Model Answers</div>
+    <div class="answer-block-body">`;
+  for (const a of card.graphAnswers) {
+    html += `<div class="ans-row">
+      <span class="ans-ref">${a.ref}</span>
+      <span class="ans-tick">✓</span>
+      <span>${a.text}</span>
+    </div>`;
+  }
+  html += '</div></div></div>';
+  return html;
+}
+
+// ─────────────────────────────────────────────────────────────
+// Build: Activity 3 — Forces
+// ─────────────────────────────────────────────────────────────
+function buildForcesFace(card) {
+  let html = `<div class="instructions">${card.instructions}</div>`;
+  html += `<p style="font-size:0.85rem;font-weight:700;color:#0c2340;margin-bottom:8px">Part A — F = ma sprint</p>`;
+  html += `<div class="table-wrap"><table class="forces-table">
+    <thead><tr>
+      <th>#</th><th>Force (F)</th><th>Mass (m)</th><th>Acceleration (a)</th><th>Find →</th>
+    </tr></thead><tbody>`;
+  for (const r of card.forceRows) {
+    const fClass = r.find === 'F' ? 'find-cell' : '';
+    const mClass = r.find === 'm' ? 'find-cell' : '';
+    const aClass = r.find === 'a' ? 'find-cell' : '';
+    html += `<tr>
+      <td style="font-weight:700;color:#9ca3af">${r.n}</td>
+      <td class="${fClass || ''}">${r.find === 'F' ? '?' : r.F}</td>
+      <td class="${mClass || ''}">${r.find === 'm' ? '?' : r.m}</td>
+      <td class="${aClass || ''}">${r.find === 'a' ? '?' : r.a}</td>
+      <td class="blank-cell">…</td>
+    </tr>`;
+  }
+  html += '</tbody></table></div>';
+  html += `<p style="font-size:0.85rem;font-weight:700;color:#0c2340;margin:14px 0 8px">Part B — Stopping distances</p>`;
+  html += `<div class="graph-qs">`;
+  for (const q of card.stoppingQs) {
+    html += `<div class="graph-q">
+      <div class="graph-q-ref">${q.ref}</div>
+      <div>${q.stem}</div>
+    </div>`;
+  }
+  html += '</div>';
+  return html;
+}
+
+function buildForcesAnswers(card) {
+  let html = `<div class="answer-section">
+    <div class="answer-block">
+      <div class="answer-block-hdr">Part A — F = ma Model Answers</div>
+      <div class="answer-block-body" style="padding:0">
+        <div class="table-wrap" style="margin:0"><table class="forces-table">
+          <thead><tr>
+            <th>#</th><th>Force (F)</th><th>Mass (m)</th><th>Acceleration (a)</th><th>Answer</th>
+          </tr></thead><tbody>`;
+  for (const r of card.forceRows) {
+    html += `<tr>
+      <td style="font-weight:700;color:#9ca3af">${r.n}</td>
+      <td>${r.F}</td><td>${r.m}</td><td>${r.a}</td>
+      <td class="answer-cell" style="text-align:left">${r.answer}</td>
+    </tr>`;
+  }
+  html += '</tbody></table></div></div></div>';
+  html += `<div class="answer-block"><div class="answer-block-hdr">Part B — Model Answers</div><div class="answer-block-body">`;
+  for (const q of card.stoppingQs) {
+    html += `<div class="ans-row">
+      <span class="ans-ref">${q.ref}</span>
+      <span class="ans-tick">✓</span>
+      <span>${q.answer}</span>
+    </div>`;
+  }
+  html += '</div></div></div>';
+  return html;
+}
+
+// ─────────────────────────────────────────────────────────────
+// Build: Exam question face
+// ─────────────────────────────────────────────────────────────
+function buildExamFace(card) {
+  let html = '<div class="exam-qs">';
+  for (const q of card.questions) {
+    html += `<div class="exam-q">
+      <div class="exam-q-num">${q.num} <span style="font-size:0.8rem;font-weight:400;color:#6b7280">[${q.marks} marks]</span></div>`;
+    if (q.context) {
+      html += `<div class="exam-context">${q.context}</div>`;
+    }
+    html += '<div class="exam-parts">';
+    for (const p of q.parts) {
+      const lines = Array(p.lines).fill('<div class="write-line"></div>').join('');
+      html += `<div class="exam-part">
+        <div class="exam-part-ref">${p.ref}</div>
+        <div class="exam-part-body">
+          <div class="exam-stem">${p.stem} <span class="exam-marks">[${p.marks}]</span></div>
+          ${lines}
+        </div>
+      </div>`;
+    }
+    html += '</div></div>';
+  }
+  html += '</div>';
+  return html;
+}
+
+// ─────────────────────────────────────────────────────────────
+// Build: Mark scheme face
+// ─────────────────────────────────────────────────────────────
+function buildMarkScheme(card) {
+  let html = '<div class="ms-section">';
+  for (const msQ of card.markScheme) {
+    html += `<div class="ms-q">
+      <div class="ms-q-hdr">${msQ.num}</div>`;
+    for (const p of msQ.parts) {
+      html += `<div class="ms-part">
+        <div class="ms-ref">${p.ref}</div>
+        <div class="ms-body">`;
+      for (const pt of p.points) {
+        html += `<div class="ms-pt"><span class="ms-pt-tick">✓</span><span>${pt}</span></div>`;
+      }
+      for (const note of p.notes) {
+        html += `<div class="ms-note">${note}</div>`;
+      }
+      html += '</div></div>';
+    }
+    html += '</div>';
+  }
+  html += '</div>';
+  return html;
+}
+
+// ─────────────────────────────────────────────────────────────
+// Render current card
+// ─────────────────────────────────────────────────────────────
+function buildCardHTML(card, showAnswers) {
+  const isExam = card.type === 'exam';
+  const timeLabel = isExam ? `${card.totalMarks} marks` : `${card.duration} min`;
+  const badgeType = isExam ? 'badge-exam' : 'badge-activity';
+  const badgeText = isExam ? 'EXAM' : 'ACTIVITY';
+
+  let header = `<div class="card-header">
+    <div class="card-title">${card.title}</div>
+    <span class="badge badge-spec">${card.spec}</span>
+    <span class="badge badge-time">${timeLabel}</span>
+    <span class="badge ${badgeType}">${badgeText}</span>
+  </div>`;
+
+  let body = '';
+  if (!showAnswers) {
+    if (card.type === 'activity')   body = buildCalcFace(card);
+    else if (card.type === 'graph') body = buildGraphFace(card);
+    else if (card.type === 'forces')body = buildForcesFace(card);
+    else if (card.type === 'exam')  body = buildExamFace(card);
+  } else {
+    if (card.type === 'activity')   body = buildCalcAnswers(card);
+    else if (card.type === 'graph') body = buildGraphAnswers(card);
+    else if (card.type === 'forces')body = buildForcesAnswers(card);
+    else if (card.type === 'exam')  body = buildMarkScheme(card);
+  }
+
+  return `${header}<div class="card-body">${body}</div>`;
+}
+
+function render() {
+  const card = cards[current];
+  const isExam = card.type === 'exam';
+
+  // Progress
+  const label = isExam ? 'Exam Questions' : `Activity ${current + 1} of ${cards.length - 1}`;
+  document.getElementById('progressPill').textContent = label;
+  const pct = ((current + 1) / cards.length) * 100;
+  document.getElementById('progFill').style.width = pct + '%';
+
+  // Content
+  document.getElementById('mainArea').innerHTML = `<div class="card">${buildCardHTML(card, revealed)}</div>`;
+
+  // Hint
+  document.getElementById('hintText').textContent = revealed
+    ? (isExam ? 'Check your answers against the mark scheme.' : 'Check your answers carefully, then move on.')
+    : (isExam ? 'Write your answers on paper, then reveal the mark scheme.' : 'Work through the activity on paper, then reveal the model answers.');
+
+  // Buttons
+  document.getElementById('btnPrev').disabled = current === 0;
+  document.getElementById('btnNext').disabled = !revealed;
+  document.getElementById('btnReveal').textContent = revealed ? 'Hide Answers ↩' : 'Reveal Answers ✓';
+
+  // Nav dots
+  const dotsEl = document.getElementById('navDots');
+  dotsEl.innerHTML = cards.map((_, i) => {
+    const cls = i === current ? 'active' : done.has(i) ? 'done' : '';
+    return `<button class="nav-dot ${cls}" onclick="goTo(${i})" title="Card ${i+1}"></button>`;
+  }).join('');
+
+  // Complete banner
+  document.getElementById('completeBanner').style.display = 'none';
+}
+
+function toggleReveal() {
+  revealed = !revealed;
+  if (revealed) done.add(current);
+  render();
+}
+
+function navigate(dir) {
+  const next = current + dir;
+  if (next >= 0 && next < cards.length) {
+    current = next;
+    revealed = false;
+    render();
+  } else if (dir === 1) {
+    document.getElementById('completeBanner').style.display = 'block';
+    document.getElementById('mainArea').innerHTML = '';
+    document.getElementById('hintText').textContent = '';
+  }
+}
+
+function goTo(idx) {
+  current = idx;
+  revealed = done.has(idx);
+  render();
+}
+
+render();
+</script>
+</body>
+</html>
