@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Y7 Chemistry – Revision Cards</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: #f5f0ff; min-height: 100vh; display: flex; flex-direction: column; }
+
+  /* ── Header ─────────────────────────────────────── */
+  .header { background: #2d1b69; color: white; padding: 14px 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
+  .header-left h1 { font-size: 1.05rem; font-weight: 700; letter-spacing: 0.01em; }
+  .header-left .sub { font-size: 0.78rem; opacity: 0.68; margin-top: 2px; }
+  .progress-pill { background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.25); padding: 5px 14px; border-radius: 20px; font-size: 0.82rem; font-weight: 600; white-space: nowrap; }
+  .progress-track { height: 4px; background: #ddd6fe; }
+  .progress-fill { height: 100%; background: #7c3aed; transition: width 0.5s ease; }
+
+  /* ── Main ────────────────────────────────────────── */
+  .main { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 20px 16px 32px; gap: 14px; }
+
+  /* ── Topic nav ───────────────────────────────────── */
+  .spec-nav { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
+  .spec-dot { min-width: 72px; height: 32px; border-radius: 16px; border: 2px solid #c4b5fd; background: white; color: #5b21b6; font-weight: 700; font-size: 0.7rem; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.15s; padding: 2px 8px; text-align: center; }
+  .spec-dot:hover { background: #ede9fe; }
+  .spec-dot.active { background: #2d1b69; color: white; border-color: #2d1b69; }
+  .spec-dot.done { background: #7c3aed; color: white; border-color: #7c3aed; }
+
+  /* ── Card scene ─────────────────────────────────── */
+  .card-scene { width: 100%; max-width: 880px; display: grid; }
+  .card-face { grid-area: 1/1; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.11); transition: opacity 0.35s ease, transform 0.35s ease; }
+  .card-face.back { opacity: 0; transform: scale(0.97); pointer-events: none; }
+  .card-scene.revealed .card-face.front { opacity: 0; transform: scale(0.97); pointer-events: none; }
+  .card-scene.revealed .card-face.back { opacity: 1; transform: scale(1); pointer-events: all; }
+
+  /* ── Question card ──────────────────────────────── */
+  .q-header { background: #2d1b69; color: white; padding: 14px 20px; display: flex; align-items: center; gap: 12px; }
+  .spec-badge { background: #c4b5fd; color: #2d1b69; font-weight: 700; font-size: 0.88rem; padding: 5px 12px; border-radius: 8px; white-space: nowrap; flex-shrink: 0; }
+  .q-header-title { font-size: 1rem; font-weight: 600; line-height: 1.3; }
+  .marks-badge { margin-left: auto; background: #f4d03f; color: #1a1a2e; font-weight: 700; font-size: 0.8rem; padding: 5px 12px; border-radius: 20px; white-space: nowrap; flex-shrink: 0; }
+  .spec-stmt { background: #ede9fe; padding: 9px 20px; font-size: 0.83rem; color: #2d1b69; font-style: italic; line-height: 1.45; border-bottom: 1px solid #c4b5fd; }
+  .spec-stmt strong { font-style: normal; color: #2d1b69; }
+  .q-body { background: white; padding: 16px 20px; display: flex; gap: 18px; align-items: flex-start; }
+  .questions-col { flex: 1; min-width: 0; }
+  .diagram-col { width: 220px; flex-shrink: 0; }
+  .diagram-box { border: 2px dashed #c4b5fd; border-radius: 10px; background: #fdf8ff; padding: 12px; display: flex; flex-direction: column; align-items: center; gap: 6px; }
+  .diagram-box svg { width: 100%; height: auto; }
+  .diagram-caption { font-size: 0.74rem; color: #777; font-style: italic; text-align: center; line-height: 1.4; }
+  .q-item { display: flex; gap: 10px; padding: 12px 0; border-bottom: 1px solid #f3f0ff; align-items: flex-start; }
+  .q-item:last-child { border-bottom: none; padding-bottom: 0; }
+  .q-ref { font-weight: 700; color: #2d1b69; font-size: 1rem; min-width: 30px; padding-top: 1px; flex-shrink: 0; }
+  .q-content { flex: 1; min-width: 0; }
+  .q-stem { font-size: 0.91rem; color: #1a1a2e; line-height: 1.55; }
+  .q-meta { margin-top: 7px; display: flex; gap: 7px; align-items: center; flex-wrap: wrap; }
+  .marks-pill { background: #5b21b6; color: white; font-size: 0.73rem; font-weight: 700; padding: 2px 9px; border-radius: 10px; }
+
+  /* ── Activity strip ──────────────────────────────── */
+  .activity-strip { border-top: 2px solid #fbbf24; background: #fffbeb; }
+  .activity-toggle { width: 100%; padding: 10px 20px; background: none; border: none; text-align: left; font-size: 0.87rem; font-weight: 700; color: #78350f; cursor: pointer; display: flex; align-items: center; gap: 8px; font-family: inherit; }
+  .activity-toggle:hover { background: #fef3c7; }
+  .act-chevron { margin-left: auto; transition: transform 0.2s; }
+  .activity-strip.open .act-chevron { transform: rotate(180deg); }
+  .activity-content { display: none; padding: 4px 20px 14px; font-size: 0.87rem; color: #451a03; line-height: 1.65; border-top: 1px solid #fde68a; }
+  .activity-strip.open .activity-content { display: block; }
+  .activity-content em { color: #92400e; }
+  .activity-content strong { color: #78350f; }
+
+  /* ── Mark scheme card ───────────────────────────── */
+  .ms-header { background: #6d28d9; color: white; padding: 14px 20px; display: flex; align-items: center; gap: 12px; }
+  .ms-badge { background: #c4b5fd; color: #2d1b69; font-weight: 700; font-size: 0.85rem; padding: 5px 11px; border-radius: 8px; white-space: nowrap; flex-shrink: 0; }
+  .ms-header-title { font-size: 1rem; font-weight: 600; }
+  .ms-body { background: #faf5ff; padding: 16px 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .ms-body.cols-1 { grid-template-columns: 1fr; }
+  .ms-item { background: white; border-radius: 8px; overflow: hidden; border: 1px solid #ddd6fe; box-shadow: 0 1px 4px rgba(0,0,0,0.05); }
+  .ms-item-hdr { background: #f0e6ff; padding: 7px 13px; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid #ddd6fe; }
+  .ms-ref { font-weight: 700; color: #6d28d9; font-size: 0.93rem; }
+  .ms-total { font-size: 0.76rem; color: #666; }
+  .ms-points { padding: 10px 13px; display: flex; flex-direction: column; gap: 6px; }
+  .ms-point { display: flex; gap: 8px; align-items: flex-start; font-size: 0.86rem; color: #1a1a2e; line-height: 1.45; }
+  .ms-tick { color: #7c3aed; font-weight: 800; font-size: 0.9rem; flex-shrink: 0; margin-top: 1px; }
+  .ms-note { font-size: 0.76rem; color: #6b7280; font-style: italic; line-height: 1.4; border-top: 1px solid #f3f0ff; margin-top: 4px; padding-top: 6px; }
+
+  /* ── Controls ───────────────────────────────────── */
+  .hint-text { font-size: 0.8rem; color: #777; text-align: center; min-height: 18px; font-style: italic; }
+  .controls { display: flex; gap: 10px; justify-content: center; align-items: center; flex-wrap: wrap; width: 100%; max-width: 880px; }
+  .btn { padding: 10px 22px; border: none; border-radius: 8px; cursor: pointer; font-size: 0.88rem; font-weight: 600; font-family: inherit; transition: all 0.15s; white-space: nowrap; }
+  .btn:hover:not(:disabled) { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+  .btn:active:not(:disabled) { transform: translateY(0); }
+  .btn:disabled { opacity: 0.35; cursor: not-allowed; }
+  .btn-outline { background: white; color: #2d1b69; border: 2px solid #2d1b69; }
+  .btn-reveal { background: #7c3aed; color: white; padding: 11px 30px; font-size: 0.92rem; }
+  .btn-next { background: #2d1b69; color: white; padding: 11px 30px; font-size: 0.92rem; }
+
+  /* ── Completion banner ──────────────────────────── */
+  .complete-banner { background: #2d1b69; color: white; text-align: center; padding: 20px; border-radius: 12px; width: 100%; max-width: 880px; display: none; }
+  .complete-banner h2 { font-size: 1.3rem; margin-bottom: 6px; }
+  .complete-banner p { opacity: 0.8; font-size: 0.9rem; }
+  .complete-banner.show { display: block; }
+
+  @media (max-width: 640px) {
+    .header { padding: 10px 14px; }
+    .header-left h1 { font-size: 0.9rem; }
+    .main { padding: 12px 10px 24px; gap: 10px; }
+    .q-header { padding: 10px 14px; flex-wrap: wrap; }
+    .q-header-title { font-size: 0.87rem; order: 3; flex-basis: 100%; padding-top: 4px; }
+    .q-body { flex-direction: column; padding: 12px 14px; }
+    .diagram-col { width: 100%; }
+    .ms-body { grid-template-columns: 1fr !important; padding: 12px 14px; }
+    .controls { gap: 8px; }
+    .btn { padding: 9px 14px; font-size: 0.82rem; }
+    .btn-reveal, .btn-next { padding: 9px 18px; font-size: 0.85rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-left">
+    <h1>⚗️ Chemistry &mdash; Revision Cards</h1>
+    <div class="sub">Y7 &nbsp;·&nbsp; KS3 Science &nbsp;·&nbsp; NC Programme of Study</div>
+  </div>
+  <div class="progress-pill" id="progressPill">Card 1 of 3</div>
+</div>
+<div class="progress-track"><div class="progress-fill" id="progressFill" style="width:33.33%"></div></div>
+
+<div class="main">
+  <div class="spec-nav" id="specNav"></div>
+
+  <div class="card-scene" id="cardScene">
+    <div class="card-face front" id="qFace"></div>
+    <div class="card-face back"  id="msFace"></div>
+  </div>
+
+  <div class="hint-text" id="hintText">Answer the questions, then tap <em>Reveal Answers</em></div>
+
+  <div class="controls">
+    <button class="btn btn-outline" id="btnPrev" onclick="navigate(-1)">&#8592; Previous</button>
+    <button class="btn btn-reveal" id="btnReveal" onclick="revealAnswers()">Reveal Answers ✓</button>
+    <button class="btn btn-next"   id="btnNext"   onclick="navigate(1)" disabled>Next Card &#8594;</button>
+  </div>
+
+  <div class="complete-banner" id="completeBanner">
+    <h2>⚗️ All Chemistry cards complete!</h2>
+    <p>You've reviewed all 3 topics &mdash; 19 marks of practice. Use the dots above to revisit any topic.</p>
+  </div>
+</div>
+
+<script>
+// ── SVG Diagrams ──────────────────────────────────────────────────────────
+const diagrams = {
+
+  "C1": `<svg viewBox="0 0 220 130" xmlns="http://www.w3.org/2000/svg" font-family="inherit">
+    <!-- Solid box -->
+    <rect x="4" y="10" width="62" height="62" rx="4" fill="#f0e6ff" stroke="#7c3aed" stroke-width="1.2"/>
+    <text x="35" y="5" font-size="8.5" text-anchor="middle" font-weight="700" fill="#2d1b69">SOLID</text>
+    <!-- Solid particles (regular grid) -->
+    <circle cx="18" cy="24" r="6" fill="#7c3aed" opacity="0.8"/><circle cx="35" cy="24" r="6" fill="#7c3aed" opacity="0.8"/><circle cx="52" cy="24" r="6" fill="#7c3aed" opacity="0.8"/>
+    <circle cx="18" cy="41" r="6" fill="#7c3aed" opacity="0.8"/><circle cx="35" cy="41" r="6" fill="#7c3aed" opacity="0.8"/><circle cx="52" cy="41" r="6" fill="#7c3aed" opacity="0.8"/>
+    <circle cx="18" cy="58" r="6" fill="#7c3aed" opacity="0.8"/><circle cx="35" cy="58" r="6" fill="#7c3aed" opacity="0.8"/><circle cx="52" cy="58" r="6" fill="#7c3aed" opacity="0.8"/>
+    <text x="35" y="83" font-size="7.5" text-anchor="middle" fill="#5b21b6" font-style="italic">regular, close,</text>
+    <text x="35" y="92" font-size="7.5" text-anchor="middle" fill="#5b21b6" font-style="italic">vibrate in place</text>
+
+    <!-- Liquid box -->
+    <rect x="79" y="10" width="62" height="62" rx="4" fill="#f0e6ff" stroke="#7c3aed" stroke-width="1.2"/>
+    <text x="110" y="5" font-size="8.5" text-anchor="middle" font-weight="700" fill="#2d1b69">LIQUID</text>
+    <!-- Liquid particles (irregular, still touching) -->
+    <circle cx="93" cy="24" r="6" fill="#a78bfa" opacity="0.85"/><circle cx="110" cy="21" r="6" fill="#a78bfa" opacity="0.85"/><circle cx="126" cy="26" r="6" fill="#a78bfa" opacity="0.85"/>
+    <circle cx="90" cy="40" r="6" fill="#a78bfa" opacity="0.85"/><circle cx="107" cy="38" r="6" fill="#a78bfa" opacity="0.85"/><circle cx="124" cy="42" r="6" fill="#a78bfa" opacity="0.85"/>
+    <circle cx="93" cy="57" r="6" fill="#a78bfa" opacity="0.85"/><circle cx="112" cy="54" r="6" fill="#a78bfa" opacity="0.85"/><circle cx="128" cy="59" r="6" fill="#a78bfa" opacity="0.85"/>
+    <text x="110" y="83" font-size="7.5" text-anchor="middle" fill="#5b21b6" font-style="italic">irregular, close,</text>
+    <text x="110" y="92" font-size="7.5" text-anchor="middle" fill="#5b21b6" font-style="italic">slide past each other</text>
+
+    <!-- Gas box -->
+    <rect x="154" y="10" width="62" height="62" rx="4" fill="#f0e6ff" stroke="#7c3aed" stroke-width="1.2"/>
+    <text x="185" y="5" font-size="8.5" text-anchor="middle" font-weight="700" fill="#2d1b69">GAS</text>
+    <!-- Gas particles (spread out, random) -->
+    <circle cx="164" cy="19" r="5" fill="#c4b5fd" opacity="0.9"/>
+    <circle cx="198" cy="23" r="5" fill="#c4b5fd" opacity="0.9"/>
+    <circle cx="175" cy="45" r="5" fill="#c4b5fd" opacity="0.9"/>
+    <circle cx="208" cy="55" r="5" fill="#c4b5fd" opacity="0.9"/>
+    <circle cx="163" cy="62" r="5" fill="#c4b5fd" opacity="0.9"/>
+    <circle cx="192" cy="38" r="5" fill="#c4b5fd" opacity="0.9"/>
+    <text x="185" y="83" font-size="7.5" text-anchor="middle" fill="#5b21b6" font-style="italic">far apart, random,</text>
+    <text x="185" y="92" font-size="7.5" text-anchor="middle" fill="#5b21b6" font-style="italic">move fast &amp; freely</text>
+    <!-- Title -->
+    <text x="110" y="120" font-size="8" text-anchor="middle" fill="#888" font-style="italic">The Particle Model</text>
+  </svg>`,
+
+  "C2": `<svg viewBox="0 0 120 200" xmlns="http://www.w3.org/2000/svg" font-family="inherit">
+    <!-- Chromatography paper outline -->
+    <rect x="30" y="8" width="60" height="175" rx="4" fill="#fefce8" stroke="#a16207" stroke-width="1.2"/>
+    <!-- Solvent front line (dashed) -->
+    <line x1="30" y1="38" x2="90" y2="38" stroke="#2563eb" stroke-width="1.2" stroke-dasharray="4,3"/>
+    <text x="96" y="42" font-size="7.5" fill="#1d4ed8" font-weight="600">solvent</text>
+    <text x="96" y="51" font-size="7.5" fill="#1d4ed8" font-weight="600">front</text>
+    <!-- Spots for sample 1 (four components of black ink) -->
+    <!-- Component 1 - highest (most soluble) -->
+    <ellipse cx="60" cy="55" rx="10" ry="5" fill="#fbbf24" opacity="0.9"/>
+    <text x="96" y="59" font-size="7" fill="#666">Component 1</text>
+    <!-- Component 2 -->
+    <ellipse cx="60" cy="88" rx="10" ry="5" fill="#a78bfa" opacity="0.9"/>
+    <text x="96" y="92" font-size="7" fill="#666">Component 2</text>
+    <!-- Component 3 -->
+    <ellipse cx="60" cy="122" rx="10" ry="5" fill="#34d399" opacity="0.9"/>
+    <text x="96" y="126" font-size="7" fill="#666">Component 3</text>
+    <!-- Component 4 - lowest (least soluble) -->
+    <ellipse cx="60" cy="152" rx="10" ry="5" fill="#f87171" opacity="0.9"/>
+    <text x="96" y="156" font-size="7" fill="#666">Component 4</text>
+    <!-- Baseline (pencil line) -->
+    <line x1="30" y1="168" x2="90" y2="168" stroke="#444" stroke-width="1" stroke-dasharray="3,2"/>
+    <text x="60" y="178" font-size="7" text-anchor="middle" fill="#555">baseline</text>
+    <!-- Original spot -->
+    <ellipse cx="60" cy="168" rx="6" ry="3" fill="#333" opacity="0.7"/>
+    <!-- Direction arrow (solvent travelling up) -->
+    <line x1="18" y1="168" x2="18" y2="38" stroke="#2563eb" stroke-width="1.2" marker-end="url(#arrowUp)"/>
+    <text x="14" y="110" font-size="7.5" fill="#1d4ed8" transform="rotate(-90,14,110)">solvent travels up</text>
+    <defs>
+      <marker id="arrowUp" viewBox="0 0 6 6" refX="3" refY="6" markerWidth="4" markerHeight="4" orient="auto">
+        <path d="M0,6 L3,0 L6,6 Z" fill="#2563eb"/>
+      </marker>
+    </defs>
+  </svg>`
+};
+
+// ── Card data ─────────────────────────────────────────────────────────────
+const cards = [
+  {
+    id: "C1",
+    navLabel: "States",
+    topic: "States of Matter",
+    lo: "Describe properties of solids, liquids and gases; use the particle model to explain properties and changes of state; explain what happens during melting",
+    totalMarks: 6,
+    hasDiagram: true,
+    title: "States of Matter",
+    questions: [
+      { ref:"(a)", marks:2, stem:"Use Fig. 1 to describe the arrangement and movement of particles in <strong>(i) a solid</strong> and <strong>(ii) a gas</strong>." },
+      { ref:"(b)", marks:2, stem:"Use the particle model to explain why a gas can be <strong>compressed</strong> but a solid <strong>cannot</strong>." },
+      { ref:"(c)", marks:2, stem:"A student heats a block of wax until it melts. Describe what happens to the <strong>energy</strong> and <strong>arrangement</strong> of the particles as the wax changes from solid to liquid." }
+    ],
+    markScheme: [
+      { ref:"(a)", total:2, points:[
+        "(i) Solid: particles are closely packed in a regular arrangement ✓; they vibrate about fixed positions (cannot move freely) ✓ (1 mark — both needed)",
+        "(ii) Gas: particles are very far apart / randomly arranged ✓; they move quickly and freely in all directions ✓ (1 mark — both needed)"
+      ], notes:["Accept 'lattice arrangement' for regular; accept 'random' for gas movement; do not accept 'particles do not move' for solid"] },
+      { ref:"(b)", total:2, points:[
+        "In a gas there are large spaces / gaps between particles ✓ → particles can be pushed closer together when a force is applied (compressed) ✓ (1)",
+        "In a solid the particles are already closely packed together / there are no significant gaps ✓ → they cannot be pushed closer together ✓ (1)"
+      ], notes:["Must address both gas AND solid for full marks; gas explanation alone = 1 mark"] },
+      { ref:"(c)", total:2, points:[
+        "Particles gain kinetic energy / vibrate more / move faster as they are heated ✓ (1)",
+        "The forces / bonds holding particles in fixed positions weaken and break ✓; particles break free and can now slide past each other (liquid state) ✓ (1)"
+      ], notes:["Do not accept 'temperature increases during melting' — temperature stays constant at melting point; accept: 'particles overcome forces between them'"] }
+    ],
+    activity: {
+      title: "🔬 Particle Model Drawing Task",
+      body: `Draw particle diagrams for <strong>solid ice</strong>, <strong>liquid water</strong>, and <strong>water vapour (steam)</strong> in three separate boxes. Show the forces between particles using dotted lines between them.
+<br><br>
+<strong>Then answer:</strong><br>
+<strong>1.</strong> Why does steam take up much more space than the same mass of ice?<br>
+<strong>2.</strong> When you heat ice from −20°C to 120°C, sketch a <em>temperature-time graph</em> showing what happens. Label the melting point and boiling point. Why does the graph have flat sections?<br>
+<strong>3.</strong> <em>Challenge:</em> Explain, using the particle model, why sweating cools you down. Which particles leave the liquid surface, and what happens to the energy of the liquid left behind?`
+    }
+  },
+  {
+    id: "C2",
+    navLabel: "Separation",
+    topic: "Separating Techniques",
+    lo: "Select and describe filtration, evaporation, distillation, and chromatography; interpret a chromatogram; solve multi-step separation problems",
+    totalMarks: 7,
+    hasDiagram: true,
+    title: "Separating Techniques",
+    questions: [
+      { ref:"(a)", marks:1, stem:"Name the separation technique used to separate an <strong>insoluble solid</strong> from a liquid." },
+      { ref:"(b)", marks:3, stem:"Rock salt is a mixture of <strong>salt</strong> (soluble in water) and <strong>sand</strong> (insoluble). Describe a method to produce pure, dry salt from rock salt. Name <em>each</em> technique used and explain why it is used at each stage." },
+      { ref:"(c)", marks:2, stem:"Fig. 1 shows a chromatogram of a sample of <strong>black ink</strong>. The ink produced four spots. Explain what this tells you about black ink, and describe how the components became separated on the chromatogram." },
+      { ref:"(d)", marks:1, stem:"State the <strong>one property difference</strong> between two liquids that allows <em>simple distillation</em> to separate them." }
+    ],
+    markScheme: [
+      { ref:"(a)", total:1, points:[
+        "Filtration ✓"
+      ], notes:[] },
+      { ref:"(b)", total:3, points:[
+        "Step 1: Dissolve the rock salt in water (crush first if needed) and stir ✓ — salt dissolves, sand does not (1)",
+        "Step 2: Filtration — pour through filter paper in a funnel; sand is retained on the filter paper as the residue, salt solution (filtrate) passes through ✓ (1)",
+        "Step 3: Evaporation / crystallisation — gently heat the salt solution to evaporate the water; salt crystals remain ✓ (1)"
+      ], notes:["Award 1 mark per correct step including the technique name and a brief reason; technique name without explanation = 0; accept 'boil to dryness' but note this can cause spattering — best practice is gentle heating"] },
+      { ref:"(c)", total:2, points:[
+        "Black ink is a mixture / contains (at least) four different dyes / pigments ✓ (1)",
+        "The components have different solubilities in the solvent ✓; more soluble components are carried further up the paper / travel at different rates → components separate ✓ (1)"
+      ], notes:["Must link number of spots to number of components for first mark; must explain mechanism involving solubility for second mark"] },
+      { ref:"(d)", total:1, points:[
+        "They have different boiling points ✓"
+      ], notes:["Do not accept 'different temperatures'; must specifically say boiling points"] }
+    ],
+    activity: {
+      title: "🧪 Experiment Design Challenge",
+      body: `You have a mixture of three substances: <strong>iron filings</strong>, <strong>salt</strong>, and <strong>sand</strong>. Design a method using <em>three separate steps</em> to isolate each substance in a pure form.
+<br><br>
+For each step, write:
+<br>&nbsp;&nbsp;— the <strong>name of the technique</strong>
+<br>&nbsp;&nbsp;— the <strong>scientific principle</strong> that makes it work
+<br>&nbsp;&nbsp;— the substance you are collecting at each stage
+<br><br>
+<em>Hint: think about the properties of each material — magnetic? Soluble? Insoluble?</em>
+<br><br>
+<em>Expected method: (1) Use a magnet to extract iron filings (iron is magnetic). (2) Add water and stir — salt dissolves, sand does not. Filter to remove sand. (3) Evaporate the salt solution to obtain salt crystals.</em>
+<br><br>
+<strong>Challenge:</strong> Could you use chromatography to check whether the salt sample is pure? Explain your reasoning.`
+    }
+  },
+  {
+    id: "C3",
+    navLabel: "Solutions",
+    topic: "Solutions",
+    lo: "Define solute, solvent, solution; explain dissolving using the particle model; state that mass is conserved; explain diffusion with an example",
+    totalMarks: 6,
+    hasDiagram: false,
+    title: "Solutions &amp; Dissolving",
+    questions: [
+      { ref:"(a)", marks:1, stem:"A student dissolves sugar in water to make a sweet drink. Identify the <strong>solute</strong> and the <strong>solvent</strong>." },
+      { ref:"(b)", marks:2, stem:"Using the <strong>particle model</strong>, describe what happens to the sugar particles when the sugar dissolves in water." },
+      { ref:"(c)", marks:1, stem:"A student adds <strong>5 g</strong> of sugar to <strong>95 g</strong> of water. State the total mass of the solution produced." },
+      { ref:"(d)", marks:2, stem:"Explain what <strong>diffusion</strong> is. Give <strong>one specific example</strong> of diffusion in the human body, naming the substance that moves and the location where it moves." }
+    ],
+    markScheme: [
+      { ref:"(a)", total:1, points:[
+        "Solute = sugar ✓ AND Solvent = water ✓ (1 mark — both required)"
+      ], notes:["Do not award if either is incorrect; must use the correct terms 'solute' and 'solvent'"] },
+      { ref:"(b)", total:2, points:[
+        "The sugar particles break apart from each other / spread out / separate ✓ (1)",
+        "They move into the spaces between the water particles / become evenly distributed throughout the solution ✓ (1)"
+      ], notes:["Must refer to particles specifically; 'sugar mixes with water' without reference to particles = 0; accept 'solute particles spread through the solvent particles'"] },
+      { ref:"(c)", total:1, points:[
+        "100 g ✓"
+      ], notes:["Accept with or without explanation; correct answer is enough for this mark"] },
+      { ref:"(d)", total:2, points:[
+        "Diffusion is the (net) movement of particles from a region of high concentration to a region of low concentration ✓ (1)",
+        "Example: oxygen moves from the alveoli (lungs) into the bloodstream ✓ / glucose moves from the small intestine into the blood ✓ / carbon dioxide moves from body cells into the blood ✓ (1)"
+      ], notes:["Must name a specific substance AND a specific location for the second mark; 'substances move across the cell membrane' without identifying what or where = 0"] }
+    ],
+    activity: {
+      title: "📊 Solubility Investigation",
+      body: `A student investigates how temperature affects the solubility of sugar (mass of sugar that dissolves in 100 g of water):
+<br><br>
+<table style="border-collapse:collapse;font-size:0.84rem;margin:8px 0;">
+  <tr><th style="background:#5b21b6;color:white;padding:5px 14px;text-align:center;">Temperature (°C)</th><td style="padding:4px 14px;border:1px solid #ddd6fe;text-align:center;">10</td><td style="padding:4px 14px;border:1px solid #ddd6fe;text-align:center;">20</td><td style="padding:4px 14px;border:1px solid #ddd6fe;text-align:center;">40</td><td style="padding:4px 14px;border:1px solid #ddd6fe;text-align:center;">60</td><td style="padding:4px 14px;border:1px solid #ddd6fe;text-align:center;">80</td></tr>
+  <tr><th style="background:#5b21b6;color:white;padding:5px 14px;text-align:center;">Mass dissolved (g)</th><td style="padding:4px 14px;border:1px solid #ddd6fe;text-align:center;">191</td><td style="padding:4px 14px;border:1px solid #ddd6fe;text-align:center;">204</td><td style="padding:4px 14px;border:1px solid #ddd6fe;text-align:center;">238</td><td style="padding:4px 14px;border:1px solid #ddd6fe;text-align:center;">287</td><td style="padding:4px 14px;border:1px solid #ddd6fe;text-align:center;">362</td></tr>
+</table>
+<br>
+<strong>Tasks:</strong><br>
+<strong>1.</strong> Plot these results as a line graph (temperature on x-axis, mass dissolved on y-axis).<br>
+<strong>2.</strong> Use your graph to estimate how much sugar dissolves at <strong>50°C</strong>.<br>
+<strong>3.</strong> A hot saturated sugar solution made at 80°C is cooled to 20°C. Describe and explain what happens.<br>
+<strong>4.</strong> <em>Challenge:</em> State the relationship between temperature and solubility for sugar. Is this true for all substances? Research one substance where the pattern is different.`
+    }
+  }
+];
+
+// ── State ─────────────────────────────────────────────────────────────────
+let current = 0;
+const done = new Set();
+
+// ── Helpers ───────────────────────────────────────────────────────────────
+function esc(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+function isNote(line) {
+  return /^(NOTE|Do not|Accept|Allow|Award|Must|Any |1 mark per|penalise|best practice)/i.test(line.trim());
+}
+function cleanPoint(pt) {
+  return pt.replace(/\s*✓\s*\(\d+\s*mark[s]?\)/g,'').replace(/\s*✓\s*\(\d+\)/g,'').replace(/\s*✓/g,'').trim();
+}
+
+// ── Build question face ───────────────────────────────────────────────────
+function buildQuestion(card) {
+  let qsHTML = '';
+  for (const q of card.questions) {
+    qsHTML += `
+      <div class="q-item">
+        <div class="q-ref">${q.ref}</div>
+        <div class="q-content">
+          <div class="q-stem">${q.stem}</div>
+          <div class="q-meta"><span class="marks-pill">[${q.marks}]</span></div>
+        </div>
+      </div>`;
+  }
+  const diagHTML = (card.hasDiagram && diagrams[card.id]) ? `
+    <div class="diagram-col">
+      <div class="diagram-box">
+        ${diagrams[card.id]}
+        <div class="diagram-caption">Fig. 1 &mdash; refer to this diagram when answering</div>
+      </div>
+    </div>` : '';
+
+  const stripId = `act_${card.id}`;
+  const actHTML = `
+    <div class="activity-strip" id="${stripId}">
+      <button class="activity-toggle" onclick="document.getElementById('${stripId}').classList.toggle('open')">
+        ${card.activity.title} <span class="act-chevron">▾</span>
+      </button>
+      <div class="activity-content">${card.activity.body}</div>
+    </div>`;
+
+  return `
+    <div class="q-header">
+      <span class="spec-badge">${esc(card.id)}</span>
+      <span class="q-header-title">${card.title}</span>
+      <span class="marks-badge">${card.totalMarks} marks</span>
+    </div>
+    <div class="spec-stmt"><strong>Learning Outcomes:</strong> ${esc(card.lo)}</div>
+    <div class="q-body">
+      <div class="questions-col">${qsHTML}</div>
+      ${diagHTML}
+    </div>
+    ${actHTML}`;
+}
+
+// ── Build mark scheme face ────────────────────────────────────────────────
+function buildMarkScheme(card) {
+  const numQ = card.markScheme.length;
+  const singleCol = numQ <= 2;
+  let itemsHTML = '';
+  for (const item of card.markScheme) {
+    const pureAnswers = item.points.filter(p => !isNote(p));
+    const pureNotes   = item.points.filter(p => isNote(p));
+    const pointsHTML  = pureAnswers.map(pt => {
+      const hasCheck = pt.includes('✓');
+      const cleaned  = cleanPoint(pt);
+      return `<div class="ms-point">${hasCheck ? '<span class="ms-tick">✓</span>' : '<span class="ms-tick" style="opacity:0">✓</span>'}<span>${esc(cleaned)}</span></div>`;
+    }).join('');
+    const notesHTML = [...pureNotes, ...(item.notes || [])].map(n =>
+      `<div class="ms-note">${esc(n)}</div>`
+    ).join('');
+    itemsHTML += `
+      <div class="ms-item">
+        <div class="ms-item-hdr">
+          <span class="ms-ref">${esc(item.ref)}</span>
+          <span class="ms-total">[${item.total} mark${item.total > 1 ? 's' : ''}]</span>
+        </div>
+        <div class="ms-points">${pointsHTML}${notesHTML}</div>
+      </div>`;
+  }
+  return `
+    <div class="ms-header">
+      <span class="ms-badge">✓ MS</span>
+      <span class="ms-header-title">${esc(card.id)} &mdash; Mark Scheme</span>
+    </div>
+    <div class="spec-stmt"><strong>Learning Outcomes:</strong> ${esc(card.lo)}</div>
+    <div class="ms-body ${singleCol ? 'cols-1' : ''}">${itemsHTML}</div>`;
+}
+
+// ── Nav dots ──────────────────────────────────────────────────────────────
+function renderNav() {
+  document.getElementById('specNav').innerHTML = cards.map((c, i) => {
+    const cls = i === current ? 'active' : done.has(i) ? 'done' : '';
+    return `<div class="spec-dot ${cls}" onclick="goTo(${i})" title="${c.topic}">${esc(c.navLabel)}</div>`;
+  }).join('');
+}
+
+// ── Main render ───────────────────────────────────────────────────────────
+function render() {
+  const card = cards[current];
+  document.getElementById('cardScene').classList.remove('revealed');
+  document.getElementById('progressPill').textContent = `Card ${current + 1} of ${cards.length}`;
+  document.getElementById('progressFill').style.width = `${(current + 1) / cards.length * 100}%`;
+  document.getElementById('hintText').textContent = 'Answer the questions, then tap "Reveal Answers"';
+  document.getElementById('btnReveal').disabled = false;
+  document.getElementById('btnReveal').textContent = 'Reveal Answers ✓';
+  document.getElementById('btnNext').disabled = true;
+  document.getElementById('btnPrev').disabled = current === 0;
+  document.getElementById('completeBanner').classList.remove('show');
+  document.getElementById('qFace').innerHTML  = buildQuestion(card);
+  document.getElementById('msFace').innerHTML = buildMarkScheme(card);
+  renderNav();
+}
+
+// ── Actions ───────────────────────────────────────────────────────────────
+function revealAnswers() {
+  const scene = document.getElementById('cardScene');
+  const btn   = document.getElementById('btnReveal');
+  if (scene.classList.contains('revealed')) {
+    scene.classList.remove('revealed');
+    btn.textContent = 'Reveal Answers ✓';
+    document.getElementById('hintText').textContent = 'Answer the questions, then tap "Reveal Answers"';
+  } else {
+    scene.classList.add('revealed');
+    btn.textContent = 'Hide Answers ↩';
+    document.getElementById('btnNext').disabled = (current === cards.length - 1);
+    document.getElementById('hintText').textContent = 'Check your answers carefully, then move on';
+    done.add(current);
+    renderNav();
+  }
+}
+
+function navigate(dir) {
+  const next = current + dir;
+  if (next >= 0 && next < cards.length) {
+    current = next;
+    render();
+  } else if (dir === 1 && current === cards.length - 1) {
+    document.getElementById('completeBanner').classList.add('show');
+    document.getElementById('hintText').textContent = '';
+  }
+}
+
+function goTo(idx) { current = idx; render(); }
+
+// ── Init ──────────────────────────────────────────────────────────────────
+render();
+</script>
+</body>
+</html>

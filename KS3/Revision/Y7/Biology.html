@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Y7 Biology – Revision Cards</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: #eef7f0; min-height: 100vh; display: flex; flex-direction: column; }
+
+  /* ── Header ─────────────────────────────────────── */
+  .header { background: #1b4332; color: white; padding: 14px 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
+  .header-left h1 { font-size: 1.05rem; font-weight: 700; letter-spacing: 0.01em; }
+  .header-left .sub { font-size: 0.78rem; opacity: 0.68; margin-top: 2px; }
+  .progress-pill { background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.25); padding: 5px 14px; border-radius: 20px; font-size: 0.82rem; font-weight: 600; white-space: nowrap; }
+  .progress-track { height: 4px; background: #c8ebd3; }
+  .progress-fill { height: 100%; background: #52b788; transition: width 0.5s ease; }
+
+  /* ── Main ────────────────────────────────────────── */
+  .main { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 20px 16px 32px; gap: 14px; }
+
+  /* ── Topic nav ───────────────────────────────────── */
+  .spec-nav { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
+  .spec-dot { min-width: 72px; height: 32px; border-radius: 16px; border: 2px solid #95d5b2; background: white; color: #2d6a4f; font-weight: 700; font-size: 0.7rem; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.15s; padding: 2px 8px; text-align: center; }
+  .spec-dot:hover { background: #d8f3dc; }
+  .spec-dot.active { background: #1b4332; color: white; border-color: #1b4332; }
+  .spec-dot.done { background: #52b788; color: white; border-color: #52b788; }
+
+  /* ── Card scene ─────────────────────────────────── */
+  .card-scene { width: 100%; max-width: 880px; display: grid; }
+  .card-face { grid-area: 1/1; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.11); transition: opacity 0.35s ease, transform 0.35s ease; }
+  .card-face.back { opacity: 0; transform: scale(0.97); pointer-events: none; }
+  .card-scene.revealed .card-face.front { opacity: 0; transform: scale(0.97); pointer-events: none; }
+  .card-scene.revealed .card-face.back { opacity: 1; transform: scale(1); pointer-events: all; }
+
+  /* ── Question card ──────────────────────────────── */
+  .q-header { background: #1b4332; color: white; padding: 14px 20px; display: flex; align-items: center; gap: 12px; }
+  .spec-badge { background: #95d5b2; color: #1b4332; font-weight: 700; font-size: 0.88rem; padding: 5px 12px; border-radius: 8px; white-space: nowrap; flex-shrink: 0; }
+  .q-header-title { font-size: 1rem; font-weight: 600; line-height: 1.3; }
+  .marks-badge { margin-left: auto; background: #f4d03f; color: #1a2e1f; font-weight: 700; font-size: 0.8rem; padding: 5px 12px; border-radius: 20px; white-space: nowrap; flex-shrink: 0; }
+  .spec-stmt { background: #d8f3dc; padding: 9px 20px; font-size: 0.83rem; color: #1a2e1f; font-style: italic; line-height: 1.45; border-bottom: 1px solid #95d5b2; }
+  .spec-stmt strong { font-style: normal; color: #1b4332; }
+  .q-body { background: white; padding: 16px 20px; display: flex; gap: 18px; align-items: flex-start; }
+  .questions-col { flex: 1; min-width: 0; }
+  .diagram-col { width: 260px; flex-shrink: 0; }
+  .diagram-box { border: 2px dashed #95d5b2; border-radius: 10px; background: #f8fdf9; padding: 12px; display: flex; flex-direction: column; align-items: center; gap: 6px; }
+  .diagram-box svg { width: 100%; height: auto; }
+  .diagram-caption { font-size: 0.74rem; color: #777; font-style: italic; text-align: center; line-height: 1.4; }
+  .q-item { display: flex; gap: 10px; padding: 12px 0; border-bottom: 1px solid #e8f5e9; align-items: flex-start; }
+  .q-item:last-child { border-bottom: none; padding-bottom: 0; }
+  .q-ref { font-weight: 700; color: #1b4332; font-size: 1rem; min-width: 30px; padding-top: 1px; flex-shrink: 0; }
+  .q-content { flex: 1; min-width: 0; }
+  .q-stem { font-size: 0.91rem; color: #1a2e1f; line-height: 1.55; }
+  .q-meta { margin-top: 7px; display: flex; gap: 7px; align-items: center; flex-wrap: wrap; }
+  .marks-pill { background: #2d6a4f; color: white; font-size: 0.73rem; font-weight: 700; padding: 2px 9px; border-radius: 10px; }
+
+  /* ── Activity strip ──────────────────────────────── */
+  .activity-strip { border-top: 2px solid #fbbf24; background: #fffbeb; }
+  .activity-toggle { width: 100%; padding: 10px 20px; background: none; border: none; text-align: left; font-size: 0.87rem; font-weight: 700; color: #78350f; cursor: pointer; display: flex; align-items: center; gap: 8px; font-family: inherit; }
+  .activity-toggle:hover { background: #fef3c7; }
+  .act-chevron { margin-left: auto; transition: transform 0.2s; }
+  .activity-strip.open .act-chevron { transform: rotate(180deg); }
+  .activity-content { display: none; padding: 4px 20px 14px; font-size: 0.87rem; color: #451a03; line-height: 1.65; border-top: 1px solid #fde68a; }
+  .activity-strip.open .activity-content { display: block; }
+  .activity-content em { color: #92400e; }
+  .activity-content strong { color: #78350f; }
+
+  /* ── Mark scheme card ───────────────────────────── */
+  .ms-header { background: #40916c; color: white; padding: 14px 20px; display: flex; align-items: center; gap: 12px; }
+  .ms-badge { background: #95d5b2; color: #1b4332; font-weight: 700; font-size: 0.85rem; padding: 5px 11px; border-radius: 8px; white-space: nowrap; flex-shrink: 0; }
+  .ms-header-title { font-size: 1rem; font-weight: 600; }
+  .ms-body { background: #f0faf4; padding: 16px 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .ms-body.cols-1 { grid-template-columns: 1fr; }
+  .ms-item { background: white; border-radius: 8px; overflow: hidden; border: 1px solid #b7e4c7; box-shadow: 0 1px 4px rgba(0,0,0,0.05); }
+  .ms-item-hdr { background: #ebf7ef; padding: 7px 13px; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid #b7e4c7; }
+  .ms-ref { font-weight: 700; color: #40916c; font-size: 0.93rem; }
+  .ms-total { font-size: 0.76rem; color: #666; }
+  .ms-points { padding: 10px 13px; display: flex; flex-direction: column; gap: 6px; }
+  .ms-point { display: flex; gap: 8px; align-items: flex-start; font-size: 0.86rem; color: #1a2e1f; line-height: 1.45; }
+  .ms-tick { color: #27ae60; font-weight: 800; font-size: 0.9rem; flex-shrink: 0; margin-top: 1px; }
+  .ms-note { font-size: 0.76rem; color: #6b7280; font-style: italic; line-height: 1.4; border-top: 1px solid #e8f5e9; margin-top: 4px; padding-top: 6px; }
+
+  /* ── Controls ───────────────────────────────────── */
+  .hint-text { font-size: 0.8rem; color: #777; text-align: center; min-height: 18px; font-style: italic; }
+  .controls { display: flex; gap: 10px; justify-content: center; align-items: center; flex-wrap: wrap; width: 100%; max-width: 880px; }
+  .btn { padding: 10px 22px; border: none; border-radius: 8px; cursor: pointer; font-size: 0.88rem; font-weight: 600; font-family: inherit; transition: all 0.15s; white-space: nowrap; }
+  .btn:hover:not(:disabled) { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+  .btn:active:not(:disabled) { transform: translateY(0); }
+  .btn:disabled { opacity: 0.35; cursor: not-allowed; }
+  .btn-outline { background: white; color: #1b4332; border: 2px solid #1b4332; }
+  .btn-reveal { background: #52b788; color: white; padding: 11px 30px; font-size: 0.92rem; }
+  .btn-next { background: #1b4332; color: white; padding: 11px 30px; font-size: 0.92rem; }
+
+  /* ── Completion banner ──────────────────────────── */
+  .complete-banner { background: #1b4332; color: white; text-align: center; padding: 20px; border-radius: 12px; width: 100%; max-width: 880px; display: none; }
+  .complete-banner h2 { font-size: 1.3rem; margin-bottom: 6px; }
+  .complete-banner p { opacity: 0.8; font-size: 0.9rem; }
+  .complete-banner.show { display: block; }
+
+  @media (max-width: 640px) {
+    .header { padding: 10px 14px; }
+    .header-left h1 { font-size: 0.9rem; }
+    .main { padding: 12px 10px 24px; gap: 10px; }
+    .q-header { padding: 10px 14px; flex-wrap: wrap; }
+    .q-header-title { font-size: 0.87rem; order: 3; flex-basis: 100%; padding-top: 4px; }
+    .q-body { flex-direction: column; padding: 12px 14px; }
+    .diagram-col { width: 100%; }
+    .ms-body { grid-template-columns: 1fr !important; padding: 12px 14px; }
+    .controls { gap: 8px; }
+    .btn { padding: 9px 14px; font-size: 0.82rem; }
+    .btn-reveal, .btn-next { padding: 9px 18px; font-size: 0.85rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-left">
+    <h1>🌿 Biology &mdash; Revision Cards</h1>
+    <div class="sub">Y7 &nbsp;·&nbsp; KS3 Science &nbsp;·&nbsp; NC Programme of Study</div>
+  </div>
+  <div class="progress-pill" id="progressPill">Card 1 of 3</div>
+</div>
+<div class="progress-track"><div class="progress-fill" id="progressFill" style="width:33.33%"></div></div>
+
+<div class="main">
+  <div class="spec-nav" id="specNav"></div>
+
+  <div class="card-scene" id="cardScene">
+    <div class="card-face front" id="qFace"></div>
+    <div class="card-face back"  id="msFace"></div>
+  </div>
+
+  <div class="hint-text" id="hintText">Answer the questions, then tap <em>Reveal Answers</em></div>
+
+  <div class="controls">
+    <button class="btn btn-outline" id="btnPrev" onclick="navigate(-1)">&#8592; Previous</button>
+    <button class="btn btn-reveal" id="btnReveal" onclick="revealAnswers()">Reveal Answers ✓</button>
+    <button class="btn btn-next"   id="btnNext"   onclick="navigate(1)" disabled>Next Card &#8594;</button>
+  </div>
+
+  <div class="complete-banner" id="completeBanner">
+    <h2>🎉 All Biology cards complete!</h2>
+    <p>You've reviewed all 3 topics &mdash; 19 marks of practice. Use the dots above to revisit any topic.</p>
+  </div>
+</div>
+
+<script>
+// ── SVG Diagrams ──────────────────────────────────────────────────────────
+const diagrams = {
+  "B3": `<svg viewBox="0 0 260 130" xmlns="http://www.w3.org/2000/svg" font-family="inherit">
+    <defs>
+      <marker id="arrowG" viewBox="0 0 8 8" refX="8" refY="4" markerWidth="5" markerHeight="5" orient="auto">
+        <path d="M0,0 L8,4 L0,8 Z" fill="#40916c"/>
+      </marker>
+    </defs>
+    <!-- Grass -->
+    <rect x="4" y="44" width="50" height="28" rx="6" fill="#d8f3dc" stroke="#40916c" stroke-width="1.5"/>
+    <text x="29" y="62" font-size="10" text-anchor="middle" font-weight="700" fill="#1b4332">Grass</text>
+    <!-- Arrow 1 -->
+    <line x1="54" y1="58" x2="68" y2="58" stroke="#40916c" stroke-width="2" marker-end="url(#arrowG)"/>
+    <!-- Rabbit -->
+    <rect x="70" y="44" width="54" height="28" rx="6" fill="#d8f3dc" stroke="#40916c" stroke-width="1.5"/>
+    <text x="97" y="62" font-size="10" text-anchor="middle" font-weight="700" fill="#1b4332">Rabbit</text>
+    <!-- Arrow 2 -->
+    <line x1="124" y1="58" x2="138" y2="58" stroke="#40916c" stroke-width="2" marker-end="url(#arrowG)"/>
+    <!-- Fox -->
+    <rect x="140" y="44" width="44" height="28" rx="6" fill="#d8f3dc" stroke="#40916c" stroke-width="1.5"/>
+    <text x="162" y="62" font-size="10" text-anchor="middle" font-weight="700" fill="#1b4332">Fox</text>
+    <!-- Arrow 3 -->
+    <line x1="184" y1="58" x2="198" y2="58" stroke="#40916c" stroke-width="2" marker-end="url(#arrowG)"/>
+    <!-- Eagle -->
+    <rect x="200" y="44" width="50" height="28" rx="6" fill="#d8f3dc" stroke="#40916c" stroke-width="1.5"/>
+    <text x="225" y="62" font-size="10" text-anchor="middle" font-weight="700" fill="#1b4332">Eagle</text>
+    <!-- Labels -->
+    <text x="29"  y="84" font-size="7.5" text-anchor="middle" fill="#2d6a4f" font-style="italic">Producer</text>
+    <text x="97"  y="84" font-size="7.5" text-anchor="middle" fill="#2d6a4f" font-style="italic">Primary</text>
+    <text x="97"  y="93" font-size="7.5" text-anchor="middle" fill="#2d6a4f" font-style="italic">consumer</text>
+    <text x="162" y="84" font-size="7.5" text-anchor="middle" fill="#2d6a4f" font-style="italic">Secondary</text>
+    <text x="162" y="93" font-size="7.5" text-anchor="middle" fill="#2d6a4f" font-style="italic">consumer</text>
+    <text x="225" y="84" font-size="7.5" text-anchor="middle" fill="#2d6a4f" font-style="italic">Tertiary</text>
+    <text x="225" y="93" font-size="7.5" text-anchor="middle" fill="#2d6a4f" font-style="italic">consumer</text>
+    <text x="130" y="120" font-size="8" text-anchor="middle" fill="#888" font-style="italic">arrows show transfer of energy / biomass</text>
+  </svg>`
+};
+
+// ── Card data ─────────────────────────────────────────────────────────────
+const cards = [
+  {
+    id: "B1",
+    navLabel: "Life Processes",
+    topic: "Life Processes",
+    lo: "Recall MRSGREN; describe each life process with examples; distinguish living, dead, and never-alive; describe levels of biological organisation",
+    totalMarks: 6,
+    hasDiagram: false,
+    title: "Life Processes &amp; Organisation",
+    questions: [
+      { ref:"(a)", marks:2, stem:"State what the letters <strong>M</strong>, <strong>R</strong>, <strong>S</strong> and <strong>G</strong> stand for in the mnemonic MRSGREN." },
+      { ref:"(b)", marks:2, stem:"A student claims a candle flame is alive because it moves and grows. Use two <em>named</em> life processes as evidence to explain why a candle flame is <strong>not</strong> a living organism." },
+      { ref:"(c)", marks:2, stem:"Starting from the smallest, list the <strong>five</strong> levels of biological organisation in a multicellular organism. Give one human body example at each of the first four levels." }
+    ],
+    markScheme: [
+      { ref:"(a)", total:2, points:[
+        "M = Movement ✓",
+        "R = Respiration ✓  |  S = Sensitivity ✓  |  G = Growth ✓  (any two further correct ✓)"
+      ], notes:["2 marks for all four correct; 1 mark for any two or three correct; 0 for only one correct"] },
+      { ref:"(b)", total:2, points:[
+        "Names a valid life process the flame cannot carry out, e.g. Reproduction — a candle cannot reproduce / make copies of itself ✓ (1)",
+        "Second valid life process with explanation, e.g. Excretion — a candle does not produce or remove metabolic waste ✓ (1)"
+      ], notes:["Accept: Nutrition, Respiration (cellular), Sensitivity, Excretion, Reproduction; must name the process AND give a linked reason; do not accept 'Movement' or 'Growth' without a clear explanation of why the flame fails that test"] },
+      { ref:"(c)", total:2, points:[
+        "Correct order: cell → tissue → organ → organ system → organism ✓ (1)",
+        "One correct human example per level, e.g. muscle cell → muscle tissue → heart → circulatory system ✓ (1)"
+      ], notes:["Accept any correct human body examples; 'organism' level does not require an example; penalise if order is wrong"] }
+    ],
+    activity: {
+      title: "🧠 Thinking Task — Is It Alive?",
+      body: `For each item below, decide whether it is <strong>living</strong>, <strong>dead</strong>, or <strong>never alive</strong>. Justify every decision using at least <strong>two life processes</strong> from MRSGREN as evidence.
+<br><br>
+&nbsp;&nbsp;<strong>1.</strong> A lit candle &ensp;·&ensp; <strong>2.</strong> A seed &ensp;·&ensp; <strong>3.</strong> A wooden chair &ensp;·&ensp; <strong>4.</strong> A mushroom &ensp;·&ensp; <strong>5.</strong> A virus
+<br><br>
+<em>Challenge:</em> Viruses are at the centre of an ongoing scientific debate — some biologists argue they are not truly living. Which life processes can a virus carry out, and which can it not? What does this reveal about the difficulty of defining "life"?`
+    }
+  },
+  {
+    id: "B2",
+    navLabel: "Cells",
+    topic: "Cells",
+    lo: "Identify cell structures and functions; compare animal and plant cells; describe specialised cell adaptations; explain diffusion",
+    totalMarks: 6,
+    hasDiagram: false,
+    title: "Cell Structure &amp; Function",
+    questions: [
+      { ref:"(a)", marks:1, stem:"Name <strong>one</strong> structure found in plant cells but <em>not</em> in animal cells. State one function of this structure." },
+      { ref:"(b)", marks:2, stem:"A red blood cell has <strong>no nucleus</strong> and is <strong>biconcave</strong> (disc-shaped). Explain how <em>each</em> of these features is an adaptation that helps the cell carry oxygen around the body." },
+      { ref:"(c)", marks:2, stem:"Explain what <em>diffusion</em> is. Give one specific example of diffusion occurring in or between cells in the human body, naming the substance and the location." },
+      { ref:"(d)", marks:1, stem:"Name the cell structure that <strong>controls what enters and leaves</strong> every cell." }
+    ],
+    markScheme: [
+      { ref:"(a)", total:1, points:[
+        "Cell wall → gives structural support / maintains the shape of the cell ✓",
+        "Chloroplast → site of photosynthesis / absorbs light energy for photosynthesis ✓",
+        "(Permanent) vacuole → stores cell sap / maintains turgor pressure / keeps cell rigid ✓"
+      ], notes:["1 mark for correctly pairing any one structure with its correct function; structure without function = 0 marks"] },
+      { ref:"(b)", total:2, points:[
+        "No nucleus ✓ → more space inside the cell for haemoglobin / cell can carry more haemoglobin / more oxygen ✓ (1 mark — both parts required)",
+        "Biconcave / disc shape ✓ → larger surface area ✓ → oxygen diffuses in and out more quickly ✓ (1 mark — structural feature linked to function)"
+      ], notes:["Must link each structural feature to a functional benefit for the mark; feature alone = 0"] },
+      { ref:"(c)", total:2, points:[
+        "Diffusion is the (net) movement of particles from a region of high concentration to a region of low concentration ✓ (1)",
+        "Example: oxygen diffuses from the alveoli into the blood ✓ / glucose diffuses from the small intestine into the blood ✓ / CO₂ diffuses from respiring cells into the blood ✓ (1)"
+      ], notes:["Accept any correct example naming a specific substance and a specific location; 'substances move through the cell membrane' without detail = 0"] },
+      { ref:"(d)", total:1, points:[
+        "Cell membrane ✓"
+      ], notes:["Do not accept 'cell wall'"] }
+    ],
+    activity: {
+      title: "✏️ Draw It! — Cell Comparison",
+      body: `Draw a large <strong>plant cell</strong> and a large <strong>animal cell</strong> side by side. Label every structure you can remember on each cell.
+<br><br>
+Use <strong style="color:#16a34a;">green</strong> shading for structures <em>only found in plant cells</em>, and <strong style="color:#2563eb;">blue</strong> for structures found in <em>both</em> cell types.
+<br><br>
+<em>Challenge:</em> In the space below, sketch a <strong>root hair cell</strong> and a <strong>sperm cell</strong>. For each, identify <em>two</em> structural features and explain exactly how each feature helps the cell carry out its function.`
+    }
+  },
+  {
+    id: "B3",
+    navLabel: "Food Chains",
+    topic: "Food Chains &amp; Plants",
+    lo: "Construct and interpret food chains; predict effects of predator-prey changes; state the photosynthesis equation; explain leaf adaptations",
+    totalMarks: 7,
+    hasDiagram: true,
+    title: "Food Chains &amp; Photosynthesis",
+    questions: [
+      { ref:"(a)", marks:1, stem:"State what the <strong>arrows</strong> in a food chain represent." },
+      { ref:"(b)", marks:2, stem:"Use the food chain in Fig. 1. A disease kills most of the foxes. Predict what will happen to the <strong>rabbit</strong> population over the following months. Explain your answer." },
+      { ref:"(c)", marks:2, stem:"Write the <strong>word equation</strong> for photosynthesis. Include all reactants, products, and the energy source." },
+      { ref:"(d)", marks:2, stem:"Describe <strong>two</strong> structural adaptations of a leaf that help maximise the rate of photosynthesis. For each adaptation, explain how it helps." }
+    ],
+    markScheme: [
+      { ref:"(a)", total:1, points:[
+        "The transfer of energy / biomass from one organism to the next ✓"
+      ], notes:["Must include the idea of transfer or direction of flow; do not accept 'food' or 'eaten by' alone; accept 'energy flow'"] },
+      { ref:"(b)", total:2, points:[
+        "Rabbit population increases ✓ (1)",
+        "Because fewer foxes are preying on / eating the rabbits ✓ (1)"
+      ], notes:["Must give correct prediction AND a linked explanation for full marks"] },
+      { ref:"(c)", total:2, points:[
+        "carbon dioxide + water → glucose + oxygen ✓ (1 mark — correct reactants and products both needed)",
+        "light energy shown as a condition above or below the arrow ✓ (1)"
+      ], notes:["Accept 'sunlight' for light energy; 'chlorophyll' is a catalyst not a reactant and should appear above the arrow only; do not accept reversed equation"] },
+      { ref:"(d)", total:2, points:[
+        "Large / broad / flat surface area ✓ → maximises light absorption / more light reaching chlorophyll ✓ (1)",
+        "Palisade mesophyll cells near the upper surface / packed with chloroplasts ✓ → absorb maximum light for photosynthesis ✓ (1)",
+        "Stomata in lower epidermis ✓ → allow CO₂ to enter and O₂ to leave the leaf ✓ (1)",
+        "Air spaces in spongy mesophyll ✓ → allow CO₂ to diffuse rapidly to photosynthesising cells ✓ (1)",
+        "Thin leaf / short diffusion pathway ✓ → gases reach all cells quickly ✓ (1)"
+      ], notes:["1 mark per adaptation correctly linked to its function; adaptation without explanation = 0; any 2 from the list above"] }
+    ],
+    activity: {
+      title: "🌿 Food Web Challenge",
+      body: `Using the organisms below, construct a <strong>food web</strong> by drawing arrows to show every feeding relationship:
+<br><br>
+<strong>Organisms:</strong> grass, oak tree, rabbit, mouse, fox, owl, eagle, caterpillar
+<br><br>
+<strong>Then answer:</strong><br>
+<strong>1.</strong> Circle one <em>producer</em> in your web. Explain what makes it a producer.<br>
+<strong>2.</strong> A farmer sprays pesticide that kills all the caterpillars. Predict what happens to <em>two different organisms</em> in your food web. Use your arrows as evidence.<br>
+<strong>3.</strong> <em>Challenge:</em> What is <strong>bioaccumulation</strong>? Using your food web, explain how a toxic chemical sprayed on grass could end up at a dangerously high concentration inside an eagle.`
+    }
+  }
+];
+
+// ── State ─────────────────────────────────────────────────────────────────
+let current = 0;
+const done = new Set();
+
+// ── Helpers ───────────────────────────────────────────────────────────────
+function esc(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+function isNote(line) {
+  return /^(NOTE|Do not|Accept|Allow|Award|Must|Any |1 mark per|penalise)/i.test(line.trim());
+}
+function cleanPoint(pt) {
+  return pt.replace(/\s*✓\s*\(\d+\s*mark[s]?\)/g,'').replace(/\s*✓\s*\(\d+\)/g,'').replace(/\s*✓/g,'').trim();
+}
+
+// ── Build question face ───────────────────────────────────────────────────
+function buildQuestion(card) {
+  let qsHTML = '';
+  for (const q of card.questions) {
+    qsHTML += `
+      <div class="q-item">
+        <div class="q-ref">${q.ref}</div>
+        <div class="q-content">
+          <div class="q-stem">${q.stem}</div>
+          <div class="q-meta"><span class="marks-pill">[${q.marks}]</span></div>
+        </div>
+      </div>`;
+  }
+  const diagHTML = (card.hasDiagram && diagrams[card.id]) ? `
+    <div class="diagram-col">
+      <div class="diagram-box">
+        ${diagrams[card.id]}
+        <div class="diagram-caption">Fig. 1 &mdash; refer to this diagram when answering</div>
+      </div>
+    </div>` : '';
+
+  const stripId = `act_${card.id}`;
+  const actHTML = `
+    <div class="activity-strip" id="${stripId}">
+      <button class="activity-toggle" onclick="document.getElementById('${stripId}').classList.toggle('open')">
+        ${card.activity.title} <span class="act-chevron">▾</span>
+      </button>
+      <div class="activity-content">${card.activity.body}</div>
+    </div>`;
+
+  return `
+    <div class="q-header">
+      <span class="spec-badge">${esc(card.id)}</span>
+      <span class="q-header-title">${card.title}</span>
+      <span class="marks-badge">${card.totalMarks} marks</span>
+    </div>
+    <div class="spec-stmt"><strong>Learning Outcomes:</strong> ${esc(card.lo)}</div>
+    <div class="q-body">
+      <div class="questions-col">${qsHTML}</div>
+      ${diagHTML}
+    </div>
+    ${actHTML}`;
+}
+
+// ── Build mark scheme face ────────────────────────────────────────────────
+function buildMarkScheme(card) {
+  const numQ = card.markScheme.length;
+  const singleCol = numQ <= 2;
+  let itemsHTML = '';
+  for (const item of card.markScheme) {
+    const pureAnswers = item.points.filter(p => !isNote(p));
+    const pureNotes   = item.points.filter(p => isNote(p));
+    const pointsHTML  = pureAnswers.map(pt => {
+      const hasCheck = pt.includes('✓');
+      const cleaned  = cleanPoint(pt);
+      return `<div class="ms-point">${hasCheck ? '<span class="ms-tick">✓</span>' : '<span class="ms-tick" style="opacity:0">✓</span>'}<span>${esc(cleaned)}</span></div>`;
+    }).join('');
+    const notesHTML = [...pureNotes, ...(item.notes || [])].map(n =>
+      `<div class="ms-note">${esc(n)}</div>`
+    ).join('');
+    itemsHTML += `
+      <div class="ms-item">
+        <div class="ms-item-hdr">
+          <span class="ms-ref">${esc(item.ref)}</span>
+          <span class="ms-total">[${item.total} mark${item.total > 1 ? 's' : ''}]</span>
+        </div>
+        <div class="ms-points">${pointsHTML}${notesHTML}</div>
+      </div>`;
+  }
+  return `
+    <div class="ms-header">
+      <span class="ms-badge">✓ MS</span>
+      <span class="ms-header-title">${esc(card.id)} &mdash; Mark Scheme</span>
+    </div>
+    <div class="spec-stmt"><strong>Learning Outcomes:</strong> ${esc(card.lo)}</div>
+    <div class="ms-body ${singleCol ? 'cols-1' : ''}">${itemsHTML}</div>`;
+}
+
+// ── Nav dots ──────────────────────────────────────────────────────────────
+function renderNav() {
+  document.getElementById('specNav').innerHTML = cards.map((c, i) => {
+    const cls = i === current ? 'active' : done.has(i) ? 'done' : '';
+    return `<div class="spec-dot ${cls}" onclick="goTo(${i})" title="${c.topic}">${esc(c.navLabel)}</div>`;
+  }).join('');
+}
+
+// ── Main render ───────────────────────────────────────────────────────────
+function render() {
+  const card = cards[current];
+  document.getElementById('cardScene').classList.remove('revealed');
+  document.getElementById('progressPill').textContent = `Card ${current + 1} of ${cards.length}`;
+  document.getElementById('progressFill').style.width = `${(current + 1) / cards.length * 100}%`;
+  document.getElementById('hintText').textContent = 'Answer the questions, then tap "Reveal Answers"';
+  document.getElementById('btnReveal').disabled = false;
+  document.getElementById('btnReveal').textContent = 'Reveal Answers ✓';
+  document.getElementById('btnNext').disabled = true;
+  document.getElementById('btnPrev').disabled = current === 0;
+  document.getElementById('completeBanner').classList.remove('show');
+  document.getElementById('qFace').innerHTML  = buildQuestion(card);
+  document.getElementById('msFace').innerHTML = buildMarkScheme(card);
+  renderNav();
+}
+
+// ── Actions ───────────────────────────────────────────────────────────────
+function revealAnswers() {
+  const scene = document.getElementById('cardScene');
+  const btn   = document.getElementById('btnReveal');
+  if (scene.classList.contains('revealed')) {
+    scene.classList.remove('revealed');
+    btn.textContent = 'Reveal Answers ✓';
+    document.getElementById('hintText').textContent = 'Answer the questions, then tap "Reveal Answers"';
+  } else {
+    scene.classList.add('revealed');
+    btn.textContent = 'Hide Answers ↩';
+    document.getElementById('btnNext').disabled = (current === cards.length - 1);
+    document.getElementById('hintText').textContent = 'Check your answers carefully, then move on';
+    done.add(current);
+    renderNav();
+  }
+}
+
+function navigate(dir) {
+  const next = current + dir;
+  if (next >= 0 && next < cards.length) {
+    current = next;
+    render();
+  } else if (dir === 1 && current === cards.length - 1) {
+    document.getElementById('completeBanner').classList.add('show');
+    document.getElementById('hintText').textContent = '';
+  }
+}
+
+function goTo(idx) { current = idx; render(); }
+
+// ── Init ──────────────────────────────────────────────────────────────────
+render();
+</script>
+</body>
+</html>

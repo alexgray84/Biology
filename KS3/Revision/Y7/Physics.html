@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Y7 Physics – Revision Cards</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: #f0f4ff; min-height: 100vh; display: flex; flex-direction: column; }
+
+  /* ── Header ─────────────────────────────────────── */
+  .header { background: #0c2340; color: white; padding: 14px 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
+  .header-left h1 { font-size: 1.05rem; font-weight: 700; letter-spacing: 0.01em; }
+  .header-left .sub { font-size: 0.78rem; opacity: 0.68; margin-top: 2px; }
+  .progress-pill { background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.25); padding: 5px 14px; border-radius: 20px; font-size: 0.82rem; font-weight: 600; white-space: nowrap; }
+  .progress-track { height: 4px; background: #bfdbfe; }
+  .progress-fill { height: 100%; background: #3b82f6; transition: width 0.5s ease; }
+
+  /* ── Main ────────────────────────────────────────── */
+  .main { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 20px 16px 32px; gap: 14px; }
+
+  /* ── Topic nav ───────────────────────────────────── */
+  .spec-nav { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
+  .spec-dot { min-width: 72px; height: 32px; border-radius: 16px; border: 2px solid #93c5fd; background: white; color: #1d4ed8; font-weight: 700; font-size: 0.7rem; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.15s; padding: 2px 8px; text-align: center; }
+  .spec-dot:hover { background: #dbeafe; }
+  .spec-dot.active { background: #0c2340; color: white; border-color: #0c2340; }
+  .spec-dot.done { background: #3b82f6; color: white; border-color: #3b82f6; }
+
+  /* ── Card scene ─────────────────────────────────── */
+  .card-scene { width: 100%; max-width: 880px; display: grid; }
+  .card-face { grid-area: 1/1; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.11); transition: opacity 0.35s ease, transform 0.35s ease; }
+  .card-face.back { opacity: 0; transform: scale(0.97); pointer-events: none; }
+  .card-scene.revealed .card-face.front { opacity: 0; transform: scale(0.97); pointer-events: none; }
+  .card-scene.revealed .card-face.back { opacity: 1; transform: scale(1); pointer-events: all; }
+
+  /* ── Question card ──────────────────────────────── */
+  .q-header { background: #0c2340; color: white; padding: 14px 20px; display: flex; align-items: center; gap: 12px; }
+  .spec-badge { background: #93c5fd; color: #0c2340; font-weight: 700; font-size: 0.88rem; padding: 5px 12px; border-radius: 8px; white-space: nowrap; flex-shrink: 0; }
+  .q-header-title { font-size: 1rem; font-weight: 600; line-height: 1.3; }
+  .marks-badge { margin-left: auto; background: #f4d03f; color: #1a2e1f; font-weight: 700; font-size: 0.8rem; padding: 5px 12px; border-radius: 20px; white-space: nowrap; flex-shrink: 0; }
+  .spec-stmt { background: #dbeafe; padding: 9px 20px; font-size: 0.83rem; color: #1e3a5f; font-style: italic; line-height: 1.45; border-bottom: 1px solid #93c5fd; }
+  .spec-stmt strong { font-style: normal; color: #0c2340; }
+  .q-body { background: white; padding: 16px 20px; display: flex; gap: 18px; align-items: flex-start; }
+  .questions-col { flex: 1; min-width: 0; }
+  .diagram-col { width: 260px; flex-shrink: 0; }
+  .diagram-box { border: 2px dashed #93c5fd; border-radius: 10px; background: #f8faff; padding: 12px; display: flex; flex-direction: column; align-items: center; gap: 6px; }
+  .diagram-box svg { width: 100%; height: auto; }
+  .diagram-caption { font-size: 0.74rem; color: #777; font-style: italic; text-align: center; line-height: 1.4; }
+  .q-item { display: flex; gap: 10px; padding: 12px 0; border-bottom: 1px solid #eff6ff; align-items: flex-start; }
+  .q-item:last-child { border-bottom: none; padding-bottom: 0; }
+  .q-ref { font-weight: 700; color: #0c2340; font-size: 1rem; min-width: 30px; padding-top: 1px; flex-shrink: 0; }
+  .q-content { flex: 1; min-width: 0; }
+  .q-stem { font-size: 0.91rem; color: #1a2e4f; line-height: 1.55; }
+  .q-meta { margin-top: 7px; display: flex; gap: 7px; align-items: center; flex-wrap: wrap; }
+  .marks-pill { background: #1d4ed8; color: white; font-size: 0.73rem; font-weight: 700; padding: 2px 9px; border-radius: 10px; }
+
+  /* ── Activity strip ──────────────────────────────── */
+  .activity-strip { border-top: 2px solid #fbbf24; background: #fffbeb; }
+  .activity-toggle { width: 100%; padding: 10px 20px; background: none; border: none; text-align: left; font-size: 0.87rem; font-weight: 700; color: #78350f; cursor: pointer; display: flex; align-items: center; gap: 8px; font-family: inherit; }
+  .activity-toggle:hover { background: #fef3c7; }
+  .act-chevron { margin-left: auto; transition: transform 0.2s; }
+  .activity-strip.open .act-chevron { transform: rotate(180deg); }
+  .activity-content { display: none; padding: 4px 20px 14px; font-size: 0.87rem; color: #451a03; line-height: 1.65; border-top: 1px solid #fde68a; }
+  .activity-strip.open .activity-content { display: block; }
+  .activity-content em { color: #92400e; }
+  .activity-content strong { color: #78350f; }
+
+  /* ── Mark scheme card ───────────────────────────── */
+  .ms-header { background: #1e5fa8; color: white; padding: 14px 20px; display: flex; align-items: center; gap: 12px; }
+  .ms-badge { background: #93c5fd; color: #0c2340; font-weight: 700; font-size: 0.85rem; padding: 5px 11px; border-radius: 8px; white-space: nowrap; flex-shrink: 0; }
+  .ms-header-title { font-size: 1rem; font-weight: 600; }
+  .ms-body { background: #f0f4ff; padding: 16px 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .ms-body.cols-1 { grid-template-columns: 1fr; }
+  .ms-item { background: white; border-radius: 8px; overflow: hidden; border: 1px solid #bfdbfe; box-shadow: 0 1px 4px rgba(0,0,0,0.05); }
+  .ms-item-hdr { background: #e8f0ff; padding: 7px 13px; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid #bfdbfe; }
+  .ms-ref { font-weight: 700; color: #1e5fa8; font-size: 0.93rem; }
+  .ms-total { font-size: 0.76rem; color: #666; }
+  .ms-points { padding: 10px 13px; display: flex; flex-direction: column; gap: 6px; }
+  .ms-point { display: flex; gap: 8px; align-items: flex-start; font-size: 0.86rem; color: #1a2e4f; line-height: 1.45; }
+  .ms-tick { color: #2563eb; font-weight: 800; font-size: 0.9rem; flex-shrink: 0; margin-top: 1px; }
+  .ms-note { font-size: 0.76rem; color: #6b7280; font-style: italic; line-height: 1.4; border-top: 1px solid #eff6ff; margin-top: 4px; padding-top: 6px; }
+
+  /* ── Controls ───────────────────────────────────── */
+  .hint-text { font-size: 0.8rem; color: #777; text-align: center; min-height: 18px; font-style: italic; }
+  .controls { display: flex; gap: 10px; justify-content: center; align-items: center; flex-wrap: wrap; width: 100%; max-width: 880px; }
+  .btn { padding: 10px 22px; border: none; border-radius: 8px; cursor: pointer; font-size: 0.88rem; font-weight: 600; font-family: inherit; transition: all 0.15s; white-space: nowrap; }
+  .btn:hover:not(:disabled) { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+  .btn:active:not(:disabled) { transform: translateY(0); }
+  .btn:disabled { opacity: 0.35; cursor: not-allowed; }
+  .btn-outline { background: white; color: #0c2340; border: 2px solid #0c2340; }
+  .btn-reveal { background: #3b82f6; color: white; padding: 11px 30px; font-size: 0.92rem; }
+  .btn-next { background: #0c2340; color: white; padding: 11px 30px; font-size: 0.92rem; }
+
+  /* ── Completion banner ──────────────────────────── */
+  .complete-banner { background: #0c2340; color: white; text-align: center; padding: 20px; border-radius: 12px; width: 100%; max-width: 880px; display: none; }
+  .complete-banner h2 { font-size: 1.3rem; margin-bottom: 6px; }
+  .complete-banner p { opacity: 0.8; font-size: 0.9rem; }
+  .complete-banner.show { display: block; }
+
+  @media (max-width: 640px) {
+    .header { padding: 10px 14px; }
+    .header-left h1 { font-size: 0.9rem; }
+    .main { padding: 12px 10px 24px; gap: 10px; }
+    .q-header { padding: 10px 14px; flex-wrap: wrap; }
+    .q-header-title { font-size: 0.87rem; order: 3; flex-basis: 100%; padding-top: 4px; }
+    .q-body { flex-direction: column; padding: 12px 14px; }
+    .diagram-col { width: 100%; }
+    .ms-body { grid-template-columns: 1fr !important; padding: 12px 14px; }
+    .controls { gap: 8px; }
+    .btn { padding: 9px 14px; font-size: 0.82rem; }
+    .btn-reveal, .btn-next { padding: 9px 18px; font-size: 0.85rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-left">
+    <h1>⚡ Physics &mdash; Revision Cards</h1>
+    <div class="sub">Y7 &nbsp;·&nbsp; KS3 Science &nbsp;·&nbsp; NC Programme of Study</div>
+  </div>
+  <div class="progress-pill" id="progressPill">Card 1 of 4</div>
+</div>
+<div class="progress-track"><div class="progress-fill" id="progressFill" style="width:25%"></div></div>
+
+<div class="main">
+  <div class="spec-nav" id="specNav"></div>
+
+  <div class="card-scene" id="cardScene">
+    <div class="card-face front" id="qFace"></div>
+    <div class="card-face back"  id="msFace"></div>
+  </div>
+
+  <div class="hint-text" id="hintText">Answer the questions, then tap <em>Reveal Answers</em></div>
+
+  <div class="controls">
+    <button class="btn btn-outline" id="btnPrev" onclick="navigate(-1)">&#8592; Previous</button>
+    <button class="btn btn-reveal" id="btnReveal" onclick="revealAnswers()">Reveal Answers ✓</button>
+    <button class="btn btn-next"   id="btnNext"   onclick="navigate(1)" disabled>Next Card &#8594;</button>
+  </div>
+
+  <div class="complete-banner" id="completeBanner">
+    <h2>⚡ All Physics cards complete!</h2>
+    <p>You've reviewed all 4 topics &mdash; 25 marks of practice. Use the dots above to revisit any topic.</p>
+  </div>
+</div>
+
+<script>
+// ── SVG Diagrams ──────────────────────────────────────────────────────────
+const diagrams = {
+
+  "P1": `<svg viewBox="0 0 260 160" xmlns="http://www.w3.org/2000/svg" font-family="inherit">
+    <defs>
+      <marker id="arrowB" viewBox="0 0 8 8" refX="8" refY="4" markerWidth="5" markerHeight="5" orient="auto">
+        <path d="M0,0 L8,4 L0,8 Z" fill="#1d4ed8"/>
+      </marker>
+    </defs>
+    <!-- Input label -->
+    <text x="8" y="78" font-size="9" fill="#1e3a5f" font-weight="600">500 J</text>
+    <text x="8" y="89" font-size="8" fill="#555">electrical</text>
+    <!-- Input arrow body (wide) -->
+    <rect x="52" y="56" width="60" height="40" fill="#3b82f6" opacity="0.85" rx="2"/>
+    <polygon points="112,48 130,76 112,104" fill="#3b82f6" opacity="0.85"/>
+    <!-- Splits -->
+    <!-- Useful output (thin, going right) -->
+    <rect x="138" y="62" width="70" height="16" fill="#22c55e" rx="2"/>
+    <polygon points="208,58 220,70 208,82" fill="#22c55e"/>
+    <text x="224" y="68" font-size="9" fill="#166534" font-weight="600">100 J light</text>
+    <text x="224" y="79" font-size="8" fill="#555">(useful)</text>
+    <!-- Wasted output (thick, going down-right) -->
+    <rect x="138" y="84" width="70" height="32" fill="#f87171" rx="2"/>
+    <polygon points="208,80 220,100 208,120" fill="#f87171"/>
+    <text x="224" y="97" font-size="9" fill="#991b1b" font-weight="600">400 J heat</text>
+    <text x="224" y="108" font-size="8" fill="#555">(wasted)</text>
+    <!-- Labels -->
+    <text x="68" y="150" font-size="8" text-anchor="middle" fill="#888" font-style="italic">arrow width = amount of energy</text>
+    <line x1="130" y1="145" x2="180" y2="145" stroke="#888" stroke-width="0.8"/>
+  </svg>`,
+
+  "P2": `<svg viewBox="0 0 260 185" xmlns="http://www.w3.org/2000/svg" font-family="inherit">
+    <!-- Axes -->
+    <line x1="38" y1="10" x2="38" y2="160" stroke="#333" stroke-width="1.5"/>
+    <line x1="38" y1="160" x2="248" y2="160" stroke="#333" stroke-width="1.5"/>
+    <!-- Y axis label -->
+    <text x="8" y="90" font-size="9" text-anchor="middle" fill="#333" transform="rotate(-90,8,90)">Distance (m)</text>
+    <!-- X axis label -->
+    <text x="143" y="178" font-size="9" text-anchor="middle" fill="#333">Time (s)</text>
+    <!-- Section A: constant speed (0,160) to (90,80) -->
+    <line x1="38" y1="160" x2="128" y2="60" stroke="#3b82f6" stroke-width="2.5"/>
+    <!-- Section B: stationary (90,80) to (150,80) -->
+    <line x1="128" y1="60" x2="178" y2="60" stroke="#3b82f6" stroke-width="2.5"/>
+    <!-- Section C: faster speed (150,80) to (210,160) ... actually going further away, steeper -->
+    <line x1="178" y1="60" x2="248" y2="155" stroke="#3b82f6" stroke-width="2.5"/>
+    <!-- X tick marks -->
+    <line x1="128" y1="160" x2="128" y2="165" stroke="#555" stroke-width="1"/>
+    <text x="128" y="174" font-size="8" text-anchor="middle" fill="#555">60</text>
+    <line x1="178" y1="160" x2="178" y2="165" stroke="#555" stroke-width="1"/>
+    <text x="178" y="174" font-size="8" text-anchor="middle" fill="#555">90</text>
+    <line x1="248" y1="160" x2="248" y2="165" stroke="#555" stroke-width="1"/>
+    <text x="248" y="174" font-size="8" text-anchor="middle" fill="#555">140</text>
+    <!-- Y ticks -->
+    <line x1="33" y1="60" x2="38" y2="60" stroke="#555" stroke-width="1"/>
+    <text x="28" y="63" font-size="8" text-anchor="end" fill="#555">300</text>
+    <line x1="33" y1="110" x2="38" y2="110" stroke="#555" stroke-width="1"/>
+    <text x="28" y="113" font-size="8" text-anchor="end" fill="#555">150</text>
+    <line x1="33" y1="160" x2="38" y2="160" stroke="#555" stroke-width="1"/>
+    <text x="28" y="163" font-size="8" text-anchor="end" fill="#555">0</text>
+    <!-- Section labels -->
+    <text x="83" y="125" font-size="9" text-anchor="middle" fill="#1d4ed8" font-weight="700">A</text>
+    <text x="153" y="50" font-size="9" text-anchor="middle" fill="#1d4ed8" font-weight="700">B</text>
+    <text x="218" y="108" font-size="9" text-anchor="middle" fill="#1d4ed8" font-weight="700">C</text>
+  </svg>`
+};
+
+// ── Card data ─────────────────────────────────────────────────────────────
+const cards = [
+  {
+    id: "P1",
+    navLabel: "Energy",
+    topic: "Energy Stores &amp; Transfers",
+    lo: "Identify the five key energy stores; state the law of conservation of energy; calculate efficiency; interpret Sankey diagrams; describe energy transfers",
+    totalMarks: 7,
+    hasDiagram: true,
+    title: "Energy Stores &amp; Transfers",
+    questions: [
+      { ref:"(a)", marks:1, stem:"Name <strong>three</strong> of the five key energy stores you have studied at Y7." },
+      { ref:"(b)", marks:1, stem:"State the <strong>law of conservation of energy</strong>." },
+      { ref:"(c)", marks:2, stem:"A lamp uses <strong>500 J</strong> of electrical energy. 100 J is usefully transferred as light. Calculate the <strong>efficiency</strong> of the lamp. Show your working and include the unit." },
+      { ref:"(d)", marks:1, stem:"Fig. 1 shows a Sankey diagram for the same lamp. State what the <strong>width (thickness)</strong> of each arrow represents." },
+      { ref:"(e)", marks:2, stem:"A book is held above the ground, then dropped. Name the energy stores that <strong>change</strong> as it falls. State whether each store is <em>increasing</em> or <em>decreasing</em>." }
+    ],
+    markScheme: [
+      { ref:"(a)", total:1, points:[
+        "Any three from: kinetic ✓ / gravitational potential ✓ / elastic (potential) ✓ / chemical ✓ / thermal ✓"
+      ], notes:["1 mark for any three named correctly; accept 'gravitational' for gravitational potential; do not accept 'heat' alone — must say 'thermal'"] },
+      { ref:"(b)", total:1, points:[
+        "Energy cannot be created or destroyed; it can only be transferred from one store to another ✓"
+      ], notes:["Accept: 'energy is always conserved'; must convey that total energy stays the same"] },
+      { ref:"(c)", total:2, points:[
+        "Efficiency = (useful energy output ÷ total energy input) × 100 ✓",
+        "= (100 ÷ 500) × 100 = 20% ✓"
+      ], notes:["1 mark for correct method / substitution; 1 mark for correct final answer with % symbol; accept 0.2 only if clearly stated as a decimal fraction (not percentage)"] },
+      { ref:"(d)", total:1, points:[
+        "The width / thickness of an arrow represents the amount (quantity) of energy ✓"
+      ], notes:["Do not accept 'type of energy' or 'speed of transfer'"] },
+      { ref:"(e)", total:2, points:[
+        "Gravitational potential energy store decreases ✓ (1)",
+        "Kinetic energy store increases ✓ (1)"
+      ], notes:["Both must be correct for full marks; do not award for 'thermal energy increases' — this only occurs on impact, not during the fall"] }
+    ],
+    activity: {
+      title: "📊 Design a Sankey Diagram",
+      body: `A toaster uses <strong>2000 J</strong> of electrical energy per slice of toast. <strong>1400 J</strong> heats the toast (useful output). The remaining energy is wasted as heat to the surroundings.
+<br><br>
+<strong>Tasks:</strong><br>
+<strong>1.</strong> Draw a Sankey diagram to represent this energy transfer. Label all arrows with the amount of energy and the type of transfer.<br>
+<strong>2.</strong> Calculate the efficiency of the toaster. Show your working.<br>
+<strong>3.</strong> <em>Challenge:</em> A student says "A toaster is actually better at heating a room than a light bulb." Do you agree? Use efficiency and the idea of energy dissipation to justify your answer.
+<br><br>
+<em>Answer to (2): efficiency = 1400 ÷ 2000 × 100 = 70%</em>`
+    }
+  },
+  {
+    id: "P2",
+    navLabel: "Motion",
+    topic: "Motion",
+    lo: "Define speed and use v = d/t; interpret distance-time graphs; identify contact and non-contact forces; explain resultant force and balanced forces",
+    totalMarks: 6,
+    hasDiagram: true,
+    title: "Motion &amp; Speed",
+    questions: [
+      { ref:"(a)", marks:1, stem:"State the <strong>equation for speed</strong> using the symbols <em>v</em>, <em>d</em>, and <em>t</em>." },
+      { ref:"(b)", marks:2, stem:"A cyclist travels <strong>1800 m</strong> in <strong>6 minutes</strong>. Calculate the cyclist's speed in <strong>m/s</strong>. Show your working." },
+      { ref:"(c)", marks:2, stem:"Describe the motion of the object in <strong>Section A</strong> and <strong>Section B</strong> of the distance-time graph in Fig. 1." },
+      { ref:"(d)", marks:1, stem:"In Section C, the object travels <strong>300 m</strong> in <strong>50 seconds</strong>. Calculate its speed in m/s." }
+    ],
+    markScheme: [
+      { ref:"(a)", total:1, points:[
+        "v = d ÷ t ✓"
+      ], notes:["Accept 'speed = distance ÷ time'; accept v = d/t"] },
+      { ref:"(b)", total:2, points:[
+        "Convert time: 6 min = 6 × 60 = 360 s ✓ (1)",
+        "v = 1800 ÷ 360 = 5 m/s ✓ (1)"
+      ], notes:["1 mark for correct time conversion; 1 mark for correct final answer with units m/s; if no conversion shown but answer is correct, award both marks; answer without units loses the second mark"] },
+      { ref:"(c)", total:2, points:[
+        "Section A: the object is moving at constant / steady speed ✓ (gradient is constant / straight line going up) (1)",
+        "Section B: the object is stationary / not moving ✓ (horizontal line / zero gradient) (1)"
+      ], notes:["Accept descriptions of the graph line shape as well as a description of motion; do not award for 'accelerating' in section A"] },
+      { ref:"(d)", total:1, points:[
+        "v = 300 ÷ 50 = 6 m/s ✓"
+      ], notes:["Must include unit for the mark"] }
+    ],
+    activity: {
+      title: "📈 Distance-Time Graph Challenge",
+      body: `A dog leaves home and runs at <strong>4 m/s</strong> for <strong>30 seconds</strong>, then stops to sniff a bush for <strong>20 seconds</strong>, then runs back home at <strong>6 m/s</strong>.
+<br><br>
+<strong>Tasks:</strong><br>
+<strong>1.</strong> How far from home is the dog after the first 30 seconds?<br>
+<strong>2.</strong> Draw a distance-time graph for the <em>entire</em> journey. Label each section clearly.<br>
+<strong>3.</strong> How long does the dog take to get back home from the bush?<br>
+<strong>4.</strong> <em>Challenge:</em> What is the dog's <em>average speed</em> for the whole journey (total distance ÷ total time)?
+<br><br>
+<em>Answers: (1) 120 m &nbsp;·&nbsp; (3) 120 ÷ 6 = 20 s &nbsp;·&nbsp; (4) total dist = 240 m, total time = 70 s, avg speed ≈ 3.4 m/s</em>`
+    }
+  },
+  {
+    id: "P3",
+    navLabel: "Waves",
+    topic: "Sound &amp; Light",
+    lo: "Explain how sound is produced and travels; describe pitch and volume; explain why sound needs a medium; apply the law of reflection; describe mirror image properties",
+    totalMarks: 6,
+    hasDiagram: false,
+    title: "Sound &amp; Light",
+    questions: [
+      { ref:"(a)", marks:2, stem:"A guitar string is plucked and a sound is produced. State what determines the <strong>pitch</strong> of the sound AND what determines the <strong>volume</strong> of the sound." },
+      { ref:"(b)", marks:1, stem:"Explain why sound <strong>cannot be heard in space</strong> (a vacuum)." },
+      { ref:"(c)", marks:2, stem:"A ray of light hits a flat mirror. The <strong>angle of incidence</strong> is <strong>35°</strong>. State the angle of reflection AND state the <em>law of reflection</em>." },
+      { ref:"(d)", marks:1, stem:"State whether sound travels <strong>faster in a solid or in a gas</strong>. Give one reason for your answer." }
+    ],
+    markScheme: [
+      { ref:"(a)", total:2, points:[
+        "Pitch is determined by the frequency of vibration / how fast the string vibrates ✓ (1)",
+        "Volume is determined by the amplitude of vibration / how far the string moves from its rest position ✓ (1)"
+      ], notes:["Accept 'how many vibrations per second' for frequency; do not accept 'speed' for either answer"] },
+      { ref:"(b)", total:1, points:[
+        "Sound needs a medium / particles to vibrate and transfer the wave ✓; a vacuum has no particles ✓ so sound cannot travel through it"
+      ], notes:["Must include idea that sound needs particles AND that a vacuum has none; partial answer (particles needed, but vacuum not mentioned) = 0; accept: 'there is no matter/medium in space for the wave to travel through'"] },
+      { ref:"(c)", total:2, points:[
+        "Angle of reflection = 35° ✓ (1)",
+        "Law of reflection: the angle of incidence equals the angle of reflection ✓ (1)"
+      ], notes:["Must state both angle of incidence AND angle of reflection in the law for full marks; '35 = 35' alone, without naming the law = 1 mark"] },
+      { ref:"(d)", total:1, points:[
+        "Sound travels faster in a solid ✓; because particles are more closely packed / vibrations transfer more quickly between adjacent particles ✓ (both parts needed)"
+      ], notes:["Must give the correct answer AND a reason; correct answer alone = 0"] }
+    ],
+    activity: {
+      title: "🔦 Ray Diagram Challenge",
+      body: `<strong>Task 1:</strong> Draw a ray diagram showing a ray of light hitting a flat mirror at an angle of incidence of <strong>30°</strong>. Mark clearly:
+<br>&nbsp;&nbsp;— the normal (dotted line perpendicular to the mirror surface)
+<br>&nbsp;&nbsp;— the angle of incidence (30°)
+<br>&nbsp;&nbsp;— the reflected ray
+<br>&nbsp;&nbsp;— the angle of reflection
+<br><br>
+<strong>Task 2 — Periscope Design:</strong> A periscope uses two flat mirrors to allow a person to see over obstacles. Sketch a design for a simple periscope, showing how a light ray travels from an object above (e.g. over a wall) to an observer's eye below. Mark the angle each mirror should be placed at for the design to work.
+<br><br>
+<em>Challenge:</em> Explain, using your knowledge of mirror images, why writing in a mirror appears back-to-front. What property of mirror images causes this?`
+    }
+  },
+  {
+    id: "P4",
+    navLabel: "Forces",
+    topic: "Forces",
+    lo: "Calculate weight using W = mg; identify contact and non-contact forces; analyse balanced and unbalanced forces; describe friction and upthrust",
+    totalMarks: 6,
+    hasDiagram: false,
+    title: "Forces",
+    questions: [
+      { ref:"(a)", marks:2, stem:"Calculate the <strong>weight</strong> of a 3 kg book on Earth. The gravitational field strength is <strong>10 N/kg</strong>. State the equation used and show your working. Include the correct unit in your answer." },
+      { ref:"(b)", marks:2, stem:"A book rests on a table and does not move. Name the <strong>two forces</strong> acting on the book. State the <em>resultant force</em> and explain what this tells you about the book's motion." },
+      { ref:"(c)", marks:2, stem:"Explain what <strong>friction</strong> is. Give one example where friction is <em>useful</em>, and one example where friction is a <em>disadvantage</em>." }
+    ],
+    markScheme: [
+      { ref:"(a)", total:2, points:[
+        "W = m × g ✓ (1)",
+        "W = 3 × 10 = 30 N ✓ (1)"
+      ], notes:["1 mark for correct equation stated; 1 mark for correct calculation with unit N; answer without unit or with wrong unit loses the second mark"] },
+      { ref:"(b)", total:2, points:[
+        "Weight / gravitational force (acting downwards) ✓ AND normal contact force (acting upwards from the table) ✓ (1 mark — both forces needed)",
+        "Resultant force = 0 N / forces are balanced ✓ → the book is stationary / not accelerating / at rest ✓ (1 mark)"
+      ], notes:["Accept 'gravity' for weight; must state resultant = 0 N AND give the implication for motion; resultant alone without explanation of motion = 0"] },
+      { ref:"(c)", total:2, points:[
+        "Friction is a force that acts between two surfaces in contact / opposes the relative motion (or tendency to move) of surfaces ✓ (1)",
+        "Useful example: brakes on a bicycle slow the bike down safely ✓ / grip between shoes and floor prevents slipping ✓ (1 mark for any valid useful example)",
+        "Disadvantage example: ball bearings / engine parts — friction causes heat / wears surfaces down / reduces efficiency ✓ (1 mark for any valid disadvantage)"
+      ], notes:["Award 1 mark for a correct definition of friction; 1 further mark for giving one valid example (useful OR disadvantage is sufficient for the second mark if definition is correct)"] }
+    ],
+    activity: {
+      title: "🔬 Forces Investigation — Thinking Task",
+      body: `A student pushes a heavy box across a floor with a force of <strong>25 N</strong>. The box moves at <strong>constant velocity</strong>.
+<br><br>
+<strong>Questions:</strong><br>
+<strong>1.</strong> What does constant velocity tell you about the resultant force on the box? What is the friction force?<br>
+<strong>2.</strong> The student pushes harder with a force of <strong>40 N</strong>. Describe what happens to the box and explain why in terms of forces.<br>
+<strong>3.</strong> Draw a force diagram (free body diagram) for the box in <em>each</em> scenario. Label all forces with their size.<br>
+<strong>4.</strong> <em>Challenge:</em> The student stacks heavy books inside the box, doubling its weight. Explain how this affects the friction force, and why, using what you know about normal contact force.
+<br><br>
+<em>Key answers: (1) Resultant = 0 N, friction = 25 N. (2) Unbalanced force of 15 N, box accelerates.</em>`
+    }
+  }
+];
+
+// ── State ─────────────────────────────────────────────────────────────────
+let current = 0;
+const done = new Set();
+
+// ── Helpers ───────────────────────────────────────────────────────────────
+function esc(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+function isNote(line) {
+  return /^(NOTE|Do not|Accept|Allow|Award|Must|Any |1 mark per|penalise|answer without)/i.test(line.trim());
+}
+function cleanPoint(pt) {
+  return pt.replace(/\s*✓\s*\(\d+\s*mark[s]?\)/g,'').replace(/\s*✓\s*\(\d+\)/g,'').replace(/\s*✓/g,'').trim();
+}
+
+// ── Build question face ───────────────────────────────────────────────────
+function buildQuestion(card) {
+  let qsHTML = '';
+  for (const q of card.questions) {
+    qsHTML += `
+      <div class="q-item">
+        <div class="q-ref">${q.ref}</div>
+        <div class="q-content">
+          <div class="q-stem">${q.stem}</div>
+          <div class="q-meta"><span class="marks-pill">[${q.marks}]</span></div>
+        </div>
+      </div>`;
+  }
+  const diagHTML = (card.hasDiagram && diagrams[card.id]) ? `
+    <div class="diagram-col">
+      <div class="diagram-box">
+        ${diagrams[card.id]}
+        <div class="diagram-caption">Fig. 1 &mdash; refer to this diagram when answering</div>
+      </div>
+    </div>` : '';
+
+  const stripId = `act_${card.id}`;
+  const actHTML = `
+    <div class="activity-strip" id="${stripId}">
+      <button class="activity-toggle" onclick="document.getElementById('${stripId}').classList.toggle('open')">
+        ${card.activity.title} <span class="act-chevron">▾</span>
+      </button>
+      <div class="activity-content">${card.activity.body}</div>
+    </div>`;
+
+  return `
+    <div class="q-header">
+      <span class="spec-badge">${esc(card.id)}</span>
+      <span class="q-header-title">${card.title}</span>
+      <span class="marks-badge">${card.totalMarks} marks</span>
+    </div>
+    <div class="spec-stmt"><strong>Learning Outcomes:</strong> ${esc(card.lo)}</div>
+    <div class="q-body">
+      <div class="questions-col">${qsHTML}</div>
+      ${diagHTML}
+    </div>
+    ${actHTML}`;
+}
+
+// ── Build mark scheme face ────────────────────────────────────────────────
+function buildMarkScheme(card) {
+  const numQ = card.markScheme.length;
+  const singleCol = numQ <= 2;
+  let itemsHTML = '';
+  for (const item of card.markScheme) {
+    const pureAnswers = item.points.filter(p => !isNote(p));
+    const pureNotes   = item.points.filter(p => isNote(p));
+    const pointsHTML  = pureAnswers.map(pt => {
+      const hasCheck = pt.includes('✓');
+      const cleaned  = cleanPoint(pt);
+      return `<div class="ms-point">${hasCheck ? '<span class="ms-tick">✓</span>' : '<span class="ms-tick" style="opacity:0">✓</span>'}<span>${esc(cleaned)}</span></div>`;
+    }).join('');
+    const notesHTML = [...pureNotes, ...(item.notes || [])].map(n =>
+      `<div class="ms-note">${esc(n)}</div>`
+    ).join('');
+    itemsHTML += `
+      <div class="ms-item">
+        <div class="ms-item-hdr">
+          <span class="ms-ref">${esc(item.ref)}</span>
+          <span class="ms-total">[${item.total} mark${item.total > 1 ? 's' : ''}]</span>
+        </div>
+        <div class="ms-points">${pointsHTML}${notesHTML}</div>
+      </div>`;
+  }
+  return `
+    <div class="ms-header">
+      <span class="ms-badge">✓ MS</span>
+      <span class="ms-header-title">${esc(card.id)} &mdash; Mark Scheme</span>
+    </div>
+    <div class="spec-stmt"><strong>Learning Outcomes:</strong> ${esc(card.lo)}</div>
+    <div class="ms-body ${singleCol ? 'cols-1' : ''}">${itemsHTML}</div>`;
+}
+
+// ── Nav dots ──────────────────────────────────────────────────────────────
+function renderNav() {
+  document.getElementById('specNav').innerHTML = cards.map((c, i) => {
+    const cls = i === current ? 'active' : done.has(i) ? 'done' : '';
+    return `<div class="spec-dot ${cls}" onclick="goTo(${i})" title="${c.topic}">${esc(c.navLabel)}</div>`;
+  }).join('');
+}
+
+// ── Main render ───────────────────────────────────────────────────────────
+function render() {
+  const card = cards[current];
+  document.getElementById('cardScene').classList.remove('revealed');
+  document.getElementById('progressPill').textContent = `Card ${current + 1} of ${cards.length}`;
+  document.getElementById('progressFill').style.width = `${(current + 1) / cards.length * 100}%`;
+  document.getElementById('hintText').textContent = 'Answer the questions, then tap "Reveal Answers"';
+  document.getElementById('btnReveal').disabled = false;
+  document.getElementById('btnReveal').textContent = 'Reveal Answers ✓';
+  document.getElementById('btnNext').disabled = true;
+  document.getElementById('btnPrev').disabled = current === 0;
+  document.getElementById('completeBanner').classList.remove('show');
+  document.getElementById('qFace').innerHTML  = buildQuestion(card);
+  document.getElementById('msFace').innerHTML = buildMarkScheme(card);
+  renderNav();
+}
+
+// ── Actions ───────────────────────────────────────────────────────────────
+function revealAnswers() {
+  const scene = document.getElementById('cardScene');
+  const btn   = document.getElementById('btnReveal');
+  if (scene.classList.contains('revealed')) {
+    scene.classList.remove('revealed');
+    btn.textContent = 'Reveal Answers ✓';
+    document.getElementById('hintText').textContent = 'Answer the questions, then tap "Reveal Answers"';
+  } else {
+    scene.classList.add('revealed');
+    btn.textContent = 'Hide Answers ↩';
+    document.getElementById('btnNext').disabled = (current === cards.length - 1);
+    document.getElementById('hintText').textContent = 'Check your answers carefully, then move on';
+    done.add(current);
+    renderNav();
+  }
+}
+
+function navigate(dir) {
+  const next = current + dir;
+  if (next >= 0 && next < cards.length) {
+    current = next;
+    render();
+  } else if (dir === 1 && current === cards.length - 1) {
+    document.getElementById('completeBanner').classList.add('show');
+    document.getElementById('hintText').textContent = '';
+  }
+}
+
+function goTo(idx) { current = idx; render(); }
+
+// ── Init ──────────────────────────────────────────────────────────────────
+render();
+</script>
+</body>
+</html>
