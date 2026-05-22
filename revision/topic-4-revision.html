@@ -1,0 +1,1228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IAL Biology — Unit 2 Topic 4 Revision Cards</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: #f5f0e8;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+  /* ── Header ─────────────────────────────────────── */
+  .header {
+    background: #2a1a10;
+    color: white;
+    padding: 14px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .header-left h1 { font-size: 1.05rem; font-weight: 700; letter-spacing: 0.01em; }
+  .header-left .sub { font-size: 0.78rem; opacity: 0.65; margin-top: 2px; }
+  .progress-pill {
+    background: rgba(255,255,255,0.13);
+    border: 1px solid rgba(255,255,255,0.22);
+    padding: 5px 14px;
+    border-radius: 20px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .progress-track { height: 4px; background: #d4c4b4; }
+  .progress-fill {
+    height: 100%;
+    background: #c44b2b;
+    transition: width 0.5s ease;
+  }
+  /* ── Main ────────────────────────────────────────── */
+  .main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 14px 16px 32px;
+    gap: 12px;
+  }
+  /* ── Spec dot nav ───────────────────────────────── */
+  .spec-nav { display: flex; gap: 7px; flex-wrap: wrap; justify-content: center; }
+  .spec-dot {
+    height: 30px;
+    padding: 0 10px;
+    border-radius: 15px;
+    border: 2px solid #c4a882;
+    background: #fffdf8;
+    color: #5c3a1e;
+    font-weight: 700;
+    font-size: 0.7rem;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+  .spec-dot:hover { background: #f0e4d0; }
+  .spec-dot.active { background: #2a1a10; color: white; border-color: #2a1a10; }
+  .spec-dot.done   { background: #c44b2b; color: white; border-color: #c44b2b; }
+  /* ── Card scene ─────────────────────────────────── */
+  .card-scene {
+    width: 100%;
+    max-width: 920px;
+    display: grid;
+  }
+  .card-face {
+    grid-area: 1 / 1;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 22px rgba(60,30,10,0.14);
+    transition: opacity 0.35s ease, transform 0.35s ease;
+    background: #fffdf8;
+  }
+  .card-face.back { opacity: 0; transform: scale(0.97); pointer-events: none; }
+  .card-scene.revealed .card-face.front { opacity: 0; transform: scale(0.97); pointer-events: none; }
+  .card-scene.revealed .card-face.back  { opacity: 1; transform: scale(1); pointer-events: all; }
+  /* ── Card header colours ─────────────────────────── */
+  .q-header {
+    background: #2a1a10;
+    color: white;
+    padding: 13px 20px;
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    flex-wrap: wrap;
+  }
+  .ms-header {
+    background: #3d2518;
+    color: white;
+    padding: 13px 20px;
+    display: flex;
+    align-items: center;
+    gap: 11px;
+  }
+  .unit-badge {
+    font-size: 0.68rem;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 10px;
+    white-space: nowrap;
+    flex-shrink: 0;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    background: #c44b2b;
+    color: #fff5f2;
+  }
+  .spec-badge-hdr {
+    background: rgba(255,255,255,0.18);
+    font-weight: 700;
+    font-size: 0.88rem;
+    padding: 4px 11px;
+    border-radius: 7px;
+    white-space: nowrap;
+    flex-shrink: 0;
+    border: 1px solid rgba(255,255,255,0.25);
+  }
+  .q-header-title { font-size: 0.97rem; font-weight: 600; line-height: 1.3; flex: 1; }
+  .marks-badge {
+    margin-left: auto;
+    background: #e8c46a;
+    color: #2a1a00;
+    font-weight: 700;
+    font-size: 0.78rem;
+    padding: 4px 11px;
+    border-radius: 20px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  /* ── Spec statement bar ─────────────────────────── */
+  .spec-stmt {
+    padding: 8px 20px;
+    font-size: 0.83rem;
+    color: #3a2510;
+    font-style: italic;
+    line-height: 1.45;
+    border-bottom: 1px solid #d4bfa0;
+    background: #fdf0e8;
+    border-left: 4px solid #c44b2b;
+  }
+  .spec-stmt strong { font-style: normal; color: #c44b2b; }
+  /* ── Question body ──────────────────────────────── */
+  .q-body {
+    background: #fffdf8;
+    padding: 16px 20px;
+  }
+  .q-item {
+    display: flex; gap: 10px;
+    padding: 11px 0;
+    border-bottom: 1px solid #ede4d8;
+    align-items: flex-start;
+  }
+  .q-item:last-child { border-bottom: none; padding-bottom: 0; }
+  .q-ref { font-weight: 700; color: #2a1a10; font-size: 0.97rem; min-width: 30px; padding-top: 1px; flex-shrink: 0; }
+  .q-content { flex: 1; min-width: 0; }
+  .q-stem { font-size: 0.91rem; color: #2a1a10; line-height: 1.55; }
+  .q-meta { margin-top: 7px; display: flex; gap: 7px; align-items: center; flex-wrap: wrap; }
+  .marks-pill { background: #2a1a10; color: white; font-size: 0.71rem; font-weight: 700; padding: 2px 9px; border-radius: 10px; }
+  .ao-pill { background: #f0e8dc; color: #5c3a1e; font-size: 0.7rem; font-weight: 600; padding: 2px 8px; border-radius: 10px; border: 1px solid #c4a882; }
+  /* ── Mark scheme ────────────────────────────────── */
+  .ms-badge { background: rgba(255,255,255,0.22); font-weight: 700; font-size: 0.83rem; padding: 4px 10px; border-radius: 7px; white-space: nowrap; flex-shrink: 0; border: 1px solid rgba(255,255,255,0.3); }
+  .ms-header-title { font-size: 0.97rem; font-weight: 600; }
+  .ms-body { background: #f5ede0; padding: 16px 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 11px; }
+  .ms-body.cols-1 { grid-template-columns: 1fr; }
+  .ms-item { background: #fffdf8; border-radius: 8px; overflow: hidden; border: 1px solid #d4bfa0; box-shadow: 0 1px 4px rgba(60,30,10,0.06); }
+  .ms-item-hdr { background: #f0e4d0; padding: 6px 13px; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid #d4bfa0; }
+  .ms-ref { font-weight: 700; color: #2a1a10; font-size: 0.92rem; }
+  .ms-total { font-size: 0.74rem; color: #7a5a3a; }
+  .ms-points { padding: 9px 13px; display: flex; flex-direction: column; gap: 6px; }
+  .ms-point { display: flex; gap: 8px; align-items: flex-start; font-size: 0.86rem; color: #2a1a10; line-height: 1.45; }
+  .ms-tick { color: #1a7a4a; font-weight: 800; font-size: 0.9rem; flex-shrink: 0; margin-top: 1px; }
+  .ms-note { font-size: 0.74rem; color: #7a5a3a; font-style: italic; line-height: 1.4; border-top: 1px solid #ede4d8; margin-top: 4px; padding-top: 5px; }
+  /* ── Controls ───────────────────────────────────── */
+  .hint-text { font-size: 0.8rem; color: #8a7060; text-align: center; min-height: 18px; font-style: italic; }
+  .controls { display: flex; gap: 10px; justify-content: center; align-items: center; flex-wrap: wrap; width: 100%; max-width: 920px; }
+  .btn { padding: 10px 22px; border: none; border-radius: 8px; cursor: pointer; font-size: 0.87rem; font-weight: 600; font-family: inherit; transition: all 0.15s; white-space: nowrap; }
+  .btn:hover:not(:disabled) { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(60,30,10,0.18); }
+  .btn:active:not(:disabled) { transform: translateY(0); }
+  .btn:disabled { opacity: 0.35; cursor: not-allowed; }
+  .btn-outline { background: #fffdf8; color: #2a1a10; border: 2px solid #2a1a10; }
+  .btn-reveal  { background: #c44b2b; color: white; padding: 11px 30px; font-size: 0.92rem; }
+  .btn-next    { background: #2a1a10; color: white; padding: 11px 30px; font-size: 0.92rem; }
+  /* ── Completion banner ──────────────────────────── */
+  .complete-banner { background: #2a1a10; color: white; text-align: center; padding: 20px; border-radius: 12px; width: 100%; max-width: 920px; display: none; }
+  .complete-banner h2 { font-size: 1.3rem; margin-bottom: 6px; }
+  .complete-banner p { opacity: 0.8; font-size: 0.9rem; }
+  .complete-banner.show { display: block; }
+  @media (max-width: 640px) {
+    .header { padding: 10px 14px; }
+    .header-left h1 { font-size: 0.9rem; }
+    .main { padding: 10px 10px 24px; gap: 9px; }
+    .spec-dot { height: 26px; font-size: 0.65rem; padding: 0 7px; }
+    .q-header { padding: 10px 14px; }
+    .q-header-title { font-size: 0.87rem; }
+    .spec-stmt { padding: 7px 14px; font-size: 0.79rem; }
+    .q-body { padding: 12px 14px; }
+    .ms-body { grid-template-columns: 1fr !important; padding: 12px 14px; }
+    .controls { gap: 8px; }
+    .btn { padding: 9px 14px; font-size: 0.81rem; }
+    .btn-reveal, .btn-next { padding: 9px 18px; font-size: 0.84rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-left">
+    <h1>IAL Biology — Unit 2, Topic 4 Revision Cards</h1>
+    <div class="sub">Pearson Edexcel IAL · WBI12 · Biodiversity and Natural Resources</div>
+  </div>
+  <div class="progress-pill" id="progressPill">Card 1 of 19</div>
+</div>
+<div class="progress-track"><div class="progress-fill" id="progressFill" style="width:5.26%"></div></div>
+
+<div class="main">
+  <div class="spec-nav" id="specNav"></div>
+  <div class="card-scene" id="cardScene">
+    <div class="card-face front" id="qFace"></div>
+    <div class="card-face back"  id="msFace"></div>
+  </div>
+  <div class="hint-text" id="hintText">Answer the questions, then tap <em>Reveal Answers</em></div>
+  <div class="controls">
+    <button class="btn btn-outline" id="btnPrev" onclick="navigate(-1)">&#8592; Previous</button>
+    <button class="btn btn-reveal"  id="btnReveal" onclick="revealAnswers()">Reveal Answers ✓</button>
+    <button class="btn btn-next"    id="btnNext"   onclick="navigate(1)" disabled>Next Card &#8594;</button>
+  </div>
+  <div class="complete-banner" id="completeBanner">
+    <h2>🎉 All 19 cards complete!</h2>
+    <p>You've covered every spec point in Topic 4. Use the dots above to revisit any topic.</p>
+  </div>
+</div>
+
+<script>
+const specPoints = [
+
+  // ── 4.1 / 4.2 ──────────────────────────────────────────────────────────────
+  {
+    id: "4.1", label: "4.1–4.2",
+    topic: "Topic 4: Biodiversity and Natural Resources",
+    statement: "4.1: know the structure and ultrastructure of plant cells (cell wall, chloroplast, amyloplast, vacuole, tonoplast, plasmodesmata, pits, middle lamella) and compare with animal cells; understand their functions. 4.2: be able to recognise these organelles from electron microscope (EM) images.",
+    totalMarks: 9,
+    questionSlide: {
+      title: "Plant Cell Ultrastructure",
+      questions: [
+        { ref: "(a)", ao: "AO1", marks: 4, stem: "Name <strong>four</strong> structures found in plant cells but <strong>not</strong> in animal cells." },
+        { ref: "(b)", ao: "AO1", marks: 3, stem: "State the function of each of the following plant cell structures: (i) plasmodesmata &nbsp; (ii) tonoplast &nbsp; (iii) amyloplast." },
+        { ref: "(c)", ao: "AO2", marks: 2, stem: "In an electron micrograph, describe <strong>two</strong> features you would use to identify a chloroplast." }
+      ]
+    },
+    markSchemeSlide: {
+      markScheme: [
+        {
+          ref: "(a)", total: "4 marks",
+          points: [
+            "Cell wall (cellulose)",
+            "Chloroplast",
+            "Amyloplast",
+            "Vacuole / tonoplast",
+            "Plasmodesmata",
+            "Pits / middle lamella"
+          ],
+          notes: "Any four correct structures. Award 1 mark each."
+        },
+        {
+          ref: "(b)", total: "3 marks",
+          points: [
+            "(i) Plasmodesmata: cytoplasmic channels through cell walls; allow communication / transport of materials between adjacent cells [1]",
+            "(ii) Tonoplast: membrane surrounding the vacuole; controls movement of substances into and out of the vacuole [1]",
+            "(iii) Amyloplasts: store starch (as amylose / amylopectin); found in storage organs (e.g. root, seed) [1]"
+          ],
+          notes: "1 mark per structure. Must link structure to function."
+        },
+        {
+          ref: "(c)", total: "2 marks",
+          points: [
+            "Double membrane / envelope surrounding organelle [1]",
+            "Internal thylakoid membranes / grana (stacks of thylakoids) visible [1]",
+            "Dense stroma visible [1]",
+            "Starch grains may be present [1]"
+          ],
+          notes: "Any two features. Award 1 mark each."
+        }
+      ]
+    }
+  },
+
+  // ── 4.3 ────────────────────────────────────────────────────────────────────
+  {
+    id: "4.3", label: "4.3",
+    topic: "Topic 4: Biodiversity and Natural Resources",
+    statement: "Understand the structure and function of the polysaccharides starch and cellulose, including the role of hydrogen bonds between β-glucose molecules in the formation of cellulose microfibrils.",
+    totalMarks: 7,
+    questionSlide: {
+      title: "Starch and Cellulose",
+      questions: [
+        { ref: "(a)", ao: "AO1", marks: 4, stem: "Compare the structures of starch and cellulose, referring to: the type of glucose monomer, the type of glycosidic bond, and the overall shape of the molecule." },
+        { ref: "(b)", ao: "AO1", marks: 3, stem: "Explain how hydrogen bonds between β-glucose molecules contribute to the strength of cellulose microfibrils." }
+      ]
+    },
+    markSchemeSlide: {
+      markScheme: [
+        {
+          ref: "(a)", total: "4 marks",
+          points: [
+            "Starch: made of α-glucose; 1,4 glycosidic bonds (amylose) and 1,4 + 1,6 (amylopectin); helical / coiled chain shape [2]",
+            "Cellulose: made of β-glucose; 1,4 glycosidic bonds only; alternate glucose monomers rotated 180°; straight / unbranched chains [2]"
+          ],
+          notes: "Award up to 2 marks per polysaccharide. Must reference glucose type, bond type, and shape for full marks."
+        },
+        {
+          ref: "(b)", total: "3 marks",
+          points: [
+            "Alternate β-glucose units rotated 180° → OH groups on same side → parallel chains form [1]",
+            "Many hydrogen bonds form between adjacent cellulose chains [1]",
+            "Multiple chains bundled into microfibrils; many individually weak H-bonds collectively provide high tensile strength [1]"
+          ],
+          notes: "Must link structure (H-bonds between parallel chains) to function (strength). Do not accept 'covalent bonds give strength' — must specify H-bonds."
+        }
+      ]
+    }
+  },
+
+  // ── 4.4 ────────────────────────────────────────────────────────────────────
+  {
+    id: "4.4", label: "4.4",
+    topic: "Topic 4: Biodiversity and Natural Resources",
+    statement: "Understand how the arrangement of cellulose microfibrils and secondary thickening in plant cell walls contributes to the physical properties of xylem vessels and sclerenchyma fibres that can be exploited by humans.",
+    totalMarks: 6,
+    questionSlide: {
+      title: "Cell Wall Properties: Xylem and Sclerenchyma",
+      questions: [
+        { ref: "(a)", ao: "AO1", marks: 3, stem: "Explain how the arrangement of cellulose microfibrils in the secondary cell wall gives xylem vessels and sclerenchyma fibres high tensile strength." },
+        { ref: "(b)", ao: "AO2", marks: 3, stem: "Describe the process of secondary thickening with lignin in xylem vessels and explain how this makes them suitable for water transport." }
+      ]
+    },
+    markSchemeSlide: {
+      markScheme: [
+        {
+          ref: "(a)", total: "3 marks",
+          points: [
+            "Cellulose microfibrils arranged in parallel layers within the cell wall [1]",
+            "Adjacent layers are laid at different angles to each other (cross-hatched arrangement) [1]",
+            "This arrangement resists stretching / forces in multiple directions, giving high tensile strength [1]"
+          ],
+          notes: "Must refer to microfibrils in layers at different angles. Simply stating 'many hydrogen bonds' is insufficient without reference to arrangement."
+        },
+        {
+          ref: "(b)", total: "3 marks",
+          points: [
+            "Lignin (a polymer) deposited in the cell wall → secondary thickening [1]",
+            "Lignin waterproofs the wall; prevents water moving laterally through the wall (apoplast blocked) [1]",
+            "Cell dies, leaving a hollow lumen; forms a rigid tube that can withstand pressure differences during transpiration [1]"
+          ],
+          notes: "Must explain both the waterproofing effect and the hollow lumen for water transport."
+        }
+      ]
+    }
+  },
+
+  // ── 4.5 ────────────────────────────────────────────────────────────────────
+  {
+    id: "4.5", label: "4.5",
+    topic: "Topic 4: Biodiversity and Natural Resources",
+    statement: "Know the similarities and differences between the structures of, the position in the stem, and the function of sclerenchyma fibres (support), xylem vessels (support and transport of water and mineral ions) and phloem (translocation of organic solutes).",
+    totalMarks: 7,
+    questionSlide: {
+      title: "Sclerenchyma, Xylem and Phloem",
+      questions: [
+        { ref: "(a)", ao: "AO1", marks: 6, stem: "For each of the three tissue types — sclerenchyma fibres, xylem vessels, and phloem — state: (i) its position in a dicotyledonous stem, (ii) its function, and (iii) whether the mature cells are living or dead." },
+        { ref: "(b)", ao: "AO1", marks: 1, stem: "State <strong>one</strong> structural feature shared by both xylem vessels and sclerenchyma fibres." }
+      ]
+    },
+    markSchemeSlide: {
+      markScheme: [
+        {
+          ref: "(a)", total: "6 marks",
+          points: [
+            "Sclerenchyma: cortex / outside of vascular bundles / bundle cap; support only; dead [2]",
+            "Xylem: inside of vascular bundles (adaxial / towards centre); support AND transport of water and mineral ions; dead [2]",
+            "Phloem: outside of vascular bundles (abaxial / towards periphery); translocation of organic solutes; living (sieve tube elements + companion cells) [2]"
+          ],
+          notes: "2 marks per tissue type (position + function + living/dead). Do not accept 'xylem transports food' or 'phloem transports water'."
+        },
+        {
+          ref: "(b)", total: "1 mark",
+          points: [
+            "Both have lignified cell walls [1]",
+            "Both are dead at maturity [1]",
+            "Both provide structural support [1]"
+          ],
+          notes: "Any one correct similarity. Award 1 mark."
+        }
+      ]
+    }
+  },
+
+  // ── 4.6 CP7 ────────────────────────────────────────────────────────────────
+  {
+    id: "4.6", label: "4.6 CP7",
+    topic: "Topic 4: Biodiversity and Natural Resources",
+    statement: "4.6 CP7: Use a light microscope to (i) make observations, draw and label plan diagrams of transverse sections of roots, stems and leaves; (ii) draw and label cells of plant tissues; (iii) identify sclerenchyma fibres, phloem sieve tubes and xylem vessels and their location.",
+    totalMarks: 8,
+    questionSlide: {
+      title: "CP7 — Light Microscopy of Plant Tissues",
+      questions: [
+        { ref: "(a)", ao: "AO3", marks: 3, stem: "Describe how you would prepare a transverse section (TS) of a plant stem for observation under a light microscope." },
+        { ref: "(b)", ao: "AO2", marks: 3, stem: "In a plan diagram of a dicotyledonous stem TS, explain how you would distinguish between sclerenchyma fibres and xylem vessels." },
+        { ref: "(c)", ao: "AO1", marks: 2, stem: "State <strong>two</strong> rules for drawing a plan diagram of a plant tissue section." }
+      ]
+    },
+    markSchemeSlide: {
+      markScheme: [
+        {
+          ref: "(a)", total: "3 marks",
+          points: [
+            "Cut thin transverse section with sharp scalpel / razor blade [1]",
+            "Stain with appropriate stain (e.g. phloroglucinol to stain lignin red; toluidine blue; aceto-carmine) [1]",
+            "Mount in water on a glass slide and place coverslip on top; blot excess water [1]"
+          ],
+          notes: "Accept any named appropriate stain. Do not accept 'iodine' for this purpose (iodine stains starch not lignin)."
+        },
+        {
+          ref: "(b)", total: "3 marks",
+          points: [
+            "Xylem: large cells with wide, clear lumen; no cytoplasm; at inner/adaxial side of vascular bundle [1]",
+            "Sclerenchyma: smaller cells; very thick cell wall; narrow lumen or no lumen; found at bundle cap or in cortex [1]",
+            "Both stain positive for lignin with phloroglucinol (both appear red/pink); xylem distinguished by large lumen size [1]"
+          ],
+          notes: "Must refer to specific structural differences. Marks for lumen size, wall thickness, and position."
+        },
+        {
+          ref: "(c)", total: "2 marks",
+          points: [
+            "Show only tissue boundaries / outlines; do NOT draw individual cells [1]",
+            "Lines should be drawn with a sharp pencil; no shading; label lines should not cross [1]",
+            "Drawn to scale / proportions accurate [1]"
+          ],
+          notes: "Any two valid rules. Plan diagrams show distribution of tissues, not cellular detail."
+        }
+      ]
+    }
+  },
+
+  // ── 4.7 ────────────────────────────────────────────────────────────────────
+  {
+    id: "4.7", label: "4.7",
+    topic: "Topic 4: Biodiversity and Natural Resources",
+    statement: "Understand how the uses of plant fibres and starch may contribute to sustainability, including plant-based products to replace oil-based plastics.",
+    totalMarks: 6,
+    questionSlide: {
+      title: "Plant Fibres, Starch and Sustainability",
+      questions: [
+        { ref: "(a)", ao: "AO1", marks: 2, stem: "Give <strong>two</strong> reasons why using plant-based materials to replace oil-based plastics is considered more sustainable." },
+        { ref: "(b)", ao: "AO2", marks: 2, stem: "Describe <strong>two</strong> specific examples of how plant fibres or starch can replace oil-based products." },
+        { ref: "(c)", ao: "AO3", marks: 2, stem: "Evaluate <strong>one</strong> potential disadvantage of replacing oil-based plastics with starch-based bioplastics on a large scale." }
+      ]
+    },
+    markSchemeSlide: {
+      markScheme: [
+        {
+          ref: "(a)", total: "2 marks",
+          points: [
+            "Plant materials are renewable (regrown each season); oil is a finite fossil fuel [1]",
+            "Plant-based materials are biodegradable / break down naturally; oil-based plastics persist for hundreds of years [1]",
+            "Growing crops for bioplastics is carbon-neutral (CO₂ absorbed during growth offsets CO₂ released on degradation) [1]"
+          ],
+          notes: "Any two. Award 1 mark each."
+        },
+        {
+          ref: "(b)", total: "2 marks",
+          points: [
+            "Hemp / flax / jute fibres used in composite materials / ropes / packaging (replacing synthetic polymers) [1]",
+            "Starch-based films / bags (e.g. from maize or potato starch) to replace polyethylene bags [1]",
+            "Cellulose used for biodegradable packaging / cardboard / paper products [1]"
+          ],
+          notes: "Any two specific examples. Must name the plant product and its application."
+        },
+        {
+          ref: "(c)", total: "2 marks",
+          points: [
+            "Large areas of agricultural land needed for crop production → less land for food crops / habitat destruction [1]",
+            "May compete with food production, raising food prices [1]",
+            "Bioplastics may still require industrial composting conditions to degrade properly [1]"
+          ],
+          notes: "Any one disadvantage (1 mark) with a developed explanation (1 mark)."
+        }
+      ]
+    }
+  },
+
+  // ── 4.8 ────────────────────────────────────────────────────────────────────
+  {
+    id: "4.8", label: "4.8",
+    topic: "Topic 4: Biodiversity and Natural Resources",
+    statement: "Understand the importance of water and inorganic ions — nitrate, calcium ions and magnesium ions — to plants.",
+    totalMarks: 8,
+    questionSlide: {
+      title: "Water and Inorganic Ions in Plants",
+      questions: [
+        { ref: "(a)", ao: "AO1", marks: 2, stem: "Explain why nitrate ions are essential to plants." },
+        { ref: "(b)", ao: "AO1", marks: 2, stem: "Explain the role of magnesium ions in plants. Include the consequence of magnesium deficiency." },
+        { ref: "(c)", ao: "AO1", marks: 2, stem: "Explain the importance of calcium ions to plant cell walls." },
+        { ref: "(d)", ao: "AO1", marks: 2, stem: "State <strong>two</strong> properties of water that make it essential for plant function." }
+      ]
+    },
+    markSchemeSlide: {
+      markScheme: [
+        {
+          ref: "(a)", total: "2 marks",
+          points: [
+            "Nitrate ions (NO₃⁻) absorbed and used to synthesise amino acids [1]",
+            "Amino acids used to make proteins (enzymes, structural proteins, haemoglobin etc.); also required for synthesis of nucleotides / DNA / RNA [1]"
+          ],
+          notes: "Must link nitrate → amino acids → proteins for both marks. Not just 'needed for growth'."
+        },
+        {
+          ref: "(b)", total: "2 marks",
+          points: [
+            "Magnesium (Mg²⁺) is a component of the chlorophyll molecule (at the centre of the porphyrin ring) [1]",
+            "Magnesium deficiency causes chlorosis (yellowing of leaves) as chlorophyll cannot be synthesised [1]"
+          ],
+          notes: "Must name chlorophyll for first mark. Deficiency symptom must be named (chlorosis)."
+        },
+        {
+          ref: "(c)", total: "2 marks",
+          points: [
+            "Calcium ions form calcium pectate in the middle lamella [1]",
+            "Middle lamella cements adjacent cell walls together / holds plant cells together [1]"
+          ],
+          notes: "Must name calcium pectate and middle lamella."
+        },
+        {
+          ref: "(d)", total: "2 marks",
+          points: [
+            "Solvent: water dissolves mineral ions for transport in xylem / organic solutes in phloem [1]",
+            "Reactant in photosynthesis (photolysis of water) and hydrolysis reactions [1]",
+            "Provides turgor pressure that supports non-woody plant tissues [1]",
+            "High specific heat capacity buffers temperature changes [1]"
+          ],
+          notes: "Any two properties. Must relate the property to plant function — not just 'water is a solvent'."
+        }
+      ]
+    }
+  },
+
+  // ── 4.9 CP8 ────────────────────────────────────────────────────────────────
+  {
+    id: "4.9", label: "4.9 CP8",
+    topic: "Topic 4: Biodiversity and Natural Resources",
+    statement: "4.9 CP8: Determine the tensile strength of plant fibres.",
+    totalMarks: 8,
+    questionSlide: {
+      title: "CP8 — Tensile Strength of Plant Fibres",
+      questions: [
+        { ref: "(a)", ao: "AO3", marks: 4, stem: "Describe a method to determine the tensile strength of a sample of plant fibres." },
+        { ref: "(b)", ao: "AO3", marks: 2, stem: "State <strong>two</strong> variables that must be controlled to make this a fair investigation." },
+        { ref: "(c)", ao: "AO2", marks: 2, stem: "Write the formula for tensile strength and state the units. Suggest why repeating the test multiple times and calculating a mean improves the reliability of the results." }
+      ]
+    },
+    markSchemeSlide: {
+      markScheme: [
+        {
+          ref: "(a)", total: "4 marks",
+          points: [
+            "Clamp one end of the fibre securely; hang the other end over a pulley / fix to force meter [1]",
+            "Add masses one at a time (or apply increasing force) to the free end [1]",
+            "Record the mass / force at the point when the fibre snaps (breaking force) [1]",
+            "Repeat for multiple fibres of the same type; calculate mean breaking force [1]"
+          ],
+          notes: "Accept use of a Newton meter instead of masses. Must include repetition for full marks."
+        },
+        {
+          ref: "(b)", total: "2 marks",
+          points: [
+            "Length of fibre (same length each trial) [1]",
+            "Cross-sectional area / diameter / thickness of fibre [1]",
+            "Moisture content of fibre / humidity [1]",
+            "Temperature [1]",
+            "Type / species of plant [1]"
+          ],
+          notes: "Any two valid control variables. Award 1 mark each."
+        },
+        {
+          ref: "(c)", total: "2 marks",
+          points: [
+            "Tensile strength = breaking force (N) ÷ cross-sectional area (m²); units = Nm⁻² or Pa [1]",
+            "Individual fibres vary in thickness / flaws; repeating and taking a mean reduces the effect of anomalies / increases reliability [1]"
+          ],
+          notes: "Both the formula and units are required for the first mark."
+        }
+      ]
+    }
+  },
+
+  // ── 4.10 ───────────────────────────────────────────────────────────────────
+  {
+    id: "4.10", label: "4.10",
+    topic: "Topic 4: Biodiversity and Natural Resources",
+    statement: "Understand the conditions required for bacterial growth.",
+    totalMarks: 7,
+    questionSlide: {
+      title: "Conditions for Bacterial Growth",
+      questions: [
+        { ref: "(a)", ao: "AO1", marks: 4, stem: "State <strong>four</strong> conditions required for bacterial growth." },
+        { ref: "(b)", ao: "AO2", marks: 3, stem: "Explain how temperature affects the rate of bacterial growth, including what happens both below and above the optimum temperature." }
+      ]
+    },
+    markSchemeSlide: {
+      markScheme: [
+        {
+          ref: "(a)", total: "4 marks",
+          points: [
+            "Suitable / optimum temperature (typically ~25–37°C for most species) [1]",
+            "Nutrients: carbon source (e.g. glucose), nitrogen source, mineral ions, vitamins [1]",
+            "Water / moisture [1]",
+            "Suitable pH [1]",
+            "Oxygen (for aerobes) / absence of oxygen (for anaerobes) [1]"
+          ],
+          notes: "Any four conditions. Award 1 mark each."
+        },
+        {
+          ref: "(b)", total: "3 marks",
+          points: [
+            "Below optimum: lower temperature → less kinetic energy → fewer enzyme-substrate collisions → slower metabolic reactions → slower growth rate [1]",
+            "At optimum: maximum enzyme activity → maximum growth rate [1]",
+            "Above optimum: enzymes denature (bonds maintaining tertiary structure break) → active sites change shape → metabolic reactions cannot proceed → growth stops / bacteria die [1]"
+          ],
+          notes: "Must address both sides of optimum for full marks. Must refer to enzymes."
+        }
+      ]
+    }
+  },
+
+  // ── 4.11 ───────────────────────────────────────────────────────────────────
+  {
+    id: "4.11", label: "4.11",
+    topic: "Topic 4: Biodiversity and Natural Resources",
+    statement: "Know that substances derived from plants can have antimicrobial and other therapeutic properties.",
+    totalMarks: 6,
+    questionSlide: {
+      title: "Therapeutic Properties of Plants",
+      questions: [
+        { ref: "(a)", ao: "AO1", marks: 4, stem: "Name <strong>two</strong> substances derived from plants that have medicinal properties. For each, state the plant source and describe its therapeutic use." },
+        { ref: "(b)", ao: "AO2", marks: 2, stem: "Suggest, in terms of natural selection, why plants produce antimicrobial compounds." }
+      ]
+    },
+    markSchemeSlide: {
+      markScheme: [
+        {
+          ref: "(a)", total: "4 marks",
+          points: [
+            "Digitalis / digoxin: from foxglove (Digitalis purpurea); used to treat heart failure / regulate heart rhythm [2]",
+            "Aspirin / salicylic acid: from willow bark (Salix sp.); analgesic / anti-inflammatory / reduces fever [2]",
+            "Quinine: from cinchona bark; antimalarial [2]",
+            "Morphine / codeine: from opium poppy (Papaver somniferum); pain relief / analgesic [2]"
+          ],
+          notes: "Award 2 marks per substance (1 for plant source, 1 for therapeutic use). Any two substances. Do not accept penicillin (fungal, not plant)."
+        },
+        {
+          ref: "(b)", total: "2 marks",
+          points: [
+            "Plants cannot move away from pathogens / are sessile [1]",
+            "Mutations producing antimicrobial compounds gave a selective advantage (reduced infection/damage); individuals with these compounds survived and reproduced more → allele frequency increased over generations [1]"
+          ],
+          notes: "Must use natural selection language: variation → selection pressure → differential survival/reproduction → allele frequency change."
+        }
+      ]
+    }
+  },
+
+  // ── 4.12 CP9 ───────────────────────────────────────────────────────────────
+  {
+    id: "4.12", label: "4.12 CP9",
+    topic: "Topic 4: Biodiversity and Natural Resources",
+    statement: "4.12 CP9: Investigate the antimicrobial properties of plants, including aseptic techniques for the safe handling of bacteria.",
+    totalMarks: 8,
+    questionSlide: {
+      title: "CP9 — Antimicrobial Properties of Plants",
+      questions: [
+        { ref: "(a)", ao: "AO3", marks: 4, stem: "Describe the aseptic techniques you would use when investigating the antimicrobial properties of a plant extract against bacteria on agar plates." },
+        { ref: "(b)", ao: "AO3", marks: 4, stem: "Describe how you would carry out the investigation and analyse the results to compare the antimicrobial effectiveness of different plant extracts." }
+      ]
+    },
+    markSchemeSlide: {
+      markScheme: [
+        {
+          ref: "(a)", total: "4 marks",
+          points: [
+            "Sterilise all glassware and agar by autoclaving / using an autoclave [1]",
+            "Flame inoculating loop until red hot (incinerate); allow to cool before use [1]",
+            "Work near a Bunsen burner flame to create upward air currents that reduce contamination [1]",
+            "Incubate plates at 25°C (not 37°C, which could select for human pathogens) [1]",
+            "Seal petri dishes with adhesive tape (do not seal completely); dispose of used cultures by autoclaving [1]"
+          ],
+          notes: "Any four aseptic technique points. Award 1 mark each."
+        },
+        {
+          ref: "(b)", total: "4 marks",
+          points: [
+            "Spread a known bacterium evenly across agar surface using a sterile spreader / flood plate method [1]",
+            "Place discs soaked in different plant extracts (known concentration) on the agar surface; include a control disc soaked in distilled water [1]",
+            "Incubate at 25°C for ~24–48 hours [1]",
+            "Measure the diameter of the clear zone of inhibition around each disc; larger zone = greater antimicrobial effect [1]"
+          ],
+          notes: "Must include control disc (distilled water). Must state how results are measured (zone of inhibition diameter)."
+        }
+      ]
+    }
+  },
+
+  // ── 4.13 ───────────────────────────────────────────────────────────────────
+  {
+    id: "4.13", label: "4.13",
+    topic: "Topic 4: Biodiversity and Natural Resources",
+    statement: "Understand the development of drug testing from historic to contemporary protocols, including William Withering's digitalis soup, double blind trials, placebo and three-phased testing.",
+    totalMarks: 11,
+    questionSlide: {
+      title: "Drug Testing: Historic to Contemporary",
+      questions: [
+        { ref: "(a)", ao: "AO2", marks: 3, stem: "Describe William Withering's investigation into digitalis and explain <strong>two</strong> reasons why his methodology would not meet modern scientific standards." },
+        { ref: "(b)", ao: "AO1", marks: 2, stem: "Explain the purpose of using a placebo in a drug trial." },
+        { ref: "(c)", ao: "AO1", marks: 3, stem: "Explain what is meant by a double-blind trial and state why this design is used in preference to a single-blind trial." },
+        { ref: "(d)", ao: "AO1", marks: 3, stem: "Describe the <strong>three phases</strong> of clinical drug testing, stating the main purpose of each phase." }
+      ]
+    },
+    markSchemeSlide: {
+      markScheme: [
+        {
+          ref: "(a)", total: "3 marks",
+          points: [
+            "Withering collected case studies of patients given foxglove extract ('digitalis soup') for heart conditions over many years [1]",
+            "No control group (no comparison to patients not given the treatment) [1]",
+            "No standardised / consistent dose given to patients; self-reported symptoms not objectively measured; no randomisation [1]"
+          ],
+          notes: "1 mark for description of Withering's work; 1 mark each for two valid methodological weaknesses. Do not accept 'no double-blind' alone — must state why this is a weakness."
+        },
+        {
+          ref: "(b)", total: "2 marks",
+          points: [
+            "Placebo is identical in appearance to the drug but contains no active ingredient [1]",
+            "Allows comparison to determine whether the drug's effect is real and not due to the placebo effect (patients improving because they believe they are being treated) [1]"
+          ],
+          notes: "Must mention that the placebo looks identical, AND explain the placebo effect for both marks."
+        },
+        {
+          ref: "(c)", total: "3 marks",
+          points: [
+            "In a double-blind trial, neither the patient NOR the administering doctor/researcher knows who is receiving the drug or the placebo [1]",
+            "Prevents patient bias: patients cannot alter their reported symptoms based on knowing whether they received treatment [1]",
+            "Prevents researcher bias: doctors cannot unconsciously score results differently for patients they know are receiving the drug [1]"
+          ],
+          notes: "Single-blind = only patient unaware. Double-blind = both patient AND researcher unaware. Must explain why both are blind."
+        },
+        {
+          ref: "(d)", total: "3 marks",
+          points: [
+            "Phase 1: Small number of healthy volunteers; tests safety, toxicity and dose range; determines whether the drug is safe to proceed [1]",
+            "Phase 2: Larger group of patients who have the condition; tests efficacy (does the drug work?) and continues safety monitoring; determines optimal dose [1]",
+            "Phase 3: Large-scale randomised double-blind controlled trial across thousands of patients; compares drug to existing treatment or placebo; establishes statistical evidence of effectiveness and monitors side effects [1]"
+          ],
+          notes: "One mark per phase. Must correctly name what each phase tests (safety → efficacy → large-scale comparison). Phases must be in correct order."
+        }
+      ]
+    }
+  },
+
+  // ── 4.14 ───────────────────────────────────────────────────────────────────
+  {
+    id: "4.14", label: "4.14",
+    topic: "Topic 4: Biodiversity and Natural Resources",
+    statement: "4.14(i): understand that classification is a means of organising the variety of life based on relationships between organisms using differences and similarities in phenotypes and genotypes, built around the species concept. 4.14(ii): understand the process and importance of critical evaluation of new data by the scientific community leading to new taxonomic groupings, including the three-domain system (Archaea, Bacteria and Eukarya).",
+    totalMarks: 8,
+    questionSlide: {
+      title: "Classification and Taxonomy",
+      questions: [
+        { ref: "(a)", ao: "AO1", marks: 2, stem: "State what is meant by a <strong>species</strong> in the context of biological classification." },
+        { ref: "(b)", ao: "AO1", marks: 3, stem: "Describe how the introduction of the three-domain system changed the classification of prokaryotes. Explain what evidence led to this change." },
+        { ref: "(c)", ao: "AO2", marks: 3, stem: "Explain why new molecular evidence can lead to organisms being reclassified, and why it is important that new classification data is critically evaluated by the scientific community before changes are accepted." }
+      ]
+    },
+    markSchemeSlide: {
+      markScheme: [
+        {
+          ref: "(a)", total: "2 marks",
+          points: [
+            "A group of organisms that share common morphological characteristics [1]",
+            "AND can interbreed with each other to produce fertile offspring [1]"
+          ],
+          notes: "Both criteria required for full marks. Must state 'fertile offspring' not just 'offspring'."
+        },
+        {
+          ref: "(b)", total: "3 marks",
+          points: [
+            "Previously, all prokaryotes were classified together in a single kingdom (Monera / Prokaryotae) [1]",
+            "Woese proposed three domains: Archaea, Bacteria and Eukarya, replacing the older five-kingdom system [1]",
+            "Based on molecular evidence (ribosomal RNA / gene sequence comparisons); Archaea have more genetic similarities to Eukarya than to Bacteria [1]"
+          ],
+          notes: "Must name all three domains. Evidence must be molecular (rRNA/DNA sequences)."
+        },
+        {
+          ref: "(c)", total: "3 marks",
+          points: [
+            "DNA / protein sequence comparisons reveal evolutionary relationships; organisms sharing more DNA base sequences are more closely related [1]",
+            "Molecular evidence can show organisms that appear similar morphologically are actually genetically very different (convergent evolution) — or vice versa [1]",
+            "Peer review and critical evaluation prevents false claims changing accepted classifications; ensures reproducibility; maintains scientific integrity [1]"
+          ],
+          notes: "Must address both the reason for reclassification AND the importance of peer review."
+        }
+      ]
+    }
+  },
+
+  // ── 4.15 / 4.16 ────────────────────────────────────────────────────────────
+  {
+    id: "4.15", label: "4.15–4.16",
+    topic: "Topic 4: Biodiversity and Natural Resources",
+    statement: "4.15: know that, over time, the variety of life has become extensive but is now being threatened by human activity. 4.16: understand what is meant by the terms biodiversity and endemism.",
+    totalMarks: 6,
+    questionSlide: {
+      title: "Biodiversity and Endemism",
+      questions: [
+        { ref: "(a)", ao: "AO1", marks: 2, stem: "Define the term <strong>biodiversity</strong>, referring to both of its components." },
+        { ref: "(b)", ao: "AO1", marks: 1, stem: "Define the term <strong>endemic species</strong>." },
+        { ref: "(c)", ao: "AO2", marks: 3, stem: "Give <strong>three</strong> ways in which human activity threatens biodiversity, and for each, give a specific example." }
+      ]
+    },
+    markSchemeSlide: {
+      markScheme: [
+        {
+          ref: "(a)", total: "2 marks",
+          points: [
+            "The variety / range of species in an area (species richness) [1]",
+            "AND the genetic variation / range of alleles within a species (genetic diversity) [1]"
+          ],
+          notes: "Must reference both species richness AND genetic diversity for full marks."
+        },
+        {
+          ref: "(b)", total: "1 mark",
+          points: [
+            "A species found only in a particular geographic area and nowhere else in the world [1]"
+          ],
+          notes: "Must convey 'found nowhere else'. Accept 'native to one region only'."
+        },
+        {
+          ref: "(c)", total: "3 marks",
+          points: [
+            "Habitat destruction: deforestation / urbanisation / draining wetlands → loss of habitat for many species [1]",
+            "Over-exploitation / over-hunting: e.g. overfishing, poaching → reduces population sizes [1]",
+            "Pollution: e.g. pesticides, oil spills, eutrophication → kills organisms / reduces species richness [1]",
+            "Introduction of invasive species: e.g. grey squirrel outcompeting red squirrel [1]",
+            "Climate change: e.g. coral bleaching, range shifts → species unable to adapt [1]"
+          ],
+          notes: "Any three. Award 1 mark each. Must name a specific example for each threat."
+        }
+      ]
+    }
+  },
+
+  // ── 4.17 ───────────────────────────────────────────────────────────────────
+  {
+    id: "4.17", label: "4.17",
+    topic: "Topic 4: Biodiversity and Natural Resources",
+    statement: "Know how biodiversity can be measured within a habitat using species richness, and within a species using genetic diversity by calculating the heterozygosity index: H = number of heterozygotes ÷ number of individuals in the population.",
+    totalMarks: 6,
+    questionSlide: {
+      title: "Measuring Biodiversity: Heterozygosity Index",
+      questions: [
+        { ref: "(a)", ao: "AO1", marks: 2, stem: "Distinguish between <strong>species richness</strong> and <strong>genetic diversity</strong> as measures of biodiversity." },
+        { ref: "(b)", ao: "AO2", marks: 3, stem: "In a population of 250 individuals, 75 are heterozygous for a particular gene locus. Calculate the heterozygosity index (H) and explain what this value tells us about the population's genetic diversity." },
+        { ref: "(c)", ao: "AO3", marks: 1, stem: "State <strong>one</strong> limitation of using species richness alone as a measure of biodiversity." }
+      ]
+    },
+    markSchemeSlide: {
+      markScheme: [
+        {
+          ref: "(a)", total: "2 marks",
+          points: [
+            "Species richness: the number of different species in a given area / habitat [1]",
+            "Genetic diversity: variation in alleles / genotypes within a single species, measured using the heterozygosity index [1]"
+          ],
+          notes: "Must clearly distinguish between the two (one is between-species, one is within-species)."
+        },
+        {
+          ref: "(b)", total: "3 marks",
+          points: [
+            "H = number of heterozygotes ÷ total individuals = 75 ÷ 250 = 0.3 [2]",
+            "H = 0.3 means 30% of individuals in the population are heterozygous at this locus; higher H indicates greater genetic diversity; this population has moderate genetic diversity [1]"
+          ],
+          notes: "Award 1 mark for correct substitution, 1 mark for correct answer (0.3), 1 mark for interpretation. ECF applies to interpretation if calculation is wrong."
+        },
+        {
+          ref: "(c)", total: "1 mark",
+          points: [
+            "Does not consider the relative abundance of species (evenness) [1]",
+            "A habitat with one very abundant species and many rare ones would still appear highly diverse [1]",
+            "Does not measure genetic variation within species [1]"
+          ],
+          notes: "Any one valid limitation."
+        }
+      ]
+    }
+  },
+
+  // ── 4.18 ───────────────────────────────────────────────────────────────────
+  {
+    id: "4.18", label: "4.18",
+    topic: "Topic 4: Biodiversity and Natural Resources",
+    statement: "Understand how biodiversity can be compared in different habitats using the index of diversity: D = N(N−1) ÷ Σn(n−1), where N = total number of all organisms and n = number of individuals of each species.",
+    totalMarks: 7,
+    questionSlide: {
+      title: "Index of Diversity (Simpson's D)",
+      questions: [
+        { ref: "(a)", ao: "AO1", marks: 2, stem: "Define the terms N and n in the formula D = N(N−1) ÷ Σn(n−1)." },
+        { ref: "(b)", ao: "AO2", marks: 3, stem: "A meadow contains the following plants: 15 buttercups, 10 daisies, 5 nettles. Calculate the index of diversity D. Show your working." },
+        { ref: "(c)", ao: "AO3", marks: 2, stem: "A second meadow has D = 5.8. Compare the biodiversity of the two meadows and suggest one reason why the index of diversity is a more useful measure than species richness alone." }
+      ]
+    },
+    markSchemeSlide: {
+      markScheme: [
+        {
+          ref: "(a)", total: "2 marks",
+          points: [
+            "N = total number of all individual organisms across all species in the sample [1]",
+            "n = number of individual organisms of each particular species [1]"
+          ],
+          notes: "Must be precise: N is the overall total; n is for each species separately."
+        },
+        {
+          ref: "(b)", total: "3 marks",
+          points: [
+            "N = 15 + 10 + 5 = 30; N(N−1) = 30 × 29 = 870 [1]",
+            "Σn(n−1) = (15×14) + (10×9) + (5×4) = 210 + 90 + 20 = 320 [1]",
+            "D = 870 ÷ 320 = 2.72 (to 3 s.f.) [1]"
+          ],
+          notes: "Award marks for correct working even if final answer is wrong (ECF). Must show all steps."
+        },
+        {
+          ref: "(c)", total: "2 marks",
+          points: [
+            "Second meadow (D = 5.8) is more biodiverse than the first (D ≈ 2.72); higher D = greater diversity [1]",
+            "Index of diversity accounts for both the number of species AND their relative abundance (evenness); two habitats with the same species richness can have very different D values if one is dominated by a single species [1]"
+          ],
+          notes: "Must compare both D values explicitly. Second mark must explain why D is more informative than species richness alone."
+        }
+      ]
+    }
+  },
+
+  // ── 4.19 ───────────────────────────────────────────────────────────────────
+  {
+    id: "4.19", label: "4.19",
+    topic: "Topic 4: Biodiversity and Natural Resources",
+    statement: "Understand the concept of niche and be able to discuss examples of adaptations of organisms to their environment (behavioural, anatomical and physiological).",
+    totalMarks: 8,
+    questionSlide: {
+      title: "Niche and Adaptations",
+      questions: [
+        { ref: "(a)", ao: "AO1", marks: 2, stem: "Define the term <strong>ecological niche</strong>." },
+        { ref: "(b)", ao: "AO2", marks: 6, stem: "For a named organism of your choice, describe <strong>one</strong> behavioural adaptation, <strong>one</strong> anatomical adaptation, and <strong>one</strong> physiological adaptation. For each, explain how it improves the organism's survival in its environment. (2 marks per adaptation)" }
+      ]
+    },
+    markSchemeSlide: {
+      markScheme: [
+        {
+          ref: "(a)", total: "2 marks",
+          points: [
+            "The role an organism plays within its ecosystem / community [1]",
+            "Includes all aspects of where it lives, when and what it feeds on, its interactions with other organisms, abiotic factors it tolerates, etc. — the sum total of how it interacts with its environment [1]"
+          ],
+          notes: "Must convey that a niche is more than just a habitat — it includes feeding relationships and interactions."
+        },
+        {
+          ref: "(b)", total: "6 marks",
+          points: [
+            "Behavioural: e.g. migration (Arctic tern): moves between hemispheres to exploit food resources / avoid harsh winter conditions → increased survival and reproduction [2]",
+            "Anatomical: e.g. polar bear thick fur and subcutaneous fat layer: insulation → reduces heat loss → survives in Arctic temperatures [2]",
+            "Physiological: e.g. camel produces concentrated urine / stores fat (not water) in hump: conserves water in desert environment → survives dehydration [2]"
+          ],
+          notes: "Any named organism accepted. Award 1 mark for the adaptation, 1 mark for the explanation. Each type must be different. Mark scheme examples are illustrative — award marks for any correct example with valid explanation."
+        }
+      ]
+    }
+  },
+
+  // ── 4.20 ───────────────────────────────────────────────────────────────────
+  {
+    id: "4.20", label: "4.20",
+    topic: "Topic 4: Biodiversity and Natural Resources",
+    statement: "4.20(i): understand how the Hardy-Weinberg equation can be used to detect changes in allele frequency over time. 4.20(ii): understand that changes in allele frequency can result from mutation and natural selection. 4.20(iii): understand that reproductive isolation can lead to accumulation of different genetic information in populations, potentially leading to new species.",
+    totalMarks: 10,
+    questionSlide: {
+      title: "Hardy-Weinberg, Selection and Speciation",
+      questions: [
+        { ref: "(a)", ao: "AO1", marks: 4, stem: "State the two Hardy-Weinberg equations and list <strong>four</strong> conditions that must be met for allele frequencies to remain constant between generations." },
+        { ref: "(b)", ao: "AO2", marks: 2, stem: "In a population, the frequency of the dominant allele A is 0.6. Calculate the expected frequency of heterozygotes (Aa) and the frequency of homozygous recessive individuals (aa)." },
+        { ref: "(c)", ao: "AO1", marks: 4, stem: "Explain how reproductive isolation can lead to the formation of a new species." }
+      ]
+    },
+    markSchemeSlide: {
+      markScheme: [
+        {
+          ref: "(a)", total: "4 marks",
+          points: [
+            "p + q = 1 (where p = frequency of dominant allele, q = frequency of recessive allele) [1]",
+            "p² + 2pq + q² = 1 (where p² = homozygous dominant, 2pq = heterozygous, q² = homozygous recessive) [1]",
+            "Conditions (any four from): large population; no mutations; no natural selection; random mating; no migration (no gene flow into or out of population) [2]"
+          ],
+          notes: "Award 1 mark per equation, 1 mark for any two conditions, 1 mark for any two more conditions. Need at least four conditions for full 2 marks."
+        },
+        {
+          ref: "(b)", total: "2 marks",
+          points: [
+            "p = 0.6 → q = 1 − 0.6 = 0.4; frequency of Aa (heterozygotes) = 2pq = 2 × 0.6 × 0.4 = 0.48 [1]",
+            "Frequency of aa (homozygous recessive) = q² = 0.4² = 0.16 [1]"
+          ],
+          notes: "Award 1 mark for correct 2pq, 1 mark for correct q²."
+        },
+        {
+          ref: "(c)", total: "4 marks",
+          points: [
+            "Population becomes divided by a reproductive isolating barrier (geographic, behavioural or mechanical) → gene flow between the two sub-populations stops [1]",
+            "Different mutations arise by chance in each sub-population [1]",
+            "Natural selection acts differently on each sub-population (different environments) → different allele frequencies accumulate [1]",
+            "Eventually, the genetic differences become so great that individuals from the two populations can no longer interbreed to produce fertile offspring → new species formed (speciation) [1]"
+          ],
+          notes: "Must follow a logical sequence: isolation → no gene flow → different mutations/selection → genetic divergence → reproductive incompatibility."
+        }
+      ]
+    }
+  },
+
+  // ── 4.21 ───────────────────────────────────────────────────────────────────
+  {
+    id: "4.21", label: "4.21",
+    topic: "Topic 4: Biodiversity and Natural Resources",
+    statement: "Be able to evaluate the methods used by zoos and seed banks in the conservation of endangered species and their genetic diversity, including scientific research, captive breeding programmes, reintroduction programmes and education.",
+    totalMarks: 9,
+    questionSlide: {
+      title: "Conservation: Zoos and Seed Banks",
+      questions: [
+        { ref: "(a)", ao: "AO2", marks: 4, stem: "Evaluate the use of zoos in the conservation of endangered species. In your answer, include <strong>two</strong> advantages and <strong>two</strong> disadvantages." },
+        { ref: "(b)", ao: "AO2", marks: 3, stem: "Describe how seed banks contribute to conservation of genetic diversity, and evaluate <strong>two</strong> limitations of this approach." },
+        { ref: "(c)", ao: "AO3", marks: 2, stem: "Suggest why maintaining genetic diversity is important when planning a captive breeding programme for reintroduction." }
+      ]
+    },
+    markSchemeSlide: {
+      markScheme: [
+        {
+          ref: "(a)", total: "4 marks",
+          points: [
+            "Advantage 1: Captive breeding programmes increase population numbers / prevent extinction of critically endangered species [1]",
+            "Advantage 2: Zoos conduct scientific research into animal biology / diseases / breeding; provide public education to raise awareness and funding [1]",
+            "Disadvantage 1: Animals in captivity may lose natural behaviours (hunting, foraging) → reintroduction into wild may fail [1]",
+            "Disadvantage 2: Limited space in zoos → small captive populations → risk of inbreeding → reduced genetic diversity → lower fitness [1]"
+          ],
+          notes: "Must be an evaluation (advantages AND disadvantages). Award 1 mark per valid point."
+        },
+        {
+          ref: "(b)", total: "3 marks",
+          points: [
+            "Seeds are collected from wild plant populations and stored at low temperature (−20°C) and low humidity to remain viable for many years [1]",
+            "Seeds represent the genetic diversity of the species; can be germinated and grown if wild populations become extinct [1]",
+            "Limitation 1: Only works for seed-producing plants; cannot conserve ferns, mosses, or many species lacking viable seeds [1]",
+            "Limitation 2: Seeds have a finite lifespan; must be periodically grown out and new seeds re-collected; some seeds do not survive storage well [1]",
+            "Limitation 3: Does not preserve the species in its ecosystem / ecological interactions are lost [1]"
+          ],
+          notes: "1 mark for description of seed bank method, 1 mark for genetic diversity point, 1 mark for any valid limitation."
+        },
+        {
+          ref: "(c)", total: "2 marks",
+          points: [
+            "High genetic diversity means the population contains a wider range of alleles [1]",
+            "Greater variation increases the likelihood that some individuals carry alleles for resistance to new diseases / ability to cope with environmental change → wild population more likely to survive after reintroduction [1]"
+          ],
+          notes: "Must link genetic diversity to fitness / survival in the wild, not just 'prevents inbreeding'."
+        }
+      ]
+    }
+  }
+
+];
+
+// ── State ───────────────────────────────────────────────────────────────────
+let current = 0;
+const visited = new Set();
+const revealed = new Set();
+
+// ── Build question face ─────────────────────────────────────────────────────
+function buildQuestion(sp) {
+  const qs = sp.questionSlide;
+  const questionsHTML = qs.questions.map(q => `
+    <div class="q-item">
+      <div class="q-ref">${q.ref}</div>
+      <div class="q-content">
+        <div class="q-stem">${q.stem}</div>
+        <div class="q-meta">
+          <span class="marks-pill">${q.marks} mark${q.marks !== 1 ? 's' : ''}</span>
+          <span class="ao-pill">${q.ao}</span>
+        </div>
+      </div>
+    </div>`).join('');
+
+  return `
+    <div class="q-header">
+      <span class="unit-badge">WBI12 · Unit 2</span>
+      <span class="spec-badge-hdr">${sp.id}</span>
+      <span class="q-header-title">${qs.title}</span>
+      <span class="marks-badge">${sp.totalMarks} marks</span>
+    </div>
+    <div class="spec-stmt"><strong>Spec:</strong> ${sp.statement}</div>
+    <div class="q-body">${questionsHTML}</div>`;
+}
+
+// ── Build mark scheme face ──────────────────────────────────────────────────
+function buildMarkScheme(sp) {
+  const ms = sp.markSchemeSlide;
+  const useSingleCol = ms.markScheme.length <= 2;
+  const itemsHTML = ms.markScheme.map(item => {
+    const pointsHTML = item.points.map(p =>
+      `<div class="ms-point"><span class="ms-tick">✓</span><span>${p}</span></div>`
+    ).join('');
+    const noteHTML = item.notes
+      ? `<div class="ms-note">📝 ${item.notes}</div>`
+      : '';
+    return `
+      <div class="ms-item">
+        <div class="ms-item-hdr">
+          <span class="ms-ref">${item.ref}</span>
+          <span class="ms-total">${item.total}</span>
+        </div>
+        <div class="ms-points">${pointsHTML}${noteHTML}</div>
+      </div>`;
+  }).join('');
+
+  return `
+    <div class="ms-header">
+      <span class="ms-badge">Mark Scheme</span>
+      <span class="ms-header-title">${sp.questionSlide.title}</span>
+    </div>
+    <div class="ms-body ${useSingleCol ? 'cols-1' : ''}">${itemsHTML}</div>`;
+}
+
+// ── Render nav dots ─────────────────────────────────────────────────────────
+function renderNav() {
+  document.getElementById('specNav').innerHTML = specPoints.map((sp, i) => {
+    let cls = '';
+    if (i === current) cls = 'active';
+    else if (revealed.has(i)) cls = 'done';
+    return `<div class="spec-dot ${cls}" onclick="goTo(${i})" title="${sp.questionSlide.title}">${sp.label}</div>`;
+  }).join('');
+}
+
+// ── Render current card ─────────────────────────────────────────────────────
+function render() {
+  const sp = specPoints[current];
+  visited.add(current);
+
+  document.getElementById('qFace').innerHTML  = buildQuestion(sp);
+  document.getElementById('msFace').innerHTML = buildMarkScheme(sp);
+
+  const scene = document.getElementById('cardScene');
+  if (revealed.has(current)) {
+    scene.classList.add('revealed');
+    document.getElementById('hintText').textContent = '';
+    document.getElementById('btnReveal').disabled = true;
+    document.getElementById('btnNext').disabled = false;
+  } else {
+    scene.classList.remove('revealed');
+    document.getElementById('hintText').innerHTML = 'Answer the questions, then tap <em>Reveal Answers</em>';
+    document.getElementById('btnReveal').disabled = false;
+    document.getElementById('btnNext').disabled = true;
+  }
+
+  document.getElementById('btnPrev').disabled = (current === 0);
+
+  const total = specPoints.length;
+  document.getElementById('progressPill').textContent = `Card ${current + 1} of ${total}`;
+  document.getElementById('progressFill').style.width = `${((current + 1) / total) * 100}%`;
+
+  renderNav();
+
+  if (revealed.size === total) {
+    document.getElementById('completeBanner').classList.add('show');
+  }
+}
+
+// ── Reveal answers ──────────────────────────────────────────────────────────
+function revealAnswers() {
+  revealed.add(current);
+  document.getElementById('cardScene').classList.add('revealed');
+  document.getElementById('hintText').textContent = '';
+  document.getElementById('btnReveal').disabled = true;
+  document.getElementById('btnNext').disabled = false;
+  renderNav();
+}
+
+// ── Navigation ──────────────────────────────────────────────────────────────
+function navigate(dir) {
+  const next = current + dir;
+  if (next >= 0 && next < specPoints.length) {
+    current = next;
+    render();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+}
+
+function goTo(idx) {
+  current = idx;
+  render();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ── Init ────────────────────────────────────────────────────────────────────
+render();
+</script>
+</body>
+</html>
