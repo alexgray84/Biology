@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Y7 Chemistry – Assessment Revision</title>
+<style>
+  :root {
+    --ink:#2d1b69; --mid:#5b21b6; --accent:#7c3aed; --soft:#f5f0ff;
+    --chipbg:#ede9fe; --chipink:#4c1d95; --badge:#c4b5fd; --badgeink:#2d1b69;
+    --line:#ddd6fe; --panel:#f7f4ff; --track:#e4dcff;
+  }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:'Segoe UI', system-ui, -apple-system, sans-serif; background:var(--soft); min-height:100vh; display:flex; flex-direction:column; color:#1a2230; }
+  .header { background:var(--ink); color:#fff; padding:14px 24px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; }
+  .header-left h1 { font-size:1.05rem; font-weight:700; }
+  .header-left .sub { font-size:0.78rem; opacity:0.7; margin-top:2px; }
+  .header a.home { color:#fff; opacity:0.8; text-decoration:none; font-size:0.8rem; border:1px solid rgba(255,255,255,0.4); padding:5px 12px; border-radius:20px; }
+  .header a.home:hover { opacity:1; }
+  .progress-pill { background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.25); padding:5px 14px; border-radius:20px; font-size:0.82rem; font-weight:600; white-space:nowrap; }
+  .progress-track { height:4px; background:var(--track); }
+  .progress-fill { height:100%; background:var(--accent); transition:width 0.4s ease; }
+  .main { flex:1; display:flex; flex-direction:column; align-items:center; padding:18px 16px 36px; gap:14px; }
+  .spec-nav { display:flex; gap:7px; flex-wrap:wrap; justify-content:center; max-width:900px; }
+  .spec-dot { min-width:46px; height:30px; border-radius:15px; border:2px solid var(--badge); background:#fff; color:var(--mid); font-weight:700; font-size:0.72rem; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all 0.15s; padding:2px 9px; }
+  .spec-dot:hover { background:var(--chipbg); }
+  .spec-dot.active { background:var(--ink); color:#fff; border-color:var(--ink); }
+  .spec-dot.done { background:var(--accent); color:#fff; border-color:var(--accent); }
+  .card { width:100%; max-width:900px; border-radius:14px; overflow:hidden; box-shadow:0 4px 22px rgba(0,0,0,0.10); background:#fff; }
+  .q-header { background:var(--ink); color:#fff; padding:13px 20px; display:flex; align-items:center; gap:12px; }
+  .spec-badge { background:var(--badge); color:var(--badgeink); font-weight:800; font-size:0.9rem; padding:5px 12px; border-radius:8px; white-space:nowrap; }
+  .q-title { font-size:1.04rem; font-weight:700; line-height:1.3; }
+  .tag-badge { margin-left:auto; background:rgba(255,255,255,0.18); color:#fff; font-weight:600; font-size:0.74rem; padding:5px 12px; border-radius:20px; white-space:nowrap; }
+  .teach { display:flex; gap:20px; padding:18px 20px; align-items:flex-start; }
+  .teach-main { flex:1; min-width:0; }
+  .teach-side { width:264px; flex-shrink:0; display:flex; flex-direction:column; gap:14px; }
+  .keyidea { background:var(--panel); border-left:4px solid var(--accent); border-radius:8px; padding:11px 14px; font-size:0.92rem; line-height:1.55; color:#1a2230; margin-bottom:14px; }
+  .ki-label { display:block; font-size:0.68rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--mid); font-weight:800; margin-bottom:4px; }
+  ul.facts { list-style:none; display:flex; flex-direction:column; gap:9px; }
+  ul.facts li { position:relative; padding-left:24px; font-size:0.91rem; line-height:1.5; }
+  ul.facts li::before { content:"\2713"; position:absolute; left:0; top:0; color:var(--accent); font-weight:800; }
+  ul.facts li b { color:var(--ink); }
+  .diagram { border:2px dashed var(--badge); border-radius:10px; background:var(--panel); padding:10px; }
+  .diagram svg { width:100%; height:auto; display:block; }
+  .keywords h4 { font-size:0.7rem; letter-spacing:0.08em; text-transform:uppercase; color:var(--mid); margin-bottom:8px; }
+  .kw-list { display:flex; flex-wrap:wrap; gap:6px; }
+  .chip { background:var(--chipbg); color:var(--chipink); font-size:0.76rem; font-weight:700; padding:4px 11px; border-radius:20px; }
+  .practice { border-top:2px solid var(--accent); background:var(--panel); padding:14px 20px 18px; }
+  .practice-head { font-size:0.95rem; font-weight:800; color:var(--ink); margin-bottom:10px; display:flex; align-items:baseline; gap:10px; }
+  .practice-hint { font-size:0.74rem; font-weight:600; color:#7a7a7a; font-style:italic; }
+  ol.q-list { list-style:none; display:flex; flex-direction:column; gap:10px; counter-reset:q; }
+  .qrow { background:#fff; border:1px solid var(--line); border-radius:10px; padding:11px 14px; }
+  .q-text { font-size:0.92rem; line-height:1.5; counter-increment:q; }
+  .q-text::before { content:"Q"counter(q)". "; font-weight:800; color:var(--mid); }
+  .ans { margin-top:9px; width:100%; text-align:left; border:none; border-radius:8px; cursor:pointer; font-family:inherit; font-size:0.88rem; padding:9px 13px; background:var(--ink); color:#fff; font-weight:700; transition:all 0.15s; }
+  .ans:hover { filter:brightness(1.12); }
+  .ans .ans-text { display:none; }
+  .ans.show { background:var(--panel); color:#1a2230; border:1px solid var(--accent); font-weight:500; line-height:1.5; }
+  .ans.show .ans-label { display:none; }
+  .ans.show .ans-text { display:inline; }
+  .ans.show .ans-text::before { content:"\2713 "; color:var(--accent); font-weight:800; }
+  .controls { display:flex; gap:10px; justify-content:center; align-items:center; flex-wrap:wrap; width:100%; max-width:900px; }
+  .btn { padding:11px 24px; border:none; border-radius:9px; cursor:pointer; font-size:0.9rem; font-weight:700; font-family:inherit; transition:all 0.15s; white-space:nowrap; }
+  .btn:hover:not(:disabled) { transform:translateY(-1px); box-shadow:0 4px 12px rgba(0,0,0,0.15); }
+  .btn:disabled { opacity:0.35; cursor:not-allowed; }
+  .btn-outline { background:#fff; color:var(--ink); border:2px solid var(--ink); }
+  .btn-reveal { background:var(--accent); color:#fff; padding:11px 28px; }
+  .btn-next { background:var(--ink); color:#fff; padding:11px 28px; }
+  @media (max-width:640px) {
+    .teach { flex-direction:column-reverse; padding:14px; gap:14px; }
+    .teach-side { width:100%; }
+    .q-title { font-size:0.95rem; order:3; flex-basis:100%; }
+    .q-header { flex-wrap:wrap; padding:11px 14px; }
+    .tag-badge { margin-left:0; }
+    .controls { gap:8px; }
+    .btn { padding:12px 16px; min-height:46px; }
+    .btn-reveal, .btn-next { flex:1 1 130px; }
+    .spec-dot { min-width:0; font-size:0.68rem; }
+  }
+</style>
+</head>
+<body>
+<div class="header">
+  <div class="header-left">
+    <h1>🧪 Chemistry &mdash; Assessment Revision</h1>
+    <div class="sub">Y7 &nbsp;&middot;&nbsp; States of Matter · Separating · Solutions</div>
+  </div>
+  <a class="home" href="index.html">&#8592; All subjects</a>
+  <div class="progress-pill" id="progressPill">1 / 3</div>
+</div>
+<div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+<div class="main">
+  <div class="spec-nav" id="specNav"></div>
+  <div class="card" id="card"></div>
+  <div class="controls">
+    <button class="btn btn-outline" id="btnPrev" onclick="navigate(-1)">&#8592; Previous</button>
+    <button class="btn btn-reveal" id="btnReveal" onclick="revealAll()">Reveal answers &#10003;</button>
+    <button class="btn btn-next" id="btnNext" onclick="navigate(1)">Next &#8594;</button>
+  </div>
+</div>
+<script>
+const cards = [{"ref": "11.1", "tag": "States", "title": "Solids, liquids and gases (the particle model)", "keyidea": "The way the particles are arranged explains the properties of each state of matter.", "facts": ["<b>Solid</b> – particles packed closely in a regular pattern, vibrating in place. Fixed shape and volume; cannot be compressed.", "<b>Liquid</b> – particles close together but random; they can slide past each other. Fixed volume; takes the shape of its container.", "<b>Gas</b> – particles far apart, moving quickly in all directions. No fixed shape or volume; can be compressed.", "Gases can be compressed because there is space between the particles."], "keywords": ["particle", "solid", "liquid", "gas", "compress"], "diagram": "<svg viewBox=\"0 0 250 130\" xmlns=\"http://www.w3.org/2000/svg\" font-family=\"Segoe UI, system-ui, sans-serif\">\n  <rect x=\"10\" y=\"20\" width=\"66\" height=\"66\" rx=\"6\" fill=\"#f7f4ff\" stroke=\"#5b21b6\" stroke-width=\"2\"/>\n  <g fill=\"#7c3aed\">\n   <circle cx=\"24\" cy=\"34\" r=\"5\"/><circle cx=\"38\" cy=\"34\" r=\"5\"/><circle cx=\"52\" cy=\"34\" r=\"5\"/><circle cx=\"66\" cy=\"34\" r=\"5\"/>\n   <circle cx=\"24\" cy=\"50\" r=\"5\"/><circle cx=\"38\" cy=\"50\" r=\"5\"/><circle cx=\"52\" cy=\"50\" r=\"5\"/><circle cx=\"66\" cy=\"50\" r=\"5\"/>\n   <circle cx=\"24\" cy=\"66\" r=\"5\"/><circle cx=\"38\" cy=\"66\" r=\"5\"/><circle cx=\"52\" cy=\"66\" r=\"5\"/><circle cx=\"66\" cy=\"66\" r=\"5\"/></g>\n  <text x=\"43\" y=\"102\" font-size=\"10\" text-anchor=\"middle\" fill=\"#2d1b69\" font-weight=\"700\">SOLID</text>\n  <text x=\"43\" y=\"116\" font-size=\"7.5\" text-anchor=\"middle\" fill=\"#5b21b6\">packed, regular</text>\n  <rect x=\"92\" y=\"20\" width=\"66\" height=\"66\" rx=\"6\" fill=\"#f7f4ff\" stroke=\"#5b21b6\" stroke-width=\"2\"/>\n  <g fill=\"#7c3aed\">\n   <circle cx=\"104\" cy=\"36\" r=\"5\"/><circle cx=\"120\" cy=\"40\" r=\"5\"/><circle cx=\"138\" cy=\"34\" r=\"5\"/><circle cx=\"150\" cy=\"44\" r=\"5\"/>\n   <circle cx=\"108\" cy=\"56\" r=\"5\"/><circle cx=\"126\" cy=\"58\" r=\"5\"/><circle cx=\"144\" cy=\"60\" r=\"5\"/>\n   <circle cx=\"112\" cy=\"74\" r=\"5\"/><circle cx=\"132\" cy=\"74\" r=\"5\"/></g>\n  <text x=\"125\" y=\"102\" font-size=\"10\" text-anchor=\"middle\" fill=\"#2d1b69\" font-weight=\"700\">LIQUID</text>\n  <text x=\"125\" y=\"116\" font-size=\"7.5\" text-anchor=\"middle\" fill=\"#5b21b6\">close, random</text>\n  <rect x=\"174\" y=\"20\" width=\"66\" height=\"66\" rx=\"6\" fill=\"#f7f4ff\" stroke=\"#5b21b6\" stroke-width=\"2\"/>\n  <g fill=\"#7c3aed\">\n   <circle cx=\"186\" cy=\"32\" r=\"5\"/><circle cx=\"222\" cy=\"38\" r=\"5\"/><circle cx=\"200\" cy=\"56\" r=\"5\"/>\n   <circle cx=\"230\" cy=\"68\" r=\"5\"/><circle cx=\"188\" cy=\"74\" r=\"5\"/></g>\n  <text x=\"207\" y=\"102\" font-size=\"10\" text-anchor=\"middle\" fill=\"#2d1b69\" font-weight=\"700\">GAS</text>\n  <text x=\"207\" y=\"116\" font-size=\"7.5\" text-anchor=\"middle\" fill=\"#5b21b6\">far apart, fast</text>\n</svg>", "questions": [["Describe the arrangement of particles in a solid.", "Closely packed in a regular pattern, vibrating in place."], ["Why can gases be compressed but solids cannot?", "Gas particles are far apart with space between them; solid particles are packed tightly with no space."], ["Which state takes the shape of its container but has a fixed volume?", "A liquid."]]}, {"ref": "11.2", "tag": "States", "title": "Changes of state", "keyidea": "Heating or cooling changes the state by changing the energy and movement of the particles.", "facts": ["<b>Melting</b>: solid &#8594; liquid. <b>Freezing</b>: liquid &#8594; solid.", "<b>Boiling / evaporating</b>: liquid &#8594; gas. <b>Condensing</b>: gas &#8594; liquid.", "<b>Heating</b> gives particles more energy, so they move more and spread further apart.", "<b>Cooling</b> removes energy, so particles move less and get closer.", "The particles are only rearranged, not created or destroyed, so the mass stays the same."], "keywords": ["melting", "freezing", "boiling", "condensing", "energy"], "diagram": "<svg viewBox=\"0 0 250 140\" xmlns=\"http://www.w3.org/2000/svg\" font-family=\"Segoe UI, system-ui, sans-serif\">\n  <rect x=\"6\" y=\"50\" width=\"58\" height=\"34\" rx=\"6\" fill=\"#ede9fe\" stroke=\"#5b21b6\" stroke-width=\"1.5\"/>\n  <text x=\"35\" y=\"71\" font-size=\"10\" text-anchor=\"middle\" fill=\"#2d1b69\" font-weight=\"700\">SOLID</text>\n  <rect x=\"96\" y=\"50\" width=\"58\" height=\"34\" rx=\"6\" fill=\"#ede9fe\" stroke=\"#5b21b6\" stroke-width=\"1.5\"/>\n  <text x=\"125\" y=\"71\" font-size=\"10\" text-anchor=\"middle\" fill=\"#2d1b69\" font-weight=\"700\">LIQUID</text>\n  <rect x=\"186\" y=\"50\" width=\"58\" height=\"34\" rx=\"6\" fill=\"#ede9fe\" stroke=\"#5b21b6\" stroke-width=\"1.5\"/>\n  <text x=\"215\" y=\"71\" font-size=\"10\" text-anchor=\"middle\" fill=\"#2d1b69\" font-weight=\"700\">GAS</text>\n  <defs><marker id=\"scA\" markerWidth=\"7\" markerHeight=\"7\" refX=\"6\" refY=\"3.5\" orient=\"auto\"><path d=\"M0,0 L7,3.5 L0,7 Z\" fill=\"#dc2626\"/></marker>\n        <marker id=\"scB\" markerWidth=\"7\" markerHeight=\"7\" refX=\"6\" refY=\"3.5\" orient=\"auto\"><path d=\"M0,0 L7,3.5 L0,7 Z\" fill=\"#2563eb\"/></marker></defs>\n  <line x1=\"64\" y1=\"58\" x2=\"96\" y2=\"58\" stroke=\"#dc2626\" stroke-width=\"2\" marker-end=\"url(#scA)\"/>\n  <text x=\"80\" y=\"50\" font-size=\"7.5\" text-anchor=\"middle\" fill=\"#dc2626\">melting</text>\n  <line x1=\"96\" y1=\"78\" x2=\"64\" y2=\"78\" stroke=\"#2563eb\" stroke-width=\"2\" marker-end=\"url(#scB)\"/>\n  <text x=\"80\" y=\"98\" font-size=\"7.5\" text-anchor=\"middle\" fill=\"#2563eb\">freezing</text>\n  <line x1=\"154\" y1=\"58\" x2=\"186\" y2=\"58\" stroke=\"#dc2626\" stroke-width=\"2\" marker-end=\"url(#scA)\"/>\n  <text x=\"170\" y=\"50\" font-size=\"7.5\" text-anchor=\"middle\" fill=\"#dc2626\">boiling</text>\n  <line x1=\"186\" y1=\"78\" x2=\"154\" y2=\"78\" stroke=\"#2563eb\" stroke-width=\"2\" marker-end=\"url(#scB)\"/>\n  <text x=\"170\" y=\"98\" font-size=\"7.5\" text-anchor=\"middle\" fill=\"#2563eb\">condensing</text>\n  <text x=\"125\" y=\"126\" font-size=\"8\" text-anchor=\"middle\" fill=\"#dc2626\" font-weight=\"700\">heating &#8594;</text>\n  <text x=\"125\" y=\"138\" font-size=\"8\" text-anchor=\"middle\" fill=\"#2563eb\" font-weight=\"700\">&#8592; cooling</text>\n</svg>", "questions": [["What is the change from a liquid to a gas called?", "Boiling (or evaporating)."], ["What is the change from a gas to a liquid called?", "Condensing."], ["What happens to the particles when a solid is heated and melts?", "They gain energy, move more and spread further apart so they can flow."], ["Name the change of state from a liquid to a solid.", "Freezing."]]}, {"ref": "13.1", "tag": "Separating", "title": "Methods of separating mixtures", "keyidea": "Mixtures can be separated using physical methods. Choose the method that fits the mixture. (A solute dissolves in a solvent to make a solution.)", "facts": ["<b>Filtration</b> – separates an insoluble solid from a liquid using filter paper, e.g. sand from water.", "<b>Evaporation</b> – separates a dissolved (soluble) solid from a solution by evaporating the liquid, e.g. salt from salt water.", "<b>Simple distillation</b> – separates the liquid (solvent) from a solution by boiling then condensing it, e.g. pure water from salt water.", "<b>Paper chromatography</b> – separates different coloured substances, e.g. the dyes in an ink.", "Key words: a <b>soluble</b> solid (solute) dissolves; an <b>insoluble</b> one does not."], "keywords": ["filtration", "evaporation", "distillation", "chromatography", "solute", "solvent", "soluble"], "diagram": "<svg viewBox=\"0 0 250 150\" xmlns=\"http://www.w3.org/2000/svg\" font-family=\"Segoe UI, system-ui, sans-serif\">\n  <text x=\"62\" y=\"14\" font-size=\"9\" text-anchor=\"middle\" fill=\"#2d1b69\" font-weight=\"700\">Filtration</text>\n  <path d=\"M35 24 L90 24 L62 70 Z\" fill=\"#f7f4ff\" stroke=\"#5b21b6\" stroke-width=\"1.5\"/>\n  <line x1=\"44\" y1=\"34\" x2=\"80\" y2=\"34\" stroke=\"#7c3aed\" stroke-width=\"1\"/>\n  <text x=\"98\" y=\"40\" font-size=\"7.5\" fill=\"#5b21b6\">residue</text>\n  <text x=\"98\" y=\"50\" font-size=\"7.5\" fill=\"#5b21b6\">(insoluble)</text>\n  <rect x=\"46\" y=\"78\" width=\"32\" height=\"40\" rx=\"3\" fill=\"#ede9fe\" stroke=\"#5b21b6\" stroke-width=\"1.5\"/>\n  <line x1=\"62\" y1=\"70\" x2=\"62\" y2=\"80\" stroke=\"#2563eb\" stroke-width=\"1.5\"/>\n  <text x=\"62\" y=\"134\" font-size=\"7.5\" text-anchor=\"middle\" fill=\"#5b21b6\">filtrate</text>\n  <line x1=\"120\" y1=\"20\" x2=\"120\" y2=\"130\" stroke=\"#ddd6fe\" stroke-width=\"1.5\"/>\n  <text x=\"188\" y=\"14\" font-size=\"9\" text-anchor=\"middle\" fill=\"#2d1b69\" font-weight=\"700\">Distillation</text>\n  <rect x=\"150\" y=\"80\" width=\"34\" height=\"38\" rx=\"3\" fill=\"#ede9fe\" stroke=\"#5b21b6\" stroke-width=\"1.5\"/>\n  <text x=\"167\" y=\"103\" font-size=\"7\" text-anchor=\"middle\" fill=\"#5b21b6\">salt water</text>\n  <path d=\"M167 80 L167 50 L210 40\" fill=\"none\" stroke=\"#5b21b6\" stroke-width=\"1.5\"/>\n  <text x=\"200\" y=\"33\" font-size=\"7\" fill=\"#5b21b6\">vapour</text>\n  <rect x=\"206\" y=\"44\" width=\"28\" height=\"34\" rx=\"3\" fill=\"#dbeafe\" stroke=\"#2563eb\" stroke-width=\"1.5\"/>\n  <text x=\"220\" y=\"92\" font-size=\"7\" text-anchor=\"middle\" fill=\"#2563eb\">pure water</text>\n  <circle cx=\"167\" cy=\"124\" r=\"0\"/>\n  <path d=\"M158 122 q9 8 18 0\" fill=\"none\" stroke=\"#dc2626\" stroke-width=\"1.5\"/>\n  <text x=\"167\" y=\"140\" font-size=\"7\" text-anchor=\"middle\" fill=\"#dc2626\">heat</text>\n</svg>", "questions": [["Which method separates sand from water?", "Filtration."], ["How would you get pure water from salty water?", "Simple distillation."], ["How would you separate the dyes in a felt-tip pen ink?", "Paper chromatography."], ["What method gets salt crystals back from salt water?", "Evaporation."], ["A solid that dissolves in water is described as...?", "Soluble (it is the solute; water is the solvent)."]]}];
+let idx = 0;
+const card = document.getElementById('card');
+const specNav = document.getElementById('specNav');
+const btnReveal = document.getElementById('btnReveal');
+
+function buildNav(){
+  specNav.innerHTML = cards.map((c,i)=>`<button class="spec-dot" onclick="jump(${i})">${c.ref}</button>`).join('');
+}
+function render(){
+  const c = cards[idx];
+  const diagram = c.diagram ? `<div class="diagram">${c.diagram}</div>` : '';
+  const kws = c.keywords.map(k=>`<span class="chip">${k}</span>`).join('');
+  const facts = c.facts.map(f=>`<li>${f}</li>`).join('');
+  const qs = c.questions.map(q=>`<li class="qrow"><div class="q-text">${q[0]}</div><button class="ans" onclick="this.classList.toggle('show')"><span class="ans-label">Show answer</span><span class="ans-text">${q[1]}</span></button></li>`).join('');
+  card.innerHTML = `
+    <div class="q-header"><span class="spec-badge">${c.ref}</span><span class="q-title">${c.title}</span><span class="tag-badge">${c.tag}</span></div>
+    <div class="teach">
+      <div class="teach-main">
+        <div class="keyidea"><span class="ki-label">Key idea</span>${c.keyidea}</div>
+        <ul class="facts">${facts}</ul>
+      </div>
+      <div class="teach-side">
+        ${diagram}
+        <div class="keywords"><h4>Key words to know</h4><div class="kw-list">${kws}</div></div>
+      </div>
+    </div>
+    <div class="practice">
+      <div class="practice-head">Check yourself <span class="practice-hint">tap a box to reveal the answer</span></div>
+      <ol class="q-list">${qs}</ol>
+    </div>`;
+  document.getElementById('progressPill').textContent = `${idx+1} / ${cards.length}`;
+  document.getElementById('progressFill').style.width = ((idx+1)/cards.length*100)+'%';
+  document.getElementById('btnPrev').disabled = idx===0;
+  document.getElementById('btnNext').disabled = idx===cards.length-1;
+  btnReveal.textContent = 'Reveal answers \u2713';
+  [...specNav.children].forEach((d,i)=>{ d.classList.toggle('active', i===idx); });
+}
+function revealAll(){
+  const btns = card.querySelectorAll('.ans');
+  const anyHidden = [...btns].some(b=>!b.classList.contains('show'));
+  btns.forEach(b=> b.classList.toggle('show', anyHidden));
+  btnReveal.textContent = anyHidden ? 'Hide answers' : 'Reveal answers \u2713';
+}
+function navigate(d){
+  const ni = idx + d;
+  if(ni<0 || ni>=cards.length) return;
+  specNav.children[idx].classList.add('done');
+  idx = ni; render();
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+function jump(i){ idx=i; render(); window.scrollTo({top:0, behavior:'smooth'}); }
+buildNav(); render();
+</script>
+</body>
+</html>

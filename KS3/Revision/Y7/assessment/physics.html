@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Y7 Physics – Assessment Revision</title>
+<style>
+  :root {
+    --ink:#0c2340; --mid:#1d4ed8; --accent:#2563eb; --soft:#eff6ff;
+    --chipbg:#dbeafe; --chipink:#1e40af; --badge:#93c5fd; --badgeink:#0c2340;
+    --line:#bfdbfe; --panel:#f0f6ff; --track:#cfe0ff;
+  }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:'Segoe UI', system-ui, -apple-system, sans-serif; background:var(--soft); min-height:100vh; display:flex; flex-direction:column; color:#1a2230; }
+  .header { background:var(--ink); color:#fff; padding:14px 24px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; }
+  .header-left h1 { font-size:1.05rem; font-weight:700; }
+  .header-left .sub { font-size:0.78rem; opacity:0.7; margin-top:2px; }
+  .header a.home { color:#fff; opacity:0.8; text-decoration:none; font-size:0.8rem; border:1px solid rgba(255,255,255,0.4); padding:5px 12px; border-radius:20px; }
+  .header a.home:hover { opacity:1; }
+  .progress-pill { background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.25); padding:5px 14px; border-radius:20px; font-size:0.82rem; font-weight:600; white-space:nowrap; }
+  .progress-track { height:4px; background:var(--track); }
+  .progress-fill { height:100%; background:var(--accent); transition:width 0.4s ease; }
+  .main { flex:1; display:flex; flex-direction:column; align-items:center; padding:18px 16px 36px; gap:14px; }
+  .spec-nav { display:flex; gap:7px; flex-wrap:wrap; justify-content:center; max-width:900px; }
+  .spec-dot { min-width:46px; height:30px; border-radius:15px; border:2px solid var(--badge); background:#fff; color:var(--mid); font-weight:700; font-size:0.72rem; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all 0.15s; padding:2px 9px; }
+  .spec-dot:hover { background:var(--chipbg); }
+  .spec-dot.active { background:var(--ink); color:#fff; border-color:var(--ink); }
+  .spec-dot.done { background:var(--accent); color:#fff; border-color:var(--accent); }
+  .card { width:100%; max-width:900px; border-radius:14px; overflow:hidden; box-shadow:0 4px 22px rgba(0,0,0,0.10); background:#fff; }
+  .q-header { background:var(--ink); color:#fff; padding:13px 20px; display:flex; align-items:center; gap:12px; }
+  .spec-badge { background:var(--badge); color:var(--badgeink); font-weight:800; font-size:0.9rem; padding:5px 12px; border-radius:8px; white-space:nowrap; }
+  .q-title { font-size:1.04rem; font-weight:700; line-height:1.3; }
+  .tag-badge { margin-left:auto; background:rgba(255,255,255,0.18); color:#fff; font-weight:600; font-size:0.74rem; padding:5px 12px; border-radius:20px; white-space:nowrap; }
+  .teach { display:flex; gap:20px; padding:18px 20px; align-items:flex-start; }
+  .teach-main { flex:1; min-width:0; }
+  .teach-side { width:264px; flex-shrink:0; display:flex; flex-direction:column; gap:14px; }
+  .keyidea { background:var(--panel); border-left:4px solid var(--accent); border-radius:8px; padding:11px 14px; font-size:0.92rem; line-height:1.55; color:#1a2230; margin-bottom:14px; }
+  .ki-label { display:block; font-size:0.68rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--mid); font-weight:800; margin-bottom:4px; }
+  ul.facts { list-style:none; display:flex; flex-direction:column; gap:9px; }
+  ul.facts li { position:relative; padding-left:24px; font-size:0.91rem; line-height:1.5; }
+  ul.facts li::before { content:"\2713"; position:absolute; left:0; top:0; color:var(--accent); font-weight:800; }
+  ul.facts li b { color:var(--ink); }
+  .diagram { border:2px dashed var(--badge); border-radius:10px; background:var(--panel); padding:10px; }
+  .diagram svg { width:100%; height:auto; display:block; }
+  .keywords h4 { font-size:0.7rem; letter-spacing:0.08em; text-transform:uppercase; color:var(--mid); margin-bottom:8px; }
+  .kw-list { display:flex; flex-wrap:wrap; gap:6px; }
+  .chip { background:var(--chipbg); color:var(--chipink); font-size:0.76rem; font-weight:700; padding:4px 11px; border-radius:20px; }
+  .practice { border-top:2px solid var(--accent); background:var(--panel); padding:14px 20px 18px; }
+  .practice-head { font-size:0.95rem; font-weight:800; color:var(--ink); margin-bottom:10px; display:flex; align-items:baseline; gap:10px; }
+  .practice-hint { font-size:0.74rem; font-weight:600; color:#7a7a7a; font-style:italic; }
+  ol.q-list { list-style:none; display:flex; flex-direction:column; gap:10px; counter-reset:q; }
+  .qrow { background:#fff; border:1px solid var(--line); border-radius:10px; padding:11px 14px; }
+  .q-text { font-size:0.92rem; line-height:1.5; counter-increment:q; }
+  .q-text::before { content:"Q"counter(q)". "; font-weight:800; color:var(--mid); }
+  .ans { margin-top:9px; width:100%; text-align:left; border:none; border-radius:8px; cursor:pointer; font-family:inherit; font-size:0.88rem; padding:9px 13px; background:var(--ink); color:#fff; font-weight:700; transition:all 0.15s; }
+  .ans:hover { filter:brightness(1.12); }
+  .ans .ans-text { display:none; }
+  .ans.show { background:var(--panel); color:#1a2230; border:1px solid var(--accent); font-weight:500; line-height:1.5; }
+  .ans.show .ans-label { display:none; }
+  .ans.show .ans-text { display:inline; }
+  .ans.show .ans-text::before { content:"\2713 "; color:var(--accent); font-weight:800; }
+  .controls { display:flex; gap:10px; justify-content:center; align-items:center; flex-wrap:wrap; width:100%; max-width:900px; }
+  .btn { padding:11px 24px; border:none; border-radius:9px; cursor:pointer; font-size:0.9rem; font-weight:700; font-family:inherit; transition:all 0.15s; white-space:nowrap; }
+  .btn:hover:not(:disabled) { transform:translateY(-1px); box-shadow:0 4px 12px rgba(0,0,0,0.15); }
+  .btn:disabled { opacity:0.35; cursor:not-allowed; }
+  .btn-outline { background:#fff; color:var(--ink); border:2px solid var(--ink); }
+  .btn-reveal { background:var(--accent); color:#fff; padding:11px 28px; }
+  .btn-next { background:var(--ink); color:#fff; padding:11px 28px; }
+  @media (max-width:640px) {
+    .teach { flex-direction:column-reverse; padding:14px; gap:14px; }
+    .teach-side { width:100%; }
+    .q-title { font-size:0.95rem; order:3; flex-basis:100%; }
+    .q-header { flex-wrap:wrap; padding:11px 14px; }
+    .tag-badge { margin-left:0; }
+    .controls { gap:8px; }
+    .btn { padding:12px 16px; min-height:46px; }
+    .btn-reveal, .btn-next { flex:1 1 130px; }
+    .spec-dot { min-width:0; font-size:0.68rem; }
+  }
+</style>
+</head>
+<body>
+<div class="header">
+  <div class="header-left">
+    <h1>⚡ Physics &mdash; Assessment Revision</h1>
+    <div class="sub">Y7 &nbsp;&middot;&nbsp; Energy · Waves · Forces</div>
+  </div>
+  <a class="home" href="index.html">&#8592; All subjects</a>
+  <div class="progress-pill" id="progressPill">1 / 8</div>
+</div>
+<div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+<div class="main">
+  <div class="spec-nav" id="specNav"></div>
+  <div class="card" id="card"></div>
+  <div class="controls">
+    <button class="btn btn-outline" id="btnPrev" onclick="navigate(-1)">&#8592; Previous</button>
+    <button class="btn btn-reveal" id="btnReveal" onclick="revealAll()">Reveal answers &#10003;</button>
+    <button class="btn btn-next" id="btnNext" onclick="navigate(1)">Next &#8594;</button>
+  </div>
+</div>
+<script>
+const cards = [{"ref": "28.2", "tag": "Energy", "title": "The energy stores", "keyidea": "Energy can be stored in six different ways. Learn the name and an example of each.", "facts": ["<b>Thermal (heat)</b> – stored in hot objects.", "<b>Chemical</b> – stored in food, fuels and batteries.", "<b>Kinetic</b> – stored in moving objects.", "<b>Gravitational potential</b> – stored in objects raised up high.", "<b>Elastic potential (strain)</b> – stored in stretched or squashed objects.", "<b>Nuclear</b> – stored in the nuclei of atoms."], "keywords": ["energy store", "thermal", "chemical", "kinetic", "gravitational", "elastic", "nuclear"], "diagram": "<svg viewBox=\"0 0 250 160\" xmlns=\"http://www.w3.org/2000/svg\" font-family=\"Segoe UI, system-ui, sans-serif\">\n  <g>\n  <rect x=\"6\" y=\"10\" width=\"76\" height=\"40\" rx=\"8\" fill=\"#dbeafe\" stroke=\"#1d4ed8\" stroke-width=\"1.5\"/>\n  <text x=\"44\" y=\"28\" font-size=\"9\" text-anchor=\"middle\" fill=\"#0c2340\" font-weight=\"700\">thermal</text>\n  <text x=\"44\" y=\"42\" font-size=\"7.5\" text-anchor=\"middle\" fill=\"#1d4ed8\">hot objects</text>\n  <rect x=\"88\" y=\"10\" width=\"76\" height=\"40\" rx=\"8\" fill=\"#dbeafe\" stroke=\"#1d4ed8\" stroke-width=\"1.5\"/>\n  <text x=\"126\" y=\"28\" font-size=\"9\" text-anchor=\"middle\" fill=\"#0c2340\" font-weight=\"700\">chemical</text>\n  <text x=\"126\" y=\"42\" font-size=\"7.5\" text-anchor=\"middle\" fill=\"#1d4ed8\">food, fuel, battery</text>\n  <rect x=\"170\" y=\"10\" width=\"74\" height=\"40\" rx=\"8\" fill=\"#dbeafe\" stroke=\"#1d4ed8\" stroke-width=\"1.5\"/>\n  <text x=\"207\" y=\"28\" font-size=\"9\" text-anchor=\"middle\" fill=\"#0c2340\" font-weight=\"700\">kinetic</text>\n  <text x=\"207\" y=\"42\" font-size=\"7.5\" text-anchor=\"middle\" fill=\"#1d4ed8\">moving things</text>\n  <rect x=\"6\" y=\"58\" width=\"76\" height=\"44\" rx=\"8\" fill=\"#dbeafe\" stroke=\"#1d4ed8\" stroke-width=\"1.5\"/>\n  <text x=\"44\" y=\"76\" font-size=\"8.5\" text-anchor=\"middle\" fill=\"#0c2340\" font-weight=\"700\">gravitational</text>\n  <text x=\"44\" y=\"89\" font-size=\"7.5\" text-anchor=\"middle\" fill=\"#1d4ed8\">raised up high</text>\n  <rect x=\"88\" y=\"58\" width=\"76\" height=\"44\" rx=\"8\" fill=\"#dbeafe\" stroke=\"#1d4ed8\" stroke-width=\"1.5\"/>\n  <text x=\"126\" y=\"76\" font-size=\"9\" text-anchor=\"middle\" fill=\"#0c2340\" font-weight=\"700\">elastic</text>\n  <text x=\"126\" y=\"89\" font-size=\"7.5\" text-anchor=\"middle\" fill=\"#1d4ed8\">stretched/squashed</text>\n  <rect x=\"170\" y=\"58\" width=\"74\" height=\"44\" rx=\"8\" fill=\"#dbeafe\" stroke=\"#1d4ed8\" stroke-width=\"1.5\"/>\n  <text x=\"207\" y=\"76\" font-size=\"9\" text-anchor=\"middle\" fill=\"#0c2340\" font-weight=\"700\">nuclear</text>\n  <text x=\"207\" y=\"89\" font-size=\"7.5\" text-anchor=\"middle\" fill=\"#1d4ed8\">in atoms</text>\n  </g>\n  <text x=\"125\" y=\"125\" font-size=\"9\" text-anchor=\"middle\" fill=\"#0c2340\" font-weight=\"700\">6 energy stores</text>\n</svg>", "questions": [["What energy store does a moving car have?", "Kinetic energy."], ["What store does a stretched elastic band have?", "Elastic potential (strain) energy."], ["Name the energy store in food, fuels and batteries.", "Chemical energy."], ["A book on a high shelf has which energy store?", "Gravitational potential energy."]]}, {"ref": "28.3", "tag": "Energy", "title": "Energy is transferred, never created or lost", "keyidea": "Energy can move between stores but it cannot be created or destroyed. The total amount always stays the same. This is conservation of energy.", "facts": ["Energy <b>transfers</b> from one store to another.", "The total amount of energy always stays the same (conservation of energy).", "Example: a falling ball transfers gravitational potential &#8594; kinetic energy.", "Energy that seems 'lost' as heat is actually <b>dissipated</b> (spread out) to the surroundings, not destroyed."], "keywords": ["energy transfer", "conservation of energy", "dissipated"], "diagram": "<svg viewBox=\"0 0 240 120\" xmlns=\"http://www.w3.org/2000/svg\" font-family=\"Segoe UI, system-ui, sans-serif\">\n  <defs><marker id=\"etA\" markerWidth=\"8\" markerHeight=\"8\" refX=\"7\" refY=\"4\" orient=\"auto\"><path d=\"M0,0 L8,4 L0,8 Z\" fill=\"#1d4ed8\"/></marker></defs>\n  <rect x=\"14\" y=\"42\" width=\"70\" height=\"40\" rx=\"8\" fill=\"#0c2340\"/>\n  <text x=\"49\" y=\"60\" font-size=\"8.5\" text-anchor=\"middle\" fill=\"#fff\">store A</text>\n  <text x=\"49\" y=\"74\" font-size=\"7.5\" text-anchor=\"middle\" fill=\"#93c5fd\">e.g. chemical</text>\n  <rect x=\"156\" y=\"42\" width=\"70\" height=\"40\" rx=\"8\" fill=\"#1d4ed8\"/>\n  <text x=\"191\" y=\"60\" font-size=\"8.5\" text-anchor=\"middle\" fill=\"#fff\">store B</text>\n  <text x=\"191\" y=\"74\" font-size=\"7.5\" text-anchor=\"middle\" fill=\"#dbeafe\">e.g. kinetic</text>\n  <line x1=\"86\" y1=\"62\" x2=\"154\" y2=\"62\" stroke=\"#1d4ed8\" stroke-width=\"3\" marker-end=\"url(#etA)\"/>\n  <text x=\"120\" y=\"34\" font-size=\"8.5\" text-anchor=\"middle\" fill=\"#0c2340\" font-weight=\"700\">transferred by light, heating,</text>\n  <text x=\"120\" y=\"100\" font-size=\"8.5\" text-anchor=\"middle\" fill=\"#0c2340\" font-weight=\"700\">sound, electricity or forces</text>\n  <text x=\"120\" y=\"113\" font-size=\"8\" text-anchor=\"middle\" fill=\"#777\" font-style=\"italic\">total energy stays the same</text>\n</svg>", "questions": [["Can energy be created or destroyed?", "No – it can only be transferred (conservation of energy)."], ["A ball falls from a shelf. Describe the energy transfer.", "Gravitational potential energy &#8594; kinetic energy."], ["When energy seems 'lost' as heat, where has it gone?", "It is transferred (dissipated) to the surroundings, not destroyed."]]}, {"ref": "28.4", "tag": "Energy", "title": "Ways energy is transferred", "keyidea": "There are five main pathways that energy can be transferred along.", "facts": ["<b>By light</b> (light waves) – e.g. from the Sun or a lamp.", "<b>By heating</b> – e.g. a hob heating a pan.", "<b>By sound</b> (sound waves) – e.g. from a speaker.", "<b>By electricity</b> (an electric current) – e.g. through wires to a device.", "<b>By forces</b> (mechanically) – e.g. pushing or pulling an object."], "keywords": ["light", "heating", "sound", "electricity", "forces"], "diagram": "", "questions": [["Name four ways energy can be transferred.", "Any four of: light, heating, sound, electricity, forces."], ["How is energy transferred from the Sun to the Earth?", "By light."], ["How is energy transferred when you push a trolley?", "By a force (mechanically)."]]}, {"ref": "36.1", "tag": "Waves", "title": "Sound is caused by vibrations", "keyidea": "Sound is made when an object vibrates. The vibrations travel as a wave to our ears.", "facts": ["A vibrating object makes the particles around it vibrate, passing the sound on.", "Sound travels as a wave through a <b>medium</b> – a solid, liquid or gas.", "Sound <b>cannot travel through a vacuum</b> (empty space) because there are no particles.", "The vibrations reach our ear and we hear them."], "keywords": ["vibration", "sound wave", "medium", "vacuum"], "diagram": "<svg viewBox=\"0 0 230 130\" xmlns=\"http://www.w3.org/2000/svg\" font-family=\"Segoe UI, system-ui, sans-serif\">\n  <rect x=\"20\" y=\"45\" width=\"22\" height=\"40\" fill=\"#0c2340\"/>\n  <polygon points=\"42,50 70,30 70,100 42,80\" fill=\"#1d4ed8\"/>\n  <text x=\"46\" y=\"118\" font-size=\"9\" fill=\"#0c2340\" font-weight=\"700\">vibrating speaker</text>\n  <path d=\"M85 65 a14 22 0 0 1 0 0 M85 45 a26 38 0 0 1 0 40\" fill=\"none\" stroke=\"#1d4ed8\" stroke-width=\"2\"/>\n  <path d=\"M100 38 a40 56 0 0 1 0 54\" fill=\"none\" stroke=\"#1d4ed8\" stroke-width=\"2\"/>\n  <path d=\"M118 30 a55 70 0 0 1 0 70\" fill=\"none\" stroke=\"#1d4ed8\" stroke-width=\"2\"/>\n  <path d=\"M138 22 a72 86 0 0 1 0 86\" fill=\"none\" stroke=\"#93c5fd\" stroke-width=\"2\"/>\n  <text x=\"180\" y=\"68\" font-size=\"9\" text-anchor=\"middle\" fill=\"#0c2340\">sound</text>\n  <text x=\"180\" y=\"80\" font-size=\"9\" text-anchor=\"middle\" fill=\"#0c2340\">waves &#8594; ear</text>\n</svg>", "questions": [["What causes sound?", "Vibrating objects."], ["Why can't sound travel through space (a vacuum)?", "There are no particles to vibrate and carry the sound."], ["Through which states of matter can sound travel?", "Solids, liquids and gases."]]}, {"ref": "36.2", "tag": "Waves", "title": "Volume, pitch, frequency and amplitude", "keyidea": "The size and speed of the vibrations change how a sound seems to us.", "facts": ["<b>Amplitude</b> – the size (height) of the vibration. Bigger amplitude = louder sound.", "<b>Volume (loudness)</b> depends on amplitude.", "<b>Frequency</b> – the number of vibrations per second, measured in <b>hertz (Hz)</b>.", "<b>Pitch</b> – how high or low a sound is. Higher frequency = higher pitch."], "keywords": ["amplitude", "frequency", "hertz (Hz)", "volume", "pitch"], "diagram": "<svg viewBox=\"0 0 240 170\" xmlns=\"http://www.w3.org/2000/svg\" font-family=\"Segoe UI, system-ui, sans-serif\">\n  <line x1=\"10\" y1=\"45\" x2=\"230\" y2=\"45\" stroke=\"#cbd5e1\" stroke-width=\"1\"/>\n  <path d=\"M10 45 Q30 8 50 45 T90 45 T130 45 T170 45 T210 45\" fill=\"none\" stroke=\"#1d4ed8\" stroke-width=\"2.5\"/>\n  <text x=\"120\" y=\"20\" font-size=\"8.5\" text-anchor=\"middle\" fill=\"#0c2340\" font-weight=\"700\">large amplitude = LOUD</text>\n  <line x1=\"10\" y1=\"120\" x2=\"230\" y2=\"120\" stroke=\"#cbd5e1\" stroke-width=\"1\"/>\n  <path d=\"M10 120 Q20 100 30 120 T50 120 T70 120 T90 120 T110 120 T130 120 T150 120 T170 120 T190 120 T210 120 T230 120\" fill=\"none\" stroke=\"#1d4ed8\" stroke-width=\"2.5\"/>\n  <text x=\"120\" y=\"150\" font-size=\"8.5\" text-anchor=\"middle\" fill=\"#0c2340\" font-weight=\"700\">high frequency = HIGH PITCH</text>\n  <text x=\"120\" y=\"164\" font-size=\"8\" text-anchor=\"middle\" fill=\"#777\" font-style=\"italic\">frequency is measured in hertz (Hz)</text>\n</svg>", "questions": [["What is frequency measured in?", "Hertz (Hz)."], ["A sound wave has a large amplitude. Is it loud or quiet?", "Loud."], ["What does increasing the frequency do to the pitch?", "It makes the pitch higher."], ["Which property changes the loudness of a sound?", "The amplitude."]]}, {"ref": "38.1", "tag": "Waves", "title": "Reflection and ray diagrams", "keyidea": "Light reflects off surfaces following a rule: the angle of incidence equals the angle of reflection.", "facts": ["<b>Incident ray</b> – the ray travelling towards the surface.", "<b>Reflected ray</b> – the ray bouncing off the surface.", "<b>Normal</b> – an imaginary line at 90&#176; to the surface where the ray hits.", "<b>Angle of incidence</b> – between the incident ray and the normal.", "<b>Angle of reflection</b> – between the reflected ray and the normal.", "<b>Law of reflection:</b> angle of incidence = angle of reflection."], "keywords": ["incident ray", "reflected ray", "normal", "angle of incidence", "angle of reflection"], "diagram": "<svg viewBox=\"0 0 230 160\" xmlns=\"http://www.w3.org/2000/svg\" font-family=\"Segoe UI, system-ui, sans-serif\">\n  <rect x=\"20\" y=\"120\" width=\"190\" height=\"14\" fill=\"#94a3b8\"/>\n  <line x1=\"20\" y1=\"120\" x2=\"210\" y2=\"120\" stroke=\"#0c2340\" stroke-width=\"2\"/>\n  <line x1=\"115\" y1=\"30\" x2=\"115\" y2=\"120\" stroke=\"#0c2340\" stroke-width=\"1.5\" stroke-dasharray=\"5 4\"/>\n  <text x=\"120\" y=\"40\" font-size=\"9\" fill=\"#0c2340\">normal (90&#176;)</text>\n  <defs><marker id=\"rdA\" markerWidth=\"7\" markerHeight=\"7\" refX=\"6\" refY=\"3.5\" orient=\"auto\"><path d=\"M0,0 L7,3.5 L0,7 Z\" fill=\"#dc2626\"/></marker></defs>\n  <line x1=\"45\" y1=\"45\" x2=\"113\" y2=\"118\" stroke=\"#dc2626\" stroke-width=\"2.5\" marker-end=\"url(#rdA)\"/>\n  <line x1=\"117\" y1=\"118\" x2=\"185\" y2=\"45\" stroke=\"#1d4ed8\" stroke-width=\"2.5\" marker-end=\"url(#rdA)\"/>\n  <text x=\"55\" y=\"60\" font-size=\"8.5\" fill=\"#dc2626\" font-weight=\"700\">incident ray</text>\n  <text x=\"150\" y=\"60\" font-size=\"8.5\" fill=\"#1d4ed8\" font-weight=\"700\">reflected ray</text>\n  <text x=\"92\" y=\"108\" font-size=\"8\" fill=\"#dc2626\">i</text>\n  <text x=\"132\" y=\"108\" font-size=\"8\" fill=\"#1d4ed8\">r</text>\n  <text x=\"115\" y=\"152\" font-size=\"8.5\" text-anchor=\"middle\" fill=\"#0c2340\" font-weight=\"700\">angle of incidence (i) = angle of reflection (r)</text>\n</svg>", "questions": [["What is the normal in a ray diagram?", "A line drawn at 90&#176; to the surface at the point the ray hits."], ["The angle of incidence is 30&#176;. What is the angle of reflection?", "30&#176; (they are equal)."], ["Which angles are measured from the normal?", "The angle of incidence and the angle of reflection."], ["Name the ray travelling towards the mirror.", "The incident ray."]]}, {"ref": "39.1", "tag": "Forces", "title": "Forces are pushes or pulls", "keyidea": "A force is a push or a pull. Forces can change an object's speed, direction or shape.", "facts": ["A force can change the <b>speed</b> of an object (speed up or slow down).", "A force can change the <b>direction</b> an object is moving.", "A force can change the <b>shape</b> of an object (stretch, squash or bend).", "Forces are measured in <b>newtons (N)</b> using a newton meter."], "keywords": ["force", "push", "pull", "newton (N)"], "diagram": "<svg viewBox=\"0 0 240 130\" xmlns=\"http://www.w3.org/2000/svg\" font-family=\"Segoe UI, system-ui, sans-serif\">\n  <defs><marker id=\"fA\" markerWidth=\"8\" markerHeight=\"8\" refX=\"7\" refY=\"4\" orient=\"auto\"><path d=\"M0,0 L8,4 L0,8 Z\" fill=\"#0c2340\"/></marker></defs>\n  <rect x=\"95\" y=\"35\" width=\"50\" height=\"40\" rx=\"4\" fill=\"#dbeafe\" stroke=\"#0c2340\" stroke-width=\"2\"/>\n  <line x1=\"40\" y1=\"55\" x2=\"92\" y2=\"55\" stroke=\"#0c2340\" stroke-width=\"3\" marker-end=\"url(#fA)\"/>\n  <text x=\"55\" y=\"48\" font-size=\"9\" fill=\"#0c2340\" font-weight=\"700\">push</text>\n  <line x1=\"200\" y1=\"55\" x2=\"148\" y2=\"55\" stroke=\"#0c2340\" stroke-width=\"3\" marker-end=\"url(#fA)\"/>\n  <text x=\"170\" y=\"48\" font-size=\"9\" fill=\"#0c2340\" font-weight=\"700\">pull</text>\n  <text x=\"120\" y=\"100\" font-size=\"9\" text-anchor=\"middle\" fill=\"#0c2340\" font-weight=\"700\">a force can change speed,</text>\n  <text x=\"120\" y=\"114\" font-size=\"9\" text-anchor=\"middle\" fill=\"#0c2340\" font-weight=\"700\">direction or shape &#183; measured in N</text>\n</svg>", "questions": [["What is a force?", "A push or a pull."], ["Name three things a force can do to an object.", "Change its speed, change its direction, change its shape."], ["What unit are forces measured in?", "Newtons (N)."]]}, {"ref": "39.5", "tag": "Forces", "title": "The difference between mass and weight", "keyidea": "Mass and weight are not the same. Mass is the amount of matter; weight is the force of gravity.", "facts": ["<b>Mass</b> – the amount of matter (stuff) in an object, measured in <b>kilograms (kg)</b>. It stays the same everywhere.", "<b>Weight</b> – the force of gravity pulling on an object, measured in <b>newtons (N)</b>. It changes with gravity.", "On the Moon your mass is the same but your weight is less (weaker gravity).", "<b>weight = mass &#215; gravity</b>. On Earth gravity (g) is about 10 N/kg."], "keywords": ["mass", "weight", "gravity", "kilogram (kg)", "newton (N)"], "diagram": "<svg viewBox=\"0 0 240 140\" xmlns=\"http://www.w3.org/2000/svg\" font-family=\"Segoe UI, system-ui, sans-serif\">\n  <circle cx=\"60\" cy=\"55\" r=\"34\" fill=\"#dbeafe\" stroke=\"#1d4ed8\" stroke-width=\"2\"/>\n  <text x=\"60\" y=\"40\" font-size=\"9\" text-anchor=\"middle\" fill=\"#0c2340\" font-weight=\"700\">Earth</text>\n  <text x=\"60\" y=\"56\" font-size=\"8\" text-anchor=\"middle\" fill=\"#0c2340\">mass 2 kg</text>\n  <text x=\"60\" y=\"70\" font-size=\"8\" text-anchor=\"middle\" fill=\"#dc2626\">weight 20 N</text>\n  <circle cx=\"180\" cy=\"55\" r=\"34\" fill=\"#f1f5f9\" stroke=\"#64748b\" stroke-width=\"2\"/>\n  <text x=\"180\" y=\"40\" font-size=\"9\" text-anchor=\"middle\" fill=\"#0c2340\" font-weight=\"700\">Moon</text>\n  <text x=\"180\" y=\"56\" font-size=\"8\" text-anchor=\"middle\" fill=\"#0c2340\">mass 2 kg</text>\n  <text x=\"180\" y=\"70\" font-size=\"8\" text-anchor=\"middle\" fill=\"#dc2626\">weight ~3 N</text>\n  <text x=\"120\" y=\"118\" font-size=\"9\" text-anchor=\"middle\" fill=\"#0c2340\" font-weight=\"700\">mass stays the same;</text>\n  <text x=\"120\" y=\"132\" font-size=\"9\" text-anchor=\"middle\" fill=\"#0c2340\" font-weight=\"700\">weight changes with gravity</text>\n</svg>", "questions": [["What is mass and what units is it measured in?", "The amount of matter in an object, measured in kilograms (kg)."], ["What is weight and what units is it measured in?", "The force of gravity on an object, measured in newtons (N)."], ["Does your mass change on the Moon?", "No – mass stays the same; only weight changes."], ["A 2 kg object on Earth (g = 10 N/kg). What is its weight?", "20 N (weight = mass &#215; gravity = 2 &#215; 10)."]]}];
+let idx = 0;
+const card = document.getElementById('card');
+const specNav = document.getElementById('specNav');
+const btnReveal = document.getElementById('btnReveal');
+
+function buildNav(){
+  specNav.innerHTML = cards.map((c,i)=>`<button class="spec-dot" onclick="jump(${i})">${c.ref}</button>`).join('');
+}
+function render(){
+  const c = cards[idx];
+  const diagram = c.diagram ? `<div class="diagram">${c.diagram}</div>` : '';
+  const kws = c.keywords.map(k=>`<span class="chip">${k}</span>`).join('');
+  const facts = c.facts.map(f=>`<li>${f}</li>`).join('');
+  const qs = c.questions.map(q=>`<li class="qrow"><div class="q-text">${q[0]}</div><button class="ans" onclick="this.classList.toggle('show')"><span class="ans-label">Show answer</span><span class="ans-text">${q[1]}</span></button></li>`).join('');
+  card.innerHTML = `
+    <div class="q-header"><span class="spec-badge">${c.ref}</span><span class="q-title">${c.title}</span><span class="tag-badge">${c.tag}</span></div>
+    <div class="teach">
+      <div class="teach-main">
+        <div class="keyidea"><span class="ki-label">Key idea</span>${c.keyidea}</div>
+        <ul class="facts">${facts}</ul>
+      </div>
+      <div class="teach-side">
+        ${diagram}
+        <div class="keywords"><h4>Key words to know</h4><div class="kw-list">${kws}</div></div>
+      </div>
+    </div>
+    <div class="practice">
+      <div class="practice-head">Check yourself <span class="practice-hint">tap a box to reveal the answer</span></div>
+      <ol class="q-list">${qs}</ol>
+    </div>`;
+  document.getElementById('progressPill').textContent = `${idx+1} / ${cards.length}`;
+  document.getElementById('progressFill').style.width = ((idx+1)/cards.length*100)+'%';
+  document.getElementById('btnPrev').disabled = idx===0;
+  document.getElementById('btnNext').disabled = idx===cards.length-1;
+  btnReveal.textContent = 'Reveal answers \u2713';
+  [...specNav.children].forEach((d,i)=>{ d.classList.toggle('active', i===idx); });
+}
+function revealAll(){
+  const btns = card.querySelectorAll('.ans');
+  const anyHidden = [...btns].some(b=>!b.classList.contains('show'));
+  btns.forEach(b=> b.classList.toggle('show', anyHidden));
+  btnReveal.textContent = anyHidden ? 'Hide answers' : 'Reveal answers \u2713';
+}
+function navigate(d){
+  const ni = idx + d;
+  if(ni<0 || ni>=cards.length) return;
+  specNav.children[idx].classList.add('done');
+  idx = ni; render();
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+function jump(i){ idx=i; render(); window.scrollTo({top:0, behavior:'smooth'}); }
+buildNav(); render();
+</script>
+</body>
+</html>
