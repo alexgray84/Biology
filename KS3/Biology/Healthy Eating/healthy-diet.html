@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A Healthy Diet — Fuelling the World Cup | KS3 Biology</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    /* New World Cup 2026 palette — distinct from the site's dark + warm themes */
+    --ink:#0b1b3a;          /* midnight navy */
+    --ink-soft:#41507a;
+    --paper:#f3f5fb;        /* cool stadium white */
+    --card:#ffffff;
+    --line:#e2e7f3;
+    --pitch:#10b981;        /* pitch green */
+    --pitch-dk:#059669;
+    --magenta:#ec1c6e;      /* host-city magenta */
+    --teal:#06b6c4;         /* electric teal */
+    --amber:#f7a823;        /* sunny amber */
+    --grape:#7c3aed;        /* challenge violet */
+    --good:#16a34a; --med:#f59e0b; --bad:#ef4444;
+    --shadow:0 10px 30px rgba(11,27,58,.08);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    background:
+      radial-gradient(1200px 400px at 100% -50px, rgba(236,28,110,.07), transparent),
+      radial-gradient(1000px 400px at -10% 0, rgba(6,182,196,.08), transparent),
+      var(--paper);
+    color:var(--ink);
+    font-family:'DM Sans',system-ui,sans-serif;
+    font-size:16px; line-height:1.6;
+    padding-bottom:80px;
+  }
+  h1,h2,h3,.eyebrow{font-family:'Sora',sans-serif}
+
+  /* ── Header ── */
+  header.hero{
+    max-width:1080px; margin:0 auto; padding:40px 22px 18px;
+  }
+  .pill{
+    display:inline-flex; align-items:center; gap:8px;
+    background:var(--ink); color:#fff; font-family:'Sora';
+    font-size:12px; font-weight:700; letter-spacing:.12em; text-transform:uppercase;
+    padding:7px 14px; border-radius:100px; margin-bottom:18px;
+  }
+  .pill .dot{width:8px;height:8px;border-radius:50%;background:var(--pitch);box-shadow:0 0 0 3px rgba(16,185,129,.25)}
+  h1{
+    font-size:clamp(32px,5.5vw,52px); font-weight:800; line-height:1.05; letter-spacing:-.02em;
+  }
+  h1 .accent{color:var(--magenta)}
+  .lede{margin-top:14px; max-width:680px; color:var(--ink-soft); font-size:18px}
+  .lo{
+    margin-top:20px; background:var(--card); border:1px solid var(--line);
+    border-left:5px solid var(--teal); border-radius:14px; padding:16px 20px; box-shadow:var(--shadow);
+  }
+  .lo b{font-family:'Sora'; color:var(--teal)}
+
+  /* ── Horizontal nav ── */
+  nav.tabs{
+    position:sticky; top:0; z-index:50;
+    background:rgba(243,245,251,.85); backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);
+    padding:10px 0; margin-top:24px;
+  }
+  .tabs-inner{
+    max-width:1080px; margin:0 auto; padding:0 16px;
+    display:flex; gap:8px; overflow-x:auto; scrollbar-width:thin;
+  }
+  .tab{
+    flex:0 0 auto; display:flex; align-items:center; gap:9px;
+    background:var(--card); border:1.5px solid var(--line); color:var(--ink-soft);
+    font-family:'Sora'; font-weight:600; font-size:14px;
+    padding:9px 15px; border-radius:100px; cursor:pointer; white-space:nowrap;
+    transition:all .2s;
+  }
+  .tab:hover{border-color:var(--teal); color:var(--ink)}
+  .tab .num{
+    display:grid; place-items:center; width:22px;height:22px; border-radius:50%;
+    background:var(--paper); color:var(--ink-soft); font-size:12px; font-weight:700;
+  }
+  .tab.active{background:var(--ink); color:#fff; border-color:var(--ink)}
+  .tab.active .num{background:var(--magenta); color:#fff}
+
+  /* ── Sections ── */
+  main{max-width:1080px; margin:0 auto; padding:0 22px}
+  .section{display:none; animation:fade .4s ease}
+  .section.active{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  .section-head{display:flex; align-items:baseline; gap:14px; margin:34px 0 6px}
+  .section-head .n{font-family:'Sora'; font-weight:800; font-size:40px; color:var(--line)}
+  h2{font-size:clamp(24px,4vw,32px); font-weight:800; letter-spacing:-.01em}
+  .sub{color:var(--ink-soft); margin-bottom:18px}
+
+  .card{
+    background:var(--card); border:1px solid var(--line); border-radius:16px;
+    padding:22px 24px; box-shadow:var(--shadow); margin:16px 0;
+  }
+  .grid2{display:grid; grid-template-columns:1fr 1fr; gap:16px}
+  @media(max-width:760px){.grid2{grid-template-columns:1fr}}
+
+  .kicker{
+    font-family:'Sora'; font-size:12px; font-weight:700; letter-spacing:.1em; text-transform:uppercase;
+    color:var(--magenta); margin-bottom:8px; display:flex; align-items:center; gap:8px;
+  }
+  .coach{
+    display:flex; gap:14px; align-items:flex-start;
+    background:linear-gradient(180deg,rgba(6,182,196,.07),transparent);
+    border:1px solid var(--line); border-radius:14px; padding:16px 18px; margin:14px 0;
+  }
+  .coach .avatar{
+    flex:0 0 46px; height:46px; border-radius:50%; display:grid; place-items:center;
+    background:var(--teal); color:#fff; font-size:22px;
+  }
+  .coach b{font-family:'Sora'}
+
+  ul.clean{list-style:none; display:grid; gap:8px; margin:6px 0}
+  ul.clean li{position:relative; padding-left:26px}
+  ul.clean li::before{content:"⚽"; position:absolute; left:0; top:1px; font-size:14px}
+
+  /* Vocab */
+  .vocab{display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:12px}
+  .word{background:var(--card); border:1px solid var(--line); border-top:4px solid var(--amber); border-radius:12px; padding:14px 16px}
+  .word b{font-family:'Sora'; color:var(--ink)}
+  .word p{font-size:14px; color:var(--ink-soft); margin-top:4px}
+
+  /* Eatwell plate (CSS conic diagram) */
+  .plate-wrap{display:flex; flex-wrap:wrap; gap:26px; align-items:center; justify-content:center}
+  .plate{
+    width:260px; height:260px; border-radius:50%; flex:0 0 auto;
+    background:conic-gradient(
+      var(--pitch) 0 33%,
+      var(--amber) 33% 70%,
+      var(--magenta) 70% 85%,
+      var(--teal) 85% 96%,
+      #c084fc 96% 100%);
+    box-shadow:inset 0 0 0 10px #fff, var(--shadow);
+    position:relative;
+  }
+  .legend{display:grid; gap:8px; min-width:230px}
+  .legend .row{display:flex; align-items:center; gap:10px; font-size:14px}
+  .legend .sw{width:16px;height:16px;border-radius:4px;flex:0 0 auto}
+
+  /* Traffic-light label */
+  .label{
+    max-width:380px; margin:0 auto; border:2px solid var(--ink); border-radius:12px; overflow:hidden;
+    background:#fff;
+  }
+  .label .top{background:var(--ink); color:#fff; padding:8px 12px; font-family:'Sora'; font-weight:700; font-size:13px}
+  .label .lights{display:grid; grid-template-columns:repeat(5,1fr)}
+  .label .cell{padding:10px 6px; text-align:center; color:#fff; font-size:12px; line-height:1.3}
+  .label .cell b{display:block; font-family:'Sora'; font-size:15px}
+  .g{background:var(--good)} .a{background:var(--med)} .r{background:var(--bad)}
+
+  /* Tiered tasks */
+  .task{border:1px solid var(--line); border-radius:16px; overflow:hidden; margin:18px 0; box-shadow:var(--shadow)}
+  .task-head{background:var(--ink); color:#fff; padding:14px 20px; display:flex; align-items:center; gap:12px}
+  .task-head .ticon{font-size:20px}
+  .task-head h3{font-size:18px; font-weight:700}
+  .tier-tabs{display:flex; gap:6px; padding:12px 16px 0; flex-wrap:wrap; background:var(--card)}
+  .tier-btn{
+    font-family:'Sora'; font-weight:600; font-size:13px; cursor:pointer;
+    border:1.5px solid var(--line); background:#fff; color:var(--ink-soft);
+    padding:7px 14px; border-radius:100px; transition:all .2s;
+  }
+  .tier-btn[data-t="f"].active,.tier-btn[data-t="f"]:hover{background:var(--pitch); color:#fff; border-color:var(--pitch)}
+  .tier-btn[data-t="c"].active,.tier-btn[data-t="c"]:hover{background:var(--teal); color:#fff; border-color:var(--teal)}
+  .tier-btn[data-t="s"].active,.tier-btn[data-t="s"]:hover{background:var(--grape); color:#fff; border-color:var(--grape)}
+  .tier-body{display:none; padding:18px 20px; background:var(--card)}
+  .tier-body.active{display:block}
+  .badge{display:inline-block; font-family:'Sora'; font-size:11px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; padding:3px 10px; border-radius:100px; margin-bottom:10px}
+  .badge.f{background:rgba(16,185,129,.15); color:var(--pitch-dk)}
+  .badge.c{background:rgba(6,182,196,.15); color:#0e7490}
+  .badge.s{background:rgba(124,58,237,.15); color:var(--grape)}
+  .stems{background:var(--paper); border-radius:10px; padding:12px 16px; margin-top:12px; font-size:14px}
+  .stems b{font-family:'Sora'; display:block; margin-bottom:6px; color:var(--ink)}
+  .stems span{display:block; color:var(--ink-soft); padding:3px 0; font-style:italic}
+
+  /* Quiz */
+  .quiz .q{font-family:'Sora'; font-weight:700; margin-bottom:12px}
+  .opt{
+    display:block; width:100%; text-align:left; background:#fff; border:1.5px solid var(--line);
+    border-radius:12px; padding:12px 16px; margin:8px 0; cursor:pointer; font:inherit; color:var(--ink);
+    transition:all .15s;
+  }
+  .opt:hover{border-color:var(--teal)}
+  .opt.correct{background:rgba(22,163,74,.12); border-color:var(--good)}
+  .opt.wrong{background:rgba(239,68,68,.1); border-color:var(--bad)}
+  .fb{margin-top:8px; font-size:14px; padding:10px 14px; border-radius:10px; display:none}
+  .fb.show{display:block}
+  .fb.ok{background:rgba(22,163,74,.1); color:#15803d}
+  .fb.no{background:rgba(239,68,68,.1); color:#b91c1c}
+
+  /* True/false + reveal */
+  .reveal-btn{
+    font-family:'Sora'; font-weight:600; font-size:14px; cursor:pointer;
+    background:var(--amber); color:var(--ink); border:none; padding:9px 18px; border-radius:100px; margin-top:8px;
+  }
+  .reveal{display:none; margin-top:12px; background:var(--paper); border-left:4px solid var(--pitch); border-radius:8px; padding:12px 16px; font-size:14px}
+  .reveal.show{display:block}
+
+  .nav-foot{display:flex; justify-content:space-between; margin:36px 0 0; gap:12px}
+  .nav-foot button{
+    font-family:'Sora'; font-weight:600; cursor:pointer; border:1.5px solid var(--line);
+    background:#fff; color:var(--ink); padding:11px 20px; border-radius:100px; font-size:14px; transition:all .2s;
+  }
+  .nav-foot button:hover:not(:disabled){background:var(--ink); color:#fff; border-color:var(--ink)}
+  .nav-foot button:disabled{opacity:.35; cursor:not-allowed}
+
+  .progress{height:5px; background:var(--line); border-radius:100px; overflow:hidden; max-width:1080px; margin:0 auto}
+  .progress .bar{height:100%; width:0; background:linear-gradient(90deg,var(--teal),var(--magenta)); transition:width .4s}
+
+  table.tbl{width:100%; border-collapse:collapse; font-size:14px; margin-top:8px}
+  table.tbl th,table.tbl td{border:1px solid var(--line); padding:10px 12px; text-align:left}
+  table.tbl th{background:var(--paper); font-family:'Sora'}
+  .footer{max-width:1080px; margin:40px auto 0; padding:0 22px; color:var(--ink-soft); font-size:13px; text-align:center}
+  .footer a{color:var(--teal)}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <span class="pill"><span class="dot"></span>KS3 Biology · World Cup 2026 special</span>
+  <h1>A healthy diet:<br><span class="accent">fuelling a World Cup squad</span></h1>
+  <p class="lede">This summer the FIFA World Cup is being played across the USA, Canada and Mexico. Behind every player is a team of nutritionists getting their diet exactly right. Today you are the team nutritionist.</p>
+  <div class="lo">
+    <b>Learning objective</b><br>
+    I can explain what makes up a healthy, balanced diet and the potential impacts of eating unhealthily — and apply this to fuelling an elite athlete.
+  </div>
+</header>
+
+<div class="progress"><div class="bar" id="bar"></div></div>
+
+<nav class="tabs">
+  <div class="tabs-inner" id="tabbar">
+    <button class="tab active" data-i="0"><span class="num">1</span>Kick off</button>
+    <button class="tab" data-i="1"><span class="num">2</span>Key words</button>
+    <button class="tab" data-i="2"><span class="num">3</span>What is a healthy diet?</button>
+    <button class="tab" data-i="3"><span class="num">4</span>The winning plate</button>
+    <button class="tab" data-i="4"><span class="num">5</span>Reading the label</button>
+    <button class="tab" data-i="5"><span class="num">6</span>Poor fuel</button>
+    <button class="tab" data-i="6"><span class="num">7</span>Match plan</button>
+    <button class="tab" data-i="7"><span class="num">8</span>Full time</button>
+  </div>
+</nav>
+
+<main>
+
+<!-- ============ 1. KICK OFF ============ -->
+<section class="section active" data-i="0">
+  <div class="section-head"><span class="n">01</span><h2>Kick off</h2></div>
+  <p class="sub">Do now — answer these from memory before we start. No notes.</p>
+  <div class="card quiz">
+    <p class="q">1. A footballer needs energy to sprint, jump and last 90 minutes. Which type of nutrient is the body's main everyday energy source?</p>
+    <button class="opt" data-ok="0">Vitamins</button>
+    <button class="opt" data-ok="1">Carbohydrates (starchy foods)</button>
+    <button class="opt" data-ok="0">Minerals such as calcium</button>
+    <div class="fb"></div>
+  </div>
+  <div class="card quiz">
+    <p class="q">2. Which of these best describes a <em>balanced</em> diet?</p>
+    <button class="opt" data-ok="0">Eating only the foods you like best</button>
+    <button class="opt" data-ok="0">Eating as little as possible to stay light</button>
+    <button class="opt" data-ok="1">A variety of foods in the right proportions to stay healthy</button>
+    <div class="fb"></div>
+  </div>
+  <div class="card quiz">
+    <p class="q">3. True or false: you can always tell if a person is healthy just by looking at them.</p>
+    <button class="opt" data-ok="0">True</button>
+    <button class="opt" data-ok="1">False</button>
+    <div class="fb"></div>
+  </div>
+  <div class="coach">
+    <div class="avatar">🩺</div>
+    <div><b>Dr Elsie says:</b> Being healthy isn't about how someone looks. It's about how they care for their body and mind so they feel good, have energy, and can do what they enjoy — like playing 90 minutes.</div>
+  </div>
+</section>
+
+<!-- ============ 2. KEY WORDS ============ -->
+<section class="section" data-i="1">
+  <div class="section-head"><span class="n">02</span><h2>Key words</h2></div>
+  <p class="sub">The squad sheet. You'll use every one of these today.</p>
+  <div class="vocab">
+    <div class="word"><b>Nutrients</b><p>Substances in food the body needs for growth, energy and staying healthy.</p></div>
+    <div class="word"><b>Balanced diet</b><p>A variety of different foods in the right proportions to keep you healthy.</p></div>
+    <div class="word"><b>Calories (kcal)</b><p>A unit of energy we get from food and drink.</p></div>
+    <div class="word"><b>Vitamins</b><p>Nutrients that help you grow, heal and fight off illness.</p></div>
+    <div class="word"><b>Minerals</b><p>Elements such as calcium and iron, needed for many body functions.</p></div>
+    <div class="word"><b>Food group</b><p>Foods that share similar nutritional value, e.g. dairy or proteins.</p></div>
+  </div>
+  <div class="card" style="margin-top:18px">
+    <div class="kicker">⚡ Quick recall — match the player to the nutrient</div>
+    <p>Read each player's need below. Write down the nutrient that matches each one, then tap to check your answers.</p>
+    <ul class="clean">
+      <li>A striker building muscle to hold off defenders needs…</li>
+      <li>A player who tires late in the game needs steady energy from…</li>
+      <li>Strong bones to survive hard tackles come from…</li>
+      <li>A fast recovery and strong immune system on a long tour come from…</li>
+    </ul>
+    <button class="reveal-btn">Reveal answers</button>
+    <div class="reveal">
+      Striker building muscle → <b>protein</b>. Player tiring late → <b>carbohydrates</b>. Strong bones → <b>calcium (a mineral)</b>. Fast recovery and immune system → <b>vitamins</b>.
+    </div>
+  </div>
+</section>
+
+<!-- ============ 3. WHAT IS A HEALTHY DIET ============ -->
+<section class="section" data-i="2">
+  <div class="section-head"><span class="n">03</span><h2>What is a healthy diet?</h2></div>
+  <p class="sub">Different players, different plates — same goal.</p>
+  <div class="card">
+    <p>What we eat every day matters. Food is enjoyable, but it also gives us <b>energy</b>, helps us <b>grow strong</b> and keeps us <b>healthy</b>. Not all foods are the same — different foods contain different amounts of the nutrients our bodies need.</p>
+    <p style="margin-top:12px">A healthy diet is a <b>balanced diet</b>: a range of different foods so we get the variety of nutrients we need.</p>
+  </div>
+  <div class="grid2">
+    <div class="coach"><div class="avatar" style="background:var(--magenta)">⚽</div><div><b>Player A:</b> "I'm vegetarian, so I get my protein from beans, lentils and tofu instead of meat."</div></div>
+    <div class="coach"><div class="avatar" style="background:var(--amber);color:var(--ink)">⚽</div><div><b>Player B:</b> "I'm allergic to dairy, so I find other ways to get calcium for my bones."</div></div>
+  </div>
+  <div class="coach"><div class="avatar">🩺</div><div><b>Dr Elsie:</b> Everyone has different tastes and dietary needs. Players don't all eat the same meals — but they all make sure they get the right amount of nutrients, vitamins and minerals.</div></div>
+
+  <div class="task">
+    <div class="task-head"><span class="ticon">🎯</span><h3>Fix the misconception</h3></div>
+    <div class="tier-tabs">
+      <button class="tier-btn active" data-t="f">Foundation</button>
+      <button class="tier-btn" data-t="c">Core</button>
+      <button class="tier-btn" data-t="s">Challenge</button>
+    </div>
+    <div class="tier-body active" data-t="f">
+      <span class="badge f">Foundation</span>
+      <p>A pundit says: <em>"You can tell who's the fittest player just by looking at them."</em> Is this true or false? Write one sentence to explain.</p>
+      <div class="stems"><b>Sentence stems</b>
+        <span>This statement is false because being healthy is about…</span>
+        <span>You cannot always tell because…</span>
+      </div>
+    </div>
+    <div class="tier-body" data-t="c">
+      <span class="badge c">Core</span>
+      <p>Sofia's statement has <b>two</b> misconceptions: <em>"You can tell if someone is healthy by looking at them, and we all need to eat the same foods to have a balanced diet."</em> Re-write it so it is correct.</p>
+      <div class="stems"><b>Sentence stems</b>
+        <span>You cannot tell if someone is healthy by looking because…</span>
+        <span>We do not all need to eat the same foods because… however we do all need to…</span>
+      </div>
+    </div>
+    <div class="tier-body" data-t="s">
+      <span class="badge s">Challenge</span>
+      <p>Two players have very different diets — one vegetarian, one not — yet both are elite athletes. Explain how this is possible, using the words <b>balanced diet</b>, <b>nutrients</b> and <b>food groups</b>. Then explain why a "one diet fits all" plan would be poor science.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 4. THE WINNING PLATE ============ -->
+<section class="section" data-i="3">
+  <div class="section-head"><span class="n">04</span><h2>The winning plate</h2></div>
+  <p class="sub">Nutritionists picture a healthy diet as a plate. The bigger the slice, the more of that food group we need each day.</p>
+
+  <div class="card">
+    <div class="plate-wrap">
+      <div class="plate" aria-label="Eatwell plate diagram"></div>
+      <div class="legend">
+        <div class="row"><span class="sw" style="background:var(--pitch)"></span><b>Fruit &amp; vegetables</b> — vitamins, fibre, lower illness risk</div>
+        <div class="row"><span class="sw" style="background:var(--amber)"></span><b>Starchy foods</b> — rice, pasta, bread: main energy</div>
+        <div class="row"><span class="sw" style="background:var(--magenta)"></span><b>Proteins</b> — chicken, fish, eggs, beans: build &amp; repair</div>
+        <div class="row"><span class="sw" style="background:var(--teal)"></span><b>Dairy</b> — milk, yogurt, cheese: strong bones &amp; teeth</div>
+        <div class="row"><span class="sw" style="background:#c084fc"></span><b>Oils &amp; spreads</b> — small amounts only</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="kicker">📊 Read the data</div>
+    <p>Each food group does a different job in an athlete's body:</p>
+    <table class="tbl">
+      <tr><th>Food group</th><th>Examples</th><th>What it does for a player</th></tr>
+      <tr><td>Fruit &amp; veg</td><td>Bananas, berries, spinach, carrots</td><td>Vitamins &amp; fibre; lowers illness risk on a long tour</td></tr>
+      <tr><td>Starchy foods</td><td>Rice, pasta, wholemeal bread</td><td>Main energy supply for 90 minutes</td></tr>
+      <tr><td>Proteins</td><td>Chicken, fish, eggs, beans, pulses</td><td>Builds muscle and repairs the body after a match</td></tr>
+      <tr><td>Dairy</td><td>Milk, yogurt, cheese</td><td>Strengthens bones and teeth for hard tackles</td></tr>
+    </table>
+    <div class="coach" style="margin-top:14px"><div class="avatar" style="background:var(--amber);color:var(--ink)">⚽</div><div>Aim for <b>5 portions</b> of fruit and veg a day — a mix, because each one carries a different combination of fibre, vitamins and minerals.</div></div>
+  </div>
+
+  <div class="card quiz">
+    <p class="q">Which two food groups should make up the <em>largest</em> part of the plate?</p>
+    <button class="opt" data-ok="0">Dairy and oils</button>
+    <button class="opt" data-ok="1">Fruit &amp; vegetables and starchy foods</button>
+    <button class="opt" data-ok="0">Proteins and dairy</button>
+    <div class="fb"></div>
+  </div>
+
+  <div class="task">
+    <div class="task-head"><span class="ticon">🍽️</span><h3>Build the match-day plate</h3></div>
+    <div class="tier-tabs">
+      <button class="tier-btn active" data-t="f">Foundation</button>
+      <button class="tier-btn" data-t="c">Core</button>
+      <button class="tier-btn" data-t="s">Challenge</button>
+    </div>
+    <div class="tier-body active" data-t="f">
+      <span class="badge f">Foundation</span>
+      <p>Sort these foods into the right food group: <b>salmon, banana, brown rice, yogurt, broccoli</b>.</p>
+      <div class="stems"><b>Use the headings</b>
+        <span>Fruit &amp; veg: …</span><span>Starchy: …</span><span>Protein: …</span><span>Dairy: …</span>
+      </div>
+    </div>
+    <div class="tier-body" data-t="c">
+      <span class="badge c">Core</span>
+      <p>Design a balanced pre-match meal for a player. Include at least one food from four food groups, and say <b>why</b> each one helps performance.</p>
+      <div class="stems"><b>Sentence stems</b>
+        <span>I would include … because it provides …</span>
+        <span>The largest part of the plate is … because …</span>
+      </div>
+    </div>
+    <div class="tier-body" data-t="s">
+      <span class="badge s">Challenge</span>
+      <p>A defender and a goalkeeper run very different distances in a game. Should their plates look identical? Use ideas about <b>energy</b> and <b>portions</b> to justify your answer, and suggest one specific difference between the two plates.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 5. READING THE LABEL ============ -->
+<section class="section" data-i="4">
+  <div class="section-head"><span class="n">05</span><h2>Reading the label</h2></div>
+  <p class="sub">At a packed World Cup stadium, every packaged snack carries a front-of-pack label. Learn to read it like a nutritionist.</p>
+
+  <div class="card">
+    <div class="kicker">📊 Traffic-light label — stadium energy bar (per 100g)</div>
+    <div class="label">
+      <div class="top">Each serving (100g) contains — % of an adult's daily intake</div>
+      <div class="lights">
+        <div class="cell" style="background:#374151"><b>250</b>kcal<br>Energy<br>13%</div>
+        <div class="cell r"><b>34g</b>Sugars<br>HIGH 38%</div>
+        <div class="cell g"><b>3.0g</b>Fat<br>LOW 4%</div>
+        <div class="cell g"><b>1.3g</b>Sat fat<br>LOW 7%</div>
+        <div class="cell a"><b>0.8g</b>Salt<br>MED 15%</div>
+      </div>
+    </div>
+    <ul class="clean" style="margin-top:16px">
+      <li><b>Red</b> = high — eat smaller amounts.</li>
+      <li><b>Amber</b> = medium — okay most of the time.</li>
+      <li><b>Green</b> = low — the better choice.</li>
+    </ul>
+    <div class="coach"><div class="avatar">🩺</div><div><b>Dr Elsie:</b> These guides are based on <b>adult</b> needs, so a young player's targets are different. And remember — not all fats are bad. Healthy fats in salmon, avocado and nuts are essential for the brain and heart.</div></div>
+  </div>
+
+  <div class="card quiz">
+    <p class="q">Looking at the energy bar label above, which nutrient is at a level you'd want to limit?</p>
+    <button class="opt" data-ok="0">Fat (green/low)</button>
+    <button class="opt" data-ok="1">Sugars (red/high)</button>
+    <button class="opt" data-ok="0">Saturated fat (green/low)</button>
+    <div class="fb"></div>
+  </div>
+
+  <div class="task">
+    <div class="task-head"><span class="ticon">🔎</span><h3>Decode the snack</h3></div>
+    <div class="tier-tabs">
+      <button class="tier-btn active" data-t="f">Foundation</button>
+      <button class="tier-btn" data-t="c">Core</button>
+      <button class="tier-btn" data-t="s">Challenge</button>
+    </div>
+    <div class="tier-body active" data-t="f">
+      <span class="badge f">Foundation</span>
+      <p>Look at the label. Which colour means "high — eat less"? Which nutrient on this bar is at that level?</p>
+      <div class="stems"><b>Sentence stem</b><span>The colour … means high. On this bar, the … is high.</span></div>
+    </div>
+    <div class="tier-body" data-t="c">
+      <span class="badge c">Core</span>
+      <p>Two snacks are on sale in the stadium. Snack A is green for sugar but amber for salt; Snack B is red for sugar but green for everything else. Which is the better choice for a player at half-time, and why?</p>
+      <div class="stems"><b>Sentence stems</b><span>I would choose Snack … because …</span><span>This matters at half-time because …</span></div>
+    </div>
+    <div class="tier-body" data-t="s">
+      <span class="badge s">Challenge</span>
+      <p>The label says 38% of sugar from one 100g bar — but it's based on an adult. Explain why this figure could be <b>misleading</b> for a 13-year-old player, and explain why two foods with the same calories can still differ hugely in how healthy they are.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 6. POOR FUEL ============ -->
+<section class="section" data-i="5">
+  <div class="section-head"><span class="n">06</span><h2>The cost of poor fuel</h2></div>
+  <p class="sub">What happens when the diet is unbalanced over a long time?</p>
+
+  <div class="grid2">
+    <div class="card">
+      <div class="kicker">🦷 Too much sugar</div>
+      <p>The odd treat is fine. But too much sugar can mean low energy, excess body fat over time, and <b>tooth decay</b> — bacteria turn sugars into acids that damage tooth enamel, causing cavities and pain.</p>
+    </div>
+    <div class="card">
+      <div class="kicker">❤️ Too much unhealthy fat</div>
+      <p>Diets high in unhealthy fats can let cholesterol build up in arteries, raising the risk of <b>high blood pressure</b>, clogged arteries and heart attacks.</p>
+    </div>
+  </div>
+  <div class="card">
+    <div class="kicker">⚠️ Excess high-calorie food over time</div>
+    <p>Regularly eating more high-calorie, sugary food than the body uses can increase the chance of health issues such as heart disease, breathing problems, joint pain, and <b>type 2 diabetes</b> (the body struggles to break down sugar/glucose).</p>
+    <div class="coach"><div class="avatar">🩺</div><div><b>Dr Elsie:</b> Health conditions have many causes, but a balanced diet can help prevent some of them or reduce how serious they become. Understanding food helps us make better choices.</div></div>
+  </div>
+
+  <div class="card quiz">
+    <p class="q">Complete the sentence: Tooth decay can be prevented by regular ______ as well as a healthy diet.</p>
+    <button class="opt" data-ok="0">snacking</button>
+    <button class="opt" data-ok="1">brushing of teeth</button>
+    <button class="opt" data-ok="0">fizzy drinks</button>
+    <div class="fb"></div>
+  </div>
+
+  <div class="card">
+    <div class="kicker">✅ True or false?</div>
+    <p>Decide for each statement, then reveal.</p>
+    <ul class="clean">
+      <li>Eating a balanced diet can reduce the risk of heart disease.</li>
+      <li>Diets high in sugar and fat can increase the risk of high blood pressure.</li>
+      <li>Maintaining a balanced diet is not good for your health.</li>
+    </ul>
+    <button class="reveal-btn">Reveal answers</button>
+    <div class="reveal"><b>True, True, False.</b> A balanced diet lowers heart-disease risk; high sugar and fat raise blood-pressure risk; and a balanced diet is definitely good for health.</div>
+  </div>
+</section>
+
+<!-- ============ 7. MATCH PLAN (BIG TASK) ============ -->
+<section class="section" data-i="6">
+  <div class="section-head"><span class="n">07</span><h2>Match plan</h2></div>
+  <p class="sub">The big one. You are the squad nutritionist. Sofia is in charge of the team meal and her plan needs work.</p>
+
+  <div class="card">
+    <div class="kicker">📋 The brief</div>
+    <p>Sofia's match-day menu: <b>fried chicken with fried chips, then vanilla ice cream</b>. Your job: recommend changes so the squad gets a more balanced diet for performance and recovery.</p>
+  </div>
+
+  <div class="task">
+    <div class="task-head"><span class="ticon">🏆</span><h3>Fix Sofia's menu</h3></div>
+    <div class="tier-tabs">
+      <button class="tier-btn active" data-t="f">Foundation</button>
+      <button class="tier-btn" data-t="c">Core</button>
+      <button class="tier-btn" data-t="s">Challenge</button>
+    </div>
+    <div class="tier-body active" data-t="f">
+      <span class="badge f">Foundation</span>
+      <p>Suggest <b>two</b> changes to make the meal healthier. Use the plate diagram from section 4 to help.</p>
+      <div class="stems"><b>Sentence stems</b>
+        <span>One change is to add … because it gives …</span>
+        <span>Another change is to swap … for … because …</span>
+      </div>
+    </div>
+    <div class="tier-body" data-t="c">
+      <span class="badge c">Core</span>
+      <p>Recommend <b>three</b> changes or additions. For each, name the food group and explain how it helps the player perform or recover.</p>
+      <div class="stems"><b>Sentence stems</b>
+        <span>I would add … (food group: …) because it provides …</span>
+        <span>I would change the … because frying adds …</span>
+        <span>This helps performance / recovery by …</span>
+      </div>
+    </div>
+    <div class="tier-body" data-t="s">
+      <span class="badge s">Challenge</span>
+      <p>Redesign the whole match-day plan: a <b>pre-match</b> meal, a <b>half-time</b> choice, and a <b>recovery</b> meal. Justify each using nutrients, energy and recovery. Then evaluate one trade-off (e.g. taste and morale vs nutrition) a real nutritionist must balance with elite athletes.</p>
+      <div class="stems"><b>Push your thinking</b>
+        <span>Before the match I'd serve … to provide slow-release energy because …</span>
+        <span>The trade-off here is … which I would manage by …</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="kicker">💡 Model answer (reveal after you've tried)</div>
+    <button class="reveal-btn">Reveal coach's suggestions</button>
+    <div class="reveal">
+      Add green vegetables such as broccoli or spinach for extra minerals and fibre. Swap fried chips for boiled wholemeal rice — less oil, steady energy. Add fruit alongside (or instead of) the ice cream to boost daily fruit-and-veg portions and cut added sugar. The fried chicken could be grilled to reduce unhealthy fat while keeping the protein for muscle repair.
+    </div>
+  </div>
+</section>
+
+<!-- ============ 8. FULL TIME ============ -->
+<section class="section" data-i="7">
+  <div class="section-head"><span class="n">08</span><h2>Full time</h2></div>
+  <p class="sub">Exit ticket — show what you've learned.</p>
+
+  <div class="card">
+    <div class="kicker">🏁 The whistle</div>
+    <p>A healthy diet means eating a <b>balance</b> of food from different food groups, giving a range of nutrients, vitamins and minerals that our bodies need to function. Poor choices over time can lead to tooth decay and chronic diseases. Understanding which foods carry which nutrients helps us — and our players — make better choices.</p>
+  </div>
+
+  <div class="card quiz">
+    <p class="q">Exit Q1: Why does a footballer need carbohydrates such as pasta and rice?</p>
+    <button class="opt" data-ok="0">To build muscle and repair the body</button>
+    <button class="opt" data-ok="1">For their main supply of energy</button>
+    <button class="opt" data-ok="0">To strengthen bones and teeth</button>
+    <div class="fb"></div>
+  </div>
+  <div class="card quiz">
+    <p class="q">Exit Q2: Which long-term health risk is linked to eating too much sugar?</p>
+    <button class="opt" data-ok="1">Tooth decay</button>
+    <button class="opt" data-ok="0">Stronger bones</button>
+    <button class="opt" data-ok="0">Better eyesight</button>
+    <div class="fb"></div>
+  </div>
+
+  <div class="card">
+    <div class="kicker">✍️ 3-2-1 exit ticket</div>
+    <ul class="clean">
+      <li><b>3</b> food groups a player needs and why.</li>
+      <li><b>2</b> things a traffic-light label tells you.</li>
+      <li><b>1</b> change you'd make to your own diet this week.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <div class="kicker">🔗 Where to get support</div>
+    <p>NHS Live Well — advice about healthy living and exercise, and NHS Health A–Z for prevention and services. Search "NHS Live Well".</p>
+  </div>
+</section>
+
+<div class="nav-foot">
+  <button id="prev" disabled>← Previous</button>
+  <button id="next">Next →</button>
+</div>
+
+</main>
+
+<script>
+  const sections=[...document.querySelectorAll('.section')];
+  const tabs=[...document.querySelectorAll('.tab')];
+  const bar=document.getElementById('bar');
+  const prev=document.getElementById('prev');
+  const next=document.getElementById('next');
+  let cur=0;
+
+  function show(i){
+    cur=Math.max(0,Math.min(sections.length-1,i));
+    sections.forEach(s=>s.classList.toggle('active', +s.dataset.i===cur));
+    tabs.forEach(t=>t.classList.toggle('active', +t.dataset.i===cur));
+    bar.style.width=((cur+1)/sections.length*100)+'%';
+    prev.disabled=cur===0;
+    next.disabled=cur===sections.length-1;
+    const at=tabs[cur]; if(at) at.scrollIntoView({inline:'center',block:'nearest',behavior:'smooth'});
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+  tabs.forEach(t=>t.addEventListener('click',()=>show(+t.dataset.i)));
+  prev.addEventListener('click',()=>show(cur-1));
+  next.addEventListener('click',()=>show(cur+1));
+
+  // Tiered task switching (scoped per task)
+  document.querySelectorAll('.task').forEach(task=>{
+    const btns=task.querySelectorAll('.tier-btn');
+    const bodies=task.querySelectorAll('.tier-body');
+    btns.forEach(b=>b.addEventListener('click',()=>{
+      btns.forEach(x=>x.classList.remove('active'));
+      bodies.forEach(x=>x.classList.remove('active'));
+      b.classList.add('active');
+      task.querySelector('.tier-body[data-t="'+b.dataset.t+'"]').classList.add('active');
+    }));
+  });
+
+  // Quizzes
+  document.querySelectorAll('.quiz').forEach(q=>{
+    const opts=q.querySelectorAll('.opt');
+    const fb=q.querySelector('.fb');
+    opts.forEach(o=>o.addEventListener('click',()=>{
+      const ok=o.dataset.ok==='1';
+      opts.forEach(x=>x.disabled=true);
+      o.classList.add(ok?'correct':'wrong');
+      if(!ok){ const c=q.querySelector('.opt[data-ok="1"]'); if(c) c.classList.add('correct'); }
+      fb.textContent=ok?'✅ Back of the net — correct!':'❌ Not quite. The highlighted answer is correct.';
+      fb.className='fb show '+(ok?'ok':'no');
+    }));
+  });
+
+  // Reveals
+  document.querySelectorAll('.reveal-btn').forEach(b=>{
+    const original=b.textContent;
+    b.addEventListener('click',()=>{
+      const r=b.nextElementSibling;
+      const open=r.classList.toggle('show');
+      b.textContent=open?'Hide':original;
+    });
+  });
+
+  // keyboard arrows
+  document.addEventListener('keydown',e=>{
+    if(e.key==='ArrowRight') show(cur+1);
+    if(e.key==='ArrowLeft') show(cur-1);
+  });
+
+  show(0);
+</script>
+</body>
+</html>
