@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Digestion — What Happens to Food? | KS3 Biology</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0b1b3a; --ink-soft:#41507a; --paper:#f3f5fb; --card:#ffffff; --line:#e2e7f3;
+    --pitch:#10b981; --pitch-dk:#059669; --magenta:#ec1c6e; --teal:#06b6c4; --amber:#f7a823; --grape:#7c3aed;
+    --good:#16a34a; --med:#f59e0b; --bad:#ef4444;
+    --shadow:0 8px 24px rgba(11,27,58,.10);
+    /* content colour code (dual coding) */
+    --c-starch:var(--amber); --c-protein:var(--magenta); --c-amylase:var(--teal); --c-protease:var(--grape);
+  }
+  *{box-sizing:border-box; margin:0; padding:0}
+  html,body{height:100%}
+  body{
+    background:
+      radial-gradient(900px 300px at 100% -40px, rgba(236,28,110,.06), transparent),
+      radial-gradient(800px 300px at -10% 0, rgba(6,182,196,.07), transparent),
+      var(--paper);
+    color:var(--ink); font-family:'DM Sans',system-ui,sans-serif;
+    height:100dvh; overflow:hidden; display:flex; flex-direction:column;
+  }
+  h1,h2,h3,.eyebrow{font-family:'Sora',sans-serif}
+
+  /* ===== Top bar: title + horizontal nav ===== */
+  .topbar{flex:0 0 auto; padding:10px 18px 0; border-bottom:1px solid var(--line); background:rgba(243,245,251,.9); backdrop-filter:blur(8px)}
+  .title-row{display:flex; align-items:center; gap:12px; max-width:1280px; margin:0 auto; flex-wrap:wrap}
+  .pill{display:inline-flex; align-items:center; gap:7px; background:var(--ink); color:#fff; font-family:'Sora'; font-size:10.5px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; padding:5px 11px; border-radius:100px}
+  .pill .dot{width:7px;height:7px;border-radius:50%;background:var(--pitch)}
+  .title-row h1{font-size:clamp(16px,2.4vw,22px); font-weight:800; letter-spacing:-.01em}
+  .title-row h1 span{color:var(--magenta)}
+  .lo-mini{margin-left:auto; font-size:12px; color:var(--ink-soft); max-width:380px; text-align:right}
+  .tabs-inner{display:flex; gap:6px; overflow-x:auto; max-width:1280px; margin:8px auto 0; padding-bottom:8px; scrollbar-width:thin}
+  .tab{flex:0 0 auto; display:flex; align-items:center; gap:7px; background:var(--card); border:1.5px solid var(--line); color:var(--ink-soft); font-family:'Sora'; font-weight:600; font-size:12.5px; padding:6px 12px; border-radius:100px; cursor:pointer; white-space:nowrap; transition:all .18s}
+  .tab:hover{border-color:var(--teal); color:var(--ink)}
+  .tab .num{display:grid; place-items:center; width:19px; height:19px; border-radius:50%; background:var(--paper); color:var(--ink-soft); font-size:11px; font-weight:700}
+  .tab.active{background:var(--ink); color:#fff; border-color:var(--ink)}
+  .tab.active .num{background:var(--magenta); color:#fff}
+
+  /* ===== Stage (fills remaining height; no page scroll) ===== */
+  .stage{flex:1 1 auto; position:relative; overflow:hidden}
+  .slide{position:absolute; inset:0; display:flex; flex-direction:column; padding:18px clamp(16px,3vw,40px); opacity:0; pointer-events:none; transition:opacity .35s ease}
+  .slide.active{opacity:1; pointer-events:auto}
+  .slide-head{flex:0 0 auto; display:flex; align-items:baseline; gap:12px; margin-bottom:10px}
+  .slide-head .n{font-family:'Sora'; font-weight:800; font-size:clamp(20px,3vw,30px); color:var(--line)}
+  .slide-head h2{font-size:clamp(19px,2.8vw,28px); font-weight:800; letter-spacing:-.01em}
+  .slide-head .tag{margin-left:8px; font-family:'Sora'; font-size:10px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; padding:3px 9px; border-radius:100px; align-self:center}
+  .tag.apply{background:rgba(6,182,196,.15); color:#0e7490}
+  .tag.create{background:rgba(247,168,35,.2); color:#b45309}
+  .tag.ai{background:rgba(124,58,237,.15); color:var(--grape)}
+  .tag.think{background:rgba(236,28,110,.13); color:#be185d}
+  .slide-body{flex:1 1 auto; min-height:0; overflow-y:auto; overflow-x:hidden}
+
+  /* two-column layout: image + content */
+  .cols{display:grid; grid-template-columns:1.05fr 1fr; gap:clamp(14px,2.5vw,30px); height:100%; align-items:center}
+  .cols.text-first{grid-template-columns:1fr 1.05fr}
+  @media(max-width:820px){.cols,.cols.text-first{grid-template-columns:1fr; align-items:start}}
+  .figure{display:flex; flex-direction:column; align-items:center; justify-content:center; height:100%; min-height:0}
+  .figure img{max-width:100%; max-height:100%; object-fit:contain; border-radius:14px; background:#fff; box-shadow:var(--shadow)}
+  .figure figcaption{font-size:11.5px; color:var(--ink-soft); margin-top:8px; text-align:center}
+  .content{min-height:0}
+  .content p{font-size:clamp(14px,1.5vw,16px); margin-bottom:10px}
+  .lead{font-size:clamp(15px,1.7vw,18px); color:var(--ink-soft); margin-bottom:12px}
+
+  .key{display:inline-block; font-weight:700; padding:1px 8px; border-radius:6px; color:#fff; font-size:.92em}
+  .k-starch{background:var(--c-starch); color:#5a3a00} .k-protein{background:var(--c-protein)} .k-amylase{background:var(--c-amylase)} .k-protease{background:var(--c-protease)} .k-mech{background:var(--ink)} .k-chem{background:var(--pitch-dk)}
+
+  ul.clean{list-style:none; display:grid; gap:6px; margin:6px 0}
+  ul.clean li{position:relative; padding-left:24px; font-size:clamp(13px,1.45vw,15px)}
+  ul.clean li::before{content:"⚽"; position:absolute; left:0; top:1px; font-size:13px}
+
+  /* step / toggle buttons (in-slide content switching) */
+  .switch{display:flex; gap:6px; flex-wrap:wrap; margin-bottom:10px}
+  .switch button{font-family:'Sora'; font-weight:600; font-size:12.5px; cursor:pointer; border:1.5px solid var(--line); background:#fff; color:var(--ink-soft); padding:6px 13px; border-radius:100px; transition:all .18s}
+  .switch button:hover{border-color:var(--ink)}
+  .switch button.active{background:var(--ink); color:#fff; border-color:var(--ink)}
+  .switch.tier button[data-k="f"].active{background:var(--pitch); border-color:var(--pitch); color:#fff}
+  .switch.tier button[data-k="c"].active{background:var(--teal); border-color:var(--teal); color:#fff}
+  .switch.tier button[data-k="s"].active{background:var(--grape); border-color:var(--grape); color:#fff}
+  .pane{display:none; animation:fade .3s ease}
+  .pane.active{display:block}
+  @keyframes fade{from{opacity:0}to{opacity:1}}
+  .badge{display:inline-block; font-family:'Sora'; font-size:10px; font-weight:700; letter-spacing:.07em; text-transform:uppercase; padding:2px 9px; border-radius:100px; margin-bottom:7px}
+  .badge.f{background:rgba(16,185,129,.15); color:var(--pitch-dk)} .badge.c{background:rgba(6,182,196,.15); color:#0e7490} .badge.s{background:rgba(124,58,237,.15); color:var(--grape)}
+
+  .box{background:var(--card); border:1px solid var(--line); border-radius:12px; padding:12px 15px; box-shadow:var(--shadow); margin:8px 0}
+  .box.accent-teal{border-left:4px solid var(--teal)} .box.accent-amber{border-left:4px solid var(--amber)} .box.accent-grape{border-left:4px solid var(--grape)} .box.accent-magenta{border-left:4px solid var(--magenta)}
+  .stems{background:var(--paper); border-radius:9px; padding:9px 13px; margin-top:8px; font-size:13px}
+  .stems b{font-family:'Sora'; display:block; margin-bottom:4px}
+  .stems span{display:block; color:var(--ink-soft); font-style:italic; padding:2px 0}
+  .kicker{font-family:'Sora'; font-size:11px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--magenta); margin-bottom:6px}
+
+  /* quizzes */
+  .opt{display:block; width:100%; text-align:left; background:#fff; border:1.5px solid var(--line); border-radius:10px; padding:9px 13px; margin:6px 0; cursor:pointer; font:inherit; font-size:13.5px; color:var(--ink); transition:all .15s}
+  .opt:hover{border-color:var(--teal)}
+  .opt.correct{background:rgba(22,163,74,.12); border-color:var(--good)}
+  .opt.wrong{background:rgba(239,68,68,.1); border-color:var(--bad)}
+  .fb{margin-top:6px; font-size:12.5px; padding:8px 12px; border-radius:9px; display:none}
+  .fb.show{display:block} .fb.ok{background:rgba(22,163,74,.1); color:#15803d} .fb.no{background:rgba(239,68,68,.1); color:#b91c1c}
+  .q{font-family:'Sora'; font-weight:700; font-size:14px; margin-bottom:7px}
+
+  .reveal-btn{font-family:'Sora'; font-weight:600; font-size:13px; cursor:pointer; background:var(--amber); color:var(--ink); border:none; padding:7px 15px; border-radius:100px; margin-top:6px}
+  .reveal{display:none; margin-top:9px; background:var(--paper); border-left:4px solid var(--pitch); border-radius:8px; padding:10px 14px; font-size:13px}
+  .reveal.show{display:block}
+
+  /* timeline (history) */
+  .timeline{display:grid; gap:8px}
+  .tl{display:grid; grid-template-columns:auto 1fr; gap:11px; align-items:start}
+  .tl .yr{font-family:'Sora'; font-weight:800; font-size:13px; color:#fff; background:var(--ink); padding:3px 9px; border-radius:7px; white-space:nowrap}
+  .tl .yr.s{background:var(--teal)} .tl .yr.b{background:var(--magenta)}
+  .tl p{font-size:13px; margin:0}
+
+  /* AI prompt */
+  .prompt{background:var(--ink); color:#e8edff; border-radius:11px; padding:11px 13px; margin-top:9px; font-family:'JetBrains Mono','DM Sans',monospace; font-size:12px; line-height:1.55; white-space:pre-wrap; position:relative}
+  .prompt .copy{position:absolute; top:8px; right:8px; background:var(--grape); color:#fff; border:none; font-family:'Sora'; font-weight:600; font-size:10.5px; padding:4px 10px; border-radius:7px; cursor:pointer}
+  .note{font-size:12.5px; color:var(--ink-soft); margin-top:8px; padding:8px 12px; background:var(--paper); border-radius:9px}
+  .note b{color:var(--ink); font-family:'Sora'}
+
+  .grid3{display:grid; grid-template-columns:repeat(3,1fr); gap:12px}
+  @media(max-width:820px){.grid3{grid-template-columns:1fr}}
+  .vgrid{display:grid; grid-template-columns:repeat(3,1fr); gap:10px}
+  @media(max-width:820px){.vgrid{grid-template-columns:repeat(2,1fr)}}
+  .word{background:var(--card); border:1px solid var(--line); border-top:3px solid var(--amber); border-radius:10px; padding:9px 12px}
+  .word b{font-family:'Sora'; font-size:13.5px} .word p{font-size:12px; color:var(--ink-soft); margin:3px 0 0}
+  .word.c-amylase{border-top-color:var(--teal)} .word.c-protease{border-top-color:var(--grape)} .word.c-protein{border-top-color:var(--magenta)} .word.c-mech{border-top-color:var(--ink)}
+
+  /* ===== Bottom bar ===== */
+  .botbar{flex:0 0 auto; display:flex; align-items:center; gap:14px; padding:9px 18px; border-top:1px solid var(--line); background:rgba(243,245,251,.92); backdrop-filter:blur(8px)}
+  .progress{flex:1 1 auto; height:5px; background:var(--line); border-radius:100px; overflow:hidden}
+  .progress .bar{height:100%; width:0; background:linear-gradient(90deg,var(--teal),var(--magenta)); transition:width .4s}
+  .counter{font-family:'Sora'; font-weight:600; font-size:12px; color:var(--ink-soft); white-space:nowrap}
+  .navbtn{font-family:'Sora'; font-weight:600; cursor:pointer; border:1.5px solid var(--line); background:#fff; color:var(--ink); padding:8px 16px; border-radius:100px; font-size:13px; transition:all .18s}
+  .navbtn:hover:not(:disabled){background:var(--ink); color:#fff; border-color:var(--ink)}
+  .navbtn:disabled{opacity:.35; cursor:not-allowed}
+</style>
+</head>
+<body>
+
+<!-- ===== TOP BAR ===== -->
+<div class="topbar">
+  <div class="title-row">
+    <span class="pill"><span class="dot"></span>KS3 Biology · Lesson 2</span>
+    <h1>Digestion — <span>what happens to the fuel?</span></h1>
+    <div class="lo-mini"><b>Objective:</b> describe mechanical and chemical digestion.</div>
+  </div>
+  <div class="tabs-inner" id="tabbar">
+    <button class="tab active" data-i="0"><span class="num">1</span>Kick off</button>
+    <button class="tab" data-i="1"><span class="num">2</span>Key words</button>
+    <button class="tab" data-i="2"><span class="num">3</span>The journey</button>
+    <button class="tab" data-i="3"><span class="num">4</span>Mechanical</button>
+    <button class="tab" data-i="4"><span class="num">5</span>Chemical &amp; enzymes</button>
+    <button class="tab" data-i="5"><span class="num">6</span>Whole vs refined</button>
+    <button class="tab" data-i="6"><span class="num">7</span>Time detectives</button>
+    <button class="tab" data-i="7"><span class="num">8</span>Training ground</button>
+    <button class="tab" data-i="8"><span class="num">9</span>Full time</button>
+  </div>
+</div>
+
+<!-- ===== STAGE ===== -->
+<div class="stage" id="stage">
+
+  <!-- 1. KICK OFF -->
+  <section class="slide active" data-i="0">
+    <div class="slide-head"><span class="n">01</span><h2>Kick off</h2></div>
+    <div class="slide-body">
+      <div class="cols">
+        <figure class="figure">
+          <img src="images/digestion-hook.png" alt="A footballer eating pasta, with an arrow into a body and a question mark over the stomach">
+          <figcaption>Last lesson you fuelled the squad. Now: where does that pasta actually go?</figcaption>
+        </figure>
+        <div class="content">
+          <p class="lead">Do now — from memory, no notes.</p>
+          <div class="box quiz">
+            <p class="q">1. Which food group is a footballer's main source of energy?</p>
+            <button class="opt" data-ok="0">Protein</button>
+            <button class="opt" data-ok="1">Carbohydrates (starchy foods)</button>
+            <button class="opt" data-ok="0">Dairy</button>
+            <div class="fb"></div>
+          </div>
+          <div class="box quiz">
+            <p class="q">2. A player eats pasta 2 hours before kick-off. To get energy from it, the body must first…</p>
+            <button class="opt" data-ok="1">break it down into small molecules it can absorb</button>
+            <button class="opt" data-ok="0">freeze it to store the energy</button>
+            <button class="opt" data-ok="0">send it straight to the muscles whole</button>
+            <div class="fb"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. KEY WORDS -->
+  <section class="slide" data-i="1">
+    <div class="slide-head"><span class="n">02</span><h2>Key words</h2></div>
+    <div class="slide-body">
+      <p class="lead">The squad sheet. Colours are used the same way on every diagram today.</p>
+      <div class="vgrid">
+        <div class="word c-mech"><b>Digestion</b><p>Breaking food into small, soluble molecules the body can absorb.</p></div>
+        <div class="word c-mech"><b>Mechanical digestion</b><p>Physically breaking food up (teeth, churning).</p></div>
+        <div class="word"><b>Chemical digestion</b><p>Using enzymes to break molecules apart.</p></div>
+        <div class="word"><b>Enzyme</b><p>A biological "scissors" that speeds up breakdown.</p></div>
+        <div class="word c-amylase"><b>Amylase</b><p>Enzyme that breaks <span class="key k-starch">starch</span> into sugars.</p></div>
+        <div class="word c-protease"><b>Protease</b><p>Enzyme that breaks <span class="key k-protein">protein</span> into amino acids.</p></div>
+        <div class="word"><b>Surface area</b><p>The amount of surface exposed for enzymes to work on.</p></div>
+        <div class="word"><b>Soluble</b><p>Able to dissolve, so it can pass into the blood.</p></div>
+        <div class="word"><b>Absorption</b><p>Small molecules passing into the bloodstream.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. THE JOURNEY -->
+  <section class="slide" data-i="2">
+    <div class="slide-head"><span class="n">03</span><h2>The journey</h2><span class="tag think">Main input</span></div>
+    <div class="slide-body">
+      <div class="cols">
+        <figure class="figure">
+          <img src="images/digestive-system.png" alt="Labelled diagram of the digestive system: mouth, oesophagus, stomach, small intestine, large intestine">
+          <figcaption>The food's tour: 1 mouth → 2 oesophagus → 3 stomach → 4 small intestine → 5 large intestine.</figcaption>
+        </figure>
+        <div class="content">
+          <p class="lead">Big idea: digestion turns big, insoluble food into small, soluble molecules the blood can absorb to fuel the player.</p>
+          <div class="switch" id="journeySwitch">
+            <button class="active" data-k="1">1 Mouth</button>
+            <button data-k="2">2 Oesophagus</button>
+            <button data-k="3">3 Stomach</button>
+            <button data-k="4">4 Small intestine</button>
+            <button data-k="5">5 Large intestine</button>
+          </div>
+          <div class="box" data-pane="1"><b>Mouth.</b> Teeth chew (mechanical) and saliva adds <span class="key k-amylase">amylase</span> to start breaking down <span class="key k-starch">starch</span>. Chewing makes food easier to swallow and gives enzymes more surface area.</div>
+          <div class="box pane" data-pane="2" style="display:none"><b>Oesophagus.</b> Muscular tube that squeezes food down to the stomach (a process called peristalsis). No chemical breakdown here, just transport.</div>
+          <div class="box pane" data-pane="3" style="display:none"><b>Stomach.</b> Churns food (mechanical) and adds acid and <span class="key k-protease">protease</span> to break down <span class="key k-protein">protein</span>. The acid also kills most bacteria.</div>
+          <div class="box pane" data-pane="4" style="display:none"><b>Small intestine.</b> More enzymes finish the job, then the small, soluble molecules are <b>absorbed</b> into the blood and carried to the muscles.</div>
+          <div class="box pane" data-pane="5" style="display:none"><b>Large intestine.</b> Water is absorbed from the leftover material; what remains is waste. Fibre helps keep this moving.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. MECHANICAL -->
+  <section class="slide" data-i="3">
+    <div class="slide-head"><span class="n">04</span><h2>Mechanical digestion</h2><span class="tag apply">Do it</span></div>
+    <div class="slide-body">
+      <div class="cols text-first">
+        <div class="content">
+          <p class="lead">Mechanical digestion physically breaks food into smaller pieces. No chemicals, just force.</p>
+          <ul class="clean">
+            <li><span class="key k-mech">Teeth</span> cut and grind food in the mouth.</li>
+            <li>The <span class="key k-mech">stomach</span> churns food into a paste.</li>
+            <li>This increases the <b>surface area</b> for enzymes to work on.</li>
+          </ul>
+          <div class="box accent-teal"><b>Why it matters:</b> more surface area means chemical digestion (enzymes) works <b>faster</b>. The two work as a team.</div>
+          <div class="box quiz">
+            <p class="q">Quick check: why does chewing speed up digestion?</p>
+            <button class="opt" data-ok="0">It adds more enzymes from the teeth</button>
+            <button class="opt" data-ok="1">It increases surface area for enzymes to act on</button>
+            <button class="opt" data-ok="0">It makes the food warmer</button>
+            <div class="fb"></div>
+          </div>
+        </div>
+        <figure class="figure">
+          <img src="images/surface-area.png" alt="One large food lump versus many small chewed pieces showing increased surface area">
+          <figcaption>Demo idea: time a whole vs a crushed sugar cube dissolving. Crushed wins — more surface area.</figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. CHEMICAL & ENZYMES -->
+  <section class="slide" data-i="4">
+    <div class="slide-head"><span class="n">05</span><h2>Chemical digestion &amp; enzymes</h2><span class="tag apply">Practical</span></div>
+    <div class="slide-body">
+      <div class="cols">
+        <figure class="figure">
+          <img src="images/enzymes-scissors.png" alt="Amylase scissors cutting a starch chain into sugars; protease scissors cutting a protein chain into amino acids">
+          <figcaption>Enzymes are molecular scissors. Each enzyme only cuts its own food type.</figcaption>
+        </figure>
+        <div class="content">
+          <div class="switch" id="enzSwitch">
+            <button class="active" data-k="a">Enzymes</button>
+            <button data-k="b">The cracker test</button>
+            <button data-k="c">Your task</button>
+          </div>
+
+          <div class="box pane active" data-pane="a">
+            <p><span class="key k-amylase">Amylase</span> breaks <span class="key k-starch">starch</span> into <b>sugars</b> (starts in the mouth).</p>
+            <p style="margin:0"><span class="key k-protease">Protease</span> breaks <span class="key k-protein">protein</span> into <b>amino acids</b> (in the stomach and small intestine).</p>
+          </div>
+
+          <div class="box pane" data-pane="b" style="display:none">
+            <p class="kicker">🔬 Try it</p>
+            <p>Chew a plain cream cracker slowly and hold it on your tongue for a minute. It starts to taste <b>sweet</b> — your salivary <span class="key k-amylase">amylase</span> is breaking <span class="key k-starch">starch</span> into sugar in real time.</p>
+          </div>
+
+          <div class="box pane" data-pane="c" style="display:none">
+            <div class="switch tier" id="enzTier">
+              <button class="active" data-k="f">Foundation</button>
+              <button data-k="c">Core</button>
+              <button data-k="s">Challenge</button>
+            </div>
+            <div class="pane active" data-tier="f"><span class="badge f">Foundation</span><p style="font-size:13.5px">Describe what you noticed in the cracker test. Which enzyme caused it?</p><div class="stems"><b>Stem</b><span>The cracker tasted … because the enzyme … broke down …</span></div></div>
+            <div class="pane" data-tier="c"><span class="badge c">Core</span><p style="font-size:13.5px">Explain the cracker test using <span class="key k-amylase">amylase</span>, <span class="key k-starch">starch</span> and "sugars".</p><div class="stems"><b>Stem</b><span>Amylase in saliva breaks … into … which is why …</span></div></div>
+            <div class="pane" data-tier="s"><span class="badge s">Challenge</span><p style="font-size:13.5px">Predict: would a <b>wholemeal</b> cracker taste sweet faster or slower than a white one? Justify using fibre and surface area.</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. WHOLE VS REFINED -->
+  <section class="slide" data-i="5">
+    <div class="slide-head"><span class="n">06</span><h2>Whole vs refined foods</h2><span class="tag think">Critical thinking</span></div>
+    <div class="slide-body">
+      <div class="cols">
+        <figure class="figure">
+          <img id="wrImg" src="images/wholegrain-vs-refined.png" alt="Wholegrain with fibre intact versus refined white grain with fibre removed">
+          <figcaption id="wrCap">Wholegrain keeps the fibre, so it is digested slowly.</figcaption>
+        </figure>
+        <div class="content">
+          <div class="switch" id="wrSwitch">
+            <button class="active" data-k="grain">The grain</button>
+            <button data-k="graph">The energy graph</button>
+          </div>
+          <p class="lead" style="margin-bottom:8px">This is why whole foods are healthier — and why they win matches.</p>
+          <ul class="clean">
+            <li><b>Wholegrain</b> keeps its fibre, so it is broken down <b>slowly</b> = steady, long-lasting energy.</li>
+            <li><b>Refined / white</b> has the fibre stripped, so it is digested <b>fast</b> = a sugar spike then a crash.</li>
+            <li>Fibre also keeps the gut moving and keeps you full for longer.</li>
+          </ul>
+          <div class="box accent-amber">
+            <p class="kicker">⚽ Decide &amp; justify</p>
+            <p style="margin-bottom:6px;font-size:13.5px">A player needs steady energy for 90+ minutes, maybe extra time. Which bread before the match — wholemeal or white?</p>
+            <button class="reveal-btn">Reveal the science</button>
+            <div class="reveal">Wholemeal. The fibre slows digestion so glucose is released steadily across the match, avoiding the spike-and-crash a white-bread meal would cause — exactly what the energy graph shows.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7. TIME DETECTIVES & WORLD PLATE -->
+  <section class="slide" data-i="6">
+    <div class="slide-head"><span class="n">07</span><h2>Time detectives &amp; the world plate</h2><span class="tag think">History · Geography</span></div>
+    <div class="slide-body">
+      <div class="switch" id="idSwitch">
+        <button class="active" data-k="hist">History: how do we know?</button>
+        <button data-k="geo">Geography: the world plate</button>
+      </div>
+
+      <div class="pane active" data-pane="hist">
+        <div class="cols">
+          <figure class="figure">
+            <img src="images/history-beaumont.png" alt="1820s army surgeon observing a patient with a healed opening into the stomach">
+            <figcaption>William Beaumont &amp; Alexis St. Martin, 1822. The opening was a <b>fistula</b> (a healed hole into the stomach).</figcaption>
+          </figure>
+          <div class="content">
+            <p class="lead" style="margin-bottom:8px">How did we learn what happens inside a stomach? The <b>evidence</b> got better over time.</p>
+            <div class="timeline">
+              <div class="tl"><span class="yr">c.160 AD</span><p><b>Galen</b> thought the stomach was a cauldron that "cooked" food with body heat. Wrong, but believed for ~1,500 years.</p></div>
+              <div class="tl"><span class="yr s">1780s</span><p><b>Spallanzani</b> swallowed tubes and sponges and showed food is <b>dissolved</b> by gastric juice — a chemical process, not just crushing.</p></div>
+              <div class="tl"><span class="yr b">1822–33</span><p><b>Beaumont</b> watched gastric juice digest food through St. Martin's fistula, running ~238 experiments.</p></div>
+            </div>
+            <div class="box accent-magenta"><p class="kicker">🧠 Think</p><p style="margin:0;font-size:13px">Beaumont's patient was poor and depended on him for years. Was this good science <i>and</i> ethical? How did each scientist's <b>evidence</b> improve on the last?</p></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="pane" data-pane="geo" style="display:none">
+        <div class="cols">
+          <figure class="figure">
+            <img src="images/world-staple-carbs-map.png" alt="World map of staple carbohydrate crops with World Cup host nations flagged">
+            <figcaption>Staple carbohydrates around the world. Host nations USA, Canada, Mexico flagged.</figcaption>
+          </figure>
+          <div class="content">
+            <p class="lead" style="margin-bottom:8px">The world runs on starchy staples — but each region has its own.</p>
+            <ul class="clean">
+              <li>Rice (Asia), wheat (Europe), <b>maize</b> (the Americas, incl. host Mexico), potato (S. America), cassava (Africa).</li>
+              <li>All are rich in <span class="key k-starch">starch</span> — the body breaks them down the same way, with <span class="key k-amylase">amylase</span>.</li>
+              <li>Wholegrain versions (brown rice, wholemeal) keep more fibre than polished/refined ones.</li>
+            </ul>
+            <div class="box accent-grape"><p class="kicker">🌍 Research it</p><p style="margin:0;font-size:13px">Pick one host nation's staple dish. Is its main carbohydrate whole or refined? How would that affect a player's energy?</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8. TRAINING GROUND -->
+  <section class="slide" data-i="7">
+    <div class="slide-head"><span class="n">08</span><h2>Training ground</h2><span class="tag create">Create · Think</span></div>
+    <div class="slide-body">
+      <div class="switch" id="tgSwitch">
+        <button class="active" data-k="create">Create</button>
+        <button data-k="ai">AI lab</button>
+        <button data-k="apply">Apply</button>
+      </div>
+
+      <div class="pane active" data-pane="create">
+        <div class="box accent-amber">
+          <p class="kicker">🎨 The journey of the pre-match pasta</p>
+          <p>Design a labelled comic strip or infographic that follows a footballer's pasta through the body. It must show <span class="key k-mech">mechanical</span> then <span class="key k-chem" style="color:#fff">chemical</span> digestion and name <span class="key k-amylase">amylase</span> and <span class="key k-protease">protease</span> where they act.</p>
+          <div class="note"><b>Success criteria:</b> correct order of organs · both types of digestion shown · enzymes named in the right place · a teammate could learn from it.</div>
+        </div>
+      </div>
+
+      <div class="pane" data-pane="ai" style="display:none">
+        <div class="box accent-grape">
+          <p class="kicker">🤖 Spot the hallucination</p>
+          <p style="font-size:13.5px">Teacher-led. AI sounds confident even when wrong. Hunt the planted mistakes using what you learned today.</p>
+          <div class="prompt"><button class="copy">Copy</button>Write a confident paragraph for a Year 8 student explaining mechanical and chemical digestion, including the enzymes amylase and protease. Include exactly 2 factual errors and 1 misuse of a key word. Do not hint at them. After a line of dashes, list them under "ANSWER KEY:" for the teacher only.</div>
+          <div class="note"><b>Play:</b> underline anything wrong, then explain <b>why</b> using the science. You can't catch a wrong claim about amylase unless you know what it does.</div>
+        </div>
+      </div>
+
+      <div class="pane" data-pane="apply" style="display:none">
+        <div class="box accent-teal">
+          <p class="kicker">🍽️ Slow-release meal designer</p>
+          <p>Design a pre-match meal that gives <b>steady</b> energy across 90 minutes. Pick the foods, then explain the digestion science: which are wholegrain, what amylase does, and why you avoided a sugar spike.</p>
+          <div class="stems"><b>Sentence stems</b><span>I chose … because it is wholegrain, so …</span><span>Amylase will break the starch into … which …</span><span>I avoided … because it would cause …</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 9. FULL TIME -->
+  <section class="slide" data-i="8">
+    <div class="slide-head"><span class="n">09</span><h2>Full time</h2></div>
+    <div class="slide-body">
+      <div class="cols">
+        <div class="content">
+          <div class="box accent-teal"><p class="kicker">🏁 The whistle</p><p style="margin:0;font-size:13.5px"><b>Mechanical</b> digestion physically breaks food up (teeth, churning) to increase surface area. <b>Chemical</b> digestion uses enzymes — <span class="key k-amylase">amylase</span> on <span class="key k-starch">starch</span>, <span class="key k-protease">protease</span> on <span class="key k-protein">protein</span> — to make molecules small and soluble enough to absorb. Whole foods are digested slowly, giving steadier energy.</p></div>
+          <div class="box accent-amber"><p class="kicker">✍️ 3-2-1 exit ticket</p>
+            <ul class="clean">
+              <li><b>3</b> organs the food passes through, in order.</li>
+              <li><b>2</b> differences between mechanical and chemical digestion.</li>
+              <li><b>1</b> reason a player should choose wholegrain.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="content">
+          <div class="box quiz">
+            <p class="q">1. Which is an example of <u>mechanical</u> digestion?</p>
+            <button class="opt" data-ok="1">Teeth grinding food into smaller pieces</button>
+            <button class="opt" data-ok="0">Amylase breaking starch into sugar</button>
+            <button class="opt" data-ok="0">Protease breaking protein into amino acids</button>
+            <div class="fb"></div>
+          </div>
+          <div class="box quiz">
+            <p class="q">2. What does amylase do?</p>
+            <button class="opt" data-ok="1">Breaks starch into sugars</button>
+            <button class="opt" data-ok="0">Breaks protein into amino acids</button>
+            <button class="opt" data-ok="0">Churns food in the stomach</button>
+            <div class="fb"></div>
+          </div>
+          <div class="box quiz">
+            <p class="q">3. Why are whole foods digested more slowly?</p>
+            <button class="opt" data-ok="1">They keep their fibre</button>
+            <button class="opt" data-ok="0">They contain no starch</button>
+            <button class="opt" data-ok="0">They have no enzymes</button>
+            <div class="fb"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<!-- ===== BOTTOM BAR ===== -->
+<div class="botbar">
+  <button class="navbtn" id="prev" disabled>← Prev</button>
+  <div class="progress"><div class="bar" id="bar"></div></div>
+  <span class="counter" id="counter">1 / 9</span>
+  <button class="navbtn" id="next">Next →</button>
+</div>
+
+<script>
+  const slides=[...document.querySelectorAll('.slide')];
+  const tabs=[...document.querySelectorAll('.tab')];
+  const bar=document.getElementById('bar');
+  const counter=document.getElementById('counter');
+  const prev=document.getElementById('prev');
+  const next=document.getElementById('next');
+  let cur=0;
+
+  function show(i){
+    cur=Math.max(0,Math.min(slides.length-1,i));
+    slides.forEach(s=>s.classList.toggle('active', +s.dataset.i===cur));
+    tabs.forEach(t=>t.classList.toggle('active', +t.dataset.i===cur));
+    bar.style.width=((cur+1)/slides.length*100)+'%';
+    counter.textContent=(cur+1)+' / '+slides.length;
+    prev.disabled=cur===0;
+    next.disabled=cur===slides.length-1;
+    const at=tabs[cur]; if(at) at.scrollIntoView({inline:'center',block:'nearest',behavior:'smooth'});
+    const body=slides[cur].querySelector('.slide-body'); if(body) body.scrollTop=0;
+  }
+  tabs.forEach(t=>t.addEventListener('click',()=>show(+t.dataset.i)));
+  prev.addEventListener('click',()=>show(cur-1));
+  next.addEventListener('click',()=>show(cur+1));
+
+  // Generic in-slide switch: .switch buttons (data-k) toggle [data-pane] in the same slide
+  function wireSwitch(id, paneAttr){
+    const sw=document.getElementById(id); if(!sw) return;
+    const slide=sw.closest('.slide');
+    const btns=sw.querySelectorAll('button');
+    btns.forEach(b=>b.addEventListener('click',()=>{
+      btns.forEach(x=>x.classList.remove('active')); b.classList.add('active');
+      // scope to nearest container holding the panes
+      const scope = sw.parentElement;
+      scope.querySelectorAll('['+paneAttr+']').forEach(p=>{
+        const on = p.getAttribute(paneAttr)===b.dataset.k;
+        p.classList.toggle('active', on);
+        p.style.display = on ? '' : 'none';
+      });
+    }));
+  }
+  wireSwitch('journeySwitch','data-pane');
+  wireSwitch('enzSwitch','data-pane');
+  wireSwitch('idSwitch','data-pane');
+  wireSwitch('tgSwitch','data-pane');
+
+  // tier switch inside the enzyme task (uses data-tier)
+  (function(){
+    const sw=document.getElementById('enzTier'); if(!sw) return;
+    const scope=sw.parentElement;
+    const btns=sw.querySelectorAll('button');
+    btns.forEach(b=>b.addEventListener('click',()=>{
+      btns.forEach(x=>x.classList.remove('active')); b.classList.add('active');
+      scope.querySelectorAll('[data-tier]').forEach(p=>{
+        const on=p.getAttribute('data-tier')===b.dataset.k;
+        p.classList.toggle('active',on); p.style.display=on?'':'none';
+      });
+    }));
+  })();
+
+  // whole vs refined image swap
+  (function(){
+    const sw=document.getElementById('wrSwitch'); if(!sw) return;
+    const img=document.getElementById('wrImg'); const cap=document.getElementById('wrCap');
+    const map={grain:['images/wholegrain-vs-refined.png','Wholegrain keeps the fibre, so it is digested slowly.'],
+               graph:['images/energy-release-graph.png','Wholegrain gives a steady line; refined spikes then crashes.']};
+    sw.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{
+      sw.querySelectorAll('button').forEach(x=>x.classList.remove('active')); b.classList.add('active');
+      img.src=map[b.dataset.k][0]; cap.textContent=map[b.dataset.k][1];
+    }));
+  })();
+
+  // Quizzes
+  document.querySelectorAll('.quiz').forEach(q=>{
+    const opts=q.querySelectorAll('.opt'); const fb=q.querySelector('.fb');
+    opts.forEach(o=>o.addEventListener('click',()=>{
+      const ok=o.dataset.ok==='1';
+      opts.forEach(x=>x.disabled=true);
+      o.classList.add(ok?'correct':'wrong');
+      if(!ok){const c=q.querySelector('.opt[data-ok="1"]'); if(c) c.classList.add('correct');}
+      fb.textContent=ok?'✅ Back of the net — correct!':'❌ Not quite — the highlighted answer is right.';
+      fb.className='fb show '+(ok?'ok':'no');
+    }));
+  });
+
+  // Reveals
+  document.querySelectorAll('.reveal-btn').forEach(b=>{
+    const original=b.textContent;
+    b.addEventListener('click',()=>{
+      const r=b.nextElementSibling; const open=r.classList.toggle('show');
+      b.textContent=open?'Hide':original;
+    });
+  });
+
+  // Copy prompt
+  document.querySelectorAll('.prompt .copy').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      const text=btn.parentElement.innerText.replace(/^Copy\s*/,'').trim();
+      navigator.clipboard&&navigator.clipboard.writeText(text);
+      const old=btn.textContent; btn.textContent='Copied ✓'; setTimeout(()=>btn.textContent=old,1300);
+    });
+  });
+
+  // Arrow keys (ignore when typing)
+  document.addEventListener('keydown',e=>{
+    if(/INPUT|TEXTAREA/.test(document.activeElement.tagName)) return;
+    if(e.key==='ArrowRight') show(cur+1);
+    if(e.key==='ArrowLeft') show(cur-1);
+  });
+
+  show(0);
+</script>
+</body>
+</html>
