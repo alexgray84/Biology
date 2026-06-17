@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Plant Nutrition – Lesson Activities</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  background: #eef7f0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── Header ──────────────────────────────────────────── */
+.header {
+  background: #1b4332;
+  color: white;
+  padding: 14px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.header-left h1 { font-size: 1.05rem; font-weight: 700; letter-spacing: 0.01em; }
+.header-left .sub { font-size: 0.78rem; opacity: 0.68; margin-top: 2px; }
+.progress-pill {
+  background: rgba(255,255,255,0.15);
+  border: 1px solid rgba(255,255,255,0.25);
+  padding: 5px 14px;
+  border-radius: 20px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.progress-track { height: 4px; background: #c8ebd3; }
+.progress-fill { height: 100%; background: #52b788; transition: width 0.5s ease; }
+
+/* ── Main ────────────────────────────────────────────── */
+.main {
+  flex: 1;
+  padding: 20px 16px 4px;
+  max-width: 880px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* ── Card ─────────────────────────────────────────────── */
+.card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+  overflow: hidden;
+  margin-bottom: 12px;
+}
+.card-header {
+  background: #f0fdf4;
+  border-bottom: 1px solid #d1fae5;
+  padding: 12px 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.card-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #1b4332;
+  flex: 1;
+  min-width: 160px;
+}
+.badge {
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 20px;
+  white-space: nowrap;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+.badge-activity { background: #fef3c7; color: #92400e; }
+.badge-exam     { background: #dbeafe; color: #1e3a8a; }
+.badge-spec     { background: #d1fae5; color: #065f46; text-transform: none; font-size: 0.75rem; }
+.badge-time     { background: #f3f4f6; color: #374151; text-transform: none; font-size: 0.75rem; }
+.badge-marks    { background: #1b4332; color: white; margin-left: auto; }
+
+.card-body { padding: 18px 20px; }
+
+/* ── Instructions ─────────────────────────────────────── */
+.instructions {
+  background: #f0fdf4;
+  border-left: 3px solid #52b788;
+  padding: 10px 14px;
+  border-radius: 0 6px 6px 0;
+  font-size: 0.88rem;
+  color: #1b4332;
+  margin-bottom: 16px;
+  line-height: 1.55;
+}
+
+/* ── Equation list ────────────────────────────────────── */
+.eq-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 4px; }
+.eq-item {
+  border: 1.5px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 10px 14px;
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+.eq-item.correct { border-color: #22c55e; background: #f0fdf4; }
+.eq-item.wrong   { border-color: #ef4444; background: #fef2f2; }
+.eq-num { font-weight: 700; color: #9ca3af; min-width: 22px; font-size: 0.9rem; padding-top: 1px; }
+.eq-body { flex: 1; }
+.eq-text { font-size: 0.9rem; line-height: 1.5; color: #1f2937; font-family: 'Courier New', monospace; }
+.eq-kind {
+  font-size: 0.7rem; font-weight: 700; padding: 2px 7px; border-radius: 10px;
+  background: #f3f4f6; color: #6b7280; align-self: flex-start; white-space: nowrap;
+}
+.eq-verdict { font-size: 1.1rem; font-weight: 700; padding-top: 1px; }
+.eq-verdict.ok  { color: #16a34a; }
+.eq-verdict.bad { color: #dc2626; }
+.eq-error { font-size: 0.83rem; color: #b91c1c; margin-top: 5px; line-height: 1.45; }
+.eq-fix   { font-size: 0.83rem; color: #15803d; margin-top: 4px; line-height: 1.45; font-family: 'Courier New', monospace; }
+
+/* ── Data table ───────────────────────────────────────── */
+.table-wrap { overflow-x: auto; margin-bottom: 14px; }
+.data-table { width: 100%; border-collapse: collapse; font-size: 0.86rem; }
+.data-table th {
+  background: #1b4332; color: white;
+  padding: 8px 12px; text-align: left; font-weight: 600;
+}
+.data-table td {
+  padding: 7px 12px; border-bottom: 1px solid #e5e7eb; color: #374151;
+}
+.data-table tr:nth-child(even) td { background: #f9fafb; }
+
+/* ── Task steps ───────────────────────────────────────── */
+.task-steps {
+  list-style: none; counter-reset: step;
+  display: flex; flex-direction: column; gap: 8px;
+  margin-bottom: 4px;
+}
+.task-steps li {
+  counter-increment: step;
+  display: flex; gap: 10px; align-items: flex-start;
+  font-size: 0.88rem; color: #374151; line-height: 1.55;
+}
+.task-steps li::before {
+  content: counter(step);
+  background: #52b788; color: white;
+  font-size: 0.74rem; font-weight: 700;
+  min-width: 20px; height: 20px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; margin-top: 2px;
+}
+
+/* ── Prediction grid ──────────────────────────────────── */
+.pred-table { width: 100%; border-collapse: collapse; font-size: 0.83rem; }
+.pred-table th {
+  background: #1b4332; color: white;
+  padding: 8px 10px; text-align: left; font-weight: 600; font-size: 0.8rem;
+}
+.pred-table td {
+  padding: 8px 10px; border: 1px solid #e5e7eb; vertical-align: top; line-height: 1.45;
+}
+.pred-table tr:nth-child(even) td { background: #f9fafb; }
+.pred-table td.n { text-align: center; font-weight: 700; color: #9ca3af; width: 28px; }
+.pred-table td.expt { min-width: 150px; font-size: 0.82rem; }
+.pred-table td.blank { color: #d1d5db; font-style: italic; font-size: 0.8rem; min-width: 110px; }
+.pred-table td.answer { color: #065f46; font-size: 0.82rem; min-width: 110px; }
+
+/* ── Answer blocks ────────────────────────────────────── */
+.answer-section { display: flex; flex-direction: column; gap: 12px; }
+.answer-block { border: 1px solid #d1fae5; border-radius: 8px; overflow: hidden; }
+.answer-block-hdr {
+  background: #f0fdf4; border-bottom: 1px solid #d1fae5;
+  padding: 7px 14px; font-size: 0.82rem; font-weight: 700; color: #065f46;
+}
+.answer-block-body {
+  padding: 10px 14px; font-size: 0.87rem; color: #374151; line-height: 1.6;
+}
+
+/* ── Exam questions ───────────────────────────────────── */
+.exam-qs { display: flex; flex-direction: column; gap: 18px; }
+.exam-q { }
+.exam-q-num {
+  font-size: 0.95rem; font-weight: 700; color: #1b4332;
+  border-bottom: 1px solid #d1fae5; padding-bottom: 5px; margin-bottom: 10px;
+}
+.exam-context {
+  font-size: 0.87rem; color: #374151; line-height: 1.55;
+  padding: 8px 12px; background: #f9fafb;
+  border-left: 3px solid #d1fae5; border-radius: 0 6px 6px 0;
+  margin-bottom: 10px;
+}
+.exam-parts { display: flex; flex-direction: column; gap: 10px; }
+.exam-part { display: flex; gap: 10px; align-items: flex-start; }
+.exam-part-ref { font-weight: 700; color: #374151; min-width: 28px; font-size: 0.9rem; padding-top: 2px; }
+.exam-part-body { flex: 1; }
+.exam-stem { font-size: 0.9rem; color: #1a1a2e; line-height: 1.55; }
+.exam-marks { font-size: 0.8rem; color: #6b7280; font-weight: 600; margin-left: 4px; }
+.write-line { border-bottom: 1px solid #e5e7eb; height: 22px; margin-top: 5px; }
+
+/* ── Mark scheme ──────────────────────────────────────── */
+.ms-section { display: flex; flex-direction: column; gap: 14px; }
+.ms-q { }
+.ms-q-hdr {
+  background: #f0fdf4; border-radius: 6px;
+  padding: 6px 12px; font-size: 0.85rem; font-weight: 700; color: #065f46;
+  margin-bottom: 8px;
+}
+.ms-part { display: flex; gap: 10px; margin-bottom: 8px; padding-left: 8px; }
+.ms-ref { font-weight: 700; color: #374151; min-width: 28px; font-size: 0.85rem; padding-top: 1px; }
+.ms-body { flex: 1; }
+.ms-pt {
+  display: flex; gap: 7px; align-items: flex-start;
+  font-size: 0.86rem; color: #1a1a2e; line-height: 1.5; margin-bottom: 3px;
+}
+.ms-pt-tick { color: #16a34a; font-weight: 700; flex-shrink: 0; }
+.ms-note { font-size: 0.8rem; color: #6b7280; font-style: italic; margin-top: 3px; line-height: 1.4; }
+
+/* ── Hint & Nav ───────────────────────────────────────── */
+.hint-wrap { padding: 4px 16px 0; max-width: 880px; margin: 0 auto; width: 100%; }
+.hint-text {
+  text-align: center; font-size: 0.82rem; color: #6b7280;
+  font-style: italic; padding: 6px 0;
+}
+.nav-bar {
+  background: white; border-top: 1px solid #e5e7eb;
+  padding: 11px 20px;
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+}
+.nav-dots { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; justify-content: center; }
+.nav-dot {
+  width: 11px; height: 11px; border-radius: 50%;
+  background: #d1fae5; border: none; cursor: pointer;
+  transition: background 0.2s; padding: 0;
+}
+.nav-dot.active { background: #1b4332; }
+.nav-dot.done   { background: #52b788; }
+.btn {
+  padding: 9px 18px; border-radius: 8px;
+  font-size: 0.88rem; font-weight: 600; border: none; cursor: pointer;
+  transition: background 0.15s, opacity 0.15s;
+}
+.btn-prev   { background: #f3f4f6; color: #374151; }
+.btn-prev:hover:not(:disabled)   { background: #e5e7eb; }
+.btn-reveal { background: #1b4332; color: white; }
+.btn-reveal:hover { background: #2d6a4f; }
+.btn-next   { background: #52b788; color: white; }
+.btn-next:hover:not(:disabled)   { background: #40916c; }
+.btn:disabled { opacity: 0.35; cursor: default; }
+
+/* ── Complete banner ──────────────────────────────────── */
+.complete-banner {
+  background: #1b4332; color: white;
+  text-align: center; padding: 24px 20px;
+  border-radius: 12px; margin: 0 16px 20px;
+  max-width: 848px; margin-left: auto; margin-right: auto;
+}
+.complete-banner h2 { font-size: 1.25rem; margin-bottom: 8px; }
+.complete-banner p  { opacity: 0.8; font-size: 0.9rem; }
+
+/* ── Mobile ───────────────────────────────────────────── */
+@media (max-width: 640px) {
+  .header { padding: 10px 14px; }
+  .main { padding: 12px 10px 4px; }
+  .card-body { padding: 14px; }
+  .card-header { padding: 10px 14px; }
+  .nav-bar { flex-wrap: wrap; padding: 10px 12px; gap: 8px; }
+  .btn { padding: 8px 13px; font-size: 0.83rem; }
+  .data-table th, .data-table td { padding: 6px 8px; font-size: 0.8rem; }
+  .pred-table th, .pred-table td { padding: 6px 8px; font-size: 0.78rem; }
+  .pred-table td.expt { min-width: 110px; }
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-left">
+    <h1>🌿 Plant Nutrition</h1>
+    <div class="sub">Lesson activities &nbsp;·&nbsp; Specs 2.18–2.23</div>
+  </div>
+  <div class="progress-pill" id="progressPill">Activity 1 of 3</div>
+</div>
+<div class="progress-track"><div class="progress-fill" id="progFill"></div></div>
+
+<div class="main" id="mainArea"></div>
+
+<div class="hint-wrap">
+  <p class="hint-text" id="hintText">Work through the activity on paper, then reveal the model answers.</p>
+</div>
+
+<div class="nav-bar">
+  <button class="btn btn-prev"    id="btnPrev"   onclick="navigate(-1)" disabled>&#8592; Back</button>
+  <div class="nav-dots" id="navDots"></div>
+  <button class="btn btn-reveal"  id="btnReveal" onclick="toggleReveal()">Reveal Answers ✓</button>
+  <button class="btn btn-next"    id="btnNext"   onclick="navigate(1)"  disabled>Next &#8594;</button>
+</div>
+
+<div class="complete-banner" id="completeBanner" style="display:none">
+  <h2>🎉 Lesson complete!</h2>
+  <p>3 activities + 25 marks of exam practice. Use the dots above to revisit any section.</p>
+</div>
+
+<script>
+// ─────────────────────────────────────────────────────────────
+// Card data
+// ─────────────────────────────────────────────────────────────
+const cards = [
+
+  // ── Activity 1: Equation Error Clinic ──────────────────────
+  {
+    id: "act1", type: "activity",
+    title: "Equation Error Clinic",
+    spec: "2.18–2.19", duration: "10",
+    instructions: "Six photosynthesis equations are shown below — some are correct, some contain deliberate errors. For each equation: decide whether it is correct or incorrect; if incorrect, identify the error and write the corrected version.",
+    equations: [
+      {
+        n: 1, kind: "Word",
+        text: "carbon dioxide + water → glucose + oxygen",
+        correct: false,
+        error: "Light energy is not shown as a condition above or below the arrow.",
+        fix: "carbon dioxide + water → <small style='vertical-align:super;font-size:0.7em'>[light energy]</small> glucose + oxygen"
+      },
+      {
+        n: 2, kind: "Word",
+        text: "carbon dioxide + water → [light energy] glucose + oxygen",
+        correct: true, error: null, fix: null
+      },
+      {
+        n: 3, kind: "Word",
+        text: "glucose + oxygen → [light energy] carbon dioxide + water",
+        correct: false,
+        error: "Reactants and products are reversed — this is the word equation for aerobic respiration, not photosynthesis. Light energy is also incorrectly placed as a condition.",
+        fix: "carbon dioxide + water → [light energy] glucose + oxygen"
+      },
+      {
+        n: 4, kind: "Symbol",
+        text: "6CO₂ + 6H₂O → C₆H₁₂O₆ + 6O₂",
+        correct: true, error: null, fix: null
+      },
+      {
+        n: 5, kind: "Symbol",
+        text: "6CO₂ + 6H₂O → 6C₆H₁₂O₆ + 6O₂",
+        correct: false,
+        error: "Glucose (C₆H₁₂O₆) should have a coefficient of 1, not 6. As written, the right-hand side contains 36 carbon atoms but the left-hand side has only 6.",
+        fix: "6CO₂ + 6H₂O → C₆H₁₂O₆ + 6O₂"
+      },
+      {
+        n: 6, kind: "Symbol",
+        text: "CO₂ + H₂O → C₆H₁₂O₆ + O₂",
+        correct: false,
+        error: "The equation is not balanced. C₆H₁₂O₆ contains 6 carbons, 12 hydrogens and 6 oxygens, so 6 molecules of CO₂ and 6 molecules of H₂O are required, and 6 molecules of O₂ are produced.",
+        fix: "6CO₂ + 6H₂O → C₆H₁₂O₆ + 6O₂"
+      }
+    ]
+  },
+
+  // ── Activity 2: Limiting Factors Graph Builder ──────────────
+  {
+    id: "act2", type: "activity",
+    title: "Limiting Factors Graph Builder",
+    spec: "2.20", duration: "10",
+    instructions: "Use the data in the table below to complete all four tasks on paper.",
+    tableHeaders: ["Light intensity (a.u.)", "Curve A — Rate (high CO₂, 25 °C)", "Curve B — Rate (low CO₂, 25 °C)"],
+    tableRows: [
+      ["0","0","0"], ["10","12","10"], ["20","24","18"],
+      ["30","34","22"], ["40","42","24"], ["50","46","24"], ["60","48","24"]
+    ],
+    tasks: [
+      "On paper, draw a set of axes. Label the x-axis <em>Light intensity (a.u.)</em> and the y-axis <em>Rate of photosynthesis (a.u.)</em>. Plot both curves and label them Curve A and Curve B.",
+      "At light intensity 20 on Curve A, state the limiting factor. Write your answer as a full sentence.",
+      "At light intensity 50 on Curve A, the rate is no longer increasing. Explain why, referring to limiting factors.",
+      "Predict what Curve A would look like if the temperature were reduced to 5 °C instead of 25 °C. Sketch this new curve on your axes and annotate it to explain the shape."
+    ],
+    modelAnswers: [
+      {
+        label: "Task 1 — Graph",
+        text: "Curve A should rise steeply from the origin and level off (plateau) at approximately 48 a.u. around light intensity 40–50. Curve B should rise and plateau earlier at approximately 24 a.u. around light intensity 30. Both curves start at (0, 0). Curve A is above Curve B throughout."
+      },
+      {
+        label: "Task 2 — Limiting factor at light intensity 20, Curve A",
+        text: "The limiting factor is <strong>light intensity</strong>. At this point Curve A is still rising steeply, which shows that increasing light intensity increases the rate — so light is the factor in shortest supply."
+      },
+      {
+        label: "Task 3 — Why the rate plateaus at light intensity 50, Curve A",
+        text: "Light is no longer the limiting factor. Another factor — either <strong>CO₂ concentration</strong> or <strong>temperature</strong> — is now in short supply and is preventing the rate from increasing any further, even though light intensity is still rising."
+      },
+      {
+        label: "Task 4 — New curve at 5 °C",
+        text: "The new curve rises more <strong>slowly</strong> than Curve A and plateaus at a <strong>lower maximum rate</strong>. This is because the enzyme-controlled reactions of photosynthesis proceed more slowly at lower temperatures — enzymes have less kinetic energy and there are fewer successful collisions per second. The limiting factor at the plateau of the 5 °C curve is <strong>temperature</strong>."
+      }
+    ]
+  },
+
+  // ── Activity 3: Practical Prediction Grid ──────────────────
+  {
+    id: "act3", type: "activity",
+    title: "Practical Prediction Grid",
+    spec: "2.22–2.23", duration: "10",
+    instructions: "For each of the six experiments below, write (1) your predicted observation and (2) a one-sentence explanation of why. Complete on paper, then reveal the model answers.",
+    gridRows: [
+      {
+        n: 1,
+        expt: "Elodea in bright light + NaHCO₃ solution",
+        predict: "Bubbles of gas (O₂) produced steadily",
+        explain: "CO₂ is available from NaHCO₃ and light is present, so photosynthesis occurs and oxygen is released as a product."
+      },
+      {
+        n: 2,
+        expt: "Elodea in bright light + plain water (no NaHCO₃)",
+        predict: "Very few or no bubbles after the initial burst",
+        explain: "CO₂ in plain water is quickly used up; CO₂ becomes the limiting factor and the rate drops to near zero."
+      },
+      {
+        n: 3,
+        expt: "De-starched all-green leaf left in bright light with CO₂, then tested with iodine",
+        predict: "Leaf turns blue-black (positive starch test)",
+        explain: "Light, CO₂ and chlorophyll are all present, so photosynthesis occurs; glucose is produced and converted to starch."
+      },
+      {
+        n: 4,
+        expt: "De-starched variegated leaf — white area only, tested with iodine after 2 h in bright light",
+        predict: "White area remains brown/orange (negative)",
+        explain: "White areas contain no chlorophyll, so they cannot photosynthesise regardless of light and CO₂ availability; no starch is produced."
+      },
+      {
+        n: 5,
+        expt: "De-starched green leaf placed in complete darkness for 24 h, then tested with iodine",
+        predict: "Leaf remains brown/orange (negative)",
+        explain: "No light is available, so photosynthesis cannot occur; no glucose is produced and therefore no starch accumulates."
+      },
+      {
+        n: 6,
+        expt: "Plant grown for 3 weeks in Mg²⁺-free nutrient solution — observe leaf colour",
+        predict: "Leaves appear pale yellow (chlorosis)",
+        explain: "Mg²⁺ ions are required for chlorophyll synthesis; without them, chlorophyll cannot be made and the leaves lose their green colour."
+      }
+    ]
+  },
+
+  // ── Exam Questions ─────────────────────────────────────────
+  {
+    id: "exam", type: "exam",
+    title: "Exam Questions",
+    spec: "2.18–2.23", duration: "25", totalMarks: 25,
+    questions: [
+      {
+        num: "Q1", marks: 5, context: null,
+        parts: [
+          { ref:"(a)", marks:2, stem:"State <strong>two</strong> roles of photosynthesis that make it important to other living organisms.", lines:3 },
+          { ref:"(b)", marks:2, stem:"Write the balanced symbol equation for photosynthesis.", lines:2 },
+          { ref:"(c)", marks:1, stem:"The sun is described as the ultimate source of energy for most communities of living organisms. Explain how energy from the sun eventually reaches a lion that eats a zebra.", lines:2 }
+        ]
+      },
+      {
+        num: "Q2", marks: 5,
+        context: "A student investigates the effect of light intensity on the rate of photosynthesis at high CO₂ concentration. She plots a curve that rises steeply at low light intensities and then levels off at a plateau.",
+        parts: [
+          { ref:"(a)", marks:1, stem:"State what is meant by a <em>limiting factor</em> in the context of photosynthesis.", lines:2 },
+          { ref:"(b)", marks:2, stem:"Explain why the rate of photosynthesis levels off at the plateau in the student’s graph.", lines:3 },
+          { ref:"(c)", marks:2, stem:"The student doubles the CO₂ concentration. Predict what will happen to the rate at the plateau, and explain why.", lines:3 }
+        ]
+      },
+      {
+        num: "Q3", marks: 5, context: null,
+        parts: [
+          { ref:"(a)", marks:1, stem:"Name the layer of cells in a leaf that contains the greatest number of chloroplasts.", lines:1 },
+          { ref:"(b)", marks:2, stem:"Explain how <strong>two</strong> structural features of a leaf are adapted to allow efficient gas exchange during photosynthesis.", lines:4 },
+          { ref:"(c)", marks:2, stem:"Explain why a thin leaf is an advantage for photosynthesis.", lines:3 }
+        ]
+      },
+      {
+        num: "Q4", marks: 5,
+        context: "A student notices that a plant growing in nutrient solution has pale yellow leaves.",
+        parts: [
+          { ref:"(a)", marks:1, stem:"Name the mineral ion most likely to be deficient in this plant.", lines:1 },
+          { ref:"(b)", marks:2, stem:"Explain how the absence of this ion leads to pale yellow leaves.", lines:3 },
+          { ref:"(c)", marks:2, stem:"The student adds the missing ion to the nutrient solution. Predict and justify what you would expect to observe in the plant over the following weeks.", lines:3 }
+        ]
+      },
+      {
+        num: "Q5", marks: 5,
+        context: "A student investigates whether light is required for photosynthesis. She de-starches a leaf, covers half of it with aluminium foil, then places it in bright light for three hours. The leaf is then tested with iodine solution.",
+        parts: [
+          { ref:"(a)", marks:1, stem:"State the name of the reagent used to test for starch and describe what a positive result looks like.", lines:2 },
+          { ref:"(b)", marks:3, stem:"Predict and explain the result for (i) the uncovered half and (ii) the covered half of the leaf.", lines:5 },
+          { ref:"(c)", marks:1, stem:"State why the leaf must be de-starched before the investigation begins.", lines:2 }
+        ]
+      }
+    ],
+    markScheme: [
+      {
+        num: "Q1",
+        parts: [
+          { ref:"(a)", total:2,
+            points:["Produces oxygen (released for use by organisms in aerobic respiration) ✓ (1)","Produces glucose / organic compounds that form the basis of food chains ✓ (1)"],
+            notes:["Accept: removes CO₂ from the atmosphere; any two valid points, 1 mark each"] },
+          { ref:"(b)", total:2,
+            points:["6CO₂ + 6H₂O → C₆H₁₂O₆ + 6O₂ ✓ (1 mark for correct reactants; 1 mark for correct products and balanced equation)"],
+            notes:["Accept light energy shown above arrow; state symbols not required"] },
+          { ref:"(c)", total:1,
+            points:["Plants / grass absorb light energy and store it as chemical energy in glucose via photosynthesis; the zebra eats the grass and obtains this energy; the lion eats the zebra ✓ (1)"],
+            notes:["Accept any valid food chain clearly showing energy transfer: sun → plant → zebra → lion"] }
+        ]
+      },
+      {
+        num: "Q2",
+        parts: [
+          { ref:"(a)", total:1,
+            points:["A factor that limits the rate of photosynthesis because it is present in insufficient quantity / a factor whose increase (when in short supply) will increase the rate ✓"],
+            notes:[] },
+          { ref:"(b)", total:2,
+            points:["Light is no longer the limiting factor at high light intensities ✓ (1)","Another factor — CO₂ concentration or temperature — is now limiting the rate, preventing it from rising further ✓ (1)"],
+            notes:[] },
+          { ref:"(c)", total:2,
+            points:["The rate at the plateau will increase ✓ (1)","CO₂ concentration was the limiting factor at the plateau; with more CO₂ available, this limitation is removed and the rate can rise further ✓ (1)"],
+            notes:[] }
+        ]
+      },
+      {
+        num: "Q3",
+        parts: [
+          { ref:"(a)", total:1,
+            points:["Palisade mesophyll ✓"],
+            notes:["Accept: palisade layer / palisade cells"] },
+          { ref:"(b)", total:2,
+            points:["Air spaces in the spongy mesophyll provide a large internal surface area and allow CO₂ to diffuse efficiently to photosynthesising cells ✓ (1)","Stomata (mainly on the lower epidermis) allow CO₂ to enter and O₂ to leave the leaf ✓ (1)"],
+            notes:["Any two valid adaptations with structural feature linked to function; 1 mark each"] },
+          { ref:"(c)", total:2,
+            points:["A thin leaf means there is a short diffusion distance for CO₂ to travel from the stomata to the chloroplasts ✓ (1)","This maintains a steep diffusion gradient / ensures CO₂ reaches all cells quickly, maximising the rate of photosynthesis ✓ (1)"],
+            notes:[] }
+        ]
+      },
+      {
+        num: "Q4",
+        parts: [
+          { ref:"(a)", total:1,
+            points:["Magnesium ions (Mg²⁺) ✓"],
+            notes:["Accept: magnesium"] },
+          { ref:"(b)", total:2,
+            points:["Magnesium ions are required for the synthesis of chlorophyll ✓ (1)","Without Mg²⁺, little or no chlorophyll is produced, so the leaves cannot absorb light effectively / appear yellow (chlorosis) ✓ (1)"],
+            notes:[] },
+          { ref:"(c)", total:2,
+            points:["The plant will gradually recover; new leaves will grow and be green ✓ (1)","Mg²⁺ ions now available → chlorophyll synthesised → photosynthesis rate increases ✓ (1)"],
+            notes:["Do not accept ‘immediate recovery’; recovery requires new growth with newly synthesised chlorophyll"] }
+        ]
+      },
+      {
+        num: "Q5",
+        parts: [
+          { ref:"(a)", total:1,
+            points:["Iodine solution ✓; positive result = turns blue-black ✓ (both parts needed for the mark)"],
+            notes:[] },
+          { ref:"(b)", total:3,
+            points:["(i) Uncovered half turns blue-black — starch is present ✓ (1)","(i) Light reached the chloroplasts so photosynthesis occurred; glucose was produced and converted to starch ✓ (1)","(ii) Covered half remains brown/orange — no starch present because light was blocked so photosynthesis could not occur ✓ (1)"],
+            notes:["1 mark per point; both prediction and explanation required for full marks"] },
+          { ref:"(c)", total:1,
+            points:["To ensure that any starch detected was produced during the investigation / to prevent starch already present from giving a false-positive result ✓"],
+            notes:[] }
+        ]
+      }
+    ]
+  }
+];
+
+// ─────────────────────────────────────────────────────────────
+// State
+// ─────────────────────────────────────────────────────────────
+let current  = 0;
+let revealed = false;
+const done   = new Set();
+
+// ─────────────────────────────────────────────────────────────
+// Build: activity question face
+// ─────────────────────────────────────────────────────────────
+function buildActivityFace(card) {
+  let html = `<div class="instructions">${card.instructions}</div>`;
+
+  if (card.equations) {
+    html += '<div class="eq-list">';
+    for (const eq of card.equations) {
+      html += `<div class="eq-item">
+        <span class="eq-num">${eq.n}.</span>
+        <div class="eq-body"><div class="eq-text">${eq.text}</div></div>
+        <span class="eq-kind">${eq.kind}</span>
+      </div>`;
+    }
+    html += '</div>';
+  }
+
+  if (card.tableHeaders) {
+    const th = card.tableHeaders.map(h => `<th>${h}</th>`).join('');
+    const trs = card.tableRows.map(r => '<tr>' + r.map(c => `<td>${c}</td>`).join('') + '</tr>').join('');
+    html += `<div class="table-wrap"><table class="data-table"><thead><tr>${th}</tr></thead><tbody>${trs}</tbody></table></div>`;
+    html += '<ol class="task-steps">';
+    for (const t of card.tasks) html += `<li>${t}</li>`;
+    html += '</ol>';
+  }
+
+  if (card.gridRows) {
+    html += `<div class="table-wrap"><table class="pred-table">
+      <thead><tr><th>#</th><th>Experiment</th><th>Predicted observation</th><th>Explanation</th></tr></thead>
+      <tbody>`;
+    for (const r of card.gridRows) {
+      html += `<tr>
+        <td class="n">${r.n}</td>
+        <td class="expt">${r.expt}</td>
+        <td class="blank">write here…</td>
+        <td class="blank">write here…</td>
+      </tr>`;
+    }
+    html += '</tbody></table></div>';
+  }
+
+  return html;
+}
+
+// ─────────────────────────────────────────────────────────────
+// Build: activity answer face
+// ─────────────────────────────────────────────────────────────
+function buildActivityAnswers(card) {
+  let html = '<div class="answer-section">';
+
+  if (card.equations) {
+    for (const eq of card.equations) {
+      const cls = eq.correct ? 'correct' : 'wrong';
+      html += `<div class="eq-item ${cls}">
+        <span class="eq-verdict ${eq.correct ? 'ok' : 'bad'}">${eq.correct ? '✓' : '✗'}</span>
+        <div class="eq-body">
+          <div class="eq-text">${eq.text}</div>
+          ${eq.correct
+            ? '<div style="font-size:0.83rem;color:#16a34a;margin-top:4px">This equation is correct.</div>'
+            : `<div class="eq-error"><strong>Error:</strong> ${eq.error}</div>
+               <div class="eq-fix"><strong>Correction:</strong> ${eq.fix}</div>`}
+        </div>
+        <span class="eq-kind">${eq.kind}</span>
+      </div>`;
+    }
+  }
+
+  if (card.modelAnswers) {
+    for (const ans of card.modelAnswers) {
+      html += `<div class="answer-block">
+        <div class="answer-block-hdr">${ans.label}</div>
+        <div class="answer-block-body">${ans.text}</div>
+      </div>`;
+    }
+  }
+
+  if (card.gridRows) {
+    html += `<div class="answer-block">
+      <div class="answer-block-hdr">Model Answers</div>
+      <div class="answer-block-body" style="padding:0">
+        <div class="table-wrap" style="margin:0"><table class="pred-table">
+          <thead><tr><th>#</th><th>Experiment</th><th>Predicted observation</th><th>Explanation</th></tr></thead>
+          <tbody>`;
+    for (const r of card.gridRows) {
+      html += `<tr>
+        <td class="n">${r.n}</td>
+        <td class="expt">${r.expt}</td>
+        <td class="answer">${r.predict}</td>
+        <td class="answer">${r.explain}</td>
+      </tr>`;
+    }
+    html += '</tbody></table></div></div></div>';
+  }
+
+  html += '</div>';
+  return html;
+}
+
+// ─────────────────────────────────────────────────────────────
+// Build: exam question face
+// ─────────────────────────────────────────────────────────────
+function buildExamFace(card) {
+  let html = '<div class="exam-qs">';
+  for (const q of card.questions) {
+    html += `<div class="exam-q">
+      <div class="exam-q-num">${q.num} <span style="font-size:0.8rem;font-weight:400;color:#6b7280">[${q.marks} marks]</span></div>`;
+    if (q.context) {
+      html += `<div class="exam-context">${q.context}</div>`;
+    }
+    html += '<div class="exam-parts">';
+    for (const p of q.parts) {
+      const lines = Array(p.lines).fill('<div class="write-line"></div>').join('');
+      html += `<div class="exam-part">
+        <div class="exam-part-ref">${p.ref}</div>
+        <div class="exam-part-body">
+          <div class="exam-stem">${p.stem} <span class="exam-marks">[${p.marks}]</span></div>
+          ${lines}
+        </div>
+      </div>`;
+    }
+    html += '</div></div>';
+  }
+  html += '</div>';
+  return html;
+}
+
+// ─────────────────────────────────────────────────────────────
+// Build: mark scheme face
+// ─────────────────────────────────────────────────────────────
+function buildMarkScheme(card) {
+  let html = '<div class="ms-section">';
+  for (const q of card.markScheme) {
+    html += `<div class="ms-q"><div class="ms-q-hdr">${q.num}</div>`;
+    for (const part of q.parts) {
+      html += `<div class="ms-part">
+        <div class="ms-ref">${part.ref}</div>
+        <div class="ms-body">`;
+      for (const pt of part.points) {
+        html += `<div class="ms-pt"><span class="ms-pt-tick">›</span><span>${pt}</span></div>`;
+      }
+      for (const note of part.notes) {
+        html += `<div class="ms-note">${note}</div>`;
+      }
+      html += `</div></div>`;
+    }
+    html += '</div>';
+  }
+  html += '</div>';
+  return html;
+}
+
+// ─────────────────────────────────────────────────────────────
+// Render current card
+// ─────────────────────────────────────────────────────────────
+function render() {
+  const card = cards[current];
+  revealed = false;
+
+  // Progress bar
+  document.getElementById('progFill').style.width = `${((current + 1) / cards.length) * 100}%`;
+
+  // Pill
+  if (card.type === 'activity') {
+    document.getElementById('progressPill').textContent = `Activity ${current + 1} of 3`;
+  } else {
+    document.getElementById('progressPill').textContent = 'Exam Questions';
+  }
+
+  // Nav buttons
+  document.getElementById('btnPrev').disabled   = (current === 0);
+  document.getElementById('btnNext').disabled   = !done.has(current) || (current === cards.length - 1);
+  document.getElementById('btnReveal').textContent = 'Reveal Answers ✓';
+
+  // Hint
+  document.getElementById('hintText').textContent = card.type === 'exam'
+    ? 'Complete the exam questions on paper, then reveal the mark scheme.'
+    : 'Work through the activity on paper, then reveal the model answers.';
+
+  // Nav dots
+  renderDots();
+
+  // Card HTML
+  const isAct = card.type === 'activity';
+  const badgeHTML = isAct
+    ? `<span class="badge badge-activity">Activity</span>`
+    : `<span class="badge badge-exam">Exam Practice</span>`;
+  const marksHTML = isAct ? '' : `<span class="badge badge-marks">${card.totalMarks} marks</span>`;
+
+  const bodyHTML = isAct ? buildActivityFace(card) : buildExamFace(card);
+
+  document.getElementById('mainArea').innerHTML = `
+    <div class="card">
+      <div class="card-header">
+        ${badgeHTML}
+        <span class="badge badge-spec">${card.spec}</span>
+        <span class="badge badge-time">⏱ ${card.duration} min</span>
+        <span class="card-title">${card.title}</span>
+        ${marksHTML}
+      </div>
+      <div class="card-body">
+        <div id="cardContent">${bodyHTML}</div>
+      </div>
+    </div>`;
+
+  // Complete banner
+  document.getElementById('completeBanner').style.display =
+    (done.size === cards.length && current === cards.length - 1) ? 'block' : 'none';
+}
+
+// ─────────────────────────────────────────────────────────────
+// Toggle reveal / hide
+// ─────────────────────────────────────────────────────────────
+function toggleReveal() {
+  const card = cards[current];
+  const btn  = document.getElementById('btnReveal');
+  const contentEl = document.getElementById('cardContent');
+
+  if (revealed) {
+    // Hide answers — restore question face
+    revealed = false;
+    btn.textContent = 'Reveal Answers ✓';
+    document.getElementById('hintText').textContent = card.type === 'exam'
+      ? 'Complete the exam questions on paper, then reveal the mark scheme.'
+      : 'Work through the activity on paper, then reveal the model answers.';
+    contentEl.innerHTML = card.type === 'activity' ? buildActivityFace(card) : buildExamFace(card);
+  } else {
+    // Reveal answers
+    revealed = true;
+    done.add(current);
+    btn.textContent = 'Hide Answers ↩';
+    document.getElementById('hintText').textContent = card.type === 'exam'
+      ? 'Check your answers carefully against the mark scheme.'
+      : 'Check your answers against the model answers below.';
+    contentEl.innerHTML = card.type === 'activity' ? buildActivityAnswers(card) : buildMarkScheme(card);
+    document.getElementById('btnNext').disabled = (current === cards.length - 1);
+    renderDots();
+    // Complete banner check
+    if (done.size === cards.length && current === cards.length - 1) {
+      document.getElementById('completeBanner').style.display = 'block';
+    }
+  }
+}
+
+// ─────────────────────────────────────────────────────────────
+// Navigate
+// ─────────────────────────────────────────────────────────────
+function navigate(dir) {
+  current += dir;
+  render();
+  window.scrollTo(0, 0);
+}
+
+// ─────────────────────────────────────────────────────────────
+// Render nav dots
+// ─────────────────────────────────────────────────────────────
+function renderDots() {
+  const dotsEl = document.getElementById('navDots');
+  dotsEl.innerHTML = '';
+  for (let i = 0; i < cards.length; i++) {
+    const dot = document.createElement('button');
+    dot.className = 'nav-dot' + (i === current ? ' active' : (done.has(i) ? ' done' : ''));
+    dot.setAttribute('aria-label', `Card ${i + 1}`);
+    dot.onclick = () => { current = i; render(); };
+    dotsEl.appendChild(dot);
+  }
+}
+
+// ─────────────────────────────────────────────────────────────
+// Init
+// ─────────────────────────────────────────────────────────────
+render();
+</script>
+</body>
+</html>
