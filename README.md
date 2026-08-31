@@ -1,31 +1,28 @@
-# Biology Interactive Lessons
+# Science & Biology Interactive Lessons
 
-Interactive HTML lessons for IAL and IGCSE Biology students.
+Interactive resources for the Science and Biology classes taught in 2026–27.
 
 ## 🔬 Live Site
 
 **[View Lessons →](https://alexgray84.github.io/Biology/)**
 
-## 📁 Folder Structure
+## Current classes
 
-```
-Biology/
-├── index.html              # Landing page
-├── README.md
-├── ial/                    # IAL Biology (A-Level)
-│   ├── unit-1/
-│   ├── unit-2/
-│   ├── unit-3/
-│   └── unit-4/
-└── igcse/                  # IGCSE Biology
-```
+- Year 7 Science: `7/SCI/01` and `7/SCI/04`
+- Year 8 Science: `8/SCI/04`
+- Year 9 Science: `9/SCI/Z`
+- Year 10 Triple Biology: `10/Bio/Tri2`
+- Year 10 BTEC Applied Science: `10/Bio/BTEC`
+- Year 11 BTEC Applied Science: `11/Bio/BTEC`
+
+The public landing page links only to resources for these current classes. Previous class material is retained in the repository's unpublished archive and excluded from GitHub Pages by `_config.yml`.
 
 ## 🚀 Quick Start
 
 ### 1. Add HTML files to the correct folder
 ```
-ial/unit-2/cell-structure.html
-igcse/ecosystems.html
+KS3/Biology/Cells/cells-revision.html
+IGCSE/topic-2/photosynthesis.html
 ```
 
 ### 2. Update index.html to link to your lesson
