@@ -19,10 +19,10 @@ The public landing page links only to resources for these current classes. Previ
 
 ## 🚀 Quick Start
 
-### 1. Add HTML files to the correct folder
+### 1. Add approved pupil-facing HTML files to the correct class folder
 ```
-KS3/Biology/Cells/cells-revision.html
-IGCSE/topic-2/photosynthesis.html
+current/year-8/practical-enquiry/05-next-lesson.html
+current/year-10/triple-biology-cells/03-next-lesson.html
 ```
 
 ### 2. Update index.html to link to your lesson
