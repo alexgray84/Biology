@@ -17,6 +17,17 @@ Interactive resources for the Science and Biology classes taught in 2026–27.
 
 The public landing page links only to resources for these current classes. Previous class material is retained in the repository's unpublished archive and excluded from GitHub Pages by `_config.yml`.
 
+## Public site structure
+
+```
+index.html                         # Current class directory
+classes/<class-code>/index.html    # One homepage for each class
+units/<course>/<unit>/index.html   # Lessons grouped in teaching order
+current/<course>/<unit>/           # Approved pupil lesson packages
+```
+
+The two Year 7 classes share the same Year 7 unit pages and lesson packages. Other classes have their own course unit pages.
+
 ## 🚀 Quick Start
 
 ### 1. Add approved pupil-facing HTML files to the correct class folder
