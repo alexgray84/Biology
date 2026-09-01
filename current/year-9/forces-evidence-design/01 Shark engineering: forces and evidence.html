@@ -136,6 +136,9 @@
     .answer-feedback:empty { min-height: 0; margin: 0; padding: 0; border: 0; }
 
     .practice-layout { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr); gap: clamp(36px, 6vw, 82px); align-items: center; }
+    .practice-data { margin-top: 18px; padding: 14px; border: 1px solid var(--line-strong); border-radius: 14px; background: var(--paper-50); }
+    .practice-data h2 { margin: 0 0 9px; color: var(--navy-900); font-size: 0.82rem; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; }
+    .practice-data .data-note { margin-bottom: 0; }
     .task-list { counter-reset: task; margin-top: 20px; border-top: 1px solid var(--line-strong); }
     .task-item { counter-increment: task; display: grid; grid-template-columns: 32px 1fr; gap: 12px; padding: 11px 0; border-bottom: 1px solid var(--line); font-weight: 600; }
     .task-item::before { content: counter(task); color: var(--gold-600); font: 500 0.9rem/1.65 var(--serif); }
@@ -668,6 +671,12 @@
                         "type": "practice",
                         "title": "Complete the reasoning chain together",
                         "lead": "Use the second sentence as a class, then finish the boundary with your partner.",
+                        "modelData": {
+                                "title": "Classroom tow-model dataset · same speed",
+                                "columns": ["Shape", "Tow force"],
+                                "rows": [["Shape A", "3.2 N"], ["Streamlined Shape B", "2.1 N"]],
+                                "note": "Same model mass, water depth and tow speed. Tow force balances drag at constant speed."
+                        },
                         "tasks": [
                                 "Claim: identify which shape experienced less drag.",
                                 "Evidence: quote both force values and calculate the difference.",
@@ -711,6 +720,12 @@
                         },
                         "title": "Explain what the model shows and what it does not",
                         "lead": "Complete the evidence page independently, then annotate your own work against the three criteria.",
+                        "modelData": {
+                                "title": "Classroom tow-model dataset · same speed",
+                                "columns": ["Shape", "Tow force"],
+                                "rows": [["Shape A", "3.2 N"], ["Streamlined Shape B", "2.1 N"]],
+                                "note": "Same model mass, water depth and tow speed. Tow force balances drag at constant speed."
+                        },
                         "tasks": [
                                 "Draw and label thrust and drag for constant-speed motion.",
                                 "Write a complete claim–evidence–reasoning paragraph.",
@@ -900,7 +915,8 @@
         }
 
         if (current.type === "practice") {
-          content = `<div class="practice-layout"><div>${heading}<h1 class="screen-heading" id="screen-title" tabindex="-1">${escapeHtml(current.title)}</h1><p class="screen-lead">${escapeHtml(current.lead)}</p><div class="task-list">${current.tasks.map(task => `<div class="task-item">${escapeHtml(task)}</div>`).join("")}</div></div><div class="success-list"><h2>What success includes</h2>${current.criteria.map(criterion => `<p>${escapeHtml(criterion)}</p>`).join("")}</div></div>`;
+          const modelData = current.modelData ? `<section class="practice-data" aria-label="${escapeHtml(current.modelData.title)}"><h2>${escapeHtml(current.modelData.title)}</h2><table class="data-table"><thead><tr>${current.modelData.columns.map(column => `<th scope="col">${escapeHtml(column)}</th>`).join("")}</tr></thead><tbody>${current.modelData.rows.map(row => `<tr>${row.map(cell => `<td>${escapeHtml(cell)}</td>`).join("")}</tr>`).join("")}</tbody></table><p class="data-note">${escapeHtml(current.modelData.note)}</p></section>` : "";
+          content = `<div class="practice-layout"><div>${heading}<h1 class="screen-heading" id="screen-title" tabindex="-1">${escapeHtml(current.title)}</h1><p class="screen-lead">${escapeHtml(current.lead)}</p>${modelData}<div class="task-list">${current.tasks.map(task => `<div class="task-item">${escapeHtml(task)}</div>`).join("")}</div></div><div class="success-list"><h2>What success includes</h2>${current.criteria.map(criterion => `<p>${escapeHtml(criterion)}</p>`).join("")}</div></div>`;
         }
 
         if (current.type === "media") {
