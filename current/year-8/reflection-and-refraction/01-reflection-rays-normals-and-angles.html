@@ -1,0 +1,395 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Reflection: rays, normals and angles | Year 8 Science</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500&family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* Edu OS lesson runtime — Arcadia quiet academic canvas.
+   Type scale is set for a 1920 × 1080 classroom display (core text ≈ 30–36 px, headings ≥ 60 px,
+   labels ≥ 20 px) and collapses for laptops below 1280 px. See LESSON_BUILD_MEMORY.md. */
+
+:root {
+  --navy: #14263d; --ink: #223142; --muted: #4f5c6b; --gold: #b78324; --gold-soft: #f2c96d;
+  --paper: #faf7f0; --wash: #eee8dc; --white: #fffdf8; --line: #c8c5bc; --blue: #dbeaf0; --green: #dceade; --amber: #fff8e7;
+  --serif: Fraunces, Georgia, "Times New Roman", serif;
+  --sans: Montserrat, "Helvetica Neue", Arial, sans-serif;
+  /* Scale: 1vw at 1920 = 19.2px */
+  --t-label: clamp(0.85rem, 1.05vw, 1.3rem);   /* 20 px at 1920 */
+  --t-body: clamp(1.1rem, 1.6vw, 2rem);        /* 31 px */
+  --t-lead: clamp(1.25rem, 1.75vw, 2.25rem);   /* 34 px */
+  --t-h1: clamp(2.6rem, 3.6vw, 4.6rem);        /* 69 px */
+  --t-h2: clamp(1.4rem, 1.9vw, 2.4rem);        /* 36 px */
+  font-family: var(--sans);
+}
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+body { margin: 0; background: var(--wash); color: var(--ink); }
+button { font: inherit; }
+button:focus-visible, a:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
+.skip { position: fixed; top: -5rem; left: 1rem; background: var(--navy); color: #fff; padding: .6rem 1rem; z-index: 99; }
+.skip:focus { top: 1rem; }
+
+.app { height: 100vh; display: grid; grid-template-rows: 72px 5px minmax(0, 1fr) 68px; background: var(--paper); }
+.top { display: flex; align-items: center; gap: 1.2rem; padding: 0 2rem; border-bottom: 1px solid var(--line); background: var(--white); }
+.kicker { font-size: .72rem; font-weight: 800; letter-spacing: .15em; text-transform: uppercase; color: var(--muted); }
+.topic { font-family: var(--serif); font-size: 1.35rem; color: var(--navy); }
+.topic em { font-style: normal; color: var(--gold); }
+.controls { margin-left: auto; display: flex; gap: .5rem; }
+.mode, .support-toggle { border: 1px solid var(--line); border-radius: 999px; padding: .55rem .95rem; background: var(--white); font-weight: 700; color: var(--navy); cursor: pointer; }
+.progress { background: #e2d8c5; }
+.progress span { display: block; width: 0; height: 100%; background: var(--gold); transition: width .25s; }
+.main { min-height: 0; padding: 1rem 1.4rem; display: grid; grid-template-columns: minmax(0, 1fr); gap: 1rem; }
+.main.drawer-open { grid-template-columns: minmax(0, 1fr) minmax(300px, 22vw); }
+.stage, .drawer { min-height: 0; border: 1px solid var(--line); border-radius: 20px; background: var(--white); overflow: hidden; }
+.drawer { overflow: auto; }
+/* One screen, no scrolling: the screen is exactly the stage height and every child shrinks to fit. */
+.screen { height: 100%; padding: clamp(1.4rem, 3vh, 2.8rem) clamp(2rem, 4.5vw, 5.5rem); display: flex; flex-direction: column; justify-content: center; animation: in .22s ease-out; overflow: hidden; }
+@media (prefers-reduced-motion: reduce) { .screen { animation: none; } .progress span { transition: none; } }
+
+.label { font-size: var(--t-label); letter-spacing: .16em; text-transform: uppercase; font-weight: 800; color: var(--gold); }
+.assessment-badge { display: inline-block; margin-left: 1rem; padding: .25em .8em; border-radius: 999px; background: var(--navy); color: var(--gold-soft); font-size: var(--t-label); letter-spacing: .08em; text-transform: uppercase; font-weight: 800; }
+h1 { max-width: 20ch; margin: .3rem 0 .8rem; font: 400 var(--t-h1) / 1 var(--serif); letter-spacing: -.035em; color: var(--navy); }
+h2 { margin: 0 0 .5rem; font: 400 var(--t-h2) / 1.15 var(--serif); color: var(--navy); }
+.lead { max-width: 62ch; margin: 0; color: var(--muted); font-size: var(--t-lead); line-height: 1.4; }
+.callout { margin: 1.2rem 0 0; padding: 1rem 1.2rem; border-left: 6px solid var(--gold); background: var(--amber); font-size: var(--t-body); font-weight: 600; line-height: 1.35; }
+.claim { margin: 1.2rem 0 0; padding: 1.2rem 1.4rem; border: 2px dashed var(--navy); border-radius: 14px; font: 400 var(--t-lead) / 1.35 var(--serif); color: var(--navy); }
+
+/* Layout families */
+.layout { display: grid; gap: clamp(1.6rem, 3.5vw, 4rem); align-items: center; min-height: 0; max-height: 100%; }
+.layout.two { grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); }
+.layout.visual-left { grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr); }
+.layout.visual-left > .text { order: 2; }
+.layout.single { grid-template-columns: minmax(0, 1fr); max-width: 1400px; }
+.layout.stacked { grid-template-columns: minmax(0, 1fr); align-items: start; }
+.text { min-width: 0; min-height: 0; }
+.aside { min-width: 0; min-height: 0; max-height: 100%; display: flex; flex-direction: column; gap: 1rem; }
+.layout.visual-left { height: 100%; }
+.layout.visual-left > .aside { height: 100%; justify-content: center; }
+
+.list { display: grid; gap: .55rem; margin: 0; padding: 0; list-style: none; }
+.list li { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: .8rem; padding: .6rem 0; border-bottom: 1px solid var(--line); font-size: var(--t-body); font-weight: 600; line-height: 1.3; }
+.list li:last-child { border-bottom: 0; }
+.n { color: var(--gold); font-family: var(--serif); }
+.tasks { display: grid; gap: .55rem; margin: 1rem 0 0; counter-reset: task; }
+.tasks div { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: .8rem; padding: .6rem 0; border-bottom: 1px solid var(--line); font-size: var(--t-body); font-weight: 600; line-height: 1.3; }
+.tasks div::before { counter-increment: task; content: counter(task); color: var(--gold); font: 500 var(--t-body) var(--serif); }
+.resource-bar { display: flex; flex-wrap: wrap; gap: .7rem; margin-top: 1rem; }
+.resource-button { display: inline-flex; align-items: center; gap: .8rem; width: fit-content; padding: .75rem 1.1rem; border: 2px solid var(--navy); border-radius: 999px; background: var(--navy); color: #fff; font-size: var(--t-label); font-weight: 800; text-decoration: none; }
+.resource-button::after { content: "↗"; color: var(--gold-soft); font-size: 1.15em; }
+.resource-button small { padding-left: .75rem; border-left: 1px solid #ffffff55; color: var(--gold-soft); font-size: .72em; letter-spacing: .1em; text-transform: uppercase; }
+.resource-button:hover { background: #203b5d; }
+.feedback-bar { display: none; margin-top: .9rem; padding-top: .8rem; border-top: 1px solid var(--line); align-items: center; gap: .8rem; }
+.present .feedback-bar { display: flex; }
+.feedback-bar > span { color: var(--muted); font-size: var(--t-label); font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+.feedback-bar .reveal { margin: 0; }
+.criteria { margin: 1rem 0 0; padding: 1rem 1.3rem; background: var(--navy); color: #fff; border-radius: 14px; }
+.criteria h2 { margin: 0 0 .4rem; color: var(--gold-soft); }
+.criteria p { margin: .4rem 0; font-size: var(--t-body); line-height: 1.3; }
+.product { margin: 1rem 0 0; font-size: var(--t-label); font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+
+.figure { width: 100%; margin: 0; min-height: 0; display: flex; flex-direction: column; flex: 1 1 auto; }
+.figure img, .figure > svg { display: block; width: 100%; min-height: 0; flex: 1 1 auto; max-height: 100%; object-fit: contain; border-radius: 14px; background: var(--white); border: 1px solid var(--line); }
+.figure figcaption { flex: 0 0 auto; margin-top: .6rem; color: var(--muted); font-size: var(--t-label); line-height: 1.35; }
+
+/* Labelled model: figure shapes in the middle, HTML labels in side columns, leader lines drawn after layout. */
+.model { position: relative; flex: 1 1 auto; min-height: 0; display: grid; font-size: var(--t-body); grid-template-columns: minmax(6em, 8.5em) minmax(0, 1fr) minmax(6em, 8.5em); gap: .6em; align-items: stretch; }
+.layout.visual-left:has(.model) { grid-template-columns: minmax(0, 1.7fr) minmax(0, .8fr); }
+.model.no-left { grid-template-columns: minmax(0, 1fr) minmax(6em, 8.5em); }
+.model.no-right { grid-template-columns: minmax(6em, 8.5em) minmax(0, 1fr); }
+.model-figure { position: relative; min-height: 0; display: flex; align-items: center; justify-content: center; border: 1px solid var(--line); border-radius: 14px; background: var(--white); padding: .8rem; }
+.model-figure svg { width: 100%; height: 100%; max-height: 100%; }
+.model-figure .panel-title { position: absolute; top: .6rem; font-size: var(--t-label); font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: var(--gold); }
+.model-figure .panel-title.left { left: 1rem; } .model-figure .panel-title.right { right: 1rem; }
+.model-labels { position: relative; min-width: 0; min-height: 0; }
+.model-label { position: absolute; left: 0; right: 0; }
+.model-labels.right { text-align: left; } .model-labels.left { text-align: right; }
+.model-label { font-size: 1em; font-weight: 700; color: var(--navy); line-height: 1.15; padding: .2em .5em; border-radius: 8px; background: var(--paper); border: 1px solid var(--line); }
+.model-label small { display: block; font-size: var(--t-label); font-size: .66em; font-weight: 600; color: var(--muted); }
+.model-leaders { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; overflow: visible; }
+.model-leaders line { stroke: var(--navy); stroke-width: 2.5; }
+.model-leaders circle { fill: var(--navy); }
+.model-caption { flex: 0 0 auto; margin-top: .5rem; color: var(--muted); font-size: var(--t-label); line-height: 1.35; }
+.diagram { width: 100%; min-height: 32vh; display: grid; place-items: center; border: 1px solid var(--line); border-radius: 16px; background: linear-gradient(135deg, #edf3f3, #f6ede1); padding: 1.3rem; }
+.flow { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: .8rem; font-weight: 800; font-size: var(--t-body); }
+.node { padding: .9rem 1.1rem; border-radius: 12px; background: #fff; border: 1px solid var(--line); text-align: center; max-width: 22ch; }
+.arrow { color: var(--gold); font-size: var(--t-h2); }
+
+.evidence { width: 100%; border-collapse: collapse; font-size: clamp(1rem, 1.35vw, 1.6rem); }
+.evidence th, .evidence td { padding: .7rem .8rem; border: 1px solid var(--line); text-align: left; vertical-align: top; line-height: 1.3; }
+.evidence th { background: var(--navy); color: #fff; }
+.evidence td:first-child { font-weight: 700; }
+
+.steps { display: grid; gap: .7rem; margin: 1rem 0 0; }
+.step { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 1rem; padding: .9rem 1.1rem; border: 1px solid var(--line); border-radius: 12px; background: var(--paper); font-size: var(--t-body); line-height: 1.3; }
+.step .n { font-size: var(--t-h2); }
+.step.weak { border-style: dashed; color: var(--muted); }
+.step.weak::after { content: "rejected"; grid-column: 2; font-size: var(--t-label); text-transform: uppercase; letter-spacing: .1em; color: var(--gold); font-weight: 800; }
+
+.choices { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .8rem; margin-top: 1.2rem; }
+.choice { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: .8rem; align-items: start; min-height: 5rem; border: 2px solid var(--line); background: var(--white); border-radius: 14px; padding: .9rem 1rem; text-align: left; font-size: var(--t-body); font-weight: 700; line-height: 1.3; color: var(--navy); }
+.choice .n { font-size: var(--t-h2); }
+.choice.correct { border-color: var(--gold); background: var(--amber); }
+.reveal-bar { display: flex; flex-wrap: wrap; gap: .6rem; margin-top: 1.2rem; }
+.reveal-bar, .reveal { display: none; } /* reveals are teacher controls: Present mode only */
+.present .reveal-bar { display: flex; } .present .reveal { display: inline-block; }
+.reveal { border: 1px solid var(--navy); border-radius: 999px; padding: .55rem 1.1rem; background: var(--white); color: var(--navy); font-weight: 700; cursor: pointer; font-size: var(--t-label); }
+.reveal[aria-expanded="true"] { background: var(--navy); color: #fff; }
+.revealed { margin-top: 1rem; padding: 1rem 1.2rem; border-radius: 14px; background: var(--green); font-size: var(--t-body); line-height: 1.35; }
+.revealed[hidden] { display: none; }
+.revealed h2 { font-size: var(--t-body); }
+
+.drawer { padding: 1.2rem; }
+.drawer[hidden] { display: none; }
+.drawer h2 { margin: 0; }
+.tabs { display: flex; flex-wrap: wrap; gap: .4rem; margin: 1rem 0; }
+.tab { border: 1px solid var(--line); border-radius: 999px; background: var(--white); padding: .45rem .7rem; font-size: .78rem; font-weight: 800; cursor: pointer; }
+.tab.active { background: var(--navy); color: #fff; }
+.support { font-size: 1.05rem; line-height: 1.5; }
+.support h3 { margin: .2rem 0 .5rem; font: 400 1.35rem var(--serif); color: var(--navy); }
+.support ul { padding-left: 1.2rem; }
+
+.nav { display: grid; grid-template-columns: 54px minmax(0, 1fr) 54px; gap: 1rem; align-items: center; padding: .65rem 1.5rem; background: var(--navy); color: #fff; }
+.nav button { width: 48px; height: 48px; border: 1px solid #738195; border-radius: 50%; background: transparent; color: #fff; font-size: 1.4rem; cursor: pointer; }
+.nav button:disabled { opacity: .3; }
+.navtext { min-width: 0; }
+.navtext small { color: #d7c7a4; font-size: .7rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
+.navtext strong { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font: 400 1.15rem var(--serif); }
+.nav .next { justify-self: end; }
+
+/* Present mode: board only */
+.present .top { display: none; }
+.present .app { grid-template-rows: 5px minmax(0, 1fr) 68px; }
+.present .main { padding: 0; grid-template-columns: minmax(0, 1fr); }
+.present .stage { border: 0; border-radius: 0; }
+.present .drawer { display: none; }
+.present .screen { padding: clamp(1.6rem, 3.5vh, 3rem) clamp(3rem, 6vw, 8rem); }
+
+@keyframes in { from { opacity: .2; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+
+@media (max-width: 1279px) {
+  :root { --t-body: 1.05rem; --t-lead: 1.15rem; --t-h1: 2.4rem; --t-h2: 1.4rem; --t-label: .78rem; }
+  .screen { padding: 1.6rem 2rem; justify-content: flex-start; }
+}
+@media (max-width: 850px) {
+  .main.drawer-open { grid-template-columns: 1fr; }
+  .drawer { display: none; }
+  .layout.two, .layout.visual-left { grid-template-columns: 1fr; }
+  .layout.visual-left > .text { order: 0; }
+  .choices { grid-template-columns: 1fr; }
+  .top { padding: 0 1rem; }
+  .topic { font-size: 1rem; }
+}
+
+</style>
+</head>
+<body>
+<a class="skip" href="#stage">Skip to lesson</a>
+<div class="app">
+  <header class="top">
+    <div><div class="kicker">Year 8 Science · Reflection and refraction of light</div><div class="topic">Reflection: rays, normals and angles</div></div>
+    <div class="controls"><button class="support-toggle">Support</button><button class="mode">Present</button></div>
+  </header>
+  <div class="progress"><span></span></div>
+  <main class="main"><section class="stage" id="stage" aria-live="polite"></section><aside class="drawer" hidden></aside></main>
+  <nav class="nav"><button class="prev" aria-label="Previous screen">←</button><div class="navtext"></div><button class="next" aria-label="Next screen">→</button></nav>
+</div>
+<script>const lesson = {"shape":"practical-enquiry","architecture_version":2,"phases":[{"type":"doNow","layout":"retrieval-sheet","label":"Retrieve","nav":"1","title":"Bring back what you know about light","lead":"Answer all four questions in your book. Work alone and do not use notes.","minutes":4,"points":["How does light travel through one transparent material?","What does an arrow on a ray show?","Name one transparent material.","Draw two lines that meet at a right angle."],"review":{"type":"answers","label":"Reveal answers","title":"Check and correct","body":"<p>1. Light travels in straight lines. 2. The arrow shows the direction the light travels. 3. Examples include air, water, glass and clear acrylic. 4. The angle must be 90°.</p>"},"support":{"start":{"title":"Get started","heading":"","body":"<p>Answer one line at a time. A ray is a model of the path taken by light.</p>"},"build":{"title":"Build understanding","heading":"","body":"<p>Think about a shadow: a sharp edge is evidence that light travelled in straight lines.</p>"},"stretch":{"title":"Go further","heading":"","body":"<p>Explain why a ray needs an arrow as well as a straight line.</p>"}},"product":"Four numbered answers and corrections in books"},{"type":"question","layout":"full-question","label":"Question","nav":"2","title":"What rule controls a reflected ray?","lead":"Write the question. Then name the angle we will set and the angle we will measure.","minutes":4,"tasks":["Write the investigation question in your book.","Underline angle of incidence once and angle of reflection twice.","Write the unit used to measure an angle."],"callout":"How does changing the angle of incidence affect the angle of reflection?","support":{"start":{"title":"Get started","heading":"","body":"<p>The angle we change is the angle of incidence.</p>"},"build":{"title":"Build understanding","heading":"","body":"<p>We measure the angle of reflection and compare it with the angle we set.</p>"},"stretch":{"title":"Go further","heading":"","body":"<p>Predict what a graph of angle of reflection against angle of incidence would look like.</p>"}},"product":"Investigation question and variable pair written in books"},{"type":"question","layout":"image-led-decision","label":"Predict","nav":"3","title":"Predict the missing ray","lead":"Copy the mirror, normal and incoming ray. Add the path you predict after the ray reaches the mirror.","minutes":4,"tasks":["Add one arrowhead to show the predicted direction.","Write one sentence explaining your prediction.","Hold up your board when asked."],"svg":"<svg viewBox=\"0 0 900 520\" role=\"img\" aria-label=\"A horizontal plane mirror, vertical dashed normal and incident ray approaching from the upper left\"><defs><marker id=\"p-arrow\" viewBox=\"0 0 10 10\" refX=\"8\" refY=\"5\" markerWidth=\"9\" markerHeight=\"9\" orient=\"auto\"><path d=\"M0 0 L10 5 L0 10 z\" fill=\"#b78324\"/></marker></defs><rect x=\"120\" y=\"365\" width=\"660\" height=\"46\" fill=\"#dbeaf0\" stroke=\"#14263d\" stroke-width=\"5\"/><line x1=\"450\" y1=\"55\" x2=\"450\" y2=\"365\" stroke=\"#14263d\" stroke-width=\"5\" stroke-dasharray=\"15 12\"/><line x1=\"190\" y1=\"105\" x2=\"450\" y2=\"365\" stroke=\"#b78324\" stroke-width=\"8\" marker-end=\"url(#p-arrow)\"/></svg>","imageCaption":"The dashed line is perpendicular to the mirror. Add the reflected ray before anyone calls out an answer.","support":{"start":{"title":"Get started","heading":"","body":"<p>Begin the missing ray at the point where the incident ray meets the mirror.</p>"},"build":{"title":"Build understanding","heading":"","body":"<p>Compare the space on each side of the dashed normal.</p>"},"stretch":{"title":"Go further","heading":"","body":"<p>State what measurement would prove or disprove your prediction.</p>"}},"product":"Predicted reflected ray and one reason on a mini-whiteboard"},{"type":"diagram","layout":"model-stage","label":"Method","nav":"4","title":"Build the diagram in the right order","lead":"Watch the first diagram build. Then complete the parallel 30° diagram in your book.","minutes":5,"model":{"figure":"<svg viewBox=\"0 0 1000 560\" role=\"img\" aria-label=\"A complete reflection ray diagram at a plane mirror\"><defs><marker id=\"m-arrow\" viewBox=\"0 0 10 10\" refX=\"8\" refY=\"5\" markerWidth=\"8\" markerHeight=\"8\" orient=\"auto\"><path d=\"M0 0 L10 5 L0 10 z\" fill=\"#b78324\"/></marker><pattern id=\"m-hatch\" width=\"16\" height=\"16\" patternUnits=\"userSpaceOnUse\" patternTransform=\"rotate(45)\"><line x1=\"0\" y1=\"0\" x2=\"0\" y2=\"16\" stroke=\"#8895a3\" stroke-width=\"4\"/></pattern></defs><line x1=\"120\" y1=\"405\" x2=\"880\" y2=\"405\" stroke=\"#14263d\" stroke-width=\"12\"/><rect x=\"120\" y=\"417\" width=\"760\" height=\"55\" fill=\"url(#m-hatch)\"/><line x1=\"500\" y1=\"45\" x2=\"500\" y2=\"405\" stroke=\"#14263d\" stroke-width=\"5\" stroke-dasharray=\"15 12\"/><line x1=\"210\" y1=\"115\" x2=\"500\" y2=\"405\" stroke=\"#b78324\" stroke-width=\"8\" marker-end=\"url(#m-arrow)\"/><line x1=\"500\" y1=\"405\" x2=\"790\" y2=\"115\" stroke=\"#b78324\" stroke-width=\"8\" marker-end=\"url(#m-arrow)\"/><path d=\"M500 340 A65 65 0 0 0 454 359\" fill=\"none\" stroke=\"#203b5d\" stroke-width=\"5\"/><path d=\"M500 340 A65 65 0 0 1 546 359\" fill=\"none\" stroke=\"#203b5d\" stroke-width=\"5\"/></svg>","labels":[{"text":"incident ray","note":"travels towards mirror","x":31,"y":40,"side":"left"},{"text":"angle of incidence","note":"measure from normal","x":45.5,"y":64,"side":"left"},{"text":"normal","note":"90° to mirror","x":50,"y":18,"side":"right"},{"text":"reflected ray","note":"travels away","x":69,"y":40,"side":"right"},{"text":"angle of reflection","note":"measure from normal","x":54.5,"y":64,"side":"right"},{"text":"plane mirror","note":"reflecting surface","x":78,"y":72,"side":"right"}],"caption":"The two angle arcs begin at the normal, not at the mirror surface."},"support":{"start":{"title":"Get started","heading":"","body":"<p>Use this order: mirror, normal, incident ray, reflected ray, arrows, angles.</p>"},"build":{"title":"Build understanding","heading":"","body":"<p>The normal makes a 90° angle with the mirror. Both angle arcs must touch the normal.</p>"},"stretch":{"title":"Go further","heading":"","body":"<p>Explain why measuring from the mirror gives 90° minus the correct angle.</p>"}},"product":"A parallel 30° ray diagram in books"},{"type":"practice","layout":"task-and-criteria","label":"Method","nav":"5","title":"Open the method. Pass the safety check.","lead":"Read Set up on the activity sheet. Rehearse the steps with the ray box switched off.","minutes":2,"tasks":["Point to the mirror line, normal and point of incidence on your paper.","Say how you will mark each ray before removing the equipment."],"criteria":["Beam stays below eye level","Never look into the ray box","Switch off between readings"],"resources":[{"label":"Open activity sheet","href":"resources/01-reflection-investigation.html","kind":"worksheet"}],"support":{"start":{"title":"Get started","heading":"","body":"<p>Follow Set up one numbered step at a time. Do not switch on yet.</p>"},"build":{"title":"Build understanding","heading":"","body":"<p>One pupil points to each part while another says what happens next.</p>"},"stretch":{"title":"Go further","heading":"","body":"<p>Explain why the equipment is removed before the marked points are joined.</p>"}},"product":"A rehearsed method and whole-class safety check"},{"type":"practice","layout":"task-and-criteria","label":"Collect","nav":"6","title":"Collect four trustworthy angle pairs","lead":"Work in your group. Record every shared result and one ray diagram in your own book.","minutes":14,"tasks":["Rotate operator, marker, measurer and checker roles after two readings.","Measure four pairs. Record each pair and |i − r| in your own book."],"table":[["Set i (°)","Measure r (°)","Difference |i − r| (°)"],["20","",""],["30","",""],["40","",""],["50","",""]],"support":{"start":{"title":"Get started","heading":"","body":"<p>Use the activity sheet method. Complete one row fully before changing the angle.</p>"},"build":{"title":"Build understanding","heading":"","body":"<p>If the ray is wide, adjust the slit. If the angles differ greatly, check the normal and reference line before repeating.</p>"},"stretch":{"title":"Go further","heading":"","body":"<p>Estimate the measurement uncertainty of your protractor readings and compare it with each difference.</p>"}},"product":"Four angle pairs, differences and one labelled traced ray diagram in every pupil's book"},{"type":"question","layout":"full-question","label":"Interpret","nav":"7","title":"What rule do the results support?","lead":"Compare the angle pairs. Write the strongest conclusion your measurements support.","minutes":4,"tasks":["Use two measured pairs, then compare the result with your prediction.","Explain why a 1–2° difference may be measurement uncertainty rather than a different law."],"claim":"The angle of incidence and the angle of reflection follow a fixed relationship.","review":{"type":"wagoll","label":"Reveal the law","title":"Law of reflection","body":"<p>The angle of incidence equals the angle of reflection. Both angles are measured from the normal. Small differences in our readings can result from the width of the ray, thick pencil marks or protractor alignment.</p>"},"support":{"start":{"title":"Get started","heading":"","body":"<p>Begin: When i was __°, r was __°. This suggests…</p>"},"build":{"title":"Build understanding","heading":"","body":"<p>A small difference does not automatically disprove the law; compare it with the precision of your measurements.</p>"},"stretch":{"title":"Go further","heading":"","body":"<p>Explain why one unusual pair should be repeated before deciding that the law failed.</p>"}},"product":"An evidence-backed conclusion and prediction review in books"},{"type":"hinge","layout":"diagnostic-decision","label":"Check","nav":"8","title":"Choose the reflected angle","lead":"Choose A–D. Add one reason. Show together.","minutes":3,"callout":"i = 35°. Which option obeys the law of reflection?","support":false,"choices":["r = 35°, measured from the normal.","r = 55°, measured from the normal.","r = 35°, measured from the mirror.","The reflected ray retraces the incident ray."],"answer":0,"feedback":"A: i = r, with both angles measured from the normal.","recheck":"Sketch r for i = 20°. Label the normal.","product":"One A–D choice and justification on a mini-whiteboard"},{"type":"question","layout":"full-question","label":"Evaluate","nav":"9","title":"Construct a fresh reflected ray","lead":"Work alone in your book. Do not look back at the model.","minutes":5,"tasks":["Draw a plane mirror sloping upwards from left to right.","At its centre, draw a normal at 90° to the mirror.","Add an incident ray with i = 40° and construct the reflected ray.","Label both rays, both angles and the normal. State the law of reflection."],"support":false,"product":"Independent ray diagram and law statement in books"},{"type":"exit","layout":"quiet-exit","label":"Respond","nav":"10","title":"Check it. Repair one feature.","lead":"Use the criteria now. Add one precise correction in a different colour.","minutes":2,"tasks":["Point to the evidence for each criterion in your diagram.","Repair one missing or inaccurate feature."],"criteria":["Ruled rays with arrows in the correct direction","Normal at 90° to the mirror","i and r both 40°, measured from the normal","Law stated precisely"],"review":{"type":"mark-scheme","label":"Reveal self-check","title":"Check the construction","body":"<p>The incident arrow points towards the mirror; the reflected arrow points away. The dashed normal is perpendicular to the sloping mirror. Both 40° angles sit between a ray and the normal. The law states: angle of incidence = angle of reflection.</p>"},"assessment":{"type":"self","label":"Self-assessment","detail":"One visible self-correction added to the independent diagram in books"}}],"support":{"start":{"title":"Get started","heading":"Name and place each part","body":"<ul><li>Normal: a construction line drawn at 90° to the mirror.</li><li>Incident ray: the light travelling towards the mirror.</li><li>Reflected ray: the light travelling away from the mirror.</li></ul>"},"build":{"title":"Build understanding","heading":"Use the normal as your reference","body":"<ul><li>Make both angle arcs begin at the normal.</li><li>Check each arrow before adding a label.</li><li>Compare paired values before writing a rule.</li></ul>"},"stretch":{"title":"Go further","heading":"Change the orientation, not the science","body":"<ul><li>Rotate the mirror and rebuild the normal before predicting the reflected ray.</li><li>Explain how measurement uncertainty can create a small difference without changing the law.</li><li>Use the same rule to predict the ray at normal incidence.</li></ul>"}}};
+
+const state = {};</script>
+<script>
+/* Edu OS lesson runtime. Renders `lesson` (inlined by Planner/scripts/render-lesson.mjs) as one-screen phases
+   with Student and Present modes, a support drawer, keyboard navigation and teacher-controlled reveals.
+   Pupils answer in books; the only interaction is navigation and reveal. */
+(() => {
+  const stage = document.querySelector('.stage');
+  const drawer = document.querySelector('.drawer');
+  const main = document.querySelector('.main');
+  const modeButton = document.querySelector('.mode');
+  const supportButton = document.querySelector('.support-toggle');
+  let index = 0;
+  let activeTab = 'start';
+  const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[c]));
+  const letters = 'ABCDEF';
+
+  const list = items => items?.length ? `<ul class="list">${items.map((item, i) => `<li><span class="n">${String(i + 1).padStart(2, '0')}</span><span>${item}</span></li>`).join('')}</ul>` : '';
+  const tasks = items => items?.length ? `<div class="tasks">${items.map(item => `<div>${item}</div>`).join('')}</div>` : '';
+  const criteria = items => items?.length ? `<aside class="criteria"><h2>Success criteria</h2>${items.map(item => `<p>✓ ${item}</p>`).join('')}</aside>` : '';
+  const table = rows => rows?.length ? `<table class="evidence"><thead><tr>${rows[0].map(cell => `<th>${cell}</th>`).join('')}</tr></thead><tbody>${rows.slice(1).map(row => `<tr>${row.map(cell => `<td>${cell}</td>`).join('')}</tr>`).join('')}</tbody></table>` : '';
+  const flow = nodes => nodes?.length ? `<div class="diagram"><div class="flow">${nodes.map((node, i) => `${i ? '<span class="arrow">→</span>' : ''}<div class="node">${node}</div>`).join('')}</div></div>` : '';
+  const model = m => {
+    if (!m) return '';
+    const side = which => `<div class="model-labels ${which}">${m.labels.filter(l => (l.side || 'right') === which).sort((a, b) => a.y - b.y).map((l, i) => `<div class="model-label" data-label="${which}-${i}" data-x="${l.x}" data-y="${l.y}">${l.text}${l.note ? `<small>${l.note}</small>` : ''}</div>`).join('')}</div>`;
+    const titles = (m.panels || []).map((t, i) => `<span class="panel-title ${i ? 'right' : 'left'}">${esc(t)}</span>`).join('');
+    const has = which => m.labels.some(l => (l.side || 'right') === which);
+    const cls = `model${has('left') ? '' : ' no-left'}${has('right') ? '' : ' no-right'}`;
+    return `<div class="${cls}" data-model>${has('left') ? side('left') : ''}<div class="model-figure">${titles}${m.figure}</div>${has('right') ? side('right') : ''}<svg class="model-leaders" aria-hidden="true"></svg></div>${m.caption ? `<p class="model-caption">${esc(m.caption)}</p>` : ''}`;
+  };
+  const figure = phase => phase.model ? model(phase.model) : phase.image ? `<figure class="figure"><img src="${esc(phase.image)}" alt="${esc(phase.imageAlt || '')}"><figcaption>${esc(phase.imageCaption || '')}</figcaption></figure>` : phase.svg ? `<figure class="figure">${phase.svg}${phase.imageCaption ? `<figcaption>${esc(phase.imageCaption)}</figcaption>` : ''}</figure>` : '';
+  const steps = items => items?.length ? `<div class="steps">${items.map((step, i) => `<div class="step ${step.weak ? 'weak' : ''}"><span class="n">${i + 1}</span><span>${step.text ?? step}</span></div>`).join('')}</div>` : '';
+  const reveal = (id, label, title, body) => `<button class="reveal" data-reveal="${id}" aria-expanded="false" aria-controls="${id}">${esc(label)}</button>`
+    + `<div class="revealed" id="${id}" hidden>${title ? `<h2>${esc(title)}</h2>` : ''}${body}</div>`;
+
+  function choices(phase) {
+    if (!phase.choices?.length) return '';
+    const grid = `<div class="choices">${phase.choices.map((choice, i) => `<div class="choice" data-choice="${i}"><span class="n">${letters[i]}</span><span>${choice}</span></div>`).join('')}</div>`;
+    const bar = [];
+    if (phase.answer !== undefined) bar.push(reveal(`answer-${index}`, 'Reveal', `Answer: ${letters[phase.answer]}`, `<p>${phase.feedback || ''}</p>`));
+    if (phase.recheck) bar.push(reveal(`recheck-${index}`, 'Recheck', 'Recheck on whiteboards', `<p>${phase.recheck}</p>`));
+    return `${grid}${bar.length ? `<div class="reveal-bar">${bar.join('')}</div>` : ''}`;
+  }
+
+  function reveals(phase) {
+    return (phase.reveals || []).map((item, i) => reveal(`reveal-${index}-${i}`, item.label, item.title, item.body)).join('');
+  }
+
+  function feedback(phase) {
+    if (!phase.review) return '';
+    return `<div class="feedback-bar"><span>Review and improve</span>${reveal(`feedback-${index}`, phase.review.label, phase.review.title, phase.review.body)}</div>`;
+  }
+
+  function resources(phase) {
+    if (!phase.resources?.length) return '';
+    return `<div class="resource-bar">${phase.resources.map(item => `<a class="resource-button" href="${esc(item.href)}" target="_blank" rel="noopener"><span>${esc(item.label)}</span><small>${esc(item.kind)}</small></a>`).join('')}</div>`;
+  }
+
+  function header(phase) {
+    const badge = phase.assessment ? `<span class="assessment-badge">${esc(phase.assessment.label)}</span>` : '';
+    return `<div class="label">${esc(phase.label)}${badge}</div><h1 tabindex="-1">${phase.title}</h1>${phase.lead ? `<p class="lead">${phase.lead}</p>` : ''}`;
+  }
+
+  function screen(phase) {
+    // A table and worked steps may share a screen (the readings and the decisions made on them); nothing is dropped.
+    const graphic = figure(phase) || flow(phase.visual) || ((phase.table || phase.steps) ? `${table(phase.table)}${steps(phase.steps)}` : '');
+    // Points are never dropped: they share the aside when there is no graphic, otherwise they sit in the text column.
+    const text = `<div class="text">${header(phase)}${phase.claim ? `<div class="claim">${phase.claim}</div>` : ''}${phase.callout ? `<p class="callout">${phase.callout}</p>` : ''}${graphic ? list(phase.points) : ''}${choices(phase)}${tasks(phase.tasks)}${resources(phase)}${reveals(phase)}${feedback(phase)}${phase.assessment?.detail ? `<p class="product">${esc(phase.assessment.detail)}</p>` : phase.product ? `<p class="product">${esc(phase.product)}</p>` : ''}</div>`;
+    const visual = graphic || list(phase.points);
+    const aside = `<div class="aside">${visual}${criteria(phase.criteria)}</div>`;
+    const family = {
+      'retrieval-sheet': 'stacked', 'full-question': 'single', 'quiet-exit': 'single', 'task-and-criteria': 'two',
+      'image-led-decision': 'visual-left', 'visual-first-explanation': 'visual-left', 'model-stage': 'visual-left', 'observation-theatre': 'visual-left theatre',
+      'evidence-workbench': 'stacked', 'worked-model': 'two', 'split-explanation': 'two', 'diagnostic-decision': 'stacked', 'context-brief': 'visual-left', 'claim-verification': 'two'
+    }[phase.layout] || 'two';
+    const single = family === 'single' || (family === 'stacked' && !visual && !phase.criteria);
+    // A single-column screen has no aside, so its points render in the text column rather than being dropped.
+    return `<article class="screen" data-layout="${esc(phase.layout)}"><div class="layout ${single ? 'single' : family}">${text}${single ? `${graphic ? '' : list(phase.points)}${criteria(phase.criteria)}` : aside}</div></article>`;
+  }
+
+  // Protected screens (hinge, teacher-marked evidence) carry support:false so the lesson-level drawer cannot fall through.
+  const supportFor = () => { const phase = lesson.phases[index]; return phase.support === false ? null : (phase.support || lesson.support); };
+  function support() {
+    const routes = supportFor();
+    if (!routes) return '<h2>Support</h2><p class="support">No extra support on this screen.</p>';
+    const tab = routes[activeTab] || routes.start;
+    return `<h2>Support</h2><div class="tabs">${Object.entries(routes).map(([key, value]) => `<button class="tab ${key === activeTab ? 'active' : ''}" data-tab="${key}">${esc(value.title)}</button>`).join('')}</div><div class="support">${tab.heading ? `<h3>${esc(tab.heading)}</h3>` : ''}${tab.body}</div>`;
+  }
+
+  function render() {
+    const phase = lesson.phases[index];
+    stage.innerHTML = screen(phase);
+    document.querySelector('.progress span').style.width = `${((index + 1) / lesson.phases.length) * 100}%`;
+    document.querySelector('.navtext').innerHTML = `<small>${index + 1} of ${lesson.phases.length} · ${esc(phase.label)}</small><strong>${esc(phase.title)}</strong>`;
+    document.querySelector('.prev').disabled = index === 0;
+    document.querySelector('.next').disabled = index === lesson.phases.length - 1;
+    if (drawer && !drawer.hidden) drawer.innerHTML = support();
+    stage.querySelector('h1')?.focus({ preventScroll: true });
+    fit();
+    stage.querySelectorAll('[data-reveal]').forEach(button => button.addEventListener('click', () => {
+      const target = document.getElementById(button.dataset.reveal);
+      const open = target.hidden;
+      target.hidden = !open;
+      button.setAttribute('aria-expanded', String(open));
+      if (button.dataset.reveal.startsWith('answer-') && open) stage.querySelectorAll('.choice')[phase.answer]?.classList.add('correct');
+      requestAnimationFrame(fit);
+    }));
+  }
+
+  // Leader lines: from each label's inner edge to its anchor (x, y as % of the figure's svg box).
+  function leaders() {
+    const wrap = stage.querySelector('[data-model]');
+    if (!wrap) return;
+    const overlay = wrap.querySelector('.model-leaders');
+    const svg = wrap.querySelector('.model-figure svg:not(.model-leaders)');
+    if (!svg) return;
+    const box = wrap.getBoundingClientRect();
+    // Anchors are % of the drawn viewBox area, which is letterboxed inside the svg element (preserveAspectRatio meet).
+    const rect = svg.getBoundingClientRect();
+    const [, , vw, vh] = (svg.getAttribute('viewBox') || `0 0 ${rect.width} ${rect.height}`).split(/\s+|,/).map(Number);
+    const scale = Math.min(rect.width / vw, rect.height / vh);
+    const fig = { left: rect.left + (rect.width - vw * scale) / 2, top: rect.top + (rect.height - vh * scale) / 2, width: vw * scale, height: vh * scale };
+    // Place labels level with their anchors, then push apart so none overlap (top-down sweep, then clamp to the column).
+    for (const column of wrap.querySelectorAll('.model-labels')) {
+      const colRect = column.getBoundingClientRect();
+      const labels = [...column.querySelectorAll('.model-label')].map(label => ({ label, h: label.offsetHeight, want: fig.top + fig.height * Number(label.dataset.y) / 100 - colRect.top - label.offsetHeight / 2 })).sort((p, q) => p.want - q.want);
+      const gap = 6;
+      let cursor = 0;
+      for (const item of labels) { item.top = Math.max(item.want, cursor); cursor = item.top + item.h + gap; }
+      const overflow = cursor - gap - colRect.height;
+      if (overflow > 0) { let floor = colRect.height; for (const item of [...labels].reverse()) { item.top = Math.min(item.top, floor - item.h); floor = item.top - gap; } }
+      for (const item of labels) item.label.style.top = `${Math.max(0, item.top)}px`;
+    }
+    overlay.setAttribute('viewBox', `0 0 ${box.width} ${box.height}`);
+    overlay.innerHTML = [...wrap.querySelectorAll('.model-label')].map(label => {
+      const r = label.getBoundingClientRect();
+      const left = label.dataset.label.startsWith('left');
+      const x1 = (left ? r.right : r.left) - box.left;
+      const y1 = r.top + r.height / 2 - box.top;
+      const x2 = fig.left + fig.width * Number(label.dataset.x) / 100 - box.left;
+      const y2 = fig.top + fig.height * Number(label.dataset.y) / 100 - box.top;
+      return `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}"></line><circle cx="${x2}" cy="${y2}" r="4"></circle>`;
+    }).join('');
+  }
+
+  // One screen, no scrolling. If a screen still overflows the stage, step the zoom down and say so in the console
+  // so the QA screenshot review can see which screen is too dense. Density is a design fault; this only keeps the class moving.
+  function fit() {
+    const screen = stage.querySelector('.screen');
+    if (!screen) return;
+    screen.style.zoom = '';
+    let zoom = 1;
+    // .screen is exactly the stage height with overflow hidden, so measure content against its box, not the stage's.
+    const overflows = () => [screen, ...screen.querySelectorAll('.layout, .text, .aside, .model-labels')].some(el => el.scrollHeight > el.clientHeight + 1 || el.scrollWidth > el.clientWidth + 1);
+    while (overflows() && zoom > 0.7) {
+      zoom = Math.round((zoom - 0.05) * 100) / 100;
+      screen.style.zoom = zoom;
+    }
+    if (zoom < 1) console.warn(`Edu OS runtime: screen ${index + 1} ("${lesson.phases[index].title}") is too dense; zoomed to ${zoom}. Reduce the content in the design.`);
+    leaders();
+  }
+  window.addEventListener('resize', fit);
+
+  document.querySelector('.prev').addEventListener('click', () => { if (index) { index -= 1; render(); } });
+  document.querySelector('.next').addEventListener('click', () => { if (index < lesson.phases.length - 1) { index += 1; render(); } });
+  modeButton.addEventListener('click', () => {
+    const present = document.body.classList.toggle('present');
+    modeButton.textContent = present ? 'Student view' : 'Present';
+    if (present && document.fullscreenEnabled && !document.fullscreenElement) document.documentElement.requestFullscreen().catch(() => {});
+    if (!present && document.fullscreenElement) document.exitFullscreen().catch(() => {});
+  });
+  if (supportButton) {
+    if (!lesson.support && !lesson.phases.some(phase => phase.support)) supportButton.hidden = true;
+    supportButton.addEventListener('click', () => {
+      drawer.hidden = !drawer.hidden;
+      main.classList.toggle('drawer-open', !drawer.hidden);
+      if (!drawer.hidden) drawer.innerHTML = support();
+    });
+    drawer.addEventListener('click', event => {
+      const tab = event.target.closest('[data-tab]');
+      if (tab) { activeTab = tab.dataset.tab; drawer.innerHTML = support(); }
+    });
+  }
+  document.addEventListener('keydown', event => {
+    if (event.target.matches('button, input, textarea')) return;
+    if ((event.key === 'ArrowRight' || event.key === 'PageDown' || event.key === ' ') && index < lesson.phases.length - 1) { event.preventDefault(); index += 1; render(); }
+    if ((event.key === 'ArrowLeft' || event.key === 'PageUp') && index) { event.preventDefault(); index -= 1; render(); }
+    if (event.key === 'p' || event.key === 'P') modeButton.click();
+  });
+  render();
+})();
+
+</script>
+</body>
+</html>

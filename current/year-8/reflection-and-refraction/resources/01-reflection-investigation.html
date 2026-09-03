@@ -1,0 +1,285 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#14263d">
+  <title>Reflection investigation | Year 8 Science</title>
+  <style>
+    :root {
+      --navy: #14263d;
+      --navy-2: #203b5d;
+      --gold: #b78324;
+      --gold-soft: #f2c96d;
+      --paper: #faf7f0;
+      --white: #fffdf8;
+      --wash: #eee8dc;
+      --ink: #223142;
+      --muted: #596574;
+      --line: #c8c5bc;
+      --blue: #dbeaf0;
+      --green: #dceade;
+      --serif: Fraunces, Georgia, "Times New Roman", serif;
+      --sans: Montserrat, "Helvetica Neue", Arial, sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    html { background: var(--wash); }
+    body { min-height: 100vh; margin: 0; color: var(--ink); font-family: var(--sans); }
+    button { font: inherit; }
+    button:focus-visible { outline: 4px solid var(--gold-soft); outline-offset: 3px; }
+
+    .sheet {
+      width: min(1480px, calc(100% - 32px));
+      min-height: calc(100vh - 32px);
+      margin: 16px auto;
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      overflow: hidden;
+      background: var(--paper);
+      box-shadow: 0 18px 44px rgb(20 38 61 / 12%);
+    }
+
+    header {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 24px;
+      align-items: end;
+      padding: 24px 30px 20px;
+      background: var(--navy);
+      color: white;
+    }
+    .eyebrow { margin: 0 0 7px; color: var(--gold-soft); font-size: .8rem; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; }
+    h1 { margin: 0; max-width: 20ch; font: 400 clamp(2.2rem, 3.7vw, 4rem) / 1 var(--serif); letter-spacing: -.035em; }
+    .brief { max-width: 37rem; margin: 0; color: #e8edf5; font-size: clamp(1rem, 1.25vw, 1.2rem); line-height: 1.48; }
+
+    .tabs { display: flex; gap: 8px; padding: 14px 30px; border-bottom: 1px solid var(--line); background: var(--white); }
+    .tab { min-height: 44px; padding: 9px 18px; border: 1px solid var(--line); border-radius: 999px; background: var(--white); color: var(--navy); font-weight: 800; cursor: pointer; }
+    .tab[aria-selected="true"] { border-color: var(--navy); background: var(--navy); color: white; }
+    .tab .number { color: var(--gold); margin-right: .35rem; }
+
+    main { padding: 22px 30px 28px; }
+    .panel[hidden] { display: none; }
+    .panel { min-height: 560px; }
+    .grid { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(330px, .85fr); gap: 24px; align-items: start; }
+    .card { border: 1px solid var(--line); border-radius: 16px; background: var(--white); overflow: hidden; }
+    .card h2 { margin: 0; padding: 14px 18px; background: var(--blue); color: var(--navy); font: 400 1.65rem / 1.15 var(--serif); }
+    .card-body { padding: 16px 18px; }
+    .card-body > :first-child { margin-top: 0; }
+    .card-body > :last-child { margin-bottom: 0; }
+    ol, ul { margin: 0; padding-left: 1.4rem; }
+    li { margin: .55rem 0; font-size: clamp(1rem, 1.14vw, 1.16rem); line-height: 1.42; }
+    strong { color: var(--navy); }
+
+    .diagram { display: grid; place-items: center; min-height: 390px; padding: 12px; background: linear-gradient(135deg, #edf3f3, #f7efe2); }
+    .diagram svg { width: min(100%, 760px); height: auto; }
+    .caption { margin: 0; padding: 10px 16px 14px; color: var(--muted); font-size: .94rem; line-height: 1.4; }
+    .safety { margin-top: 16px; padding: 14px 16px; border-left: 6px solid var(--gold); border-radius: 10px; background: #fff5d9; font-weight: 650; line-height: 1.45; }
+
+    table { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; }
+    th, td { height: 54px; padding: 9px 12px; border: 1px solid var(--line); text-align: center; font-size: clamp(.95rem, 1.08vw, 1.1rem); }
+    th { background: var(--navy); color: white; line-height: 1.25; }
+    td:first-child { color: var(--navy); font-weight: 800; }
+    .book-task { margin-top: 18px; padding: 16px 18px; border: 2px solid var(--navy); border-radius: 14px; background: var(--white); }
+    .book-task h3 { margin: 0 0 8px; color: var(--navy); font: 400 1.45rem var(--serif); }
+    .book-task p { margin: 0; font-size: 1.05rem; line-height: 1.45; }
+    .criteria { background: var(--navy); color: white; }
+    .criteria h2 { background: transparent; color: var(--gold-soft); }
+    .criteria strong { color: var(--gold-soft); }
+
+    .footer-note { margin: 18px 0 0; color: var(--muted); font-size: .9rem; }
+
+    @media (max-width: 900px) {
+      .sheet { width: min(100% - 16px, 800px); margin: 8px auto; border-radius: 14px; }
+      header { grid-template-columns: 1fr; padding: 22px; }
+      .tabs { padding: 12px 18px; overflow-x: auto; }
+      main { padding: 18px; }
+      .grid { grid-template-columns: 1fr; }
+      .panel { min-height: 0; }
+    }
+
+    @media print {
+      @page { size: A4 portrait; margin: 10mm; }
+      html, body { background: white; }
+      .sheet { width: 100%; min-height: 0; margin: 0; border: 0; border-radius: 0; box-shadow: none; }
+      header { padding: 10mm 9mm 7mm; print-color-adjust: exact; }
+      h1 { font-size: 25pt; }
+      .brief { font-size: 10pt; }
+      .tabs { display: none; }
+      main { padding: 7mm 2mm; }
+      .panel[hidden] { display: block; }
+      .panel { min-height: 0; break-after: page; }
+      .panel:last-child { break-after: auto; }
+      .grid { grid-template-columns: 1.1fr .9fr; gap: 6mm; }
+      .diagram { min-height: 100mm; }
+      li, .book-task p, th, td { font-size: 9.5pt; }
+      .footer-note { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <article class="sheet">
+    <header>
+      <div>
+        <p class="eyebrow">Year 8 Science · Lesson 1 · Book-completion sheet</p>
+        <h1>Test the law of reflection</h1>
+      </div>
+      <p class="brief">Use this sheet to set up the practical and organise your evidence. Record every prediction, result, diagram and conclusion in your exercise book.</p>
+    </header>
+
+    <nav class="tabs" aria-label="Investigation stages">
+      <button class="tab" type="button" role="tab" aria-selected="true" aria-controls="setup" id="tab-setup"><span class="number">01</span>Set up</button>
+      <button class="tab" type="button" role="tab" aria-selected="false" aria-controls="record" id="tab-record"><span class="number">02</span>Record</button>
+      <button class="tab" type="button" role="tab" aria-selected="false" aria-controls="conclude" id="tab-conclude"><span class="number">03</span>Conclude</button>
+    </nav>
+
+    <main>
+      <section class="panel" id="setup" role="tabpanel" aria-labelledby="tab-setup">
+        <div class="grid">
+          <div class="card">
+            <div class="diagram">
+              <svg viewBox="0 0 900 560" role="img" aria-labelledby="diagram-title diagram-desc">
+                <title id="diagram-title">Ray box and plane mirror investigation</title>
+                <desc id="diagram-desc">A narrow incident ray reaches a plane mirror at the normal and reflects away on the other side.</desc>
+                <defs>
+                  <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#b78324"/></marker>
+                  <pattern id="hatch" width="15" height="15" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="15" stroke="#7f8a97" stroke-width="4"/></pattern>
+                </defs>
+                <g transform="rotate(55 450 390)">
+                  <rect x="80" y="335" width="190" height="110" rx="18" fill="#203b5d"/>
+                  <rect x="102" y="361" width="125" height="58" rx="8" fill="#faf7f0"/>
+                  <path d="M227 390 H270" stroke="#f2c96d" stroke-width="12"/>
+                  <path d="M270 390 H450" stroke="#b78324" stroke-width="8" marker-end="url(#arrow)"/>
+                </g>
+                <path d="M450 390 L650 104" stroke="#b78324" stroke-width="8" marker-end="url(#arrow)"/>
+                <line x1="450" y1="70" x2="450" y2="430" stroke="#14263d" stroke-width="5" stroke-dasharray="14 12"/>
+                <line x1="160" y1="390" x2="740" y2="390" stroke="#14263d" stroke-width="12"/>
+                <rect x="160" y="402" width="580" height="55" fill="url(#hatch)"/>
+                <path d="M450 360 A52 52 0 0 0 430 314" fill="none" stroke="#203b5d" stroke-width="5"/>
+                <path d="M450 360 A52 52 0 0 1 470 314" fill="none" stroke="#203b5d" stroke-width="5"/>
+                <g fill="#14263d" font-family="Arial, sans-serif" font-size="26" font-weight="700">
+                  <text x="45" y="90">ray box</text>
+                  <text x="185" y="300">incident ray</text>
+                  <text x="555" y="245">reflected ray</text>
+                  <text x="465" y="88">normal</text>
+                  <text x="650" y="375">plane mirror</text>
+                  <text x="405" y="315">i</text>
+                  <text x="478" y="315">r</text>
+                </g>
+              </svg>
+            </div>
+            <p class="caption">Measure both angles from the dashed normal. The normal is drawn at 90° to the mirror.</p>
+          </div>
+
+          <div>
+            <section class="card">
+              <h2>Method</h2>
+              <div class="card-body">
+                <ol>
+                  <li>Place the mirror on a ruled line. Mark its position.</li>
+                  <li>Draw a normal at 90° to the mirror line.</li>
+                  <li>Aim one narrow ray at the point where the normal meets the mirror.</li>
+                  <li>Mark two points on the incident ray and two on the reflected ray.</li>
+                  <li>Switch off the ray box. Remove the equipment. Join each pair of points with a ruler.</li>
+                  <li>Measure angle <strong>i</strong> and angle <strong>r</strong> from the normal.</li>
+                  <li>Repeat for incident angles of 20°, 30°, 40° and 50°.</li>
+                </ol>
+              </div>
+            </section>
+            <p class="safety"><strong>Safe working:</strong> Keep the beam below eye level. Never look into the ray box. The lamp housing can become hot, so switch it off between readings and hold only the cool base.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel" id="record" role="tabpanel" aria-labelledby="tab-record" hidden>
+        <div class="grid">
+          <section class="card">
+            <h2>Copy and complete this table in your book</h2>
+            <div class="card-body">
+              <table aria-label="Results table for reflection investigation">
+                <thead><tr><th>Reading</th><th>Angle of incidence, i (°)</th><th>Angle of reflection, r (°)</th><th>Difference, |i − r| (°)</th></tr></thead>
+                <tbody>
+                  <tr><td>1</td><td>20</td><td></td><td></td></tr>
+                  <tr><td>2</td><td>30</td><td></td><td></td></tr>
+                  <tr><td>3</td><td>40</td><td></td><td></td></tr>
+                  <tr><td>4</td><td>50</td><td></td><td></td></tr>
+                </tbody>
+              </table>
+              <div class="book-task">
+                <h3>Your practical record</h3>
+                <p>For one reading, draw the mirror, normal, incident ray and reflected ray. Add arrowheads. Label <strong>i</strong> and <strong>r</strong> with the measured values.</p>
+              </div>
+            </div>
+          </section>
+
+          <section class="card criteria">
+            <h2>Quality check before you move on</h2>
+            <div class="card-body">
+              <ul>
+                <li>The ray box has one narrow, visible ray.</li>
+                <li>Every ray reaches the same point on the mirror.</li>
+                <li>The normal is exactly 90° to the mirror.</li>
+                <li>Angles are measured between each ray and the normal.</li>
+                <li>Ray lines use a ruler and arrowheads show direction.</li>
+              </ul>
+            </div>
+          </section>
+        </div>
+      </section>
+
+      <section class="panel" id="conclude" role="tabpanel" aria-labelledby="tab-conclude" hidden>
+        <div class="grid">
+          <section class="card">
+            <h2>Write your conclusion in your book</h2>
+            <div class="card-body">
+              <ol>
+                <li>State the relationship between angle <strong>i</strong> and angle <strong>r</strong>.</li>
+                <li>Support the relationship with two pairs of your measured values.</li>
+                <li>State the law of reflection in one precise sentence.</li>
+                <li>Explain why one pair of measured angles might differ by 1–2° even if the law is correct.</li>
+              </ol>
+              <div class="book-task">
+                <h3>Go deeper</h3>
+                <p>Imagine rotating the mirror clockwise by 10° while the incident ray stays fixed. Predict how the reflected ray changes. Explain your prediction using the normal.</p>
+              </div>
+            </div>
+          </section>
+
+          <section class="card criteria">
+            <h2>A secure conclusion</h2>
+            <div class="card-body">
+              <ul>
+                <li>Names the <strong>normal</strong>, not the mirror surface, as the reference line.</li>
+                <li>Uses <strong>angle of incidence</strong> and <strong>angle of reflection</strong> accurately.</li>
+                <li>Uses measured evidence, not “the results were good”.</li>
+                <li>Separates the scientific law from small measurement uncertainty.</li>
+              </ul>
+            </div>
+          </section>
+        </div>
+        <p class="footer-note">This resource organises the investigation. Your exercise book is the record of your learning.</p>
+      </section>
+    </main>
+  </article>
+
+  <script>
+    const tabs = [...document.querySelectorAll('[role="tab"]')];
+    const panels = [...document.querySelectorAll('[role="tabpanel"]')];
+    function show(id) {
+      tabs.forEach(tab => tab.setAttribute('aria-selected', String(tab.getAttribute('aria-controls') === id)));
+      panels.forEach(panel => { panel.hidden = panel.id !== id; });
+    }
+    tabs.forEach((tab, index) => {
+      tab.addEventListener('click', () => show(tab.getAttribute('aria-controls')));
+      tab.addEventListener('keydown', event => {
+        if (!['ArrowLeft', 'ArrowRight'].includes(event.key)) return;
+        event.preventDefault();
+        const next = (index + (event.key === 'ArrowRight' ? 1 : -1) + tabs.length) % tabs.length;
+        tabs[next].focus();
+        show(tabs[next].getAttribute('aria-controls'));
+      });
+    });
+    panels.forEach(panel => panel.setAttribute('tabindex', '-1'));
+  </script>
+</body>
+</html>
