@@ -1,0 +1,395 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>How does light allow us to see? | Year 8 Science</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500&family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* Edu OS lesson runtime — Arcadia quiet academic canvas.
+   Type scale is set for a 1920 × 1080 classroom display (core text ≈ 30–36 px, headings ≥ 60 px,
+   labels ≥ 20 px) and collapses for laptops below 1280 px. See LESSON_BUILD_MEMORY.md. */
+
+:root {
+  --navy: #14263d; --ink: #223142; --muted: #4f5c6b; --gold: #b78324; --gold-soft: #f2c96d;
+  --paper: #faf7f0; --wash: #eee8dc; --white: #fffdf8; --line: #c8c5bc; --blue: #dbeaf0; --green: #dceade; --amber: #fff8e7;
+  --serif: Fraunces, Georgia, "Times New Roman", serif;
+  --sans: Montserrat, "Helvetica Neue", Arial, sans-serif;
+  /* Scale: 1vw at 1920 = 19.2px */
+  --t-label: clamp(0.85rem, 1.05vw, 1.3rem);   /* 20 px at 1920 */
+  --t-body: clamp(1.1rem, 1.6vw, 2rem);        /* 31 px */
+  --t-lead: clamp(1.25rem, 1.75vw, 2.25rem);   /* 34 px */
+  --t-h1: clamp(2.6rem, 3.6vw, 4.6rem);        /* 69 px */
+  --t-h2: clamp(1.4rem, 1.9vw, 2.4rem);        /* 36 px */
+  font-family: var(--sans);
+}
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+body { margin: 0; background: var(--wash); color: var(--ink); }
+button { font: inherit; }
+button:focus-visible, a:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
+.skip { position: fixed; top: -5rem; left: 1rem; background: var(--navy); color: #fff; padding: .6rem 1rem; z-index: 99; }
+.skip:focus { top: 1rem; }
+
+.app { height: 100vh; display: grid; grid-template-rows: 72px 5px minmax(0, 1fr) 68px; background: var(--paper); }
+.top { display: flex; align-items: center; gap: 1.2rem; padding: 0 2rem; border-bottom: 1px solid var(--line); background: var(--white); }
+.kicker { font-size: .72rem; font-weight: 800; letter-spacing: .15em; text-transform: uppercase; color: var(--muted); }
+.topic { font-family: var(--serif); font-size: 1.35rem; color: var(--navy); }
+.topic em { font-style: normal; color: var(--gold); }
+.controls { margin-left: auto; display: flex; gap: .5rem; }
+.mode, .support-toggle { border: 1px solid var(--line); border-radius: 999px; padding: .55rem .95rem; background: var(--white); font-weight: 700; color: var(--navy); cursor: pointer; }
+.progress { background: #e2d8c5; }
+.progress span { display: block; width: 0; height: 100%; background: var(--gold); transition: width .25s; }
+.main { min-height: 0; padding: 1rem 1.4rem; display: grid; grid-template-columns: minmax(0, 1fr); gap: 1rem; }
+.main.drawer-open { grid-template-columns: minmax(0, 1fr) minmax(300px, 22vw); }
+.stage, .drawer { min-height: 0; border: 1px solid var(--line); border-radius: 20px; background: var(--white); overflow: hidden; }
+.drawer { overflow: auto; }
+/* One screen, no scrolling: the screen is exactly the stage height and every child shrinks to fit. */
+.screen { height: 100%; padding: clamp(1.4rem, 3vh, 2.8rem) clamp(2rem, 4.5vw, 5.5rem); display: flex; flex-direction: column; justify-content: center; animation: in .22s ease-out; overflow: hidden; }
+@media (prefers-reduced-motion: reduce) { .screen { animation: none; } .progress span { transition: none; } }
+
+.label { font-size: var(--t-label); letter-spacing: .16em; text-transform: uppercase; font-weight: 800; color: var(--gold); }
+.assessment-badge { display: inline-block; margin-left: 1rem; padding: .25em .8em; border-radius: 999px; background: var(--navy); color: var(--gold-soft); font-size: var(--t-label); letter-spacing: .08em; text-transform: uppercase; font-weight: 800; }
+h1 { max-width: 20ch; margin: .3rem 0 .8rem; font: 400 var(--t-h1) / 1 var(--serif); letter-spacing: -.035em; color: var(--navy); }
+h2 { margin: 0 0 .5rem; font: 400 var(--t-h2) / 1.15 var(--serif); color: var(--navy); }
+.lead { max-width: 62ch; margin: 0; color: var(--muted); font-size: var(--t-lead); line-height: 1.4; }
+.callout { margin: 1.2rem 0 0; padding: 1rem 1.2rem; border-left: 6px solid var(--gold); background: var(--amber); font-size: var(--t-body); font-weight: 600; line-height: 1.35; }
+.claim { margin: 1.2rem 0 0; padding: 1.2rem 1.4rem; border: 2px dashed var(--navy); border-radius: 14px; font: 400 var(--t-lead) / 1.35 var(--serif); color: var(--navy); }
+
+/* Layout families */
+.layout { display: grid; gap: clamp(1.6rem, 3.5vw, 4rem); align-items: center; min-height: 0; max-height: 100%; }
+.layout.two { grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); }
+.layout.visual-left { grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr); }
+.layout.visual-left > .text { order: 2; }
+.layout.single { grid-template-columns: minmax(0, 1fr); max-width: 1400px; }
+.layout.stacked { grid-template-columns: minmax(0, 1fr); align-items: start; }
+.text { min-width: 0; min-height: 0; }
+.aside { min-width: 0; min-height: 0; max-height: 100%; display: flex; flex-direction: column; gap: 1rem; }
+.layout.visual-left { height: 100%; }
+.layout.visual-left > .aside { height: 100%; justify-content: center; }
+
+.list { display: grid; gap: .55rem; margin: 0; padding: 0; list-style: none; }
+.list li { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: .8rem; padding: .6rem 0; border-bottom: 1px solid var(--line); font-size: var(--t-body); font-weight: 600; line-height: 1.3; }
+.list li:last-child { border-bottom: 0; }
+.n { color: var(--gold); font-family: var(--serif); }
+.tasks { display: grid; gap: .55rem; margin: 1rem 0 0; counter-reset: task; }
+.tasks div { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: .8rem; padding: .6rem 0; border-bottom: 1px solid var(--line); font-size: var(--t-body); font-weight: 600; line-height: 1.3; }
+.tasks div::before { counter-increment: task; content: counter(task); color: var(--gold); font: 500 var(--t-body) var(--serif); }
+.resource-bar { display: flex; flex-wrap: wrap; gap: .7rem; margin-top: 1rem; }
+.resource-button { display: inline-flex; align-items: center; gap: .8rem; width: fit-content; padding: .75rem 1.1rem; border: 2px solid var(--navy); border-radius: 999px; background: var(--navy); color: #fff; font-size: var(--t-label); font-weight: 800; text-decoration: none; }
+.resource-button::after { content: "↗"; color: var(--gold-soft); font-size: 1.15em; }
+.resource-button small { padding-left: .75rem; border-left: 1px solid #ffffff55; color: var(--gold-soft); font-size: .72em; letter-spacing: .1em; text-transform: uppercase; }
+.resource-button:hover { background: #203b5d; }
+.feedback-bar { display: none; margin-top: .9rem; padding-top: .8rem; border-top: 1px solid var(--line); align-items: center; gap: .8rem; }
+.present .feedback-bar { display: flex; }
+.feedback-bar > span { color: var(--muted); font-size: var(--t-label); font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+.feedback-bar .reveal { margin: 0; }
+.criteria { margin: 1rem 0 0; padding: 1rem 1.3rem; background: var(--navy); color: #fff; border-radius: 14px; }
+.criteria h2 { margin: 0 0 .4rem; color: var(--gold-soft); }
+.criteria p { margin: .4rem 0; font-size: var(--t-body); line-height: 1.3; }
+.product { margin: 1rem 0 0; font-size: var(--t-label); font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+
+.figure { width: 100%; margin: 0; min-height: 0; display: flex; flex-direction: column; flex: 1 1 auto; }
+.figure img, .figure > svg { display: block; width: 100%; min-height: 0; flex: 1 1 auto; max-height: 100%; object-fit: contain; border-radius: 14px; background: var(--white); border: 1px solid var(--line); }
+.figure figcaption { flex: 0 0 auto; margin-top: .6rem; color: var(--muted); font-size: var(--t-label); line-height: 1.35; }
+
+/* Labelled model: figure shapes in the middle, HTML labels in side columns, leader lines drawn after layout. */
+.model { position: relative; flex: 1 1 auto; min-height: 0; display: grid; font-size: var(--t-body); grid-template-columns: minmax(6em, 8.5em) minmax(0, 1fr) minmax(6em, 8.5em); gap: .6em; align-items: stretch; }
+.layout.visual-left:has(.model) { grid-template-columns: minmax(0, 1.7fr) minmax(0, .8fr); }
+.model.no-left { grid-template-columns: minmax(0, 1fr) minmax(6em, 8.5em); }
+.model.no-right { grid-template-columns: minmax(6em, 8.5em) minmax(0, 1fr); }
+.model-figure { position: relative; min-height: 0; display: flex; align-items: center; justify-content: center; border: 1px solid var(--line); border-radius: 14px; background: var(--white); padding: .8rem; }
+.model-figure svg { width: 100%; height: 100%; max-height: 100%; }
+.model-figure .panel-title { position: absolute; top: .6rem; font-size: var(--t-label); font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: var(--gold); }
+.model-figure .panel-title.left { left: 1rem; } .model-figure .panel-title.right { right: 1rem; }
+.model-labels { position: relative; min-width: 0; min-height: 0; }
+.model-label { position: absolute; left: 0; right: 0; }
+.model-labels.right { text-align: left; } .model-labels.left { text-align: right; }
+.model-label { font-size: 1em; font-weight: 700; color: var(--navy); line-height: 1.15; padding: .2em .5em; border-radius: 8px; background: var(--paper); border: 1px solid var(--line); }
+.model-label small { display: block; font-size: var(--t-label); font-size: .66em; font-weight: 600; color: var(--muted); }
+.model-leaders { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; overflow: visible; }
+.model-leaders line { stroke: var(--navy); stroke-width: 2.5; }
+.model-leaders circle { fill: var(--navy); }
+.model-caption { flex: 0 0 auto; margin-top: .5rem; color: var(--muted); font-size: var(--t-label); line-height: 1.35; }
+.diagram { width: 100%; min-height: 32vh; display: grid; place-items: center; border: 1px solid var(--line); border-radius: 16px; background: linear-gradient(135deg, #edf3f3, #f6ede1); padding: 1.3rem; }
+.flow { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: .8rem; font-weight: 800; font-size: var(--t-body); }
+.node { padding: .9rem 1.1rem; border-radius: 12px; background: #fff; border: 1px solid var(--line); text-align: center; max-width: 22ch; }
+.arrow { color: var(--gold); font-size: var(--t-h2); }
+
+.evidence { width: 100%; border-collapse: collapse; font-size: clamp(1rem, 1.35vw, 1.6rem); }
+.evidence th, .evidence td { padding: .7rem .8rem; border: 1px solid var(--line); text-align: left; vertical-align: top; line-height: 1.3; }
+.evidence th { background: var(--navy); color: #fff; }
+.evidence td:first-child { font-weight: 700; }
+
+.steps { display: grid; gap: .7rem; margin: 1rem 0 0; }
+.step { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 1rem; padding: .9rem 1.1rem; border: 1px solid var(--line); border-radius: 12px; background: var(--paper); font-size: var(--t-body); line-height: 1.3; }
+.step .n { font-size: var(--t-h2); }
+.step.weak { border-style: dashed; color: var(--muted); }
+.step.weak::after { content: "rejected"; grid-column: 2; font-size: var(--t-label); text-transform: uppercase; letter-spacing: .1em; color: var(--gold); font-weight: 800; }
+
+.choices { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .8rem; margin-top: 1.2rem; }
+.choice { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: .8rem; align-items: start; min-height: 5rem; border: 2px solid var(--line); background: var(--white); border-radius: 14px; padding: .9rem 1rem; text-align: left; font-size: var(--t-body); font-weight: 700; line-height: 1.3; color: var(--navy); }
+.choice .n { font-size: var(--t-h2); }
+.choice.correct { border-color: var(--gold); background: var(--amber); }
+.reveal-bar { display: flex; flex-wrap: wrap; gap: .6rem; margin-top: 1.2rem; }
+.reveal-bar, .reveal { display: none; } /* reveals are teacher controls: Present mode only */
+.present .reveal-bar { display: flex; } .present .reveal { display: inline-block; }
+.reveal { border: 1px solid var(--navy); border-radius: 999px; padding: .55rem 1.1rem; background: var(--white); color: var(--navy); font-weight: 700; cursor: pointer; font-size: var(--t-label); }
+.reveal[aria-expanded="true"] { background: var(--navy); color: #fff; }
+.revealed { margin-top: 1rem; padding: 1rem 1.2rem; border-radius: 14px; background: var(--green); font-size: var(--t-body); line-height: 1.35; }
+.revealed[hidden] { display: none; }
+.revealed h2 { font-size: var(--t-body); }
+
+.drawer { padding: 1.2rem; }
+.drawer[hidden] { display: none; }
+.drawer h2 { margin: 0; }
+.tabs { display: flex; flex-wrap: wrap; gap: .4rem; margin: 1rem 0; }
+.tab { border: 1px solid var(--line); border-radius: 999px; background: var(--white); padding: .45rem .7rem; font-size: .78rem; font-weight: 800; cursor: pointer; }
+.tab.active { background: var(--navy); color: #fff; }
+.support { font-size: 1.05rem; line-height: 1.5; }
+.support h3 { margin: .2rem 0 .5rem; font: 400 1.35rem var(--serif); color: var(--navy); }
+.support ul { padding-left: 1.2rem; }
+
+.nav { display: grid; grid-template-columns: 54px minmax(0, 1fr) 54px; gap: 1rem; align-items: center; padding: .65rem 1.5rem; background: var(--navy); color: #fff; }
+.nav button { width: 48px; height: 48px; border: 1px solid #738195; border-radius: 50%; background: transparent; color: #fff; font-size: 1.4rem; cursor: pointer; }
+.nav button:disabled { opacity: .3; }
+.navtext { min-width: 0; }
+.navtext small { color: #d7c7a4; font-size: .7rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
+.navtext strong { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font: 400 1.15rem var(--serif); }
+.nav .next { justify-self: end; }
+
+/* Present mode: board only */
+.present .top { display: none; }
+.present .app { grid-template-rows: 5px minmax(0, 1fr) 68px; }
+.present .main { padding: 0; grid-template-columns: minmax(0, 1fr); }
+.present .stage { border: 0; border-radius: 0; }
+.present .drawer { display: none; }
+.present .screen { padding: clamp(1.6rem, 3.5vh, 3rem) clamp(3rem, 6vw, 8rem); }
+
+@keyframes in { from { opacity: .2; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+
+@media (max-width: 1279px) {
+  :root { --t-body: 1.05rem; --t-lead: 1.15rem; --t-h1: 2.4rem; --t-h2: 1.4rem; --t-label: .78rem; }
+  .screen { padding: 1.6rem 2rem; justify-content: flex-start; }
+}
+@media (max-width: 850px) {
+  .main.drawer-open { grid-template-columns: 1fr; }
+  .drawer { display: none; }
+  .layout.two, .layout.visual-left { grid-template-columns: 1fr; }
+  .layout.visual-left > .text { order: 0; }
+  .choices { grid-template-columns: 1fr; }
+  .top { padding: 0 1rem; }
+  .topic { font-size: 1rem; }
+}
+
+</style>
+</head>
+<body>
+<a class="skip" href="#stage">Skip to lesson</a>
+<div class="app">
+  <header class="top">
+    <div><div class="kicker">Year 8 Science · Light</div><div class="topic">How does light allow us to see?</div></div>
+    <div class="controls"><button class="support-toggle">Support</button><button class="mode">Present</button></div>
+  </header>
+  <div class="progress"><span></span></div>
+  <main class="main"><section class="stage" id="stage" aria-live="polite"></section><aside class="drawer" hidden></aside></main>
+  <nav class="nav"><button class="prev" aria-label="Previous screen">←</button><div class="navtext"></div><button class="next" aria-label="Next screen">→</button></nav>
+</div>
+<script>const lesson = {"shape":"concept-and-model","architecture_version":2,"phases":[{"type":"doNow","layout":"retrieval-sheet","label":"Retrieve","nav":"1","title":"What do you already think light does?","lead":"Answer all four questions in your book. Work alone and show your first idea.","minutes":4,"points":["Draw how you think light travels so that you can see a book beside a lamp.","Which emits its own visible light: the Sun, the Moon, a mirror or a switched-on phone screen?","What does an arrow on a scientific diagram usually show?","Why is a book difficult to see in complete darkness?"],"review":{"type":"answers","label":"Review first ideas","title":"Keep these ideas ready","body":"<p>Light travels from the lamp to the book and then into the eye. The Sun and a switched-on phone screen emit visible light. An arrow shows direction. In complete darkness, no light reaches the book to reflect into the eye.</p>"},"support":{"start":{"title":"Get started","heading":"","body":"<p>Draw three labelled circles first: lamp, book and eye.</p>"},"build":{"title":"Build understanding","heading":"","body":"<p>Ask which object makes visible light and where that light must arrive last.</p>"},"stretch":{"title":"Go further","heading":"","body":"<p>Explain why the Moon can look bright without producing its own visible light.</p>"}},"product":"Four numbered responses and one initial light-path sketch in books"},{"type":"practice","layout":"context-brief","label":"Retrieve","nav":"2","title":"What will you be able to do today?","lead":"Write the lesson question. Read the four outcomes and underline the action in each one.","minutes":2,"points":["Describe how light travels and classify luminous and non-luminous objects.","Construct an arrowed ray diagram showing how an object is seen.","Explain why a non-luminous object cannot be seen in complete darkness.","Recall the approximate speed of light in a vacuum."],"criteria":["Use emit, reflect and enter accurately","Draw straight ruled rays","Point every arrow in the light's direction"],"review":{"type":"answers","label":"Check the actions","title":"What counts as evidence?","body":"<p>Describe needs accurate words. Construct needs a complete arrowed diagram. Explain needs a linked scientific reason using emit, reflect or scatter, and enter.</p>"},"support":{"start":{"title":"Get started","heading":"","body":"<p>Underline describe, construct and explain.</p>"},"build":{"title":"Build understanding","heading":"","body":"<p>Match each action to words, a diagram or a reason.</p>"},"stretch":{"title":"Go further","heading":"","body":"<p>Predict which outcome will need the strongest evidence and justify your choice.</p>"}},"product":"Four compact success checks recorded beneath the lesson title in books"},{"type":"media","layout":"observation-theatre","label":"Build the model","nav":"3","title":"Will light reach the screen?","lead":"Predict what happens when one card moves sideways. Write one reason.","minutes":5,"tasks":["Predict whether aligned holes produce a bright spot.","Observe the moved card. Explain the result."],"review":{"type":"worked-solution","label":"Reveal explanation","title":"The light path","body":"<p>Moving one card blocks the straight path.</p>"},"svg":"<svg viewBox=\"0 0 1000 430\" role=\"img\" aria-label=\"A torch sends a narrow beam through holes in three aligned cards to a screen\"><defs><marker id=\"beam-arrow\" viewBox=\"0 0 10 10\" refX=\"8\" refY=\"5\" markerWidth=\"8\" markerHeight=\"8\" orient=\"auto\"><path d=\"M0 0 L10 5 L0 10 z\" fill=\"#d89b2b\"/></marker></defs><path d=\"M70 185 L180 145 L180 285 L70 245 Z\" fill=\"#203b5d\"/><circle cx=\"205\" cy=\"215\" r=\"31\" fill=\"#f4c95d\"/><rect x=\"335\" y=\"70\" width=\"34\" height=\"290\" rx=\"8\" fill=\"#d8e1e8\" stroke=\"#14263d\" stroke-width=\"5\"/><circle cx=\"352\" cy=\"215\" r=\"17\" fill=\"#fffdf8\" stroke=\"#14263d\" stroke-width=\"4\"/><rect x=\"510\" y=\"70\" width=\"34\" height=\"290\" rx=\"8\" fill=\"#d8e1e8\" stroke=\"#14263d\" stroke-width=\"5\"/><circle cx=\"527\" cy=\"215\" r=\"17\" fill=\"#fffdf8\" stroke=\"#14263d\" stroke-width=\"4\"/><rect x=\"685\" y=\"70\" width=\"34\" height=\"290\" rx=\"8\" fill=\"#d8e1e8\" stroke=\"#14263d\" stroke-width=\"5\"/><circle cx=\"702\" cy=\"215\" r=\"17\" fill=\"#fffdf8\" stroke=\"#14263d\" stroke-width=\"4\"/><rect x=\"875\" y=\"55\" width=\"35\" height=\"320\" rx=\"6\" fill=\"#faf7f0\" stroke=\"#14263d\" stroke-width=\"6\"/><line x1=\"235\" y1=\"215\" x2=\"860\" y2=\"215\" stroke=\"#d89b2b\" stroke-width=\"12\" marker-end=\"url(#beam-arrow)\"/><circle cx=\"890\" cy=\"215\" r=\"24\" fill=\"#f4c95d\" opacity=\"0.9\"/></svg>","support":{"start":{"title":"Get started","heading":"","body":"<p>Write: I predict the screen will ___ because ___.</p>"},"build":{"title":"Build understanding","heading":"","body":"<p>Compare the position of the holes before and after the middle card moves.</p>"},"stretch":{"title":"Go further","heading":"","body":"<p>Explain why this result would be different if light could curve around the card.</p>"}},"product":"A predict-observe-explain response in books"},{"type":"diagram","layout":"model-stage","label":"Build the model","nav":"4","title":"How do we see a luminous object?","lead":"Follow the single ray. Copy the definition and diagram into your book.","minutes":3,"tasks":["Write: A luminous object emits its own visible light.","Copy the lamp-to-eye ray with its arrow pointing towards the eye."],"model":{"figure":"<svg viewBox=\"0 0 1000 480\" role=\"img\" aria-label=\"A luminous lamp emits a straight ray of light that enters an eye\"><defs><marker id=\"luminous-arrow\" viewBox=\"0 0 10 10\" refX=\"8\" refY=\"5\" markerWidth=\"8\" markerHeight=\"8\" orient=\"auto\"><path d=\"M0 0 L10 5 L0 10 z\" fill=\"#d89b2b\"/></marker></defs><circle cx=\"235\" cy=\"240\" r=\"75\" fill=\"#f4c95d\" stroke=\"#14263d\" stroke-width=\"7\"/><path d=\"M202 201 Q235 145 268 201 Q291 240 268 279 Q235 335 202 279 Q179 240 202 201 Z\" fill=\"#fff3b0\" stroke=\"#b78324\" stroke-width=\"6\"/><path d=\"M725 240 Q785 165 845 240 Q785 315 725 240 Z\" fill=\"#fffdf8\" stroke=\"#14263d\" stroke-width=\"9\"/><circle cx=\"785\" cy=\"240\" r=\"23\" fill=\"#203b5d\"/><line x1=\"320\" y1=\"240\" x2=\"700\" y2=\"240\" stroke=\"#d89b2b\" stroke-width=\"13\" marker-end=\"url(#luminous-arrow)\"/></svg>","labels":[{"text":"luminous lamp","note":"emits visible light","x":23.5,"y":50,"side":"left"},{"text":"observer's eye","note":"receives light","x":78.5,"y":50,"side":"right"}],"caption":"The lamp emits visible light. The arrow points in the direction the light travels."},"support":{"start":{"title":"Get started","heading":"","body":"<p>Luminous means the object emits its own visible light.</p>"},"build":{"title":"Build understanding","heading":"","body":"<p>Begin the ray at the lamp and point its arrow towards the eye.</p>"},"stretch":{"title":"Go further","heading":"","body":"<p>Explain why the lamp can be seen even when there is no other object in the pathway.</p>"}},"product":"A definition and direct lamp-to-eye ray model in books"},{"type":"concept","layout":"visual-first-explanation","label":"Build the model","nav":"5","title":"How do we see a non-luminous object?","lead":"Follow both rays. Copy the model and definition into your book.","minutes":3,"tasks":["Write: A non-luminous object does not emit its own visible light.","Classify the lamp, book, Sun, Moon and switched-on screen."],"model":{"figure":"<svg viewBox=\"0 0 1000 480\" role=\"img\" aria-label=\"Light travels from a luminous lamp to a non-luminous book and then into an eye\"><defs><marker id=\"object-arrow\" viewBox=\"0 0 10 10\" refX=\"8\" refY=\"5\" markerWidth=\"8\" markerHeight=\"8\" orient=\"auto\"><path d=\"M0 0 L10 5 L0 10 z\" fill=\"#d89b2b\"/></marker></defs><circle cx=\"155\" cy=\"240\" r=\"68\" fill=\"#f4c95d\" stroke=\"#14263d\" stroke-width=\"7\"/><path d=\"M126 204 Q155 153 184 204 Q205 240 184 276 Q155 327 126 276 Q105 240 126 204 Z\" fill=\"#fff3b0\" stroke=\"#b78324\" stroke-width=\"6\"/><rect x=\"472\" y=\"165\" width=\"96\" height=\"150\" rx=\"10\" fill=\"#96a8b6\" stroke=\"#14263d\" stroke-width=\"7\"/><path d=\"M790 240 Q850 165 910 240 Q850 315 790 240 Z\" fill=\"#fffdf8\" stroke=\"#14263d\" stroke-width=\"9\"/><circle cx=\"850\" cy=\"240\" r=\"23\" fill=\"#203b5d\"/><line x1=\"230\" y1=\"220\" x2=\"450\" y2=\"225\" stroke=\"#d89b2b\" stroke-width=\"13\" marker-end=\"url(#object-arrow)\"/><line x1=\"575\" y1=\"240\" x2=\"765\" y2=\"240\" stroke=\"#d89b2b\" stroke-width=\"13\" marker-end=\"url(#object-arrow)\"/></svg>","labels":[{"text":"light source","note":"emits light","x":15.5,"y":50,"side":"left"},{"text":"non-luminous book","note":"reflects or scatters","x":52,"y":50,"side":"right"},{"text":"observer's eye","note":"light enters here","x":85,"y":50,"side":"right"}],"caption":"First: lamp → book. Then: book → eye. The eye does not send out light."},"support":{"start":{"title":"Get started","heading":"","body":"<p>Read the model from left to right: source, object, eye.</p>"},"build":{"title":"Build understanding","heading":"","body":"<p>Use two steps: light reaches the book, then reflected light enters the eye.</p>"},"stretch":{"title":"Go further","heading":"","body":"<p>Explain why the book becomes invisible if the lamp is switched off.</p>"}},"product":"A source-book-eye ray model and classification answers in books"},{"type":"model","layout":"worked-model","label":"Model","nav":"6","title":"Build a ray diagram in the right order","lead":"Watch the model build. Copy each accepted step and write why the rejected arrow is wrong.","minutes":5,"steps":[{"text":"Place and label the light source, non-luminous object and eye."},{"text":"Draw a ruled ray from the source to the object. Point its arrow towards the object."},{"text":"Draw a ruled ray from the object to the eye. Point its arrow towards the eye."},{"text":"Reject eye → object: the eye detects light; it is not the source in this situation.","weak":true},{"text":"Explain the path using emit, reflect and enter."}],"reveals":[{"label":"Reveal finished model","title":"The complete pathway","body":"<p>Source → non-luminous object → eye. The source emits light. The object reflects or scatters some of it. That light enters the eye.</p>"}],"support":{"start":{"title":"Get started","heading":"","body":"<p>Begin by placing the three parts: source, object and eye.</p>"},"build":{"title":"Build understanding","heading":"","body":"<p>Say where the light starts and where it must finish before drawing each arrow.</p>"},"stretch":{"title":"Go further","heading":"","body":"<p>Explain why a single object-to-eye arrow is incomplete even when its direction is correct.</p>"}},"product":"An annotated worked ray diagram and one rejected misconception in books"},{"type":"practice","layout":"task-and-criteria","label":"Model","nav":"7","title":"Practise until the model is secure","lead":"Open the task sheet. Complete tabs 1–4 in your book, then use Extend if ready.","minutes":11,"review":{"type":"worked-solution","label":"Review core answers","title":"Light-path task check","body":"<p><strong>Luminous:</strong> Sun, flame, lit screen and LED. Correct non-luminous pathways follow source → object → eye. Light speed ≈ 300,000 km/s.</p>"},"resources":[{"label":"Open light-path practice","href":"resources/01-light-path-practice.html","kind":"worksheet"}],"support":{"start":{"title":"Get started","heading":"","body":"<p>Complete tabs 1 and 2 first. Ask whether each object emits visible light at that moment.</p>"},"build":{"title":"Build understanding","heading":"","body":"<p>For every repair, identify the source, object and eye before adding rays.</p>"},"stretch":{"title":"Go further","heading":"","body":"<p>Open Extend to calculate travel times and explain why a ray model shows only selected paths.</p>"}},"product":"Core light-path practice completed in books"},{"type":"hinge","layout":"diagnostic-decision","label":"Check","nav":"8","title":"Which path lets Noor see the non-luminous book?","lead":"A lamp is beside the book. Choose A–D, add one reason and show together.","minutes":3,"support":false,"choices":["Eye → book","Lamp → eye → book","Lamp → book → eye","Book → eye"],"answer":2,"feedback":"The lamp emits light. It reaches the book, then reflects or scatters into Noor's eye.","recheck":"Choose and justify: eye → Moon, Moon → eye, or Sun → Moon → eye.","product":"One A-D response and a source-object-eye reason on mini-whiteboards"},{"type":"question","layout":"full-question","label":"Apply","nav":"9","title":"How does the cyclist see the road sign?","lead":"Work alone in your book. Draw and explain the complete light pathway without looking back.","minutes":8,"tasks":["Draw and label a streetlamp, a road sign and the cyclist's eye.","Add two straight ruled rays with arrowheads.","Label the luminous and non-luminous objects.","Explain the pathway using emit, reflect or scatter, and enter.","Explain what changes if the streetlamp is switched off."],"criteria":["Streetlamp → sign → eye","Both arrows show the light's direction","Explanation links darkness to no reflected light entering the eye"],"review":{"type":"wagoll","label":"Review and improve","title":"A precise scientific explanation","body":"<p>The streetlamp is luminous because it emits visible light. Light travels from the lamp to the non-luminous road sign. Some light reflects or scatters from the sign and enters the cyclist's eye. If the lamp is switched off and there is no other source, no light reaches the sign to reflect into the eye.</p>"},"support":false,"assessment":{"type":"teacher","label":"Teacher-marked evidence","detail":"An independent road-sign ray diagram and explanation in books"}},{"type":"exit","layout":"quiet-exit","label":"Exit","nav":"10","title":"Which outcomes can your work prove?","lead":"Check your work against all four outcomes. Improve one sentence in a different colour.","minutes":3,"tasks":["Write LO1, LO2, LO3 and LO4. Add secure, nearly or not yet beside each one.","Point to the diagram or sentence that supports each judgement.","Answer: Why can a non-luminous book not be seen in complete darkness?"],"review":{"type":"mark-scheme","label":"Reveal final check","title":"The essential link","body":"<p>A non-luminous book does not emit visible light. In complete darkness, no light reaches it, so no reflected or scattered light can enter the eye.</p>"},"support":{"start":{"title":"Get started","heading":"","body":"<p>Find one place where you used luminous or non-luminous correctly.</p>"},"build":{"title":"Build understanding","heading":"","body":"<p>Trace both arrows with your finger from source to object to eye.</p>"},"stretch":{"title":"Go further","heading":"","body":"<p>Explain why opening your eyes wider does not make the book visible in complete darkness.</p>"}},"assessment":{"type":"self","label":"Self-assessment","detail":"A four-outcome self-check and one repaired sentence in books"}}],"support":{"start":{"title":"Get started","heading":"Build the pathway","body":"<ul><li>Find the object that emits visible light.</li><li>Put the source, object and eye in order.</li><li>Draw one straight ray at a time.</li></ul>"},"build":{"title":"Build understanding","heading":"Explain the mechanism","body":"<ul><li>The source emits visible light.</li><li>The non-luminous object reflects or scatters some light.</li><li>The reflected light enters the eye.</li></ul>"},"stretch":{"title":"Go further","heading":"Test the model","body":"<ul><li>Change the source or switch it off.</li><li>Predict which ray disappears.</li><li>Explain whether the object remains visible.</li></ul>"}}};
+
+const state = {};</script>
+<script>
+/* Edu OS lesson runtime. Renders `lesson` (inlined by Planner/scripts/render-lesson.mjs) as one-screen phases
+   with Student and Present modes, a support drawer, keyboard navigation and teacher-controlled reveals.
+   Pupils answer in books; the only interaction is navigation and reveal. */
+(() => {
+  const stage = document.querySelector('.stage');
+  const drawer = document.querySelector('.drawer');
+  const main = document.querySelector('.main');
+  const modeButton = document.querySelector('.mode');
+  const supportButton = document.querySelector('.support-toggle');
+  let index = 0;
+  let activeTab = 'start';
+  const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[c]));
+  const letters = 'ABCDEF';
+
+  const list = items => items?.length ? `<ul class="list">${items.map((item, i) => `<li><span class="n">${String(i + 1).padStart(2, '0')}</span><span>${item}</span></li>`).join('')}</ul>` : '';
+  const tasks = items => items?.length ? `<div class="tasks">${items.map(item => `<div>${item}</div>`).join('')}</div>` : '';
+  const criteria = items => items?.length ? `<aside class="criteria"><h2>Success criteria</h2>${items.map(item => `<p>✓ ${item}</p>`).join('')}</aside>` : '';
+  const table = rows => rows?.length ? `<table class="evidence"><thead><tr>${rows[0].map(cell => `<th>${cell}</th>`).join('')}</tr></thead><tbody>${rows.slice(1).map(row => `<tr>${row.map(cell => `<td>${cell}</td>`).join('')}</tr>`).join('')}</tbody></table>` : '';
+  const flow = nodes => nodes?.length ? `<div class="diagram"><div class="flow">${nodes.map((node, i) => `${i ? '<span class="arrow">→</span>' : ''}<div class="node">${node}</div>`).join('')}</div></div>` : '';
+  const model = m => {
+    if (!m) return '';
+    const side = which => `<div class="model-labels ${which}">${m.labels.filter(l => (l.side || 'right') === which).sort((a, b) => a.y - b.y).map((l, i) => `<div class="model-label" data-label="${which}-${i}" data-x="${l.x}" data-y="${l.y}">${l.text}${l.note ? `<small>${l.note}</small>` : ''}</div>`).join('')}</div>`;
+    const titles = (m.panels || []).map((t, i) => `<span class="panel-title ${i ? 'right' : 'left'}">${esc(t)}</span>`).join('');
+    const has = which => m.labels.some(l => (l.side || 'right') === which);
+    const cls = `model${has('left') ? '' : ' no-left'}${has('right') ? '' : ' no-right'}`;
+    return `<div class="${cls}" data-model>${has('left') ? side('left') : ''}<div class="model-figure">${titles}${m.figure}</div>${has('right') ? side('right') : ''}<svg class="model-leaders" aria-hidden="true"></svg></div>${m.caption ? `<p class="model-caption">${esc(m.caption)}</p>` : ''}`;
+  };
+  const figure = phase => phase.model ? model(phase.model) : phase.image ? `<figure class="figure"><img src="${esc(phase.image)}" alt="${esc(phase.imageAlt || '')}"><figcaption>${esc(phase.imageCaption || '')}</figcaption></figure>` : phase.svg ? `<figure class="figure">${phase.svg}${phase.imageCaption ? `<figcaption>${esc(phase.imageCaption)}</figcaption>` : ''}</figure>` : '';
+  const steps = items => items?.length ? `<div class="steps">${items.map((step, i) => `<div class="step ${step.weak ? 'weak' : ''}"><span class="n">${i + 1}</span><span>${step.text ?? step}</span></div>`).join('')}</div>` : '';
+  const reveal = (id, label, title, body) => `<button class="reveal" data-reveal="${id}" aria-expanded="false" aria-controls="${id}">${esc(label)}</button>`
+    + `<div class="revealed" id="${id}" hidden>${title ? `<h2>${esc(title)}</h2>` : ''}${body}</div>`;
+
+  function choices(phase) {
+    if (!phase.choices?.length) return '';
+    const grid = `<div class="choices">${phase.choices.map((choice, i) => `<div class="choice" data-choice="${i}"><span class="n">${letters[i]}</span><span>${choice}</span></div>`).join('')}</div>`;
+    const bar = [];
+    if (phase.answer !== undefined) bar.push(reveal(`answer-${index}`, 'Reveal', `Answer: ${letters[phase.answer]}`, `<p>${phase.feedback || ''}</p>`));
+    if (phase.recheck) bar.push(reveal(`recheck-${index}`, 'Recheck', 'Recheck on whiteboards', `<p>${phase.recheck}</p>`));
+    return `${grid}${bar.length ? `<div class="reveal-bar">${bar.join('')}</div>` : ''}`;
+  }
+
+  function reveals(phase) {
+    return (phase.reveals || []).map((item, i) => reveal(`reveal-${index}-${i}`, item.label, item.title, item.body)).join('');
+  }
+
+  function feedback(phase) {
+    if (!phase.review) return '';
+    return `<div class="feedback-bar"><span>Review and improve</span>${reveal(`feedback-${index}`, phase.review.label, phase.review.title, phase.review.body)}</div>`;
+  }
+
+  function resources(phase) {
+    if (!phase.resources?.length) return '';
+    return `<div class="resource-bar">${phase.resources.map(item => `<a class="resource-button" href="${esc(item.href)}" target="_blank" rel="noopener"><span>${esc(item.label)}</span><small>${esc(item.kind)}</small></a>`).join('')}</div>`;
+  }
+
+  function header(phase) {
+    const badge = phase.assessment ? `<span class="assessment-badge">${esc(phase.assessment.label)}</span>` : '';
+    return `<div class="label">${esc(phase.label)}${badge}</div><h1 tabindex="-1">${phase.title}</h1>${phase.lead ? `<p class="lead">${phase.lead}</p>` : ''}`;
+  }
+
+  function screen(phase) {
+    // A table and worked steps may share a screen (the readings and the decisions made on them); nothing is dropped.
+    const graphic = figure(phase) || flow(phase.visual) || ((phase.table || phase.steps) ? `${table(phase.table)}${steps(phase.steps)}` : '');
+    // Points are never dropped: they share the aside when there is no graphic, otherwise they sit in the text column.
+    const text = `<div class="text">${header(phase)}${phase.claim ? `<div class="claim">${phase.claim}</div>` : ''}${phase.callout ? `<p class="callout">${phase.callout}</p>` : ''}${graphic ? list(phase.points) : ''}${choices(phase)}${tasks(phase.tasks)}${resources(phase)}${reveals(phase)}${feedback(phase)}${phase.assessment?.detail ? `<p class="product">${esc(phase.assessment.detail)}</p>` : phase.product ? `<p class="product">${esc(phase.product)}</p>` : ''}</div>`;
+    const visual = graphic || list(phase.points);
+    const aside = `<div class="aside">${visual}${criteria(phase.criteria)}</div>`;
+    const family = {
+      'retrieval-sheet': 'stacked', 'full-question': 'single', 'quiet-exit': 'single', 'task-and-criteria': 'two',
+      'image-led-decision': 'visual-left', 'visual-first-explanation': 'visual-left', 'model-stage': 'visual-left', 'observation-theatre': 'visual-left theatre',
+      'evidence-workbench': 'stacked', 'worked-model': 'two', 'split-explanation': 'two', 'diagnostic-decision': 'stacked', 'context-brief': 'visual-left', 'claim-verification': 'two'
+    }[phase.layout] || 'two';
+    const single = family === 'single' || (family === 'stacked' && !visual && !phase.criteria);
+    // A single-column screen has no aside, so its points render in the text column rather than being dropped.
+    return `<article class="screen" data-layout="${esc(phase.layout)}"><div class="layout ${single ? 'single' : family}">${text}${single ? `${graphic ? '' : list(phase.points)}${criteria(phase.criteria)}` : aside}</div></article>`;
+  }
+
+  // Protected screens (hinge, teacher-marked evidence) carry support:false so the lesson-level drawer cannot fall through.
+  const supportFor = () => { const phase = lesson.phases[index]; return phase.support === false ? null : (phase.support || lesson.support); };
+  function support() {
+    const routes = supportFor();
+    if (!routes) return '<h2>Support</h2><p class="support">No extra support on this screen.</p>';
+    const tab = routes[activeTab] || routes.start;
+    return `<h2>Support</h2><div class="tabs">${Object.entries(routes).map(([key, value]) => `<button class="tab ${key === activeTab ? 'active' : ''}" data-tab="${key}">${esc(value.title)}</button>`).join('')}</div><div class="support">${tab.heading ? `<h3>${esc(tab.heading)}</h3>` : ''}${tab.body}</div>`;
+  }
+
+  function render() {
+    const phase = lesson.phases[index];
+    stage.innerHTML = screen(phase);
+    document.querySelector('.progress span').style.width = `${((index + 1) / lesson.phases.length) * 100}%`;
+    document.querySelector('.navtext').innerHTML = `<small>${index + 1} of ${lesson.phases.length} · ${esc(phase.label)}</small><strong>${esc(phase.title)}</strong>`;
+    document.querySelector('.prev').disabled = index === 0;
+    document.querySelector('.next').disabled = index === lesson.phases.length - 1;
+    if (drawer && !drawer.hidden) drawer.innerHTML = support();
+    stage.querySelector('h1')?.focus({ preventScroll: true });
+    fit();
+    stage.querySelectorAll('[data-reveal]').forEach(button => button.addEventListener('click', () => {
+      const target = document.getElementById(button.dataset.reveal);
+      const open = target.hidden;
+      target.hidden = !open;
+      button.setAttribute('aria-expanded', String(open));
+      if (button.dataset.reveal.startsWith('answer-') && open) stage.querySelectorAll('.choice')[phase.answer]?.classList.add('correct');
+      requestAnimationFrame(fit);
+    }));
+  }
+
+  // Leader lines: from each label's inner edge to its anchor (x, y as % of the figure's svg box).
+  function leaders() {
+    const wrap = stage.querySelector('[data-model]');
+    if (!wrap) return;
+    const overlay = wrap.querySelector('.model-leaders');
+    const svg = wrap.querySelector('.model-figure svg:not(.model-leaders)');
+    if (!svg) return;
+    const box = wrap.getBoundingClientRect();
+    // Anchors are % of the drawn viewBox area, which is letterboxed inside the svg element (preserveAspectRatio meet).
+    const rect = svg.getBoundingClientRect();
+    const [, , vw, vh] = (svg.getAttribute('viewBox') || `0 0 ${rect.width} ${rect.height}`).split(/\s+|,/).map(Number);
+    const scale = Math.min(rect.width / vw, rect.height / vh);
+    const fig = { left: rect.left + (rect.width - vw * scale) / 2, top: rect.top + (rect.height - vh * scale) / 2, width: vw * scale, height: vh * scale };
+    // Place labels level with their anchors, then push apart so none overlap (top-down sweep, then clamp to the column).
+    for (const column of wrap.querySelectorAll('.model-labels')) {
+      const colRect = column.getBoundingClientRect();
+      const labels = [...column.querySelectorAll('.model-label')].map(label => ({ label, h: label.offsetHeight, want: fig.top + fig.height * Number(label.dataset.y) / 100 - colRect.top - label.offsetHeight / 2 })).sort((p, q) => p.want - q.want);
+      const gap = 6;
+      let cursor = 0;
+      for (const item of labels) { item.top = Math.max(item.want, cursor); cursor = item.top + item.h + gap; }
+      const overflow = cursor - gap - colRect.height;
+      if (overflow > 0) { let floor = colRect.height; for (const item of [...labels].reverse()) { item.top = Math.min(item.top, floor - item.h); floor = item.top - gap; } }
+      for (const item of labels) item.label.style.top = `${Math.max(0, item.top)}px`;
+    }
+    overlay.setAttribute('viewBox', `0 0 ${box.width} ${box.height}`);
+    overlay.innerHTML = [...wrap.querySelectorAll('.model-label')].map(label => {
+      const r = label.getBoundingClientRect();
+      const left = label.dataset.label.startsWith('left');
+      const x1 = (left ? r.right : r.left) - box.left;
+      const y1 = r.top + r.height / 2 - box.top;
+      const x2 = fig.left + fig.width * Number(label.dataset.x) / 100 - box.left;
+      const y2 = fig.top + fig.height * Number(label.dataset.y) / 100 - box.top;
+      return `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}"></line><circle cx="${x2}" cy="${y2}" r="4"></circle>`;
+    }).join('');
+  }
+
+  // One screen, no scrolling. If a screen still overflows the stage, step the zoom down and say so in the console
+  // so the QA screenshot review can see which screen is too dense. Density is a design fault; this only keeps the class moving.
+  function fit() {
+    const screen = stage.querySelector('.screen');
+    if (!screen) return;
+    screen.style.zoom = '';
+    let zoom = 1;
+    // .screen is exactly the stage height with overflow hidden, so measure content against its box, not the stage's.
+    const overflows = () => [screen, ...screen.querySelectorAll('.layout, .text, .aside, .model-labels')].some(el => el.scrollHeight > el.clientHeight + 1 || el.scrollWidth > el.clientWidth + 1);
+    while (overflows() && zoom > 0.7) {
+      zoom = Math.round((zoom - 0.05) * 100) / 100;
+      screen.style.zoom = zoom;
+    }
+    if (zoom < 1) console.warn(`Edu OS runtime: screen ${index + 1} ("${lesson.phases[index].title}") is too dense; zoomed to ${zoom}. Reduce the content in the design.`);
+    leaders();
+  }
+  window.addEventListener('resize', fit);
+
+  document.querySelector('.prev').addEventListener('click', () => { if (index) { index -= 1; render(); } });
+  document.querySelector('.next').addEventListener('click', () => { if (index < lesson.phases.length - 1) { index += 1; render(); } });
+  modeButton.addEventListener('click', () => {
+    const present = document.body.classList.toggle('present');
+    modeButton.textContent = present ? 'Student view' : 'Present';
+    if (present && document.fullscreenEnabled && !document.fullscreenElement) document.documentElement.requestFullscreen().catch(() => {});
+    if (!present && document.fullscreenElement) document.exitFullscreen().catch(() => {});
+  });
+  if (supportButton) {
+    if (!lesson.support && !lesson.phases.some(phase => phase.support)) supportButton.hidden = true;
+    supportButton.addEventListener('click', () => {
+      drawer.hidden = !drawer.hidden;
+      main.classList.toggle('drawer-open', !drawer.hidden);
+      if (!drawer.hidden) drawer.innerHTML = support();
+    });
+    drawer.addEventListener('click', event => {
+      const tab = event.target.closest('[data-tab]');
+      if (tab) { activeTab = tab.dataset.tab; drawer.innerHTML = support(); }
+    });
+  }
+  document.addEventListener('keydown', event => {
+    if (event.target.matches('button, input, textarea')) return;
+    if ((event.key === 'ArrowRight' || event.key === 'PageDown' || event.key === ' ') && index < lesson.phases.length - 1) { event.preventDefault(); index += 1; render(); }
+    if ((event.key === 'ArrowLeft' || event.key === 'PageUp') && index) { event.preventDefault(); index -= 1; render(); }
+    if (event.key === 'p' || event.key === 'P') modeButton.click();
+  });
+  render();
+})();
+
+</script>
+</body>
+</html>
