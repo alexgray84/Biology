@@ -25,6 +25,9 @@
     const cls = `model${has('left') ? '' : ' no-left'}${has('right') ? '' : ' no-right'}`;
     return `<div class="${cls}" data-model>${has('left') ? side('left') : ''}<div class="model-figure">${titles}${m.figure}</div>${has('right') ? side('right') : ''}<svg class="model-leaders" aria-hidden="true"></svg></div>${m.caption ? `<p class="model-caption">${esc(m.caption)}</p>` : ''}`;
   };
+  const interactive = config => config?.kind === 'terminal-velocity-lab'
+    ? `<div class="terminal-lab" data-terminal-lab data-config="${esc(encodeURIComponent(JSON.stringify(config)))}"><div class="terminal-lab-loading">Loading the fall laboratory…</div></div>`
+    : '';
   const figure = phase => phase.model ? model(phase.model) : phase.image ? `<figure class="figure"><img src="${esc(phase.image)}" alt="${esc(phase.imageAlt || '')}"><figcaption>${esc(phase.imageCaption || '')}</figcaption></figure>` : phase.svg ? `<figure class="figure">${phase.svg}${phase.imageCaption ? `<figcaption>${esc(phase.imageCaption)}</figcaption>` : ''}</figure>` : '';
   const steps = items => items?.length ? `<div class="steps">${items.map((step, i) => `<div class="step ${step.weak ? 'weak' : ''}"><span class="n">${i + 1}</span><span>${step.text ?? step}</span></div>`).join('')}</div>` : '';
   const reveal = (id, label, title, body) => `<button class="reveal" data-reveal="${id}" aria-expanded="false" aria-controls="${id}">${esc(label)}</button>`
@@ -60,7 +63,7 @@
 
   function screen(phase) {
     // A table and worked steps may share a screen (the readings and the decisions made on them); nothing is dropped.
-    const graphic = figure(phase) || flow(phase.visual) || ((phase.table || phase.steps) ? `${table(phase.table)}${steps(phase.steps)}` : '');
+    const graphic = interactive(phase.interactive) || figure(phase) || flow(phase.visual) || ((phase.table || phase.steps) ? `${table(phase.table)}${steps(phase.steps)}` : '');
     // Points are never dropped: they share the aside when there is no graphic, otherwise they sit in the text column.
     const text = `<div class="text">${header(phase)}${phase.claim ? `<div class="claim">${phase.claim}</div>` : ''}${phase.callout ? `<p class="callout">${phase.callout}</p>` : ''}${graphic ? list(phase.points) : ''}${choices(phase)}${tasks(phase.tasks)}${resources(phase)}${reveals(phase)}${feedback(phase)}${phase.assessment?.detail ? `<p class="product">${esc(phase.assessment.detail)}</p>` : phase.product ? `<p class="product">${esc(phase.product)}</p>` : ''}</div>`;
     const visual = graphic || list(phase.points);
@@ -102,6 +105,7 @@
       if (button.dataset.reveal.startsWith('answer-') && open) stage.querySelectorAll('.choice')[phase.answer]?.classList.add('correct');
       requestAnimationFrame(fit);
     }));
+    window.dispatchEvent(new CustomEvent('edu:screen-rendered', { detail: { index, phase } }));
   }
 
   // Leader lines: from each label's inner edge to its anchor (x, y as % of the figure's svg box).
