@@ -28,6 +28,10 @@ current/<course>/<unit>/           # Approved pupil lesson packages
 
 The two Year 7 classes share the same Year 7 unit pages and lesson packages. Other classes have their own course unit pages.
 
+## Current lesson-building approach
+
+The teacher-approved working standard is [LESSON_AUTHORING_STANDARD.md](LESSON_AUTHORING_STANDARD.md), locked in on 13 September 2026. New lessons use the Arcadia frame, explicit specification-aligned teaching, relevant task widgets and on-demand model answers/mark schemes for every question.
+
 ## 🚀 Quick Start
 
 ### 1. Add approved pupil-facing HTML files to the correct class folder

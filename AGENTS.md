@@ -1,87 +1,28 @@
-# Biology Interactive Lessons: Codex Instructions
+# Science and Biology lesson site: working instructions
 
-## What This Is
-A collection of interactive HTML science lessons hosted on GitHub Pages, built by Alex Gray for students at Arcadia British School Dubai. Covers KS3 Science, IGCSE Biology (Pearson Edexcel), and IAL Biology (Pearson Edexcel A-Level). Each lesson is a self-contained HTML file with embedded CSS/JS — no build tools, no frameworks, just static files served via GitHub Pages.
+The teacher locked in the current lesson-building approach on **13 September 2026**. Read and follow [LESSON_AUTHORING_STANDARD.md](LESSON_AUTHORING_STANDARD.md) for new lessons and substantial revisions. It supersedes the earlier all-inline HTML, legacy-theme, universal ability-tier and private-only answer defaults. Existing lessons do not require automatic migration.
 
-**Live site:** https://alexgray84.github.io/Biology/
+## Site and content ownership
 
-## Tech Stack
-- Pure HTML/CSS/JS (no framework)
-- Google Fonts: DM Sans, Instrument Serif, JetBrains Mono
-- GitHub Pages for hosting
-- Git for version control
+This repository hosts pupil-facing science lessons for Arcadia British School Dubai at https://alexgray84.github.io/Biology/. Current routes are:
 
-## Architecture
-```
-Biology/
-├── index.html                 # Main landing page (links to all courses)
-├── ial/                       # IAL Biology (A-Level)
-│   └── unit-2/                # 12 lessons (most active area)
-│       ├── index.html         # Unit index with lesson list
-│       └── *.html             # Individual lessons
-├── IGCSE/                     # IGCSE Biology
-│   ├── index.html             # Topic 4: Ecology
-│   ├── index5.html            # Topic 5: Biological Resources
-│   ├── topic-2/               # Topic 2: Structure & Function
-│   └── *.html                 # Individual lessons
-├── KS3/                       # Key Stage 3
-│   ├── Biology/Ecosystems/    # 1 lesson
-│   └── Physics/               # Forces (2), Waves (2), Sound (1)
-└── revision/                  # Revision sessions
-```
+- `index.html`: current class directory.
+- `classes/<class-code>/index.html`: class homepage.
+- `units/<course>/<unit>/index.html`: lessons in teaching order.
+- `current/<course>/<unit>/`: lesson HTML and local asset packages.
 
-### Pattern: Each lesson is a single self-contained HTML file
-- All CSS is in a `<style>` block in `<head>`
-- All JS is in a `<script>` block at the end of `<body>`
-- No external dependencies beyond Google Fonts
-- Two design systems in use:
-  1. **Dark theme** (IGCSE, newer): `--bg: #0f110f`, green accent, dark surface
-  2. **Warm light theme** (IAL unit-2, newer): `--bg: #f5f0e8`, terracotta accent, serif display font
-  3. **Simple green/blue gradient** (index pages, older): system-ui fonts, card-based layout
+Year 10 Triple Biology is `10/Bio/Tri2`, with class route `classes/10-bio-tri2/` and unit route `units/year-10-triple/cells/`. Preserve existing URLs. New Week 3 examples live in `current/year-10/triple-biology-cells/week-03/`.
 
-### Lesson Features
-- Sticky section navigation
-- Progress tracking
-- Tiered difficulty (Foundation / Core / Challenge)
-- Interactive quizzes with feedback
-- Interleaved retrieval practice questions
+## Required authoring behaviour
 
-## Key Files
-- `index.html` — Main landing page, links to all courses and units
-- `ial/unit-2/index.html` — Unit 2 lesson list (most lessons live here)
-- `IGCSE/index5.html` — Topic 5 index (most recent IGCSE work)
-- `IGCSE/Selective-breeding.html` — Most recently created lesson
+Use the Arcadia projection layout: six screen families, specification-linked outcomes, purposeful do now, explicit small-step input, modelling, guided and independent thinking, relevant adaptations and HOT. Populate all six contextual widget capabilities purposefully. Every question and pupil-response task, including widget tasks, must have an explicit model-answer and mark-scheme reveal. Keep answers hidden until opened; unmarked tasks use labelled success criteria.
 
-## Commands
-```bash
-# Preview locally
-open index.html          # or use Live Server in VS Code
+Use a direct HTML entry point with local assets. JavaScript and CSS may live beside the lesson. Retain local dependencies and licences; do not require a remote build framework for the pupil route. Do not copy the Week 3 subject content into unrelated lessons.
 
-# Deploy (auto via GitHub Pages on push)
-git add <files>
-git commit -m "Add lesson"
-git push
-```
+Pupil model answers and mark schemes are authorised public review content. Private teaching notes, personal/class data, pupil identifiers, code-to-name mappings, secrets and private-companion links are not. Publish only the requested lesson package, navigation and relevant authoring documentation.
 
-## Coding Conventions
-- Lesson files use kebab-case for new files (older files have spaces/PascalCase)
-- Each lesson is entirely self-contained (no shared CSS/JS files)
-- Index pages follow a consistent template with course-section cards
-- Lessons use CSS custom properties for theming
-- Interactive elements use vanilla JS (no jQuery, no React)
-- Status badges on index: "Coming soon" vs active lesson count
+## Publishing
 
-## Current Work
-- Most recent: IGCSE Selective Breeding lesson + Topic 5 index update (Feb 24)
-- IAL Unit 2 is the most complete section (12 lessons covering Topics 3A-3C)
-- KS3 Physics has 5 lessons across Forces, Waves, Sound
-- Many sections still marked "Coming soon"
+GitHub Pages currently serves the root of `main`. Verify the live configuration when publishing. Stage explicit paths, commit with a useful summary and use a normal fast-forward push. Do not overwrite concurrent work or use a force push. Update class/unit links and lesson counts. Check deployment completion and the published paths.
 
-## Domain Context
-This is an education project. Lessons follow evidence-informed pedagogy:
-- **Retrieval practice** — Students recall information through quizzes embedded in lessons
-- **Interleaving** — Questions from previous topics mixed into current lessons
-- **Tiered difficulty** — Foundation (recall), Core (application), Challenge (analysis/evaluation)
-- **Specification alignment** — Lessons map to Pearson Edexcel spec references (e.g., "3C.1")
-- Lessons are designed for classroom use on student devices (responsive design matters)
-- The audience is secondary school students (ages 11-18) in Dubai
+The teacher's explicit push request supplies publication approval. Respect a session instruction to leave classroom/browser test gates to the teacher, recording the limitation without claiming those checks passed. A deployed page is not proof of classroom suitability.
