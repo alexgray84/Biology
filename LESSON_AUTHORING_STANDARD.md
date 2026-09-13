@@ -20,6 +20,7 @@
 - Include suitable exam-style questions with command words and marks. Model how to develop a response, then provide independent application in a different context. Label original questions as original; distinguish them from sourced exam-board questions.
 - Map each scored requirement to planned input, practice and a check before the assessment. Record actual delivery separately. A new context can be appropriate; untaught prerequisite knowledge cannot be silently assumed.
 - Protect writing and review time. Rebalance or remove optional tasks when adding substantive content rather than pretending extra material takes no time.
+- When the teacher has already set an assessment, use that paper. Do not link a replacement draft or expose its unrelated mark scheme. A timer-only holding screen needs adjustable minutes, Start, Pause, Reset to the chosen duration and an option to add time. The question-review requirement continues to apply to authored lesson questions.
 
 ## Presentation and widgets
 
@@ -37,6 +38,7 @@ Use scientifically accurate original diagrams, suitable interactive models or pr
 - Keep pupil-facing model answers and mark schemes in the lesson's review controls. Keep confidential teacher notes, class information, teaching decisions and the private companion outside the public package.
 - Keep a private teaching companion and a local source/build record. Record source provenance and permissions for images/libraries. Do not include pupil names, code-to-name keys, secrets or unrelated workspace files in a public publication.
 - Publish only the selected lesson package and update the correct class and unit navigation. Check the configured destination rather than assuming a repository or branch. Preserve existing lesson URLs and earlier material.
+- Organise published lessons by their curriculum unit, in teaching order. Weeks are planning metadata, not separate class-page sections or lesson containers. If a published lesson moves, keep a redirect from the earlier entry URL.
 - The teacher's explicit publication instruction authorises the requested push; do not ask for the same approval again. Check deployment completion and the live destination. Respect a session instruction to leave lesson tests to the teacher and record that honestly; a successful deployment does not constitute classroom or viewport QA.
 
 ## Current reference implementation

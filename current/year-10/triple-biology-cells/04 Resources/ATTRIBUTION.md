@@ -1,4 +1,4 @@
-# Week 3 lesson assets
+# Cells unit lesson assets
 
 Created 13 September 2026 for the Year 10 Biology lessons.
 

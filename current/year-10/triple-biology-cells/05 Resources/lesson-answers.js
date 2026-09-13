@@ -7,7 +7,6 @@ window.LessonAnswers=(()=>{
     D.m('Cell evidence','A combination of nuclear organisation, wall material and whole-organism features supports classification.')
   ],[D.c('Three outcomes',['Explain why differentiation matters, not just its meaning.','Compare advantages and disadvantages in the medical context.','Use decisive cell evidence.'])]);
   D.l2.outcomes=D.answer([D.m('Osmosis','Net water moves from more dilute to more concentrated solution across a partially permeable membrane.'),D.m('Tissue and measurement','Use water direction to explain mass/turgor changes. Percentage mass change is (final − initial) ÷ initial × 100; control conditions to compare concentrations.')],[D.c('Three outcomes',['Give a correct membrane-and-water explanation.','Link the mechanism to tissue changes.','Use the formula and explain valid controls.'])]);
-  D.l2.collect=D.l2['yellow-sheet'];
   const main=(p,l)=>(l.number===1?D.l1:D.l2)[p.id];
   const has=(p,l)=>Boolean(main(p,l));
   const widget=(id,p,l,tab,page)=>LessonWidgetAnswers.get(id,p,l,tab,page);

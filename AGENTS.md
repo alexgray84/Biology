@@ -11,7 +11,7 @@ This repository hosts pupil-facing science lessons for Arcadia British School Du
 - `units/<course>/<unit>/index.html`: lessons in teaching order.
 - `current/<course>/<unit>/`: lesson HTML and local asset packages.
 
-Year 10 Triple Biology is `10/Bio/Tri2`, with class route `classes/10-bio-tri2/` and unit route `units/year-10-triple/cells/`. Preserve existing URLs. New Week 3 examples live in `current/year-10/triple-biology-cells/week-03/`.
+Year 10 Triple Biology is `10/Bio/Tri2`, with class route `classes/10-bio-tri2/` and unit route `units/year-10-triple/cells/`. Preserve existing URLs. The new lessons are Lessons 04 and 05 directly in `current/year-10/triple-biology-cells/`, with `04 Resources` and `05 Resources`. Organise lessons by curriculum unit, not by week. The former Week 3 entry URLs only redirect to the unit copies.
 
 ## Required authoring behaviour
 

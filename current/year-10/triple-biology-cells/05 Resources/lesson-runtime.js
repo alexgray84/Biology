@@ -15,10 +15,10 @@
   const figure=(name,caption,secondary=false)=>`<figure class="bio-figure${secondary?' is-secondary':''}">${BioDiagrams.render(name,state())}<figcaption>${caption||'Schematic model. Colours and sizes are illustrative.'}</figcaption></figure>`;
   function content(p) {
     const s=state();
-    if(p.type==='title')return `<div class="title-layout"><p class="screen-kicker">Year 10 Biology · Week 3 · Lesson ${lesson.number}</p><h1 class="screen-heading" tabindex="-1">${lesson.title}</h1><p class="title-question">${lesson.question}</p><div class="title-path">${lesson.path.map(x=>`<span>${x}</span>`).join('')}</div></div>`;
+    if(p.type==='title')return `<div class="title-layout"><p class="screen-kicker">Year 10 Biology · ${esc(lesson.unit)} · Lesson ${lesson.unitLesson}</p><h1 class="screen-heading" tabindex="-1">${lesson.title}</h1><p class="title-question">${lesson.question}</p><div class="title-path">${lesson.path.map(x=>`<span>${x}</span>`).join('')}</div></div>`;
     const heading=`<p class="bio-eyebrow">${p.label||p.family}</p><h1 class="screen-heading" tabindex="-1">${p.title}</h1>${p.lead?`<p class="screen-lead">${p.lead}</p>`:''}`;
     if(p.type==='outcome')return `${heading}<ol class="outcome-list">${lesson.outcomes.map(o=>`<li><div><strong>${o[0]}</strong><span class="spec-ref">Pearson 4BI1 · ${o[1]}</span></div></li>`).join('')}</ol>`;
-    if(p.type==='exam')return `${heading}<div class="exam-layout"><div><ul class="bio-list"><li>Work independently on your yellow sheet.</li><li>Answer all six questions. Use clear scientific words.</li><li>Check your answers if you finish early.</li></ul><p class="bio-task">20 marks · 22 minutes</p><p class="exam-note"><a href="03%20Yellow%20sheet%20-%20draft.pdf" target="_blank" rel="noopener">Open the yellow sheet</a></p></div><div class="exam-timer"><p class="bio-eyebrow">Time remaining</p><output id="exam-clock" aria-label="Time remaining">22:00</output><div class="bio-controls">${button('Start','timer','start')}${button('Pause','timer','pause')}${button('Reset','timer','reset')}</div><p class="exam-note" id="timer-status">Ready to start.</p></div></div>`;
+    if(p.type==='exam')return `${heading}<div class="exam-layout"><div><ul class="bio-list"><li>Work independently on the yellow sheet provided.</li><li>Follow the instructions on your paper.</li><li>Check your answers if you finish early.</li></ul><p class="bio-task">Use clear scientific words. Stop when directed.</p></div><div class="exam-timer"><p class="bio-eyebrow">Time remaining</p><output id="exam-clock" aria-label="Time remaining" aria-live="off"></output><form id="timer-settings" class="timer-settings"><label for="timer-minutes">Minutes</label><div class="bio-controls"><input id="timer-minutes" name="minutes" type="number" min="1" max="180" step="1" value="${duration/60}" required><button type="submit">Set time</button></div></form><div class="bio-controls">${button('Start','timer','start')}${button('Pause','timer','pause')}${button('Reset','timer','reset')}${button('+1 min','timer','add')}</div><p class="exam-note" id="timer-status" role="status">Ready to start.</p></div></div>`;
     if(p.type==='structures') {
       const entries=lesson.structures, selected=entries.find(e=>e.id===s.focus)||entries[0];
       return `${heading}<div class="bio-layout"><figure class="bio-figure"><div class="cell-view" id="cell-view"><div class="cell-fallback">${BioDiagrams.render('structures')}</div></div><figcaption>Cutaway animal cell · drag or focus the model and use arrow keys to rotate. Colours and sizes are illustrative.</figcaption></figure><div class="bio-copy"><p class="structure-name"><span class="focus-swatch" style="background:${selected.color}"></span>${selected.name}</p><p>${selected.text}</p><div class="bio-controls" aria-label="Explore cell structures">${entries.map(e=>button(esc(e.name),'structure',e.id,`aria-pressed="${e.id===s.focus}"`)).join('')}</div></div></div><p class="bio-task">${p.task}</p>`;
@@ -72,8 +72,27 @@
     drawer.innerHTML=`<header class="drawer-head"><div><h2 id="drawer-title" tabindex="-1">${panel.title}</h2><p>${panel.subtitle}</p>${activeWidget==='answers'&&answerContext?button('← Return to task','answer-back','',`class="review-return"`):''}</div>${button('×','close','',`class="icon-control" aria-label="Close ${panel.title}"`)}</header><div class="drawer-tabs" role="tablist" aria-label="${panel.title} sections">${panel.tabs.map((t,i)=>button(t.label,'tab',i,`class="support-tab" role="tab" id="widget-tab-${i}" aria-selected="${i===w.tab}" aria-controls="widget-page" tabindex="${i===w.tab?0:-1}"`)).join('')}</div><div class="drawer-body" role="tabpanel" id="widget-page" aria-labelledby="widget-tab-${w.tab}"><article class="widget-page">${page.note?`<p class="widget-note">${page.note}</p>`:''}<h3>${page.heading}</h3>${page.quote?`<blockquote>${page.quote}</blockquote>`:''}${page.text?`<p>${page.text}</p>`:''}${page.items?`<ul>${page.items.map(x=>`<li>${x}</li>`).join('')}</ul>`:''}${page.source?`<a class="widget-source" target="_blank" rel="noopener" href="${esc(page.source)}">${page.sourceLabel||'Read the source'} ↗</a>`:''}${page.action?button(page.action.label+' →','go',page.action.id,'class="widget-action"'):''}${page.href?`<a class="widget-action" href="${esc(page.href)}" target="_blank" rel="noopener">${page.linkLabel||'Open resource'} ↗</a>`:''}${activeWidget!=='answers'&&LessonAnswers.widget(activeWidget,phase(),lesson,w.tab,w.page)?button('Model answer &amp; mark scheme','widget-answer','',`class="widget-action review-widget" aria-controls="student-drawer"`):''}</article></div><nav class="widget-pagination" aria-label="Widget pages">${button('←','page',-1,`aria-label="Previous widget page" ${w.page===0?'disabled':''}`)}<span>${w.page+1} / ${tab.pages.length}</span>${button('→','page',1,`aria-label="Next widget page" ${w.page===tab.pages.length-1?'disabled':''}`)}</nav>`;
     if(focus)$('drawer-title').focus({preventScroll:true});
   }
-  let remaining=22*60, deadline=null;
-  function tick(){if(deadline!==null){remaining=Math.max(0,Math.ceil((deadline-Date.now())/1000));if(remaining===0){deadline=null;$('status').textContent='Assessment time has ended. Put your pen down.';}}if($('exam-clock')){$('exam-clock').textContent=`${Math.floor(remaining/60).toString().padStart(2,'0')}:${(remaining%60).toString().padStart(2,'0')}`;$('timer-status').textContent=remaining===0?'Time is up. Put your pen down.':deadline?'Work independently.':remaining===1320?'Ready to start.':'Timer paused.';}}
+  let duration=22*60, remaining=duration, deadline=null;
+  function tick(){
+    if(deadline!==null){
+      remaining=Math.max(0,Math.ceil((deadline-Date.now())/1000));
+      if(remaining===0){deadline=null;$('status').textContent='Assessment time has ended. Put your pen down.';}
+    }
+    if($('exam-clock')){
+      $('exam-clock').textContent=`${Math.floor(remaining/60).toString().padStart(2,'0')}:${(remaining%60).toString().padStart(2,'0')}`;
+      const message=remaining===0?'Time is up. Put your pen down.':deadline!==null?'Work independently.':remaining===duration?'Ready to start.':'Timer paused.';
+      if($('timer-status').textContent!==message)$('timer-status').textContent=message;
+    }
+  }
+  document.addEventListener('submit',e=>{
+    if(e.target.id!=='timer-settings')return;
+    e.preventDefault();
+    const input=$('timer-minutes');
+    if(!input.reportValidity())return;
+    duration=Number(input.value)*60;remaining=duration;deadline=null;
+    $('status').textContent=`Timer set to ${input.value} minutes. Press Start when ready.`;
+    tick();
+  });
   setInterval(tick,500);
   $('previous-screen').addEventListener('click',()=>go(index-1));
   $('next-screen').addEventListener('click',()=>go(index+1));
@@ -92,7 +111,14 @@
     if(a==='scenario'){s.scenario=Number(v);s.showNet=false;render();document.querySelector(`[data-action="scenario"][data-value="${v}"]`)?.focus();}
     if(a==='net'){s.showNet=!s.showNet;render();document.querySelector('[data-action="net"]')?.focus();}
     if(a==='choice'){s.choice=Number(v);render();document.querySelector(`[data-action="choice"][data-value="${v}"]`)?.focus();}
-    if(a==='timer'){if(v==='start'&&deadline===null&&remaining>0)deadline=Date.now()+remaining*1000;if(v==='pause'){tick();deadline=null;}if(v==='reset'){deadline=null;remaining=1320;}tick();}
+    if(a==='timer'){
+      tick();
+      if(v==='start'&&deadline===null&&remaining>0)deadline=Date.now()+remaining*1000;
+      if(v==='pause')deadline=null;
+      if(v==='reset'){deadline=null;remaining=duration;}
+      if(v==='add'){remaining+=60;if(deadline!==null)deadline+=60000;}
+      tick();
+    }
     if(a==='fullscreen'){try{if(document.fullscreenElement)await document.exitFullscreen();else await document.documentElement.requestFullscreen();}catch(_){$('status').textContent='Fullscreen is unavailable in this viewer. Open the HTML in your browser.';}}
   });
   document.addEventListener('keydown',e=>{
