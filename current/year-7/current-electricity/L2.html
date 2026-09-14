@@ -1,0 +1,388 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Lesson 2 · Models for circuits | Year 7 Science</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500&family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>/* Edu OS lesson runtime — Arcadia quiet academic canvas.
+   Type scale is set for a 1920 × 1080 classroom display (core text ≈ 30–36 px, headings ≥ 60 px,
+   labels ≥ 20 px) and collapses for laptops below 1280 px. See LESSON_BUILD_MEMORY.md. */
+
+:root {
+  --navy: #14263d; --ink: #223142; --muted: #4f5c6b; --gold: #b78324; --gold-soft: #f2c96d;
+  --paper: #faf7f0; --wash: #eee8dc; --white: #fffdf8; --line: #c8c5bc; --blue: #dbeaf0; --green: #dceade; --amber: #fff8e7;
+  --serif: Fraunces, Georgia, "Times New Roman", serif;
+  --sans: Montserrat, "Helvetica Neue", Arial, sans-serif;
+  /* Scale: 1vw at 1920 = 19.2px */
+  --t-label: clamp(0.85rem, 1.05vw, 1.3rem);   /* 20 px at 1920 */
+  --t-body: clamp(1.1rem, 1.6vw, 2rem);        /* 31 px */
+  --t-lead: clamp(1.25rem, 1.75vw, 2.25rem);   /* 34 px */
+  --t-h1: clamp(2.6rem, 3.6vw, 4.6rem);        /* 69 px */
+  --t-h2: clamp(1.4rem, 1.9vw, 2.4rem);        /* 36 px */
+  font-family: var(--sans);
+}
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+body { margin: 0; background: var(--wash); color: var(--ink); }
+button { font: inherit; }
+button:focus-visible, a:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
+.skip { position: fixed; top: -5rem; left: 1rem; background: var(--navy); color: #fff; padding: .6rem 1rem; z-index: 99; }
+.skip:focus { top: 1rem; }
+
+.app { height: 100vh; display: grid; grid-template-rows: 72px 5px minmax(0, 1fr) 68px; background: var(--paper); }
+.top { display: flex; align-items: center; gap: 1.2rem; padding: 0 2rem; border-bottom: 1px solid var(--line); background: var(--white); }
+.kicker { font-size: .72rem; font-weight: 800; letter-spacing: .15em; text-transform: uppercase; color: var(--muted); }
+.topic { font-family: var(--serif); font-size: 1.35rem; color: var(--navy); }
+.topic em { font-style: normal; color: var(--gold); }
+.controls { margin-left: auto; display: flex; gap: .5rem; }
+.mode, .support-toggle { border: 1px solid var(--line); border-radius: 999px; padding: .55rem .95rem; background: var(--white); font-weight: 700; color: var(--navy); cursor: pointer; }
+.progress { background: #e2d8c5; }
+.progress span { display: block; width: 0; height: 100%; background: var(--gold); transition: width .25s; }
+.main { min-height: 0; padding: 1rem 1.4rem; display: grid; grid-template-columns: minmax(0, 1fr); gap: 1rem; }
+.main.drawer-open { grid-template-columns: minmax(0, 1fr) minmax(300px, 22vw); }
+.stage, .drawer { min-height: 0; border: 1px solid var(--line); border-radius: 20px; background: var(--white); overflow: hidden; }
+.drawer { overflow: auto; }
+/* One screen, no scrolling: the screen is exactly the stage height and every child shrinks to fit. */
+.screen { height: 100%; padding: clamp(1.4rem, 3vh, 2.8rem) clamp(2rem, 4.5vw, 5.5rem); display: flex; flex-direction: column; justify-content: center; animation: in .22s ease-out; overflow: hidden; }
+@media (prefers-reduced-motion: reduce) { .screen { animation: none; } .progress span { transition: none; } }
+
+.label { font-size: var(--t-label); letter-spacing: .16em; text-transform: uppercase; font-weight: 800; color: var(--gold); }
+.assessment-badge { display: inline-block; margin-left: 1rem; padding: .25em .8em; border-radius: 999px; background: var(--navy); color: var(--gold-soft); font-size: var(--t-label); letter-spacing: .08em; text-transform: uppercase; font-weight: 800; }
+h1 { max-width: 20ch; margin: .3rem 0 .8rem; font: 400 var(--t-h1) / 1 var(--serif); letter-spacing: -.035em; color: var(--navy); }
+h2 { margin: 0 0 .5rem; font: 400 var(--t-h2) / 1.15 var(--serif); color: var(--navy); }
+.lead { max-width: 62ch; margin: 0; color: var(--muted); font-size: var(--t-lead); line-height: 1.4; }
+.callout { margin: 1.2rem 0 0; padding: 1rem 1.2rem; border-left: 6px solid var(--gold); background: var(--amber); font-size: var(--t-body); font-weight: 600; line-height: 1.35; }
+.claim { margin: 1.2rem 0 0; padding: 1.2rem 1.4rem; border: 2px dashed var(--navy); border-radius: 14px; font: 400 var(--t-lead) / 1.35 var(--serif); color: var(--navy); }
+
+/* Layout families */
+.layout { display: grid; gap: clamp(1.6rem, 3.5vw, 4rem); align-items: center; min-height: 0; max-height: 100%; }
+.layout.two { grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); }
+.layout.visual-left { grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr); }
+.layout.visual-left > .text { order: 2; }
+.layout.single { grid-template-columns: minmax(0, 1fr); max-width: 1400px; }
+.layout.stacked { grid-template-columns: minmax(0, 1fr); align-items: start; }
+.text { min-width: 0; min-height: 0; }
+.aside { min-width: 0; min-height: 0; max-height: 100%; display: flex; flex-direction: column; gap: 1rem; }
+.layout.visual-left { height: 100%; }
+.layout.visual-left > .aside { height: 100%; justify-content: center; }
+
+.list { display: grid; gap: .55rem; margin: 0; padding: 0; list-style: none; }
+.list li { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: .8rem; padding: .6rem 0; border-bottom: 1px solid var(--line); font-size: var(--t-body); font-weight: 600; line-height: 1.3; }
+.list li:last-child { border-bottom: 0; }
+.n { color: var(--gold); font-family: var(--serif); }
+.tasks { display: grid; gap: .55rem; margin: 1rem 0 0; counter-reset: task; }
+.tasks div { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: .8rem; padding: .6rem 0; border-bottom: 1px solid var(--line); font-size: var(--t-body); font-weight: 600; line-height: 1.3; }
+.tasks div::before { counter-increment: task; content: counter(task); color: var(--gold); font: 500 var(--t-body) var(--serif); }
+.resource-bar { display: flex; flex-wrap: wrap; gap: .7rem; margin-top: 1rem; }
+.resource-button { display: inline-flex; align-items: center; gap: .8rem; width: fit-content; padding: .75rem 1.1rem; border: 2px solid var(--navy); border-radius: 999px; background: var(--navy); color: #fff; font-size: var(--t-label); font-weight: 800; text-decoration: none; }
+.resource-button::after { content: "↗"; color: var(--gold-soft); font-size: 1.15em; }
+.resource-button small { padding-left: .75rem; border-left: 1px solid #ffffff55; color: var(--gold-soft); font-size: .72em; letter-spacing: .1em; text-transform: uppercase; }
+.resource-button:hover { background: #203b5d; }
+.feedback-bar { display: none; margin-top: .9rem; padding-top: .8rem; border-top: 1px solid var(--line); align-items: center; gap: .8rem; }
+.present .feedback-bar { display: flex; }
+.feedback-bar > span { color: var(--muted); font-size: var(--t-label); font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+.feedback-bar .reveal { margin: 0; }
+.criteria { margin: 1rem 0 0; padding: 1rem 1.3rem; background: var(--navy); color: #fff; border-radius: 14px; }
+.criteria h2 { margin: 0 0 .4rem; color: var(--gold-soft); }
+.criteria p { margin: .4rem 0; font-size: var(--t-body); line-height: 1.3; }
+.product { margin: 1rem 0 0; font-size: var(--t-label); font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+
+.figure { width: 100%; margin: 0; min-height: 0; display: flex; flex-direction: column; flex: 1 1 auto; }
+.figure img, .figure > svg { display: block; width: 100%; min-height: 0; flex: 1 1 auto; max-height: 100%; object-fit: contain; border-radius: 14px; background: var(--white); border: 1px solid var(--line); }
+.figure figcaption { flex: 0 0 auto; margin-top: .6rem; color: var(--muted); font-size: var(--t-label); line-height: 1.35; }
+
+/* Labelled model: figure shapes in the middle, HTML labels in side columns, leader lines drawn after layout. */
+.model { position: relative; flex: 1 1 auto; min-height: 0; display: grid; font-size: var(--t-body); grid-template-columns: minmax(6em, 8.5em) minmax(0, 1fr) minmax(6em, 8.5em); gap: .6em; align-items: stretch; }
+.layout.visual-left:has(.model) { grid-template-columns: minmax(0, 1.7fr) minmax(0, .8fr); }
+.model.no-left { grid-template-columns: minmax(0, 1fr) minmax(6em, 8.5em); }
+.model.no-right { grid-template-columns: minmax(6em, 8.5em) minmax(0, 1fr); }
+.model-figure { position: relative; min-height: 0; display: flex; align-items: center; justify-content: center; border: 1px solid var(--line); border-radius: 14px; background: var(--white); padding: .8rem; }
+.model-figure svg { width: 100%; height: 100%; max-height: 100%; }
+.model-figure .panel-title { position: absolute; top: .6rem; font-size: var(--t-label); font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: var(--gold); }
+.model-figure .panel-title.left { left: 1rem; } .model-figure .panel-title.right { right: 1rem; }
+.model-labels { position: relative; min-width: 0; min-height: 0; }
+.model-label { position: absolute; left: 0; right: 0; }
+.model-labels.right { text-align: left; } .model-labels.left { text-align: right; }
+.model-label { font-size: 1em; font-weight: 700; color: var(--navy); line-height: 1.15; padding: .2em .5em; border-radius: 8px; background: var(--paper); border: 1px solid var(--line); }
+.model-label small { display: block; font-size: var(--t-label); font-size: .66em; font-weight: 600; color: var(--muted); }
+.model-leaders { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; overflow: visible; }
+.model-leaders line { stroke: var(--navy); stroke-width: 2.5; }
+.model-leaders circle { fill: var(--navy); }
+.model-caption { flex: 0 0 auto; margin-top: .5rem; color: var(--muted); font-size: var(--t-label); line-height: 1.35; }
+.diagram { width: 100%; min-height: 32vh; display: grid; place-items: center; border: 1px solid var(--line); border-radius: 16px; background: linear-gradient(135deg, #edf3f3, #f6ede1); padding: 1.3rem; }
+.flow { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: .8rem; font-weight: 800; font-size: var(--t-body); }
+.node { padding: .9rem 1.1rem; border-radius: 12px; background: #fff; border: 1px solid var(--line); text-align: center; max-width: 22ch; }
+.arrow { color: var(--gold); font-size: var(--t-h2); }
+
+.evidence { width: 100%; border-collapse: collapse; font-size: clamp(1rem, 1.35vw, 1.6rem); }
+.evidence th, .evidence td { padding: .7rem .8rem; border: 1px solid var(--line); text-align: left; vertical-align: top; line-height: 1.3; }
+.evidence th { background: var(--navy); color: #fff; }
+.evidence td:first-child { font-weight: 700; }
+
+.steps { display: grid; gap: .7rem; margin: 1rem 0 0; }
+.step { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 1rem; padding: .9rem 1.1rem; border: 1px solid var(--line); border-radius: 12px; background: var(--paper); font-size: var(--t-body); line-height: 1.3; }
+.step .n { font-size: var(--t-h2); }
+.step.weak { border-style: dashed; color: var(--muted); }
+.step.weak::after { content: "rejected"; grid-column: 2; font-size: var(--t-label); text-transform: uppercase; letter-spacing: .1em; color: var(--gold); font-weight: 800; }
+
+.choices { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .8rem; margin-top: 1.2rem; }
+.choice { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: .8rem; align-items: start; min-height: 5rem; border: 2px solid var(--line); background: var(--white); border-radius: 14px; padding: .9rem 1rem; text-align: left; font-size: var(--t-body); font-weight: 700; line-height: 1.3; color: var(--navy); }
+.choice .n { font-size: var(--t-h2); }
+.choice.correct { border-color: var(--gold); background: var(--amber); }
+.reveal-bar { display: flex; flex-wrap: wrap; gap: .6rem; margin-top: 1.2rem; }
+.reveal-bar, .reveal { display: none; } /* reveals are teacher controls: Present mode only */
+.present .reveal-bar { display: flex; } .present .reveal { display: inline-block; }
+.reveal { border: 1px solid var(--navy); border-radius: 999px; padding: .55rem 1.1rem; background: var(--white); color: var(--navy); font-weight: 700; cursor: pointer; font-size: var(--t-label); }
+.reveal[aria-expanded="true"] { background: var(--navy); color: #fff; }
+.revealed { margin-top: 1rem; padding: 1rem 1.2rem; border-radius: 14px; background: var(--green); font-size: var(--t-body); line-height: 1.35; }
+.revealed[hidden] { display: none; }
+.revealed h2 { font-size: var(--t-body); }
+/* Keep the answer and follow-up question readable together at board scale. */
+.screen[data-layout="diagnostic-decision"] .layout.single { max-width: none; }
+.screen[data-layout="diagnostic-decision"] .revealed { margin-top: .6rem; padding: .65rem 1rem; }
+.screen[data-layout="diagnostic-decision"] .revealed h2 { margin: 0 0 .35rem; }
+.screen[data-layout="diagnostic-decision"] .revealed p { margin: .3rem 0; }
+
+.drawer { padding: 1.2rem; }
+.drawer[hidden] { display: none; }
+.drawer h2 { margin: 0; }
+.tabs { display: flex; flex-wrap: wrap; gap: .4rem; margin: 1rem 0; }
+.tab { border: 1px solid var(--line); border-radius: 999px; background: var(--white); padding: .45rem .7rem; font-size: .78rem; font-weight: 800; cursor: pointer; }
+.tab.active { background: var(--navy); color: #fff; }
+.support { font-size: 1.05rem; line-height: 1.5; }
+.support h3 { margin: .2rem 0 .5rem; font: 400 1.35rem var(--serif); color: var(--navy); }
+.support ul { padding-left: 1.2rem; }
+
+/* Three.js terminal-velocity laboratory. The model stays usable without motion or WebGL. */
+.terminal-lab { width: 100%; min-height: 0; }
+.terminal-lab-loading { min-height: 28rem; display: grid; place-items: center; border: 1px solid var(--line); border-radius: 16px; background: #dceff5; color: var(--navy); font-weight: 800; }
+.terminal-lab-card { position: relative; display: grid; grid-template-rows: minmax(18rem, 1fr) auto auto auto; gap: .55rem; width: 100%; height: min(68vh, 650px); min-height: 34rem; padding: .65rem; border: 1px solid #afc7cf; border-radius: 18px; background: #f7fbfc; box-shadow: 0 18px 48px #18324a14; overflow: hidden; }
+.terminal-view { position: relative; min-height: 0; overflow: hidden; border-radius: 13px; background: #dceff5; }
+.terminal-view canvas { display: block; width: 100%; height: 100%; }
+.terminal-stage-readout { position: absolute; top: .75rem; left: .75rem; display: grid; gap: .12rem; max-width: min(78%, 24rem); padding: .65rem .8rem; border-radius: 12px; background: #fffdf8eb; color: var(--navy); box-shadow: 0 8px 30px #17324d20; backdrop-filter: blur(7px); }
+.terminal-stage-readout small { color: var(--gold); font-size: .68rem; font-weight: 800; letter-spacing: .11em; text-transform: uppercase; }
+.terminal-stage-readout strong { font: 500 1.05rem/1.1 var(--serif); }
+.terminal-stage-readout span { color: var(--muted); font-size: .76rem; font-weight: 700; }
+.terminal-force-key { position: absolute; right: .65rem; bottom: .65rem; display: flex; flex-wrap: wrap; justify-content: flex-end; gap: .35rem; }
+.terminal-force-key[hidden] { display: none; }
+.force-chip { padding: .32rem .52rem; border-radius: 999px; background: #fffdf8e8; color: var(--navy); font-size: .65rem; font-weight: 800; box-shadow: 0 4px 14px #17324d1f; }
+.force-chip.weight { border-left: 5px solid #e04f45; }
+.force-chip.drag { border-left: 5px solid #158b9f; }
+.force-chip.result { border-left: 5px solid #d99518; }
+.terminal-stage-tabs { display: grid; grid-template-columns: repeat(6, 1fr); gap: .32rem; }
+.terminal-stage-tabs[hidden] { display: none; }
+.terminal-stage-tabs button, .terminal-controls button { min-height: 2.1rem; border: 1px solid #9eb2bc; border-radius: 9px; background: #fff; color: var(--navy); font: 800 .68rem/1.15 var(--sans); cursor: pointer; }
+.terminal-stage-tabs button:hover, .terminal-controls button:hover { border-color: var(--navy); background: #edf4f5; }
+.terminal-stage-tabs button.active { border-color: var(--navy); background: var(--navy); color: #fff; }
+.terminal-variables { display: grid; grid-template-columns: auto repeat(2, minmax(0, 1fr)); gap: .35rem; align-items: center; }
+.terminal-variables[hidden] { display: none; }
+.terminal-variables span { color: var(--muted); font-size: .68rem; font-weight: 800; }
+.terminal-variables button { min-height: 2.1rem; border: 1px solid #9eb2bc; border-radius: 9px; background: #fff; color: var(--navy); font: 800 .68rem/1.15 var(--sans); cursor: pointer; }
+.terminal-variables button.active { border-color: var(--navy); background: var(--navy); color: #fff; }
+.terminal-controls { display: grid; grid-template-columns: repeat(auto-fit, minmax(7rem, 1fr)); gap: .32rem; }
+.terminal-controls button { padding: .4rem .35rem; }
+.terminal-controls button[aria-pressed="true"], .terminal-controls button[aria-expanded="true"] { border-color: var(--gold); background: #f9edcc; }
+.terminal-controls button:disabled { opacity: .7; cursor: default; }
+.terminal-controls [data-action="explain"] { display: none; }
+.present .terminal-controls [data-action="explain"] { display: block; }
+.terminal-caption { margin: 0; color: var(--muted); font-size: .64rem; line-height: 1.25; }
+.terminal-explanation { position: absolute; z-index: 3; right: 1.3rem; bottom: 7.2rem; width: min(26rem, 78%); padding: .8rem 1rem; border: 1px solid #9eb2bc; border-radius: 12px; background: #fffdf8f5; color: var(--navy); box-shadow: 0 16px 34px #17324d2b; }
+.terminal-explanation[hidden] { display: none; }
+.terminal-explanation strong { font-size: .82rem; }
+.terminal-explanation p { margin: .35rem 0 0; color: var(--muted); font-size: .76rem; line-height: 1.35; }
+.terminal-simple { min-height: 18rem; display: grid; grid-template-columns: minmax(8rem, .72fr) minmax(0, 1.28fr); gap: 1rem; align-items: center; padding: 1rem; border-radius: 13px; background: linear-gradient(145deg, #e3f3f6, #f8eee1); }
+.terminal-simple[hidden] { display: none; }
+.terminal-simple-diagram { display: grid; grid-template-rows: 1fr auto 1fr; justify-items: center; align-items: center; height: 15rem; }
+.simple-person { position: relative; width: 2.7rem; height: 4rem; border-radius: 45% 45% 30% 30%; background: var(--navy); }
+.simple-person span { position: absolute; left: .75rem; top: -1.35rem; width: 1.25rem; height: 1.25rem; border-radius: 50%; background: #c98562; border: 3px solid #101923; }
+.simple-person i { position: absolute; left: -.7rem; top: .65rem; width: 4.1rem; height: .55rem; border-radius: 999px; background: var(--gold); transform: rotate(-6deg); }
+.simple-arrow { position: relative; width: .38rem; border-radius: 999px; }
+.simple-arrow::after { content: ""; position: absolute; left: 50%; width: 0; height: 0; transform: translateX(-50%); border-left: .58rem solid transparent; border-right: .58rem solid transparent; }
+.simple-arrow span { position: absolute; left: 1rem; top: 50%; color: var(--navy); font-size: .72rem; font-weight: 800; transform: translateY(-50%); }
+.simple-arrow.drag { align-self: end; background: #158b9f; }
+.simple-arrow.drag::after { top: -.55rem; border-bottom: .8rem solid #158b9f; }
+.simple-arrow.weight { align-self: start; background: #e04f45; }
+.simple-arrow.weight::after { bottom: -.55rem; border-top: .8rem solid #e04f45; }
+.terminal-simple-copy { display: grid; gap: .55rem; color: var(--navy); }
+.terminal-simple-copy strong { font: 500 1.25rem/1.15 var(--serif); }
+.terminal-simple-copy span { padding-bottom: .4rem; border-bottom: 1px solid #afc7cf; font-size: .82rem; font-weight: 700; }
+.sr-only { position: absolute !important; width: 1px !important; height: 1px !important; padding: 0 !important; margin: -1px !important; overflow: hidden !important; clip: rect(0, 0, 0, 0) !important; white-space: nowrap !important; border: 0 !important; }
+button:focus-visible, a:focus-visible { outline: 4px solid #2f78cc; outline-offset: 3px; }
+
+.nav { display: grid; grid-template-columns: 54px minmax(0, 1fr) 54px; gap: 1rem; align-items: center; padding: .65rem 1.5rem; background: var(--navy); color: #fff; }
+.nav button { width: 48px; height: 48px; border: 1px solid #738195; border-radius: 50%; background: transparent; color: #fff; font-size: 1.4rem; cursor: pointer; }
+.nav button:disabled { opacity: .3; }
+.navtext { min-width: 0; }
+.navtext small { color: #d7c7a4; font-size: .7rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
+.navtext strong { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font: 400 1.15rem var(--serif); }
+.nav .next { justify-self: end; }
+
+/* Present mode: board only */
+.present .top { display: none; }
+.present .app { grid-template-rows: 5px minmax(0, 1fr) 68px; }
+.present .main { padding: 0; grid-template-columns: minmax(0, 1fr); }
+.present .stage { border: 0; border-radius: 0; }
+.present .drawer { display: none; }
+.present .screen { padding: clamp(1.6rem, 3.5vh, 3rem) clamp(3rem, 6vw, 8rem); }
+
+@keyframes in { from { opacity: .2; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+
+@media (max-width: 1279px) {
+  :root { --t-body: 1.05rem; --t-lead: 1.15rem; --t-h1: 2.4rem; --t-h2: 1.4rem; --t-label: .78rem; }
+  .screen { padding: 1.6rem 2rem; justify-content: flex-start; }
+}
+@media (max-width: 850px) {
+  .main.drawer-open { grid-template-columns: 1fr; }
+  .drawer { display: none; }
+  .layout.two, .layout.visual-left { grid-template-columns: 1fr; }
+  .layout.visual-left > .text { order: 0; }
+  .choices { grid-template-columns: 1fr; }
+  .top { padding: 0 1rem; }
+  .topic { font-size: 1rem; }
+  .terminal-lab-card { height: 35rem; }
+  .terminal-controls { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+/* Local access layer: retain Arcadia's palette, figures and layout families. */
+.app{height:100dvh;grid-template-rows:auto 5px minmax(0,1fr) auto}
+.top{padding:.7rem 1.4rem;flex-wrap:wrap;gap:.7rem;position:relative;z-index:2}
+.controls{flex-wrap:wrap;justify-content:flex-end;gap:.4rem}
+.controls button,.drawer button,#one-step-card button{min-height:44px;min-width:44px;border:1px solid var(--line);border-radius:999px;background:var(--white);color:var(--navy);padding:.5rem .85rem;font:700 .95rem var(--sans);cursor:pointer}
+.controls [data-panel="support"]{border:2px solid #376050;background:#e5efe8}
+.controls [data-panel="stretch"]{border:2px solid #94702d;background:#fff3d7}
+.controls button.active,.controls button[aria-pressed="true"]{background:var(--navy);color:white}
+button:disabled{opacity:.45;cursor:default}
+.main.drawer-open{grid-template-columns:minmax(0,1fr) minmax(340px,31%)}
+.stage{overflow:auto;overscroll-behavior:contain}
+.screen{height:auto;min-height:100%;overflow:visible;padding:clamp(1.2rem,2.2vw,2.8rem);justify-content:center;zoom:1!important}
+.layout,.layout.visual-left{height:auto;max-height:none;min-height:0}
+.figure,.figure img{max-height:none;height:auto;min-height:0}
+.figure img{width:100%;object-fit:contain}
+.drawer{display:block;background:var(--paper);padding:1.2rem;font-size:1.1rem;line-height:1.55;overscroll-behavior:contain}
+.drawer[hidden],[hidden]{display:none!important}
+.drawer-heading{display:flex;align-items:center;justify-content:space-between;gap:.7rem}
+.drawer h2{font-size:1.6rem}.drawer h3{font:700 1.08rem var(--sans);margin:1.3rem 0 .45rem}
+.drawer p{margin:.6rem 0 1rem}.drawer li{margin:.6rem 0}.drawer ol{padding-left:1.5rem}
+.drawer .section-context{font-size:.85rem;color:var(--muted);border-bottom:1px solid var(--line);padding-bottom:.8rem}
+.drawer dt{font-weight:700}.drawer dd{margin:0 0 .8rem}.drawer dl{margin-top:.5rem}
+.sentence{padding:1rem;background:var(--white);border-left:4px solid var(--gold)}
+.big-question{font-size:1.25rem;font-weight:600}.thinking-label{color:#74521b;font-weight:700;font-size:.9rem}
+.drawer details{border-top:1px solid var(--line);padding-top:.8rem;margin-top:1rem}
+.drawer summary{cursor:pointer;min-height:44px;padding:.3rem 0;font-weight:700}
+.access-links{display:grid;gap:.6rem}.access-links a{display:block;padding:.6rem .8rem;border:1px solid var(--line);border-radius:9px;color:var(--navy);background:var(--white)}
+.drawer label{display:block;margin:1rem 0}.drawer select{display:block;width:100%;padding:.65rem;font:inherit;color:var(--navy);background:var(--white);border:1px solid var(--line);border-radius:8px;margin-top:.3rem;min-height:44px}
+.drawer .check-option{display:flex;align-items:center;gap:.65rem;min-height:44px}.drawer input[type="checkbox"]{width:24px;height:24px;flex-shrink:0;accent-color:var(--navy)}
+#one-step-card{margin-top:1rem;border:2px solid #376050;background:#e5efe8;padding:.8rem 1rem;border-radius:12px;font-size:var(--t-body)}
+#one-step-card p{margin:.5rem 0}.step-heading{display:flex;justify-content:space-between;align-items:center;gap:.5rem;font-size:1rem}.step-heading span{display:flex;gap:.3rem}
+.one-step-active .tasks{display:none}
+.nav{min-height:68px;padding:.6rem 1.4rem}.navtext{min-width:0}.navtext strong{white-space:normal}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
+:root[data-plain="true"]{--serif:Arial,sans-serif;--sans:Arial,sans-serif}
+:root[data-spacing="true"] .stage,:root[data-spacing="true"] .drawer{word-spacing:.12em;letter-spacing:.025em}
+:root[data-spacing="true"] :is(p,li,.lead,.tasks>div,.choice,dd){line-height:1.85}
+:root[data-spacing="true"] h1{line-height:1.2;letter-spacing:0}
+:root[data-motion="true"] *, :root[data-motion="true"] *::before{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+select:focus-visible,input:focus-visible,summary:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+@media(max-width:1150px){.main.drawer-open .layout{grid-template-columns:1fr}.main.drawer-open .layout.visual-left>.text{order:0}.main.drawer-open .figure{max-width:620px;margin:auto}.top>div:first-child{display:none}.controls{margin:0;justify-content:flex-start}.layout{gap:1.2rem}}
+@media(max-width:850px){.main.drawer-open{display:flex;flex-direction:column;overflow:auto}.main.drawer-open .drawer{display:block;flex:0 0 auto;overflow:visible;order:-1}.main.drawer-open .stage{flex:0 0 auto;overflow:visible}.main.drawer-open .screen{min-height:0}.main{padding:.6rem}.top{padding:.5rem}.controls button{font-size:.85rem;padding:.4rem .65rem}.screen .layout{grid-template-columns:1fr}.layout.visual-left>.text{order:0}.screen h1{font-size:2.4rem}.navtext strong{font-size:.9rem}.choices{grid-template-columns:1fr}.drawer{max-height:none}.nav{padding:.5rem .8rem}}
+@media(max-height:520px){.app{height:auto;min-height:100dvh;grid-template-rows:auto 5px auto auto}.top{position:sticky;top:0}.main,.stage{overflow:visible}.nav{position:sticky;bottom:0;background:var(--navy)}}
+
+.inline-review{display:inline-block;margin-top:1.1rem;padding:.65rem 1rem;min-height:44px;border:1px solid var(--navy);border-radius:999px;background:var(--white);color:var(--navy);font:700 1rem var(--sans);cursor:pointer}.drawer .answer-item{padding:1rem 0;border-bottom:1px solid var(--line)}.drawer .answer-item h3{margin:.3rem 0 .6rem}.drawer .answer-item .scheme{font-size:1rem;background:var(--white);padding:.65rem}.drawer .answer-item img{width:100%;height:auto}.controls .lab-link{display:inline-flex;align-items:center;min-height:44px;border:1px solid var(--line);border-radius:999px;color:var(--navy);background:var(--amber);padding:.5rem .8rem;text-decoration:none;font-size:.95rem;font-weight:700}.tasks>div{line-height:1.5}.tasks>div+div{margin-top:.65rem}
+</style>
+</head>
+<body>
+<a class="skip" href="#stage">Skip to lesson</a>
+<div class="app">
+  <header class="top">
+    <div><div class="kicker">Year 7 Science · Current electricity · Lesson 2</div><div class="topic">Lesson 2 · Models for circuits</div></div>
+    <div class="controls" role="group" aria-label="Learning and access tools"><button data-panel="support" aria-expanded="false" aria-controls="learning-panel">Support</button><button data-panel="stretch" aria-expanded="false" aria-controls="learning-panel">Stretch &amp; challenge</button><button data-panel="resources" aria-expanded="false" aria-controls="learning-panel">Resources</button><button id="read-aloud" aria-pressed="false">Read aloud</button><button id="focus-step" aria-pressed="false">One step</button><button data-panel="access" aria-expanded="false" aria-controls="learning-panel">Access</button><button data-panel="review" aria-expanded="false" aria-controls="learning-panel">Review</button><a class="lab-link" href="circuit-lab.html" target="circuit-lab" rel="noopener">Circuit Lab ↗</a></div>
+  </header>
+  <div class="progress"><span></span></div>
+  <main class="main"><section class="stage" id="stage" aria-label="Lesson section"></section><aside class="drawer" id="learning-panel" hidden></aside></main>
+  <nav class="nav"><button class="prev" aria-label="Previous screen">←</button><div class="navtext"></div><button class="next" aria-label="Next screen">→</button></nav>
+</div>
+<script>const lesson = {"shape":"concept-and-model","architecture_version":3,"phases":[{"type":"question","layout":"image-led-decision","label":"Retrieve","nav":"1","title":"What did the switch change?","lead":"In your book, draw first. Then write one reason.","minutes":3,"points":[],"tasks":["Draw a lamp and an open-switch symbol.","Explain why opening the switch stopped the lamp in L1."],"review":{"type":"answers","label":"Model answer & mark scheme","title":"Review after your attempt","body":"<section class=\"answer-item\"><h3>1. Draw a lamp and an open-switch symbol.</h3><p>Lamp: a circle with a cross. Open switch: two contacts with a gap and a raised blade.</p><p class=\"scheme\"><b>Success criteria:</b> Both recognisable symbols; switch gap visible.</p><img src=\"figures/components.svg\" alt=\"Circuit equipment and standard symbols\" style=\"max-width:100%\"><p>One acceptable schematic; component positions may differ if the connections match.</p></section><section class=\"answer-item\"><h3>2. Explain why opening the switch stopped the lamp in L1.</h3><p>It broke the complete conducting path, so steady current stopped throughout the single loop.</p><p class=\"scheme\"><b>Success criteria:</b> Link gap → incomplete path → no current through the lamp.</p></section>"},"support":{"start":{"title":"Get started","heading":"","body":"<p>Recall the lamp symbol.</p>"},"build":{"title":"Build understanding","heading":"","body":"<p>Opening the switch changes ___, so ___.</p>"},"stretch":{"title":"Go further","heading":"","body":"<p>The parts are moved around without changing any connections. Must the current change?</p>"}},"product":"An individual oral, drawn or written response; compare with the model and improve one point."},{"type":"practice","layout":"context-brief","label":"Learning","nav":"2","title":"Today: test a model","lead":"Read the goals. Choose the evidence you will need.","minutes":2,"points":["LO1 · Describe current as the rate of flow of charge; distinguish charge from energy.","LO2 · Explain what a circuit model represents and evaluate a limitation.","LO3 · Plan and use current measurements to compare predictions about a single loop."],"tasks":["What work could show that you can evaluate a model?"],"review":{"type":"answers","label":"Model answer & mark scheme","title":"Review after your attempt","body":"<section class=\"answer-item\"><h3>1. What work could show that you can evaluate a model?</h3><p>A verdict that maps the model parts, uses a test result and states a limitation.</p><p class=\"scheme\"><b>Success criteria:</b> Name evidence and a limitation, rather than simply saying the model looks realistic.</p></section>"},"support":{"start":{"title":"Get started","heading":"","body":"<p>Read LO1 with a partner.</p>"},"build":{"title":"Build understanding","heading":"","body":"<p>I can show ___ by ___.</p>"},"stretch":{"title":"Go further","heading":"","body":"<p>Is a realistic-looking picture always the best model?</p>"}},"product":"An individual oral, drawn or written response; compare with the model and improve one point."},{"type":"concept","layout":"split-explanation","label":"Build the model","nav":"3","title":"A model helps us explain","lead":"Match each example to the idea it represents.","minutes":4,"points":["A scientific model is a simplified representation used to explain or predict.","A physical model can be handled. A diagram or computer model is an abstract representation.","Charge is already present in conducting materials. Current is its rate of flow. Energy is transferred from the source to components."],"tasks":["Classify a loop of linked toy carriers and Circuit Lab as physical or computer models."],"review":{"type":"answers","label":"Model answer & mark scheme","title":"Review after your attempt","body":"<section class=\"answer-item\"><h3>1. Classify a loop of linked toy carriers and Circuit Lab as physical or computer models.</h3><p>The toy carriers form a physical model; Circuit Lab is a computer model. Neither is the actual moving charge in a metal wire.</p><p class=\"scheme\"><b>Success criteria:</b> Classify both and distinguish representation from the real system.</p></section>"},"support":{"start":{"title":"Get started","heading":"","body":"<p>Name one thing you can handle.</p>"},"build":{"title":"Build understanding","heading":"","body":"<p>This is a ___ model because ___. It represents ___.</p>"},"stretch":{"title":"Go further","heading":"","body":"<p>Why can a model be useful even when it leaves things out?</p>"}},"image":"figures/model.svg","imageAlt":"Analogy: carriers represent charge; tokens represent transferred energy.","imageCaption":"Analogy: carriers represent charge; tokens represent transferred energy. Standard-symbol schematic; component positions may differ in the simulator.","imageKind":"illustration","product":"An individual oral, drawn or written response; compare with the model and improve one point."},{"type":"diagram","layout":"model-stage","label":"Build the model","nav":"4","title":"Carriers return; energy transfers","lead":"Use the analogy to explain the lamp.","minutes":4,"points":["Carriers represent charge; the number passing a point each second represents current.","Energy tokens represent energy. The loading station represents the source; the unloading station represents the lamp.","The carriers keep circulating. Tokens are transferred at the lamp. Real charge is not a train carrying lumps of coal."],"tasks":["Identify the source, charge, current and energy in the carrier model.","What stays the same across one lamp in a steady single loop?"],"review":{"type":"answers","label":"Model answer & mark scheme","title":"Review after your attempt","body":"<section class=\"answer-item\"><h3>1. Identify the source, charge, current and energy in the carrier model.</h3><p>Loading station → source; carriers → charge; carriers passing per second → current; tokens → energy.</p><p class=\"scheme\"><b>Success criteria:</b> All four mappings, including rate for current.</p></section><section class=\"answer-item\"><h3>2. What stays the same across one lamp in a steady single loop?</h3><p>The rate of charge flow is the same on either side. Energy is transferred by the lamp, but charge is not consumed.</p><p class=\"scheme\"><b>Success criteria:</b> Keep current and charge separate from energy.</p></section>"},"support":{"start":{"title":"Get started","heading":"","body":"<p>Point to a carrier.</p>"},"build":{"title":"Build understanding","heading":"","body":"<p>The ___ represents ___. It changes/stays the same because ___.</p>"},"stretch":{"title":"Go further","heading":"","body":"<p>What is wrong with removing a carrier at the lamp to represent light?</p>"}},"image":"figures/model.svg","imageAlt":"Analogy: carriers represent charge; tokens represent transferred energy.","imageCaption":"Analogy: carriers represent charge; tokens represent transferred energy. Standard-symbol schematic; component positions may differ in the simulator.","imageKind":"illustration","product":"An individual oral, drawn or written response; compare with the model and improve one point."},{"type":"model","layout":"worked-model","label":"Model","nav":"5","title":"Measure along the path","lead":"Watch the meter connection. Describe the decision.","minutes":4,"points":["An ammeter measures current in amperes (A). It is inserted in series, along the path.","Remove one wire. Join its two ends through the ammeter. Do not leave a wire bypassing the meter.","In Circuit Lab, compare current magnitudes. A minus sign can mean the meter terminals face the opposite way."],"tasks":["Why must the ammeter replace a wire in the path?","Does −0.59 A mean a smaller current than +0.59 A?"],"review":{"type":"answers","label":"Model answer & mark scheme","title":"Review after your attempt","body":"<section class=\"answer-item\"><h3>1. Why must the ammeter replace a wire in the path?</h3><p>The charge flowing through that part of the circuit must pass through the meter. A bypass means the current can avoid the meter.</p><p class=\"scheme\"><b>Success criteria:</b> Ammeter in series; no bypass.</p></section><section class=\"answer-item\"><h3>2. Does −0.59 A mean a smaller current than +0.59 A?</h3><p>No. Their magnitudes are equal; the sign describes direction relative to the meter terminals.</p><p class=\"scheme\"><b>Success criteria:</b> Compare magnitudes and explain sign.</p></section>"},"resources":[{"label":"Meter connection guide","href":"L2-lab.html#meter"}],"support":{"start":{"title":"Get started","heading":"","body":"<p>Find the two ends of one wire.</p>"},"build":{"title":"Build understanding","heading":"","body":"<p>I put the ammeter ___ because ___.</p>"},"stretch":{"title":"Go further","heading":"","body":"<p>Why is placing an ammeter directly across the battery a poor measurement method?</p>"}},"image":"figures/ammeter.svg","imageAlt":"One lamp and an ammeter in the same series path.","imageCaption":"One lamp and an ammeter in the same series path. Standard-symbol schematic; component positions may differ in the simulator.","imageKind":"illustration","product":"An individual oral, drawn or written response; compare with the model and improve one point."},{"type":"data","layout":"evidence-workbench","label":"Predict","nav":"6","title":"Two predictions. One fair test.","lead":"Write both predictions before opening the lab.","minutes":3,"points":["Claim A: the lamp uses up current, so less current leaves it.","Claim B: the same steady current flows into and out of the lamp.","Keep the same source setting, lamp and switch state. Compare two positions in the same loop."],"tasks":["What readings would distinguish the two claims?"],"review":{"type":"answers","label":"Model answer & mark scheme","title":"Review after your attempt","body":"<section class=\"answer-item\"><h3>1. What readings would distinguish the two claims?</h3><p>A predicts a smaller current magnitude after the lamp; B predicts equal magnitudes. Measure on both sides with the circuit otherwise unchanged.</p><p class=\"scheme\"><b>Success criteria:</b> State contrasting predictions and control the other conditions.</p></section>"},"support":{"start":{"title":"Get started","heading":"","body":"<p>Copy A and B as short predictions.</p>"},"build":{"title":"Build understanding","heading":"","body":"<p>If ___ is correct, I expect ___. I will keep ___ the same.</p>"},"stretch":{"title":"Go further","heading":"","body":"<p>Would changing the battery between measurements make the test stronger?</p>"}},"product":"An individual oral, drawn or written response; compare with the model and improve one point."},{"type":"practice","layout":"task-and-criteria","label":"Collect","nav":"7","title":"Test the circulating-charge model","lead":"Work in pairs. Each person keeps a record.","minutes":10,"points":["Open the lab guide. Start with a 6 V source, one 10 Ω lamp and a closed switch.","Insert two ammeters in the same loop, one on each side of the lamp. Record their magnitudes.","Open the switch. Record again. Swap roles and explain the result."],"tasks":["Record the two meter readings for the closed and open circuit. Which prediction fits?","Write one sentence explaining the lamp without saying it uses up current."],"review":{"type":"answers","label":"Model answer & mark scheme","title":"Review after your attempt","body":"<section class=\"answer-item\"><h3>1. Record the two meter readings for the closed and open circuit. Which prediction fits?</h3><p>With the supplied two-meter starter, both closed-loop meters are about 0.59 A; both are 0 A when open. Equal magnitudes support Claim B. Record actual readings and retain units.</p><p class=\"scheme\"><b>Success criteria:</b> Two positions × two switch states, units A, correct comparison.</p></section><section class=\"answer-item\"><h3>2. Write one sentence explaining the lamp without saying it uses up current.</h3><p>The lamp transfers energy to its surroundings while the same rate of charge flow passes into and out of it in the closed single loop.</p><p class=\"scheme\"><b>Success criteria:</b> Energy transfer and equal current linked correctly.</p></section>"},"resources":[{"label":"Lab guide & recording table","href":"L2-lab.html#investigation"}],"support":{"start":{"title":"Get started","heading":"","body":"<p>Use the two-meter starter if needed.</p>"},"build":{"title":"Build understanding","heading":"","body":"<p>At position ___ the current was ___ A. This supports ___ because ___.</p>"},"stretch":{"title":"Go further","heading":"","body":"<p>Does a computer result alone prove what every real circuit will do?</p>"}},"image":"figures/twoAmmeters.svg","imageAlt":"Two ammeters, one lamp and a closed switch in a single loop.","imageCaption":"Two ammeters, one lamp and a closed switch in a single loop. Standard-symbol schematic; component positions may differ in the simulator.","imageKind":"illustration","product":"Own readings with units and an evidence-based explanation."},{"type":"hinge","layout":"diagnostic-decision","label":"Check","nav":"8","title":"Check the explanation","lead":"Choose a letter. Give a reason before review.","minutes":3,"points":[],"tasks":["The current entering a lamp is 0.40 A in a steady single loop. What leaves the lamp?"],"review":{"type":"answers","label":"Model answer & mark scheme","title":"Review after your attempt","body":"<section class=\"answer-item\"><h3>1. The current entering a lamp is 0.40 A in a steady single loop. What leaves the lamp?</h3><p>B: 0.40 A. Charge is not consumed by the lamp; it transfers energy.</p><p class=\"scheme\"><b>Success criteria:</b> 1 mark for B; 1 for conserved charge / equal current in the same loop.</p></section>"},"support":false,"choices":["0.20 A, because the lamp uses half.","0.40 A, because charge is not used up.","0 A, because it all becomes light.","0.80 A, because the lamp makes charge."],"answer":1,"feedback":"B. The same steady current flows into and out of the lamp. Energy is transferred; charge is not consumed.","recheck":"A motor replaces the lamp. Current entering it is 0.25 A. What leaves it, and why?","callout":"The current entering a lamp is 0.40 A in a steady single loop. What leaves the lamp?","product":"An individual choice and scientific justification before review."},{"type":"ai","layout":"claim-verification","label":"Evaluate","nav":"9","title":"You decide which feedback helps","lead":"Keep your own explanation visible. Judge the prepared feedback.","minutes":4,"points":["Prepared chatbot-style feedback, written for this task; no live chatbot is used.","1. “Add both meter readings to support your explanation.”","2. “Say some current turns into light.”","3. “Your simulator results prove the model is perfect for every real circuit.”"],"tasks":["Accept, adapt or reject each suggestion. Justify your decisions using your own result.","Revise one sentence. What decision remained yours?"],"review":{"type":"answers","label":"Model answer & mark scheme","title":"Review after your attempt","body":"<section class=\"answer-item\"><h3>1. Accept, adapt or reject each suggestion. Justify your decisions using your own result.</h3><p>1 Accept: measured magnitudes make the evidence explicit. 2 Reject: the lamp transfers energy, not charge/current into light. 3 Reject or adapt: the results agree with this simulation; real tests and limitations still matter.</p><p class=\"scheme\"><b>Success criteria:</b> Judge all three; use science/evidence rather than the confident wording.</p></section><section class=\"answer-item\"><h3>2. Revise one sentence. What decision remained yours?</h3><p>Example: “Both meters read about 0.59 A, supporting equal current in the single loop. The lamp transfers energy; it does not use up charge.” The pupil chose what to accept and checked it against evidence.</p><p class=\"scheme\"><b>Success criteria:</b> Keep a first attempt, one justified change and a brief disclosure: used prepared feedback, checked against my measurements.</p></section>"},"resources":[{"label":"Feedback editor: decide, improve, reflect","href":"L2-practice.html#section-9"}],"support":{"start":{"title":"Get started","heading":"","body":"<p>Read one suggestion at a time.</p>"},"build":{"title":"Build understanding","heading":"","body":"<p>I ___ suggestion ___ because my evidence shows ___.</p>"},"stretch":{"title":"Go further","heading":"","body":"<p>Why could useful and incorrect advice appear in the same generated response?</p>"}},"product":"An individual oral, drawn or written response; compare with the model and improve one point."},{"type":"concept","layout":"split-explanation","label":"Evaluate","nav":"10","title":"How far can this model take us?","lead":"Compare the carrier analogy and the simulator.","minutes":4,"points":["The carrier analogy separates circulating charge from transferred energy.","Circuit Lab calculates steady DC readings from components and connections. It is a rule-based simulator, not a chatbot.","Its lamps have fixed resistance. It does not model a filament heating up or the battery running out."],"tasks":["Give one strength and one limitation of each model."],"review":{"type":"answers","label":"Model answer & mark scheme","title":"Review after your attempt","body":"<section class=\"answer-item\"><h3>1. Give one strength and one limitation of each model.</h3><p>Carrier model: makes charge/energy distinction visible, but tokens and trains are not real electrical processes. Simulator: gives predictions for many connections, but fixed-resistance lamps and no battery depletion limit realism.</p><p class=\"scheme\"><b>Success criteria:</b> A relevant strength and limitation for both models.</p></section>"},"support":{"start":{"title":"Get started","heading":"","body":"<p>Choose the analogy first.</p>"},"build":{"title":"Build understanding","heading":"","body":"<p>This model helps with ___. It is limited because ___.</p>"},"stretch":{"title":"Go further","heading":"","body":"<p>Which model would you choose to predict a numerical current, and what would you still check?</p>"}},"image":"figures/model.svg","imageAlt":"Analogy: carriers represent charge; tokens represent transferred energy.","imageCaption":"Analogy: carriers represent charge; tokens represent transferred energy. Standard-symbol schematic; component positions may differ in the simulator.","imageKind":"illustration","product":"An individual oral, drawn or written response; compare with the model and improve one point."},{"type":"practice","layout":"task-and-criteria","label":"Apply","nav":"11","title":"Make your own model verdict","lead":"Work individually. Use your readings, not a copied verdict.","minutes":5,"points":[],"tasks":["Draw the tested loop with a battery, lamp, switch and two ammeters. Mark the two current magnitudes. (3 marks)","Explain the result using the carrier model, and give one limitation. (3 marks)"],"criteria":["A correctly connected diagram.","A claim supported by two readings.","A limitation that matters."],"review":{"type":"answers","label":"Model answer & mark scheme","title":"Review after your attempt","body":"<section class=\"answer-item\"><h3>1. Draw the tested loop with a battery, lamp, switch and two ammeters. Mark the two current magnitudes. (3 marks)</h3><p>A single complete loop with standard symbols; both ammeters in series, one on either side of the lamp; readings labelled in A and equal in magnitude for the closed loop.</p><p class=\"scheme\"><b>Mark scheme (original classroom question):</b> 1 complete standard-symbol circuit; 1 correct meter positions; 1 readings and units.</p><img src=\"figures/twoAmmeters.svg\" alt=\"Two ammeters, one lamp and a closed switch in a single loop.\" style=\"max-width:100%\"><p>One acceptable schematic; component positions may differ if the connections match.</p></section><section class=\"answer-item\"><h3>2. Explain the result using the carrier model, and give one limitation. (3 marks)</h3><p>Carriers represent charge; energy tokens represent transferred energy. The same rate of carriers passes both positions. The analogy does not literally describe particles carrying tokens (or another valid limitation).</p><p class=\"scheme\"><b>Mark scheme (original classroom question):</b> 1 correct charge/energy mapping; 1 evidence-linked conserved flow; 1 valid limitation. Accept equivalent reasoning.</p></section>"},"resources":[{"label":"Independent questions & drawing","href":"L2-practice.html#section-11"}],"support":{"start":{"title":"Get started","heading":"","body":"<p>Draw or direct the loop.</p>"},"build":{"title":"Build understanding","heading":"","body":"<p>The readings were ___. This supports ___ because ___. However, ___.</p>"},"stretch":{"title":"Go further","heading":"","body":"<p>What further evidence would strengthen your verdict about real circuits?</p>"}},"assessment":{"type":"self","label":"Self-assessment","detail":"An individual model verdict supported by meter readings and a labelled circuit."}},{"type":"exit","layout":"quiet-exit","label":"Exit","nav":"12","title":"Keep one distinction clear","lead":"Answer, then use review to improve one word or connection.","minutes":2,"points":[],"tasks":["What circulates, what is transferred, and what does your ammeter measure?","Name one improvement you made and why."],"review":{"type":"answers","label":"Model answer & mark scheme","title":"Review after your attempt","body":"<section class=\"answer-item\"><h3>1. What circulates, what is transferred, and what does your ammeter measure?</h3><p>Charge circulates in the closed circuit; energy is transferred; an ammeter measures the rate of charge flow, called current.</p><p class=\"scheme\"><b>Success criteria:</b> All three correct; do not replace energy with current.</p></section><section class=\"answer-item\"><h3>2. Name one improvement you made and why.</h3><p>Example: “I replaced ‘current is used up’ with ‘energy is transferred’ because the two current magnitudes were equal.”</p><p class=\"scheme\"><b>Success criteria:</b> A specific change with a scientific reason.</p></section>"},"support":{"start":{"title":"Get started","heading":"","body":"<p>Say charge, energy and current separately.</p>"},"build":{"title":"Build understanding","heading":"","body":"<p>I changed ___ to ___ because ___.</p>"},"stretch":{"title":"Go further","heading":"","body":"<p>Can a model be useful without being a complete explanation of electricity?</p>"}},"product":"An individual oral, drawn or written response; compare with the model and improve one point."}]};
+
+const state = {};</script>
+<script>const differentiation=[{"steps":["Recall the lamp symbol.","Show a gap at the switch.","Say what happens to the path."],"stem":"Opening the switch changes ___, so ___.","record":"Use the symbol reference, large symbols or a pupil-directed scribe. A clear connection matters more than a perfectly straight line.","vocab":[["Current","Rate of flow of charge."],["Path","The conducting route."]],"question":"The parts are moved around without changing any connections. Must the current change?","check":"No. Rearranging the same connections does not itself change the electrical circuit; the same source and components give the same steady current.","prompt":"Make a claim, use the circuit or readings as evidence, then explain the link.","supportAnswer":"Use the model response for this section to check the science. No. Rearranging the same connections does not itself change the electrical circuit; the same source and components give the same steady current."},{"steps":["Read LO1 with a partner.","Find the word evaluate.","Choose a product that shows your reasoning."],"stem":"I can show ___ by ___.","record":"Rehearse aloud. Point to the diagram or direct a partner to record your words. Keep the same scientific explanation.","vocab":[["Evaluate","Judge strengths and limitations."]],"question":"Is a realistic-looking picture always the best model?","check":"No. A useful model represents the important relationships and makes useful predictions. Appearance alone does not establish accuracy.","prompt":"Make a claim, use the circuit or readings as evidence, then explain the link.","supportAnswer":"Use the model response for this section to check the science. No. A useful model represents the important relationships and makes useful predictions. Appearance alone does not establish accuracy."},{"steps":["Name one thing you can handle.","Name one thing on the screen.","Explain what each represents."],"stem":"This is a ___ model because ___. It represents ___.","record":"Rehearse aloud. Point to the diagram or direct a partner to record your words. Keep the same scientific explanation.","vocab":[["Model","A simplified representation."],["Charge","An electrical property of particles."],["Energy","Transferred by the circuit to its surroundings."]],"question":"Why can a model be useful even when it leaves things out?","check":"Simplification makes a particular relationship easier to understand or test. It becomes misleading if its omissions matter to the question being asked.","prompt":"Make a claim, use the circuit or readings as evidence, then explain the link.","supportAnswer":"Use the model response for this section to check the science. Simplification makes a particular relationship easier to understand or test. It becomes misleading if its omissions matter to the question being asked."},{"steps":["Point to a carrier.","Point to its energy token.","Explain what returns after unloading."],"stem":"The ___ represents ___. It changes/stays the same because ___.","record":"Rehearse aloud. Point to the diagram or direct a partner to record your words. Keep the same scientific explanation.","vocab":[["Analogy","An explanation using a familiar comparison."],["Rate","How much passes in a given time."]],"question":"What is wrong with removing a carrier at the lamp to represent light?","check":"That would suggest charge is used up. Transfer an energy token instead and keep the carrier in the circulating model.","prompt":"Make a claim, use the circuit or readings as evidence, then explain the link.","supportAnswer":"Use the model response for this section to check the science. That would suggest charge is used up. Transfer an energy token instead and keep the carrier in the circulating model."},{"steps":["Find the two ends of one wire.","Replace that wire with the meter and two connections.","Read the current and its unit."],"stem":"I put the ammeter ___ because ___.","record":"Choose builder, connection director or recorder. Use the starter circuit if needed. Read one value at a time; a partner may type your dictated values.","vocab":[["Ammeter","Measures current."],["Magnitude","Size without the positive or negative sign."]],"question":"Why is placing an ammeter directly across the battery a poor measurement method?","check":"Its very low resistance gives a bypass with excessive current. It measures that new path and changes the circuit; it does not measure the original lamp current.","prompt":"Make a claim, use the circuit or readings as evidence, then explain the link.","supportAnswer":"Use the model response for this section to check the science. Its very low resistance gives a bypass with excessive current. It measures that new path and changes the circuit; it does not measure the original lamp current."},{"steps":["Copy A and B as short predictions.","Circle what you will measure.","Name one thing to keep the same."],"stem":"If ___ is correct, I expect ___. I will keep ___ the same.","record":"Rehearse aloud. Point to the diagram or direct a partner to record your words. Keep the same scientific explanation.","vocab":[["Prediction","Expected result before a test."],["Control","A condition kept the same."]],"question":"Would changing the battery between measurements make the test stronger?","check":"No. Any difference could then be caused by the changed battery setting rather than the measurement position.","prompt":"Make a claim, use the circuit or readings as evidence, then explain the link.","supportAnswer":"Use the model response for this section to check the science. No. Any difference could then be caused by the changed battery setting rather than the measurement position."},{"steps":["Use the two-meter starter if needed.","Read meter 1, then meter 2.","Record the switch state before changing it."],"stem":"At position ___ the current was ___ A. This supports ___ because ___.","record":"Choose builder, connection director or recorder. Use the starter circuit if needed. Read one value at a time; a partner may type your dictated values.","vocab":[["Steady","No longer changing with time."],["Evidence","Results that support a judgement."]],"question":"Does a computer result alone prove what every real circuit will do?","check":"No. It shows what this programmed model predicts. Real meter measurements and knowledge of the model assumptions are needed to evaluate its real-world accuracy.","prompt":"Make a claim, use the circuit or readings as evidence, then explain the link.","supportAnswer":"Use the model response for this section to check the science. No. It shows what this programmed model predicts. Real meter measurements and knowledge of the model assumptions are needed to evaluate its real-world accuracy."},{"steps":["Read 0.40 A as the starting current.","Think about charge, then energy.","Choose and explain your own answer."],"stem":"I choose ___ because the lamp transfers ___, while ___.","record":"Rehearse aloud. Point to the diagram or direct a partner to record your words. Keep the same scientific explanation.","vocab":[["Steady current","The same rate of flow over time."]],"question":"If the lamp transfers more energy each second, must it use up more charge?","check":"No. Energy transfer is not charge consumption. A different operating condition can change current throughout the loop, but it is still equal on both sides of the lamp.","prompt":"Make a claim, use the circuit or readings as evidence, then explain the link.","supportAnswer":"Use the model response for this section to check the science. No. Energy transfer is not charge consumption. A different operating condition can change current throughout the loop, but it is still equal on both sides of the lamp."},{"steps":["Read one suggestion at a time.","Label it accept, adapt or reject.","Use one reading or science idea as a reason."],"stem":"I ___ suggestion ___ because my evidence shows ___.","record":"Rehearse aloud. Point to the diagram or direct a partner to record your words. Keep the same scientific explanation.","vocab":[["Feedback","Suggestions for improving work."],["Verify","Check against evidence."]],"question":"Why could useful and incorrect advice appear in the same generated response?","check":"A generative system produces text from learned patterns; fluent language is not a guarantee that every claim is correct. Evaluate each suggestion separately rather than trusting or rejecting the whole response.","prompt":"Make a claim, use the circuit or readings as evidence, then explain the link.","supportAnswer":"Use the model response for this section to check the science. A generative system produces text from learned patterns; fluent language is not a guarantee that every claim is correct. Evaluate each suggestion separately rather than trusting or rejecting the whole response."},{"steps":["Choose the analogy first.","State what it helps explain.","Name something it leaves out."],"stem":"This model helps with ___. It is limited because ___.","record":"Rehearse aloud. Point to the diagram or direct a partner to record your words. Keep the same scientific explanation.","vocab":[["Assumption","Something the model treats as true."],["Limitation","Something it cannot represent well."]],"question":"Which model would you choose to predict a numerical current, and what would you still check?","check":"Use the simulator for a numerical prediction because it calculates from component values and topology. Check the values, assumptions and comparison with real measurements; the carrier analogy is not calibrated for amperes.","prompt":"Make a claim, use the circuit or readings as evidence, then explain the link.","supportAnswer":"Use the model response for this section to check the science. Use the simulator for a numerical prediction because it calculates from component values and topology. Check the values, assumptions and comparison with real measurements; the carrier analogy is not calibrated for amperes."},{"steps":["Draw or direct the loop.","Label the meter readings.","Use claim → evidence → explanation → limitation."],"stem":"The readings were ___. This supports ___ because ___. However, ___.","record":"Use the symbol reference, large symbols or a pupil-directed scribe. A clear connection matters more than a perfectly straight line.","vocab":[["Verdict","A judgement with reasons."]],"question":"What further evidence would strengthen your verdict about real circuits?","check":"Repeat the same two-position current measurement with teacher-supervised real low-voltage equipment, checking connections and meter uncertainty. Re-running unchanged simulator values is not new independent real-world evidence.","prompt":"Make a claim, use the circuit or readings as evidence, then explain the link.","supportAnswer":"Use the model response for this section to check the science. Repeat the same two-position current measurement with teacher-supervised real low-voltage equipment, checking connections and meter uncertainty. Re-running unchanged simulator values is not new independent real-world evidence."},{"steps":["Say charge, energy and current separately.","Match each to its meaning.","Explain one correction."],"stem":"I changed ___ to ___ because ___.","record":"Rehearse aloud. Point to the diagram or direct a partner to record your words. Keep the same scientific explanation.","vocab":[["Current","Rate of flow of charge."]],"question":"Can a model be useful without being a complete explanation of electricity?","check":"Yes. A model can accurately represent one relationship while omitting other processes; its usefulness depends on the question and its limits.","prompt":"Make a claim, use the circuit or readings as evidence, then explain the link.","supportAnswer":"Use the model response for this section to check the science. Yes. A model can accurately represent one relationship while omitting other processes; its usefulness depends on the question and its limits."}];const lessonTools={"resources":[{"label":"Lab guide & recording tables","href":"L2-lab.html"},{"label":"Questions, diagrams & answers","href":"L2-practice.html"},{"label":"Circuit symbol reference","href":"L2-reference.html"},{"label":"Provided model data (fallback)","href":"L2-data.html"},{"label":"Circuit Lab","href":"circuit-lab.html"}],"recheckAnswer":"0.25 A. The motor transfers energy while the same steady current passes through the single loop."};
+/* L2–4 classroom controls with contextual question/answer pairs. No pupil data or remote services. */
+(() => {
+ const $=s=>document.querySelector(s), stage=$('.stage'), drawer=$('.drawer');
+ const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ let index=Math.max(0,Math.min(lesson.phases.length-1,(Number(location.hash.slice(1))||1)-1)), panel='', focusMode=false, action=0, speaking=false, speechRun=0;
+ const preferences={size:'100',space:false,plain:false,paper:'cream',motion:matchMedia('(prefers-reduced-motion: reduce)').matches};
+ const list=items=>items?.length?`<ul class="list">${items.map((v,i)=>`<li><span class="n">${i+1}</span><span>${v}</span></li>`).join('')}</ul>`:'';
+ const vocab=r=>`<dl>${r.vocab.map(([a,b])=>`<dt>${esc(a)}</dt><dd>${esc(b)}</dd>`).join('')}</dl>`;
+ const routesHelp=r=>`<h3>Words to use</h3>${vocab(r)}<h3>Start your explanation</h3><p class="sentence">${esc(r.stem)}</p><h3>Choose how to respond</h3><p>${esc(r.record)}</p>`;
+ const links=()=>'<div class="access-links">'+lessonTools.resources.map(r=>`<a href="${esc(r.href)}" target="_blank" rel="noopener">${esc(r.label)} ↗</a>`).join('')+'</div>';
+ const reviewMarkup=()=>lesson.phases[index].review.body;
+
+ const note=document.createElement('span');note.className='sr-only';note.setAttribute('role','status');$('.top').append(note);
+ function stop(){speechRun++;if('speechSynthesis' in window) speechSynthesis.cancel();speaking=false;$('#read-aloud').textContent='Read aloud';$('#read-aloud').setAttribute('aria-pressed','false');}
+ function applyPreferences(){
+  const el=document.documentElement;el.style.fontSize=preferences.size+'%';el.dataset.spacing=preferences.space;el.dataset.plain=preferences.plain;el.dataset.motion=preferences.motion;
+  const bg={cream:['#faf7f0','#fffdf8'],white:['#ffffff','#ffffff'],blue:['#eaf3f7','#f1f7fa']}[preferences.paper];
+  el.style.setProperty('--paper',bg[0]);el.style.setProperty('--white',bg[1]);
+ }
+ function panelBody(){const r=differentiation[index],p=lesson.phases[index];
+  if(panel==='support')return `<h3>Take it in steps</h3><ol>${r.steps.map(s=>`<li>${esc(s)}</li>`).join('')}</ol>${routesHelp(r)}${links()}<details><summary>Model response for this supported task</summary>${reviewMarkup()}</details>`;
+  if(panel==='stretch')return `<p class="thinking-label">Reason · explain · justify</p><h3>Think further</h3><p class="big-question">${esc(r.question)}</p><h3>A way into the question</h3><p>${esc(r.prompt)}</p><p class="sentence">My view is ___ because ___. The connection or evidence that supports it is ___. If ___ changed, then ___.</p><details><summary>Support for this challenge</summary>${routesHelp(r)}${links()}</details><details><summary>Model answer &amp; success criteria</summary><p>${esc(r.check)}</p><p><b>Success criteria:</b> Make a clear judgement, give an accurate scientific reason and refer to the relevant path, model or reading.</p></details>`;
+  if(panel==='resources')return `<p>Open the task in another tab. Keep your own first answer before opening its review.</p>${links()}<p>The lab guide names the simulator investigation and the exact steps for this lesson.</p>`;
+  if(panel==='review')return `${reviewMarkup()}<details><summary>Stretch: model answer and criteria</summary><p><b>${esc(r.question)}</b></p><p>${esc(r.check)}</p><p>Success: a justified judgement using the circuit, model or readings.</p></details>${p.recheck?`<details><summary>Follow-up check</summary><p>${p.recheck}</p><details><summary>Follow-up answer</summary><p>${esc(lessonTools.recheckAnswer)}</p></details></details>`:''}`;
+
+  return `<p>Choose what helps you. These choices stay on as you move through the lesson.</p><label>Text size<select id="text-size">${['100','120','140'].map(v=>`<option value="${v}" ${preferences.size===v?'selected':''}>${v}%</option>`).join('')}</select></label><label class="check-option"><input type="checkbox" id="more-space" ${preferences.space?'checked':''}> More space between words and lines</label><label class="check-option"><input type="checkbox" id="plain-font" ${preferences.plain?'checked':''}> Plain font for all text</label><label>Page colour<select id="page-colour">${[['cream','Warm cream'],['white','White'],['blue','Pale blue']].map(([v,t])=>`<option value="${v}" ${preferences.paper===v?'selected':''}>${t}</option>`).join('')}</select></label><label class="check-option"><input type="checkbox" id="reduce-motion" ${preferences.motion?'checked':''}> Reduce motion</label><p><b>Read aloud</b> reads the section, then the open panel. Press it again to stop. Voices depend on your device.</p><p><b>One step</b> gives one action at a time while keeping the diagram and safety information visible.</p><p>You can point, speak, type or direct a partner where the task allows. Use your usual access arrangements.</p><button id="reset-access">Reset access choices</button>`;
+ }
+ function paintPanel(moveFocus=false){
+  drawer.hidden=!panel;$('.main').classList.toggle('drawer-open',!!panel);
+  document.querySelectorAll('[data-panel]').forEach(b=>{b.setAttribute('aria-expanded',String(b.dataset.panel===panel));b.classList.toggle('active',b.dataset.panel===panel);});
+  if(!panel)return;
+  const title={support:'Support',stretch:'Stretch & challenge',access:'Access choices',review:'Model answers & criteria',resources:'Lesson resources'}[panel];
+  drawer.innerHTML=`<div class="drawer-heading"><h2 id="panel-title" tabindex="-1">${title}</h2><button id="close-panel" aria-label="Close ${title}">×</button></div><p class="section-context">Section ${index+1} · ${esc(lesson.phases[index].title)}</p>${panelBody()}`;
+  drawer.setAttribute('aria-labelledby','panel-title');drawer.scrollTop=0;
+  $('#close-panel').onclick=()=>closePanel();
+  if(panel==='access'){
+   for(const [id,key,event] of [['text-size','size','change'],['more-space','space','change'],['plain-font','plain','change'],['page-colour','paper','change'],['reduce-motion','motion','change']])$('#'+id).addEventListener(event,e=>{stop();preferences[key]=e.target.type==='checkbox'?e.target.checked:e.target.value;applyPreferences();});
+   $('#reset-access').onclick=()=>{Object.assign(preferences,{size:'100',space:false,plain:false,paper:'cream',motion:matchMedia('(prefers-reduced-motion: reduce)').matches});applyPreferences();paintPanel(true);};
+  }
+  if(moveFocus)$('#panel-title').focus({preventScroll:true});
+ }
+ function closePanel(){const previous=panel;stop();panel='';paintPanel();$(`[data-panel="${previous}"]`)?.focus();}
+ function paintStep(){const box=$('#one-step-card'),r=differentiation[index];box.hidden=!focusMode;$('.screen').classList.toggle('one-step-active',focusMode);if(!focusMode)return;
+  box.innerHTML=`<div class="step-heading"><b>One step · ${action+1} of ${r.steps.length}</b><span><button id="step-prev" aria-label="Previous instruction" ${action===0?'disabled':''}>←</button><button id="step-next" aria-label="Next instruction" ${action===r.steps.length-1?'disabled':''}>→</button></span></div><p aria-live="polite">${esc(r.steps[action])}</p>`;
+  ['prev','next'].forEach(direction=>$('#step-'+direction).onclick=()=>{stop();action+=direction==='next'?1:-1;paintStep();const target=$('#step-'+direction);(target.disabled?$('#step-'+(direction==='next'?'prev':'next')):target).focus();});
+ }
+ function render(initial=false){stop();const p=lesson.phases[index];
+  const figure=p.image?`<figure class="figure"><img src="${esc(p.image)}" alt="${esc(p.imageAlt)}"><figcaption>${esc(p.imageCaption)}</figcaption></figure>`:'';
+  const points=list(p.points), criteria=p.criteria?.length?`<aside class="criteria"><h2>Success criteria</h2>${p.criteria.map(s=>`<p>✓ ${s}</p>`).join('')}</aside>`:'';
+  const visual=figure||points;const family=({'image-led-decision':'visual-left','visual-first-explanation':'visual-left','model-stage':'visual-left','context-brief':'visual-left','evidence-workbench':'stacked','quiet-exit':'single','diagnostic-decision':'single'}[p.layout]||'two');
+  const single=family==='single'||(!visual&&!criteria);
+  const choices=p.choices?.length?`<div class="choices">${p.choices.map((s,i)=>`<div class="choice"><span class="n">${'ABCD'[i]}</span><span>${s}</span></div>`).join('')}</div>`:'';
+  stage.innerHTML=`<article class="screen"><div class="layout ${single?'single':family}"><div class="text"><div class="label">${esc(p.label)}${p.assessment?`<span class="assessment-badge">${esc(p.assessment.label)}</span>`:''}</div><h1 tabindex="-1">${p.title}</h1><p class="lead">${p.lead||''}</p>${p.callout?`<p class="callout">${p.callout}</p>`:''}<section id="one-step-card" aria-label="Current instruction" hidden></section>${figure?points:''}${choices}${p.tasks?.length?`<div class="tasks">${p.tasks.map(s=>`<div>${s}</div>`).join('')}</div>`:''}${p.resources?.length?`<div class="resource-bar">${p.resources.map(r=>`<a class="resource-button" href="${esc(r.href)}" target="_blank" rel="noopener">${esc(r.label)} ↗</a>`).join('')}</div>`:''}<button class="inline-review" data-open-review>Model answer &amp; mark scheme</button><p class="product">${esc(p.product||p.assessment?.detail||'')}</p>${single?`${figure?'':points}${criteria}`:''}</div>${single?'':`<div class="aside">${visual}${criteria}</div>`}</div></article>`;
+  $('.progress span').style.width=((index+1)/lesson.phases.length*100)+'%';$('.navtext').innerHTML=`<small>${index+1} of ${lesson.phases.length} · ${esc(p.label)}</small><strong>${esc(p.title)}</strong>`;
+  $('.prev').disabled=index===0;$('.next').disabled=index===lesson.phases.length-1;
+  stage.querySelector('[data-open-review]').onclick=()=>{stop();panel='review';paintPanel(true);};
+  paintStep();paintPanel();stage.scrollTop=0;if(!initial)stage.querySelector('h1').focus({preventScroll:true});
+ }
+ function navigate(delta){const next=Math.max(0,Math.min(lesson.phases.length-1,index+delta));if(next===index)return;index=next;action=0;history.replaceState(null,'','#'+(index+1));if(panel==='review')panel='';render();}
+ document.querySelectorAll('[data-panel]').forEach(b=>b.onclick=()=>{stop();if(panel===b.dataset.panel){closePanel();return;}panel=b.dataset.panel;paintPanel(true);});
+ $('#focus-step').onclick=()=>{stop();focusMode=!focusMode;$('#focus-step').setAttribute('aria-pressed',String(focusMode));paintStep();};
+ $('#read-aloud').onclick=()=>{
+  if(speaking){stop();return;}
+  if(!('speechSynthesis' in window)){note.textContent='Read aloud is unavailable in this browser. Use your device reading tools or ask someone to read with you.';alert(note.textContent);return;}
+  const content=stage.innerText+' '+Array.from(stage.querySelectorAll('img')).map(img=>img.alt).join('. ')+(panel?' '+drawer.innerText:'');
+  const utterance=new SpeechSynthesisUtterance(content);utterance.lang='en-GB';utterance.rate=.9;
+  speechSynthesis.cancel();const run=++speechRun;
+  utterance.onend=()=>{if(run===speechRun)stop();};utterance.onerror=()=>{if(run!==speechRun)return;stop();note.textContent='Read aloud stopped. Your device reading tools may also be available.';};
+  speaking=true;$('#read-aloud').textContent='Stop reading';$('#read-aloud').setAttribute('aria-pressed','true');speechSynthesis.speak(utterance);
+ };
+ $('.prev').onclick=()=>navigate(-1);$('.next').onclick=()=>navigate(1);
+ document.addEventListener('keydown',e=>{if(e.key==='Escape'){if(panel)closePanel();else stop();return;}if(e.target.closest('input,textarea,select,button,a,summary,[contenteditable],.drawer'))return;if(e.key==='ArrowRight'){e.preventDefault();navigate(1);}if(e.key==='ArrowLeft'){e.preventDefault();navigate(-1);}});
+ addEventListener('pagehide',stop);applyPreferences();render(true);
+})();
+</script>
+
+</body>
+</html>
