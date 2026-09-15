@@ -1,0 +1,1 @@
+window.LessonWidgets={panel:(id,p,l)=>l.widgets[p.id][id]};
