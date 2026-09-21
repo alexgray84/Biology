@@ -1,0 +1,1261 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#0f2231">
+  <meta name="description" content="Year 10 Triple Biology revision pack: 7-10 mark exam-style questions with mark schemes and support for cell biology, enzymes and osmosis. One screen, button-driven.">
+  <title>Cells, molecules &amp; transport · Revision pack · Year 10 Triple Biology</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --navy-950: #0f2231;
+      --navy-900: #16324a;
+      --navy-700: #2b5069;
+      --navy-100: #dbe6ee;
+      --gold-600: #a9791f;
+      --gold-500: #d8a83a;
+      --gold-100: #f5e8c8;
+      --paper-50:  #fffdf8;
+      --paper-100: #fdf9f0;
+      --paper-200: #f4ecdd;
+      --ink-900: #1c2126;
+      --ink-600: #4c5560;
+      --line: #16324a24;
+      --line-strong: #16324a55;
+      --green-700: #1c6a4a;
+      --green-100: #d9ede2;
+      --sans: "Montserrat", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --serif: "Fraunces", Georgia, "Times New Roman", serif;
+      --radius: 12px;
+    }
+    * { box-sizing: border-box; }
+    html { min-width: 320px; background: var(--paper-200); font-size: 16px; }
+    body {
+      margin: 0; height: 100dvh; overflow: hidden;              /* one screen, no page scroll */
+      background: var(--paper-200); color: var(--ink-900);
+      font: 400 1rem/1.45 var(--sans); -webkit-text-size-adjust: 100%;
+    }
+    @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+    :focus-visible { outline: 3px solid var(--gold-500); outline-offset: 2px; border-radius: 4px; }
+    .skip-link { position: fixed; left: 12px; top: -60px; z-index: 60; padding: 8px 14px; border-radius: 8px; background: var(--navy-950); color: var(--paper-50); font-weight: 700; text-decoration: none; }
+    .skip-link:focus { top: 10px; }
+
+    /* ── App shell: fixed rows, stage flexes ─────────── */
+    /* rows: topbar · progress · spec-tabs · stage(flex) · action bar */
+    .app { height: 100dvh; display: grid; grid-template-rows: auto auto auto minmax(0, 1fr) auto; }
+
+    /* Top bar */
+    .topbar { display: flex; align-items: center; gap: 12px; padding: 8px clamp(12px, 3vw, 26px); background: var(--navy-950); color: var(--paper-50); }
+    .topbar .badge { flex: 0 0 auto; width: 38px; height: 38px; display: grid; place-items: center; border-radius: 9px; background: var(--gold-500); color: var(--navy-950); font: 800 0.62rem/1 var(--sans); text-align: center; }
+    .topbar h1 { margin: 0; font: 500 clamp(0.98rem, 2vw, 1.28rem)/1.05 var(--serif); }
+    .topbar .sub { margin: 1px 0 0; font-size: 0.68rem; color: #ffffffab; font-weight: 500; }
+    .topbar .home { margin-left: auto; color: #ffffffcf; text-decoration: none; font-size: 0.74rem; font-weight: 700; border: 1px solid #ffffff33; padding: 6px 12px; border-radius: 999px; white-space: nowrap; }
+    .topbar .home:hover { background: #ffffff18; color: #fff; }
+    .progress { height: 4px; background: #ffffff1f; }
+    .progress > i { display: block; height: 100%; background: var(--gold-500); width: 25%; transition: width .35s ease; }
+
+    /* Spec-point tabs (top strip) */
+    .spectabs { display: flex; gap: 8px; padding: 9px clamp(12px, 3vw, 26px); background: var(--paper-100); border-bottom: 1px solid var(--line-strong); overflow-x: auto; scrollbar-width: thin; }
+    .spectab { flex: 0 0 auto; cursor: pointer; background: var(--paper-50); border: 1px solid var(--line-strong); border-radius: 999px; padding: 7px 14px; color: var(--navy-950); font-family: var(--sans); font-weight: 700; font-size: 0.8rem; display: flex; align-items: center; gap: 8px; white-space: nowrap; transition: background .12s, border-color .12s, color .12s; }
+    .spectab:hover { border-color: var(--navy-700); }
+    .spectab .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--line-strong); flex: 0 0 auto; }
+    .spectab .code { color: var(--gold-600); font-weight: 800; font-size: 0.72rem; }
+    .spectab[aria-selected="true"] { background: var(--navy-950); border-color: var(--navy-950); color: var(--paper-50); }
+    .spectab[aria-selected="true"] .code { color: var(--gold-500); }
+    .spectab[aria-selected="true"] .dot { background: var(--gold-500); }
+    .spectab.seen .dot { background: var(--green-700); }
+
+    /* Stage + face */
+    .stage { min-height: 0; overflow: hidden; padding: clamp(10px, 1.8vw, 18px) clamp(12px, 3vw, 26px); }
+    .card { height: 100%; min-height: 0; background: var(--paper-50); border: 1px solid var(--line-strong); border-radius: var(--radius); box-shadow: 0 14px 36px #0f223114; overflow: hidden; }
+    .face { height: 100%; min-height: 0; padding: clamp(12px, 2vw, 22px); display: grid; grid-template-rows: auto minmax(0, 1fr); gap: 10px; }
+
+    /* Face header (shared) */
+    .fkicker { font-size: 0.66rem; font-weight: 800; letter-spacing: 0.13em; text-transform: uppercase; color: var(--gold-600); }
+    .ftitlerow { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-top: 2px; }
+    .ftitle { margin: 0; font: 400 clamp(1.15rem, 2.5vw, 1.9rem)/1.04 var(--serif); color: var(--navy-950); letter-spacing: -0.01em; }
+    .pill { font-size: 0.66rem; font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase; padding: 4px 10px; border-radius: 999px; white-space: nowrap; }
+    .pill--total { background: var(--gold-500); color: var(--navy-950); }
+    .fspec { margin: 7px 0 0; font-size: 0.78rem; line-height: 1.35; color: var(--ink-600); max-width: 105ch; }
+    .fspec b { color: var(--navy-700); text-transform: uppercase; font-size: 0.64rem; letter-spacing: 0.1em; }
+
+    /* Question face body: figure | questions */
+    .fbody { min-height: 0; display: grid; grid-template-columns: minmax(0, 1.02fr) minmax(0, 0.98fr); gap: clamp(12px, 2vw, 22px); }
+    .figcol { min-height: 0; display: flex; flex-direction: column; gap: 8px; }
+    .figtabs { display: flex; gap: 6px; flex-wrap: wrap; }
+    .figtab { cursor: pointer; font-family: var(--sans); font-weight: 700; font-size: 0.72rem; padding: 5px 11px; border-radius: 999px; border: 1px solid var(--line-strong); background: var(--paper-50); color: var(--navy-900); }
+    .figtab[aria-selected="true"] { background: var(--navy-100); border-color: var(--navy-700); }
+    /* narrow-screen Question/Figure toggle (hidden on wide screens) */
+    .mtoggle { display: none; gap: 6px; grid-column: 1 / -1; }
+    .mtog { cursor: pointer; font-family: var(--sans); font-weight: 700; font-size: 0.8rem; padding: 8px 12px; border-radius: 999px; border: 1px solid var(--line-strong); background: var(--paper-50); color: var(--navy-900); flex: 1; min-height: 40px; }
+    .mtog[aria-selected="true"] { background: var(--navy-950); border-color: var(--navy-950); color: var(--paper-50); }
+    .figstage { flex: 1; min-height: 0; display: grid; place-items: center; overflow: hidden; background: #fff; border: 1px solid var(--line-strong); border-radius: 10px; padding: 10px; }
+    .figstage svg { display: block; width: 100%; height: 100%; max-height: 100%; }
+    .figstage .tablewrap { width: 100%; max-height: 100%; overflow: auto; }
+    .figcap { margin: 0; font-size: 0.72rem; color: var(--ink-600); font-weight: 600; text-align: center; }
+
+    .qcol { min-height: 0; display: flex; flex-direction: column; }
+    .qintro { margin: 0 0 8px; font-size: 0.82rem; color: var(--ink-600); }
+    ol.parts { list-style: none; margin: 0; padding: 2px 4px 2px 0; min-height: 0; overflow: auto; flex: 1; }
+    ol.parts > li { display: grid; grid-template-columns: 34px 1fr auto; gap: 4px 10px; align-items: baseline; padding: 10px 0; border-top: 1px solid var(--line); }
+    ol.parts > li:first-child { border-top: none; padding-top: 2px; }
+    ol.parts .ref { font-weight: 800; color: var(--navy-900); font-size: 0.9rem; }
+    ol.parts .stem { font-size: clamp(0.86rem, 1.15vw, 0.98rem); line-height: 1.4; }
+    ol.parts .marks { font-weight: 800; color: var(--gold-600); font-size: 0.78rem; white-space: nowrap; }
+    .cmd { font-weight: 800; color: var(--navy-950); }
+    .qhint { margin: 6px 0 0; font-size: 0.72rem; color: var(--ink-600); font-style: italic; }
+
+    /* Reading faces (mark scheme / support / how-to) */
+    .rbody { min-height: 0; overflow: auto; padding-right: 6px; }
+    .rbody.cols { column-width: 300px; column-gap: 22px; }
+    .rbody.cols > * { break-inside: avoid; }
+    .ms-intro { margin: 0 0 10px; font-size: 0.78rem; color: var(--ink-600); }
+    .ms-part { margin: 0 0 12px; padding: 12px 14px; border: 1px solid var(--line); border-radius: 10px; background: var(--paper-100); }
+    .ms-part__head { display: flex; align-items: baseline; gap: 8px; margin-bottom: 6px; }
+    .ms-part__ref { font-weight: 800; color: var(--navy-900); }
+    .ms-part__marks { margin-left: auto; font-size: 0.68rem; font-weight: 800; color: var(--green-700); background: var(--green-100); padding: 3px 9px; border-radius: 999px; }
+    .ms-points { margin: 0; padding: 0; list-style: none; }
+    .ms-points li { position: relative; padding: 4px 4px 4px 22px; font-size: 0.86rem; line-height: 1.38; }
+    .ms-points li::before { content: "✓"; position: absolute; left: 2px; top: 4px; color: var(--green-700); font-weight: 800; }
+    .ms-note { margin-top: 7px; padding: 8px 11px; border-radius: 8px; font-size: 0.78rem; background: var(--gold-100); color: #6a4c12; }
+    .ms-note b { text-transform: uppercase; letter-spacing: 0.05em; font-size: 0.66rem; }
+
+    .prose h3 { font: 600 0.98rem/1.15 var(--sans); color: var(--navy-950); margin: 14px 0 7px; break-after: avoid; }
+    .prose h3:first-child { margin-top: 2px; }
+    .prose p { margin: 0 0 10px; font-size: 0.86rem; }
+    .prose ul { margin: 0 0 12px; padding-left: 1.1em; }
+    .prose li { margin: 0 0 6px; font-size: 0.85rem; line-height: 1.35; }
+    .prose .keyword { background: var(--gold-100); padding: 1px 5px; border-radius: 4px; font-weight: 700; }
+    .callout { margin: 11px 0; padding: 10px 13px; border-radius: 9px; border-left: 4px solid var(--gold-500); background: var(--paper-100); font-size: 0.83rem; }
+    .callout b { color: var(--navy-950); }
+    .cmd-table { width: 100%; border-collapse: collapse; margin: 9px 0; font-size: 0.8rem; }
+    .cmd-table th, .cmd-table td { border: 1px solid var(--line-strong); padding: 6px 8px; text-align: left; vertical-align: top; }
+    .cmd-table th { background: var(--navy-100); color: var(--navy-950); }
+    .mag-triangle { display: block; width: 170px; max-width: 100%; margin: 4px auto 8px; }
+
+    /* Results table (in figure stage) */
+    table.data { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+    table.data caption { caption-side: top; text-align: left; font-size: 0.72rem; font-weight: 700; color: var(--ink-600); margin-bottom: 6px; }
+    table.data th, table.data td { border: 1px solid var(--line-strong); padding: 6px 8px; text-align: center; }
+    table.data thead th { background: var(--navy-900); color: var(--paper-50); font-weight: 700; }
+    table.data td.blank { background: var(--gold-100); font-weight: 800; }
+
+    /* Action bar */
+    .actionbar { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; padding: 9px clamp(12px, 3vw, 26px); background: var(--navy-950); color: var(--paper-50); }
+    .faceset { display: flex; gap: 6px; flex-wrap: wrap; }
+    .fbtn { cursor: pointer; font-family: var(--sans); font-weight: 700; font-size: 0.8rem; border-radius: 9px; padding: 9px 14px; border: 1px solid #ffffff33; background: #ffffff12; color: var(--paper-50); min-height: 42px; display: inline-flex; align-items: center; gap: 7px; transition: background .12s, border-color .12s; }
+    .fbtn:hover { background: #ffffff20; }
+    .fbtn[aria-pressed="true"] { background: var(--gold-500); border-color: var(--gold-500); color: var(--navy-950); }
+    .fbtn[data-face="ms"][aria-pressed="true"] { background: var(--green-100); border-color: var(--green-100); color: var(--green-700); }
+    .fbtn .dotmark { width: 7px; height: 7px; border-radius: 50%; background: var(--green-700); }
+    .spacer { flex: 1 1 auto; min-width: 8px; }
+    .navgrp { display: flex; align-items: center; gap: 8px; }
+    .navbtn { width: 42px; height: 42px; padding: 0; justify-content: center; border-radius: 50%; font-size: 1.05rem; }
+    .navbtn:disabled { opacity: .35; cursor: not-allowed; }
+    .posn { font-size: 0.76rem; font-weight: 700; color: #ffffffcf; min-width: 70px; text-align: center; }
+
+    /* Narrow screens: show ONE of Question / Figure at a time via a toggle,
+       so each fills the screen and neither has to scroll. */
+    @media (max-width: 860px) {
+      .fbody { grid-template-columns: 1fr; grid-template-rows: auto minmax(0, 1fr); }
+      .mtoggle { display: flex; }
+      .figcol, .qcol { grid-column: 1; grid-row: 2; min-height: 0; }
+      .fbody[data-show="q"] .figcol { display: none; }
+      .fbody[data-show="fig"] .qcol { display: none; }
+      .qhint { display: none; }
+      .face { padding: 10px 12px; gap: 7px; }
+      .face .fspec { display: none; }        /* keep the topic code in the kicker; full spec lives in Support */
+      .face .ftitle { font-size: 1.04rem; }
+      .ftitlerow { gap: 8px; }
+      .qintro { margin-bottom: 4px; font-size: 0.74rem; line-height: 1.3; }
+      ol.parts > li { padding: 5px 0; }
+      ol.parts .stem { font-size: 0.83rem; line-height: 1.34; }
+      ol.parts .ref { font-size: 0.86rem; }
+      .rbody.cols { column-width: auto; }
+      .actionbar { gap: 6px; }
+      .fbtn { font-size: 0.74rem; padding: 8px 10px; flex: 1 1 auto; justify-content: center; }
+      .faceset { flex: 1 1 100%; }
+      .navgrp { flex: 1 1 100%; justify-content: space-between; }
+      .spacer { display: none; }
+    }
+    @media (max-width: 380px) {
+      .fbtn { font-size: 0.68rem; padding: 8px 7px; }
+    }
+
+    /* Print: reveal everything stacked */
+    @media print {
+      html, body { height: auto; overflow: visible; background: #fff; }
+      .app { height: auto; display: block; }
+      .topbar .home, .actionbar, .spectabs, .skip-link { display: none !important; }
+      .stage { overflow: visible; }
+      .card, .face { height: auto; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#face">Skip to the question</a>
+  <div class="app">
+    <header class="topbar">
+      <div class="badge">Y10<br>BIO</div>
+      <div>
+        <h1>Revision — Cells, molecules &amp; transport</h1>
+        <p class="sub">Year 10 Triple Biology · Edexcel IGCSE (4BI1) Section 2 · 7–10 mark questions</p>
+      </div>
+      <a class="home" href="../../../units/year-10-triple/cells/">← Cells unit</a>
+    </header>
+    <div class="progress" aria-hidden="true"><i id="progressFill"></i></div>
+
+    <nav class="spectabs" role="tablist" id="specTabs" aria-label="Specification points"></nav>
+
+    <main class="stage">
+      <div class="card">
+        <section class="face" id="face" tabindex="-1" aria-live="polite"></section>
+      </div>
+    </main>
+
+    <div class="actionbar" role="toolbar" aria-label="View controls">
+      <div class="faceset" id="faceSet">
+        <button class="fbtn" data-face="q"   aria-pressed="true">Question</button>
+        <button class="fbtn" data-face="ms"  aria-pressed="false">Mark scheme</button>
+        <button class="fbtn" data-face="su"  aria-pressed="false">Support</button>
+        <button class="fbtn" data-face="hta" aria-pressed="false">How to answer</button>
+      </div>
+      <span class="spacer"></span>
+      <div class="navgrp">
+        <button class="fbtn navbtn" id="btnPrev" aria-label="Previous spec point" title="Previous">←</button>
+        <span class="posn" id="posn">1 / 4</span>
+        <button class="fbtn navbtn" id="btnNext" aria-label="Next spec point" title="Next">→</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+  /* =========================================================================
+     Original exam-style questions in the Edexcel IGCSE Biology (4BI1) house
+     style. Not reproductions of copyrighted past papers. Diagrams original.
+     ========================================================================= */
+  const SVG = {};
+
+  SVG.bacteria = `
+  <svg viewBox="0 0 640 320" role="img" aria-label="Rod-shaped bacterial cell with structures A to D labelled, plus ribosomes and cytoplasm.">
+    <defs><marker id="lead" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto"><circle cx="4" cy="4" r="3" fill="#16324a"/></marker></defs>
+    <rect x="150" y="90" width="300" height="150" rx="75" fill="#eaf3ef" stroke="#16324a" stroke-width="6"/>
+    <rect x="162" y="102" width="276" height="126" rx="63" fill="#fbfdfb" stroke="#2b5069" stroke-width="2.5"/>
+    <path d="M250 175 q -10 -34 26 -34 q 40 0 40 26 q 0 24 -34 24 q -40 0 -32 -16" fill="none" stroke="#a9791f" stroke-width="5"/>
+    <circle cx="368" cy="150" r="15" fill="none" stroke="#1c6a4a" stroke-width="4.5"/>
+    <g fill="#2b5069"><circle cx="230" cy="128" r="4.5"/><circle cx="255" cy="205" r="4.5"/><circle cx="345" cy="205" r="4.5"/><circle cx="400" cy="128" r="4.5"/><circle cx="315" cy="120" r="4.5"/><circle cx="285" cy="200" r="4.5"/></g>
+    <path d="M450 165 q 40 -18 70 6 q 30 24 66 4" fill="none" stroke="#16324a" stroke-width="5"/>
+    <line x1="300" y1="90" x2="300" y2="46" stroke="#16324a" stroke-width="2" marker-start="url(#lead)"/>
+    <text x="300" y="34" text-anchor="middle" font-family="Montserrat,sans-serif" font-weight="800" font-size="22" fill="#16324a">A</text>
+    <line x1="285" y1="160" x2="120" y2="160" stroke="#16324a" stroke-width="2" marker-start="url(#lead)"/>
+    <text x="104" y="166" text-anchor="middle" font-family="Montserrat,sans-serif" font-weight="800" font-size="22" fill="#16324a">B</text>
+    <line x1="556" y1="172" x2="596" y2="200" stroke="#16324a" stroke-width="2" marker-start="url(#lead)"/>
+    <text x="612" y="208" text-anchor="middle" font-family="Montserrat,sans-serif" font-weight="800" font-size="22" fill="#16324a">C</text>
+    <line x1="368" y1="150" x2="470" y2="70" stroke="#16324a" stroke-width="2" marker-start="url(#lead)"/>
+    <text x="486" y="66" text-anchor="middle" font-family="Montserrat,sans-serif" font-weight="800" font-size="22" fill="#16324a">D</text>
+    <line x1="255" y1="205" x2="205" y2="270" stroke="#2b5069" stroke-width="1.6" marker-start="url(#lead)"/>
+    <text x="150" y="288" font-family="Montserrat,sans-serif" font-weight="600" font-size="15" fill="#2b5069">ribosomes</text>
+    <line x1="440" y1="200" x2="500" y2="262" stroke="#2b5069" stroke-width="1.6" marker-start="url(#lead)"/>
+    <text x="470" y="284" font-family="Montserrat,sans-serif" font-weight="600" font-size="15" fill="#2b5069">cytoplasm</text>
+  </svg>`;
+
+  SVG.animal = `
+  <svg viewBox="0 0 640 340" role="img" aria-label="Animal cell showing cell membrane, cytoplasm, nucleus, mitochondria and ribosomes.">
+    <defs><marker id="lead2" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto"><circle cx="4" cy="4" r="3" fill="#16324a"/></marker></defs>
+    <path d="M120 60 Q 330 20 520 70 Q 600 140 520 270 Q 320 320 130 270 Q 40 160 120 60 Z" fill="#eaf3ef" stroke="#16324a" stroke-width="6"/>
+    <circle cx="320" cy="168" r="52" fill="#dbe6ee" stroke="#16324a" stroke-width="4"/>
+    <circle cx="332" cy="160" r="16" fill="#2b5069"/>
+    <g stroke="#a9791f" stroke-width="4" fill="#f5e8c8">
+      <ellipse cx="200" cy="120" rx="34" ry="18" transform="rotate(-18 200 120)"/>
+      <ellipse cx="450" cy="210" rx="34" ry="18" transform="rotate(24 450 210)"/>
+    </g>
+    <path d="M172 122 q 12 -14 24 0 q 12 14 26 -2" fill="none" stroke="#a9791f" stroke-width="2.4" transform="rotate(-18 200 120)"/>
+    <path d="M422 212 q 12 -14 24 0 q 12 14 26 -2" fill="none" stroke="#a9791f" stroke-width="2.4" transform="rotate(24 450 210)"/>
+    <g fill="#16324a"><circle cx="250" cy="230" r="5"/><circle cx="280" cy="245" r="5"/><circle cx="400" cy="110" r="5"/><circle cx="430" cy="125" r="5"/><circle cx="180" cy="200" r="5"/></g>
+    <line x1="520" y1="70" x2="523" y2="50" stroke="#16324a" stroke-width="2" marker-start="url(#lead2)"/>
+    <text x="452" y="44" font-family="Montserrat,sans-serif" font-weight="700" font-size="16" fill="#16324a">cell membrane</text>
+    <line x1="320" y1="168" x2="320" y2="300" stroke="#16324a" stroke-width="2" marker-start="url(#lead2)"/>
+    <text x="320" y="326" text-anchor="middle" font-family="Montserrat,sans-serif" font-weight="700" font-size="16" fill="#16324a">nucleus</text>
+    <line x1="200" y1="120" x2="120" y2="60" stroke="#16324a" stroke-width="2" marker-start="url(#lead2)"/>
+    <text x="60" y="52" font-family="Montserrat,sans-serif" font-weight="700" font-size="16" fill="#16324a">mitochondrion</text>
+    <line x1="450" y1="210" x2="560" y2="240" stroke="#16324a" stroke-width="2" marker-start="url(#lead2)"/>
+    <text x="512" y="262" font-family="Montserrat,sans-serif" font-weight="700" font-size="16" fill="#16324a">mitochondrion</text>
+    <line x1="280" y1="245" x2="230" y2="300" stroke="#2b5069" stroke-width="1.6" marker-start="url(#lead2)"/>
+    <text x="150" y="318" font-family="Montserrat,sans-serif" font-weight="600" font-size="15" fill="#2b5069">ribosomes</text>
+    <line x1="410" y1="180" x2="470" y2="150" stroke="#2b5069" stroke-width="1.6" marker-start="url(#lead2)"/>
+    <text x="470" y="150" font-family="Montserrat,sans-serif" font-weight="600" font-size="15" fill="#2b5069">cytoplasm</text>
+  </svg>`;
+
+  SVG.enzymeGraph = `
+  <svg viewBox="0 0 640 380" role="img" aria-label="Graph of rate of an enzyme-controlled reaction against temperature: rises from 0 to a peak near 40 degrees C, then falls to zero by about 60 degrees C.">
+    <line x1="80" y1="40" x2="80" y2="320" stroke="#16324a" stroke-width="3"/>
+    <line x1="80" y1="320" x2="600" y2="320" stroke="#16324a" stroke-width="3"/>
+    <g stroke="#16324a22" stroke-width="1"><line x1="167" y1="40" x2="167" y2="320"/><line x1="254" y1="40" x2="254" y2="320"/><line x1="341" y1="40" x2="341" y2="320"/><line x1="428" y1="40" x2="428" y2="320"/><line x1="515" y1="40" x2="515" y2="320"/></g>
+    <g font-family="Montserrat,sans-serif" font-size="14" fill="#4c5560" text-anchor="middle"><text x="80" y="342">0</text><text x="167" y="342">10</text><text x="254" y="342">20</text><text x="341" y="342">30</text><text x="428" y="342">40</text><text x="515" y="342">50</text><text x="600" y="342">60</text></g>
+    <path d="M80 312 C 180 300, 300 250, 380 150 C 405 120, 420 95, 428 92 C 440 95, 470 150, 520 250 C 545 296, 575 316, 600 318" fill="none" stroke="#a9791f" stroke-width="4.5"/>
+    <circle cx="428" cy="92" r="5" fill="#16324a"/>
+    <line x1="428" y1="92" x2="428" y2="320" stroke="#16324a" stroke-width="1.5" stroke-dasharray="5 5"/>
+    <text x="437" y="82" font-family="Montserrat,sans-serif" font-size="13" font-weight="700" fill="#16324a">optimum (~40 °C)</text>
+    <text x="340" y="372" text-anchor="middle" font-family="Montserrat,sans-serif" font-size="15" font-weight="700" fill="#16324a">Temperature / °C</text>
+    <text x="26" y="180" text-anchor="middle" font-family="Montserrat,sans-serif" font-size="15" font-weight="700" fill="#16324a" transform="rotate(-90 26 180)">Rate of reaction / a.u.</text>
+  </svg>`;
+
+  SVG.osmosis = `
+  <svg viewBox="0 0 640 300" role="img" aria-label="Osmosis: a partially permeable membrane separates a dilute solution (many water molecules) from a concentrated sugar solution; net movement of water is toward the concentrated side.">
+    <rect x="60" y="50" width="520" height="200" rx="8" fill="#eaf3ef" stroke="#16324a" stroke-width="4"/>
+    <line x1="320" y1="50" x2="320" y2="250" stroke="#16324a" stroke-width="4" stroke-dasharray="3 7"/>
+    <text x="320" y="42" text-anchor="middle" font-family="Montserrat,sans-serif" font-size="13" font-weight="700" fill="#16324a">partially permeable membrane</text>
+    <g fill="#2b5069"><circle cx="110" cy="90" r="7"/><circle cx="160" cy="120" r="7"/><circle cx="120" cy="170" r="7"/><circle cx="200" cy="90" r="7"/><circle cx="240" cy="150" r="7"/><circle cx="180" cy="210" r="7"/><circle cx="260" cy="200" r="7"/><circle cx="130" cy="130" r="7"/><circle cx="215" cy="185" r="7"/><circle cx="270" cy="110" r="7"/></g>
+    <g fill="#2b5069"><circle cx="380" cy="110" r="7"/><circle cx="470" cy="190" r="7"/><circle cx="540" cy="130" r="7"/></g>
+    <g fill="#a9791f"><circle cx="410" cy="170" r="13"/><circle cx="500" cy="100" r="13"/><circle cx="460" cy="220" r="13"/><circle cx="540" cy="200" r="13"/></g>
+    <defs><marker id="arrhead" markerUnits="userSpaceOnUse" markerWidth="20" markerHeight="20" refX="10" refY="10" orient="auto"><path d="M0 0 L20 10 L0 20 Z" fill="#1c6a4a"/></marker></defs>
+    <line x1="250" y1="266" x2="392" y2="266" stroke="#1c6a4a" stroke-width="5" marker-end="url(#arrhead)"/>
+    <text x="322" y="292" text-anchor="middle" font-family="Montserrat,sans-serif" font-size="13" font-weight="700" fill="#1c6a4a">net movement of water</text>
+    <text x="190" y="72" text-anchor="middle" font-family="Montserrat,sans-serif" font-size="14" font-weight="800" fill="#16324a">DILUTE solution</text>
+    <text x="190" y="244" text-anchor="middle" font-family="Montserrat,sans-serif" font-size="12" fill="#4c5560">high water potential</text>
+    <text x="452" y="72" text-anchor="middle" font-family="Montserrat,sans-serif" font-size="14" font-weight="800" fill="#16324a">CONCENTRATED</text>
+    <text x="452" y="244" text-anchor="middle" font-family="Montserrat,sans-serif" font-size="12" fill="#4c5560">low water potential</text>
+  </svg>`;
+
+  SVG.osmosisGraph = `
+  <svg viewBox="0 0 640 380" role="img" aria-label="Graph of percentage change in mass of potato cylinders against sucrose concentration: positive at low concentration, crossing zero near 0.3 mol per dm cubed, negative at higher concentrations.">
+    <line x1="90" y1="40" x2="90" y2="330" stroke="#16324a" stroke-width="3"/>
+    <line x1="90" y1="185" x2="600" y2="185" stroke="#16324a" stroke-width="3"/>
+    <g font-family="Montserrat,sans-serif" font-size="13" fill="#4c5560" text-anchor="end"><text x="82" y="70">+15</text><text x="82" y="128">+7.5</text><text x="82" y="190">0</text><text x="82" y="250">−7.5</text><text x="82" y="312">−15</text></g>
+    <g stroke="#16324a1c"><line x1="90" y1="66" x2="600" y2="66"/><line x1="90" y1="125" x2="600" y2="125"/><line x1="90" y1="245" x2="600" y2="245"/><line x1="90" y1="305" x2="600" y2="305"/></g>
+    <g font-family="Montserrat,sans-serif" font-size="13" fill="#4c5560" text-anchor="middle"><text x="90" y="352">0</text><text x="192" y="352">0.2</text><text x="294" y="352">0.4</text><text x="396" y="352">0.6</text><text x="498" y="352">0.8</text><text x="600" y="352">1.0</text></g>
+    <polyline points="90,89 192,153 243,185 345,249 498,313 600,330" fill="none" stroke="#a9791f" stroke-width="4"/>
+    <g fill="#16324a"><circle cx="90" cy="89" r="5"/><circle cx="192" cy="153" r="5"/><circle cx="243" cy="185" r="5"/><circle cx="345" cy="249" r="5"/><circle cx="498" cy="313" r="5"/><circle cx="600" cy="330" r="5"/></g>
+    <circle cx="243" cy="185" r="8" fill="none" stroke="#1c6a4a" stroke-width="3"/>
+    <text x="250" y="175" font-family="Montserrat,sans-serif" font-size="13" font-weight="700" fill="#1c6a4a">no change at ~0.3</text>
+    <text x="345" y="374" text-anchor="middle" font-family="Montserrat,sans-serif" font-size="15" font-weight="700" fill="#16324a">Sucrose concentration / mol dm⁻³</text>
+    <text x="30" y="185" text-anchor="middle" font-family="Montserrat,sans-serif" font-size="14" font-weight="700" fill="#16324a" transform="rotate(-90 30 185)">Change in mass / %</text>
+  </svg>`;
+
+  SVG.magTri = `
+  <svg viewBox="0 0 400 300" role="img" aria-label="Magnification triangle: image size I on top; magnification M and actual size A on the bottom. Cover the quantity you want to find.">
+    <polygon points="200,26 360,262 40,262" fill="#f5e8c8" stroke="#16324a" stroke-width="4"/>
+    <line x1="112" y1="160" x2="288" y2="160" stroke="#16324a" stroke-width="3"/>
+    <line x1="200" y1="160" x2="200" y2="262" stroke="#16324a" stroke-width="3"/>
+    <text x="200" y="122" text-anchor="middle" font-family="Montserrat,sans-serif" font-weight="800" font-size="52" fill="#16324a">I</text>
+    <text x="122" y="228" text-anchor="middle" font-family="Montserrat,sans-serif" font-weight="800" font-size="52" fill="#16324a">M</text>
+    <text x="280" y="228" text-anchor="middle" font-family="Montserrat,sans-serif" font-weight="800" font-size="52" fill="#16324a">A</text>
+    <text x="200" y="288" text-anchor="middle" font-family="Montserrat,sans-serif" font-size="16" fill="#4c5560">I = image size · M = magnification · A = actual size</text>
+  </svg>`;
+
+  SVG.units = `
+  <svg viewBox="0 0 640 250" role="img" aria-label="Unit conversion ladder: millimetres to micrometres to nanometres, multiplying by 1000 at each step; divide by 1000 to go back.">
+    <defs><marker id="ua" markerUnits="userSpaceOnUse" markerWidth="14" markerHeight="14" refX="7" refY="7" orient="auto"><path d="M0 0 L14 7 L0 14 Z" fill="#16324a"/></marker></defs>
+    <g font-family="Montserrat,sans-serif">
+      <rect x="34" y="95" width="150" height="70" rx="12" fill="#dbe6ee" stroke="#16324a" stroke-width="3"/>
+      <text x="109" y="130" text-anchor="middle" font-weight="800" font-size="30" fill="#16324a">mm</text>
+      <text x="109" y="152" text-anchor="middle" font-size="13" fill="#4c5560">millimetre</text>
+      <rect x="245" y="95" width="150" height="70" rx="12" fill="#dbe6ee" stroke="#16324a" stroke-width="3"/>
+      <text x="320" y="130" text-anchor="middle" font-weight="800" font-size="30" fill="#16324a">µm</text>
+      <text x="320" y="152" text-anchor="middle" font-size="13" fill="#4c5560">micrometre</text>
+      <rect x="456" y="95" width="150" height="70" rx="12" fill="#dbe6ee" stroke="#16324a" stroke-width="3"/>
+      <text x="531" y="130" text-anchor="middle" font-weight="800" font-size="30" fill="#16324a">nm</text>
+      <text x="531" y="152" text-anchor="middle" font-size="13" fill="#4c5560">nanometre</text>
+      <line x1="188" y1="112" x2="241" y2="112" stroke="#16324a" stroke-width="3" marker-end="url(#ua)"/>
+      <text x="214" y="102" text-anchor="middle" font-size="15" font-weight="700" fill="#a9791f">× 1000</text>
+      <line x1="399" y1="112" x2="452" y2="112" stroke="#16324a" stroke-width="3" marker-end="url(#ua)"/>
+      <text x="425" y="102" text-anchor="middle" font-size="15" font-weight="700" fill="#a9791f">× 1000</text>
+      <line x1="241" y1="150" x2="188" y2="150" stroke="#2b5069" stroke-width="3" marker-end="url(#ua)"/>
+      <text x="214" y="188" text-anchor="middle" font-size="15" font-weight="700" fill="#2b5069">÷ 1000</text>
+      <line x1="452" y1="150" x2="399" y2="150" stroke="#2b5069" stroke-width="3" marker-end="url(#ua)"/>
+      <text x="425" y="188" text-anchor="middle" font-size="15" font-weight="700" fill="#2b5069">÷ 1000</text>
+      <text x="320" y="42" text-anchor="middle" font-size="17" font-weight="800" fill="#16324a">1 mm = 1000 µm = 1 000 000 nm</text>
+      <text x="320" y="228" text-anchor="middle" font-size="13" fill="#4c5560">Put image and actual size in the SAME unit before dividing.</text>
+    </g>
+  </svg>`;
+
+  SVG.specialised = `
+  <svg viewBox="0 0 680 210" role="img" aria-label="Three specialised cells: a sperm cell with a head, midpiece and tail; a biconcave red blood cell with no nucleus; and a root hair cell with a long thin projection.">
+    <!-- sperm cell -->
+    <ellipse cx="95" cy="90" rx="30" ry="19" fill="#dbe6ee" stroke="#16324a" stroke-width="3"/>
+    <circle cx="86" cy="90" r="10" fill="#2b5069"/>
+    <rect x="123" y="82" width="24" height="16" rx="4" fill="#f5e8c8" stroke="#16324a" stroke-width="2.5"/>
+    <path d="M147 90 q 26 -20 52 0 q 26 20 52 0" fill="none" stroke="#16324a" stroke-width="3"/>
+    <text x="150" y="150" text-anchor="middle" font-family="Montserrat,sans-serif" font-weight="700" font-size="15" fill="#16324a">sperm cell</text>
+    <text x="150" y="170" text-anchor="middle" font-family="Montserrat,sans-serif" font-size="12" fill="#4c5560">head · midpiece · tail</text>
+    <!-- red blood cell -->
+    <ellipse cx="370" cy="90" rx="46" ry="28" fill="#f2ded3" stroke="#a23b28" stroke-width="3"/>
+    <ellipse cx="370" cy="90" rx="19" ry="11" fill="#f7ece6" stroke="#a23b28" stroke-width="2"/>
+    <text x="370" y="150" text-anchor="middle" font-family="Montserrat,sans-serif" font-weight="700" font-size="15" fill="#16324a">red blood cell</text>
+    <text x="370" y="170" text-anchor="middle" font-family="Montserrat,sans-serif" font-size="12" fill="#4c5560">biconcave · no nucleus</text>
+    <!-- root hair cell -->
+    <rect x="540" y="66" width="64" height="48" rx="6" fill="#dcece8" stroke="#1c6a4a" stroke-width="3"/>
+    <line x1="604" y1="90" x2="664" y2="90" stroke="#1c6a4a" stroke-width="3"/>
+    <circle cx="562" cy="86" r="7" fill="#2b5069"/>
+    <text x="580" y="150" text-anchor="middle" font-family="Montserrat,sans-serif" font-weight="700" font-size="15" fill="#16324a">root hair cell</text>
+    <text x="580" y="170" text-anchor="middle" font-family="Montserrat,sans-serif" font-size="12" fill="#4c5560">long thin projection</text>
+  </svg>`;
+
+  SVG.stemflow = `
+  <svg viewBox="0 0 680 290" role="img" aria-label="A stem cell divides and differentiates into specialised cells: a nerve cell, a red blood cell and a muscle cell.">
+    <defs><marker id="sf" markerUnits="userSpaceOnUse" markerWidth="16" markerHeight="16" refX="8" refY="8" orient="auto"><path d="M0 0 L16 8 L0 16 Z" fill="#16324a"/></marker></defs>
+    <circle cx="95" cy="145" r="52" fill="#dbe6ee" stroke="#16324a" stroke-width="4"/>
+    <circle cx="108" cy="135" r="18" fill="#2b5069"/>
+    <text x="95" y="222" text-anchor="middle" font-family="Montserrat,sans-serif" font-weight="800" font-size="16" fill="#16324a">stem cell</text>
+    <text x="95" y="242" text-anchor="middle" font-family="Montserrat,sans-serif" font-size="13" fill="#4c5560">unspecialised</text>
+    <line x1="152" y1="140" x2="300" y2="65" stroke="#16324a" stroke-width="3" marker-end="url(#sf)"/>
+    <line x1="152" y1="148" x2="300" y2="148" stroke="#16324a" stroke-width="3" marker-end="url(#sf)"/>
+    <line x1="152" y1="156" x2="300" y2="230" stroke="#16324a" stroke-width="3" marker-end="url(#sf)"/>
+    <text x="228" y="40" text-anchor="middle" font-family="Montserrat,sans-serif" font-size="13" font-weight="700" fill="#a9791f">divides &amp; differentiates</text>
+    <circle cx="342" cy="65" r="15" fill="#eaf3ef" stroke="#16324a" stroke-width="3"/>
+    <line x1="357" y1="65" x2="440" y2="65" stroke="#16324a" stroke-width="3"/>
+    <text x="452" y="70" font-family="Montserrat,sans-serif" font-weight="700" font-size="15" fill="#16324a">nerve cell</text>
+    <ellipse cx="350" cy="148" rx="28" ry="16" fill="#f2ded3" stroke="#a23b28" stroke-width="3"/>
+    <ellipse cx="350" cy="148" rx="11" ry="6" fill="#f7ece6" stroke="#a23b28" stroke-width="1.6"/>
+    <text x="390" y="153" font-family="Montserrat,sans-serif" font-weight="700" font-size="15" fill="#16324a">red blood cell</text>
+    <rect x="318" y="216" width="96" height="26" rx="13" fill="#f5e8c8" stroke="#a9791f" stroke-width="3"/>
+    <text x="426" y="234" font-family="Montserrat,sans-serif" font-weight="700" font-size="15" fill="#16324a">muscle cell</text>
+  </svg>`;
+
+  SVG.biomolecules = `
+  <svg viewBox="0 0 680 250" role="img" aria-label="Large biological molecules built from basic units: simple sugars join into starch or glycogen; amino acids join into a protein; one glycerol plus three fatty acids form a lipid.">
+    <defs><marker id="bm" markerUnits="userSpaceOnUse" markerWidth="14" markerHeight="14" refX="7" refY="7" orient="auto"><path d="M0 0 L14 7 L0 14 Z" fill="#16324a"/></marker></defs>
+    <!-- carbohydrate -->
+    <g fill="#dbe6ee" stroke="#16324a" stroke-width="2.5"><circle cx="42" cy="42" r="11"/><circle cx="68" cy="42" r="11"/><circle cx="55" cy="64" r="11"/></g>
+    <text x="55" y="92" text-anchor="middle" font-family="Montserrat,sans-serif" font-size="12" fill="#4c5560">simple sugars</text>
+    <line x1="118" y1="52" x2="176" y2="52" stroke="#16324a" stroke-width="2.5" marker-end="url(#bm)"/>
+    <g fill="#dbe6ee" stroke="#16324a" stroke-width="2.5"><circle cx="205" cy="52" r="10"/><circle cx="227" cy="52" r="10"/><circle cx="249" cy="52" r="10"/><circle cx="271" cy="52" r="10"/><circle cx="293" cy="52" r="10"/></g>
+    <text x="470" y="57" font-family="Montserrat,sans-serif" font-weight="700" font-size="15" fill="#16324a">starch / glycogen</text>
+    <!-- protein -->
+    <g stroke="#16324a" stroke-width="2.5"><rect x="34" y="108" width="18" height="18" fill="#f5e8c8"/><polygon points="70,126 79,108 88,126" fill="#f2ded3"/><circle cx="55" cy="140" r="9" fill="#dcece8"/></g>
+    <text x="60" y="165" text-anchor="middle" font-family="Montserrat,sans-serif" font-size="12" fill="#4c5560">amino acids</text>
+    <line x1="118" y1="126" x2="176" y2="126" stroke="#16324a" stroke-width="2.5" marker-end="url(#bm)"/>
+    <g stroke="#16324a" stroke-width="2.5"><rect x="198" y="117" width="16" height="16" fill="#f5e8c8"/><polygon points="230,133 238,117 246,133" fill="#f2ded3"/><rect x="256" y="117" width="16" height="16" fill="#dcece8"/><polygon points="288,133 296,117 304,133" fill="#f5e8c8"/></g>
+    <text x="470" y="131" font-family="Montserrat,sans-serif" font-weight="700" font-size="15" fill="#16324a">protein</text>
+    <!-- lipid -->
+    <rect x="34" y="192" width="20" height="20" fill="#dbe6ee" stroke="#16324a" stroke-width="2.5"/>
+    <text x="44" y="230" text-anchor="middle" font-family="Montserrat,sans-serif" font-size="12" fill="#4c5560">glycerol</text>
+    <g stroke="#a9791f" stroke-width="2.5" fill="none"><path d="M64 196 l 40 0"/><path d="M64 204 l 40 0"/><path d="M64 212 l 40 0"/></g>
+    <text x="110" y="230" text-anchor="middle" font-family="Montserrat,sans-serif" font-size="12" fill="#4c5560">3 fatty acids</text>
+    <line x1="150" y1="204" x2="208" y2="204" stroke="#16324a" stroke-width="2.5" marker-end="url(#bm)"/>
+    <rect x="230" y="192" width="20" height="20" fill="#dbe6ee" stroke="#16324a" stroke-width="2.5"/>
+    <g stroke="#a9791f" stroke-width="2.5" fill="none"><path d="M250 196 l 34 0"/><path d="M250 204 l 34 0"/><path d="M250 212 l 34 0"/></g>
+    <text x="470" y="209" font-family="Montserrat,sans-serif" font-weight="700" font-size="15" fill="#16324a">lipid (fat / oil)</text>
+  </svg>`;
+
+  SVG.foodtubes = `
+  <svg viewBox="0 0 640 240" role="img" aria-label="Four test tubes showing the positive colour of each food test.">
+    <g stroke="#16324a" stroke-width="3" fill="none">
+      <path d="M70 40 v120 a24 24 0 0 0 48 0 v-120"/><path d="M210 40 v120 a24 24 0 0 0 48 0 v-120"/>
+      <path d="M350 40 v120 a24 24 0 0 0 48 0 v-120"/><path d="M490 40 v120 a24 24 0 0 0 48 0 v-120"/>
+    </g>
+    <path d="M74 96 v64 a20 20 0 0 0 40 0 v-64 z" fill="#1b2a3a"/>
+    <path d="M214 96 v64 a20 20 0 0 0 40 0 v-64 z" fill="#c9662e"/>
+    <path d="M354 96 v64 a20 20 0 0 0 40 0 v-64 z" fill="#7d4a86"/>
+    <path d="M494 96 v64 a20 20 0 0 0 40 0 v-64 z" fill="#efeae0"/>
+    <g font-family="Montserrat,sans-serif" font-weight="700" font-size="13" fill="#16324a" text-anchor="middle">
+      <text x="94" y="200">starch test</text><text x="234" y="200">sugar test</text><text x="374" y="200">protein test</text><text x="514" y="200">fat test</text>
+    </g>
+    <g font-family="Montserrat,sans-serif" font-size="11" fill="#4c5560" text-anchor="middle">
+      <text x="94" y="218">blue-black</text><text x="234" y="218">brick-red</text><text x="374" y="218">purple</text><text x="514" y="218">white emulsion</text>
+    </g>
+  </svg>`;
+
+  SVG.phGraph = `
+  <svg viewBox="0 0 640 360" role="img" aria-label="Graph of rate of an enzyme-controlled reaction against pH: the rate rises to a peak at about pH 7 (the optimum) then falls on either side.">
+    <line x1="80" y1="40" x2="80" y2="310" stroke="#16324a" stroke-width="3"/>
+    <line x1="80" y1="310" x2="600" y2="310" stroke="#16324a" stroke-width="3"/>
+    <g font-family="Montserrat,sans-serif" font-size="14" fill="#4c5560" text-anchor="middle">
+      <text x="80" y="332">1</text><text x="167" y="332">3</text><text x="253" y="332">5</text><text x="340" y="332">7</text><text x="427" y="332">9</text><text x="513" y="332">11</text><text x="600" y="332">13</text></g>
+    <path d="M80 300 C 200 296, 300 120, 340 88 C 380 120, 480 296, 600 300" fill="none" stroke="#a9791f" stroke-width="4.5"/>
+    <circle cx="340" cy="88" r="5" fill="#16324a"/>
+    <line x1="340" y1="88" x2="340" y2="310" stroke="#16324a" stroke-width="1.5" stroke-dasharray="5 5"/>
+    <text x="349" y="80" font-family="Montserrat,sans-serif" font-size="13" font-weight="700" fill="#16324a">optimum (pH 7)</text>
+    <text x="340" y="352" text-anchor="middle" font-family="Montserrat,sans-serif" font-size="15" font-weight="700" fill="#16324a">pH</text>
+    <text x="26" y="175" text-anchor="middle" font-family="Montserrat,sans-serif" font-size="15" font-weight="700" fill="#16324a" transform="rotate(-90 26 175)">Rate of reaction / a.u.</text>
+  </svg>`;
+
+  SVG.diffusion = `
+  <svg viewBox="0 0 640 240" role="img" aria-label="Diffusion: particles move from a region of high concentration to a region of low concentration, down the concentration gradient, without needing energy.">
+    <rect x="50" y="40" width="540" height="150" rx="8" fill="#eaf3ef" stroke="#16324a" stroke-width="3"/>
+    <line x1="320" y1="40" x2="320" y2="190" stroke="#16324a" stroke-width="2" stroke-dasharray="4 6"/>
+    <g fill="#2b5069"><circle cx="90" cy="75" r="8"/><circle cx="140" cy="110" r="8"/><circle cx="110" cy="150" r="8"/><circle cx="180" cy="80" r="8"/><circle cx="210" cy="130" r="8"/><circle cx="160" cy="165" r="8"/><circle cx="240" cy="95" r="8"/><circle cx="260" cy="155" r="8"/><circle cx="200" cy="55" r="8"/></g>
+    <g fill="#2b5069"><circle cx="400" cy="90" r="8"/><circle cx="470" cy="150" r="8"/><circle cx="540" cy="110" r="8"/></g>
+    <defs><marker id="df" markerUnits="userSpaceOnUse" markerWidth="18" markerHeight="18" refX="9" refY="9" orient="auto"><path d="M0 0 L18 9 L0 18 Z" fill="#1c6a4a"/></marker></defs>
+    <line x1="250" y1="212" x2="392" y2="212" stroke="#1c6a4a" stroke-width="5" marker-end="url(#df)"/>
+    <text x="150" y="30" text-anchor="middle" font-family="Montserrat,sans-serif" font-size="13" font-weight="800" fill="#16324a">HIGH concentration</text>
+    <text x="470" y="30" text-anchor="middle" font-family="Montserrat,sans-serif" font-size="13" font-weight="800" fill="#16324a">LOW concentration</text>
+    <text x="322" y="232" text-anchor="middle" font-family="Montserrat,sans-serif" font-size="13" font-weight="700" fill="#1c6a4a">down the gradient · no energy needed</text>
+  </svg>`;
+
+  SVG.activeTransport = `
+  <svg viewBox="0 0 640 240" role="img" aria-label="Active transport: a carrier protein moves particles from a low concentration to a high concentration, against the gradient, using energy from respiration.">
+    <rect x="50" y="40" width="540" height="150" rx="8" fill="#eaf3ef" stroke="#16324a" stroke-width="3"/>
+    <rect x="300" y="40" width="40" height="150" fill="#f5e8c8" stroke="#16324a" stroke-width="3"/>
+    <text x="320" y="30" text-anchor="middle" font-family="Montserrat,sans-serif" font-size="12" font-weight="700" fill="#16324a">carrier protein</text>
+    <g fill="#2b5069"><circle cx="110" cy="90" r="8"/><circle cx="170" cy="140" r="8"/><circle cx="230" cy="100" r="8"/></g>
+    <g fill="#2b5069"><circle cx="380" cy="70" r="8"/><circle cx="440" cy="120" r="8"/><circle cx="500" cy="80" r="8"/><circle cx="540" cy="150" r="8"/><circle cx="410" cy="160" r="8"/><circle cx="470" cy="60" r="8"/></g>
+    <defs><marker id="at" markerUnits="userSpaceOnUse" markerWidth="18" markerHeight="18" refX="9" refY="9" orient="auto"><path d="M0 0 L18 9 L0 18 Z" fill="#a23b28"/></marker></defs>
+    <line x1="250" y1="212" x2="392" y2="212" stroke="#a23b28" stroke-width="5" marker-end="url(#at)"/>
+    <text x="175" y="30" text-anchor="middle" font-family="Montserrat,sans-serif" font-size="13" font-weight="800" fill="#16324a">LOW concentration</text>
+    <text x="470" y="30" text-anchor="middle" font-family="Montserrat,sans-serif" font-size="13" font-weight="800" fill="#16324a">HIGH concentration</text>
+    <text x="322" y="232" text-anchor="middle" font-family="Montserrat,sans-serif" font-size="13" font-weight="700" fill="#a23b28">against the gradient · needs energy (ATP)</text>
+  </svg>`;
+
+  SVG.savcubes = `
+  <svg viewBox="0 0 640 280" role="img" aria-label="A small cube and a large cube. As a cube gets bigger its volume grows faster than its surface area, so its surface area to volume ratio falls.">
+    <!-- small cube side 2 -->
+    <rect x="90" y="150" width="70" height="70" fill="#dbe6ee" stroke="#16324a" stroke-width="3"/>
+    <polygon points="90,150 118,122 188,122 160,150" fill="#c9d7e3" stroke="#16324a" stroke-width="3"/>
+    <polygon points="160,150 188,122 188,192 160,220" fill="#b8cad9" stroke="#16324a" stroke-width="3"/>
+    <text x="139" y="252" text-anchor="middle" font-family="Montserrat,sans-serif" font-weight="700" font-size="15" fill="#16324a">side 2 cm</text>
+    <text x="139" y="272" text-anchor="middle" font-family="Montserrat,sans-serif" font-size="12" fill="#4c5560">large SA : V</text>
+    <!-- large cube side 4 -->
+    <rect x="380" y="110" width="130" height="130" fill="#dbe6ee" stroke="#16324a" stroke-width="3"/>
+    <polygon points="380,110 424,66 554,66 510,110" fill="#c9d7e3" stroke="#16324a" stroke-width="3"/>
+    <polygon points="510,110 554,66 554,196 510,240" fill="#b8cad9" stroke="#16324a" stroke-width="3"/>
+    <text x="467" y="262" text-anchor="middle" font-family="Montserrat,sans-serif" font-weight="700" font-size="15" fill="#16324a">side 4 cm</text>
+    <text x="467" y="282" text-anchor="middle" font-family="Montserrat,sans-serif" font-size="12" fill="#4c5560">small SA : V</text>
+  </svg>`;
+
+  const OSMOSIS_TABLE = `
+    <div class="tablewrap"><table class="data">
+      <caption>Table 1 · Potato cylinders in sucrose solutions (30 min)</caption>
+      <thead><tr><th>Sucrose / mol&nbsp;dm⁻³</th><th>Initial / g</th><th>Final / g</th><th>Change / %</th></tr></thead>
+      <tbody>
+        <tr><td>0.0</td><td>5.00</td><td>5.60</td><td>+12.0</td></tr>
+        <tr><td>0.2</td><td>5.00</td><td>5.20</td><td>+4.0</td></tr>
+        <tr><td>0.3</td><td>5.00</td><td>5.00</td><td>0.0</td></tr>
+        <tr><td>0.5</td><td>5.00</td><td>4.60</td><td class="blank">?</td></tr>
+        <tr><td>0.8</td><td>5.00</td><td>4.15</td><td>−17.0</td></tr>
+        <tr><td>1.0</td><td>5.00</td><td>4.00</td><td>−20.0</td></tr>
+      </tbody>
+    </table></div>`;
+
+  function msPart(ref, marks, points, note) { return { ref, marks, points, note }; }
+  function magTriangle() {
+    return `<svg class="mag-triangle" viewBox="0 0 220 170" role="img" aria-label="Magnification triangle: image size on top, magnification and actual size on the bottom.">
+      <polygon points="110,12 208,158 12,158" fill="#f5e8c8" stroke="#16324a" stroke-width="3"/>
+      <line x1="60" y1="95" x2="160" y2="95" stroke="#16324a" stroke-width="2.5"/>
+      <line x1="110" y1="95" x2="110" y2="158" stroke="#16324a" stroke-width="2.5"/>
+      <text x="110" y="66" text-anchor="middle" font-family="Montserrat,sans-serif" font-weight="800" font-size="20" fill="#16324a">I</text>
+      <text x="66" y="140" text-anchor="middle" font-family="Montserrat,sans-serif" font-weight="800" font-size="20" fill="#16324a">M</text>
+      <text x="156" y="140" text-anchor="middle" font-family="Montserrat,sans-serif" font-weight="800" font-size="20" fill="#16324a">A</text>
+    </svg>
+    <p style="font-size:0.76rem;color:var(--ink-600);text-align:center;margin:-4px 0 6px">I = image size · M = magnification · A = actual size</p>`;
+  }
+
+  const SPEC_POINTS = [
+    { /* 1(b) bacterial cells */
+      code: "1(b)", tab: "Bacterial cells", topicName: "Variety of living organisms",
+      title: "Structure of bacterial cells", total: 9,
+      spec: "Structure of a bacterial cell (a prokaryote): cell wall, cell membrane, cytoplasm, ribosomes, circular chromosomal DNA and plasmid DNA not enclosed in a nucleus.",
+      figures: [{ tab: "Bacterial cell", cap: "Fig 1 · A rod-shaped bacterial cell (A–D labelled)", node: SVG.bacteria }],
+      parts: [
+        { ref: "(a)", marks: 3, stem: `<span class="cmd">Name</span> the structures labelled <b>A</b>, <b>B</b> and <b>C</b> on Fig&nbsp;1.` },
+        { ref: "(b)", marks: 2, stem: `A bacterium is a <b>prokaryotic</b> organism. <span class="cmd">State two</span> features shown in Fig&nbsp;1 that tell you this cell is prokaryotic.` },
+        { ref: "(c)", marks: 2, stem: `Structure <b>D</b> is a plasmid. <span class="cmd">Describe</span> what a plasmid is and one reason it is useful to a bacterium.` },
+        { ref: "(d)", marks: 2, stem: `<span class="cmd">Name two</span> structures present in <b>both</b> this bacterial cell and a human cheek (animal) cell.` }
+      ],
+      markScheme: [
+        msPart("(a)", 3, ["A = cell wall ✓", "B = (circular) chromosomal DNA / single circular chromosome / genetic material ✓", "C = flagellum ✓"], "One mark each. Accept 'DNA loop' for B. Do <b>not</b> accept 'nucleus' for B."),
+        msPart("(b)", 2, ["The DNA / genetic material is not enclosed in a nucleus (free in the cytoplasm / a single circular chromosome) ✓", "There are no membrane-bound organelles (e.g. no mitochondria / no nucleus) ✓", "(Also allow: extra DNA carried as a plasmid ✓)"], "Any <b>two</b>. Must describe a prokaryotic feature, not just 'it is small'."),
+        msPart("(c)", 2, ["A plasmid is a small, circular piece / ring of DNA (separate from the main chromosome) ✓", "It carries extra genes, e.g. for antibiotic resistance, and can be passed between bacteria ✓"], "Reject 'plasmid = nucleus'. Second mark needs a use/benefit."),
+        msPart("(d)", 2, ["cell membrane ✓", "cytoplasm ✓", "ribosomes ✓"], "Any <b>two</b>. Reject cell wall (animal cells have none) and any organelle bacteria lack.")
+      ],
+      support: `
+        <h3>What you must know</h3>
+        <p>A bacterium is a <span class="keyword">prokaryote</span>. Its key structures are:</p>
+        <ul>
+          <li><b>Cell wall</b> — protects the cell and stops it bursting (not made of cellulose).</li>
+          <li><b>Cell membrane</b> — controls what enters and leaves.</li>
+          <li><b>Cytoplasm</b> — jelly where reactions happen.</li>
+          <li><b>Ribosomes</b> — make proteins.</li>
+          <li><b>Chromosomal DNA</b> — a single circular loop, <b>free in the cytoplasm</b> (no nucleus).</li>
+          <li><b>Plasmid(s)</b> — small extra ring(s) of DNA, e.g. carrying antibiotic-resistance genes.</li>
+          <li><b>Flagellum</b> (some bacteria) — a tail for movement.</li>
+        </ul>
+        <div class="callout"><b>Prokaryote vs eukaryote:</b> prokaryotic cells have <b>no nucleus</b> and <b>no membrane-bound organelles</b>. Animal and plant cells are eukaryotic — they do have a nucleus and organelles.</div>
+        <table class="cmd-table">
+          <tr><th>Feature</th><th>Bacterial</th><th>Animal</th></tr>
+          <tr><td>Nucleus</td><td>✗ (DNA free in cytoplasm)</td><td>✓</td></tr>
+          <tr><td>Cell wall</td><td>✓</td><td>✗</td></tr>
+          <tr><td>Plasmids</td><td>✓ (often)</td><td>✗</td></tr>
+          <tr><td>Membrane, cytoplasm, ribosomes</td><td>✓</td><td>✓</td></tr>
+          <tr><td>Mitochondria</td><td>✗</td><td>✓</td></tr>
+        </table>`,
+      howTo: `
+        <h3>Reading the command words</h3>
+        <table class="cmd-table">
+          <tr><th>Command</th><th>What the examiner wants</th></tr>
+          <tr><td><b>Name / State</b></td><td>One or two words. No explanation needed — don't waste time writing sentences.</td></tr>
+          <tr><td><b>Describe</b></td><td>Say what something <i>is</i> or what happens — here, what a plasmid is <i>and</i> a use.</td></tr>
+        </table>
+        <h3>Banking the marks</h3>
+        <ul>
+          <li><b>1 mark = 1 point.</b> Part (a) gives 3 marks for 3 correct labels — write A, B and C clearly.</li>
+          <li>In (b), "state <b>two</b> features" means <b>two separate</b> prokaryotic features. Repeating one idea scores once.</li>
+          <li>Trap in (d): the cell wall is <b>not</b> shared with animal cells, so it scores nothing.</li>
+        </ul>
+        <div class="callout"><b>Common mistake:</b> writing "nucleus" for structure B. Bacteria have <b>no nucleus</b> — the DNA is a free circular loop.</div>`
+    },
+
+    { /* 2(b) animal cell organelles */
+      code: "2(b)", tab: "Cell organelles", topicName: "Cell structure",
+      title: "Animal cell organelles &amp; their functions", total: 9,
+      spec: "Structure and function of animal cell organelles: nucleus, cytoplasm, cell membrane, mitochondria and ribosomes.",
+      figures: [{ tab: "Animal cell", cap: "Fig 2 · An animal cell under a light microscope (schematic)", node: SVG.animal }],
+      parts: [
+        { ref: "(a)", marks: 2, stem: `<span class="cmd">Name</span> the organelle where aerobic respiration takes place and <span class="cmd">describe</span> its function.` },
+        { ref: "(b)", marks: 2, stem: `<span class="cmd">State</span> the function of <b>(i)</b> the ribosomes and <b>(ii)</b> the cell membrane.` },
+        { ref: "(c)", marks: 2, stem: `<span class="cmd">Describe</span> <b>two</b> functions of the nucleus.` },
+        { ref: "(d)", marks: 3, stem: `A liver cell carries out many chemical reactions and makes many proteins. <span class="cmd">Explain</span> why a liver cell contains <b>(i)</b> many mitochondria and <b>(ii)</b> many ribosomes.` }
+      ],
+      markScheme: [
+        msPart("(a)", 2, ["mitochondrion / mitochondria ✓", "site of aerobic respiration / releases energy (as ATP) for the cell ✓"], "Spelling must be recognisable. Reject 'makes energy' alone if it omits respiration/release."),
+        msPart("(b)", 2, ["(i) ribosomes — (site of) protein synthesis / make proteins ✓", "(ii) cell membrane — controls what enters and leaves the cell ✓"], "Each part 1 mark. Reject 'protects the cell' for the membrane."),
+        msPart("(c)", 2, ["contains the DNA / genetic material / chromosomes ✓", "controls the cell's activities / controls protein synthesis / controls cell division ✓"], "Any <b>two</b> distinct functions."),
+        msPart("(d)", 3, ["(i) the liver cell is very active / carries out many reactions, so it needs a lot of energy; mitochondria carry out aerobic respiration to release this energy ✓", "(i) so more mitochondria → more respiration → more energy released ✓", "(ii) ribosomes make proteins, so many ribosomes are needed to make many proteins / enzymes ✓"], "First two marks are for the mitochondria/energy chain; third for linking ribosomes to protein synthesis.")
+      ],
+      support: `
+        <h3>The animal cell organelles</h3>
+        <table class="cmd-table">
+          <tr><th>Organelle</th><th>Function</th></tr>
+          <tr><td><b>Nucleus</b></td><td>Contains DNA/chromosomes; controls the cell's activities.</td></tr>
+          <tr><td><b>Cytoplasm</b></td><td>Jelly where most chemical reactions occur.</td></tr>
+          <tr><td><b>Cell membrane</b></td><td>Controls what enters and leaves the cell.</td></tr>
+          <tr><td><b>Mitochondria</b></td><td>Site of aerobic respiration — release energy.</td></tr>
+          <tr><td><b>Ribosomes</b></td><td>Site of protein synthesis — make proteins.</td></tr>
+        </table>
+        <div class="callout"><b>Link structure to activity:</b> a very active cell (muscle, liver, sperm) has <b>many mitochondria</b> for energy; a cell that makes lots of protein has <b>many ribosomes</b>.</div>`,
+      howTo: `
+        <h3>Function questions</h3>
+        <ul>
+          <li><b>State / name</b> = a few words. <b>Describe</b> = say what it does. <b>Explain</b> = give the reason <i>why</i>.</li>
+          <li>Learn a one-line function for every organelle — these are quick, guaranteed marks.</li>
+        </ul>
+        <h3>Building an "Explain" chain (part d)</h3>
+        <p>Each link in the chain is a mark: <i>active cell → needs energy → aerobic respiration in mitochondria → more mitochondria = more energy</i>. Do the same for ribosomes: <i>makes proteins → needs ribosomes → many ribosomes = many proteins</i>.</p>
+        <div class="callout"><b>Common mistake:</b> writing "mitochondria make energy". Energy is <b>released</b> (from glucose) in respiration, not made — say <b>released</b>.</div>`
+    },
+
+    { /* 2(b) magnification & unit conversions */
+      code: "2(b)", tab: "Magnification", topicName: "Cell structure",
+      title: "Magnification &amp; unit conversions", total: 9,
+      spec: "Use of the equation magnification = image size ÷ actual size, and conversion between mm, µm and nm when describing cell measurements.",
+      figures: [
+        { tab: "Triangle", cap: "The magnification triangle — cover the quantity you want", node: SVG.magTri },
+        { tab: "Units", cap: "Converting between mm, µm and nm", node: SVG.units }
+      ],
+      parts: [
+        { ref: "(a)", marks: 1, stem: `<span class="cmd">Write down</span> the equation that links magnification, image size and actual size.` },
+        { ref: "(b)", marks: 1, stem: `<span class="cmd">Convert</span> <b>0.05&nbsp;mm</b> into micrometres&nbsp;(µm).` },
+        { ref: "(c)", marks: 3, stem: `A cell has an actual width of <b>30&nbsp;µm</b>. Under a microscope its image is <b>60&nbsp;mm</b> wide. <span class="cmd">Calculate</span> the magnification of the image. Show your working.` },
+        { ref: "(d)", marks: 3, stem: `A different cell is viewed at a magnification of <b>×400</b>. Its image measures <b>8&nbsp;mm</b> across. <span class="cmd">Calculate</span> the real width of the cell in <b>micrometres&nbsp;(µm)</b>. Show your working.` },
+        { ref: "(e)", marks: 1, stem: `<span class="cmd">State</span> which is larger, 1&nbsp;mm or 1&nbsp;µm, and by how many times.` }
+      ],
+      markScheme: [
+        msPart("(a)", 1, ["magnification = image size ÷ actual size ✓ (accept M = I ÷ A)"], "Must be the correct arrangement. Reject actual = image × magnification."),
+        msPart("(b)", 1, ["50 µm ✓ (0.05 × 1000)"], "mm → µm is × 1000."),
+        msPart("(c)", 3, ["put both in the same unit, e.g. 60 mm = 60 000 µm (or 30 µm = 0.03 mm) ✓", "magnification = image ÷ actual ✓", "= ×2000 ✓"], "Answer <b>×2000</b>. Allow ecf from a correct conversion. No conversion (60 ÷ 30 = 2) = max 1."),
+        msPart("(d)", 3, ["actual = image ÷ magnification = 8 ÷ 400 = 0.02 mm ✓", "convert mm → µm: × 1000 ✓", "= 20 µm ✓"], "Answer <b>20 µm</b> with working. Allow ecf for a correct conversion of a wrong 0.02."),
+        msPart("(e)", 1, ["1 mm is larger, by 1000 times ✓"], "Both parts needed: 'larger' and '×1000'.")
+      ],
+      support: `
+        <h3>The magnification equation</h3>
+        ${magTriangle()}
+        <p><span class="keyword">magnification = image size ÷ actual size</span></p>
+        <p>Cover the quantity you want in the triangle: <b>I</b> on top, <b>M</b> and <b>A</b> underneath. So M = I ÷ A, A = I ÷ M, and I = M × A.</p>
+        <h3>Unit conversions</h3>
+        <table class="cmd-table">
+          <tr><th>Convert</th><th>How</th></tr>
+          <tr><td>mm → µm</td><td>× 1000</td></tr>
+          <tr><td>µm → mm</td><td>÷ 1000</td></tr>
+          <tr><td>µm → nm</td><td>× 1000</td></tr>
+        </table>
+        <div class="callout"><b>Remember:</b> 1 mm = 1000 µm and 1 µm = 1000 nm. Image and actual size must be in the <b>same unit</b> before you divide.</div>`,
+      howTo: `
+        <h3>Every magnification calculation</h3>
+        <ol style="padding-left:1.2em;font-size:0.86rem">
+          <li>Decide what you want (magnification or actual size) and pick the formula from the triangle.</li>
+          <li><b>Convert so both measurements share one unit</b> — this is where most marks are lost.</li>
+          <li>Do the division, then convert the answer to the unit the question asks for.</li>
+          <li>Always <b>show working</b> — method marks survive a slip in the final number.</li>
+        </ol>
+        <div class="callout"><b>Sense check:</b> magnification has <b>no unit</b> (it is "×…"). Actual cell sizes are tiny — a few µm. If a "real size" comes out in centimetres, you've slipped a conversion.</div>`
+    },
+
+    { /* 2(a) differentiation & specialised cells */
+      code: "2(a)", tab: "Specialised cells", topicName: "Levels of organisation",
+      title: "Cell differentiation &amp; specialised cells", total: 9,
+      spec: "Cell differentiation — how cells become specialised during development — and how the structure of specialised cells (e.g. sperm, red blood and root hair cells) is adapted to their function.",
+      figures: [{ tab: "Specialised cells", cap: "Three specialised cells (schematic)", node: SVG.specialised }],
+      parts: [
+        { ref: "(a)", marks: 2, stem: `<span class="cmd">Define</span> the term <b>differentiation</b>.` },
+        { ref: "(b)", marks: 2, stem: `For the <b>red blood cell</b>, <span class="cmd">describe</span> one way it is adapted to its function and <span class="cmd">explain</span> how this helps.` },
+        { ref: "(c)", marks: 2, stem: `A sperm cell has a <b>tail</b> and many <b>mitochondria</b>. <span class="cmd">Explain</span> how each of these adaptations helps the sperm cell.` },
+        { ref: "(d)", marks: 2, stem: `A root hair cell has a long, thin extension. <span class="cmd">Explain</span> how this helps it absorb water and mineral ions.` },
+        { ref: "(e)", marks: 1, stem: `<span class="cmd">Name</span> one other specialised cell and <span class="cmd">state</span> its function.` }
+      ],
+      markScheme: [
+        msPart("(a)", 2, ["the process by which a cell becomes specialised ✓", "developing a structure / shape suited to a particular function (job) ✓"], "Both ideas needed: becomes specialised + structure suited to a function. 'The cell changes' alone = 0."),
+        msPart("(b)", 2, ["adaptation: biconcave disc shape / no nucleus / packed with haemoglobin ✓", "how it helps: biconcave → large surface area to absorb oxygen; OR no nucleus → more room for haemoglobin to carry more oxygen ✓"], "Must be a matching adaptation + explanation pair. A lone adaptation = 1."),
+        msPart("(c)", 2, ["tail / flagellum lets the sperm swim (to the egg) ✓", "many mitochondria release energy (from respiration) for swimming / movement ✓"], "One mark each; each links the feature to how it helps."),
+        msPart("(d)", 2, ["the long, thin extension gives a large surface area ✓", "so more water and mineral ions are absorbed / absorption is faster ✓"], "Large surface area + increased/faster absorption. Accept water absorbed by osmosis."),
+        msPart("(e)", 1, ["any valid specialised cell + matching function, e.g. ciliated cell — moves mucus; nerve cell — carries impulses; muscle cell — contracts; palisade cell — photosynthesis ✓"], "Cell AND a correct function are both needed.")
+      ],
+      support: `
+        <h3>What is differentiation?</h3>
+        <p><span class="keyword">Differentiation</span> is the process by which a cell becomes <b>specialised</b> — it develops a structure suited to a particular job. It happens as an organism grows and develops.</p>
+        <h3>Specialised cells &amp; their adaptations</h3>
+        <table class="cmd-table">
+          <tr><th>Cell</th><th>Adaptation → how it helps</th></tr>
+          <tr><td><b>Red blood cell</b></td><td>Biconcave (large SA for O₂); no nucleus (more haemoglobin).</td></tr>
+          <tr><td><b>Sperm cell</b></td><td>Tail to swim; many mitochondria for energy; enzymes to enter the egg.</td></tr>
+          <tr><td><b>Root hair cell</b></td><td>Long extension → large SA to absorb water &amp; minerals.</td></tr>
+          <tr><td><b>Ciliated cell</b></td><td>Cilia sweep mucus along the airways.</td></tr>
+          <tr><td><b>Nerve cell</b></td><td>Long axon carries impulses over distances.</td></tr>
+        </table>`,
+      howTo: `
+        <h3>Adaptation questions</h3>
+        <ul>
+          <li>Every mark needs a <b>pair</b>: name the feature <b>and</b> say <b>how it helps</b> the cell's job.</li>
+          <li>"Large surface area" only scores if you say what it's for (absorbing oxygen / water).</li>
+          <li>Link energy to <b>mitochondria → respiration</b>, never "mitochondria make energy".</li>
+        </ul>
+        <div class="callout"><b>Sentence stem that scores:</b> "The [feature] means the cell can [function] because [reason]." e.g. "The tail means the sperm can swim to the egg."</div>`
+    },
+
+    { /* 2(a) stem cells in medicine */
+      code: "2(a)", tab: "Stem cells", topicName: "Levels of organisation",
+      title: "Stem cells in medicine", total: 10,
+      spec: "Stem cells as unspecialised cells that divide and differentiate, their use in medicine, and the advantages and disadvantages — including ethical issues — of using them.",
+      figures: [{ tab: "Stem cells", cap: "A stem cell divides and differentiates into specialised cells", node: SVG.stemflow }],
+      parts: [
+        { ref: "(a)", marks: 2, stem: `<span class="cmd">State</span> what is meant by a <b>stem cell</b>.` },
+        { ref: "(b)", marks: 1, stem: `<span class="cmd">Name</span> one source of stem cells in humans.` },
+        { ref: "(c)", marks: 2, stem: `<span class="cmd">Describe</span> one way stem cells could be used to treat a medical condition.` },
+        { ref: "(d)", marks: 5, stem: `<span class="cmd">Evaluate</span> the use of embryonic stem cells in medicine. Your answer should include advantages, disadvantages and a conclusion.` }
+      ],
+      markScheme: [
+        msPart("(a)", 2, ["an unspecialised cell ✓", "that can divide (by mitosis) to make more cells and can differentiate into different (specialised) cell types ✓"], "'Unspecialised' + 'can divide and differentiate'. 'A cell that can become anything' loosely = 1."),
+        msPart("(b)", 1, ["(early) embryo / embryonic ✓  OR  bone marrow (adult) ✓  OR  umbilical cord blood ✓"], "Any one valid source."),
+        msPart("(c)", 2, ["a use: stem cells are made to differentiate into a needed cell type ✓", "linked to a condition, e.g. insulin-producing cells for (type 1) diabetes / nerve cells for a spinal injury / skin cells for burns ✓"], "Use + a specific condition. A condition with no mechanism = 1."),
+        msPart("(d)", 5, ["Advantages (up to 3): embryonic stem cells can differentiate into any cell type; could treat currently untreatable conditions; replace damaged / diseased cells or tissues; may reduce the need for donor organs.", "Disadvantages (up to 3): destroying an embryo raises ethical / religious objections (a potential life is lost); risk of rejection by the immune system; risk of uncontrolled division (tumours); risk of transferring a viral infection; expensive / technically difficult.", "Conclusion (1): a reasoned judgement that refers to both sides."], "Indicative content — this is an <b>original</b> model, not an exam-board mark scheme. Award up to 3 for advantages and up to 3 for disadvantages, capped at 4 for a one-sided answer; the 5th mark needs a supported conclusion.")
+      ],
+      support: `
+        <h3>Stem cell basics</h3>
+        <ul>
+          <li>A <span class="keyword">stem cell</span> is <b>unspecialised</b>: it can keep <b>dividing</b> and can <b>differentiate</b> into specialised cells.</li>
+          <li><b>Embryonic</b> stem cells can become <b>any</b> cell type; <b>adult</b> stem cells (e.g. bone marrow) become a <b>limited</b> range.</li>
+          <li><b>Medical uses:</b> replacing damaged cells — insulin-producing cells (diabetes), nerve cells (paralysis), skin (burns), blood cells (leukaemia).</li>
+        </ul>
+        <h3>Advantages vs disadvantages</h3>
+        <table class="cmd-table">
+          <tr><th>Advantages</th><th>Disadvantages</th></tr>
+          <tr><td>Treat currently untreatable conditions; replace damaged tissue; embryonic cells can form any cell type.</td><td>Ethical objections (embryo destroyed); risk of rejection; risk of tumours; possible infection; costly.</td></tr>
+        </table>`,
+      howTo: `
+        <h3>Answering "Evaluate" (part d)</h3>
+        <ul>
+          <li><b>Evaluate</b> = give <b>both sides</b> and reach a <b>judgement</b>.</li>
+          <li>Plan two columns — advantages and disadvantages — with 2–3 points each. A one-sided answer is capped.</li>
+          <li>Finish with a <b>conclusion</b> ("On balance…") that follows from your points — this is a separate mark.</li>
+        </ul>
+        <div class="callout"><b>Ethics tip:</b> you don't have to agree, but show you understand <i>why</i> people object to embryonic stem cells (an embryo is destroyed) as well as the medical benefits.</div>`
+    },
+
+    { /* 2(c) 2.7-2.8 biological molecules */
+      code: "2(c)", tab: "Biological molecules", topicName: "Biological molecules",
+      title: "Biological molecules", total: 9,
+      spec: "2.7 the chemical elements in carbohydrates, proteins and lipids; 2.8 their structure as large molecules built from smaller basic units (starch/glycogen from simple sugars, protein from amino acids, lipid from fatty acids + glycerol).",
+      figures: [{ tab: "Building blocks", cap: "Large molecules are built from smaller basic units", node: SVG.biomolecules }],
+      parts: [
+        { ref: "(a)", marks: 2, stem: `<span class="cmd">Name</span> the chemical elements present in <b>(i)</b> a carbohydrate and <b>(ii)</b> a protein.` },
+        { ref: "(b)", marks: 2, stem: `<span class="cmd">Name</span> the small basic units that make up <b>(i)</b> starch and <b>(ii)</b> a protein.` },
+        { ref: "(c)", marks: 2, stem: `<span class="cmd">Describe</span> the structure of a <b>lipid</b> molecule.` },
+        { ref: "(d)", marks: 2, stem: `Starch and glycogen are both made from simple sugars. <span class="cmd">State</span> where <b>(i)</b> starch and <b>(ii)</b> glycogen are stored.` },
+        { ref: "(e)", marks: 1, stem: `<span class="cmd">Give</span> one use of proteins in the body.` }
+      ],
+      markScheme: [
+        msPart("(a)", 2, ["(i) carbon, hydrogen and oxygen ✓", "(ii) carbon, hydrogen, oxygen and nitrogen (accept + sulfur) ✓"], "All named elements needed for each mark. Lipids are also C, H and O."),
+        msPart("(b)", 2, ["(i) simple sugars / glucose ✓", "(ii) amino acids ✓"], "Reject 'sugar' unqualified for starch if it implies a single named disaccharide."),
+        msPart("(c)", 2, ["one (molecule of) glycerol ✓", "joined to three fatty acids ✓"], "Both parts: glycerol + three fatty acids."),
+        msPart("(d)", 2, ["(i) starch is stored in plants (e.g. potato / seeds / leaves) ✓", "(ii) glycogen is stored in animals (in the liver / muscles) ✓"], "Plant vs animal must be correct."),
+        msPart("(e)", 1, ["any valid use, e.g. enzymes / growth and repair / muscle / antibodies / haemoglobin / hormones ✓"], "One clear use.")
+      ],
+      support: `
+        <h3>Elements &amp; building blocks</h3>
+        <table class="cmd-table">
+          <tr><th>Molecule</th><th>Elements</th><th>Basic units</th></tr>
+          <tr><td><b>Carbohydrate</b></td><td>C, H, O</td><td>simple sugars (e.g. glucose)</td></tr>
+          <tr><td><b>Protein</b></td><td>C, H, O, N (+ S)</td><td>amino acids</td></tr>
+          <tr><td><b>Lipid</b> (fat/oil)</td><td>C, H, O</td><td>glycerol + 3 fatty acids</td></tr>
+        </table>
+        <div class="callout"><b>Storage:</b> plants store carbohydrate as <b>starch</b>; animals store it as <b>glycogen</b> (in liver and muscles). Only proteins contain <b>nitrogen</b>.</div>`,
+      howTo: `
+        <h3>Recall questions</h3>
+        <ul>
+          <li>Name <b>all</b> the elements for the mark — "C, H, O and N" for protein; missing nitrogen loses it.</li>
+          <li>Learn the "unit → large molecule" pairs: sugars→starch, amino acids→protein, glycerol + fatty acids→lipid.</li>
+          <li>The <b>only</b> everyday difference in elements: proteins also contain <b>nitrogen</b>.</li>
+        </ul>`
+    },
+
+    { /* 2(c) 2.9 food tests practical */
+      code: "2(c)", tab: "Food tests", topicName: "Biological molecules",
+      title: "Food tests (practical)", total: 10,
+      spec: "2.9 practical: investigate food samples for the presence of glucose, starch, protein and fat — the reagents, methods and positive results.",
+      figures: [{ tab: "Positive results", cap: "The colour of a positive result in each food test", node: SVG.foodtubes }],
+      parts: [
+        { ref: "(a)", marks: 2, stem: `<span class="cmd">Name</span> the reagent used to test for <b>(i)</b> starch and <b>(ii)</b> protein.` },
+        { ref: "(b)", marks: 3, stem: `<span class="cmd">Describe</span> how you would test a food sample for <b>glucose</b>, including the positive result.` },
+        { ref: "(c)", marks: 2, stem: `A food turned iodine solution <b>blue-black</b>, but Benedict's solution stayed <b>blue</b>. <span class="cmd">State</span> what these two results tell you about the food.` },
+        { ref: "(d)", marks: 3, stem: `<span class="cmd">Describe</span> the test for <b>fat (lipid)</b>, including the positive result.` }
+      ],
+      markScheme: [
+        msPart("(a)", 2, ["(i) iodine (solution) ✓", "(ii) Biuret (solution / reagent) ✓"], "Accept 'iodine in potassium iodide' for starch."),
+        msPart("(b)", 3, ["add Benedict's solution ✓", "heat (in a water bath / to ~80 °C) ✓", "positive: colour changes from blue to brick-red (accept green → yellow → orange for smaller amounts) ✓"], "Reagent + heat + colour change all required for 3."),
+        msPart("(c)", 2, ["starch is present (iodine turned blue-black) ✓", "glucose / reducing sugar is absent (Benedict's stayed blue) ✓"], "Both a positive and a negative conclusion."),
+        msPart("(d)", 3, ["(emulsion test) add ethanol to the sample and shake / dissolve ✓", "then add (pour into) water ✓", "positive: a cloudy white emulsion forms ✓"], "Accept Sudan III red-stain method: add Sudan III → a red-stained oily layer.")
+      ],
+      support: `
+        <h3>The four food tests</h3>
+        <table class="cmd-table">
+          <tr><th>Food</th><th>Reagent / method</th><th>Positive result</th></tr>
+          <tr><td><b>Starch</b></td><td>iodine solution</td><td>orange → <b>blue-black</b></td></tr>
+          <tr><td><b>Glucose</b> (reducing sugar)</td><td>Benedict's solution, then <b>heat</b></td><td>blue → <b>brick-red</b></td></tr>
+          <tr><td><b>Protein</b></td><td>Biuret solution</td><td>blue → <b>purple / lilac</b></td></tr>
+          <tr><td><b>Fat / lipid</b></td><td>ethanol then water (emulsion)</td><td><b>cloudy white emulsion</b></td></tr>
+        </table>
+        <div class="callout"><b>Only Benedict's needs heat</b> (a water bath). Iodine, Biuret and the emulsion test are done at room temperature.</div>`,
+      howTo: `
+        <h3>"Describe the test" marks</h3>
+        <ul>
+          <li>Three things score: the <b>reagent</b>, any <b>condition</b> (e.g. heat), and the <b>positive result</b> (the colour change).</li>
+          <li>Give the colour change as <b>from → to</b> ("blue to brick-red"), not just the final colour.</li>
+          <li>For "state what the results tell you", give a conclusion for <b>each</b> result — present <i>and</i> absent.</li>
+        </ul>
+        <div class="callout"><b>Don't mix them up:</b> iodine = starch (blue-black); Benedict's = sugar (brick-red); Biuret = protein (purple).</div>`
+    },
+
+    { /* 2(c) 2.10-2.12 enzymes & temperature */
+      code: "2(c)", tab: "Enzymes: temperature", topicName: "Biological molecules",
+      title: "Enzymes &amp; temperature", total: 9,
+      spec: "2.10 enzymes as biological catalysts in metabolic reactions; 2.11 how temperature affects enzyme function, including changes to the shape of the active site; 2.12 the temperature practical.",
+      figures: [{ tab: "Rate vs temperature", cap: "Fig 3 · Rate of an enzyme-controlled reaction against temperature", node: SVG.enzymeGraph }],
+      parts: [
+        { ref: "(a)", marks: 1, stem: `<span class="cmd">State</span> what is meant by the term <b>catalyst</b>.` },
+        { ref: "(b)", marks: 2, stem: `Using Fig&nbsp;3, <span class="cmd">describe</span> how the rate of reaction changes as the temperature increases from 0&nbsp;°C to 60&nbsp;°C.` },
+        { ref: "(c)", marks: 3, stem: `<span class="cmd">Explain</span> why the rate increases as the temperature rises from 10&nbsp;°C to 40&nbsp;°C.` },
+        { ref: "(d)", marks: 3, stem: `<span class="cmd">Explain</span> why the rate falls to zero above about 50&nbsp;°C.` }
+      ],
+      markScheme: [
+        msPart("(a)", 1, ["a substance that speeds up (the rate of) a chemical reaction without being used up / changed itself ✓"], "Must include 'not used up / unchanged' OR 'can be reused', plus 'speeds up a reaction'."),
+        msPart("(b)", 2, ["as temperature increases the rate increases, up to a maximum / optimum (~40 °C) ✓", "above the optimum the rate decreases / falls to zero ✓"], "'Describe' from a graph — quote the shape and, ideally, the optimum value. No explanation needed here."),
+        msPart("(c)", 3, ["molecules gain (kinetic) energy and move faster ✓", "so enzyme and substrate collide more often / more frequently ✓", "more successful collisions → more enzyme–substrate complexes per second → faster rate ✓"], "Answer must be about <b>collisions</b>, not denaturation. Kinetic-energy and collision ideas are separate marks."),
+        msPart("(d)", 3, ["the high temperature denatures the enzyme ✓", "the active site changes shape ✓", "the substrate can no longer fit / bind (no enzyme–substrate complexes), so no product is made ✓"], "Reject 'the enzyme is killed'. Enzymes are not alive — the word is <b>denatured</b>.")
+      ],
+      support: `
+        <h3>Enzyme essentials</h3>
+        <ul>
+          <li>Enzymes are <span class="keyword">biological catalysts</span> — they speed up reactions and are <b>not used up</b>.</li>
+          <li>Each enzyme has an <span class="keyword">active site</span> shaped to fit only one substrate — enzymes are <b>specific</b> ("lock and key").</li>
+          <li>When substrate binds, an <b>enzyme–substrate complex</b> forms and the reaction happens.</li>
+        </ul>
+        <h3>Effect of temperature</h3>
+        <ul>
+          <li><b>Low → optimum:</b> more heat = more kinetic energy = more frequent, successful collisions = faster rate.</li>
+          <li><b>Above the optimum:</b> the enzyme <b>denatures</b> — the <b>active site changes shape</b> and the substrate no longer fits, so the rate drops to zero.</li>
+        </ul>
+        <div class="callout"><b>Optimum:</b> the temperature (or pH) at which the enzyme works fastest — around 37–40 °C for most human enzymes.</div>`,
+      howTo: `
+        <h3>"Describe" vs "Explain" on a graph</h3>
+        <table class="cmd-table">
+          <tr><th>Command</th><th>What to write</th></tr>
+          <tr><td><b>Describe (b)</b></td><td>Say <i>what the line does</i> — up, peak, down. Quote values (optimum ≈ 40 °C).</td></tr>
+          <tr><td><b>Explain (c)&amp;(d)</b></td><td>Say <i>why</i> — the science behind the shape (collisions; denaturation).</td></tr>
+        </table>
+        <h3>Keyword checklist</h3>
+        <ul>
+          <li>Rising part: <span class="keyword">kinetic energy</span>, <span class="keyword">collisions</span>, <span class="keyword">enzyme–substrate complex</span>.</li>
+          <li>Falling part: <span class="keyword">denatured</span>, <span class="keyword">active site changes shape</span>, <span class="keyword">substrate no longer fits</span>.</li>
+        </ul>
+        <div class="callout"><b>Never write</b> "the enzyme dies/is killed." Enzymes are molecules — use <b>denatured</b>. This one word can cost the mark.</div>`
+    },
+
+    { /* 2(c) 2.13-2.14B enzymes & pH */
+      code: "2(c)", tab: "Enzymes: pH", topicName: "Biological molecules",
+      title: "Enzymes &amp; pH", total: 10,
+      spec: "2.13 how enzyme function is affected by changes in pH altering the active site; 2.14B practical: investigating how enzyme activity is affected by changes in pH.",
+      figures: [{ tab: "Rate vs pH", cap: "Fig · How pH affects the rate of an enzyme-controlled reaction", node: SVG.phGraph }],
+      parts: [
+        { ref: "(a)", marks: 1, stem: `Using the graph, <span class="cmd">state</span> the <b>optimum pH</b> of this enzyme.` },
+        { ref: "(b)", marks: 2, stem: `<span class="cmd">Describe</span> how the rate of reaction changes as the pH increases from 1 to 13.` },
+        { ref: "(c)", marks: 3, stem: `<span class="cmd">Explain</span>, in terms of the active site, why the enzyme works slowly at pH 2 and at pH 12.` },
+        { ref: "(d)", marks: 4, stem: `<span class="cmd">Describe</span> how you could investigate the effect of pH on the rate of an enzyme-controlled reaction. Include one variable you would control.` }
+      ],
+      markScheme: [
+        msPart("(a)", 1, ["pH 7 ✓ (the pH at the peak of the curve)"], "Read from the dashed line at the maximum."),
+        msPart("(b)", 2, ["as pH increases the rate increases up to the optimum (pH 7) ✓", "then the rate decreases (either side of the optimum) ✓"], "'Describe' — quote the shape and the optimum value; no explanation needed here."),
+        msPart("(c)", 3, ["at pH values far from the optimum the enzyme is denatured ✓", "the shape of the active site changes ✓", "the substrate no longer fits the active site, so fewer / no enzyme–substrate complexes form and the reaction is slow ✓"], "Reject 'the enzyme is killed'. Must reference the active site changing shape."),
+        msPart("(d)", 4, ["use buffer solutions to set a range of pH values (the independent variable) ✓", "keep temperature, and the amounts of enzyme and substrate, the same (control variables) ✓", "mix enzyme and substrate and measure the rate — e.g. time for starch to be digested (tested with iodine) or volume of product formed in a set time ✓", "repeat at each pH and compare the rates ✓"], "Method must let you compare a rate across pH values. Any one valid control named earns that mark.")
+      ],
+      support: `
+        <h3>pH &amp; enzymes</h3>
+        <ul>
+          <li>Each enzyme has an <span class="keyword">optimum pH</span> at which it works fastest.</li>
+          <li>Away from the optimum, the enzyme <b>denatures</b>: the <b>active site changes shape</b> and the substrate no longer fits.</li>
+          <li>Different enzymes have different optima — e.g. <b>pepsin</b> (stomach) ≈ pH 2; <b>amylase</b> (mouth) ≈ pH 7.</li>
+        </ul>
+        <h3>Investigating pH (2.14B)</h3>
+        <ul>
+          <li><b>Independent variable:</b> pH (set with <b>buffer solutions</b>).</li>
+          <li><b>Control:</b> temperature, enzyme volume/concentration, substrate volume/concentration.</li>
+          <li><b>Measure the rate:</b> e.g. time for amylase to break down starch (iodine stays orange), or volume of gas/product in a set time.</li>
+        </ul>`,
+      howTo: `
+        <h3>Temperature vs pH answers</h3>
+        <p>The wording is the same idea: away from the optimum the enzyme <b>denatures</b> and the <b>active site changes shape</b>. The difference is only the cause (heat vs pH) — the mark-scheme keywords are identical.</p>
+        <h3>Planning a practical (part d)</h3>
+        <ul>
+          <li>Name the <b>IV</b> (pH, set by buffers), the <b>DV</b> (a measured rate) and a <b>control</b>.</li>
+          <li>Say <b>how you measure the rate</b> — a time or a volume — not just "see what happens".</li>
+        </ul>`
+    },
+
+    { /* 2(d) 2.15 diffusion & active transport */
+      code: "2(d)", tab: "Diffusion &amp; active transport", topicName: "Movement of substances into and out of cells",
+      title: "Diffusion &amp; active transport", total: 10,
+      spec: "2.15 the processes of diffusion and active transport by which substances move into and out of cells (osmosis has its own tab); 2.17 investigating diffusion.",
+      figures: [
+        { tab: "Diffusion", cap: "Diffusion — down the concentration gradient, no energy needed", node: SVG.diffusion },
+        { tab: "Active transport", cap: "Active transport — against the gradient, using energy", node: SVG.activeTransport }
+      ],
+      parts: [
+        { ref: "(a)", marks: 2, stem: `<span class="cmd">Define</span> the term <b>diffusion</b>.` },
+        { ref: "(b)", marks: 1, stem: `<span class="cmd">Give</span> one substance that moves into or out of cells by diffusion.` },
+        { ref: "(c)", marks: 2, stem: `<span class="cmd">Describe</span> <b>two</b> ways active transport differs from diffusion.` },
+        { ref: "(d)", marks: 3, stem: `Root hair cells absorb mineral ions from the soil by active transport. <span class="cmd">Explain</span> why active transport, not diffusion, is needed.` },
+        { ref: "(e)", marks: 2, stem: `<span class="cmd">Describe</span> how you could investigate diffusion using a non-living system.` }
+      ],
+      markScheme: [
+        msPart("(a)", 2, ["the net movement of particles / molecules ✓", "from a region of high concentration to a region of low concentration (down the concentration gradient) ✓"], "'Net movement' + 'high → low concentration'. 'Things spread out' loosely = 1."),
+        msPart("(b)", 1, ["e.g. oxygen (into cells) / carbon dioxide (out of cells) / glucose / water vapour ✓"], "Any correct example."),
+        msPart("(c)", 2, ["active transport moves substances against the gradient (low → high) whereas diffusion is down the gradient (high → low) ✓", "active transport needs energy (from respiration / ATP); diffusion does not ✓"], "Two clear differences; a carrier protein is a valid third point."),
+        msPart("(d)", 3, ["the mineral ions are at a higher concentration inside the root hair cell than in the soil ✓", "so they must be moved against the concentration gradient (diffusion cannot do this) ✓", "which requires energy released by respiration (in the mitochondria) ✓"], "Against-gradient idea + energy/respiration link required."),
+        msPart("(e)", 2, ["add a coloured substance (e.g. potassium manganate(VII) crystal / a dye / ink) to water or into agar jelly ✓", "measure / observe how far or how fast the colour spreads over time ✓"], "A source of colour + a measurement over time. Accept smell diffusing across a room.")
+      ],
+      support: `
+        <h3>Three ways substances move</h3>
+        <table class="cmd-table">
+          <tr><th>Process</th><th>Direction</th><th>Energy?</th></tr>
+          <tr><td><b>Diffusion</b></td><td>high → low (down gradient)</td><td>No (passive)</td></tr>
+          <tr><td><b>Osmosis</b></td><td>water, high → low water potential</td><td>No (passive)</td></tr>
+          <tr><td><b>Active transport</b></td><td>low → high (against gradient)</td><td><b>Yes</b> (from respiration)</td></tr>
+        </table>
+        <div class="callout"><b>Active transport</b> uses a <b>carrier protein</b> and energy from respiration — so it stops if a cell cannot respire (e.g. no oxygen).</div>`,
+      howTo: `
+        <h3>Compare questions (part c)</h3>
+        <ul>
+          <li>Make each point a genuine <b>comparison</b>: "…whereas diffusion…". A fact about only one side may not score.</li>
+          <li>The two safe differences: <b>direction</b> (against vs down the gradient) and <b>energy</b> (needed vs not).</li>
+        </ul>
+        <div class="callout"><b>Explain "why active transport"</b> = the substance is going the "wrong way" (low → high), which needs energy. Always link energy to <b>respiration</b>.</div>`
+    },
+
+    { /* 2(d) 2.16 factors affecting rate + SA:V */
+      code: "2(d)", tab: "Factors &amp; SA:V", topicName: "Movement of substances into and out of cells",
+      title: "Factors affecting the rate of movement", total: 10,
+      spec: "2.16 how surface area : volume ratio, distance, temperature and concentration gradient affect the rate at which substances move into and out of cells.",
+      figures: [{ tab: "Surface area : volume", cap: "As a cube gets bigger, its surface area : volume ratio falls", node: SVG.savcubes }],
+      parts: [
+        { ref: "(a)", marks: 2, stem: `<span class="cmd">State two</span> factors, other than surface area, that affect the rate of diffusion into a cell.` },
+        { ref: "(b)", marks: 3, stem: `<span class="cmd">Calculate</span> the surface area : volume ratio of a cube of side <b>2 cm</b>. Show your working.` },
+        { ref: "(c)", marks: 2, stem: `<span class="cmd">Explain</span> why a large organism has a smaller surface area : volume ratio, and why this is a problem for exchange.` },
+        { ref: "(d)", marks: 2, stem: `<span class="cmd">Explain</span> how increasing the temperature increases the rate of diffusion.` },
+        { ref: "(e)", marks: 1, stem: `<span class="cmd">Explain</span> how a steeper concentration gradient affects the rate of diffusion.` }
+      ],
+      markScheme: [
+        msPart("(a)", 2, ["two from: temperature; concentration gradient (difference in concentration); diffusion distance / thickness of the surface ✓✓"], "Any two distinct factors, 1 mark each."),
+        msPart("(b)", 3, ["surface area = 6 × (2 × 2) = 24 cm² ✓", "volume = 2 × 2 × 2 = 8 cm³ ✓", "ratio = 24 : 8 = 3 : 1 ✓"], "Allow ecf. A ratio not simplified (24:8) still earns the first two marks; 3:1 needed for the third."),
+        msPart("(c)", 2, ["as size increases, volume increases faster than surface area, so the SA : V ratio decreases ✓", "diffusion across the surface becomes too slow to supply / remove substances for the whole volume (so specialised exchange surfaces are needed) ✓"], "Ratio idea + consequence for exchange."),
+        msPart("(d)", 2, ["particles gain more kinetic energy and move faster ✓", "so they diffuse / spread more quickly ✓"], "Kinetic energy + faster movement."),
+        msPart("(e)", 1, ["a steeper (bigger) concentration gradient gives a faster rate of diffusion ✓"], "Bigger difference → faster net movement.")
+      ],
+      support: `
+        <h3>Factors affecting the rate</h3>
+        <ul>
+          <li><b>Surface area : volume ratio</b> — bigger SA:V → faster exchange.</li>
+          <li><b>Distance</b> (membrane thickness) — shorter distance → faster.</li>
+          <li><b>Temperature</b> — higher → particles move faster → faster.</li>
+          <li><b>Concentration gradient</b> — steeper → faster.</li>
+        </ul>
+        <h3>Surface area : volume of a cube</h3>
+        <ul>
+          <li>Surface area = 6 × (side × side).</li>
+          <li>Volume = side × side × side.</li>
+          <li>Ratio = SA ÷ V, written as a ratio "… : 1".</li>
+        </ul>
+        <div class="callout"><b>Why size matters:</b> as things get bigger, volume grows faster than surface area, so SA:V falls — big organisms need lungs, gills, roots etc. to exchange fast enough.</div>`,
+      howTo: `
+        <h3>SA:V calculation (part b)</h3>
+        <ol style="padding-left:1.2em;font-size:0.86rem">
+          <li>Surface area of a cube = 6 faces × (side²). For side 2: 6 × 4 = 24 cm².</li>
+          <li>Volume = side³ = 8 cm³.</li>
+          <li>Write as a ratio and simplify: 24 : 8 = 3 : 1.</li>
+        </ol>
+        <div class="callout"><b>Show every step</b> — SA, V and the simplified ratio are separate marks.</div>`
+    },
+
+    { /* 2(d)-i osmosis (theory) */
+      code: "2(d)", tab: "Osmosis", topicName: "Movement of substances into and out of cells",
+      title: "Osmosis", total: 10,
+      spec: "Osmosis as the net movement of water molecules from a dilute to a concentrated solution across a partially permeable membrane, and its effect on cells.",
+      figures: [{ tab: "Osmosis", cap: "Fig 4 · Osmosis across a partially permeable membrane", node: SVG.osmosis }],
+      parts: [
+        { ref: "(a)", marks: 3, stem: `<span class="cmd">Define</span> the term <b>osmosis</b>.` },
+        { ref: "(b)", marks: 2, stem: `Using Fig&nbsp;4, <span class="cmd">state</span> the direction in which there is a net movement of water and <span class="cmd">explain</span> why.` },
+        { ref: "(c)", marks: 3, stem: `A red blood cell is placed in pure water. <span class="cmd">Describe and explain</span> what happens to the cell.` },
+        { ref: "(d)", marks: 2, stem: `<span class="cmd">Explain</span> why osmosis does <b>not</b> require energy from respiration.` }
+      ],
+      markScheme: [
+        msPart("(a)", 3, ["the (net) movement of water molecules ✓", "from a dilute solution / higher water potential to a concentrated solution / lower water potential ✓", "through / across a partially permeable membrane ✓"], "All three needed: <b>water</b> + <b>high→low water potential (dilute→concentrated)</b> + <b>partially permeable membrane</b>. 'Movement of water' alone = 1."),
+        msPart("(b)", 2, ["net movement is from the dilute side to the concentrated side (left → right in Fig 4) ✓", "the dilute side has a higher water potential / more free water molecules, so water moves down the water potential gradient ✓"], "Direction mark + reason mark. Accept 'towards the sugar solution'."),
+        msPart("(c)", 3, ["water enters the cell by osmosis (pure water has a higher water potential than the cell contents) ✓", "the cell swells ✓", "the cell bursts / lyses because a red blood cell has no cell wall ✓"], "'Describe and explain' — must say water enters AND why. Reject 'the cell explodes because of pressure' without osmosis."),
+        msPart("(d)", 2, ["osmosis is a passive process / a type of diffusion — water moves down the water potential (concentration) gradient ✓", "so no energy / ATP from respiration is needed ✓"], "Reject 'osmosis is active'. Second mark needs the link to no energy/ATP.")
+      ],
+      support: `
+        <h3>Osmosis in one sentence</h3>
+        <p><span class="keyword">Osmosis</span> = the net movement of <b>water molecules</b> from a region of <b>higher water potential</b> (dilute) to a region of <b>lower water potential</b> (concentrated), across a <b>partially permeable membrane</b>.</p>
+        <ul>
+          <li><b>Dilute solution</b> = lots of water = <b>high</b> water potential.</li>
+          <li><b>Concentrated solution</b> = little water = <b>low</b> water potential.</li>
+          <li>Water always moves <b>down</b> the water potential gradient (high → low). Osmosis is <b>passive</b> — no energy needed.</li>
+        </ul>
+        <h3>Cells in solutions</h3>
+        <table class="cmd-table">
+          <tr><th>Cell in…</th><th>Animal cell (no wall)</th><th>Plant cell (has wall)</th></tr>
+          <tr><td>Pure / dilute water</td><td>Swells, may <b>burst</b> (lyse)</td><td>Becomes <b>turgid</b> (wall stops bursting)</td></tr>
+          <tr><td>Concentrated solution</td><td><b>Shrivels</b> (crenates)</td><td>Becomes <b>flaccid</b> / plasmolysed</td></tr>
+        </table>`,
+      howTo: `
+        <h3>Definition marks (part a)</h3>
+        <p>A 3-mark "define" needs <b>three</b> ideas. Learn the sentence so all three land: <span class="keyword">water molecules</span> · <span class="keyword">high → low water potential</span> · <span class="keyword">partially permeable membrane</span>.</p>
+        <h3>"Describe and explain" (part c)</h3>
+        <ul>
+          <li><b>Describe</b> = what you'd see (the cell swells / bursts).</li>
+          <li><b>Explain</b> = why (water enters by osmosis; no cell wall to resist).</li>
+          <li>Name the process — <b>osmosis</b> — and the reason — higher water potential outside.</li>
+        </ul>
+        <div class="callout"><b>Animal vs plant:</b> a red blood cell <b>bursts</b> in pure water (no wall); a plant cell only becomes <b>turgid</b> because its cell wall resists. Pick the right outcome for the cell named.</div>`
+    },
+
+    { /* 2(d)-ii required practical: osmosis in plant tissue */
+      code: "2(d)", tab: "Required practical", topicName: "Movement of substances into and out of cells",
+      title: "Required practical — osmosis in potato tissue", total: 10,
+      spec: "The required practical investigating osmosis in plant tissue: variables, processing results (percentage change in mass) and interpreting a graph.",
+      intro: `A student cut six identical potato cylinders, recorded each starting mass, left one in each sucrose solution for 30 minutes, then reweighed them. Use the <b>Table</b> and <b>Graph</b> tabs.`,
+      figures: [
+        { tab: "Table 1 · Results", cap: "Table 1 · Effect of sucrose concentration on potato mass", node: OSMOSIS_TABLE },
+        { tab: "Fig 5 · Graph", cap: "Fig 5 · % change in mass vs sucrose concentration", node: SVG.osmosisGraph }
+      ],
+      parts: [
+        { ref: "(a)", marks: 2, stem: `<span class="cmd">Name</span> the independent variable and the dependent variable in this investigation.` },
+        { ref: "(b)", marks: 3, stem: `<b>(i)</b> <span class="cmd">Calculate</span> the percentage change in mass for the <b>0.5&nbsp;mol&nbsp;dm⁻³</b> cylinder — the missing value in Table&nbsp;1. Show your working. <b>(ii)</b> <span class="cmd">State two</span> variables that must be controlled.` },
+        { ref: "(c)", marks: 2, stem: `<span class="cmd">Explain</span> why <b>percentage</b> change in mass is calculated rather than the actual change in mass.` },
+        { ref: "(d)", marks: 3, stem: `Using Fig&nbsp;5, <span class="cmd">determine</span> the concentration of sucrose that has the same water potential as the potato cells, and <span class="cmd">explain</span> how you know.` }
+      ],
+      markScheme: [
+        msPart("(a)", 2, ["independent variable = (sucrose) concentration ✓", "dependent variable = (percentage) change in mass ✓"], "IV is what the student changes; DV is what is measured. Reject 'mass of sugar'."),
+        msPart("(b)", 3, ["(i) % change = (final − initial) ÷ initial × 100 = (4.60 − 5.00) ÷ 5.00 × 100 ✓ (working)", "(i) = −8.0 % ✓ (must show it is a decrease / negative)", "(ii) two from: temperature; time in solution; volume of solution; initial size / surface area of cylinders; same potato; blotting / drying method ✓✓"], "Answer <b>−8.0 %</b>. A bare 8 % (no minus), or no working, caps (i) at 1. (ii) needs two distinct controls."),
+        msPart("(c)", 2, ["the cylinders may not have exactly the same starting mass ✓", "percentage change allows a fair comparison / accounts for the different initial masses ✓"], "Idea of different starting masses + fair comparison. Accept 'so results can be compared reliably'."),
+        msPart("(d)", 3, ["0.3 mol dm⁻³ ✓ (where the line crosses 0 % change)", "at this concentration there is no (net) change in mass ✓", "so there is no net osmosis — the water potential of the solution equals that of the cells ✓"], "Value from the zero-crossing + reason. Allow 0.28–0.32 mol dm⁻³.")
+      ],
+      support: `
+        <h3>The required practical</h3>
+        <ul>
+          <li><b>Method:</b> cut equal-sized potato cylinders, blot and weigh each, place one in each sucrose concentration, leave for a set time, blot and reweigh.</li>
+          <li><b>Independent variable:</b> sucrose concentration. <b>Dependent variable:</b> % change in mass.</li>
+          <li><b>% change in mass</b> = (final − initial) ÷ initial × 100.</li>
+        </ul>
+        <h3>Reading the graph</h3>
+        <ul>
+          <li>Where the line crosses <b>0 %</b>, the solution and the cells have the <b>same water potential</b> — no net osmosis.</li>
+          <li>Below that concentration cells gain water (mass ↑); above it cells lose water (mass ↓).</li>
+        </ul>
+        <div class="callout"><b>Control variables:</b> temperature, time in solution, volume of solution, and the initial size/surface area of the cylinders — keep these the same so only concentration is tested.</div>`,
+      howTo: `
+        <h3>Percentage-change working (part b)</h3>
+        <ul>
+          <li>Formula: (final − initial) ÷ initial × 100.</li>
+          <li>(4.60 − 5.00) ÷ 5.00 × 100 = −8.0 %.</li>
+          <li>Keep the <b>minus sign</b> — it shows the cylinder lost mass. Losing it loses a mark.</li>
+        </ul>
+        <h3>Why percentage? (part c)</h3>
+        <p>Even "identical" cylinders differ slightly in starting mass. A <b>percentage</b> change puts them all on the same scale, so the comparison between concentrations is fair.</p>
+        <h3>The zero-crossing (part d)</h3>
+        <p>The concentration where the graph crosses 0 % change is the key result: there the cells' water potential matches the solution, so there is <b>no net movement of water</b>. Always give the value <i>and</i> that reason.</p>`
+    }
+  ];
+
+  /* -------------------- state + rendering -------------------- */
+  const state = { index: 0, mode: "q", figIndex: 0, seen: new Set() };
+  const el = (id) => document.getElementById(id);
+  const specTabs = el("specTabs");
+  const faceEl = el("face");
+  const FACES = ["q", "ms", "su", "hta"];
+  const FACE_TITLES = { ms: "Mark scheme", su: "Support", hta: "How to answer" };
+
+  function buildSpecTabs() {
+    SPEC_POINTS.forEach((sp, i) => {
+      const b = document.createElement("button");
+      b.className = "spectab";
+      b.setAttribute("role", "tab");
+      b.setAttribute("aria-selected", i === 0 ? "true" : "false");
+      b.innerHTML = `<span class="dot"></span><span class="code">${sp.code}</span><span>${sp.tab}</span>`;
+      b.addEventListener("click", () => selectSpec(i));
+      b.addEventListener("keydown", (e) => {
+        const n = SPEC_POINTS.length;
+        if (e.key === "ArrowRight") { e.preventDefault(); const k = (i + 1) % n; specTabs.children[k].focus(); selectSpec(k); }
+        if (e.key === "ArrowLeft") { e.preventDefault(); const k = (i - 1 + n) % n; specTabs.children[k].focus(); selectSpec(k); }
+      });
+      specTabs.appendChild(b);
+    });
+  }
+
+  function questionHTML(sp) {
+    const figs = sp.figures;
+    const tabs = figs.length > 1
+      ? `<div class="figtabs" role="tablist" aria-label="Figures">${figs.map((f, i) => `<button class="figtab" role="tab" data-fi="${i}" aria-selected="${i === 0 ? "true" : "false"}">${f.tab}</button>`).join("")}</div>`
+      : "";
+    const partsHTML = sp.parts.map(p =>
+      `<li><span class="ref">${p.ref}</span><span class="stem">${p.stem}</span><span class="marks">[${p.marks}]</span></li>`).join("");
+    return `
+      <div>
+        <span class="fkicker">${sp.code} · ${sp.topicName}</span>
+        <div class="ftitlerow"><h2 class="ftitle">${sp.title}</h2><span class="pill pill--total">Total ${sp.total} marks · original</span></div>
+        <p class="fspec"><b>Spec</b> &nbsp;${sp.spec}</p>
+      </div>
+      <div class="fbody" id="fbody" data-show="q">
+        <div class="mtoggle" role="tablist" aria-label="Show question or figure">
+          <button class="mtog" data-show="q" role="tab" aria-selected="true">Question</button>
+          <button class="mtog" data-show="fig" role="tab" aria-selected="false">Figure${figs.length > 1 ? "s" : ""}</button>
+        </div>
+        <div class="figcol">
+          ${tabs}
+          <div class="figstage" id="figstage">${figs[state.figIndex] ? figs[state.figIndex].node : figs[0].node}</div>
+          <p class="figcap" id="figcap">${(figs[state.figIndex] || figs[0]).cap}</p>
+        </div>
+        <div class="qcol">
+          ${sp.intro ? `<p class="qintro">${sp.intro}</p>` : ""}
+          <ol class="parts">${partsHTML}</ol>
+          <p class="qhint">Try every part in your book, then tap <b>Mark scheme</b>.</p>
+        </div>
+      </div>`;
+  }
+
+  function msHTML(sp) {
+    const parts = sp.markScheme.map(p => `
+      <div class="ms-part">
+        <div class="ms-part__head"><span class="ms-part__ref">${p.ref}</span><span class="ms-part__marks">${p.marks} mark${p.marks === 1 ? "" : "s"}</span></div>
+        <ul class="ms-points">${p.points.map(pt => `<li>${pt}</li>`).join("")}</ul>
+        ${p.note ? `<div class="ms-note"><b>Examiner note — </b>${p.note}</div>` : ""}
+      </div>`).join("");
+    return `<p class="ms-intro">${sp.total} marks total. Award marks in any order unless a note says otherwise.</p><div class="rbody cols">${parts}</div>`;
+  }
+
+  function renderFace() {
+    const sp = SPEC_POINTS[state.index];
+    if (state.mode === "q") {
+      faceEl.innerHTML = questionHTML(sp);
+      wireFigTabs(sp);
+    } else {
+      const bodyHTML = state.mode === "ms"
+        ? msHTML(sp)
+        : `<div class="rbody"><div class="prose">${state.mode === "su" ? sp.support : sp.howTo}</div></div>`;
+      faceEl.innerHTML = `
+        <div>
+          <span class="fkicker">${sp.code} · ${sp.title}</span>
+          <div class="ftitlerow"><h2 class="ftitle">${FACE_TITLES[state.mode]}</h2></div>
+        </div>
+        ${bodyHTML}`;
+    }
+    refreshControls();
+  }
+
+  function wireFigTabs(sp) {
+    // narrow-screen Question / Figure toggle
+    const fbody = el("fbody");
+    faceEl.querySelectorAll(".mtog").forEach(btn => {
+      btn.addEventListener("click", () => {
+        fbody.dataset.show = btn.dataset.show;
+        faceEl.querySelectorAll(".mtog").forEach(b => b.setAttribute("aria-selected", b === btn ? "true" : "false"));
+      });
+    });
+    if (sp.figures.length < 2) return;
+    faceEl.querySelectorAll(".figtab").forEach(btn => {
+      btn.addEventListener("click", () => {
+        state.figIndex = +btn.dataset.fi;
+        const fig = sp.figures[state.figIndex];
+        el("figstage").innerHTML = fig.node;
+        el("figcap").textContent = fig.cap;
+        faceEl.querySelectorAll(".figtab").forEach(b => b.setAttribute("aria-selected", b === btn ? "true" : "false"));
+      });
+    });
+  }
+
+  function refreshControls() {
+    // spec tabs
+    [...specTabs.children].forEach((t, k) => {
+      t.setAttribute("aria-selected", k === state.index ? "true" : "false");
+      t.classList.toggle("seen", state.seen.has(k));
+    });
+    // face buttons
+    el("faceSet").querySelectorAll(".fbtn").forEach(b => {
+      const on = b.dataset.face === state.mode;
+      b.setAttribute("aria-pressed", on ? "true" : "false");
+      if (b.dataset.face === "ms") {
+        b.innerHTML = state.seen.has(state.index)
+          ? `Mark scheme <span class="dotmark" aria-hidden="true"></span>`
+          : "Mark scheme";
+      }
+    });
+    // position + progress
+    el("posn").textContent = (state.index + 1) + " / " + SPEC_POINTS.length;
+    el("btnPrev").disabled = state.index === 0;
+    el("btnNext").disabled = state.index === SPEC_POINTS.length - 1;
+    const frac = Math.max((state.index + 1) / SPEC_POINTS.length, state.seen.size / SPEC_POINTS.length);
+    el("progressFill").style.width = (frac * 100) + "%";
+  }
+
+  function selectSpec(i) {
+    state.index = i;
+    state.mode = "q";       // returning to a spec never auto-exposes its mark scheme
+    state.figIndex = 0;
+    renderFace();
+  }
+
+  function setFace(mode) {
+    // toggle back to question if the same reading face is pressed again
+    if (state.mode === mode && mode !== "q") mode = "q";
+    state.mode = mode;
+    if (mode === "ms") state.seen.add(state.index);   // revealing marks the spec seen
+    renderFace();
+  }
+
+  /* -------------------- events -------------------- */
+  el("faceSet").querySelectorAll(".fbtn").forEach(b => b.addEventListener("click", () => setFace(b.dataset.face)));
+  el("btnPrev").addEventListener("click", () => { if (state.index > 0) selectSpec(state.index - 1); });
+  el("btnNext").addEventListener("click", () => { if (state.index < SPEC_POINTS.length - 1) selectSpec(state.index + 1); });
+  document.addEventListener("keydown", (e) => {
+    if (e.target.closest("input, textarea")) return;
+    if (e.key === "Escape" && state.mode !== "q") setFace("q");
+    else if (e.key.toLowerCase() === "m") setFace("ms");
+    else if (e.key === "ArrowRight" && !e.target.closest(".spectab")) { if (state.index < SPEC_POINTS.length - 1) selectSpec(state.index + 1); }
+    else if (e.key === "ArrowLeft" && !e.target.closest(".spectab")) { if (state.index > 0) selectSpec(state.index - 1); }
+  });
+
+  buildSpecTabs();
+  selectSpec(0);
+  </script>
+</body>
+</html>
