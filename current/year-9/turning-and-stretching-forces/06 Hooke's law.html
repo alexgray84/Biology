@@ -1,0 +1,715 @@
+<!doctype html><html lang="en-GB"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Hooke's law · Year 9</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,350;9..144,500&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+    :root {
+      --navy-950: oklch(20% 0.085 258);
+      --navy-900: oklch(25% 0.10 258);
+      --navy-700: oklch(36% 0.12 258);
+      --navy-100: oklch(93% 0.025 258);
+      --gold-600: oklch(50% 0.13 82);
+      --gold-500: oklch(76% 0.16 82);
+      --gold-100: oklch(94% 0.035 82);
+      --paper-50: oklch(99% 0.008 82);
+      --paper-100: oklch(98% 0.012 82);
+      --paper-200: oklch(95% 0.022 82);
+      --ink-900: oklch(22% 0.015 75);
+      --ink-600: oklch(43% 0.02 258);
+      --line: oklch(36% 0.04 258 / 0.18);
+      --line-strong: oklch(36% 0.06 258 / 0.34);
+      --push: oklch(39% 0.14 258);
+      --resist: oklch(43% 0.10 30);
+      --success: oklch(40% 0.09 155);
+      --surface-shadow: 0 18px 50px oklch(25% 0.08 258 / 0.08);
+      --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+      --sans: "Montserrat", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --serif: "Fraunces", Georgia, "Times New Roman", serif;
+    }
+
+    * { box-sizing: border-box; }
+    html { min-width: 320px; background: var(--paper-200); }
+    body { margin: 0; min-width: 320px; min-height: 100vh; background: var(--paper-200); color: var(--ink-900); font: 400 1rem/1.5 var(--sans); }
+    button { font: inherit; }
+    button, [role="button"] { -webkit-tap-highlight-color: transparent; }
+    button:focus-visible, [tabindex]:focus-visible, a:focus-visible { outline: 3px solid var(--gold-500); outline-offset: 3px; }
+    button:disabled { cursor: not-allowed; opacity: 0.38; }
+    .skip-link { position: fixed; left: 16px; top: -80px; z-index: 50; padding: 10px 16px; border-radius: 8px; background: var(--navy-950); color: var(--paper-100); font-weight: 700; }
+    .skip-link:focus { top: 16px; }
+    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+
+    .app { width: 100%; min-width: 0; min-height: 100vh; display: grid; grid-template-rows: minmax(0, 1fr) 62px; }
+    .app > * { min-width: 0; }
+    .crest { width: 40px; height: 46px; flex: 0 0 40px; }
+    .topic { margin: 0; padding: 28px clamp(32px, 5.6vw, 78px) 0; color: var(--navy-950); font: 400 1.35rem/1.2 var(--serif); }
+    .control, .icon-control, .tool-control, .choice, .support-tab, .phase-link, .reveal-control, .timer-control {
+      border: 1px solid var(--line);
+      background: var(--paper-50);
+      color: var(--navy-950);
+      cursor: pointer;
+      transition: background 140ms var(--ease-out), border-color 140ms var(--ease-out), color 140ms var(--ease-out), transform 140ms var(--ease-out);
+    }
+    .control { min-height: 44px; padding: 9px 15px; border-radius: 999px; font-size: 0.85rem; font-weight: 700; }
+    .control.primary { background: var(--navy-900); border-color: var(--navy-900); color: var(--paper-100); }
+    .control:hover, .icon-control:hover, .tool-control:hover, .reveal-control:hover, .timer-control:hover { border-color: var(--navy-700); background: var(--navy-100); }
+    .control.primary:hover { background: var(--navy-700); color: var(--paper-100); }
+    .control:active, .icon-control:active, .tool-control:active, .reveal-control:active, .timer-control:active { transform: translateY(1px); }
+
+    .workspace { min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; padding: 12px 20px; }
+    .workspace.has-drawer { grid-template-columns: minmax(0, 1fr) minmax(330px, 382px); }
+    .lesson-stage, .student-drawer { min-width: 0; min-height: 0; overflow: hidden; border: 1px solid var(--line); background: var(--paper-100); }
+    .lesson-stage { position: relative; display: grid; grid-template-rows: auto minmax(0, 1fr); border-radius: 20px; box-shadow: var(--surface-shadow); }
+    .screen { height: 100%; min-height: 0; display: flex; flex-direction: column; justify-content: center; padding: clamp(28px, 4.5vh, 52px) clamp(32px, 5.6vw, 78px); animation: screen-enter 220ms var(--ease-out); }
+    .screen-heading { margin: 8px 0 14px -0.035em; max-width: 24ch; color: var(--navy-950); font: 350 clamp(2.5rem, 4vw, 3.75rem)/0.99 var(--serif); letter-spacing: -0.035em; text-wrap: balance; }
+    .screen-heading:focus, .drawer-head h2:focus { outline: none; }
+    .screen-lead { max-width: 68ch; margin: 0; color: var(--ink-600); font-size: clamp(1rem, 1.3vw, 1.2rem); line-height: 1.5; text-wrap: pretty; }
+    .screen-kicker { color: var(--ink-600); font-size: 0.72rem; font-weight: 800; letter-spacing: 0.16em; text-transform: uppercase; }
+    .screen-kicker strong { color: var(--gold-600); }
+    .micro-instruction { display: flex; flex-wrap: wrap; gap: 10px 18px; margin-top: 20px; color: var(--navy-950); font-size: 0.9rem; font-weight: 700; }
+    .micro-instruction span { display: inline-flex; align-items: center; gap: 7px; }
+    .micro-instruction span::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--gold-500); }
+
+    .do-now-layout { display: grid; grid-template-columns: minmax(0, 0.72fr) minmax(0, 1.28fr); gap: clamp(36px, 6vw, 84px); align-items: center; }
+    .do-now-number { margin: 2px 0 14px; color: var(--gold-500); font: 300 clamp(5.5rem, 9vw, 8rem)/0.78 var(--serif); font-variant-numeric: lining-nums; }
+    .question-sheet { counter-reset: question; display: grid; gap: 0; border-top: 1px solid var(--line-strong); }
+    .question-row { counter-increment: question; display: grid; grid-template-columns: 38px 1fr; gap: 14px; align-items: start; padding: 14px 4px; border-bottom: 1px solid var(--line); color: var(--navy-950); font-size: clamp(1rem, 1.3vw, 1.15rem); font-weight: 600; }
+    .question-row::before { content: counter(question, decimal-leading-zero); color: var(--gold-600); font: 500 0.82rem/1.8 var(--serif); }
+
+    .question-stage { max-width: 1120px; }
+    .question-stage .screen-heading { max-width: 22ch; font-size: clamp(3rem, 5.3vw, 5.2rem); }
+    .prediction { display: flex; gap: 10px; margin-top: 26px; }
+    .choice { min-width: 150px; min-height: 48px; padding: 10px 18px; border-radius: 12px; font-weight: 700; text-align: left; }
+    .choice:hover, .choice[aria-pressed="true"] { border-color: var(--navy-700); background: var(--navy-900); color: var(--paper-100); }
+    .commitment { min-height: 26px; margin-top: 14px; color: var(--ink-600); font-size: 0.9rem; font-weight: 600; }
+
+    .concept-layout { display: grid; grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr); gap: clamp(40px, 7vw, 96px); align-items: center; }
+    .principles { display: grid; border-top: 1px solid var(--line-strong); }
+    .principle { display: grid; grid-template-columns: 34px 1fr; gap: 14px; align-items: start; padding: 13px 0; border-bottom: 1px solid var(--line); }
+    .principle span:first-child { color: var(--gold-600); font: 500 0.8rem/1.8 var(--serif); }
+    .principle p { margin: 0; color: var(--navy-950); font-size: 1.02rem; font-weight: 600; }
+    .key-statement { margin-top: 24px; padding: 18px 20px; border: 1px solid var(--navy-900); border-radius: 12px; background: var(--navy-900); color: var(--paper-100); }
+    .key-statement span { display: block; margin-bottom: 4px; color: var(--gold-500); font-size: 0.7rem; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; }
+    .key-statement p { margin: 0; font: 350 1.35rem/1.3 var(--serif); }
+
+    .model-layout { display: grid; grid-template-columns: minmax(0, 0.88fr) minmax(0, 1.12fr); gap: clamp(28px, 5vw, 72px); align-items: center; }
+    .diagram-wrap { min-width: 0; padding-block: 16px; }
+    .force-diagram { display: block; width: 100%; height: auto; max-height: 340px; overflow: visible; }
+    .force-diagram text { font-family: var(--sans); }
+    .force-arrow { stroke-linecap: round; stroke-width: 9; }
+    .force-arrow.push { stroke: var(--push); }
+    .force-arrow.resist { stroke: var(--resist); }
+    .motion-path { stroke: var(--gold-500); stroke-width: 4; stroke-linecap: round; stroke-dasharray: 12 11; animation: motion-flow 1.2s linear infinite; }
+    .diagram-label { fill: var(--navy-950); font-size: 18px; font-weight: 700; }
+    .diagram-label.resist { fill: var(--resist); }
+    .diagram-result { fill: var(--navy-950); font: 400 27px var(--serif) !important; }
+    .diagram-result, .resultant-arrow { transition: opacity 220ms var(--ease-out); }
+    .diagram-controls { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+    .reveal-control, .timer-control { min-height: 44px; padding: 9px 14px; border-radius: 999px; font-size: 0.86rem; font-weight: 750; }
+    .reveal-control.primary { border-color: var(--navy-900); background: var(--navy-900); color: var(--paper-100); }
+    .step-list { display: grid; gap: 0; margin-top: 20px; border-top: 1px solid var(--line-strong); }
+    .model-step { display: grid; grid-template-columns: 30px 1fr; gap: 12px; align-items: start; padding: 11px 0; border-bottom: 1px solid var(--line); animation: step-enter 200ms var(--ease-out); }
+    .model-step span:first-child { color: var(--gold-600); font: 500 0.82rem/1.8 var(--serif); }
+    .model-step p { margin: 0; font-weight: 600; }
+
+    .hinge-layout { max-width: 1080px; }
+    .hinge-layout .screen-heading { max-width: 25ch; font-size: clamp(2.6rem, 4.3vw, 4.2rem); }
+    .answer-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-top: 22px; }
+    .answer-option { min-height: 64px; display: grid; grid-template-columns: 32px 1fr; gap: 12px; align-items: center; padding: 11px 14px; border: 1px solid var(--line); border-radius: 12px; background: var(--paper-50); color: var(--ink-900); text-align: left; cursor: pointer; }
+    .answer-option:hover, .answer-option[aria-pressed="true"] { border-color: var(--navy-700); background: var(--navy-100); }
+    .answer-option.is-correct { border-color: var(--success); background: oklch(94% 0.025 155); }
+    .answer-letter { width: 30px; height: 30px; display: grid; place-items: center; border: 1px solid var(--line-strong); border-radius: 50%; color: var(--navy-700); font-size: 0.82rem; font-weight: 800; }
+    .answer-feedback { min-height: 50px; margin-top: 12px; padding: 12px 15px; border: 1px solid var(--line); border-radius: 10px; background: var(--paper-200); color: var(--navy-950); }
+    .answer-feedback:empty { min-height: 0; margin: 0; padding: 0; border: 0; }
+
+    .practice-layout { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr); gap: clamp(36px, 6vw, 82px); align-items: center; }
+    .task-list { counter-reset: task; margin-top: 20px; border-top: 1px solid var(--line-strong); }
+    .task-item { counter-increment: task; display: grid; grid-template-columns: 32px 1fr; gap: 12px; padding: 11px 0; border-bottom: 1px solid var(--line); font-weight: 600; }
+    .task-item::before { content: counter(task); color: var(--gold-600); font: 500 0.9rem/1.65 var(--serif); }
+    .success-list { padding: 24px 0 24px 28px; border-left: 1px solid var(--line-strong); }
+    .success-list h2 { margin: 0 0 14px; color: var(--navy-950); font: 400 1.55rem var(--serif); }
+    .success-list p { display: flex; gap: 9px; margin: 10px 0; color: var(--ink-600); font-size: 0.92rem; }
+    .success-list p::before { content: "✓"; color: var(--gold-600); font-weight: 800; }
+
+    .source-claim { max-width: 950px; margin: 22px 0 0; padding: clamp(22px, 3vw, 34px); border: 1px solid var(--line-strong); border-radius: 14px; background: var(--paper-50); }
+    .source-label { margin-bottom: 12px; color: var(--ink-600); font-size: 0.72rem; font-weight: 800; letter-spacing: 0.15em; text-transform: uppercase; }
+    .source-claim blockquote { margin: 0; max-width: 34ch; color: var(--navy-950); font: 350 clamp(1.65rem, 2.5vw, 2.45rem)/1.18 var(--serif); text-wrap: balance; }
+    .verification-steps { display: flex; flex-wrap: wrap; gap: 16px 28px; margin-top: 20px; color: var(--navy-950); font-weight: 700; }
+    .verification-steps span { display: inline-flex; align-items: center; gap: 8px; }
+    .verification-steps b { color: var(--gold-600); font-family: var(--serif); }
+
+    .exit-layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 0.42fr); gap: clamp(48px, 8vw, 112px); align-items: center; }
+    .exit-mark { color: var(--gold-500); font: 300 clamp(5rem, 8vw, 7.5rem)/0.8 var(--serif); }
+    .exit-question { margin: 16px 0 0; max-width: 42ch; color: var(--navy-950); font: 350 clamp(1.7rem, 2.6vw, 2.5rem)/1.17 var(--serif); }
+    .timer-panel { padding: 28px 0 28px 32px; border-left: 1px solid var(--line-strong); }
+    .timer-value { color: var(--navy-950); font: 350 clamp(3.5rem, 5.5vw, 5rem)/1 var(--serif); font-variant-numeric: tabular-nums; }
+    .timer-note { margin: 8px 0 18px; color: var(--ink-600); font-size: 0.86rem; }
+
+    .student-drawer { display: grid; grid-template-rows: auto auto minmax(0, 1fr); border-radius: 18px; box-shadow: var(--surface-shadow); animation: drawer-enter 240ms var(--ease-out); }
+    .student-drawer[hidden] { display: none; }
+    .drawer-head { display: flex; align-items: start; gap: 16px; padding: 18px 18px 14px; border-bottom: 1px solid var(--line); }
+    .drawer-head h2 { margin: 0; color: var(--navy-950); font: 400 1.55rem/1.1 var(--serif); }
+    .drawer-head p { margin: 5px 0 0; color: var(--ink-600); font-size: 0.8rem; line-height: 1.4; }
+    .icon-control { width: 44px; height: 44px; flex: 0 0 44px; display: grid; place-items: center; margin-left: auto; border-radius: 50%; font-size: 1.25rem; font-weight: 500; }
+    .drawer-tabs { display: flex; align-items: center; gap: 4px; padding: 8px 12px; border-bottom: 1px solid var(--line); overflow-x: auto; }
+    .support-tab { min-height: 38px; padding: 7px 10px; border-color: transparent; border-radius: 999px; color: var(--ink-600); font-size: 0.72rem; font-weight: 750; white-space: nowrap; }
+    .support-tab[aria-selected="true"] { background: var(--navy-900); color: var(--paper-100); }
+    .drawer-body { min-height: 0; padding: 18px; overflow: auto; }
+    .drawer-section-title { margin: 0 0 14px; color: var(--gold-600); font-size: 0.7rem; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; }
+    .support-list { display: grid; gap: 0; border-top: 1px solid var(--line-strong); }
+    .support-item { padding: 13px 2px; border-bottom: 1px solid var(--line); }
+    .support-item h3 { margin: 0; color: var(--navy-950); font-size: 0.92rem; line-height: 1.4; }
+    .support-item p { margin: 5px 0 0; color: var(--ink-600); font-size: 0.8rem; line-height: 1.45; }
+    .journey-list { display: grid; gap: 2px; }
+    .phase-link { width: 100%; min-height: 42px; display: grid; grid-template-columns: 28px 1fr auto; gap: 10px; align-items: center; padding: 7px 9px; border-color: transparent; border-radius: 8px; text-align: left; font-size: 0.78rem; }
+    .phase-link[aria-current="step"] { background: var(--navy-100); color: var(--navy-950); font-weight: 750; }
+    .phase-link span:first-child { color: var(--gold-600); font-family: var(--serif); }
+    .phase-link small { color: var(--ink-600); }
+
+    .student-tools { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 0; }
+    .student-tools:empty { padding: 0; visibility: hidden; }
+    .tool-control { min-height: 42px; display: inline-flex; align-items: center; gap: 8px; padding: 8px 14px; border-radius: 999px; font-size: 0.78rem; font-weight: 750; }
+    .tool-control[aria-pressed="true"] { border-color: var(--navy-900); background: var(--navy-900); color: var(--paper-100); }
+    .tool-icon { font-size: 0.92rem; line-height: 1; }
+    .support-tool { border-color: var(--gold-500); }
+
+    .lesson-nav { display: grid; grid-template-columns: 48px minmax(0, 1fr) 48px; align-items: center; gap: 16px; padding: 7px 20px 10px; border-top: 1px solid var(--line); background: var(--paper-50); }
+    .nav-control { width: 44px; height: 44px; display: grid; place-items: center; border: 1px solid var(--line); border-radius: 50%; background: var(--paper-50); color: var(--navy-950); cursor: pointer; font-size: 1.2rem; font-weight: 700; }
+    .nav-control:hover { border-color: var(--navy-700); background: var(--navy-100); }
+    .nav-context { min-width: 0; display: grid; grid-template-columns: minmax(0, 1fr) auto auto; gap: 16px; align-items: center; }
+    .phase-context { min-width: 0; }
+    .phase-context small { display: block; color: var(--ink-600); font-size: 0.68rem; font-weight: 750; letter-spacing: 0.11em; text-transform: uppercase; }
+    .phase-context strong { display: block; overflow: hidden; color: var(--navy-950); font: 400 1.12rem/1.2 var(--serif); text-overflow: ellipsis; white-space: nowrap; }
+    .next-context { color: var(--ink-600); font-size: 0.72rem; text-align: right; }
+    .next-context strong { color: var(--navy-950); }
+
+    @media (min-width: 1021px) {
+      .workspace.has-drawer .screen, .workspace.has-drawer .topic { padding-inline: clamp(28px, 3vw, 46px); }
+      .workspace.has-drawer .do-now-layout,
+      .workspace.has-drawer .concept-layout,
+      .workspace.has-drawer .model-layout,
+      .workspace.has-drawer .practice-layout,
+      .workspace.has-drawer .exit-layout { gap: clamp(22px, 3vw, 42px); }
+      .workspace.has-drawer .force-diagram { max-height: 270px; }
+    }
+
+    @keyframes screen-enter { from { opacity: 0; transform: translateY(7px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes drawer-enter { from { opacity: 0; transform: translateX(10px); } to { opacity: 1; transform: translateX(0); } }
+    @keyframes step-enter { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes motion-flow { to { stroke-dashoffset: -23; } }
+
+    @media (max-width: 1020px) {
+      .workspace.has-drawer { grid-template-columns: 1fr; grid-template-rows: minmax(0, 1fr) minmax(200px, 35%); }
+      .student-drawer { grid-template-rows: auto auto minmax(0, 1fr); }
+      .screen { padding: 28px 36px; }
+      .topic { padding-inline: 36px; }
+      .do-now-layout, .concept-layout { grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr); gap: 36px; }
+      .model-layout { grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr); gap: 24px; }
+      .practice-layout { grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr); gap: 32px; }
+      .exit-layout { grid-template-columns: minmax(0, 1fr) minmax(0, 0.4fr); gap: 40px; }
+    }
+
+    @media (max-width: 760px) {
+      body { min-height: 100%; }
+      .app { min-height: 100dvh; grid-template-rows: auto 58px; }
+      .crest { width: 34px; height: 40px; flex-basis: 34px; }
+      .topic { padding: 24px 24px 0; font-size: 1.05rem; }
+      .workspace, .workspace.has-drawer { display: grid; grid-template-columns: 1fr; grid-template-rows: auto auto; padding: 10px 12px; }
+      .lesson-stage { min-height: 520px; }
+      .screen { height: auto; min-height: 518px; justify-content: center; padding: 32px 24px; }
+      .screen-heading { font-size: clamp(2.25rem, 11vw, 3.25rem); }
+      .screen-lead { font-size: 1rem; }
+      .do-now-layout, .concept-layout, .model-layout, .practice-layout, .exit-layout { grid-template-columns: 1fr; gap: 28px; }
+      .do-now-number { font-size: 5rem; }
+      .question-row { font-size: 0.96rem; padding-block: 11px; }
+      .question-stage .screen-heading { font-size: clamp(2.35rem, 11vw, 3.35rem); }
+      .prediction { flex-direction: column; }
+      .choice { width: 100%; }
+      .principles { margin-top: 4px; }
+      .key-statement { margin-top: 18px; }
+      .model-layout .diagram-wrap { order: -1; }
+      .force-diagram { max-height: 250px; }
+      .answer-grid { grid-template-columns: 1fr; }
+      .practice-layout { align-items: start; }
+      .success-list, .timer-panel { padding: 20px 0 0; border-left: 0; border-top: 1px solid var(--line-strong); }
+      .source-claim blockquote { font-size: 1.6rem; }
+      .student-drawer { max-height: none; border-radius: 16px; box-shadow: none; }
+      .drawer-body { max-height: 360px; }
+      .student-tools { justify-content: flex-start; padding: 0; }
+      .tool-control { flex: 0 0 auto; min-height: 44px; }
+      .lesson-nav { grid-template-columns: 44px minmax(0, 1fr) 44px; gap: 10px; padding-inline: 12px; }
+      .next-context { display: none; }
+      .nav-context { grid-template-columns: minmax(0, 1fr) auto; gap: 8px; }
+    }
+
+    @media (max-height: 680px) and (min-width: 761px) {
+      .app { grid-template-rows: minmax(0, 1fr) 56px; }
+      .screen { padding-block: 22px; }
+      .screen-heading { font-size: clamp(2.25rem, 3.6vw, 3.3rem); margin-block: 6px 10px; }
+      .screen-lead { font-size: 1rem; }
+      .question-row, .principle { padding-block: 9px; }
+      .model-step, .task-item { padding-block: 8px; }
+      .source-claim { margin-top: 14px; padding: 18px 22px; }
+    }
+
+    /* Projection: teaching text scales with both screen width and height. */
+    @media (min-width: 761px) {
+      .app {
+        --board-body: clamp(24px, min(2.4vw, 3.6dvh), 42px);
+        --board-question: clamp(28px, min(2.8vw, 4.5dvh), 50px);
+        --board-heading: clamp(38px, min(4.4vw, 6.6dvh), 76px);
+        --board-label: clamp(16px, min(1.5vw, 2.5dvh), 26px);
+        --board-inset: clamp(24px, 2.8vw, 54px);
+        height: 100dvh;
+        min-height: 0;
+        grid-template-rows: minmax(0, 1fr) 58px;
+      }
+      .workspace { padding: 8px; }
+      .lesson-stage { border-radius: 12px; box-shadow: none; }
+      .topic { padding: 16px var(--board-inset) 0; font-size: var(--board-body); font-weight: 500; }
+      .screen { padding: 18px var(--board-inset) 22px; font-size: var(--board-body); line-height: 1.3; justify-content: flex-start; }
+      .screen > :only-child { width: 100%; margin-block: auto; }
+      .screen-heading { max-width: none; margin: 6px 0 12px; font-size: var(--board-heading); font-weight: 500; line-height: 1.08; letter-spacing: -0.025em; }
+      .screen-lead { max-width: none; color: var(--navy-950); font-size: var(--board-body); line-height: 1.3; }
+      .screen-kicker { color: var(--navy-950); font-size: var(--board-label); letter-spacing: 0.08em; }
+      .screen-kicker strong { color: var(--navy-950); }
+      .micro-instruction { gap: 10px 24px; margin-top: 12px; font-size: var(--board-label); }
+      .do-now-layout { height: 100%; grid-template-columns: 1fr; grid-template-rows: auto minmax(0, 1fr); gap: 18px; align-items: stretch; }
+      .do-now-number, .exit-mark { display: none; }
+      .question-sheet { min-height: 0; grid-template-rows: repeat(4, minmax(0, 1fr)); }
+      .question-row { grid-template-columns: 44px 1fr; align-items: center; gap: 18px; padding: 12px 0; font-size: var(--board-question); line-height: 1.28; }
+      .question-row::before { color: var(--navy-950); font: 500 var(--board-body)/1.3 var(--serif); }
+      .question-stage, .hinge-layout { max-width: none; }
+      .question-stage .screen-heading, .hinge-layout .screen-heading { max-width: none; font-size: var(--board-heading); }
+      .prediction { gap: 16px; margin-top: 22px; }
+      .choice { flex: 1; padding: 16px 20px; font-size: var(--board-body); line-height: 1.3; }
+      .commitment { margin-top: 12px; color: var(--navy-950); font-size: var(--board-label); }
+      .concept-layout, .practice-layout, .exit-layout { gap: 32px; }
+      .concept-layout { grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); }
+      .principle { grid-template-columns: 36px 1fr; gap: 12px; padding-block: 16px; }
+      .principle p, .model-step p, .task-item, .success-list p { color: var(--navy-950); font-size: var(--board-body); line-height: 1.3; }
+      .principle span:first-child, .model-step span:first-child, .task-item::before { color: var(--navy-950); font-size: var(--board-label); }
+      .key-statement { margin-top: 18px; padding: 16px 18px; }
+      .key-statement span, .source-label { font-size: var(--board-label); }
+      .key-statement p { font-size: var(--board-body); font-weight: 500; }
+      .screen-diagram .model-layout { display: flex; height: 100%; flex-direction: column; align-items: stretch; gap: 12px; }
+      .screen-diagram .diagram-wrap { flex: 1; min-height: 0; display: flex; align-items: center; justify-content: center; }
+      .force-diagram { max-height: 100%; }
+      .diagram-label { font-size: 42px; }
+      .diagram-result { font-size: 44px !important; font-weight: 500 !important; }
+      .diagram-wrap { padding: 0; }
+      .model-layout { gap: 20px; }
+      .worked-heading { grid-area: heading; }
+      .screen-model .model-layout { grid-template-areas: "heading diagram" "steps steps" "controls controls"; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: center; }
+      .screen-model .diagram-wrap { grid-area: diagram; }
+      .screen-model .force-diagram { max-height: 28dvh; }
+      .screen-model .step-list { grid-area: steps; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 28px; margin-top: 0; }
+      .screen-model .diagram-controls { grid-area: controls; margin: 0; }
+      .model-step { padding-block: 10px; }
+      .reveal-control, .timer-control { padding: 9px 16px; font-size: var(--board-label); }
+      .answer-grid { gap: 14px; margin-top: 18px; }
+      .answer-option { grid-template-columns: 38px 1fr; padding: 16px; font-size: var(--board-body); line-height: 1.3; }
+      .answer-letter { width: 36px; height: 36px; font-size: var(--board-label); }
+      .answer-feedback { padding: 12px 16px; font-size: var(--board-body); line-height: 1.3; }
+      .practice-layout { grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr); }
+      .task-list { margin-top: 14px; }
+      .task-item { padding-block: 12px; }
+      .success-list { padding: 16px 0 16px 24px; }
+      .success-list h2 { font-size: var(--board-body); font-weight: 500; }
+      .success-list p { margin-block: 18px; }
+      .screen-ai { justify-content: center; }
+      .source-claim { max-width: none; margin-top: 20px; padding: 24px; }
+      .source-label { color: var(--navy-950); }
+      .source-claim blockquote { max-width: none; font-size: var(--board-heading); font-weight: 500; }
+      .verification-steps { gap: 16px 28px; font-size: var(--board-body); }
+      .exit-layout { grid-template-columns: minmax(0, 1.8fr) minmax(0, 1fr); }
+      .exit-question { max-width: none; margin-top: 22px; font-size: var(--board-question); font-weight: 500; line-height: 1.3; }
+      .timer-panel { padding: 18px 0 18px 24px; }
+      .timer-value { font-size: clamp(64px, 8vw, 128px); }
+      .timer-note { color: var(--navy-950); font-size: var(--board-body); line-height: 1.3; }
+      .timer-control { margin-top: 8px; }
+      .lesson-nav { padding: 6px 16px; }
+      .phase-context small { font-size: 12px; }
+      .phase-context strong { font-size: 20px; }
+      .next-context, .tool-control { font-size: 16px; }
+      .workspace.has-drawer { grid-template-columns: minmax(0, 1fr); grid-template-rows: minmax(0, 1fr); }
+      .workspace.has-drawer .lesson-stage, .workspace.has-drawer .student-drawer { grid-area: 1 / 1; }
+      .workspace.has-drawer .lesson-stage { visibility: hidden; }
+      .student-drawer { border-radius: 12px; box-shadow: none; }
+      .drawer-head { padding: 24px var(--board-inset); }
+      .drawer-head h2 { font-size: var(--board-heading); font-weight: 500; }
+      .drawer-head p, .support-item h3, .support-item p { color: var(--navy-950); font-size: var(--board-body); line-height: 1.3; }
+      .drawer-tabs { padding: 12px var(--board-inset); gap: 16px; }
+      .support-tab { padding: 10px 18px; font-size: var(--board-body); }
+      .drawer-body { padding: 24px var(--board-inset); }
+      .drawer-section-title { color: var(--navy-950); font-size: var(--board-label); }
+      .support-list { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px; }
+      .support-item { padding-block: 20px; }
+      .support-item p { margin-top: 14px; }
+    }
+
+    @media (pointer: coarse) {
+      .support-tab, .phase-link, .reveal-control, .timer-control { min-height: 44px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+      .motion-path { stroke-dasharray: none; }
+    }
+  
+/* Six screen families share a projection canvas and optional task widgets. */
+.app { grid-template-rows: minmax(0, 1fr) auto 58px; }
+.nav-context { grid-template-columns: minmax(0, 1fr) auto; }
+.student-tools {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr)) minmax(0, 1.6fr);
+  gap: 8px;
+  padding: 0 12px 8px;
+}
+.student-tools:empty { padding: 0; }
+.tool-control { justify-content: center; gap: 0; border-radius: 8px; font-size: 16px; padding: 8px 10px; }
+.tool-control[aria-expanded="true"] { background: var(--navy-900); border-color: var(--navy-900); color: var(--paper-100); }
+.topic[hidden] { display: none; }
+.app[data-family="Title"] .lesson-stage { grid-template-rows: minmax(0, 1fr); }
+.title-layout { display: flex; flex-direction: column; justify-content: center; height: 100%; }
+.title-layout .screen-heading { font-size: clamp(72px, min(8.2vw, 13vh), 148px); max-width: 12ch; margin: 20px 0; }
+.title-question { font: 500 clamp(32px, min(4.2vw, 6.8vh), 72px)/1.15 var(--serif); max-width: 22ch; margin: 0 0 32px; }
+.title-path { display: flex; flex-wrap: wrap; gap: 14px 32px; border-top: 1px solid var(--line-strong); padding-top: 24px; font-size: var(--board-body, 24px); }
+.title-path span + span::before { content: "→"; color: var(--gold-600); margin-right: 24px; }
+.outcome-layout { width: 100%; }
+.outcome-list { list-style: none; counter-reset: outcome; padding: 0; margin: 24px 0 0; border-top: 1px solid var(--line-strong); }
+.outcome-list li { counter-increment: outcome; display: grid; grid-template-columns: 32px 1fr; gap: 14px; border-bottom: 1px solid var(--line); padding: 20px 0; }
+.outcome-list li::before { content: counter(outcome, decimal-leading-zero); font-family: var(--serif); }
+.outcome-list strong { display: block; font-weight: 650; }
+.outcome-list p { margin: 8px 0 0; }
+.outcome-open { margin-top: 20px; }
+.workspace.has-drawer .lesson-stage { visibility: visible; }
+.workspace.has-drawer .lesson-stage, .workspace.has-drawer .student-drawer { grid-area: auto; }
+.student-drawer { grid-template-rows: auto auto minmax(0, 1fr) auto; animation: none; }
+.drawer-head { align-items: start; }
+.drawer-head p { margin-top: 8px; }
+.drawer-tabs { flex-wrap: wrap; overflow: visible; }
+.drawer-tabs:empty { display: none; }
+.drawer-body { overflow: hidden; max-height: none; }
+.widget-page h3 { font: 500 1.35em/1.15 var(--serif); margin: 0 0 18px; }
+.widget-page p { margin: 0 0 18px; }
+.widget-page ul { margin: 20px 0; padding-left: 1.15em; }
+.widget-page li { padding-left: 5px; margin: 0 0 16px; }
+.widget-page blockquote { margin: 0 0 20px; font: 500 1.25em/1.25 var(--serif); }
+.widget-note { font-size: 0.7em; text-transform: uppercase; letter-spacing: 0.08em; font-weight: 700; }
+.widget-action { display: flex; align-items: center; justify-content: space-between; gap: 18px; padding: 14px 18px; border: 1px solid var(--navy-900); border-radius: 8px; background: var(--navy-900); color: var(--paper-100); font: 650 0.8em/1.3 var(--sans); cursor: pointer; }
+.widget-source { color: var(--navy-700); font-size: 0.75em; text-underline-offset: 4px; }
+.widget-diagram { margin-bottom: 18px; }
+.widget-diagram .force-diagram { width: 100%; max-height: 180px; }
+.widget-diagram .diagram-label { font-size: 46px; }
+.widget-pagination { display: grid; grid-template-columns: 44px 1fr 44px; align-items: center; gap: 12px; padding: 10px 20px; border-top: 1px solid var(--line); }
+.widget-pagination span { text-align: center; font-size: 16px; }
+.context-anchor { margin-block: 0 !important; }
+.context-key { margin: 24px 0 0; padding-top: 20px; border-top: 1px solid var(--line-strong); font-weight: 600; }
+.context-key span { display: block; margin-bottom: 8px; font-size: 0.75em; text-transform: uppercase; letter-spacing: 0.06em; }
+.context-key p { margin: 0; }
+.context-options, .context-tasks { padding-left: 1.2em; margin: 22px 0 0; }
+.context-options li, .context-tasks li { margin-bottom: 16px; padding-left: 8px; }
+
+@media (min-width: 761px) {
+  .app { grid-template-rows: minmax(0, 1fr) auto 58px; }
+  .workspace.has-drawer { grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); grid-template-rows: minmax(0, 1fr); gap: 8px; }
+  .workspace.has-drawer .screen, .workspace.has-drawer .topic { padding-inline: 26px; }
+  .workspace.has-drawer .screen { font-size: clamp(22px, min(2.1vw, 3.3vh), 36px); }
+  .workspace.has-drawer .screen-heading { font-size: clamp(32px, min(3.3vw, 5.3vh), 56px); }
+  .workspace.has-drawer .screen-lead { font-size: inherit; }
+  .workspace.has-drawer .topic { font-size: clamp(22px, 2.2vw, 36px); }
+  .workspace.has-drawer .screen-outcome { justify-content: center; }
+  .outcome-list li { padding-block: 16px; }
+  .outcome-list p { font-size: 0.85em; }
+  .drawer-head { padding: 20px 22px 14px; gap: 8px; }
+  .drawer-head h2 { font-size: clamp(28px, min(2.8vw, 4.8vh), 46px); }
+  .drawer-head p { font-size: clamp(18px, min(1.8vw, 2.8vh), 28px); line-height: 1.3; }
+  .drawer-tabs { padding: 10px 16px; gap: 6px; }
+  .support-tab { font-size: clamp(16px, 1.45vw, 22px); padding: 8px 12px; min-height: 40px; }
+  .drawer-body { padding: 22px; color: var(--navy-950); font-size: clamp(23px, min(2.15vw, 3.4vh), 36px); line-height: 1.3; }
+  .screen-model .force-diagram { max-height: 23vh; }
+  .screen-model .model-layout { gap: 14px; }
+  .screen-model .model-step { padding-block: 8px; }
+}
+
+@media (max-width: 760px) {
+  .app { grid-template-rows: auto auto 58px; }
+  .student-tools { grid-template-columns: repeat(3, minmax(0, 1fr)); padding: 0 12px 8px; }
+  .tool-control { font-size: 13px; min-height: 44px; }
+  .title-layout .screen-heading { font-size: clamp(56px, 15vw, 100px); }
+  .title-question { font-size: 32px; }
+  .title-path { flex-direction: column; font-size: 20px; }
+  .title-path span + span::before { content: none; }
+  .workspace.has-drawer { grid-template-columns: 1fr; grid-template-rows: auto auto; }
+  .workspace.has-drawer .lesson-stage, .workspace.has-drawer .student-drawer { grid-area: auto; }
+  .drawer-body { overflow: visible; font-size: 21px; }
+  .student-drawer { min-height: 500px; }
+  .screen-outcome { font-size: 22px; }
+  .context-anchor { font-size: 21px; }
+  .nav-context { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* Content extensions to the approved Arcadia 1.0.0 frame. */
+.screen { gap: 0; }
+.bio-layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: center; gap: 30px; min-height: 0; }
+.bio-copy p { margin: 0 0 16px; }
+.bio-copy strong, .bio-list strong { font-weight: 700; }
+.bio-list { padding-left: 1.15em; margin: 12px 0 0; }
+.bio-list li { padding: 9px 0 9px 8px; border-bottom: 1px solid var(--line); }
+.bio-task { margin: 18px 0 0; padding: 15px 0 0; border-top: 1px solid var(--line-strong); font-weight: 600; }
+.bio-eyebrow { color: var(--gold-600); font-size: .65em; letter-spacing: .09em; text-transform: uppercase; margin: 0 0 10px; font-weight: 750; }
+.bio-figure { margin: 0; min-width: 0; }
+.bio-figure svg { display: block; width: 100%; max-height: 36vh; }
+.bio-figure figcaption { margin-top: 9px; font-size: .56em; line-height: 1.35; color: var(--ink-600); }
+.bio-figure text { font-family: var(--sans); fill: #182944; }
+.bio-figure .diagram-label { font-size: 22px; font-weight: 650; }
+.bio-figure .diagram-small { font-size: 17px; font-weight: 500; }
+.bio-controls { display: flex; flex-wrap: wrap; gap: 8px; margin: 15px 0 0; }
+.bio-controls button { border-radius: 8px; padding: 10px 14px; min-height: 44px; font-size: .65em; font-weight: 650; }
+.bio-controls button[aria-pressed="true"] { color: var(--paper-100); background: var(--navy-900); }
+.bio-step { border-top: 1px solid var(--line-strong); padding-top: 14px; margin-top: 12px; min-height: 4.3em; }
+.bio-step .step-number { font-size: .6em; font-weight: 700; color: var(--gold-600); display: block; margin-bottom: 8px; }
+.spec-ref { display: block; font: 600 .62em/1.4 var(--sans); color: var(--ink-600); margin-top: 7px; }
+.outcome-list { margin-top: 14px; }
+.outcome-list li { padding-block: 14px; }
+.outcome-list strong { font-size: .85em; }
+.bio-quote { margin: 12px 0 20px; padding: 18px 24px; border: 1px solid var(--line-strong); border-radius: 10px; font: 450 1.17em/1.23 var(--serif); }
+.bio-cases { display: grid; gap: 0; margin: 14px 0 0; }
+.bio-case { display: grid; grid-template-columns: 38px 1fr; gap: 14px; padding: 13px 0; border-top: 1px solid var(--line); }
+.bio-case b { color: var(--gold-600); font-family: var(--serif); }
+.bio-case p { margin: 0; }
+.bio-formula { display: block; font: 500 .9em/1.5 var(--sans); padding: 18px 0; border-block: 1px solid var(--line-strong); }
+.bio-formula span { display: block; }
+.cell-view { position: relative; height: 30vh; min-height: 180px; width: 100%; touch-action: pan-y; }
+.cell-view canvas { display: block; width: 100%; height: 100%; touch-action: none; cursor: grab; }
+.cell-view canvas:active { cursor: grabbing; }
+.cell-fallback { height: 100%; }
+.cell-fallback svg { height: 100%; }
+.cell-view.is-live .cell-fallback { display: none; }
+.structure-name { margin: 6px 0 12px; font: 500 1.1em/1.2 var(--serif); }
+.focus-swatch { display: inline-block; width: 16px; height: 16px; border: 1px solid #182944; border-radius: 50%; margin-right: 10px; }
+.exam-layout { display: grid; grid-template-columns: 1.2fr .8fr; align-items: center; gap: 42px; }
+.exam-timer { border-left: 1px solid var(--line-strong); padding-left: 36px; }
+.exam-timer output { display: block; font: 400 clamp(70px, 10vw, 155px)/1 var(--serif); font-variant-numeric: tabular-nums; margin: 18px 0; }
+.exam-timer .timer-control { font-size: .6em; border-radius: 8px; }
+.timer-settings { margin: 12px 0; }
+.timer-settings label { display: block; font-size: .6em; font-weight: 650; }
+.timer-settings .bio-controls { margin-top: 6px; }
+.timer-settings input { width: 5em; min-height: 44px; padding: 8px 10px; border: 1px solid var(--line-strong); border-radius: 8px; background: var(--paper-100); color: var(--navy-900); font: inherit; font-size: .65em; }
+.timer-settings input:focus-visible { outline: 3px solid var(--navy-900); outline-offset: 3px; }
+.exam-note, .routine-credit { font-size: .52em; line-height: 1.4; color: var(--ink-600); margin: 12px 0 0; }
+.exam-note a, .routine-credit a { color: inherit; }
+.student-tools [hidden] { display: none; }
+.widget-page a { color: var(--navy-900); text-underline-offset: 4px; }
+.widget-action { text-decoration: none; margin-top: 18px; }
+.widget-page a.widget-action { color: var(--paper-100); }
+.widget-pagination button { border-radius: 8px; height: 40px; font-size: 21px; }
+.screen-lead { margin-bottom: 14px; }
+.nav-fullscreen { padding: 6px 10px; border: 0; border-radius: 5px; font-size: 15px; }
+.screen:focus { outline: none; }
+.workspace.has-drawer .bio-layout { grid-template-columns: 1fr; gap: 10px; }
+.workspace.has-drawer .bio-figure svg { max-height: 20vh; }
+.workspace.has-drawer .bio-figure figcaption { margin-top: 3px; }
+.workspace.has-drawer .cell-view { height: 18vh; min-height: 120px; }
+.workspace.has-drawer .bio-list li { padding-block: 6px; }
+.workspace.has-drawer .bio-case { padding-block: 9px; }
+.workspace.has-drawer .bio-task { padding-top: 10px; margin-top: 12px; }
+.workspace.has-drawer .bio-controls { gap: 5px; margin-top: 8px; }
+.workspace.has-drawer .bio-controls button { padding: 7px 10px; font-size: .67em; }
+.workspace.has-drawer .bio-step { min-height: 0; }
+.workspace.has-drawer .answer-option { min-height: 50px; padding: 9px; font-size: .85em; }
+.workspace.has-drawer .answer-grid { margin-top: 12px; }
+.workspace.has-drawer .bio-quote { padding: 12px 14px; margin-block: 10px; font-size: 1.1em; }
+.workspace.has-drawer .screen-heading { margin-top: 0; margin-bottom: 12px; }
+.workspace.has-drawer .bio-copy p { margin-bottom: 10px; }
+.workspace.has-drawer .bio-figure.is-secondary { display: none; }
+@media (min-width: 761px) {
+  .screen.bio-screen { padding-top: 18px; padding-bottom: 18px; font-size: clamp(24px, min(2.3vw, 3.55vh), 40px); }
+  .bio-screen .screen-heading { font-size: clamp(40px, min(4.4vw, 6.5vh), 78px); max-width: 30ch; }
+  .bio-screen .screen-lead { font-size: .87em; line-height: 1.3; }
+  .bio-screen .answer-option { font-size: .85em; }
+  .workspace.has-drawer .screen.bio-screen { font-size: clamp(22px, min(2.1vw, 3.3vh), 36px); }
+  .workspace.has-drawer .bio-screen .screen-heading { font-size: clamp(32px, min(3.3vw, 5.3vh), 56px); }
+}
+@media (max-width: 760px) {
+  .screen.bio-screen { font-size: 22px; height: auto; padding: 25px 22px; }
+  .bio-layout, .exam-layout { grid-template-columns: 1fr; gap: 22px; }
+  .bio-figure svg { max-height: 300px; }
+  .exam-timer { border: 0; padding: 0; }
+  .bio-controls button { font-size: 16px; }
+  .spec-ref { font-size: 15px; }
+  .cell-view { height: 270px; }
+  .bio-figure figcaption, .routine-credit, .exam-note { font-size: 14px; }
+  .bio-screen .screen-heading { font-size: 39px; }
+  .nav-fullscreen { display: none; }
+}
+
+/* Explicit teacher-requested answer access; the six subject widgets stay in place. */
+.review-access-row { display: flex; justify-content: flex-end; flex: 0 0 auto; margin: 0 0 8px; }
+.review-access { min-height: 38px; padding: 8px 14px; border: 1px solid var(--navy-900); border-radius: 8px; color: var(--navy-950); background: var(--paper-100); font: 650 15px/1.25 var(--sans); cursor: pointer; }
+.review-access:hover, .review-access[aria-expanded="true"] { color: var(--paper-100); background: var(--navy-900); }
+.review-return { min-height: 36px; padding: 6px 10px; margin-top: 10px; font: 650 15px/1.3 var(--sans); border-radius: 6px; }
+.review-widget { font-size: .68em; padding: 10px 13px; }
+.screen .title-layout { height: auto; flex: 1; min-height: 0; }
+.workspace.has-drawer .title-layout .screen-heading { font-size: clamp(38px, 4.4vw, 74px); }
+.workspace.has-drawer .title-question { font-size: clamp(25px, 2.4vw, 42px); margin-bottom: 18px; }
+.workspace.has-drawer .title-path { font-size: 21px; gap: 8px; padding-top: 15px; }
+.workspace.has-drawer .exam-layout { grid-template-columns: 1fr; gap: 12px; }
+.workspace.has-drawer .exam-timer { padding-left: 0; border-left: 0; }
+.workspace.has-drawer .exam-timer output { font-size: 58px; margin: 8px 0; }
+@media (max-width: 760px) { .review-access { min-height: 44px; font-size: 14px; } }
+
+.eye-embed{width:100%;height:54vh;min-height:350px;border:1px solid var(--line);border-radius:6px;background:#f4f1e9}.workspace.has-drawer .eye-embed{height:43vh;min-height:280px}.resource-links{display:flex;gap:12px;flex-wrap:wrap;margin-top:12px}.resource-links a{background:var(--navy-900);color:var(--paper-100);padding:10px 16px;border-radius:7px;text-decoration:none;font:650 16px/1.3 var(--sans)}.science-table{border-collapse:collapse;width:100%;margin:16px 0;font-size:.82em}.science-table td,.science-table th{padding:12px 16px;border:1px solid var(--line);text-align:left}.science-table th{background:var(--navy-900);color:var(--paper-100)}.bio-layout:has(>.bio-figure):not(:has(.bio-copy)){grid-template-columns:1fr 1fr}.bio-layout:not(:has(>.bio-figure)){display:block}.widget-page .widget-action{font-size:.65em}.topic{font-size:26px!important}.screen.bio-screen:has(.eye-embed) .screen-heading{font-size:46px}.screen.bio-screen:has(.eye-embed) .bio-task{font-size:22px}.screen.bio-screen:has(.eye-embed) .screen-lead{display:none}@media(max-width:760px){.eye-embed{height:560px}.topic{font-size:20px!important}}
+@media(max-height:850px),(max-width:1100px){.screen{overflow:auto}.screen.bio-screen:has(.eye-embed) .screen-heading{font-size:30px;margin-block:6px 12px}.eye-embed,.workspace.has-drawer .eye-embed{height:530px;min-height:530px}}
+</style></head><body>
+  <a class="skip-link" href="#lesson-main">Skip to lesson</a>
+  <div class="app" id="app" data-family="Title">
+    <main class="workspace" id="lesson-main">
+      <section class="lesson-stage" aria-label="Current lesson screen"><p class="topic">Hooke's law</p><div class="screen" id="screen"></div></section>
+      <aside class="student-drawer" id="student-drawer" aria-labelledby="drawer-title" hidden></aside>
+    </main>
+    <nav class="student-tools" id="student-tools" aria-label="Lesson widgets"></nav>
+    <footer class="lesson-nav"><button class="nav-control" id="previous-screen" type="button" aria-label="Previous lesson screen">←</button>
+      <div class="nav-context"><div class="phase-context"><small id="phase-position">Screen 1 of 12</small><strong id="phase-name">Title</strong></div><div class="next-context" id="next-context">Next: <strong>Learning outcome</strong></div></div>
+      <button class="nav-control" id="next-screen" type="button" aria-label="Next lesson screen">→</button></footer>
+  </div>
+  <div class="sr-only" id="status" role="status" aria-live="polite" aria-atomic="true"></div>
+<script>window.LESSON={"number": 6, "unit": "Forces", "unitLesson": 6, "title": "Hooke's law", "question": "How does force relate to a spring's extension?", "path": ["Recall", "Investigate", "Analyse"], "outcomes": [["Explain that force is proportional to extension within the proportional region (F = k e).", "Topic 43"], ["Collect data and draw a force–extension graph.", "Topic 43"], ["Find the spring constant from the gradient and identify the limit of proportionality.", "Topic 43"]], "frame_version": "Arcadia Lesson Frame 1.0.0", "source_id": "Y9-SCI-W05-L02", "phases": [{"id": "title", "family": "Title", "type": "title", "title": "Hooke's law", "topic": "forces", "items": [], "task": "", "support": null, "resources": []}, {"id": "outcomes", "family": "Learning outcome", "type": "outcome", "title": "What will you be able to do?", "topic": "forces", "items": [], "task": "", "support": null, "resources": []}, {"id": "p-donow", "family": "Do now", "type": "content", "nav": "Do Now", "title": "Recall: springs and graphs", "topic": "forces", "minutes": 4, "lead": "Answer in your book.", "items": ["Write the equation for extension.", "A 200 g mass has a weight of about how many newtons? Use g = 10 N/kg.", "Which axis shows force on a force–extension graph?", "Why do we repeat measurements?"], "task": "", "resources": []}, {"id": "p-starter", "family": "Input", "type": "content", "nav": "Predict", "title": "Sketch the graph", "topic": "forces", "minutes": 4, "lead": "Predict the shape before you measure.", "items": ["Sketch the force–extension graph you expect for a spring at small forces.", "Label both axes with units.", "What would a steeper line mean about the spring?"], "task": "Draw and label your prediction in your book.", "resources": []}, {"id": "p-law", "family": "Thinking", "type": "content", "nav": "Hooke's law", "title": "Hooke's law", "topic": "forces", "minutes": 6, "diagram": "fe-graph-limit", "caption": "A straight line through the origin, then it curves at the limit of proportionality.", "lead": "For small forces, force and extension go up together.", "items": ["F = k × e.", "F: force / N. k: spring constant / N per m. e: extension / m.", "The law works in the proportional region — the straight part of the graph.", "The gradient of that straight part equals k."], "task": "Copy: F = k × e, and gradient = k.", "resources": []}, {"id": "p-limits", "family": "Input", "type": "content", "nav": "Two limits", "title": "Two different limits", "topic": "forces", "minutes": 5, "lead": "Two points on the graph mean different things.", "items": ["Limit of proportionality: the graph stops being a straight line through the origin.", "Elastic limit: beyond this the spring does not return to its original length.", "These are related but not the same.", "Permanent stretch is only shown by unloading the spring."], "task": "In your book, write one sentence for each limit.", "resources": []}, {"id": "p-practical", "family": "Input", "type": "content", "nav": "Practical", "title": "Collect the data safely", "topic": "forces", "minutes": 5, "lead": "Follow your approved plan.", "items": ["Record the original length before loading.", "Add equal force increments and let the spring settle.", "Read at eye level and calculate the extension.", "Safety: goggles, a stable clamp stand and a catch tray."], "task": "Record the original length first.", "resources": [{"label": "Open the results & analysis sheet", "href": "06 Hooke's law - Practical.html"}]}, {"id": "p-hinge", "family": "Assess", "type": "hinge", "nav": "Hinge", "title": "Calculate the spring constant", "topic": "forces", "secure": true, "minutes": 3, "lead": "A spring extends 0.040 m under a force of 2.0 N.", "options": ["0.020 N/m", "0.080 N/m", "50 N/m", "80 N/m"], "task": "Show A, B, C or D. Use k = F ÷ e.", "resources": []}, {"id": "p-collect", "family": "Assess", "type": "content", "nav": "Collect data", "title": "Run your practical", "topic": "forces", "secure": true, "minutes": 12, "label": "Practical · collect force and extension", "lead": "Work carefully with your group.", "items": ["Add equal force steps and record the stretched length each time.", "Calculate the extension for every force.", "Fill in the results table on your sheet."], "task": "Repeat readings where time allows.", "resources": [{"label": "Open the results & analysis sheet", "href": "06 Hooke's law - Practical.html"}]}, {"id": "p-analysis", "family": "Assess", "type": "content", "nav": "Analysis", "title": "Plot and find k", "topic": "forces", "minutes": 6, "diagram": "fe-graph-limit", "caption": "k is the gradient of the straight part. Mark where the line stops being straight.", "lead": "Use your graph to find the spring constant.", "items": ["Plot force (y-axis) against extension (x-axis).", "Draw a best-fit line over the straight part.", "Find k from the gradient = change in force ÷ change in extension.", "Mark the point where the line stops being straight."], "task": "Calculate k from your gradient. Give the unit N/m.", "resources": [{"label": "Open the results & analysis sheet", "href": "06 Hooke's law - Practical.html"}]}, {"id": "p-exit", "family": "Assess", "type": "content", "nav": "Exit ticket", "title": "Show what you learned", "topic": "forces", "secure": true, "minutes": 3, "lead": "Answer without your notes.", "items": ["State Hooke's law in words.", "A spring extends 0.030 m under 1.5 N. Calculate the spring constant.", "Distinguish the limit of proportionality from the elastic limit."], "task": "", "resources": []}], "reviews": {"p-donow": {"models": [{"heading": "Do Now answers", "text": "1. extension = stretched − original length. 2. W = 0.200 × 10 = 2.0 N. 3. Force is on the vertical (y) axis. 4. To check for mistakes and make the result more reliable."}], "criteria": [{"heading": "Check for", "items": ["2.0 N.", "Force on the y-axis."]}], "marks": null}, "p-starter": {"models": [{"heading": "Model answer", "text": "A straight line through the origin. A steeper line means a stiffer spring — a larger spring constant, k."}], "criteria": [{"heading": "Check for", "items": ["Straight line through origin.", "Steeper = stiffer / larger k."]}], "marks": null}, "p-hinge": {"models": [{"heading": "Answer: C", "text": "k = F ÷ e = 2.0 ÷ 0.040 = 50 N/m. A and B divide the wrong way; D uses the wrong numbers."}], "criteria": [{"heading": "Reasoning", "items": ["Chooses C.", "Uses k = F ÷ e with metres."]}], "marks": null}, "p-analysis": {"models": [{"heading": "Analysis guidance", "text": "Plot force (y) against extension (x). Draw a best-fit line over the straight part. k = gradient = change in force ÷ change in extension. Mark where the line stops being straight — the limit of proportionality. Do not claim permanent stretch without unloading evidence."}], "criteria": [{"heading": "Mark scheme", "items": ["Correct axes.", "Best-fit line over the linear part.", "k from the gradient with unit N/m.", "Limit of proportionality marked."]}], "marks": null}, "p-exit": {"models": [{"heading": "Exit answers", "text": "1. Within the proportional region, force is proportional to extension (F = k e). 2. k = 1.5 ÷ 0.030 = 50 N/m. 3. Limit of proportionality: the graph stops being a straight line through the origin. Elastic limit: the spring no longer returns to its original length (needs unloading evidence)."}], "criteria": [{"heading": "Check for", "items": ["Hooke's law in words.", "k = 50 N/m.", "Both limits distinguished."]}], "marks": null}}, "widgets": {"outcomes": {"resources": {"title": "Resources", "subtitle": "Words and tasks for this screen.", "tabs": [{"label": "Resources", "pages": [{"heading": "Key words", "text": "spring constant (k) — how stiff a spring is, in N/m. proportional — a straight line through the origin. limit of proportionality — where the line stops being straight. elastic limit — where the spring no longer returns to its original length."}, {"heading": "How to succeed", "text": "Use F = k × e. Plot force against extension. The gradient of the straight part is k. Mark where the line bends."}]}]}}, "p-starter": {"adaptation": {"title": "Adaptation", "subtitle": "Support for Students of Determination — a foothold first, then work on your own.", "tabs": [{"label": "Get started", "pages": [{"heading": "Get started", "text": "Draw two axes. Force up the side, extension along the bottom."}]}, {"label": "Build understanding", "pages": [{"heading": "Build understanding", "text": "For small forces, expect a straight line from the origin, going up to the right."}]}]}, "hot": {"title": "Higher-order thinking", "subtitle": "Go further with the same idea.", "tabs": [{"label": "Go further", "pages": [{"heading": "Go further", "text": "Predict what the line would look like for a stiffer spring, and explain why."}]}]}}, "p-law": {"adaptation": {"title": "Adaptation", "subtitle": "Support for Students of Determination — a foothold first, then work on your own.", "tabs": [{"label": "Get started", "pages": [{"heading": "Get started", "text": "F = k × e. Force in N, extension in m, k in N/m."}]}, {"label": "Build understanding", "pages": [{"heading": "Build understanding", "text": "The gradient of the straight part of the graph equals k."}]}]}, "hot": {"title": "Higher-order thinking", "subtitle": "Go further with the same idea.", "tabs": [{"label": "Go further", "pages": [{"heading": "Go further", "text": "Two springs have different gradients. Explain what that tells you about their stiffness."}]}]}}, "p-limits": {"adaptation": {"title": "Adaptation", "subtitle": "Support for Students of Determination — a foothold first, then work on your own.", "tabs": [{"label": "Get started", "pages": [{"heading": "Get started", "text": "Two words to separate: proportionality and elastic. Read each definition slowly."}]}, {"label": "Build understanding", "pages": [{"heading": "Build understanding", "text": "Limit of proportionality = the line stops being straight. Elastic limit = the spring does not return to its shape."}]}]}, "hot": {"title": "Higher-order thinking", "subtitle": "Go further with the same idea.", "tabs": [{"label": "Go further", "pages": [{"heading": "Go further", "text": "Explain how you could test whether a spring has passed its elastic limit."}]}]}}, "p-practical": {"adaptation": {"title": "Adaptation", "subtitle": "Support for Students of Determination — a foothold first, then work on your own.", "tabs": [{"label": "Get started", "pages": [{"heading": "Get started", "text": "Record the original length before any load. Add equal force steps."}]}, {"label": "Build understanding", "pages": [{"heading": "Build understanding", "text": "Let the spring settle, read at eye level, and repeat where you can."}]}]}, "hot": {"title": "Higher-order thinking", "subtitle": "Go further with the same idea.", "tabs": [{"label": "Go further", "pages": [{"heading": "Go further", "text": "Explain why the readings near the top of your graph may become less reliable."}]}]}}, "p-analysis": {"adaptation": {"title": "Adaptation", "subtitle": "Support for Students of Determination — a foothold first, then work on your own.", "tabs": [{"label": "Get started", "pages": [{"heading": "Get started", "text": "Force goes up the side; extension along the bottom. Draw the best-fit line."}]}, {"label": "Build understanding", "pages": [{"heading": "Build understanding", "text": "k = change in force ÷ change in extension, read from the straight part."}]}]}, "hot": {"title": "Higher-order thinking", "subtitle": "Go further with the same idea.", "tabs": [{"label": "Go further", "pages": [{"heading": "Go further", "text": "Beyond one point your line curves. Explain what this shows about the spring."}]}]}}}};</script>
+<script>window.LessonWidgets={panel:(id,p,l)=>l.widgets[p.id][id]};</script>
+<script>window.LessonAnswers=(()=>{const widget=(id,p,l,t,i)=>l.widgets[p.id]?.[id]?.tabs[t]?.pages[i]?.review;return {has:(p,l)=>!!l.reviews[p.id],widget,panel:(p,l,s,c)=>{const r=c?widget(c.widget,p,l,c.tab,c.page):l.reviews[p.id];return {title:'Model answer & mark scheme',subtitle:c?'Review this widget task.':p.title,tabs:[{label:'Model answer',pages:r.models.map(x=>({...x,note:'One model response · equivalent wording is valid'}))},{label:'Mark scheme',pages:r.criteria.map(x=>({...x,note:r.marks===null?'Unmarked task · success criteria':r.marks+' marks · original classroom scheme'}))}]}}}})();</script>
+<script>window.BioDiagrams={render:function(n,s){var d={"lever-moment": "<svg class=\"force-diagram\" viewBox=\"0 0 470 300\" role=\"img\" aria-label=\"A lever resting on a pivot. A downward force acts at a perpendicular distance d from the pivot.\">\n  <rect x=\"74\" y=\"150\" width=\"340\" height=\"16\" rx=\"7\" fill=\"var(--navy-700)\"/>\n  <polygon points=\"122,166 104,206 140,206\" fill=\"var(--navy-950)\"/>\n  <text class=\"diagram-label\" x=\"122\" y=\"230\" text-anchor=\"middle\">pivot</text>\n  <line x1=\"382\" y1=\"72\" x2=\"382\" y2=\"140\" stroke=\"var(--gold-600)\" stroke-width=\"9\" stroke-linecap=\"round\"/>\n  <polygon points=\"382,150 366,120 398,120\" fill=\"var(--gold-600)\"/>\n  <text class=\"diagram-label\" x=\"382\" y=\"60\" text-anchor=\"middle\" style=\"fill:var(--gold-600)\">force F (N)</text>\n  <line x1=\"122\" y1=\"260\" x2=\"382\" y2=\"260\" stroke=\"var(--navy-950)\" stroke-width=\"2\"/>\n  <line x1=\"122\" y1=\"252\" x2=\"122\" y2=\"268\" stroke=\"var(--navy-950)\" stroke-width=\"2\"/>\n  <line x1=\"382\" y1=\"252\" x2=\"382\" y2=\"268\" stroke=\"var(--navy-950)\" stroke-width=\"2\"/>\n  <text class=\"diagram-label\" x=\"252\" y=\"286\" text-anchor=\"middle\">perpendicular distance d (m)</text>\n  <text class=\"diagram-result\" x=\"74\" y=\"112\">M = F &#215; d</text>\n</svg>", "door-hinge": "<svg class=\"force-diagram\" viewBox=\"0 0 460 250\" role=\"img\" aria-label=\"A door from above, hinged at one end. A push near the hinge gives a small turning effect; a push at the handle gives a large turning effect.\">\n  <rect x=\"70\" y=\"120\" width=\"330\" height=\"14\" rx=\"6\" fill=\"var(--navy-700)\"/>\n  <circle cx=\"76\" cy=\"127\" r=\"13\" fill=\"var(--navy-950)\"/>\n  <text class=\"diagram-label\" x=\"92\" y=\"170\" text-anchor=\"middle\">hinge (pivot)</text>\n  <line x1=\"150\" y1=\"78\" x2=\"150\" y2=\"112\" stroke=\"var(--gold-600)\" stroke-width=\"6\" stroke-linecap=\"round\"/>\n  <polygon points=\"150,120 141,101 159,101\" fill=\"var(--gold-600)\"/>\n  <text class=\"diagram-label\" x=\"150\" y=\"66\" text-anchor=\"middle\" style=\"fill:var(--gold-600)\">small effect</text>\n  <line x1=\"366\" y1=\"62\" x2=\"366\" y2=\"112\" stroke=\"var(--gold-500)\" stroke-width=\"11\" stroke-linecap=\"round\"/>\n  <polygon points=\"366,122 349,94 383,94\" fill=\"var(--gold-500)\"/>\n  <text class=\"diagram-label\" x=\"366\" y=\"50\" text-anchor=\"middle\" style=\"fill:var(--gold-600)\">large effect</text>\n</svg>", "door-scene": "<svg class=\"force-diagram\" viewBox=\"0 0 460 320\" role=\"img\" aria-label=\"A door in its frame seen from the front. The hinges on the left are the pivot. The handle is far from the hinges. A curved arrow shows the door swinging open.\">\n  <line x1=\"40\" y1=\"292\" x2=\"420\" y2=\"292\" stroke=\"var(--navy-700)\" stroke-width=\"3\"/>\n  <rect x=\"120\" y=\"40\" width=\"210\" height=\"252\" rx=\"4\" fill=\"none\" stroke=\"var(--navy-950)\" stroke-width=\"7\"/>\n  <rect x=\"128\" y=\"48\" width=\"194\" height=\"244\" rx=\"3\" fill=\"var(--paper-200)\" stroke=\"var(--navy-700)\" stroke-width=\"2\"/>\n  <rect x=\"150\" y=\"70\" width=\"150\" height=\"92\" rx=\"4\" fill=\"none\" stroke=\"var(--navy-700)\" stroke-width=\"2\"/>\n  <rect x=\"150\" y=\"180\" width=\"150\" height=\"92\" rx=\"4\" fill=\"none\" stroke=\"var(--navy-700)\" stroke-width=\"2\"/>\n  <rect x=\"118\" y=\"86\" width=\"16\" height=\"30\" rx=\"2\" fill=\"var(--navy-950)\"/>\n  <rect x=\"118\" y=\"216\" width=\"16\" height=\"30\" rx=\"2\" fill=\"var(--navy-950)\"/>\n  <text class=\"diagram-label\" x=\"70\" y=\"171\" text-anchor=\"middle\">hinges</text>\n  <text class=\"diagram-label\" x=\"70\" y=\"193\" text-anchor=\"middle\">= pivot</text>\n  <circle cx=\"305\" cy=\"166\" r=\"8\" fill=\"var(--gold-600)\"/>\n  <text class=\"diagram-label\" x=\"292\" y=\"171\" text-anchor=\"end\" style=\"fill:var(--gold-600)\">handle</text>\n  <path d=\"M 338 120 A 92 92 0 0 1 404 196\" fill=\"none\" stroke=\"var(--gold-500)\" stroke-width=\"7\" stroke-linecap=\"round\"/>\n  <polygon points=\"404,196 392,170 416,178\" fill=\"var(--gold-500)\"/>\n  <text class=\"diagram-label\" x=\"392\" y=\"232\" text-anchor=\"middle\" style=\"fill:var(--gold-600)\">push far</text>\n  <text class=\"diagram-label\" x=\"392\" y=\"254\" text-anchor=\"middle\" style=\"fill:var(--gold-600)\">from hinges</text>\n</svg>", "balance-beam": "<svg class=\"force-diagram\" viewBox=\"0 0 480 300\" role=\"img\" aria-label=\"A metre rule balanced on a central pivot. A force on the left turns it anticlockwise; a force on the right turns it clockwise. It balances when the two moments are equal.\">\n  <rect x=\"60\" y=\"150\" width=\"360\" height=\"14\" rx=\"6\" fill=\"var(--navy-700)\"/>\n  <polygon points=\"240,164 220,206 260,206\" fill=\"var(--navy-950)\"/>\n  <text class=\"diagram-label\" x=\"240\" y=\"228\" text-anchor=\"middle\">pivot</text>\n  <line x1=\"150\" y1=\"96\" x2=\"150\" y2=\"146\" stroke=\"var(--gold-600)\" stroke-width=\"8\" stroke-linecap=\"round\"/>\n  <polygon points=\"150,154 137,128 163,128\" fill=\"var(--gold-600)\"/>\n  <text class=\"diagram-label\" x=\"150\" y=\"86\" text-anchor=\"middle\" style=\"fill:var(--gold-600)\">F&#8321;</text>\n  <line x1=\"340\" y1=\"96\" x2=\"340\" y2=\"146\" stroke=\"var(--gold-500)\" stroke-width=\"8\" stroke-linecap=\"round\"/>\n  <polygon points=\"340,154 327,128 353,128\" fill=\"var(--gold-500)\"/>\n  <text class=\"diagram-label\" x=\"340\" y=\"86\" text-anchor=\"middle\" style=\"fill:var(--gold-600)\">F&#8322;</text>\n  <line x1=\"150\" y1=\"184\" x2=\"240\" y2=\"184\" stroke=\"var(--navy-950)\" stroke-width=\"2\"/>\n  <text class=\"diagram-label\" x=\"195\" y=\"200\" text-anchor=\"middle\">d&#8321;</text>\n  <line x1=\"240\" y1=\"184\" x2=\"340\" y2=\"184\" stroke=\"var(--navy-950)\" stroke-width=\"2\"/>\n  <text class=\"diagram-label\" x=\"290\" y=\"200\" text-anchor=\"middle\">d&#8322;</text>\n  <text class=\"diagram-result\" x=\"245\" y=\"58\" text-anchor=\"middle\" style=\"font-size:22px !important\">F&#8321; &#215; d&#8321; = F&#8322; &#215; d&#8322;</text>\n  <text class=\"diagram-label\" x=\"150\" y=\"260\" text-anchor=\"middle\">anticlockwise</text>\n  <text class=\"diagram-label\" x=\"340\" y=\"260\" text-anchor=\"middle\">clockwise</text>\n</svg>", "work-done": "<svg class=\"force-diagram\" viewBox=\"0 0 480 250\" role=\"img\" aria-label=\"A box is pushed by a force and moves a distance in the same direction. Work equals force times distance.\">\n  <line x1=\"40\" y1=\"180\" x2=\"450\" y2=\"180\" stroke=\"var(--navy-700)\" stroke-width=\"3\"/>\n  <rect x=\"70\" y=\"130\" width=\"72\" height=\"50\" rx=\"4\" fill=\"var(--paper-200)\" stroke=\"var(--navy-950)\" stroke-width=\"2\"/>\n  <rect x=\"300\" y=\"130\" width=\"72\" height=\"50\" rx=\"4\" fill=\"none\" stroke=\"var(--navy-700)\" stroke-width=\"2\" stroke-dasharray=\"6 5\"/>\n  <line x1=\"150\" y1=\"155\" x2=\"250\" y2=\"155\" stroke=\"var(--gold-600)\" stroke-width=\"9\" stroke-linecap=\"round\"/>\n  <polygon points=\"262,155 236,143 236,167\" fill=\"var(--gold-600)\"/>\n  <text class=\"diagram-label\" x=\"205\" y=\"128\" text-anchor=\"middle\" style=\"fill:var(--gold-600)\">force F (N)</text>\n  <line x1=\"106\" y1=\"210\" x2=\"336\" y2=\"210\" stroke=\"var(--navy-950)\" stroke-width=\"2\"/>\n  <line x1=\"106\" y1=\"202\" x2=\"106\" y2=\"218\" stroke=\"var(--navy-950)\" stroke-width=\"2\"/>\n  <line x1=\"336\" y1=\"202\" x2=\"336\" y2=\"218\" stroke=\"var(--navy-950)\" stroke-width=\"2\"/>\n  <text class=\"diagram-label\" x=\"221\" y=\"234\" text-anchor=\"middle\">distance d (m)</text>\n  <text class=\"diagram-result\" x=\"60\" y=\"60\">W = F &#215; d</text>\n</svg>", "work-zero": "<svg class=\"force-diagram\" viewBox=\"0 0 460 240\" role=\"img\" aria-label=\"A tray is carried level. The support force points up while the tray moves sideways. The force is at right angles to the movement, so the work done is zero.\">\n  <rect x=\"150\" y=\"120\" width=\"150\" height=\"12\" rx=\"4\" fill=\"var(--navy-700)\"/>\n  <line x1=\"176\" y1=\"118\" x2=\"176\" y2=\"60\" stroke=\"var(--navy-950)\" stroke-width=\"8\" stroke-linecap=\"round\"/>\n  <polygon points=\"176,50 163,76 189,76\" fill=\"var(--navy-950)\"/>\n  <text class=\"diagram-label\" x=\"176\" y=\"40\" text-anchor=\"middle\">support force</text>\n  <line x1=\"300\" y1=\"150\" x2=\"400\" y2=\"150\" stroke=\"var(--gold-600)\" stroke-width=\"8\" stroke-linecap=\"round\" stroke-dasharray=\"2 0\"/>\n  <polygon points=\"412,150 386,138 386,162\" fill=\"var(--gold-600)\"/>\n  <text class=\"diagram-label\" x=\"356\" y=\"176\" text-anchor=\"middle\" style=\"fill:var(--gold-600)\">movement</text>\n  <rect x=\"176\" y=\"120\" width=\"16\" height=\"16\" fill=\"none\" stroke=\"var(--navy-950)\" stroke-width=\"2\"/>\n  <text class=\"diagram-result\" x=\"60\" y=\"150\" style=\"fill:var(--success)\">W = 0 J</text>\n</svg>", "spring-extension": "<svg class=\"force-diagram\" viewBox=\"0 0 480 340\" role=\"img\" aria-label=\"Two identical springs hang from a support. The left spring is at its original length. The right spring is stretched longer by a weight. The extension is the extra length: stretched length minus original length.\">\n  <rect x=\"60\" y=\"40\" width=\"370\" height=\"10\" fill=\"var(--navy-700)\"/>\n  <path d=\"M150 50 L150 62 L128 72 L172 86 L128 100 L172 114 L128 128 L172 140 L150 150\" fill=\"none\" stroke=\"var(--navy-950)\" stroke-width=\"3\"/>\n  <text class=\"diagram-label\" x=\"150\" y=\"176\" text-anchor=\"middle\">original</text>\n  <text class=\"diagram-label\" x=\"150\" y=\"198\" text-anchor=\"middle\">length l&#8320;</text>\n  <path d=\"M330 50 L330 64 L308 76 L352 92 L308 108 L352 124 L308 140 L352 156 L308 172 L352 188 L330 202 L330 214\" fill=\"none\" stroke=\"var(--navy-950)\" stroke-width=\"3\"/>\n  <rect x=\"314\" y=\"214\" width=\"32\" height=\"20\" rx=\"3\" fill=\"var(--gold-500)\"/>\n  <line x1=\"330\" y1=\"234\" x2=\"330\" y2=\"270\" stroke=\"var(--gold-600)\" stroke-width=\"7\" stroke-linecap=\"round\"/>\n  <polygon points=\"330,278 319,254 341,254\" fill=\"var(--gold-600)\"/>\n  <text class=\"diagram-label\" x=\"330\" y=\"302\" text-anchor=\"middle\">stretched length l</text>\n  <line x1=\"300\" y1=\"150\" x2=\"430\" y2=\"150\" stroke=\"var(--navy-700)\" stroke-width=\"1.5\" stroke-dasharray=\"5 5\"/>\n  <line x1=\"412\" y1=\"150\" x2=\"412\" y2=\"214\" stroke=\"var(--success)\" stroke-width=\"3\"/>\n  <line x1=\"406\" y1=\"150\" x2=\"418\" y2=\"150\" stroke=\"var(--success)\" stroke-width=\"3\"/>\n  <line x1=\"406\" y1=\"214\" x2=\"418\" y2=\"214\" stroke=\"var(--success)\" stroke-width=\"3\"/>\n  <text class=\"diagram-label\" x=\"408\" y=\"142\" text-anchor=\"middle\" style=\"fill:var(--success)\">extension e</text>\n  <text class=\"diagram-result\" x=\"60\" y=\"328\" style=\"font-size:24px !important\">extension e = l &#8722; l&#8320;</text>\n</svg>", "apparatus-hookes": "<svg class=\"force-diagram\" viewBox=\"-10 0 460 360\" role=\"img\" aria-label=\"A clamp stand holds a spring next to a vertical ruler. Masses hang from the spring above a catch tray.\">\n  <rect x=\"60\" y=\"322\" width=\"180\" height=\"14\" rx=\"3\" fill=\"var(--navy-950)\"/>\n  <rect x=\"140\" y=\"44\" width=\"12\" height=\"290\" fill=\"var(--navy-700)\"/>\n  <rect x=\"140\" y=\"60\" width=\"120\" height=\"11\" fill=\"var(--navy-700)\"/>\n  <path d=\"M252 71 L252 82 L270 90 L234 102 L270 114 L234 126 L270 138 L252 146 L252 152\" fill=\"none\" stroke=\"var(--navy-950)\" stroke-width=\"3\"/>\n  <rect x=\"238\" y=\"152\" width=\"28\" height=\"14\" rx=\"2\" fill=\"var(--gold-500)\"/>\n  <rect x=\"240\" y=\"166\" width=\"24\" height=\"11\" fill=\"var(--gold-600)\"/>\n  <rect x=\"240\" y=\"179\" width=\"24\" height=\"11\" fill=\"var(--gold-600)\"/>\n  <path d=\"M214 212 q38 26 76 0\" fill=\"none\" stroke=\"var(--success)\" stroke-width=\"4\"/>\n  <rect x=\"300\" y=\"70\" width=\"12\" height=\"220\" fill=\"none\" stroke=\"var(--navy-950)\" stroke-width=\"2\"/>\n  <line x1=\"300\" y1=\"98\" x2=\"312\" y2=\"98\" stroke=\"var(--navy-950)\"/><line x1=\"300\" y1=\"126\" x2=\"312\" y2=\"126\" stroke=\"var(--navy-950)\"/>\n  <line x1=\"300\" y1=\"154\" x2=\"312\" y2=\"154\" stroke=\"var(--navy-950)\"/><line x1=\"300\" y1=\"182\" x2=\"312\" y2=\"182\" stroke=\"var(--navy-950)\"/>\n  <line x1=\"300\" y1=\"210\" x2=\"312\" y2=\"210\" stroke=\"var(--navy-950)\"/><line x1=\"300\" y1=\"238\" x2=\"312\" y2=\"238\" stroke=\"var(--navy-950)\"/>\n  <line x1=\"146\" y1=\"52\" x2=\"120\" y2=\"42\" stroke=\"var(--navy-700)\" stroke-width=\"1\"/>\n  <text class=\"diagram-label\" x=\"116\" y=\"38\" text-anchor=\"end\">clamp stand</text>\n  <line x1=\"234\" y1=\"108\" x2=\"120\" y2=\"108\" stroke=\"var(--navy-700)\" stroke-width=\"1\"/>\n  <text class=\"diagram-label\" x=\"116\" y=\"113\" text-anchor=\"end\">spring</text>\n  <line x1=\"312\" y1=\"150\" x2=\"360\" y2=\"150\" stroke=\"var(--navy-700)\" stroke-width=\"1\"/>\n  <text class=\"diagram-label\" x=\"364\" y=\"155\" text-anchor=\"start\">ruler</text>\n  <line x1=\"266\" y1=\"176\" x2=\"360\" y2=\"210\" stroke=\"var(--navy-700)\" stroke-width=\"1\"/>\n  <text class=\"diagram-label\" x=\"364\" y=\"215\" text-anchor=\"start\">masses</text>\n  <text class=\"diagram-label\" x=\"252\" y=\"240\" text-anchor=\"middle\" style=\"fill:var(--success)\">catch tray</text>\n</svg>", "fe-graph-limit": "<svg class=\"force-diagram\" viewBox=\"0 0 460 320\" role=\"img\" aria-label=\"A force-extension graph. It is a straight line through the origin, then it curves. The point where it stops being straight is the limit of proportionality. The gradient of the straight part equals the spring constant k.\">\n  <line x1=\"70\" y1=\"40\" x2=\"70\" y2=\"272\" stroke=\"var(--navy-950)\" stroke-width=\"2.5\"/>\n  <line x1=\"70\" y1=\"272\" x2=\"424\" y2=\"272\" stroke=\"var(--navy-950)\" stroke-width=\"2.5\"/>\n  <text class=\"diagram-label\" x=\"44\" y=\"150\" text-anchor=\"middle\" transform=\"rotate(-90 44 150)\">force F (N)</text>\n  <text class=\"diagram-label\" x=\"250\" y=\"300\" text-anchor=\"middle\">extension e (m)</text>\n  <line x1=\"70\" y1=\"272\" x2=\"250\" y2=\"120\" stroke=\"var(--navy-700)\" stroke-width=\"4\"/>\n  <path d=\"M250 120 q70 -34 150 -20\" fill=\"none\" stroke=\"var(--navy-700)\" stroke-width=\"4\" stroke-dasharray=\"1 0\"/>\n  <circle cx=\"250\" cy=\"120\" r=\"7\" fill=\"var(--gold-500)\"/>\n  <line x1=\"256\" y1=\"126\" x2=\"288\" y2=\"162\" stroke=\"var(--gold-600)\" stroke-width=\"1.5\"/>\n  <text class=\"diagram-label\" x=\"288\" y=\"180\" text-anchor=\"start\" style=\"fill:var(--gold-600)\">limit of</text>\n  <text class=\"diagram-label\" x=\"288\" y=\"200\" text-anchor=\"start\" style=\"fill:var(--gold-600)\">proportionality</text>\n  <text class=\"diagram-label\" x=\"116\" y=\"206\" text-anchor=\"start\">gradient = k</text>\n</svg>", "two-springs": "<svg class=\"force-diagram\" viewBox=\"0 0 460 320\" role=\"img\" aria-label=\"A force-extension graph with two straight lines from the origin. Line A is steeper than line B, so spring A has the larger spring constant.\">\n  <line x1=\"70\" y1=\"40\" x2=\"70\" y2=\"272\" stroke=\"var(--navy-950)\" stroke-width=\"2.5\"/>\n  <line x1=\"70\" y1=\"272\" x2=\"424\" y2=\"272\" stroke=\"var(--navy-950)\" stroke-width=\"2.5\"/>\n  <text class=\"diagram-label\" x=\"44\" y=\"150\" text-anchor=\"middle\" transform=\"rotate(-90 44 150)\">force F (N)</text>\n  <text class=\"diagram-label\" x=\"250\" y=\"300\" text-anchor=\"middle\">extension e (m)</text>\n  <line x1=\"70\" y1=\"272\" x2=\"210\" y2=\"60\" stroke=\"var(--navy-700)\" stroke-width=\"4\"/>\n  <text class=\"diagram-result\" x=\"196\" y=\"56\" style=\"font-size:24px !important\">A</text>\n  <line x1=\"70\" y1=\"272\" x2=\"400\" y2=\"150\" stroke=\"var(--gold-600)\" stroke-width=\"4\"/>\n  <text class=\"diagram-result\" x=\"404\" y=\"150\" style=\"font-size:24px !important;fill:var(--gold-600)\">B</text>\n  <text class=\"diagram-label\" x=\"150\" y=\"250\" text-anchor=\"start\">steeper = larger k</text>\n</svg>"};return d[n]||'';}};</script>
+<script>/* Arcadia biology lesson renderer. Screen IDs are explicit; pupil answers stay in books. */
+(() => {
+  const lesson=window.LESSON;
+  const $=id=>document.getElementById(id);
+  const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const states={}, widgetStates={};
+  let index=0, activeWidget=null, cell=null, answerContext=null;
+  const initial=location.hash.slice(1);
+  if(lesson.phases.some(p=>p.id===initial)) index=lesson.phases.findIndex(p=>p.id===initial);
+  const state=()=>states[phase().id]??(states[phase().id]={step:0,focus:'nucleus',scenario:0,showNet:false});
+  const phase=()=>lesson.phases[index];
+  const names=[['resources','Resources'],['assessments','Assessments'],['adaptation','Adaptation'],['hot','HOT'],['ai','AI literacy'],['uae','UAE National Agenda']];
+  const button=(label,action,value,attrs='')=>`<button type="button" data-action="${action}" data-value="${esc(value)}" ${attrs}>${label}</button>`;
+  const list=items=>`<ul class="bio-list">${items.map(s=>`<li>${s}</li>`).join('')}</ul>`;
+  const figure=(name,caption,secondary=false)=>`<figure class="bio-figure${secondary?' is-secondary':''}">${BioDiagrams.render(name,state())}<figcaption>${caption||'Schematic model. Colours and sizes are illustrative.'}</figcaption></figure>`;
+  function content(p) {
+    const s=state();
+    if(p.type==='title')return `<div class="title-layout"><p class="screen-kicker">Year 9 Science · ${esc(lesson.unit)} · Lesson ${lesson.unitLesson}</p><h1 class="screen-heading" tabindex="-1">${lesson.title}</h1><p class="title-question">${lesson.question}</p><div class="title-path">${lesson.path.map(x=>`<span>${x}</span>`).join('')}</div></div>`;
+    const heading=`<p class="bio-eyebrow">${p.label||p.family}</p><h1 class="screen-heading" tabindex="-1">${p.title}</h1>${p.lead?`<p class="screen-lead">${p.lead}</p>`:''}`;
+    if(p.type==='outcome')return `${heading}<ol class="outcome-list">${lesson.outcomes.map(o=>`<li><div><strong>${o[0]}</strong><span class="spec-ref">Year 9 curriculum · ${o[1]}</span></div></li>`).join('')}</ol>`;
+    if(p.type==='exam')return `${heading}<div class="exam-layout"><div><ul class="bio-list"><li>Work independently on the yellow sheet provided.</li><li>Follow the instructions on your paper.</li><li>Check your answers if you finish early.</li></ul><p class="bio-task">Use clear scientific words. Stop when directed.</p></div><div class="exam-timer"><p class="bio-eyebrow">Time remaining</p><output id="exam-clock" aria-label="Time remaining" aria-live="off"></output><form id="timer-settings" class="timer-settings"><label for="timer-minutes">Minutes</label><div class="bio-controls"><input id="timer-minutes" name="minutes" type="number" min="1" max="180" step="1" value="${duration/60}" required><button type="submit">Set time</button></div></form><div class="bio-controls">${button('Start','timer','start')}${button('Pause','timer','pause')}${button('Reset','timer','reset')}${button('+1 min','timer','add')}</div><p class="exam-note" id="timer-status" role="status">Ready to start.</p></div></div>`;
+    if(p.type==='structures') {
+      const entries=lesson.structures, selected=entries.find(e=>e.id===s.focus)||entries[0];
+      return `${heading}<div class="bio-layout"><figure class="bio-figure"><div class="cell-view" id="cell-view"><div class="cell-fallback">${BioDiagrams.render('structures')}</div></div><figcaption>Cutaway animal cell · drag or focus the model and use arrow keys to rotate. Colours and sizes are illustrative.</figcaption></figure><div class="bio-copy"><p class="structure-name"><span class="focus-swatch" style="background:${selected.color}"></span>${selected.name}</p><p>${selected.text}</p><div class="bio-controls" aria-label="Explore cell structures">${entries.map(e=>button(esc(e.name),'structure',e.id,`aria-pressed="${e.id===s.focus}"`)).join('')}</div></div></div><p class="bio-task">${p.task}</p>`;
+    }
+    if(p.type==='eye')return `${heading}<iframe class="eye-embed" title="Rotatable labelled eye" src="Resources/eye-model.html?embed"></iframe><p class="bio-task">${p.task}</p>`;
+    if(p.type==='table')return `${heading}<table class="science-table">${p.rows.map((r,i)=>`<tr>${r.map(c=>i===0?`<th>${c}</th>`:`<td>${c}</td>`).join('')}</tr>`).join('')}</table>${p.items?list(p.items):''}<p class="bio-task">${p.task||''}</p>`;
+    if(p.type==='model')return `${heading}<div class="bio-layout">${p.diagram?figure(p.diagram,p.caption):''}<div><div class="bio-step"><span class="step-number">STEP ${s.step+1} OF ${p.steps.length}</span><p>${p.steps[s.step]}</p></div><div class="bio-controls">${button('← Back','step',-1,s.step===0?'disabled':'')}${button('Next step →','step',1,s.step===p.steps.length-1?'disabled':'')}</div></div></div>${p.task?`<p class="bio-task">${p.task}</p>`:''}`;
+    if(p.type==='osmosis')return `${heading}<div class="bio-layout">${figure('osmosis','Water = blue circles; sucrose = gold squares. Counts illustrate particles; they do not measure concentration.')}<div class="bio-copy"><p>Inside stays at <strong>5% sucrose</strong>. Change the solution outside.</p><div class="bio-controls" aria-label="Concentration outside">${[0,15,5].map(v=>button(v+'% sucrose','scenario',v,`aria-pressed="${s.scenario===v}"`)).join('')}</div><p class="bio-task">Predict the net movement. Explain your choice before showing it.</p><div class="bio-controls">${button(s.showNet?'Hide net direction':'Show net direction','net','')}</div></div></div>`;
+    if(p.type==='hinge')return `${heading}<div class="answer-grid">${p.options.map((opt,i)=>button(`<span class="answer-letter">${'ABCD'[i]}</span><span>${opt}</span>`,'choice',i,`class="answer-option" aria-pressed="${s.choice===i}"`)).join('')}</div><p class="bio-task">${p.task||'Choose one answer. Give the evidence that supports it.'}</p>${s.choice!==undefined?`<p class="exam-note">Selected: ${'ABCD'[s.choice]}. Explain your reasoning in your book or aloud.</p>`:''}`;
+    if(p.type==='cases')return `${heading}<div class="bio-cases">${p.cases.map(c=>`<div class="bio-case"><b>${c[0]}</b><p>${c[1]}</p></div>`).join('')}</div>${p.task?`<p class="bio-task">${p.task}</p>`:''}`;
+    if(p.type==='quote')return `${heading}<blockquote class="bio-quote">${p.quote}</blockquote>${list(p.items)}${p.credit?`<p class="routine-credit">${p.credit}</p>`:''}`;
+    const copy=`<div class="bio-copy">${p.text?`<p>${p.text}</p>`:''}${p.items?list(p.items):''}${p.formula?`<div class="bio-formula">${p.formula.map(x=>`<span>${x}</span>`).join('')}</div>`:''}</div>`;
+    return `${heading}${p.diagram?`<div class="bio-layout">${copy}${figure(p.diagram,p.caption,p.secondaryDiagram)}</div>`:copy}${p.task?`<p class="bio-task">${p.task}</p>`:''}`;
+  }
+  function render(focusHeading=false) {
+    cell?.dispose();cell=null;
+    const p=phase();
+    $('app').dataset.family=p.family;
+    document.querySelector('.topic').hidden=p.family==='Title';
+    $('screen').className='screen '+(p.type==='title'?'':'bio-screen');
+    const review=LessonAnswers.has(p,lesson)?`<div class="review-access-row">${button('Model answer &amp; mark scheme','answers','',`class="review-access" aria-expanded="${activeWidget==='answers'&&!answerContext}" aria-controls="student-drawer"`)}</div>`:'';
+    const keepEye=p.type==='eye'&&$('screen').querySelector('.eye-embed');
+    if(keepEye){$('screen').querySelector('.review-access-row').outerHTML=review;}else $('screen').innerHTML=review+content(p)+(p.resources?.length?`<div class="resource-links">${p.resources.map(r=>`<a href="${esc(r.href)}" target="_blank" rel="noopener">${r.label} ↗</a>`).join('')}</div>`:'');
+    $('phase-position').textContent=`Screen ${index+1} of ${lesson.phases.length}`;
+    $('phase-name').textContent=p.nav||p.title||lesson.title;
+    $('next-context').innerHTML=`${index<lesson.phases.length-1?`Next: <strong>${esc(lesson.phases[index+1].nav||lesson.phases[index+1].title)}</strong>`:'Lesson complete'} ${button('⛶','fullscreen','',`class="nav-fullscreen" aria-label="Toggle fullscreen"`)}`;
+    $('previous-screen').disabled=index===0;$('next-screen').disabled=index===lesson.phases.length-1;
+    const widgets=(p.secure?[]:p.family==='Learning outcome'?[names[0]]:['Input','Assess','Thinking'].includes(p.family)?names:[]).filter(w=>lesson.widgets[p.id]&&lesson.widgets[p.id][w[0]]);
+    if(activeWidget!=='answers'&&!widgets.some(w=>w[0]===activeWidget))activeWidget=null;
+    $('student-tools').innerHTML=widgets.map(([id,label])=>button(label,'widget',id,`class="tool-control" aria-expanded="${id===activeWidget}" aria-controls="student-drawer"`)).join('');
+    renderPanel();
+    if(p.type==='structures')cell=CellModel.mount($('cell-view'),state());
+    if(p.type==='exam')tick();
+    try{history.replaceState(null,'','#'+p.id);}catch(_){}
+    if(focusHeading)$('screen').querySelector('h1')?.focus({preventScroll:true});
+  }
+  function go(id) {
+    const target=typeof id==='number'?id:lesson.phases.findIndex(p=>p.id===id);
+    if(target<0||target>=lesson.phases.length)return;
+    index=target;answerContext=null;activeWidget=phase().type==='outcome'?'resources':null;render(true);
+  }
+  function panelKey(){return phase().id+':'+activeWidget+(activeWidget==='answers'&&answerContext?':'+answerContext.widget+':'+answerContext.tab+':'+answerContext.page:'');}
+  function focusTrigger(id){document.querySelector(id==='answers'?'[data-action="answers"]':`[data-action="widget"][data-value="${id}"]`)?.focus({preventScroll:true});}
+  function renderPanel(focus=false) {
+    const drawer=$('student-drawer');
+    $('lesson-main').classList.toggle('has-drawer',Boolean(activeWidget));
+    drawer.hidden=!activeWidget;
+    if(!activeWidget){drawer.innerHTML='';return;}
+    const panel=activeWidget==='answers'?LessonAnswers.panel(phase(),lesson,state(),answerContext):LessonWidgets.panel(activeWidget,phase(),lesson);
+    const key=panelKey();
+    const w=widgetStates[key]??(widgetStates[key]={tab:0,page:0});
+    const tab=panel.tabs[w.tab]||panel.tabs[0];
+    w.page=Math.min(w.page,tab.pages.length-1);const page=tab.pages[w.page];
+    drawer.innerHTML=`<header class="drawer-head"><div><h2 id="drawer-title" tabindex="-1">${panel.title}</h2><p>${panel.subtitle}</p>${activeWidget==='answers'&&answerContext?button('← Return to task','answer-back','',`class="review-return"`):''}</div>${button('×','close','',`class="icon-control" aria-label="Close ${panel.title}"`)}</header><div class="drawer-tabs" role="tablist" aria-label="${panel.title} sections">${panel.tabs.map((t,i)=>button(t.label,'tab',i,`class="support-tab" role="tab" id="widget-tab-${i}" aria-selected="${i===w.tab}" aria-controls="widget-page" tabindex="${i===w.tab?0:-1}"`)).join('')}</div><div class="drawer-body" role="tabpanel" id="widget-page" aria-labelledby="widget-tab-${w.tab}"><article class="widget-page">${page.note?`<p class="widget-note">${page.note}</p>`:''}<h3>${page.heading}</h3>${page.quote?`<blockquote>${page.quote}</blockquote>`:''}${page.text?`<p>${page.text}</p>`:''}${page.items?`<ul>${page.items.map(x=>`<li>${x}</li>`).join('')}</ul>`:''}${page.source?`<a class="widget-source" target="_blank" rel="noopener" href="${esc(page.source)}">${page.sourceLabel||'Read the source'} ↗</a>`:''}${page.action?button(page.action.label+' →','go',page.action.id,'class="widget-action"'):''}${page.href?`<a class="widget-action" href="${esc(page.href)}" target="_blank" rel="noopener">${page.linkLabel||'Open resource'} ↗</a>`:''}${activeWidget!=='answers'&&LessonAnswers.widget(activeWidget,phase(),lesson,w.tab,w.page)?button('Model answer &amp; mark scheme','widget-answer','',`class="widget-action review-widget" aria-controls="student-drawer"`):''}</article></div><nav class="widget-pagination" aria-label="Widget pages">${button('←','page',-1,`aria-label="Previous widget page" ${w.page===0?'disabled':''}`)}<span>${w.page+1} / ${tab.pages.length}</span>${button('→','page',1,`aria-label="Next widget page" ${w.page===tab.pages.length-1?'disabled':''}`)}</nav>`;
+    if(focus)$('drawer-title').focus({preventScroll:true});
+  }
+  let duration=22*60, remaining=duration, deadline=null;
+  function tick(){
+    if(deadline!==null){
+      remaining=Math.max(0,Math.ceil((deadline-Date.now())/1000));
+      if(remaining===0){deadline=null;$('status').textContent='Assessment time has ended. Put your pen down.';}
+    }
+    if($('exam-clock')){
+      $('exam-clock').textContent=`${Math.floor(remaining/60).toString().padStart(2,'0')}:${(remaining%60).toString().padStart(2,'0')}`;
+      const message=remaining===0?'Time is up. Put your pen down.':deadline!==null?'Work independently.':remaining===duration?'Ready to start.':'Timer paused.';
+      if($('timer-status').textContent!==message)$('timer-status').textContent=message;
+    }
+  }
+  document.addEventListener('submit',e=>{
+    if(e.target.id!=='timer-settings')return;
+    e.preventDefault();
+    const input=$('timer-minutes');
+    if(!input.reportValidity())return;
+    duration=Number(input.value)*60;remaining=duration;deadline=null;
+    $('status').textContent=`Timer set to ${input.value} minutes. Press Start when ready.`;
+    tick();
+  });
+  setInterval(tick,500);
+  $('previous-screen').addEventListener('click',()=>go(index-1));
+  $('next-screen').addEventListener('click',()=>go(index+1));
+  document.addEventListener('click',async e=>{
+    const b=e.target.closest('[data-action]');if(!b||b.disabled)return;
+    const a=b.dataset.action,v=b.dataset.value,s=state();
+    if(a==='widget'){answerContext=null;activeWidget=activeWidget===v?null:v;render();if(activeWidget)$('drawer-title').focus({preventScroll:true});else document.querySelector(`[data-action="widget"][data-value="${v}"]`)?.focus();}
+    if(a==='close'){const old=activeWidget;activeWidget=null;answerContext=null;render();focusTrigger(old);}
+    if(a==='tab'||a==='page'){const w=widgetStates[panelKey()];if(a==='tab'){w.tab=Number(v);w.page=0;}else w.page+=Number(v);renderPanel();if(a==='tab')document.getElementById('widget-tab-'+w.tab)?.focus();else {$('widget-page').tabIndex=-1;$('widget-page').focus({preventScroll:true});}}
+    if(a==='answers'){const closing=activeWidget==='answers'&&!answerContext;answerContext=null;activeWidget=closing?null:'answers';render();if(closing)focusTrigger('answers');else $('drawer-title').focus({preventScroll:true});}
+    if(a==='widget-answer'){const w=widgetStates[panelKey()];answerContext={widget:activeWidget,tab:w.tab,page:w.page};activeWidget='answers';render();$('drawer-title').focus({preventScroll:true});}
+    if(a==='answer-back'&&answerContext){activeWidget=answerContext.widget;answerContext=null;render();document.querySelector('[data-action="widget-answer"]')?.focus({preventScroll:true});}
+    if(a==='go')go(v);
+    if(a==='step'){s.step=Math.max(0,Math.min(phase().steps.length-1,s.step+Number(v)));render();$('screen').querySelector('.bio-step').setAttribute('tabindex','-1');$('screen').querySelector('.bio-step').focus({preventScroll:true});}
+    if(a==='structure'){s.focus=v;render();document.querySelector(`[data-action="structure"][data-value="${v}"]`)?.focus();}
+    if(a==='scenario'){s.scenario=Number(v);s.showNet=false;render();document.querySelector(`[data-action="scenario"][data-value="${v}"]`)?.focus();}
+    if(a==='net'){s.showNet=!s.showNet;render();document.querySelector('[data-action="net"]')?.focus();}
+    if(a==='choice'){s.choice=Number(v);render();document.querySelector(`[data-action="choice"][data-value="${v}"]`)?.focus();}
+    if(a==='timer'){
+      tick();
+      if(v==='start'&&deadline===null&&remaining>0)deadline=Date.now()+remaining*1000;
+      if(v==='pause')deadline=null;
+      if(v==='reset'){deadline=null;remaining=duration;}
+      if(v==='add'){remaining+=60;if(deadline!==null)deadline+=60000;}
+      tick();
+    }
+    if(a==='fullscreen'){try{if(document.fullscreenElement)await document.exitFullscreen();else await document.documentElement.requestFullscreen();}catch(_){$('status').textContent='Fullscreen is unavailable in this viewer. Open the HTML in your browser.';}}
+  });
+  document.addEventListener('keydown',e=>{
+    if(e.key==='Escape'&&activeWidget){e.preventDefault();const old=activeWidget;activeWidget=null;answerContext=null;render();focusTrigger(old);return;}
+    if(e.target.closest('[role="tablist"]')&&['ArrowLeft','ArrowRight'].includes(e.key)){e.preventDefault();const w=widgetStates[panelKey()];const tabs=(activeWidget==='answers'?LessonAnswers.panel(phase(),lesson,state(),answerContext):LessonWidgets.panel(activeWidget,phase(),lesson)).tabs;w.tab=(w.tab+(e.key==='ArrowRight'?1:-1)+tabs.length)%tabs.length;w.page=0;renderPanel();document.getElementById('widget-tab-'+w.tab)?.focus();return;}
+    if(e.target.closest('button,a,canvas,input,select,textarea'))return;
+    if(e.key==='ArrowRight'){e.preventDefault();go(index+1);}if(e.key==='ArrowLeft'){e.preventDefault();go(index-1);}
+  });
+  if(phase().type==='outcome')activeWidget='resources';
+  render();
+})();
+</script>
+</body></html>
