@@ -1,0 +1,335 @@
+<!doctype html><html lang="en-GB"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Current electricity: recall and check</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{--navy:#21345B;--gold:#B8860B;--paper:#F7F1E3;--ink:#1c2233;--soft:#e8edf5;--ok:#2f6b3a;--okbg:#eaf3ec;}
+  *{box-sizing:border-box;}
+  body{margin:0;background:#e9e7e2;color:var(--ink);font:18px/1.55 "Montserrat","Avenir Next",Arial,sans-serif;}
+  .toolbar{position:sticky;top:0;z-index:5;background:#e9e7e2;display:flex;gap:10px;justify-content:flex-end;max-width:1100px;margin:0 auto;padding:12px 28px 0;}
+  .toolbar button{font:600 15px "Montserrat",Arial,sans-serif;cursor:pointer;border:2px solid var(--navy);background:var(--navy);color:#fff;border-radius:999px;padding:8px 18px;}
+  .toolbar button.ghost{background:#fff;color:var(--navy);}
+  .page{max-width:1100px;margin:0 auto;padding:14px 28px 64px;}
+  h1{margin:0 0 6px;font:700 44px/1.05 Georgia,serif;color:var(--navy);}
+  .lead{margin:0 0 20px;font-size:20px;color:#45506a;}
+  .namebar{display:flex;gap:26px;margin:0 0 20px;font-size:15px;color:#45506a;}
+  .namebar span{flex:1;border-bottom:1.5px solid #b7bccb;padding-bottom:2px;}
+  .eq{display:inline-block;padding:8px 16px;border:2px solid var(--navy);border-radius:10px;font:600 20px Georgia,serif;color:var(--navy);margin:2px 8px 20px 0;}
+  section{background:#fff;border:2px solid #cfc7b5;border-radius:18px;padding:22px 26px;margin-bottom:22px;}
+  section.stretch{border-color:var(--navy);}
+  section.secure{border-color:var(--gold);}
+  h2{margin:0 0 10px;font-size:15px;letter-spacing:.08em;text-transform:uppercase;color:var(--gold);}
+  h2 span{display:inline-block;margin-left:10px;padding:2px 10px;border-radius:999px;background:var(--soft);color:var(--navy);font-size:12px;letter-spacing:.04em;text-transform:none;}
+  .partintro{margin:0 0 10px;color:#45506a;font-size:16px;}
+  ol{margin:8px 0 0;padding-left:26px;} li{margin-bottom:14px;}
+  ol.tight li{margin-bottom:8px;}
+  .work{border:1px dashed #b9c2cc;border-radius:8px;min-height:46px;margin-top:8px;background:#fff;}
+  .note{margin-top:12px;padding:10px 14px;background:#fff7e6;border-left:4px solid var(--gold);font-size:16px;border-radius:0 8px 8px 0;}
+  .hot{margin-top:10px;padding:10px 14px;background:#f2f5fb;border-left:4px solid var(--navy);font-size:16px;border-radius:0 8px 8px 0;}
+  .ans{display:none;margin-top:8px;padding:8px 14px;background:var(--okbg);border-left:5px solid var(--ok);border-radius:0 8px 8px 0;color:#1f4a29;font-size:16px;}
+  .ans b{color:#153a1c;}
+  body.show-answers .ans{display:block;}
+  /* retrieval grid */
+  .rgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:12px;}
+  .rcell{background:var(--paper);border:1.5px solid #d9d0bd;border-radius:12px;padding:10px 12px;font-size:16px;position:relative;min-height:132px;}
+  .rcell .pts{display:inline-block;margin-bottom:6px;padding:2px 9px;border-radius:999px;background:var(--navy);color:#fff;font-size:11px;letter-spacing:.05em;font-weight:600;}
+  .rcell.p2 .pts{background:#5b6b8f;} .rcell.p3 .pts{background:var(--gold);}
+  .rline{border-bottom:1px solid #c2b8a2;height:22px;margin-top:6px;}
+  .score{margin-top:12px;display:inline-block;border:2px solid var(--navy);border-radius:10px;padding:6px 14px;font-weight:600;color:var(--navy);}
+  /* word bank + blanks */
+  .bank{margin:10px 0 14px;padding:12px 14px;background:var(--paper);border:1.5px dashed #c9bfa8;border-radius:12px;font-size:16px;}
+  .bank b{color:var(--navy);display:block;margin-bottom:6px;font-size:14px;letter-spacing:.05em;text-transform:uppercase;}
+  .bank span{display:inline-block;margin:3px 10px 3px 0;padding:2px 10px;background:#fff;border:1px solid #d9d0bd;border-radius:999px;}
+  .blank{display:inline-block;min-width:118px;border-bottom:1.5px solid var(--navy);margin:0 2px;}
+  sup.bn{color:var(--gold);font-weight:700;font-size:12px;margin-right:1px;}
+  /* tables */
+  table.rt{border-collapse:collapse;width:100%;margin:10px 0 4px;font-size:16px;}
+  table.rt th{background:var(--navy);color:#fff;font-weight:600;padding:8px 10px;text-align:left;border:1px solid #b9c2cc;font-size:14px;}
+  table.rt td{border:1px solid #cfd6df;padding:12px 10px;vertical-align:top;}
+  table.rt td.fill{height:44px;}
+  table.rt td.lt{width:64px;text-align:center;font-weight:600;}
+  .mlist{margin:8px 0 0;padding-left:0;list-style:none;font-size:16px;}
+  .mlist li{margin-bottom:7px;} .mlist b{color:var(--navy);margin-right:6px;}
+  /* diagrams */
+  .figrow{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin:10px 0 6px;}
+  .fig svg{width:100%;height:auto;display:block;}
+  .figcap{font-size:14px;color:#6b7280;margin-top:4px;}
+  .cd line,.cd circle,.cd polyline{stroke:var(--navy);stroke-width:2.6;fill:none;}
+  .cd circle.lamp{fill:#fff;} .cd circle.meter{fill:var(--soft);}
+  .cd circle.dot{fill:var(--navy);stroke:none;}
+  .cd line.plate{stroke-width:2.6;} .cd line.plateshort{stroke-width:6;}
+  .cd text{font:600 13px "Montserrat",Arial,sans-serif;fill:var(--navy);stroke:none;}
+  .cd text.gold{fill:var(--gold);}
+  /* mcq */
+  .mcq{margin:8px 0 0;padding-left:0;list-style:none;}
+  .mcq li{margin-bottom:6px;font-size:17px;}
+  .mcq .opt{display:inline-block;width:26px;height:26px;line-height:24px;text-align:center;border:2px solid var(--navy);border-radius:50%;color:var(--navy);font-weight:700;font-size:14px;margin-right:8px;}
+  /* tick boxes */
+  .box{display:inline-block;width:20px;height:20px;border:1.5px solid var(--navy);border-radius:4px;vertical-align:-4px;}
+  footer{max-width:1100px;margin:6px auto 0;padding:0 28px;font-size:14px;color:#6b7885;}
+  @media (max-width:860px){.rgrid{grid-template-columns:1fr 1fr;} .figrow{grid-template-columns:1fr;}}
+  @media (max-width:760px){.page{padding-inline:16px;} h1{font-size:34px;} .rgrid{grid-template-columns:1fr;}}
+  @media print{.toolbar{display:none;} body{background:#fff;} .ans{display:none;} body.show-answers .ans{display:block;} section{break-inside:avoid;}}
+</style></head><body>
+<div class="toolbar">
+  <button onclick="document.body.classList.toggle('show-answers')">Show / hide answers</button>
+  <button class="ghost" onclick="window.print()">Print</button>
+</div>
+<main class="page">
+  <h1>Current electricity: recall and check</h1>
+  <p class="lead">Everything you have learned about series and parallel circuits, current, voltage and resistance. Work in silence for Part A. Every value needs a unit.</p>
+  <div class="namebar"><span>Name:</span><span>Class:</span><span>Date:</span></div>
+  <div class="eq">current in A</div><div class="eq">voltage in V</div><div class="eq">resistance in &#937;</div>
+
+  <section>
+    <h2>Part A &middot; Do Now retrieval grid <span>everyone &middot; 6 minutes, no notes</span></h2>
+    <p class="partintro">Answer as many boxes as you can. Harder boxes are worth more. Start anywhere &mdash; you do not have to go in order. Total available: 18 points.</p>
+    <div class="rgrid">
+      <div class="rcell p1"><span class="pts">1 POINT</span><div>Name the unit of current and give its symbol.</div><div class="rline"></div><div class="rline"></div>
+        <div class="ans"><b>1.</b> The ampere, or amp &mdash; symbol <b>A</b>.</div></div>
+      <div class="rcell p1"><span class="pts">1 POINT</span><div>Which meter measures current, and how is it connected?</div><div class="rline"></div><div class="rline"></div>
+        <div class="ans"><b>2.</b> An <b>ammeter</b>, connected <b>in series</b> (in the path), so all the charge passes through it.</div></div>
+      <div class="rcell p1"><span class="pts">1 POINT</span><div>Name the unit of voltage and give its symbol.</div><div class="rline"></div><div class="rline"></div>
+        <div class="ans"><b>3.</b> The volt &mdash; symbol <b>V</b>.</div></div>
+      <div class="rcell p2"><span class="pts">2 POINTS</span><div>Two lamps are in series. One lamp is removed. What happens to the other, and why?</div><div class="rline"></div><div class="rline"></div>
+        <div class="ans"><b>4.</b> It <b>goes out</b>. There is only one complete path, and removing a lamp breaks it.</div></div>
+      <div class="rcell p2"><span class="pts">2 POINTS</span><div>Two parallel branches carry 0.3 A and 0.4 A. What is the supply current? How do you know?</div><div class="rline"></div><div class="rline"></div>
+        <div class="ans"><b>5.</b> <b>0.7 A</b>. The branch currents add together where the paths rejoin.</div></div>
+      <div class="rcell p2"><span class="pts">2 POINTS</span><div>What does a reading of 3 V across a lamp actually mean?</div><div class="rline"></div><div class="rline"></div>
+        <div class="ans"><b>6.</b> The lamp transfers <b>3 joules of energy for each coulomb</b> of charge that passes through it.</div></div>
+      <div class="rcell p3"><span class="pts">3 POINTS</span><div><i>From Week 2:</i> in a fair test you change one thing and measure another. What must you do with everything else, and what are those called?</div><div class="rline"></div><div class="rline"></div>
+        <div class="ans"><b>7.</b> <b>Keep them the same.</b> They are the <b>control variables</b>. Without them the result cannot be linked to the one thing you changed.</div></div>
+      <div class="rcell p3"><span class="pts">3 POINTS</span><div>Two identical lamps in series, instead of one, on the same supply. What happens to the current, and why?</div><div class="rline"></div><div class="rline"></div>
+        <div class="ans"><b>8.</b> The current is <b>smaller</b>. Two lamps give a <b>greater total resistance</b>, and with the same supply a greater resistance means a smaller current. Both lamps carry the <b>same</b> current as each other.</div></div>
+      <div class="rcell p3"><span class="pts">3 POINTS</span><div>A pupil writes: &ldquo;the current gets used up by the lamp.&rdquo; Correct them.</div><div class="rline"></div><div class="rline"></div>
+        <div class="ans"><b>9.</b> Current is <b>not used up</b>. The current is the <b>same all the way round</b> a series loop &mdash; the same charge keeps flowing. What is used up (transferred) is <b>energy</b>, not charge or current.</div></div>
+    </div>
+    <div class="score">My score: ______ / 18</div>
+    <div class="note"><b>Build understanding.</b> One step at a time: do every 1-point box first, then come back. For box 4, draw the circuit and put a gap where the lamp was, then trace the path with your finger &mdash; if your finger cannot get back to the battery, no charge flows.</div>
+    <div class="hot"><b>Go further.</b> Which box did you find hardest, and <i>why</i> &mdash; was it the words, the rule, or the reasoning? Write one sentence. That sentence is what you revise tonight.</div>
+  </section>
+
+  <section>
+    <h2>Part B &middot; Word fill <span>everyone</span></h2>
+    <p class="partintro">Copy each sentence into your book, filling the gaps. Use the word bank. <b>Three words are needed twice.</b></p>
+    <div class="bank"><b>Word bank</b>
+      <span>across</span><span>add up</span><span>ammeter</span><span>amperes</span><span>charge</span><span>decreases</span><span>difference</span><span>dimmer</span><span>energy</span><span>full</span><span>increases</span><span>ohms</span><span>parallel</span><span>resistance</span><span>same</span><span>series</span><span>splits</span><span>voltmeter</span><span>volts</span>
+    </div>
+    <ol>
+      <li><div class="q">Current is the rate of flow of <sup class="bn">1</sup><span class="blank"></span> around a circuit. It is measured in <sup class="bn">2</sup><span class="blank"></span> (symbol A) with an <sup class="bn">3</sup><span class="blank"></span>, which must be connected in <sup class="bn">4</sup><span class="blank"></span> with the component so that all the charge passes through it.</div>
+        <div class="ans"><b>1</b> charge &middot; <b>2</b> amperes &middot; <b>3</b> ammeter &middot; <b>4</b> series</div></li>
+      <li><div class="q">A <sup class="bn">5</sup><span class="blank"></span> circuit has only one complete path, so the current is the <sup class="bn">6</sup><span class="blank"></span> at every point. A <sup class="bn">7</sup><span class="blank"></span> circuit has more than one path: the current <sup class="bn">8</sup><span class="blank"></span> at a junction, and the branch currents <sup class="bn">9</sup><span class="blank"></span> to give the supply current.</div>
+        <div class="ans"><b>5</b> series &middot; <b>6</b> same &middot; <b>7</b> parallel &middot; <b>8</b> splits &middot; <b>9</b> add up</div></li>
+      <li><div class="q">Voltage, or potential <sup class="bn">10</sup><span class="blank"></span>, tells you how much <sup class="bn">11</sup><span class="blank"></span> is transferred for each coulomb of charge. It is measured in <sup class="bn">12</sup><span class="blank"></span> (symbol V) with a <sup class="bn">13</sup><span class="blank"></span> connected <sup class="bn">14</sup><span class="blank"></span> the component, on its own separate branch.</div>
+        <div class="ans"><b>10</b> difference &middot; <b>11</b> energy &middot; <b>12</b> volts &middot; <b>13</b> voltmeter &middot; <b>14</b> across</div></li>
+      <li><div class="q">In a series circuit the voltages across the components <sup class="bn">15</sup><span class="blank"></span> to give the supply voltage. In a parallel circuit each branch is joined across the <sup class="bn">16</sup><span class="blank"></span> two points as the supply, so each branch has the <sup class="bn">17</sup><span class="blank"></span> supply voltage.</div>
+        <div class="ans"><b>15</b> add up &middot; <b>16</b> same &middot; <b>17</b> full</div></li>
+      <li><div class="q"><sup class="bn">18</sup><span class="blank"></span> is the opposition to the flow of charge. It is measured in <sup class="bn">19</sup><span class="blank"></span>, symbol &#937;. Adding a lamp in series <sup class="bn">20</sup><span class="blank"></span> the total resistance, so on the same supply the current <sup class="bn">21</sup><span class="blank"></span> and the lamps get <sup class="bn">22</sup><span class="blank"></span>.</div>
+        <div class="ans"><b>18</b> Resistance &middot; <b>19</b> ohms &middot; <b>20</b> increases &middot; <b>21</b> decreases &middot; <b>22</b> dimmer</div></li>
+    </ol>
+    <div class="note"><b>Build understanding.</b> Do the words you are sure of first and cross them off the bank &mdash; that shrinks the choice for the hard gaps. Two words are easy to swap by mistake: an <b>ammeter</b> goes <b>in</b> the path, a <b>voltmeter</b> goes <b>across</b> it. Say it aloud before you write.</div>
+    <div class="hot"><b>Go further.</b> Sentence 5 says adding a lamp in series makes the current smaller. Adding a lamp in <i>parallel</i> does the opposite to the supply current. Explain why, using the word &ldquo;paths&rdquo;.
+      <div class="ans"><b>Answer.</b> A new parallel branch adds <b>another complete path</b> for charge, so the total resistance of the circuit <b>falls</b> and the <b>supply current rises</b>. Each existing branch still has the full supply voltage, so it keeps roughly the same current &mdash; the extra current is the new branch's.</div></div>
+  </section>
+
+  <section>
+    <h2>Part C &middot; Match up <span>everyone</span></h2>
+    <p class="partintro">C1. Write the letter of the correct meaning next to each term.</p>
+    <table class="rt">
+      <tr><th style="width:52%">Term</th><th class="lt">Letter</th><th style="width:52%">Term</th><th class="lt">Letter</th></tr>
+      <tr><td>1. Current</td><td class="lt"></td><td>5. Parallel circuit</td><td class="lt"></td></tr>
+      <tr><td>2. Potential difference</td><td class="lt"></td><td>6. Ammeter</td><td class="lt"></td></tr>
+      <tr><td>3. Resistance</td><td class="lt"></td><td>7. Voltmeter</td><td class="lt"></td></tr>
+      <tr><td>4. Series circuit</td><td class="lt"></td><td>8. Junction</td><td class="lt"></td></tr>
+    </table>
+    <ul class="mlist">
+      <li><b>A</b> A point where a circuit splits into branches, or where branches rejoin.</li>
+      <li><b>B</b> The rate of flow of charge, measured in amperes.</li>
+      <li><b>C</b> A meter connected across a component to measure the energy transferred per coulomb.</li>
+      <li><b>D</b> A circuit with only one complete path for the charge.</li>
+      <li><b>E</b> The opposition to the flow of charge, measured in ohms.</li>
+      <li><b>F</b> A meter connected in the path to measure the rate of flow of charge.</li>
+      <li><b>G</b> The energy transferred for each coulomb of charge between two points.</li>
+      <li><b>H</b> A circuit with two or more complete paths for the charge.</li>
+    </ul>
+    <div class="ans"><b>C1 answers.</b> 1&ndash;<b>B</b> &middot; 2&ndash;<b>G</b> &middot; 3&ndash;<b>E</b> &middot; 4&ndash;<b>D</b> &middot; 5&ndash;<b>H</b> &middot; 6&ndash;<b>F</b> &middot; 7&ndash;<b>C</b> &middot; 8&ndash;<b>A</b></div>
+
+    <p class="partintro" style="margin-top:18px">C2. Complete the quantity table.</p>
+    <table class="rt">
+      <tr><th>Quantity</th><th>Unit name</th><th>Unit symbol</th><th>Meter used</th></tr>
+      <tr><td>Current</td><td class="fill"></td><td class="fill"></td><td class="fill"></td></tr>
+      <tr><td>Potential difference (voltage)</td><td class="fill"></td><td class="fill"></td><td class="fill"></td></tr>
+      <tr><td>Resistance</td><td class="fill"></td><td class="fill"></td><td class="fill"></td></tr>
+      <tr><td>Charge</td><td class="fill"></td><td class="fill"></td><td class="fill"></td></tr>
+      <tr><td>Energy</td><td class="fill"></td><td class="fill"></td><td class="fill"></td></tr>
+    </table>
+    <div class="ans"><b>C2 answers.</b> Current &mdash; ampere (amp), <b>A</b>, ammeter (in series). Potential difference &mdash; volt, <b>V</b>, voltmeter (across). Resistance &mdash; ohm, <b>&#937;</b>, no single meter at this stage: it is worked out from voltage &divide; current. Charge &mdash; coulomb, <b>C</b>, not measured directly here. Energy &mdash; joule, <b>J</b>, not measured directly here.</div>
+    <div class="note"><b>Build understanding.</b> Use the sentences from Part B &mdash; every answer in C1 and C2 is hiding in one of them. Match the pairs you are certain of first, then choose between what is left.</div>
+    <div class="hot"><b>Go further.</b> Two of these quantities are &ldquo;per something&rdquo; quantities: current is charge <i>per second</i> and voltage is energy <i>per coulomb</i>. Explain why that means a big voltage does not automatically mean a big current.
+      <div class="ans"><b>Answer.</b> They measure different things. Voltage says how much energy each coulomb carries; current says how many coulombs pass each second. A high voltage across a <b>high resistance</b> still gives a small current, because resistance limits how fast the charge can flow.</div></div>
+  </section>
+
+  <section>
+    <h2>Part D &middot; Always, sometimes, never <span>everyone &middot; talk first, then write</span></h2>
+    <p class="partintro">For each statement write <b>always</b>, <b>sometimes</b> or <b>never</b>, then give your reason. If you write &ldquo;sometimes&rdquo;, you must say <i>when</i>.</p>
+    <ol class="tight">
+      <li><div class="q">The current is the same at every point in a series circuit.</div>
+        <div class="ans"><b>Always.</b> One path only, so the same charge flows past every point.</div></li>
+      <li><div class="q">The current splits equally at a junction.</div>
+        <div class="ans"><b>Sometimes</b> &mdash; only when the branches have equal resistance. Otherwise the branch with less resistance takes the larger share. The branch currents still add to the supply current.</div></li>
+      <li><div class="q">Each branch of a parallel circuit has the full supply voltage.</div>
+        <div class="ans"><b>Always</b> (in the ideal circuits we use). Each branch is joined across the same two supply points. In a real circuit it is very slightly less, because of small losses in the source, wires and switch.</div></li>
+      <li><div class="q">Adding another lamp in series makes all the lamps dimmer.</div>
+        <div class="ans"><b>Always</b>, on the same supply. More total resistance means a smaller current, and the supply voltage is now shared between more lamps.</div></li>
+      <li><div class="q">If one lamp in a circuit breaks, the others go out.</div>
+        <div class="ans"><b>Sometimes</b> &mdash; yes in series (the only path is broken); no in parallel (each branch is its own complete path), unless the break is in the shared supply wire.</div></li>
+      <li><div class="q">The supply voltage is shared equally between components in series.</div>
+        <div class="ans"><b>Sometimes</b> &mdash; only when the components have equal resistance. The drops always <i>add up</i> to the supply voltage, but a larger resistance takes a larger share.</div></li>
+      <li><div class="q">Current is used up as it travels round a circuit.</div>
+        <div class="ans"><b>Never.</b> Charge is not destroyed. Energy is transferred from the charge to the components, but the current returning to the battery is the same as the current leaving it.</div></li>
+      <li><div class="q">A voltmeter is connected across a component.</div>
+        <div class="ans"><b>Always.</b> It compares two points, so it needs its own branch across the component, leaving the original path intact.</div></li>
+    </ol>
+    <div class="note"><b>Build understanding.</b> Use this stem: &ldquo;This is <u>sometimes</u> true. It is true when ______, but not when ______.&rdquo; If you cannot finish the second gap, the answer is probably <i>always</i> or <i>never</i>.</div>
+    <div class="hot"><b>Go further.</b> Choose the one statement you think most pupils get wrong. Write the wrong answer they would give, and the one sentence that would fix it.</div>
+  </section>
+
+  <section>
+    <h2>Part E &middot; Read the circuit <span>everyone</span></h2>
+    <p class="partintro">Both supplies are 6 V and every lamp is identical. Treat the circuits as ideal.</p>
+    <div class="figrow">
+      <div class="fig"><svg class="cd" viewBox="0 0 460 250" role="img" aria-label="A series circuit. A battery of two cells on the left, two identical lamps L1 and L2 on the top wire with a point marked X between them, and an ammeter A1 in the bottom wire.">
+        <line x1="60" y1="40" x2="152" y2="40"/>
+        <circle class="lamp" cx="170" cy="40" r="18"/><line x1="157" y1="27" x2="183" y2="53"/><line x1="157" y1="53" x2="183" y2="27"/>
+        <line x1="188" y1="40" x2="282" y2="40"/>
+        <circle class="lamp" cx="300" cy="40" r="18"/><line x1="287" y1="27" x2="313" y2="53"/><line x1="287" y1="53" x2="313" y2="27"/>
+        <line x1="318" y1="40" x2="400" y2="40"/>
+        <line x1="400" y1="40" x2="400" y2="210"/>
+        <line x1="400" y1="210" x2="248" y2="210"/>
+        <circle class="meter" cx="230" cy="210" r="18"/><text x="230" y="215" text-anchor="middle">A</text>
+        <line x1="212" y1="210" x2="60" y2="210"/>
+        <line x1="60" y1="210" x2="60" y2="152"/>
+        <line class="plate" x1="42" y1="152" x2="78" y2="152"/><line class="plateshort" x1="50" y1="142" x2="70" y2="142"/>
+        <line x1="60" y1="142" x2="60" y2="130"/>
+        <line class="plate" x1="42" y1="130" x2="78" y2="130"/><line class="plateshort" x1="50" y1="120" x2="70" y2="120"/>
+        <line x1="60" y1="120" x2="60" y2="40"/>
+        <text x="88" y="141">6 V</text>
+        <text x="170" y="16" text-anchor="middle">L1</text><text x="300" y="16" text-anchor="middle">L2</text>
+        <circle class="dot" cx="240" cy="40" r="4"/><text class="gold" x="240" y="72" text-anchor="middle">X</text>
+        <text x="230" y="242" text-anchor="middle">A&#8321; = 0.30 A</text>
+      </svg><div class="figcap">Circuit 1 &mdash; series.</div></div>
+      <div class="fig"><svg class="cd" viewBox="0 0 460 250" role="img" aria-label="A parallel circuit. A battery of two cells on the left, an ammeter in the shared top wire reading 0.90 A, and two branches each containing a lamp: L1 in the middle branch and L2 on the right.">
+        <line x1="60" y1="40" x2="122" y2="40"/>
+        <circle class="meter" cx="140" cy="40" r="18"/><text x="140" y="45" text-anchor="middle">A</text>
+        <line x1="158" y1="40" x2="400" y2="40"/>
+        <line x1="400" y1="40" x2="400" y2="107"/>
+        <circle class="lamp" cx="400" cy="125" r="18"/><line x1="387" y1="112" x2="413" y2="138"/><line x1="387" y1="138" x2="413" y2="112"/>
+        <line x1="400" y1="143" x2="400" y2="210"/>
+        <line x1="400" y1="210" x2="60" y2="210"/>
+        <line x1="260" y1="40" x2="260" y2="107"/>
+        <circle class="lamp" cx="260" cy="125" r="18"/><line x1="247" y1="112" x2="273" y2="138"/><line x1="247" y1="138" x2="273" y2="112"/>
+        <line x1="260" y1="143" x2="260" y2="210"/>
+        <circle class="dot" cx="260" cy="40" r="4"/><circle class="dot" cx="260" cy="210" r="4"/>
+        <line x1="60" y1="210" x2="60" y2="152"/>
+        <line class="plate" x1="42" y1="152" x2="78" y2="152"/><line class="plateshort" x1="50" y1="142" x2="70" y2="142"/>
+        <line x1="60" y1="142" x2="60" y2="130"/>
+        <line class="plate" x1="42" y1="130" x2="78" y2="130"/><line class="plateshort" x1="50" y1="120" x2="70" y2="120"/>
+        <line x1="60" y1="120" x2="60" y2="40"/>
+        <text x="88" y="141">6 V</text>
+        <text x="232" y="130" text-anchor="end">L1</text><text x="424" y="130" text-anchor="start">L2</text>
+        <text x="140" y="16" text-anchor="middle">0.90 A</text>
+        <text class="gold" x="272" y="96" text-anchor="start">0.40 A</text>
+      </svg><div class="figcap">Circuit 2 &mdash; parallel.</div></div>
+    </div>
+    <ol>
+      <li><div class="q"><b>Circuit 1.</b> What would an ammeter placed at X read? Explain how you know.</div><div class="work"></div>
+        <div class="ans"><b>Answer.</b> <b>0.30 A</b> &mdash; the same. There is one path, so the current is the same at every point in the loop.</div></li>
+      <li><div class="q"><b>Circuit 1.</b> The lamps are identical. State the voltage across each one, and the rule you used.</div><div class="work"></div>
+        <div class="ans"><b>Answer.</b> <b>3 V each.</b> The voltages across series components add up to the supply voltage, and identical lamps have equal resistance, so 3 + 3 = 6 V.</div></li>
+      <li><div class="q"><b>Circuit 2.</b> Branch L1 carries 0.40 A and the supply current is 0.90 A. Calculate the current in branch L2.</div><div class="work"></div>
+        <div class="ans"><b>Answer.</b> 0.90 &minus; 0.40 = <b>0.50 A</b>. The branch currents add to the supply current.</div></li>
+      <li><div class="q"><b>Circuit 2.</b> State the voltage across L1 and across L2. Explain why it is not 3 V each.</div><div class="work" style="min-height:60px"></div>
+        <div class="ans"><b>Answer.</b> <b>6 V across each.</b> Each branch is joined across the <b>same two supply points</b>, so each gets the whole supply voltage. Voltage is not &ldquo;split at the junction&rdquo; &mdash; it is the <i>current</i> that splits there.</div></li>
+      <li><div class="q">In Circuit 2, are the branch currents equal? The lamps are identical &mdash; what does that tell you about the reading of 0.40 A?</div><div class="work" style="min-height:60px"></div>
+        <div class="ans"><b>Answer.</b> Identical lamps across the same voltage should carry <b>equal</b> currents, so you would expect about 0.45 A each. A 0.40 A / 0.50 A split means the lamps are <b>not really identical</b>, or a reading or connection is faulty. Good scientists check the apparatus when the numbers disagree with the rule.</div></li>
+    </ol>
+    <div class="note"><b>Build understanding.</b> Before you answer, trace each circuit with your finger and count the complete paths back to the battery: one path means series, two or more means parallel. Then pick the matching rule: <b>series</b> &mdash; current the same, voltages add up; <b>parallel</b> &mdash; currents add up, voltage the same.</div>
+    <div class="hot"><b>Go further.</b> One lamp in Circuit 2 is unscrewed. Describe what happens to the supply ammeter reading and to the remaining lamp, and explain both.
+      <div class="ans"><b>Answer.</b> The remaining lamp <b>stays lit at about the same brightness</b>, because its own path is still complete and it still has the full supply voltage. The supply ammeter reading <b>falls</b> to just that branch's current, because one of the two paths has been removed.</div></div>
+  </section>
+
+  <section class="secure">
+    <h2>Part F &middot; Check your understanding <span>on your own &mdash; no help, no talking</span></h2>
+    <p class="partintro">Choose one letter for each. Be ready to defend it: your teacher will ask <i>why</i>, not just <i>what</i>.</p>
+    <ol>
+      <li><div class="q">An ideal 6 V battery is connected to two lamps in series. A voltmeter across the first lamp reads 4 V. The voltage across the second lamp is:</div>
+        <ul class="mcq"><li><span class="opt">A</span>6 V</li><li><span class="opt">B</span>2 V</li><li><span class="opt">C</span>3 V</li><li><span class="opt">D</span>10 V</li></ul>
+        <div class="ans"><b>B &mdash; 2 V.</b> The series drops add to the supply voltage: 6 &minus; 4 = 2 V.<br>
+        <b>A</b> treats it as parallel (each component across the full supply). <b>C</b> assumes equal sharing &mdash; but the 4 V reading already proves the lamps are not equal. <b>D</b> adds instead of subtracting.</div></li>
+      <li><div class="q">Three identical lamps are in parallel across a 6 V supply. One lamp is unscrewed. The other two:</div>
+        <ul class="mcq"><li><span class="opt">A</span>go out</li><li><span class="opt">B</span>get dimmer</li><li><span class="opt">C</span>stay at about the same brightness</li><li><span class="opt">D</span>get much brighter</li></ul>
+        <div class="ans"><b>C &mdash; stay at about the same brightness.</b> Each branch is a complete path across the same two supply points, so each keeps the full supply voltage and its own current.<br>
+        <b>A</b> is the series answer. <b>B</b> assumes the voltage is shared between branches. <b>D</b> assumes the &ldquo;spare&rdquo; current is pushed into the others.</div></li>
+      <li><div class="q">A lamp is added in series to an existing series circuit, with the same supply. The ammeter reading:</div>
+        <ul class="mcq"><li><span class="opt">A</span>increases, because there is more to light up</li><li><span class="opt">B</span>decreases, because the total resistance is greater</li><li><span class="opt">C</span>stays the same, because the battery is unchanged</li><li><span class="opt">D</span>decreases, because current is used up by the extra lamp</li></ul>
+        <div class="ans"><b>B.</b> More components in series means greater total resistance, so a smaller current on the same supply.<br>
+        <b>D</b> gives the right answer for the <i>wrong reason</i> &mdash; current is never used up. <b>C</b> forgets that the circuit, not only the battery, sets the current.</div></li>
+    </ol>
+  </section>
+
+  <section>
+    <h2>Part G &middot; Spot the mistake <span>everyone</span></h2>
+    <p class="partintro">Each pupil has made one clear error. Write what is wrong and write a corrected version.</p>
+    <ol>
+      <li><div class="q">&ldquo;The battery gives out current. Each lamp uses some of it up, so the lamp furthest from the battery is the dimmest.&rdquo;</div><div class="work" style="min-height:60px"></div>
+        <div class="ans"><b>Error.</b> Current is not used up, and position in the circuit does not affect brightness.<br><b>Correction.</b> The current is the same all the way round a series circuit. Identical lamps in series are equally bright, wherever they are. It is <b>energy</b> that is transferred to each lamp, not current.</div></li>
+      <li><div class="q">&ldquo;In a parallel circuit the voltage splits at the junction, so each lamp gets 3 V from a 6 V battery.&rdquo;</div><div class="work" style="min-height:60px"></div>
+        <div class="ans"><b>Error.</b> It is the <b>current</b> that splits at a junction, not the voltage.<br><b>Correction.</b> Each branch is connected across the same two supply points, so each lamp has the full <b>6 V</b>. The branch currents are what add up to the supply current.</div></li>
+      <li><div class="q">&ldquo;To measure the voltage across a lamp, I broke the circuit and put the voltmeter in the gap.&rdquo;</div><div class="work" style="min-height:60px"></div>
+        <div class="ans"><b>Error.</b> That is how you connect an <b>ammeter</b>. A voltmeter in the path stops the current, so the lamp goes out and the reading is meaningless.<br><b>Correction.</b> Leave the lamp's own connections in place and add the voltmeter on a separate branch, one lead on each terminal of the lamp.</div></li>
+      <li><div class="q">&ldquo;A 6 V supply has a 10 &#937; lamp and a 20 &#937; lamp in series, so each lamp has 3 V across it.&rdquo;</div><div class="work" style="min-height:60px"></div>
+        <div class="ans"><b>Error.</b> Equal sharing only applies to <b>equal</b> resistances.<br><b>Correction.</b> The drops still add to 6 V, but the bigger resistance takes the bigger share: <b>2 V</b> across the 10 &#937; lamp and <b>4 V</b> across the 20 &#937; lamp.</div></li>
+    </ol>
+    <div class="note"><b>Build understanding.</b> Use two steps every time: (1) underline the word that is wrong, (2) write &ldquo;It should say ______ because ______.&rdquo; Question 1 is done as a model &mdash; check your wording against the reveal before you do the rest.</div>
+    <div class="hot"><b>Go further.</b> Write your own wrong statement about circuits &mdash; one a classmate would believe. Swap and correct each other's.</div>
+  </section>
+
+  <section class="stretch">
+    <h2>Part H &middot; Go further <span>when Part F is checked</span></h2>
+    <div class="eq">resistance = voltage &divide; current</div>
+    <ol>
+      <li><div class="q">A lamp has 4.0 V across it and carries a current of 0.50 A. Calculate its resistance. Give the unit.</div><div class="work"></div>
+        <div class="ans"><b>Answer.</b> R = V &divide; I = 4.0 &divide; 0.50 = <b>8.0 &#937;</b>.</div></li>
+      <li><div class="q">A 10 &#937; and a 20 &#937; resistor are in series on a 6 V ideal supply. The current is 0.20 A. Calculate the voltage across each, and show that your two answers are consistent with the series rule.</div><div class="work" style="min-height:70px"></div>
+        <div class="ans"><b>Answer.</b> V = I &times; R, so 0.20 &times; 10 = <b>2.0 V</b> and 0.20 &times; 20 = <b>4.0 V</b>. Check: 2.0 + 4.0 = 6.0 V, which equals the supply voltage. The same current passes through both, so the larger resistance has the larger voltage.</div></li>
+      <li><div class="q">Explain why house lights are wired in parallel and not in series. Give two reasons.</div><div class="work" style="min-height:70px"></div>
+        <div class="ans"><b>Answer.</b> Any two of: each light gets the <b>full mains voltage</b>, so it is at full brightness; each can be <b>switched independently</b>; if one bulb fails the others <b>stay on</b>, because each has its own complete path.</div></li>
+      <li><div class="q">In the real lesson, two series lamps measured 2.98 V and 2.98 V while the supply measured 5.97 V, not 6.00 V. Does that disprove the series voltage rule? Explain.</div><div class="work" style="min-height:70px"></div>
+        <div class="ans"><b>Answer.</b> <b>No.</b> 2.98 + 2.98 = 5.96 V, which matches the <i>measured</i> supply voltage of 5.97 V to within rounding. The 6.00 V is the setting on the source; once current flows there are small voltage losses inside the source, in the leads and in the switch, so the terminal voltage is slightly lower. The rule holds for the whole loop.</div></li>
+    </ol>
+  </section>
+
+  <section class="secure">
+    <h2>Part I &middot; Exit ticket <span>on your own &middot; hand in</span></h2>
+    <ol class="tight">
+      <li><div class="q">State the rule for current in a series circuit and the rule for current in a parallel circuit. (2 marks)</div><div class="work"></div>
+        <div class="ans"><b>Answer.</b> Series: the current is the <b>same</b> at every point (1). Parallel: the <b>branch currents add up</b> to the supply current (1).</div></li>
+      <li><div class="q">Two identical lamps are in parallel across a 9 V supply. State the voltage across each lamp and explain your answer. (2 marks)</div><div class="work" style="min-height:56px"></div>
+        <div class="ans"><b>Answer.</b> <b>9 V</b> across each (1), because each branch is connected across the same two supply points, so each has the full supply voltage (1).</div></li>
+      <li><div class="q">Explain, using resistance, why three lamps in series are dimmer than one lamp on the same supply. (2 marks)</div><div class="work" style="min-height:56px"></div>
+        <div class="ans"><b>Answer.</b> Three lamps give a <b>greater total resistance</b>, so the <b>current is smaller</b> (1). The supply voltage is also shared between three lamps, so each transfers less energy per second and is dimmer (1).</div></li>
+    </ol>
+    <p class="partintro" style="margin-top:16px">Now rate yourself honestly. Tick one box per row.</p>
+    <table class="rt">
+      <tr><th style="width:55%">I can&hellip;</th><th>Secure</th><th>Nearly</th><th>Not yet</th></tr>
+      <tr><td>explain what current is and connect an ammeter correctly</td><td><span class="box"></span></td><td><span class="box"></span></td><td><span class="box"></span></td></tr>
+      <tr><td>use the current rules for series and parallel circuits</td><td><span class="box"></span></td><td><span class="box"></span></td><td><span class="box"></span></td></tr>
+      <tr><td>explain what a voltage reading means, in energy per coulomb</td><td><span class="box"></span></td><td><span class="box"></span></td><td><span class="box"></span></td></tr>
+      <tr><td>use the voltage rules for series and parallel circuits</td><td><span class="box"></span></td><td><span class="box"></span></td><td><span class="box"></span></td></tr>
+      <tr><td>explain how resistance changes the current in a circuit</td><td><span class="box"></span></td><td><span class="box"></span></td><td><span class="box"></span></td></tr>
+    </table>
+    <p style="margin-top:14px;font-size:16px;color:#45506a">My one next step is:</p>
+    <div class="work" style="min-height:52px"></div>
+  </section>
+</main>
+<footer>Year 7 Science &middot; Current electricity, Topics 30&ndash;32 &middot; Review of Lessons 1&ndash;4 &middot; current in A, voltage in V, resistance in &#937;.</footer>
+</body></html>
