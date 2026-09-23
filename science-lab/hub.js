@@ -5,7 +5,7 @@ for (const group of yearGroups) group.addEventListener('toggle', () => {
 });
 function openLinkedSection() {
   const year = new URLSearchParams(location.search).get('year');
-  if (year === '7' || year === '8') document.getElementById(`year-${year}`).open = true;
+  if (year === '7' || year === '8' || year === '9') document.getElementById(`year-${year}`).open = true;
   let id;
   try { id = decodeURIComponent(location.hash.slice(1)); } catch { return; }
   const target = id ? document.getElementById(id) : null;
