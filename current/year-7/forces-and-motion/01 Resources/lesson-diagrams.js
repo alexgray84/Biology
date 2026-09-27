@@ -1,0 +1,1 @@
+window.BioDiagrams={render(name){return {"l1-p5": "<img src=\"01 Resources/force-meter.svg\" alt=\"Two force-meter scales: top from 0 to 4 N, pointer at 2.5 N; bottom from 0 to 2 N, pointer at 1.5 N. Both have half-newton intervals. Between the scales, a right-pointing arrow is labelled 2 N right.\">"}[name]||"";}};
