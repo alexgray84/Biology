@@ -38,7 +38,7 @@
     ],
     resourcePages:[
       {heading:'Ready to learn',text:'Have these ready now.',items:['Book, pen and ruler','Practical sheet','Eye protection']},
-      {heading:'Food tests practical sheet',text:'Integrated table, stations, risk assessment and results table.',href:'01%20Resources/Food%20tests%20practical%20sheet.html',linkLabel:'Open the practical sheet'},
+      {heading:'Food tests practical sheet',text:'Integrated table, virtual practical steps, risk assessment and results table.',href:'01%20Resources/Food%20tests%20practical%20sheet.html',linkLabel:'Open the practical sheet'},
       {heading:'Exam-style questions',text:'All the lesson’s exam questions, plus homework, with answers.',href:'01%20Resources/Exam-style%20questions.html',linkLabel:'Open the question sheet'},
       {heading:'Read the teaching input',text:'Elements, building blocks, functions and food tests.',href:'01%20Resources/Biological%20molecules%20reading.html',linkLabel:'Open the reading'}
     ],
@@ -281,19 +281,16 @@
         ]
       }}),
 
-      p('practical','Thinking','cases','Test the food samples','tests',{nav:'Core Practical 1',mins:12,timer:12,cases:[
-        ['A','Iodine; Biuret. No heating.'],
-        ['B','Benedict’s: water bath, 80 °C, 5 min.'],
-        ['C','Demo: ethanol, then water.']
-      ],safety:'Eye protection. Biuret is corrosive. Ethanol: no flames.',
-      doThis:['Start B, then A, then watch C.','Record each colour and the control.'],
+      p('practical','Thinking','model3d','Virtual practical: the mystery samples','tests',{nav:'Core Practical 1 (virtual)',mins:8,model:'foodtests',fallback:'foodTestsFallback',modelState:{set:'mystery',reagent:'iodine'},
+      caption:'Virtual practical. In the lab: eye protection; Biuret is corrosive; no flames near ethanol.',
+      doThis:['Test X, Y, Z, W with each reagent.','Record colours against the water.'],
       support:{
         start:[
-          ['One reagent, one row','Do one reagent at a time. Find its row in your table, read the positive colour, then compare your tube.',S('Using the table','Each result is checked against the table, one reagent at a time.',['One test at a time','Compared with the table'])],
-          ['A results sentence','Use: “Sample __ turned __ with __, so it contains __. The water control stayed __.”',S('Example','Sample 2 turned purple with Biuret, so it contains protein. The water control stayed blue.',['Sample, colour, reagent','Nutrient','Control colour'])]
+          ['One reagent, one row','Choose one reagent at a time. Find its row in your table, read the positive colour, then check each tube.',S('Using the table','Each result is checked against the table, one reagent at a time.',['One test at a time','Compared with the table'])],
+          ['A results sentence','Use: “Sample __ turned __ with __, so it contains __. The water control stayed __.”',S('Example','Sample Y turned purple with Biuret, so it contains protein. The water control stayed blue.',['Sample, colour, reagent','Nutrient','Control colour'])]
         ],
         understand:[
-          ['Change or no change?','A tube is faintly green after heating with Benedict’s. Hold it beside the water control. Decide, and give a reason.',S('A small positive','It changed: green is further along than the blue control, so a little reducing sugar is present.',['Compares with control','Green = a little'])],
+          ['Change or no change?','In a real lab, a tube is faintly green after heating with Benedict’s. Compare it with the water control. Decide, and give a reason.',S('A small positive','It changed: green is further along than the blue control, so a little reducing sugar is present.',['Compares with control','Green = a little'])],
           ['Two results unaided','Close this panel. Record and interpret your next two results in full sentences.',S('Independent','Each sentence names the sample, reagent, colour, nutrient and control colour.',['Two full sentences','Control used'])]
         ],
         hot:[
@@ -352,12 +349,12 @@
         ]
       }}),
 
-      p('exam-independent','Assess','content','Test the sports-drink claim [6]','exam',{nav:'Independent 6-mark question',mins:5,timer:5,secure:true,label:'Original exam-style question · 6 marks',
+      p('exam-independent','Assess','content','Test the sports-drink claim [6]','exam',{nav:'Independent 6-mark question',mins:6,timer:6,secure:true,label:'Original exam-style question · 6 marks',
         text:'A sports drink label claims it contains <strong>glucose</strong> and <strong>protein</strong> but <strong>no fat</strong>.',
         items:['<strong>Describe</strong> how to test each part of this claim, including results that would support it. [6]'],
         doThis:['Work alone, in silence, in your book. One mark-earning step per line.']}),
 
-      p('semi-quant','Assess','content','Rank the glucose [4]','exam',{nav:'Semi-quantitative question',mins:3,optional:true,label:'Original exam-style question · 4 marks',diagram:'benedictResults',secondaryDiagram:true,caption:'Tubes after heating with Benedict’s. Illustrative.',
+      p('semi-quant','Assess','content','Rank the glucose [4]','exam',{nav:'Semi-quantitative question',mins:3,label:'Original exam-style question · 4 marks',diagram:'benedictResults',secondaryDiagram:true,caption:'Tubes after heating with Benedict’s. Illustrative.',
         text:'Heated with Benedict’s: A brick-red, B green, C blue, D orange.',
         items:['(a) Rank A–D, most glucose first. [1]','(b) Explain why the test is <strong>semi-quantitative</strong>. [2]','(c) Suggest a way to measure the glucose. [1]'],
         doThis:['Answer (a)–(c) in your book.'],

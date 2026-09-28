@@ -64,8 +64,10 @@ window.LessonAnswerData=(() => {
     'benedict-scale':A([m('Colour order','Blue → green → yellow → orange → brick-red. The arrow “more glucose” points to brick-red.')],[c('Success criteria',['Five colours in order','Arrow to brick-red'])]),
 
     practical:A([
-      m('Recording a result','“Sample 2 turned purple with Biuret, so it contains protein. The water control stayed blue.” Real foods vary: record what you see.')
-    ],[c('Success criteria',['Every sample, every test','Before and after colours','Water control each time'])]),
+      m('Iodine and Benedict’s','Iodine: X blue-black; Y, Z and W orange-brown. Benedict’s, after heating: X orange; Y, Z and W stay blue, like the water control.'),
+      m('Biuret and emulsion','Biuret: Y and Z purple; X and W stay blue. Emulsion test: Z cloudy white; X, Y and W stay clear.'),
+      m('Conclusions','X: starch and glucose. Y: protein. Z: protein and lipid. W: no nutrient detected, the same as the water control.')
+    ],[c('Success criteria',['All four tests on every sample','A colour recorded for each tube','Benedict’s heated before reading']),c('Success criteria · continued',['Each result compared with the water control','A nutrient named only from a positive'])]),
 
     'results-interpret':A([
       m('X','Starch and glucose: iodine blue-black; Benedict’s orange.'),

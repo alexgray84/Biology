@@ -22,7 +22,7 @@ window.LessonModels.foodtests = (() => {
     mystery: {
       title: 'Mystery samples',
       tubes: [
-        { name: 'Sample X', short: 'X', full: 'sample X', has: ['starch', 'glucose'], look: 'unknown' },
+        { name: 'Sample X', short: 'X', full: 'sample X', has: ['starch', 'glucose'], look: 'unknown', level: 3 },
         { name: 'Sample Y', short: 'Y', full: 'sample Y', has: ['protein'], look: 'unknown' },
         { name: 'Sample Z', short: 'Z', full: 'sample Z', has: ['lipid', 'protein'], look: 'unknown' },
         { name: 'Sample W', short: 'W', full: 'sample W', has: [], look: 'unknown' },
@@ -68,7 +68,7 @@ window.LessonModels.foodtests = (() => {
 
   const tubesOf = s => (SETS[s.set] || SETS.known).tubes;
   // Colour index along the Benedict's sequence after heating (0 = stays blue).
-  const benIdx = (s, t) => s.set === 'series' ? (t.level || 0) : t.has.includes('glucose') ? 4 : 0;
+  const benIdx = (s, t) => s.set === 'series' ? (t.level || 0) : t.has.includes('glucose') ? (t.level ?? 4) : 0;
   function resultKey(s, t) {
     if (!s.ran) return t.look;
     if (s.reagent === 'iodine') return t.has.includes('starch') ? 'blueblack' : 'orangebrown';
