@@ -1,0 +1,265 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Exam-style questions</title>
+<style>
+:root{color-scheme:light;--navy:#182944;--ink:#182944;--gold:#bd8126;--gold-text:#8a5a14;--paper:#f8f6ee;--card:#fffdf8;--line:#c9c8bd;--green:#3f6b35;--green-line:#56834b;--ans:#eef4ea;--teal:#24748d;--rose:#ad5c63}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--paper);color:var(--ink);font:19px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;overflow-wrap:break-word}
+.toolbar{position:sticky;top:0;z-index:20;background:rgba(248,246,238,.97);border-bottom:1px solid var(--line);backdrop-filter:blur(4px)}
+.toolbar-inner{max-width:1000px;margin:auto;padding:10px 50px;display:flex;flex-wrap:wrap;gap:10px 12px;align-items:center;font-size:16px}
+.toolbar a,.toolbar button{font:600 16px/1.2 system-ui,-apple-system,"Segoe UI",sans-serif;padding:9px 16px;border-radius:6px;cursor:pointer;text-decoration:none;min-height:40px;display:inline-flex;align-items:center}
+.toolbar a{color:var(--navy);border:1px solid var(--navy);background:transparent}
+.toolbar button{background:var(--navy);color:#fff;border:1px solid var(--navy)}
+.toolbar button[aria-pressed="true"]{background:var(--green);border-color:var(--green)}
+.toolbar .spacer{flex:1 1 auto}
+.toolbar a:focus-visible,.toolbar button:focus-visible,summary:focus-visible,input:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+main{max-width:1000px;margin:auto;padding:28px 50px 60px}
+h1,h3{font-family:Georgia,"Times New Roman",serif;font-weight:500;line-height:1.18}
+h1{font-size:42px;margin:.2em 0 .3em}
+h3{font-size:23px;margin:1.4em 0 .4em}
+.eyebrow{font-size:15px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gold-text);margin:0}
+.meta{color:#4b5667;font-size:17px}
+h2.part{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;font-size:19px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--gold-text);border-top:3px solid var(--gold);padding-top:18px;margin:46px 0 14px;display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;line-height:1.3}
+.pill{display:inline-block;font-size:13px;font-weight:700;letter-spacing:.04em;text-transform:none;padding:3px 11px;border-radius:999px;background:#f3e6c9;color:#6d4710;border:1px solid #dcc08a}
+p,li{max-width:80ch}
+a{color:#24536b;text-underline-offset:3px}
+ol.qs{padding-left:1.6em;margin:14px 0}
+ol.qs>li{margin:0 0 26px;padding-left:.3em}
+ol.qs>li::marker{font-weight:800;color:var(--navy)}
+ol.sub{list-style:lower-alpha;padding-left:1.5em;margin:8px 0}
+ol.sub>li{margin:4px 0}
+ol.options{list-style:upper-alpha;padding-left:1.8em;margin:8px 0}
+.mk{font-weight:700;white-space:nowrap}
+.tag{display:inline-block;font-size:13px;font-weight:700;padding:1px 8px;border-radius:4px;background:#e6eef2;color:#1f5467;vertical-align:2px;margin-right:4px}
+.tag.extra{background:#f3e6c9;color:#6d4710}
+.table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:16px 0;border:1px solid var(--line);border-radius:6px;background:var(--card);max-width:100%}
+table{border-collapse:collapse;width:100%;font-size:.9em}
+th,td{text-align:left;vertical-align:top;border:1px solid var(--line);padding:10px 12px}
+.table-wrap table{border:0}
+.table-wrap tr>*:first-child{border-left:0}.table-wrap tr>*:last-child{border-right:0}
+.table-wrap thead tr:first-child>*{border-top:0}.table-wrap tbody tr:last-child>*{border-bottom:0}
+th{background:#eeeade;font-weight:700}
+td.blank{min-width:90px;height:44px}
+.box{padding:14px 20px;border:1px solid var(--line);border-radius:8px;background:var(--card);margin:16px 0}
+.box.gold{border-color:var(--gold);background:#f6efdd}
+.box.safety{border-color:var(--rose);background:#f8ecec}
+.box h3{margin-top:.2em}
+.lines{display:block;height:0;border:0}
+.write{display:block;min-height:3.2em;border-bottom:1px dashed #a7a595;margin:6px 0 10px}
+.write.tall{min-height:6em}
+figure{margin:20px 0;padding:10px;background:var(--card);border:1px solid var(--line);border-radius:8px}
+figure svg{display:block;width:100%;height:auto;max-width:100%}
+figcaption{font-size:16px;color:#4b5667;margin-top:6px}
+.ans{display:none;margin:12px 0 4px;padding:12px 18px;border:1px solid #a9c79f;border-left:6px solid var(--green-line);border-radius:6px;background:var(--ans);font-size:.93em}
+.ans::before{content:"Answer";display:block;font-size:13px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--green);margin-bottom:4px}
+.ans.success::before{content:"Success criteria"}
+.ans p{margin:.3em 0}
+.ans ul{margin:.3em 0;padding-left:1.2em}
+body.show-answers .ans{display:block}
+.checklist{list-style:none;padding:0;margin:12px 0}
+.checklist li{display:flex;gap:12px;align-items:flex-start;padding:8px 0;border-bottom:1px solid #e3e0d4}
+.checklist input{width:22px;height:22px;margin-top:4px;flex:0 0 auto;accent-color:var(--navy)}
+.checklist label{flex:1}
+.letter{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:6px;background:var(--navy);color:#fff;font-weight:800;font-family:Georgia,serif;font-size:20px}
+table.cormmss{min-width:600px}
+.cormmss td:first-child{white-space:nowrap;width:1%}
+.cormmss th:nth-child(2){width:42%}
+.cormmss td.blank{width:46%;height:64px}
+dl.vocab{display:grid;grid-template-columns:minmax(150px,220px) 1fr;gap:0;border:1px solid var(--line);border-radius:8px;background:var(--card);overflow:hidden}
+dl.vocab dt,dl.vocab dd{margin:0;padding:9px 14px;border-bottom:1px solid #e3e0d4}
+dl.vocab dt{font-weight:700;background:#f3f0e6}
+.key{border-left:4px solid var(--gold);padding:4px 0 4px 16px;margin:14px 0}
+.never li::marker{content:"✗  ";color:var(--rose);font-weight:800}
+.footer-note{margin-top:40px;padding-top:16px;border-top:1px solid var(--line);font-size:16px;color:#4b5667}
+@media (max-width:700px){
+  body{font-size:17px}
+  .toolbar-inner{padding:8px 12px;gap:6px;flex-wrap:nowrap}
+  .toolbar a,.toolbar button{padding:8px 9px;font-size:13.5px;white-space:nowrap}
+  .toolbar .spacer{display:none}
+  main{padding:20px 16px 48px}
+  h1{font-size:32px}
+  h2.part{font-size:17px}
+  table{font-size:15px}
+  th,td{padding:8px 9px}
+  dl.vocab{grid-template-columns:1fr}
+  dl.vocab dt{border-bottom:0}
+  ol.qs{padding-left:1.35em}
+}
+@media print{
+  @page{size:A4;margin:14mm}
+  body{background:#fff;font-size:11pt;line-height:1.4}
+  .toolbar{display:none!important}
+  main{padding:0;max-width:none}
+  h1{font-size:22pt}h2.part{font-size:12pt;margin-top:18px}h3{font-size:13pt}
+  a{color:inherit;text-decoration:none}
+  .table-wrap{overflow:visible;border:0}
+  table{font-size:9.5pt}th,td{padding:5px 7px}
+  tr,figure,.box,.ans,ol.qs>li{break-inside:avoid}
+  h2,h3{break-after:avoid}
+  figure{border:0;padding:0}
+  .checklist input{accent-color:#000}
+}
+</style>
+</head>
+<body>
+<header class="toolbar"><div class="toolbar-inner"><a href="../02%20Enzymes%2C%20temperature%20and%20pH.html">Return to lesson</a><span class="spacer"></span><button type="button" id="toggle-answers" aria-pressed="false">Show / hide answers</button><button type="button" id="print-page">Print</button></div></header>
+<main>
+<p class="eyebrow">Exam-style practice</p>
+<h1>Enzymes, temperature and pH: exam-style questions</h1>
+<p class="meta">Year 10 Triple Biology · Pearson Edexcel International GCSE Biology (Modular) 4XBI1 · 2.10–2.14B, with 2.29 introduced</p>
+<p>These are <strong>original exam-style questions</strong> written for this lesson, not questions taken from a Pearson paper. <span class="tag">Lesson</span> questions appeared in the lesson. <span class="tag extra">Extra</span> questions are additional original practice for homework. All data are illustrative. Write in your book, then check with <strong>Show / hide answers</strong>.</p>
+
+<h2 class="part">Part A · How enzymes work <span class="pill">2.10 · 2.29 · 14 marks</span></h2>
+<ol class="qs">
+<li><span class="tag">Lesson</span> Define the term <strong>active site</strong>. <span class="mk">[1]</span>
+<div class="ans"><p>The region of an enzyme with a specific shape, complementary to its substrate, where the substrate binds [1].</p></div></li>
+<li><span class="tag">Lesson</span> Why can’t a protease digest starch?
+<ol class="options">
+<li>Starch is too large for any enzyme to digest.</li>
+<li>Its active site is not complementary to starch, so no complex forms.</li>
+<li>Starch denatures the protease.</li>
+<li>The protease is used up digesting protein.</li>
+</ol>
+<ol class="sub">
+<li>Choose the correct option. <span class="mk">[1]</span></li>
+<li>Explain why option D is wrong. <span class="mk">[1]</span></li>
+</ol>
+<div class="ans"><ul><li>(a) B [1]</li><li>(b) The protease is a catalyst, so it is not used up; it is unchanged and reused [1]</li><li>Option A: amylase digests starch, so size is not the reason. Option C: heat or extreme pH denature enzymes, not starch.</li></ul></div></li>
+<li><span class="tag">Lesson</span> Complete the table. <span class="mk">[4]</span>
+<div class="table-wrap"><table>
+<thead><tr><th scope="col">Enzyme</th><th scope="col">Substrate</th><th scope="col">Product(s)</th></tr></thead>
+<tbody>
+<tr><th scope="row">Amylase</th><td class="blank"></td><td class="blank"></td></tr>
+<tr><th scope="row">Maltase</th><td class="blank"></td><td class="blank"></td></tr>
+<tr><th scope="row">Protease</th><td class="blank"></td><td class="blank"></td></tr>
+<tr><th scope="row">Lipase</th><td class="blank"></td><td class="blank"></td></tr>
+</tbody></table></div>
+<div class="ans"><ul><li>Amylase: starch → maltose [1]</li><li>Maltase: maltose → glucose [1]</li><li>Protease: protein → amino acids [1]</li><li>Lipase: lipids (fats and oils) → fatty acids and glycerol; both products needed [1]</li><li>Do not accept glucose as the product of amylase.</li></ul></div></li>
+<li><span class="tag extra">Extra</span> Enzymes speed up <strong>metabolic reactions</strong>.
+<ol class="sub">
+<li>Give one metabolic reaction that builds a large molecule and one that breaks a large molecule down. <span class="mk">[2]</span></li>
+<li>Explain why a cell needs only a small amount of each enzyme. <span class="mk">[2]</span></li>
+</ol>
+<div class="ans"><ul><li>(a) Build-up: glucose → glycogen (or glucose → starch) [1]. Breakdown: starch → maltose (or protein → amino acids; lipids → fatty acids and glycerol) [1]</li><li>(b) An enzyme is a catalyst: it is not used up or permanently changed [1]. The products are released, so the active site binds another substrate; each molecule is reused many times [1]</li></ul></div></li>
+<li><span class="tag extra">Extra</span> Explain how the order of amino acids in an enzyme decides which substrate it can act on. <span class="mk">[3]</span>
+<div class="ans"><ul><li>The order of amino acids decides how the chain folds [1]</li><li>Folding gives the active site its specific shape [1]</li><li>Only a substrate with a complementary shape can bind and form an enzyme–substrate complex [1]</li></ul></div></li>
+</ol>
+
+<h2 class="part">Part B · Temperature and pH <span class="pill">2.11 · 2.13 · 20 marks</span></h2>
+<figure>
+<svg viewBox="0 0 700 340" role="img" aria-label="Illustrative graph of rate of reaction against temperature for an enzyme. The rate rises from 0 to about 40 °C because molecules collide more often, peaks at the optimum of about 40 °C, then falls steeply to zero by about 60 °C as the active site changes shape and the enzyme is denatured." font-family="Montserrat, system-ui, sans-serif" data-diagram="tempGraph"><path d="M92 284V291" fill="none" stroke="#182944" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><text x="92" y="310" class="diagram-small" text-anchor="middle" font-size="17" font-weight="500" fill="#182944">0</text><path d="M172 284V291" fill="none" stroke="#182944" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><text x="172" y="310" class="diagram-small" text-anchor="middle" font-size="17" font-weight="500" fill="#182944">10</text><path d="M252 284V291" fill="none" stroke="#182944" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><text x="252" y="310" class="diagram-small" text-anchor="middle" font-size="17" font-weight="500" fill="#182944">20</text><path d="M332 284V291" fill="none" stroke="#182944" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><text x="332" y="310" class="diagram-small" text-anchor="middle" font-size="17" font-weight="500" fill="#182944">30</text><path d="M412 284V291" fill="none" stroke="#182944" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><text x="412" y="310" class="diagram-small" text-anchor="middle" font-size="17" font-weight="500" fill="#182944">40</text><path d="M492 284V291" fill="none" stroke="#182944" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><text x="492" y="310" class="diagram-small" text-anchor="middle" font-size="17" font-weight="500" fill="#182944">50</text><path d="M572 284V291" fill="none" stroke="#182944" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><text x="572" y="310" class="diagram-small" text-anchor="middle" font-size="17" font-weight="500" fill="#182944">60</text><path d="M652 284V291" fill="none" stroke="#182944" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><text x="652" y="310" class="diagram-small" text-anchor="middle" font-size="17" font-weight="500" fill="#182944">70</text><path d="M412 82.3V284" fill="none" stroke="#bd8126" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="6 6"/><path d="M92 60V284H660" fill="none" stroke="#182944" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M92 267.5L96 266.3L100 265.2L104 264L108 262.9L112 261.8L116 260.8L120 259.7L124 258.6L128 257.5L132 256.4L136 255.3L140 254.1L144 253L148 251.8L152 250.5L156 249.3L160 247.9L164 246.6L168 245.1L172 243.7L176 242.1L180 240.6L184 238.9L188 237.3L192 235.6L196 233.9L200 232.1L204 230.4L208 228.6L212 226.7L216 224.8L220 222.9L224 221L228 219.1L232 217.1L236 215.1L240 213.1L244 211.1L248 209.1L252 207L256 205L260 202.9L264 200.9L268 198.9L272 196.9L276 194.9L280 192.8L284 190.8L288 188.7L292 186.5L296 184.3L300 182.1L304 179.8L308 177.4L312 174.9L316 172.4L320 169.7L324 167L328 164.1L332 161.2L336 157.9L340 154.2L344 150.2L348 146L352 141.5L356 136.9L360 132.2L364 127.5L368 122.8L372 118.3L376 113.9L380 109.8L384 105.7L388 101.3L392 96.9L396 92.7L400 88.9L404 85.8L408 83.5L412 82.3L416 82.1L420 82.7L424 84L428 86L432 88.7L436 92L440 96L444 100.7L448 105.9L452 111.8L456 118.1L460 124.8L464 131.7L468 138.9L472 146.2L476 153.6L480 160.8L484 167.9L488 174.8L492 181.3L496 187.7L500 194.1L504 200.4L508 206.7L512 212.9L516 218.8L520 224.6L524 230.1L528 235.2L532 240L536 244.4L540 248.6L544 252.5L548 256.1L552 259.5L556 262.6L560 265.5L564 268.2L568 270.7L572 273L576 275L580 276.8L584 278.3L588 279.5L592 280.6L596 281.4L600 282.2L604 282.9L608 283.4L612 284L616 284L620 284L624 284L628 284L632 284L636 284L640 284L644 284L648 284L652 284" fill="none" stroke="#182944" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/><text x="190" y="118" class="diagram-small" text-anchor="middle" font-size="17" font-weight="750" fill="#24748d" style="fill:#24748d;font-weight:750;opacity:1">Rising:</text><text x="190" y="140" class="diagram-small" text-anchor="middle" font-size="17" font-weight="600" fill="#24748d" style="fill:#24748d;font-weight:600;opacity:1">more collisions</text><text x="412" y="54" class="diagram-small" text-anchor="middle" font-size="17" font-weight="750" fill="#8a5a14" style="fill:#8a5a14;font-weight:750;opacity:1">Optimum ≈ 40 °C</text><text x="580" y="110" class="diagram-small" text-anchor="middle" font-size="17" font-weight="750" fill="#ad5c63" style="fill:#ad5c63;font-weight:750;opacity:1">Falling: active site</text><text x="580" y="132" class="diagram-small" text-anchor="middle" font-size="17" font-weight="600" fill="#ad5c63" style="fill:#ad5c63;font-weight:600;opacity:1">changes shape —</text><text x="580" y="154" class="diagram-small" text-anchor="middle" font-size="17" font-weight="600" fill="#ad5c63" style="fill:#ad5c63;font-weight:600;opacity:1">denatured</text><text x="376" y="334" class="diagram-small" text-anchor="middle" font-size="17" font-weight="700" fill="#182944" style="font-weight:700">Temperature / °C</text><text x="34" y="172" class="diagram-small" text-anchor="middle" font-size="17" font-weight="700" fill="#182944" style="font-weight:700" transform="rotate(-90 34 172)">Rate of reaction / s⁻¹</text><text x="56" y="172" class="diagram-small" text-anchor="middle" font-size="17" font-weight="500" fill="#182944" transform="rotate(-90 56 172)">(illustrative)</text></svg>
+<figcaption>Figure 1. Rate of an amylase-controlled reaction at different temperatures. Illustrative data.</figcaption>
+</figure>
+<ol class="qs">
+<li><span class="tag">Lesson</span> Amylase is warmed from 40 °C to 60 °C. The rate falls to almost zero. Which is the best explanation? <span class="mk">[1]</span>
+<ol class="options">
+<li>The amylase is killed by the heat.</li>
+<li>The molecules move too fast to collide.</li>
+<li>Bonds break, so the active site changes shape and starch no longer fits.</li>
+<li>The starch is denatured.</li>
+</ol>
+<div class="ans"><ul><li>C [1]</li><li>A: enzymes are not alive, so they cannot be killed. B: faster molecules collide more often, not less. D: the enzyme is denatured, not the starch.</li></ul></div></li>
+<li><span class="tag extra">Extra</span> Use Figure 1.
+<ol class="sub">
+<li>Describe how the rate changes between 10 °C and 65 °C. <span class="mk">[2]</span></li>
+<li>Explain the change in rate between 10 °C and 40 °C. <span class="mk">[2]</span></li>
+<li>Explain the change in rate above 40 °C. <span class="mk">[3]</span></li>
+</ol>
+<div class="ans"><ul><li>(a) The rate increases to a peak (the optimum) at about 40 °C [1], then decreases steeply to zero by about 60–65 °C [1]</li><li>(b) Molecules gain kinetic energy and move faster [1], so enzyme and substrate collide more often and more enzyme–substrate complexes form per second [1]</li><li>(c) Bonds holding the enzyme’s shape break [1]; the active site changes shape, so the substrate no longer fits [1]; the enzyme is denatured and fewer enzyme–substrate complexes form [1]</li><li>Do not accept “killed”, “dies” or “the active site is destroyed”.</li></ul></div></li>
+<li><span class="tag">Lesson</span> Boiled amylase is cooled to 37 °C. Explain why it still does not digest starch. <span class="mk">[2]</span>
+<div class="ans"><ul><li>Boiling denatured the amylase: its active site changed shape [1]</li><li>The change is permanent, so cooling does not restore the shape [1]</li></ul></div></li>
+<li><span class="tag">Lesson</span> Explain why pepsin works in the stomach but not in the small intestine. <span class="mk">[2]</span>
+<div class="ans"><ul><li>Pepsin’s optimum is about pH 2, which matches the acidic stomach [1]</li><li>The small intestine is slightly alkaline (about pH 8), so pepsin’s active site changes shape and protein no longer fits [1]</li></ul></div></li>
+</ol>
+<figure>
+<svg viewBox="0 0 700 340" role="img" aria-label="Illustrative graph of relative rate against pH for three enzymes. Pepsin has an optimum of about pH 2, salivary amylase about pH 7 and trypsin about pH 8. Each rate falls either side of the optimum." font-family="Montserrat, system-ui, sans-serif" data-diagram="phGraph"><path d="M92 284V291" fill="none" stroke="#182944" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><text x="92" y="310" class="diagram-small" text-anchor="middle" font-size="17" font-weight="500" fill="#182944">0</text><path d="M132 284V289" fill="none" stroke="#182944" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M172 284V291" fill="none" stroke="#182944" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><text x="172" y="310" class="diagram-small" text-anchor="middle" font-size="17" font-weight="500" fill="#182944">2</text><path d="M212 284V289" fill="none" stroke="#182944" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M252 284V291" fill="none" stroke="#182944" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><text x="252" y="310" class="diagram-small" text-anchor="middle" font-size="17" font-weight="500" fill="#182944">4</text><path d="M292 284V289" fill="none" stroke="#182944" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M332 284V291" fill="none" stroke="#182944" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><text x="332" y="310" class="diagram-small" text-anchor="middle" font-size="17" font-weight="500" fill="#182944">6</text><path d="M372 284V289" fill="none" stroke="#182944" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M412 284V291" fill="none" stroke="#182944" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><text x="412" y="310" class="diagram-small" text-anchor="middle" font-size="17" font-weight="500" fill="#182944">8</text><path d="M452 284V289" fill="none" stroke="#182944" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M492 284V291" fill="none" stroke="#182944" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><text x="492" y="310" class="diagram-small" text-anchor="middle" font-size="17" font-weight="500" fill="#182944">10</text><path d="M532 284V289" fill="none" stroke="#182944" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M572 284V291" fill="none" stroke="#182944" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><text x="572" y="310" class="diagram-small" text-anchor="middle" font-size="17" font-weight="500" fill="#182944">12</text><path d="M612 284V289" fill="none" stroke="#182944" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M652 284V291" fill="none" stroke="#182944" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><text x="652" y="310" class="diagram-small" text-anchor="middle" font-size="17" font-weight="500" fill="#182944">14</text><path d="M86 196H92" fill="none" stroke="#182944" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><text x="80" y="202" class="diagram-small" text-anchor="end" font-size="17" font-weight="500" fill="#182944">50</text><path d="M86 108H92" fill="none" stroke="#182944" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><text x="80" y="114" class="diagram-small" text-anchor="end" font-size="17" font-weight="500" fill="#182944">100</text><text x="80" y="290" class="diagram-small" text-anchor="end" font-size="17" font-weight="500" fill="#182944">0</text><path d="M172 108V284" fill="none" stroke="#ad5c63" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="5 6" opacity="0.8"/><path d="M372 108V284" fill="none" stroke="#24748d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="5 6" opacity="0.8"/><path d="M412 108V284" fill="none" stroke="#bd8126" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="5 6" opacity="0.8"/><path d="M92 96V284H660" fill="none" stroke="#182944" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M92 240L96 231.8L100 223.2L104 214.3L108 205.2L112 196L116 186.8L120 177.7L124 168.8L128 160.2L132 152L136 144.3L140 137.1L144 130.6L148 124.8L152 119.8L156 115.6L160 112.3L164 109.9L168 108.5L172 108L176 108.5L180 109.9L184 112.3L188 115.6L192 119.8L196 124.8L200 130.6L204 137.1L208 144.3L212 152L216 160.2L220 168.8L224 177.7L228 186.8L232 196L236 205.2L240 214.3L244 223.2L248 231.8L252 240L256 247.7L260 254.9L264 261.4L268 267.2L272 272.2L276 276.4L280 279.7L284 282.1L288 283.5L292 284" fill="none" stroke="#ad5c63" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M252 284L256 283.5L260 282.1L264 279.7L268 276.4L272 272.2L276 267.2L280 261.4L284 254.9L288 247.7L292 240L296 231.8L300 223.2L304 214.3L308 205.2L312 196L316 186.8L320 177.7L324 168.8L328 160.2L332 152L336 144.3L340 137.1L344 130.6L348 124.8L352 119.8L356 115.6L360 112.3L364 109.9L368 108.5L372 108L376 108.5L380 109.9L384 112.3L388 115.6L392 119.8L396 124.8L400 130.6L404 137.1L408 144.3L412 152L416 160.2L420 168.8L424 177.7L428 186.8L432 196L436 205.2L440 214.3L444 223.2L448 231.8L452 240L456 247.7L460 254.9L464 261.4L468 267.2L472 272.2L476 276.4L480 279.7L484 282.1L488 283.5L492 284" fill="none" stroke="#24748d" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M292 284L296 283.5L300 282.1L304 279.7L308 276.4L312 272.2L316 267.2L320 261.4L324 254.9L328 247.7L332 240L336 231.8L340 223.2L344 214.3L348 205.2L352 196L356 186.8L360 177.7L364 168.8L368 160.2L372 152L376 144.3L380 137.1L384 130.6L388 124.8L392 119.8L396 115.6L400 112.3L404 109.9L408 108.5L412 108L416 108.5L420 109.9L424 112.3L428 115.6L432 119.8L436 124.8L440 130.6L444 137.1L448 144.3L452 152L456 160.2L460 168.8L464 177.7L468 186.8L472 196L476 205.2L480 214.3L484 223.2L488 231.8L492 240L496 247.7L500 254.9L504 261.4L508 267.2L512 272.2L516 276.4L520 279.7L524 282.1L528 283.5L532 284" fill="none" stroke="#bd8126" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/><text x="172" y="62" class="diagram-small" text-anchor="middle" font-size="17" font-weight="750" fill="#ad5c63" style="fill:#ad5c63;font-weight:750">pepsin</text><text x="172" y="84" class="diagram-small" text-anchor="middle" font-size="17" font-weight="600" fill="#ad5c63" style="fill:#ad5c63;font-weight:600">≈ pH 2</text><text x="300" y="62" class="diagram-small" text-anchor="middle" font-size="17" font-weight="750" fill="#24748d" style="fill:#24748d;font-weight:750">amylase</text><text x="300" y="84" class="diagram-small" text-anchor="middle" font-size="17" font-weight="600" fill="#24748d" style="fill:#24748d;font-weight:600">≈ pH 7</text><path d="M336 96L364 106" fill="none" stroke="#24748d" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><text x="486" y="62" class="diagram-small" text-anchor="middle" font-size="17" font-weight="750" fill="#8a5a14" style="fill:#8a5a14;font-weight:750">trypsin</text><text x="486" y="84" class="diagram-small" text-anchor="middle" font-size="17" font-weight="600" fill="#8a5a14" style="fill:#8a5a14;font-weight:600">≈ pH 8</text><path d="M450 96L420 106" fill="none" stroke="#bd8126" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><text x="92" y="334" class="diagram-small" text-anchor="start" font-size="17" font-weight="500" fill="#182944">acidic</text><text x="376" y="334" class="diagram-small" text-anchor="middle" font-size="17" font-weight="700" fill="#182944" style="font-weight:700">pH</text><text x="660" y="334" class="diagram-small" text-anchor="end" font-size="17" font-weight="500" fill="#182944">alkaline</text><text x="24" y="190" class="diagram-small" text-anchor="middle" font-size="17" font-weight="700" fill="#182944" style="font-weight:700" transform="rotate(-90 24 190)">Relative rate / %</text><text x="46" y="190" class="diagram-small" text-anchor="middle" font-size="17" font-weight="500" fill="#182944" transform="rotate(-90 46 190)">(illustrative)</text></svg>
+<figcaption>Figure 2. Relative rate against pH for three enzymes. Schematic curves; optima are approximate.</figcaption>
+</figure>
+<ol class="qs" start="5">
+<li><span class="tag extra">Extra</span> Use Figure 2.
+<ol class="sub">
+<li>Give the optimum pH of trypsin. <span class="mk">[1]</span></li>
+<li>Explain why trypsin has almost no activity at pH 2. <span class="mk">[2]</span></li>
+<li>A student says: “Every enzyme works best at pH 7.” Use Figure 2 to evaluate this claim. <span class="mk">[2]</span></li>
+</ol>
+<div class="ans"><ul><li>(a) About pH 8 [1]</li><li>(b) pH 2 is far from its optimum, so the bonds holding its shape are altered and the active site changes shape / it is denatured [1]; the substrate no longer fits, so few or no enzyme–substrate complexes form [1]</li><li>(c) The claim is wrong: pepsin’s optimum is about pH 2 [1] and trypsin’s about pH 8; each enzyme has its own optimum pH [1]</li></ul></div></li>
+<li><span class="tag extra">Extra</span> <em>Hypothetical scenario.</em> A shop in Dubai keeps fresh milk at 4 °C, not in a 35 °C summer storeroom. Explain why the milk stays fresh for longer, and why it must stay cold after it has been chilled. <span class="mk">[3]</span>
+<div class="ans"><ul><li>Spoilage is controlled by enzymes, in bacteria and in the milk [1]</li><li>At 4 °C molecules have less kinetic energy, so there are fewer collisions and fewer enzyme–substrate complexes: spoilage is slower [1]</li><li>Cold does not denature enzymes; if the milk warms up, their activity returns [1]</li></ul></div></li>
+</ol>
+
+<h2 class="part">Part C · Calculations and data <span class="pill">2.12 · Core Practical 2 · 13 marks</span></h2>
+<ol class="qs">
+<li><span class="tag">Lesson</span> Amylase end-points: <strong>90 s</strong> at 40 °C and <strong>240 s</strong> at 20 °C. Samples were tested every 30 s.
+<ol class="sub">
+<li>Calculate both rates (rate = 1 ÷ time), to 2 significant figures, with units. <span class="mk">[2]</span></li>
+<li>Explain how 30 s sampling limits the <strong>precision</strong> of the 40 °C time. <span class="mk">[2]</span></li>
+</ol>
+<div class="ans"><ul><li>(a) 40 °C: 1 ÷ 90 = 0.011 s⁻¹ [1]. 20 °C: 1 ÷ 240 = 0.0042 s⁻¹ [1]. Accept 1.1 × 10⁻² and 4.2 × 10⁻³.</li><li>(b) The starch could have run out up to 30 s earlier, any time from 60 s to 90 s [1]; the time is known only to 30 s, which is large compared with 90 s [1]</li><li>Do not accept “repeats make it accurate”.</li></ul></div></li>
+<li><span class="tag">Lesson</span> A class repeated the amylase investigation three times at each temperature. Illustrative data; “&gt;600” means no end-point by 600 s.
+<div class="table-wrap"><table>
+<thead><tr><th scope="col">Temp. / °C</th><th scope="col">Trial 1 / s</th><th scope="col">Trial 2 / s</th><th scope="col">Trial 3 / s</th><th scope="col">Mean / s</th></tr></thead>
+<tbody>
+<tr><th scope="row">10</th><td>450</td><td>420</td><td>480</td><td>450</td></tr>
+<tr><th scope="row">20</th><td>240</td><td>270</td><td>210</td><td>240</td></tr>
+<tr><th scope="row">30</th><td>150</td><td>150</td><td>150</td><td>150</td></tr>
+<tr><th scope="row">40</th><td>60</td><td>300</td><td>120</td><td>?</td></tr>
+<tr><th scope="row">50</th><td>180</td><td>150</td><td>210</td><td>180</td></tr>
+<tr><th scope="row">60</th><td>&gt;600</td><td>&gt;600</td><td>&gt;600</td><td>—</td></tr>
+</tbody></table></div>
+<ol class="sub">
+<li>Calculate the mean at 40 °C, excluding the anomaly. <span class="mk">[2]</span></li>
+<li>Calculate the rate at 40 °C. <span class="mk">[1]</span></li>
+<li>Explain why there was no end-point at 60 °C. <span class="mk">[3]</span></li>
+</ol>
+<div class="ans"><ul><li>(a) Excludes 300 s [1]; (60 + 120) ÷ 2 = 90 s [1]. Do not accept the mean of all three, 160 s.</li><li>(b) 1 ÷ 90 = 0.011 s⁻¹ [1]</li><li>(c) Amylase is denatured [1]; its active site changes shape, so starch no longer fits [1]; the starch is not broken down, so it remains [1]. Do not accept “killed” or “the starch is denatured”.</li></ul></div></li>
+<li><span class="tag extra">Extra</span> Use the illustrative data above.
+<ol class="sub">
+<li>The rate at 30 °C was 0.0067 s⁻¹. Calculate the end-point time. <span class="mk">[1]</span></li>
+<li>Calculate how many times faster the reaction was at 40 °C than at 10 °C. Show your working. <span class="mk">[2]</span></li>
+</ol>
+<div class="ans"><ul><li>(a) 1 ÷ 0.0067 = 149 s, about 150 s [1]</li><li>(b) 0.011 ÷ 0.0022, or 450 ÷ 90 [1] = 5 times faster [1]</li></ul></div></li>
+</ol>
+
+<h2 class="part">Part D · Planning an investigation <span class="pill">2.12 · 2.14B · 18 marks</span></h2>
+<figure>
+<svg viewBox="0 0 700 340" role="img" aria-label="CORMMSS planning checklist: C, change the independent variable and its values; O, the same organism or enzyme source; R, repeat at least three times and calculate a mean; M, what you measure, the dependent variable; M, how and when you measure it; S and S, two control variables and how each is kept the same." font-family="Montserrat, system-ui, sans-serif" data-diagram="cormmss"><text x="350" y="34" class="diagram-label" text-anchor="middle" font-size="22" font-weight="650" fill="#182944">CORMMSS: a planning checklist</text><rect x="5" y="58" width="95" height="236" rx="12" fill="#fbf8f0" stroke="#182944" stroke-width="2"/><text x="52.5" y="132" text-anchor="middle" font-size="52" font-weight="800" fill="#182944">C</text><text x="52.5" y="178" class="diagram-small" text-anchor="middle" font-size="17" font-weight="750" fill="#182944" style="font-weight:750">Change</text><path d="M23 194H82" fill="none" stroke="#b9b09c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><text x="52.5" y="226" class="diagram-small" text-anchor="middle" font-size="17" font-weight="600" fill="#182944" style="font-weight:600">the IV</text><text x="52.5" y="250" class="diagram-small" text-anchor="middle" font-size="17" font-weight="600" fill="#182944" style="font-weight:600">+ values</text><rect x="104" y="58" width="95" height="236" rx="12" fill="#fbf8f0" stroke="#182944" stroke-width="2"/><text x="151.5" y="132" text-anchor="middle" font-size="52" font-weight="800" fill="#182944">O</text><text x="151.5" y="178" class="diagram-small" text-anchor="middle" font-size="17" font-weight="750" fill="#182944" style="font-weight:750">Organism</text><path d="M122 194H181" fill="none" stroke="#b9b09c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><text x="151.5" y="226" class="diagram-small" text-anchor="middle" font-size="17" font-weight="600" fill="#182944" style="font-weight:600">same</text><text x="151.5" y="250" class="diagram-small" text-anchor="middle" font-size="17" font-weight="600" fill="#182944" style="font-weight:600">source</text><rect x="203" y="58" width="95" height="236" rx="12" fill="#fbf8f0" stroke="#182944" stroke-width="2"/><text x="250.5" y="132" text-anchor="middle" font-size="52" font-weight="800" fill="#182944">R</text><text x="250.5" y="178" class="diagram-small" text-anchor="middle" font-size="17" font-weight="750" fill="#182944" style="font-weight:750">Repeat</text><path d="M221 194H280" fill="none" stroke="#b9b09c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><text x="250.5" y="226" class="diagram-small" text-anchor="middle" font-size="17" font-weight="600" fill="#182944" style="font-weight:600">×3, then</text><text x="250.5" y="250" class="diagram-small" text-anchor="middle" font-size="17" font-weight="600" fill="#182944" style="font-weight:600">a mean</text><rect x="302" y="58" width="95" height="236" rx="12" fill="#fbf8f0" stroke="#182944" stroke-width="2"/><text x="341.5" y="132" text-anchor="middle" font-size="52" font-weight="800" fill="#182944">M</text><text x="376.5" y="132" text-anchor="middle" font-size="22" font-weight="750" fill="#182944">1</text><text x="349.5" y="178" class="diagram-small" text-anchor="middle" font-size="17" font-weight="750" fill="#182944" style="font-weight:750">Measure</text><path d="M320 194H379" fill="none" stroke="#b9b09c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><text x="349.5" y="226" class="diagram-small" text-anchor="middle" font-size="17" font-weight="600" fill="#182944" style="font-weight:600">what</text><text x="349.5" y="250" class="diagram-small" text-anchor="middle" font-size="17" font-weight="600" fill="#182944" style="font-weight:600">(the DV)</text><rect x="401" y="58" width="95" height="236" rx="12" fill="#fbf8f0" stroke="#182944" stroke-width="2"/><text x="440.5" y="132" text-anchor="middle" font-size="52" font-weight="800" fill="#182944">M</text><text x="475.5" y="132" text-anchor="middle" font-size="22" font-weight="750" fill="#182944">2</text><text x="448.5" y="178" class="diagram-small" text-anchor="middle" font-size="17" font-weight="750" fill="#182944" style="font-weight:750">Measure</text><path d="M419 194H478" fill="none" stroke="#b9b09c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><text x="448.5" y="226" class="diagram-small" text-anchor="middle" font-size="17" font-weight="600" fill="#182944" style="font-weight:600">how and</text><text x="448.5" y="250" class="diagram-small" text-anchor="middle" font-size="17" font-weight="600" fill="#182944" style="font-weight:600">when</text><rect x="500" y="58" width="95" height="236" rx="12" fill="#fbf8f0" stroke="#182944" stroke-width="2"/><text x="539.5" y="132" text-anchor="middle" font-size="52" font-weight="800" fill="#182944">S</text><text x="574.5" y="132" text-anchor="middle" font-size="22" font-weight="750" fill="#182944">1</text><text x="547.5" y="178" class="diagram-small" text-anchor="middle" font-size="17" font-weight="750" fill="#182944" style="font-weight:750">Same</text><path d="M518 194H577" fill="none" stroke="#b9b09c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><text x="547.5" y="226" class="diagram-small" text-anchor="middle" font-size="17" font-weight="600" fill="#182944" style="font-weight:600">control 1</text><text x="547.5" y="250" class="diagram-small" text-anchor="middle" font-size="17" font-weight="600" fill="#182944" style="font-weight:600">+ how</text><rect x="599" y="58" width="95" height="236" rx="12" fill="#fbf8f0" stroke="#182944" stroke-width="2"/><text x="638.5" y="132" text-anchor="middle" font-size="52" font-weight="800" fill="#182944">S</text><text x="673.5" y="132" text-anchor="middle" font-size="22" font-weight="750" fill="#182944">2</text><text x="646.5" y="178" class="diagram-small" text-anchor="middle" font-size="17" font-weight="750" fill="#182944" style="font-weight:750">Same</text><path d="M617 194H676" fill="none" stroke="#b9b09c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><text x="646.5" y="226" class="diagram-small" text-anchor="middle" font-size="17" font-weight="600" fill="#182944" style="font-weight:600">control 2</text><text x="646.5" y="250" class="diagram-small" text-anchor="middle" font-size="17" font-weight="600" fill="#182944" style="font-weight:600">+ how</text><text x="350" y="326" class="diagram-small" text-anchor="middle" font-size="17" font-weight="500" fill="#182944">IV = independent variable · DV = dependent variable</text></svg>
+<figcaption>CORMMSS is a planning checklist, not a mark scheme.</figcaption>
+</figure>
+<ol class="qs">
+<li><span class="tag">Lesson · worked in class</span> Describe how you could investigate the effect of <strong>pH</strong> on the activity of amylase. <span class="mk">[6]</span>
+<p>Write it from memory, then compare it with the worked example from the lesson.</p>
+<div class="ans"><ul><li>Use buffer solutions to set a range of pH values, e.g. pH 4–9, 1 cm³ added to the starch [1]</li><li>Amylase from the same stock solution [1]</li><li>Every 30 s, test one drop of the mixture with iodine on a spotting tile [1]</li><li>Time until the iodine stays orange-brown; rate = 1 ÷ time [1]</li><li>Keep the temperature constant, e.g. a 37 °C water bath [1]</li><li>Repeat three times at each pH and calculate a mean [1]</li><li>Also credit: same volumes and concentrations of starch and amylase. Maximum 6 marks.</li></ul></div></li>
+<li><span class="tag">Lesson · independent</span> A cloudy suspension of casein (a milk protein) goes <strong>clear</strong> when a protease digests it. Describe how you could investigate the effect of <strong>temperature</strong> on this protease’s activity. <span class="mk">[6]</span>
+<div class="ans"><p>1 mark per point, any order, maximum 6:</p><ul><li>At least five temperatures, set with water baths [1]</li><li>Warm the casein and the protease separately first [1]</li><li>Time until the mixture goes clear, e.g. a cross behind the tube becomes visible [1]</li><li>Same volume and concentration of casein [1]</li><li>Same volume of protease from the same source [1]</li><li>Same pH, using a buffer [1]</li><li>Three repeats at each temperature; calculate a mean [1]</li><li>Rate = 1 ÷ time [1]</li><li>Do not accept “the protease dies”.</li></ul></div></li>
+<li><span class="tag extra">Extra</span> A student investigated the effect of temperature on amylase. She:
+<ul><li>mixed the starch and amylase at room temperature, then put the tube in the water bath</li><li>tested a drop of the mixture with iodine every 2 minutes</li><li>made a new amylase solution from powder for each temperature</li><li>did one trial at each temperature.</li></ul>
+<p>Identify three weaknesses. For each, suggest an improvement and explain why it improves the investigation. <span class="mk">[6]</span></p>
+<div class="ans"><p>For each weakness: improvement [1] + reason [1]; maximum 6.</p><ul><li>Warm the starch and amylase separately for 5 minutes before mixing [1], so the whole reaction happens at the chosen temperature [1]</li><li>Sample every 30 s or more often [1], so the end-point time is more precise [1]</li><li>Use one stock amylase solution [1], so the enzyme concentration is the same and only temperature changes [1]</li><li>Do three trials and calculate a mean [1], to check repeatability and spot anomalies [1]</li><li>Also credit: add a buffer so pH is controlled, because pH also changes the rate.</li></ul></div></li>
+</ol>
+
+<h2 class="part">Review your response <span class="pill">Self-check</span></h2>
+<ul>
+<li>Did you use <strong>active site</strong>, <strong>complementary</strong> and <strong>enzyme–substrate complex</strong> accurately?</li>
+<li>Did you say <strong>denatured</strong> and explain it as a permanent change in active-site shape, never “killed”?</li>
+<li>Did you separate cold (fewer collisions, not denatured) from heat (denatured)?</li>
+<li>Did your rates have 2 significant figures and the unit s⁻¹?</li>
+<li>Did each control variable in your plan say <strong>how</strong> it is kept the same?</li>
+</ul>
+<p class="footer-note">Original questions for Year 10 Triple Biology. Mark schemes are classroom mark schemes written for these questions, not Pearson mark schemes. No pupil data are collected or stored by this page.</p>
+</main>
+<script>
+(() => {
+  const toggle = document.getElementById('toggle-answers');
+  toggle.addEventListener('click', () => {
+    const on = document.body.classList.toggle('show-answers');
+    toggle.setAttribute('aria-pressed', String(on));
+  });
+  document.getElementById('print-page').addEventListener('click', () => window.print());
+})();
+</script>
+</body>
+</html>

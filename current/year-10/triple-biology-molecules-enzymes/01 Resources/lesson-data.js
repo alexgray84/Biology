@@ -89,7 +89,7 @@
         {heading:'Test a snack label',note:'Hypothetical classroom scenario',text:'A local chickpea snack says “source of protein, no starch”. Iodine turned blue-black; Biuret turned purple. Is each claim supported?',answer:A([
           m('Protein: only partly','Biuret turned purple, so protein is present. The test shows presence, not amount.'),
           m('No starch: contradicted','Iodine turned blue-black, so starch is present.')
-        ],[c('4 marks',['Protein present, purple [1]; amount untested [1]','Starch present, blue-black [1]','“No starch” not supported [1]'])],4)},
+        ],[c('4 marks · protein claim',['Purple: protein present [1]','Amount not tested, so only partly supported [1]']),c('4 marks · starch claim',['Blue-black: starch present [1]','“No starch” claim contradicted [1]'])],4)},
         {heading:'More than energy',note:'Hypothetical classroom scenario',text:'A planner says a food basket needs only carbohydrate “because it gives energy”. Use protein and lipid functions to explain why not.',answer:A([
           m('Protein','Protein is needed for growth and repair, and to make enzymes and antibodies.'),
           m('Lipid','Lipid stores energy, insulates, protects organs and forms cell membranes. Carbohydrate cannot do these jobs.')
