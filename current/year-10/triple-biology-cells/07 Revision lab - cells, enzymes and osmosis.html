@@ -1,0 +1,2207 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Y10 Triple Biology revision lab: cells, enzymes and osmosis</title>
+<meta name="description" content="Interactive revision lesson: drag-and-drop 3D cell labelling, a lock-and-key enzyme lab, the osmosis practical, and Tarsia puzzles. Edexcel IGCSE Biology 4BI1, tiered Grade 6 to 9.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#21345B; --navy2:#2f4a7d; --gold:#B8860B; --gold2:#f0d78a; --paper:#F7F1E3; --ink:#1c2233; --soft:#e8edf5;
+  --line:#cfc7b5; --ok:#1f7a4d; --okbg:#e3f3ea; --bad:#b3261e; --badbg:#fbe7e5; --bg:#e9e7e2; --card:#fff;
+  --s:#2a7f62; --m:#2f5fb3; --x:#8a3ea8;
+  --radius:16px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Montserrat",system-ui,-apple-system,"Segoe UI",sans-serif;font-size:15px;line-height:1.45}
+h1,h2,h3{margin:0}
+button{font:inherit;cursor:pointer}
+.skip{position:absolute;left:-999px;top:8px;background:var(--navy);color:#fff;padding:8px 12px;border-radius:8px;z-index:100}
+.skip:focus{left:8px}
+:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+
+/* ---------- top bar ---------- */
+.top{display:flex;align-items:center;gap:18px;padding:8px 18px;background:var(--navy);color:#fff;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:12px;min-width:0}
+.logo{background:var(--gold);color:#fff;font-weight:800;border-radius:10px;padding:6px 10px;letter-spacing:.04em}
+.brand h1{font-family:Georgia,serif;font-size:21px;font-weight:700;line-height:1.1}
+.brand p{margin:0;font-size:11.5px;opacity:.82}
+.tierbar{display:flex;gap:6px;margin-left:auto;align-items:center}
+.tierbar .lab{font-size:11px;text-transform:uppercase;letter-spacing:.08em;opacity:.8;margin-right:4px}
+.tbtn{border:2px solid rgba(255,255,255,.4);background:transparent;color:#fff;border-radius:999px;padding:5px 12px;font-weight:700;font-size:12.5px}
+.tbtn[aria-pressed="true"]{background:#fff;color:var(--navy);border-color:#fff}
+.tbtn[data-t="s"][aria-pressed="true"]{background:#bfe9d6}
+.tbtn[data-t="m"][aria-pressed="true"]{background:#cfe0ff}
+.tbtn[data-t="x"][aria-pressed="true"]{background:#e9d3f5}
+
+/* ---------- stepper ---------- */
+.steps{display:flex;gap:6px;padding:8px 14px;background:var(--soft);border-bottom:2px solid var(--line);overflow-x:auto}
+.step{display:flex;align-items:center;gap:8px;border:2px solid transparent;background:#fff;border-radius:12px;padding:6px 12px;font-weight:700;color:var(--navy);white-space:nowrap}
+.step .n{width:24px;height:24px;border-radius:50%;background:var(--navy);color:#fff;display:grid;place-items:center;font-size:12px}
+.step .mins{font-weight:600;font-size:11px;color:#555;background:var(--paper);border-radius:999px;padding:1px 8px}
+.step[aria-current="step"]{border-color:var(--gold);box-shadow:0 2px 0 var(--gold)}
+.step.done .n{background:var(--ok)}
+.step.done .n::after{content:"✓"}
+.step.done .n span{display:none}
+
+/* ---------- stage ---------- */
+main{max-width:1320px;margin:0 auto;padding:14px 16px 60px}
+.stage{display:none}
+.stage.on{display:block}
+.mission{background:var(--card);border:2px solid var(--line);border-radius:var(--radius);padding:8px 16px;display:grid;grid-template-columns:1fr 1.5fr;gap:2px 22px;margin-bottom:10px;align-items:start}
+.mission .ymy{font-size:12.5px;margin-top:4px}
+.mission .dothis{font-size:13.5px;align-self:center}
+.mission details.lad{grid-column:1/-1;font-size:12.5px}
+.mission details.lad summary{cursor:pointer;color:var(--navy);font-weight:700;font-size:12px}
+.mission details.lad .spec{margin:4px 0}
+.mission .kick{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:var(--gold)}
+.mission h2{font-family:Georgia,serif;color:var(--navy);font-size:20px;line-height:1.15;margin:1px 0 3px}
+.mission .spec{font-size:12px;color:#555}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:2px}
+.chip{display:inline-block;font-size:11.5px;font-weight:700;border-radius:999px;padding:2px 10px;background:var(--paper);border:1px solid var(--line);color:var(--navy)}
+.chip.t-s{background:#dff3ea;border-color:#9bd1b9;color:#145a42}
+.chip.t-m{background:#e1ebff;border-color:#a9c1ef;color:#1d417f}
+.chip.t-x{background:#f2e4fa;border-color:#cfaee0;color:#5f2a77}
+.dothis{margin:0;padding-left:20px}
+.dothis li{margin:2px 0}
+.dothis b{color:var(--navy)}
+.ladder{grid-column:1/-1;display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:4px}
+.ladder div{font-size:12px;border-radius:10px;padding:6px 10px;border:2px solid transparent;background:#f6f6f2;opacity:.65}
+.ladder div.me{opacity:1;border-color:currentColor;background:#fff}
+.ladder .ls{color:var(--s)} .ladder .lm{color:var(--m)} .ladder .lx{color:var(--x)}
+.ladder b{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.07em}
+.ladder span{color:var(--ink)}
+
+.board{position:relative;background:var(--paper);border:2px solid var(--line);border-radius:var(--radius);overflow:hidden;user-select:none;-webkit-user-select:none}
+.toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:8px 0}
+.btn{border:2px solid var(--navy);background:var(--navy);color:#fff;border-radius:10px;padding:6px 14px;font-weight:700;font-size:13px}
+.btn.alt{background:#fff;color:var(--navy)}
+.btn.gold{background:var(--gold);border-color:var(--gold)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn:hover:not(:disabled){filter:brightness(1.08)}
+.msg{font-weight:600;font-size:13.5px;min-height:20px;padding:4px 10px;border-radius:8px}
+.msg.ok{background:var(--okbg);color:var(--ok)}
+.msg.bad{background:var(--badbg);color:var(--bad)}
+.msg.info{background:var(--soft);color:var(--navy)}
+
+/* draggable cards */
+.card{position:absolute;touch-action:none;cursor:grab;background:#fff;border:2px solid var(--navy);border-radius:12px;padding:6px 10px;font-weight:700;font-size:13px;color:var(--navy);box-shadow:0 3px 0 rgba(33,52,91,.25);z-index:5}
+.card:active,.card.drag{cursor:grabbing;box-shadow:0 10px 18px rgba(0,0,0,.25);transform:scale(1.03)}
+.card.sel{outline:3px solid var(--gold);outline-offset:2px}
+.card.good{border-color:var(--ok);background:var(--okbg);color:var(--ok)}
+.card.wrong{border-color:var(--bad);background:var(--badbg);color:var(--bad)}
+.card small{display:block;font-weight:500;font-size:11px;color:#444}
+@keyframes shake{0%,100%{translate:0}25%{translate:-6px}75%{translate:6px}}
+.shake{animation:shake .3s 2}
+
+/* sort */
+.sortboard{height:460px}
+.zone{position:absolute;top:12px;bottom:12px;border:3px dashed #aab4c8;border-radius:14px;background:rgba(255,255,255,.55);padding:8px;color:var(--navy)}
+.zone h3{font-size:14px;text-transform:uppercase;letter-spacing:.06em;text-align:center}
+.zone.over{background:rgba(240,215,138,.4);border-color:var(--gold)}
+.table-label{position:absolute;bottom:6px;left:12px;font-size:11px;color:#777;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+
+/* label lab */
+.labgrid{display:grid;grid-template-columns:1fr 230px;height:520px}
+.view{position:relative;background:radial-gradient(circle at 50% 40%,#fff 0,#eef2f9 70%)}
+.view canvas{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:none;cursor:grab}
+.view canvas:active{cursor:grabbing}
+.pinlayer{position:absolute;inset:0;pointer-events:none}
+.pinlayer svg{position:absolute;inset:0;width:100%;height:100%}
+.ring{position:absolute;width:34px;height:34px;margin:-17px 0 0 -17px;border-radius:50%;border:3px solid var(--navy);background:rgba(255,255,255,.92);display:grid;place-items:center;font-weight:800;font-size:13px;color:var(--navy);pointer-events:auto;cursor:pointer;transition:opacity .2s}
+.ring.far{opacity:.5}
+.ring.hot{background:var(--gold2);border-color:var(--gold);transform:scale(1.15)}
+.ring.done{border-color:var(--ok);background:var(--okbg)}
+.tag{position:absolute;transform:translate(-50%,-50%);background:var(--okbg);border:2px solid var(--ok);color:#0f5132;border-radius:9px;padding:3px 8px;font-weight:700;font-size:12px;white-space:nowrap;pointer-events:none;z-index:4}
+.tray{background:#fff;border-left:2px solid var(--line);padding:8px;display:flex;flex-direction:column;gap:6px;overflow:auto;position:relative}
+.tray h3{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--gold)}
+.tray .card{position:relative;cursor:grab;left:auto;top:auto}
+.tray .card.floating{position:absolute}
+.viewtools{position:absolute;left:8px;bottom:8px;display:flex;gap:6px;z-index:6}
+.viewtools button{border:2px solid var(--navy);background:#fff;color:var(--navy);border-radius:8px;width:32px;height:32px;font-weight:800}
+.celltabs{display:flex;gap:6px;padding:8px;background:#fff;border-bottom:2px solid var(--line)}
+.celltabs button{border:2px solid var(--navy);background:#fff;color:var(--navy);border-radius:999px;padding:4px 14px;font-weight:700;font-size:13px}
+.celltabs button[aria-selected="true"]{background:var(--navy);color:#fff}
+.celltabs .prog{margin-left:auto;font-weight:700;color:var(--navy);align-self:center;font-size:13px}
+
+/* enzyme lab */
+.enzgrid{display:grid;grid-template-columns:1fr 340px;height:640px}
+.enzleft{display:flex;flex-direction:column;min-height:0}
+.enzleft .view{flex:1;min-height:0}
+.enzleft .gbox{border-top:2px solid var(--line);background:#fff;padding:6px 10px 4px;display:grid;grid-template-columns:1fr auto;gap:2px 10px;align-items:center}
+.enzleft .gbox canvas.graph{grid-column:1/-1;height:158px;border:none;border-radius:0}
+.panel{background:#fff;border-left:2px solid var(--line);padding:10px 12px;display:flex;flex-direction:column;gap:8px;overflow:auto}
+.panel h3{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--gold)}
+.slider{display:grid;gap:2px}
+.slider label{font-weight:700;font-size:13px;display:flex;justify-content:space-between;color:var(--navy)}
+.slider input{width:100%;accent-color:var(--navy)}
+.readout{font-size:12.5px;background:var(--soft);border-radius:10px;padding:8px 10px;color:var(--navy)}
+.readout b{display:block}
+.predict{background:var(--paper);border:2px solid var(--gold2);border-radius:10px;padding:8px}
+.predict p{margin:0 0 6px;font-weight:700;font-size:13px}
+.predict .opt{display:block;width:100%;text-align:left;background:#fff;border:2px solid var(--line);border-radius:8px;padding:4px 8px;margin:3px 0;font-size:12.5px;font-weight:600}
+.predict .opt.good{border-color:var(--ok);background:var(--okbg)}
+.predict .opt.bad{border-color:var(--bad);background:var(--badbg)}
+canvas.graph{width:100%;height:158px;background:#fff;display:block}
+.hudmsg{position:absolute;left:50%;top:10px;transform:translateX(-50%);z-index:6;max-width:80%;text-align:center}
+.subs{position:absolute;left:8px;bottom:8px;z-index:6;display:grid;gap:4px;font-size:12px;font-weight:700;color:var(--navy)}
+.subs .hint{background:rgba(255,255,255,.85);border-radius:8px;padding:3px 8px}
+
+/* osmosis */
+.osgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
+.osgrid > section{background:#fff;border:2px solid var(--line);border-radius:var(--radius);padding:12px 14px}
+.osgrid h3{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--gold);margin-bottom:6px}
+.bench{height:380px}
+.bench canvas{position:absolute;inset:0;width:100%;height:100%;touch-action:none}
+.rtable{border-collapse:collapse;width:100%;font-size:13px}
+.rtable th{background:var(--navy);color:#fff;padding:5px 6px;font-size:11.5px}
+.rtable td{border:1px solid var(--line);padding:4px 6px;text-align:center}
+.rtable input{width:74px;font:inherit;font-weight:700;text-align:center;border:2px solid var(--line);border-radius:6px;padding:2px}
+.rtable input.good{border-color:var(--ok);background:var(--okbg)}
+.rtable input.bad{border-color:var(--bad);background:var(--badbg)}
+.cormms{display:grid;gap:6px}
+.crow{display:grid;grid-template-columns:44px 1fr;gap:8px;align-items:stretch}
+.crow .let{background:var(--navy);color:#fff;border-radius:10px;display:grid;place-items:center;font-family:Georgia,serif;font-size:24px;font-weight:700;position:relative}
+.crow .let small{position:absolute;bottom:1px;font:600 8.5px "Montserrat",sans-serif;opacity:.85}
+.slot{min-height:44px;border:3px dashed #aab4c8;border-radius:10px;background:rgba(255,255,255,.7);padding:4px;display:flex;align-items:center;font-size:13px;color:#667;transition:background .2s}
+.slot.over{background:rgba(240,215,138,.45);border-color:var(--gold)}
+.slot.good{border-style:solid;border-color:var(--ok);background:var(--okbg)}
+.slot.bad{border-style:solid;border-color:var(--bad);background:var(--badbg)}
+.slot .card{position:relative;left:auto;top:auto;box-shadow:none;font-weight:600;font-size:12.5px;border-width:1.5px}
+.cpool{position:relative;min-height:140px;border:2px dashed var(--line);border-radius:12px;margin-top:8px;background:var(--paper)}
+.cpool .card{font-weight:600;font-size:12.5px;max-width:300px}
+.graphwrap svg{width:100%;height:auto;display:block;background:#fff;border:2px solid var(--line);border-radius:10px;touch-action:none}
+.graphwrap text{font:600 11px "Montserrat",sans-serif;fill:#333}
+
+/* tarsia */
+.tarsia-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
+.tarsia-tabs button{border:2px solid var(--navy);background:#fff;color:var(--navy);border-radius:12px;padding:6px 14px;font-weight:700}
+.tarsia-tabs button[aria-selected="true"]{background:var(--navy);color:#fff}
+.tboard{height:610px;background:#fbf8ef;background-image:radial-gradient(#ded6c0 1.2px,transparent 1.2px);background-size:26px 26px;touch-action:none}
+.piece{position:absolute;touch-action:none;cursor:grab;z-index:5;filter:drop-shadow(0 3px 3px rgba(0,0,0,.28));transition:filter .15s}
+.piece.drag{cursor:grabbing;filter:drop-shadow(0 12px 12px rgba(0,0,0,.35));z-index:200}
+.piece:focus-visible{outline:none;filter:drop-shadow(0 0 0 var(--gold)) drop-shadow(0 0 6px var(--gold))}
+.piece.hint{filter:drop-shadow(0 0 8px #ff9800) drop-shadow(0 0 4px #ff9800)}
+.piece svg{display:block;overflow:visible}
+.piece .rot{position:absolute;left:50%;top:50%;margin:-14px 0 0 -14px;width:28px;height:28px;border-radius:50%;background:var(--gold);color:#fff;border:2px solid #fff;font-weight:800;font-size:15px;line-height:1;display:grid;place-items:center;cursor:pointer;z-index:2}
+.tstat{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.tstat .big{font-size:20px;font-weight:800;color:var(--navy)}
+
+/* questions / support */
+.below.split{grid-template-columns:1fr 1.3fr}
+.below{display:grid;grid-template-columns:1.3fr 1fr;gap:12px;margin-top:12px;align-items:start}
+.panelcard{min-width:0;background:#fff;border:2px solid var(--line);border-radius:var(--radius);padding:12px 16px}
+.panelcard > h3{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--gold);margin-bottom:6px}
+.q{border-top:1px dashed var(--line);padding:8px 0}
+.q:first-of-type{border-top:none}
+.q .stem{font-weight:600}
+.q .marks{font-weight:800;color:var(--navy)}
+.q textarea{width:100%;min-height:54px;margin:6px 0;font:inherit;border:2px solid var(--line);border-radius:10px;padding:6px 8px;resize:vertical}
+details.reveal{margin:4px 0}
+details.reveal summary{cursor:pointer;font-weight:700;color:var(--navy);border:2px solid var(--navy);border-radius:10px;padding:3px 12px;display:inline-block;list-style:none}
+details.reveal summary::-webkit-details-marker{display:none}
+details.reveal[open] summary{background:var(--navy);color:#fff}
+details.reveal .ans{margin-top:6px;background:var(--okbg);border-left:5px solid var(--ok);border-radius:8px;padding:8px 12px;font-size:13.5px}
+details.reveal .ans ul{margin:4px 0;padding-left:20px}
+.msrow{display:flex;gap:8px;align-items:flex-start}
+.msrow input{margin-top:4px}
+.stabs{display:flex;gap:6px;margin-bottom:8px}
+.stabs button{border:2px solid var(--navy);background:#fff;color:var(--navy);border-radius:999px;padding:4px 14px;font-weight:700;font-size:13px}
+.stabs button[aria-selected="true"]{background:var(--navy);color:#fff}
+.sub{font-size:12px;color:#555;margin:0 0 6px}
+select.cloze{font:inherit;font-weight:700;border:2px solid var(--navy);border-radius:8px;padding:1px 4px;color:var(--navy)}
+.cloze-ok{color:var(--ok);font-weight:800}
+
+/* overlay */
+.overlay{position:fixed;inset:0;background:rgba(20,30,52,.78);display:grid;place-items:center;z-index:300;padding:16px;overflow:auto}
+.overlay[hidden]{display:none}
+.start{background:var(--paper);border-radius:22px;max-width:880px;width:100%;padding:22px 26px;border:3px solid var(--gold)}
+.start h2{font-family:Georgia,serif;color:var(--navy);font-size:28px}
+.start p{margin:6px 0}
+.tiers{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:14px 0}
+.tiercard{background:#fff;border:3px solid var(--line);border-radius:14px;padding:10px 12px;text-align:left;color:var(--ink)}
+.tiercard b{display:block;font-size:17px}
+.tiercard small{display:block;margin-top:4px;font-size:12.5px}
+.tiercard[aria-pressed="true"]{border-width:4px}
+.tiercard[data-t="s"]{border-color:#9bd1b9}.tiercard[data-t="s"][aria-pressed="true"]{border-color:var(--s);background:#eaf8f2}
+.tiercard[data-t="m"]{border-color:#a9c1ef}.tiercard[data-t="m"][aria-pressed="true"]{border-color:var(--m);background:#edf3ff}
+.tiercard[data-t="x"]{border-color:#cfaee0}.tiercard[data-t="x"][aria-pressed="true"]{border-color:var(--x);background:#f7edfc}
+.conf{display:grid;grid-template-columns:110px minmax(0,1fr) 24px;gap:6px 10px;align-items:center;font-weight:700;color:var(--navy);font-size:13.5px}
+.conf input{width:100%;accent-color:var(--gold)}
+.summary table{border-collapse:collapse;width:100%;font-size:13.5px}
+.summary th,.summary td{border:1px solid var(--line);padding:6px 10px;text-align:center}
+.summary th{background:var(--navy);color:#fff}
+
+.smallnote{display:none;background:#fff4dc;border-bottom:2px solid var(--gold2);padding:6px 14px;font-size:12.5px;font-weight:600;color:#6b4f00}
+@media (max-width:820px){.smallnote{display:block}}
+.nogl{padding:30px;text-align:center;font-weight:700;color:var(--bad)}
+.hide{display:none!important}
+@media (max-width:1000px){
+  .below.split{grid-template-columns:1fr}
+  .summary table{display:block;overflow-x:auto}
+  .mission,.below,.osgrid,.labgrid,.enzgrid{grid-template-columns:1fr}
+  .enzgrid{height:auto}.enzleft{height:560px}
+  .labgrid{height:auto}.tray{border-left:none;border-top:2px solid var(--line);flex-direction:row;flex-wrap:wrap}
+  .tiers,.ladder{grid-template-columns:1fr}
+  .view{height:420px}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}html{scroll-behavior:auto}}
+@media print{.top,.steps,.toolbar,.overlay{display:none}.stage{display:block!important}}
+
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to the lesson</a>
+<header class="top">
+  <div class="brand"><span class="logo">Y10</span><div><h1>Biology revision lab</h1><p>Cells · Enzymes · Osmosis · Edexcel IGCSE Biology 4BI1 · Triple</p></div></div>
+  <div class="tierbar" id="tierbar" role="group" aria-label="Choose your level"><span class="lab">Level</span></div>
+</header>
+<div class="smallnote">This lesson has drag-and-drop boards and 3D models. It works best on a laptop or tablet in landscape.</div>
+<nav class="steps" id="steps" aria-label="Lesson stages"></nav>
+<main id="main"></main>
+
+<div class="overlay" id="start" role="dialog" aria-modal="true" aria-labelledby="st-h">
+  <div class="start">
+    <h2 id="st-h">Welcome to the revision lab</h2>
+    <p>Sixty minutes, six stages. You can drag things anywhere, turn them, and move between stages whenever you like. <b>You choose your level</b>, and you can change it any time.</p>
+    <div class="tiers" id="tiers" role="group" aria-label="Choose your starting level"></div>
+    <p><b>How confident are you right now?</b> (1 = not at all, 5 = very). This stays on your screen only and is compared with your exit ticket.</p>
+    <div class="conf" id="conf"></div>
+    <p style="margin-top:14px"><button class="btn gold" id="go" disabled style="font-size:16px;padding:9px 22px">Start the lesson</button></p>
+  </div>
+</div>
+
+<script src="07 Resources/three.min.js"></script>
+<script>
+/* Revision lab core: helpers, drag engine, Three.js scaffolding. */
+(function () {
+  'use strict';
+  const RL = (window.RL = { stages: [], state: { tier: null, pre: {}, post: {}, scores: {}, done: {} }, ticks: [] });
+  RL.reduced = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  RL.TIERS = { s: 'Grade 6 · Secure', m: 'Grade 7 · Strong', x: 'Grade 8–9 · Stretch' };
+
+  RL.dbg = {}; // read-only helpers used by the QA script
+  RL.$ = (s, r) => (r || document).querySelector(s);
+  RL.$$ = (s, r) => Array.from((r || document).querySelectorAll(s));
+  RL.el = function (tag, attrs, ...kids) {
+    const n = document.createElement(tag);
+    if (attrs) for (const k in attrs) {
+      const v = attrs[k];
+      if (v == null || v === false) continue;
+      if (k === 'class') n.className = v;
+      else if (k === 'html') n.innerHTML = v;
+      else if (k === 'text') n.textContent = v;
+      else if (k === 'style' && typeof v === 'object') Object.assign(n.style, v);
+      else if (k.startsWith('on') && typeof v === 'function') n.addEventListener(k.slice(2), v);
+      else n.setAttribute(k, v === true ? '' : v);
+    }
+    for (const kid of kids.flat()) if (kid != null && kid !== false) n.append(kid.nodeType ? kid : document.createTextNode(kid));
+    return n;
+  };
+  const el = RL.el;
+  RL.clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+  RL.rng = function (seed) { let s = seed >>> 0 || 1; return () => ((s = (s * 1664525 + 1013904223) >>> 0) / 4294967296); };
+  RL.shuffle = function (arr, rnd) { const a = arr.slice(), r = rnd || Math.random; for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(r() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+  RL.tier = () => RL.state.tier || 'm';
+  RL.pick = (obj) => (obj && (obj[RL.tier()] !== undefined ? obj[RL.tier()] : obj.m));
+
+  /* ---------- messages ---------- */
+  RL.msg = function (node, text, kind) { if (!node) return; node.className = (node.className.replace(/\b(msg|ok|bad|info)\b/g, '').trim() + ' msg ' + (kind || 'info')).trim(); node.textContent = text || ''; };
+
+  /* ---------- reveal + question blocks (every task has a model answer) ---------- */
+  RL.reveal = function (label, html) {
+    return el('details', { class: 'reveal' }, el('summary', { text: label || 'Show model answer' }), el('div', { class: 'ans', html }));
+  };
+  RL.ms = function (points, note) {
+    return '<ul>' + points.map(p => '<li>' + p + '</li>').join('') + '</ul>' + (note ? '<p><i>' + note + '</i></p>' : '');
+  };
+  RL.qblock = function (q) {
+    return el('div', { class: 'q' },
+      el('div', { class: 'stem', html: q.stem + ' <span class="marks">[' + q.marks + ']</span>' }),
+      q.write === false ? null : el('textarea', { 'aria-label': 'Your answer', placeholder: 'Write your answer first, then check it…' }),
+      RL.reveal('Model answer and mark scheme', RL.ms(q.ms, q.note)));
+  };
+
+  /* ---------- stage furniture ---------- */
+  RL.mission = function (o) {
+    const me = RL.tier(), L = o.ladder;
+    return el('div', { class: 'mission' },
+      el('div', null,
+        el('div', { class: 'kick', text: o.kicker }),
+        el('h2', { text: o.title }),
+        el('div', { class: 'chips' }, el('span', { class: 'chip', text: '⏱ ' + o.mins + ' min' }), el('span', { class: 'chip t-' + me, text: RL.TIERS[me] })),
+        L ? el('div', { class: 'ymy', html: '<b>Your level:</b> ' + L[me] }) : null),
+      el('ol', { class: 'dothis', html: o.steps.map(s => '<li>' + s + '</li>').join('') }),
+      el('details', { class: 'lad' }, el('summary', { text: 'Spec link and what each level does' }),
+        el('p', { class: 'spec', html: o.spec }),
+        L ? el('div', { class: 'ladder' },
+          el('div', { class: 'ls' + (me === 's' ? ' me' : '') }, el('b', { text: 'Grade 6 · Secure' }), el('span', { html: L.s })),
+          el('div', { class: 'lm' + (me === 'm' ? ' me' : '') }, el('b', { text: 'Grade 7 · Strong' }), el('span', { html: L.m })),
+          el('div', { class: 'lx' + (me === 'x' ? ' me' : '') }, el('b', { text: 'Grade 8–9 · Stretch' }), el('span', { html: L.x }))) : null));
+  };
+
+  /* Adaptation (Students of Determination) + HOT drawer: o = {adapt:{lead, nodes[]}, hot:{lead, nodes[]}} */
+  RL.support = function (o) {
+    const wrap = el('div', { class: 'panelcard' });
+    const tabs = el('div', { class: 'stabs', role: 'tablist' });
+    const bodies = {};
+    const mk = (key, label, d) => {
+      const b = el('button', { role: 'tab', 'aria-selected': 'false', text: label, onclick: () => show(key) });
+      tabs.append(b);
+      bodies[key] = { b, p: el('div', { class: 'hide', role: 'tabpanel' }, el('p', { class: 'sub', html: d.lead }), ...d.nodes) };
+    };
+    mk('a', 'Adaptation', o.adapt); mk('h', 'Go further (HOT)', o.hot);
+    function show(k) { for (const key in bodies) { const on = key === k; bodies[key].p.classList.toggle('hide', !on); bodies[key].b.setAttribute('aria-selected', on); } }
+    wrap.append(el('h3', { text: 'Support and stretch for this screen' }), tabs, bodies.a.p, bodies.h.p);
+    show('a');
+    return wrap;
+  };
+
+  /* dropdown cloze helper: stem with {{0}} {{1}} placeholders and options */
+  RL.cloze = function (stemHtml, blanks) {
+    const box = el('div', { class: 'q' });
+    const out = el('span', { class: 'msg info', style: { marginLeft: '6px' } });
+    const sels = blanks.map(b => el('select', { class: 'cloze', 'aria-label': 'Choose a word' }, el('option', { value: '', text: '…' }), RL.shuffle(b.opts).map(o => el('option', { value: o, text: o }))));
+    const parts = stemHtml.split(/\{\{(\d+)\}\}/);
+    const line = el('div', { class: 'stem' });
+    parts.forEach((p, i) => { if (i % 2 === 0) line.insertAdjacentHTML('beforeend', p); else line.append(sels[+p]); });
+    const check = el('button', { class: 'btn alt', text: 'Check', onclick: () => {
+      let ok = 0; sels.forEach((s, i) => { const good = s.value === blanks[i].ans; s.classList.toggle('cloze-ok', good); if (good) ok++; });
+      RL.msg(out, ok === blanks.length ? 'All correct ✓' : ok + ' of ' + blanks.length + ' correct — fix the others.', ok === blanks.length ? 'ok' : 'bad');
+    } });
+    box.append(line, el('div', { style: { marginTop: '6px' } }, check, out));
+    return box;
+  };
+
+  /* ---------- drag engine: free movement, optional keyboard control ---------- */
+  RL.zTop = 10;
+  RL.drag = function (node, o) {
+    o = o || {};
+    node.style.touchAction = 'none';
+    if (!node.hasAttribute('tabindex')) node.setAttribute('tabindex', '0');
+    let id = null, sx = 0, sy = 0, nx = 0, ny = 0, moved = false;
+    const area = () => (o.area ? (typeof o.area === 'function' ? o.area() : o.area) : node.offsetParent || node.parentElement);
+    const getPos = () => ({ x: node._x != null ? node._x : node.offsetLeft, y: node._y != null ? node._y : node.offsetTop });
+    node._setPos = (x, y) => {
+      if (o.clamp !== false) {
+        const a = area(); const w = node.offsetWidth, h = node.offsetHeight;
+        const m = o.margin != null ? o.margin : 0.4; // allow some overhang
+        x = RL.clamp(x, -w * m, a.clientWidth - w * (1 - m)); y = RL.clamp(y, -h * m, a.clientHeight - h * (1 - m));
+      }
+      node._x = x; node._y = y; node.style.left = x + 'px'; node.style.top = y + 'px';
+    };
+    node.addEventListener('pointerdown', e => {
+      if (e.button > 0 || (o.ignore && e.target.closest(o.ignore))) return;
+      if (o.disabled && o.disabled(node)) return;
+      id = e.pointerId; node.setPointerCapture(id);
+      const p = getPos(); sx = e.clientX; sy = e.clientY; nx = p.x; ny = p.y; moved = false;
+      node.classList.add('drag'); node.style.zIndex = ++RL.zTop;
+      if (o.onStart) o.onStart(e, node);
+      e.preventDefault();
+    });
+    node.addEventListener('pointermove', e => {
+      if (e.pointerId !== id) return;
+      const dx = e.clientX - sx, dy = e.clientY - sy;
+      if (!moved && Math.hypot(dx, dy) < 4) return;
+      moved = true;
+      node._setPos(nx + dx, ny + dy);
+      if (o.onMove) o.onMove(e, node);
+    });
+    const end = e => {
+      if (e.pointerId !== id) return;
+      try { node.releasePointerCapture(id); } catch (_) {}
+      id = null; node.classList.remove('drag');
+      if (!moved) { if (o.onClick) o.onClick(e, node); }
+      else if (o.onEnd) o.onEnd(e, node);
+    };
+    node.addEventListener('pointerup', end);
+    node.addEventListener('pointercancel', end);
+    node.addEventListener('keydown', e => {
+      const step = e.shiftKey ? 36 : 10; const p = getPos();
+      const k = e.key;
+      if (k === 'ArrowLeft') { node._setPos(p.x - step, p.y); }
+      else if (k === 'ArrowRight') { node._setPos(p.x + step, p.y); }
+      else if (k === 'ArrowUp') { node._setPos(p.x, p.y - step); }
+      else if (k === 'ArrowDown') { node._setPos(p.x, p.y + step); }
+      else if ((k === 'r' || k === 'R') && o.onRotate) { o.onRotate(node); e.preventDefault(); return; }
+      else if (k === 'Enter' || k === ' ') { if (o.onClick) o.onClick(e, node); if (o.onEnd) o.onEnd(e, node); e.preventDefault(); return; }
+      else return;
+      e.preventDefault();
+      if (o.onMove) o.onMove(e, node);
+      clearTimeout(node._kt); node._kt = setTimeout(() => o.onEnd && o.onEnd(e, node), 450);
+    });
+    return node;
+  };
+  RL.center = (n) => { const r = n.getBoundingClientRect(); return { x: r.left + r.width / 2, y: r.top + r.height / 2 }; };
+  RL.inRect = (pt, r) => pt.x >= r.left && pt.x <= r.right && pt.y >= r.top && pt.y <= r.bottom;
+  RL.glide = function (node, x, y, ms) {
+    node.style.transition = RL.reduced ? 'none' : 'left ' + (ms || 250) + 'ms ease, top ' + (ms || 250) + 'ms ease';
+    node._x = x; node._y = y; node.style.left = x + 'px'; node.style.top = y + 'px';
+    setTimeout(() => (node.style.transition = ''), (ms || 250) + 30);
+  };
+  RL.shake = function (n) { n.classList.remove('shake'); void n.offsetWidth; n.classList.add('shake'); setTimeout(() => n.classList.remove('shake'), 650); };
+
+  /* ---------- Three.js scaffolding ---------- */
+  RL.hasGL = function () {
+    try { const c = document.createElement('canvas'); return !!(window.THREE && (c.getContext('webgl2') || c.getContext('webgl'))); } catch (_) { return false; }
+  };
+  RL.three = function (host, o) {
+    o = o || {};
+    if (!RL.hasGL()) { host.append(el('div', { class: 'nogl', text: '3D view needs WebGL. Open this lesson in Chrome, Edge or Safari.' })); return null; }
+    const canvas = el('canvas', { tabindex: '0', 'aria-label': o.label || '3D model' });
+    host.prepend(canvas);
+    const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, preserveDrawingBuffer: !!o.preserve });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(o.fov || 38, 1, 0.1, 100);
+    camera.position.set(0, 0, o.z || 8);
+    scene.add(new THREE.HemisphereLight(0xffffff, 0x8899bb, 0.95));
+    const dl = new THREE.DirectionalLight(0xffffff, 0.9); dl.position.set(3, 5, 6); scene.add(dl);
+    const api = { renderer, scene, camera, canvas, host, loops: [], w: 1, h: 1 };
+    function resize() {
+      const w = Math.max(host.clientWidth, 10), h = Math.max(host.clientHeight, 10);
+      if (w === api.w && h === api.h) return;
+      api.w = w; api.h = h; renderer.setSize(w, h, false); camera.aspect = w / h; camera.updateProjectionMatrix();
+    }
+    api.resize = resize;
+    if (window.ResizeObserver) new ResizeObserver(resize).observe(host);
+    let last = performance.now();
+    (RL._gl = RL._gl || []).push(api);
+    function frame(t) {
+      if (api.dead) return;
+      requestAnimationFrame(frame);
+      if (!host.offsetParent) return; // hidden stage
+      resize(); camera.updateMatrixWorld();
+      const dt = Math.min((t - last) / 1000, 0.05); last = t;
+      for (const f of api.loops) f(dt, t / 1000);
+      renderer.render(scene, camera);
+    }
+    requestAnimationFrame(frame);
+    api.project = function (v3) { const v = v3.clone().project(camera); return { x: (v.x * 0.5 + 0.5) * api.w, y: (-v.y * 0.5 + 0.5) * api.h, z: v.z }; };
+    api.pointer = function (e) { const r = canvas.getBoundingClientRect(); return { x: ((e.clientX - r.left) / r.width) * 2 - 1, y: -((e.clientY - r.top) / r.height) * 2 + 1 }; };
+    return api;
+  };
+  /* drag-to-rotate a group; wheel / buttons to zoom */
+  RL.orbit = function (api, group, o) {
+    o = o || {};
+    let down = false, px = 0, py = 0, vx = 0, vy = 0;
+    const c = api.canvas;
+    c.addEventListener('pointerdown', e => { down = true; px = e.clientX; py = e.clientY; c.setPointerCapture(e.pointerId); });
+    c.addEventListener('pointermove', e => { if (!down) return; const dx = e.clientX - px, dy = e.clientY - py; px = e.clientX; py = e.clientY; group.rotation.y += dx * 0.01; group.rotation.x = RL.clamp(group.rotation.x + dy * 0.01, -1.3, 1.3); vx = dx; });
+    const up = () => { down = false; };
+    c.addEventListener('pointerup', up); c.addEventListener('pointercancel', up);
+    c.addEventListener('wheel', e => { e.preventDefault(); api.zoom(e.deltaY > 0 ? 1.08 : 0.92); }, { passive: false });
+    c.addEventListener('keydown', e => {
+      const k = e.key; const s = 0.15;
+      if (k === 'ArrowLeft') group.rotation.y -= s; else if (k === 'ArrowRight') group.rotation.y += s;
+      else if (k === 'ArrowUp') group.rotation.x = RL.clamp(group.rotation.x - s, -1.3, 1.3); else if (k === 'ArrowDown') group.rotation.x = RL.clamp(group.rotation.x + s, -1.3, 1.3);
+      else if (k === '+' || k === '=') api.zoom(0.92); else if (k === '-') api.zoom(1.08); else return;
+      e.preventDefault();
+    });
+    api.zoom = f => { api.camera.position.z = RL.clamp(api.camera.position.z * f, o.min || 4, o.max || 14); };
+    api.resetView = () => { group.rotation.set(0.15, -0.4, 0); api.camera.position.z = o.z || 8; };
+    api.isDragging = () => down;
+    return api;
+  };
+
+  RL.disposeGL = function () {
+    (RL._gl || []).forEach(a => { a.dead = true; try { a.renderer.dispose(); a.renderer.forceContextLoss(); } catch (_) {} });
+    RL._gl = [];
+  };
+
+  RL.mats = {
+    glass: (color, op) => new THREE.MeshPhysicalMaterial({ color, transparent: true, opacity: op == null ? 0.2 : op, side: THREE.DoubleSide, depthWrite: false, roughness: 0.2, metalness: 0 }),
+    solid: (color, rough) => new THREE.MeshStandardMaterial({ color, roughness: rough == null ? 0.55 : rough, metalness: 0.05 }),
+  };
+  RL.canvasTex = function (w, h, draw) { const c = document.createElement('canvas'); c.width = w; c.height = h; draw(c.getContext('2d'), w, h); const t = new THREE.CanvasTexture(c); t.anisotropy = 4; return t; };
+
+  /* ---------- progress ---------- */
+  RL.markDone = function (id) { RL.state.done[id] = true; const b = RL.$('.step[data-id="' + id + '"]'); if (b) b.classList.add('done'); };
+})();
+
+/* All subject content in one place: easy to review against Edexcel IGCSE Biology 4BI1 / 4XBI1.
+   Tarsia pairs are [textA, textB]. Each pair is printed on two touching edges. */
+(function () {
+  'use strict';
+  const C = (window.RL.content = {});
+
+  /* ---------- 1. Retrieval sort ---------- */
+  C.sort = {
+    zones: [{ id: 'cells', title: 'Cells' }, { id: 'enz', title: 'Enzymes' }, { id: 'osm', title: 'Osmosis & transport' }],
+    base: [
+      ['nucleus', 'cells'], ['mitochondrion', 'cells'], ['ribosome', 'cells'], ['plasmid', 'cells'],
+      ['active site', 'enz'], ['denatured', 'enz'], ['substrate', 'enz'], ['optimum pH', 'enz'],
+      ['partially permeable membrane', 'osm'], ['turgid', 'osm'], ['sucrose concentration', 'osm'], ['active transport', 'osm'],
+    ],
+    extra: [['differentiation', 'cells'], ['enzyme–substrate complex', 'enz'], ['percentage change in mass', 'osm']],
+  };
+
+  /* ---------- 2. Cell labelling ---------- */
+  C.cells = {
+    animal: {
+      name: 'Animal cell',
+      pins: [
+        { id: 'membrane', label: 'cell membrane', fn: 'controls what enters and leaves' },
+        { id: 'cytoplasm', label: 'cytoplasm', fn: 'where chemical reactions happen' },
+        { id: 'nucleus', label: 'nucleus', fn: 'contains DNA, controls the cell' },
+        { id: 'mito', label: 'mitochondrion', fn: 'aerobic respiration releases energy' },
+        { id: 'ribo', label: 'ribosome', fn: 'makes proteins' },
+      ],
+      decoys: ['cell wall', 'chloroplast', 'flagellum'], // flagellum: most animal cells have none
+    },
+    plant: {
+      name: 'Plant cell',
+      pins: [
+        { id: 'wall', label: 'cell wall', fn: 'made of cellulose; strengthens the cell' },
+        { id: 'membrane', label: 'cell membrane', fn: 'controls what enters and leaves' },
+        { id: 'cytoplasm', label: 'cytoplasm', fn: 'where chemical reactions happen' },
+        { id: 'vacuole', label: 'permanent vacuole', fn: 'stores cell sap; keeps the cell firm' },
+        { id: 'nucleus', label: 'nucleus', fn: 'contains DNA, controls the cell' },
+        { id: 'chloro', label: 'chloroplast', fn: 'photosynthesis happens here' },
+        { id: 'mito', label: 'mitochondrion', fn: 'aerobic respiration releases energy' },
+      ],
+      decoys: ['plasmid', 'flagellum'],
+    },
+    bacteria: {
+      name: 'Bacterial cell',
+      pins: [
+        { id: 'wall', label: 'cell wall', fn: 'protects the cell; not made of cellulose' },
+        { id: 'membrane', label: 'cell membrane', fn: 'controls what enters and leaves' },
+        { id: 'cytoplasm', label: 'cytoplasm', fn: 'where chemical reactions happen' },
+        { id: 'ribo', label: 'ribosome', fn: 'makes proteins' },
+        { id: 'dna', label: 'circular chromosomal DNA', fn: 'single loop, free in the cytoplasm' },
+        { id: 'plasmid', label: 'plasmid', fn: 'small extra ring of DNA' },
+        { id: 'flagellum', label: 'flagellum', fn: 'tail that moves the cell' },
+      ],
+      decoys: ['nucleus', 'mitochondrion', 'chloroplast'],
+    },
+  };
+  C.cellQs = {
+    s: [{ stem: 'Name the organelle where aerobic respiration takes place and state its function.', marks: 2,
+      ms: ['mitochondrion / mitochondria ✓', 'releases energy (for the cell) / makes ATP ✓'], note: 'Reject “makes energy” on its own.' }],
+    m: [{ stem: 'A liver cell makes many proteins and carries out many reactions. Explain why it contains (i) many mitochondria and (ii) many ribosomes.', marks: 3,
+      ms: ['(i) the cell is very active so needs a lot of energy ✓', '(i) mitochondria carry out aerobic respiration to release the energy ✓', '(ii) ribosomes make proteins, so many are needed ✓'] }],
+    x: [{ stem: 'A student’s drawing of a bacterial cell is 36 mm long. The actual cell is 2 µm long. Calculate the magnification. Show your working.', marks: 2,
+      ms: ['36 mm = 36 000 µm ✓ (same units)', '36 000 ÷ 2 = × 18 000 ✓'], note: 'Magnification = image size ÷ actual size. Put both in the same unit first.' },
+    { stem: 'Give two ways a bacterial cell differs from an animal cell.', marks: 2,
+      ms: ['no nucleus (the DNA is free in the cytoplasm) ✓', 'DNA is a single circular loop / circular chromosome ✓', 'has a cell wall / has plasmids ✓', 'no membrane-bound organelles such as mitochondria ✓'], note: 'Any two different points. Reject “flagellum” on its own: some animal cells, such as sperm, have one.' }],
+  };
+  C.cellSupport = {
+    adapt: {
+      lead: 'A foothold first, then work on your own. Colour-code the label chips by job, and label three at a time.',
+      cloze: ['The {{0}} contains the DNA and controls the cell. The {{1}} releases energy by aerobic respiration. The {{2}} makes proteins.',
+        [{ opts: ['nucleus', 'ribosome', 'vacuole'], ans: 'nucleus' }, { opts: ['mitochondrion', 'cell wall', 'plasmid'], ans: 'mitochondrion' }, { opts: ['ribosome', 'nucleus', 'flagellum'], ans: 'ribosome' }]],
+    },
+    hot: { stem: 'A plant cell has both a cell wall and a cell membrane. Explain why it needs both.', marks: 3,
+      ms: ['the cell wall (cellulose) is strong and supports the cell ✓', 'it stops the cell bursting when water enters by osmosis ✓', 'the cell membrane controls which substances enter and leave (partially permeable) ✓'] },
+  };
+
+  /* ---------- 3. Enzymes ---------- */
+  C.enzPredict = [
+    { q: 'You drag the T-shaped substrate to the active site at 37 °C. What happens?', opts: ['It fits and an enzyme–substrate complex forms', 'It cannot fit', 'It fits but nothing happens'], ans: 0, why: 'The substrate is complementary to the active site: an enzyme–substrate complex forms, then products.' },
+    { q: 'You raise the temperature to 70 °C. What will happen to the active site?', opts: ['It speeds up', 'Its shape changes (denatured)', 'It gets bigger but still fits'], ans: 1, why: 'High temperature changes the shape of the active site: the enzyme is denatured and the substrate no longer fits.' },
+  ];
+  C.enzQs = {
+    s: [{ stem: 'Describe the lock and key model of enzyme action.', marks: 3,
+      ms: ['the substrate has a shape that fits / is complementary to the active site of the enzyme ✓', 'the substrate binds to the active site to form an enzyme–substrate complex ✓', 'the substrate is changed into products ✓', 'only one substrate fits, so the enzyme is specific ✓'], note: 'Any three. Use “active site”, “substrate” and “enzyme–substrate complex”.' }],
+    m: [{ stem: 'Explain why the rate of reaction falls rapidly to zero above about 50 °C.', marks: 3,
+      ms: ['the high temperature denatures the enzyme ✓', 'the active site changes shape ✓', 'the substrate no longer fits / no enzyme–substrate complexes form, so no product is made ✓'], note: 'Never write “the enzyme is killed”. Enzymes are molecules, not alive.' },
+    { stem: 'Describe how you could investigate the effect of temperature on the time taken for amylase to digest starch. Name one variable you would control.', marks: 4,
+      ms: ['mix starch and amylase in water baths at several set temperatures (e.g. 10 to 60 °C) ✓', 'test samples at timed intervals with iodine solution ✓', 'time taken for the blue-black colour to disappear (rate = 1 ÷ time) ✓', 'control one of: pH (buffer), volumes or concentrations of enzyme and starch ✓'], note: 'Practical 2.12. Iodine stays blue-black while starch is present.' }],
+    x: [{ stem: 'Salivary amylase (optimum pH 7) is mixed with stomach acid (pH 2). Explain why the amylase stops working, and why it would not work again if its pH were returned to 7.', marks: 4,
+      ms: ['the low pH denatures the amylase ✓', 'the active site changes shape ✓', 'starch no longer fits / no enzyme–substrate complex forms ✓', 'denaturation is permanent / irreversible, so the shape is not restored at pH 7 ✓'] },
+    { stem: 'An enzyme from a hot-spring bacterium has its fastest rate at 70 °C. At 40 °C its rate is much lower, but at 90 °C it is zero. (i) Explain why its rate is lower at 40 °C. (ii) Explain why a human enzyme at 70 °C would give a different result. (iii) A student says the 40 °C enzyme is denatured. Evaluate this.', marks: 5,
+      ms: ['(i) lower kinetic energy, so fewer successful collisions between enzyme and substrate ✓', '(ii) the human enzyme has an optimum near 37–40 °C ✓', '(ii) at 70 °C its active site changes shape (denatured), so no enzyme–substrate complexes ✓', '(iii) not supported: at 40 °C the enzyme is just slow, its active site has not changed shape ✓', '(iii) denaturation is only caused by going beyond the optimum (here by about 90 °C) ✓'], note: 'Unfamiliar context: apply the same ideas to a different optimum.' }],
+  };
+  C.enzSupport = {
+    adapt: {
+      lead: 'Four small steps. Fill each gap, then try the 3D model.',
+      cloze: ['The {{0}} is the molecule an enzyme works on. It fits into the {{1}} of the enzyme, like a key in a {{2}}. Together they form an enzyme–substrate {{3}}.',
+        [{ opts: ['substrate', 'product', 'catalyst'], ans: 'substrate' }, { opts: ['active site', 'membrane', 'nucleus'], ans: 'active site' }, { opts: ['lock', 'door', 'handle'], ans: 'lock' }, { opts: ['complex', 'wall', 'sample'], ans: 'complex' }]],
+    },
+    hot: { stem: 'A student says, “Boiling kills the enzyme.” Correct this statement using what you saw in the 3D model.', marks: 3,
+      ms: ['enzymes are molecules (proteins), not living, so they cannot be killed ✓', 'heat changes the shape of the active site, so the enzyme is denatured ✓', 'the substrate can no longer fit, and the change is permanent ✓'] },
+  };
+
+  /* ---------- 4. Osmosis practical ---------- */
+  C.bench = [ // concentration, initial g, final g, expected % change (1 d.p.)
+    { c: 0.0, i: 5.0, f: 5.6 }, { c: 0.2, i: 4.8, f: 4.99 }, { c: 0.4, i: 5.1, f: 4.85 },
+    { c: 0.6, i: 4.9, f: 4.35 }, { c: 0.8, i: 5.2, f: 4.3 }, { c: 1.0, i: 5.0, f: 4.0 },
+  ];
+  C.bench.forEach(r => (r.pct = Math.round(((r.f - r.i) / r.i) * 1000) / 10));
+  C.cormms = {
+    rows: [
+      { L: 'C', w: 'Change', right: 'Change: the sucrose concentration, 0.0 to 1.0 mol dm⁻³ (the independent variable)',
+        bad: ['Change: the temperature of each beaker', 'Change: the type of potato in each beaker'] },
+      { L: 'O', w: 'Organism', right: 'Organism: use the same potato, cut with the same cork borer into cylinders of the same length',
+        bad: ['Organism: use a different potato for each beaker', 'Organism: use cylinders of different lengths'] },
+      { L: 'R', w: 'Repeat', right: 'Repeat: repeat the investigation and calculate a mean for each concentration',
+        bad: ['Repeat: run it once because it is quicker', 'Repeat: only repeat the lowest concentration'] },
+      { L: 'M', w: 'Measure', right: 'Measure: blot dry and weigh each cylinder before and after; calculate % change in mass',
+        bad: ['Measure: weigh the cylinders only at the end', 'Measure: weigh the cylinders without blotting them dry'] },
+      { L: 'M', w: 'Maintain', right: 'Maintain: keep temperature, volume of solution and time (30 min) the same',
+        bad: ['Maintain: leave each cylinder for a different time', 'Maintain: use more solution for higher concentrations'] },
+      { L: 'S', w: 'Sample', right: 'Sample: five or more different concentrations, with one similar-sized cylinder in each beaker',
+        bad: ['Sample: use just two concentrations', 'Sample: use one big potato piece for everything'] },
+    ],
+  };
+  C.osmQs = {
+    s: [{ stem: 'In the potato cylinder investigation, name the independent variable and the dependent variable.', marks: 2,
+      ms: ['independent variable = (sucrose) concentration ✓', 'dependent variable = (percentage) change in mass ✓'], note: 'The independent variable is what you change; the dependent variable is what you measure.' }],
+    m: [{ stem: 'A potato cylinder has a starting mass of 5.00 g and a final mass of 4.60 g. (i) Calculate the percentage change in mass. (ii) Explain why a percentage change is calculated.', marks: 4,
+      ms: ['(4.60 − 5.00) ÷ 5.00 × 100 ✓ (working)', '= −8.0 % ✓ (minus sign needed)', 'starting masses differ slightly between cylinders ✓', 'percentage change gives a fair comparison ✓'] }],
+    x: [{ stem: 'A student’s graph of % change in mass against sucrose concentration crosses 0 % at 0.30 mol dm⁻³. (i) Explain what this tells you. (ii) Give two improvements that make the estimate of the crossing point more reliable and accurate.', marks: 4,
+      ms: ['at 0.30 mol dm⁻³ there is no net change in mass / no net osmosis ✓', 'the water potential of the solution equals that of the potato cells ✓', 'repeat and calculate a mean / more cylinders per concentration ✓', 'extra concentrations between 0.2 and 0.4 ✓'], note: 'Reject “be more careful”. A balance reading to 0.01 g is creditable only with a reason.' }],
+  };
+  C.osmSupport = {
+    adapt: {
+      lead: 'Use the formula frame, one box at a time, for the 0.5 mol dm⁻³ cylinder (5.00 g to 4.60 g).',
+      frame: true,
+    },
+    hot: { stem: 'A different plant tissue has more concentrated cell sap than potato. How would the point where the line crosses 0 % change? Explain.', marks: 2,
+      ms: ['the crossing point moves to a higher sucrose concentration ✓', 'the cells have lower water potential, so a more concentrated solution is needed to give no net osmosis ✓'] },
+  };
+
+  /* ---------- 5. Tarsia puzzles ---------- */
+  C.tarsia = {
+    tri: {
+      name: 'Triangle · Enzymes', shape: 'tri', topic: 'Enzymes and the lock and key model',
+      pairs: {
+        s: [
+          ['enzyme', 'a protein that is a biological catalyst'],
+          ['catalyst', 'speeds up a reaction; not used up'],
+          ['substrate', 'the molecule an enzyme works on'],
+          ['active site', 'where the substrate fits on the enzyme'],
+          ['product', 'what the substrate is changed into'],
+          ['lock and key', 'substrate shape matches the active site'],
+          ['denatured', 'the enzyme’s shape has changed for good'],
+          ['optimum temperature', 'temperature with the fastest rate'],
+          ['amylase', 'digests starch into sugars'],
+        ],
+        m: [
+          ['Enzymes are specific', 'the active site fits only one substrate'],
+          ['Warming from 10 to 40 °C', 'more collisions, so a faster rate'],
+          ['Above about 50 °C', 'heat alters active site: rate falls to 0'],
+          ['pH far from the optimum', 'too acid/alkaline: active site changes'],
+          ['Enzyme–substrate complex', 'forms as substrate binds the active site'],
+          ['Optimum', 'conditions giving the fastest rate'],
+          ['Protease', 'breaks protein down into amino acids'],
+          ['Lipase', 'fats into fatty acids and glycerol'],
+          ['Enzymes are not alive', 'so heat cannot “kill” them'],
+        ],
+        x: [
+          ['Rate falls to zero at 60 °C', 'heat denatured it: no complexes form'],
+          ['Rate rises steeply from 20 to 30 °C', 'more energy: more successful collisions'],
+          ['Buffer solution in a pH practical', 'keeps one pH constant per test'],
+          ['Pepsin in the stomach', 'works best at about pH 2'],
+          ['Salivary amylase placed in pH 2', 'acid alters site: starch no longer fits'],
+          ['Boiled enzyme cooled to 20 °C', 'stays inactive: denaturing is permanent'],
+          ['Substrate with the wrong shape', 'cannot form an enzyme–substrate complex'],
+          ['Control variables, temperature practical', 'pH and volumes of enzyme and substrate'],
+          ['Optimum temperature of human enzymes', 'about 37–40 °C: near body temperature'],
+        ],
+      },
+    },
+    hex: {
+      name: 'Hexagon · Cells', shape: 'hex', topic: 'Cell structure, specialised cells and magnification',
+      pairs: {
+        s: [
+          ['nucleus', 'contains DNA and controls the cell'],
+          ['cell membrane', 'controls what enters and leaves'],
+          ['mitochondrion', 'where aerobic respiration releases energy'],
+          ['ribosome', 'where proteins are made'],
+          ['cytoplasm', 'jelly where reactions happen'],
+          ['cell wall', 'strong layer that supports the cell'],
+          ['chloroplast', 'where photosynthesis happens'],
+          ['permanent vacuole', 'stores cell sap'],
+          ['plasmid', 'small extra ring of DNA in a bacterium'],
+          ['flagellum', 'tail that helps a bacterium move'],
+          ['prokaryote', 'no nucleus: DNA is free in the cell'],
+          ['eukaryote', 'has a nucleus and other organelles'],
+        ],
+        m: [
+          ['Liver cell: many mitochondria', 'lots of energy from aerobic respiration'],
+          ['Liver cell: many ribosomes', 'makes many proteins'],
+          ['Sperm cell tail', 'swims to the egg'],
+          ['Red blood cell: no nucleus', 'more room for haemoglobin'],
+          ['Root hair cell: long thin projection', 'large surface area to absorb water'],
+          ['Bacterial chromosome', 'the main DNA: a single loop, no nucleus'],
+          ['Plant cell wall', 'stops the cell bursting in dilute solution'],
+          ['Stem cell', 'not yet specialised: can differentiate'],
+          ['Differentiation', 'the process of becoming specialised'],
+          ['Plasmid', 'extra DNA ring: may carry resistance genes'],
+          ['Cell membrane', 'partially permeable: controls entry and exit'],
+          ['Palisade cell: many chloroplasts', 'absorbs light for photosynthesis'],
+        ],
+        x: [
+          ['Image 30 mm, actual size 0.06 mm', 'magnification × 500'],
+          ['Image 45 mm, magnification × 300', 'actual size 0.15 mm'],
+          ['0.05 mm', '50 µm'],
+          ['2 µm', '2000 nm'],
+          ['Actual size 8 µm, magnification × 1000', 'image size 8 mm'],
+          ['Image 12 mm, actual size 40 µm', 'magnification × 300'],
+          ['Prokaryote compared with eukaryote', 'no nucleus or membrane-bound organelles'],
+          ['Many mitochondria and many ribosomes', 'high energy demand and lots of protein made'],
+          ['Bacterial cell wall', 'not made of cellulose'],
+          ['Red blood cell in pure water', 'bursts: no wall; water enters by osmosis'],
+          ['Plasmid used in genetic engineering', 'carries a gene into a bacterial cell'],
+          ['Stem cells in medicine', 'replaces damaged tissue; ethical issues'],
+        ],
+      },
+    },
+    sq: {
+      name: 'Square · Osmosis', shape: 'sq', topic: 'Osmosis, transport and the potato practical',
+      pairs: {
+        s: [
+          ['osmosis', 'net water movement from high to low water potential'],
+          ['dilute solution', 'high water potential: more water molecules per volume'],
+          ['concentrated solution', 'low water potential: fewer water molecules per volume'],
+          ['partially permeable membrane', 'lets some substances through but not others'],
+          ['turgid', 'plant cell full of water and firm'],
+          ['flaccid', 'plant cell that has lost water and is floppy'],
+          ['animal cell in pure water', 'swells and may burst'],
+          ['animal cell in concentrated solution', 'shrinks'],
+          ['independent variable', 'sucrose concentration'],
+          ['dependent variable', 'percentage change in mass'],
+          ['potato cylinder gains mass', 'water moved in by osmosis'],
+          ['potato cylinder loses mass', 'water moved out by osmosis'],
+        ],
+        m: [
+          ['% change in mass', '(final − initial) ÷ initial × 100'],
+          ['Why use % change?', 'starting masses differ, so it gives a fair comparison'],
+          ['Control variables', 'temperature, time, volume of solution, size of cylinders'],
+          ['Blot cylinders before weighing', 'removes surface water that would add mass'],
+          ['Repeat the investigation', 'calculate a mean to improve reliability'],
+          ['Graph crosses 0 % change', 'no net osmosis: same water potential as the potato'],
+          ['Plant cell in pure water', 'turgid: the cell wall stops it bursting'],
+          ['Plant cell in concentrated solution', 'plasmolysed: membrane pulls away from the wall'],
+          ['Osmosis is passive', 'no energy from respiration is needed'],
+          ['Diffusion', 'net movement from high to low concentration'],
+          ['Active transport', 'against the gradient, needs energy from respiration'],
+          ['Large surface area to volume ratio', 'faster exchange of substances'],
+        ],
+        x: [
+          ['5.00 g to 4.60 g', '−8.0 % change'],
+          ['5.20 g to 5.46 g', '+5.0 % change'],
+          ['4.80 g to 4.32 g', '−10.0 % change'],
+          ['Line crosses 0 % at 0.30 mol dm⁻³', 'the potato and the solution have equal water potential'],
+          ['Cylinder gains mass', 'solution has higher water potential: net water in'],
+          ['Only one cylinder per concentration', 'unreliable: repeat and calculate a mean'],
+          ['Balance reads to 0.1 g only', 'use a balance reading to 0.01 g to see small changes'],
+          ['Boiled potato in the same solution', 'little osmosis: the membrane is destroyed'],
+          ['Cylinders must be the same size', 'equal surface area, so the comparison is fair'],
+          ['Plant cell becomes flaccid', 'cytoplasm and vacuole have lost water'],
+          ['Active transport in root hair cells', 'absorbs mineral ions against a gradient using ATP'],
+          ['Axes of the results graph', 'x: sucrose concentration (IV); y: % change in mass (DV)'],
+        ],
+      },
+    },
+  };
+  C.tarsiaAdapt = {
+    lead: 'Use the blank outer edges first, turn pieces with the ↻ button, and press Hint for one nudge.',
+    nodes: [],
+  };
+  C.tarsiaHot = { stem: 'Write one new pair of edges (a term and its definition, or a cause and its effect) that could replace any pair in your puzzle.', marks: 2,
+    ms: ['a correct, specific term or cause on one edge ✓', 'a correct matching definition or effect on the other edge, using biological keywords ✓'], note: 'Example: “Red blood cell in concentrated solution” ↔ “shrinks as water leaves by osmosis”.' };
+
+  /* ---------- 6. Exit ticket ---------- */
+  C.exit = {
+    cells: {
+      s: { stem: 'Name the part of an animal cell that (i) controls the cell’s activities, (ii) releases energy from glucose and (iii) makes proteins.', marks: 3,
+        ms: ['nucleus ✓', 'mitochondria / mitochondrion ✓', 'ribosomes ✓'] },
+      m: { stem: 'A sperm cell has many mitochondria and a tail. Explain how each feature helps the sperm cell do its job.', marks: 4,
+        ms: ['mitochondria release energy by aerobic respiration ✓', 'the energy is used for the tail to move (swimming) ✓', 'the tail propels the sperm towards the egg ✓', 'so the sperm can reach and fertilise the egg ✓'] },
+      x: { stem: 'A bacterial cell is 2 µm long. In a drawing it is 40 mm long. (i) Calculate the magnification. (ii) Give two structural differences between this cell and an animal cell.', marks: 4,
+        ms: ['40 mm = 40 000 µm ✓', '40 000 ÷ 2 = × 20 000 ✓', 'no nucleus / circular DNA (one difference) ✓', 'has a cell wall / has plasmids / no mitochondria (a second, different difference) ✓'], note: 'Reject “flagellum” alone.' },
+    },
+    enz: {
+      s: { stem: 'Explain why an enzyme that digests starch cannot digest protein.', marks: 3,
+        ms: ['each enzyme has an active site of a specific shape ✓', 'protein does not fit / is not complementary to the active site ✓', 'so no enzyme–substrate complex forms ✓'] },
+      m: { stem: 'A solution of catalase is boiled and then cooled to 20 °C. It no longer breaks down hydrogen peroxide. Explain why.', marks: 3,
+        ms: ['boiling denatured the enzyme ✓', 'the active site changed shape ✓', 'the substrate no longer fits, and the change is permanent so cooling does not restore it ✓'] },
+      x: { stem: 'Pepsin works best at pH 2. A student places it in a solution at pH 10. Explain why it does not digest protein, and why returning it to pH 2 does not help.', marks: 4,
+        ms: ['the high pH denatures the pepsin ✓', 'the active site changes shape ✓', 'protein no longer fits the active site ✓', 'denaturation is permanent, so activity is not regained at pH 2 ✓'] },
+    },
+    osm: {
+      s: { stem: 'Define osmosis.', marks: 3,
+        ms: ['the movement of water molecules ✓', 'from a dilute solution (high water potential) to a concentrated solution (low water potential) ✓', 'through a partially permeable membrane ✓'] },
+      m: { stem: 'A potato cylinder rises from 4.50 g to 4.95 g in a sucrose solution. Calculate the percentage change in mass and explain the result.', marks: 4,
+        ms: ['(4.95 − 4.50) ÷ 4.50 × 100 ✓', '= +10.0 % ✓', 'water entered the potato by osmosis ✓', 'the solution had a higher water potential (more dilute) than the potato cells ✓'] },
+      x: { stem: 'Describe how you would find the sucrose concentration that has the same water potential as potato cells. Include variables you would control and how you would process the results.', marks: 5,
+        ms: ['at least five different sucrose concentrations ✓', 'equal-sized cylinders from the same potato ✓', 'blot and weigh each before and after ✓', 'control any two of: temperature, volume of solution, time ✓', 'calculate % change in mass, plot a graph, and read the concentration where the line crosses 0 % (equal water potential) ✓'] },
+    },
+  };
+})();
+
+/* Stage 1: retrieval sort. Free-moving cards go into three piles; check gives feedback. */
+(function () {
+  'use strict';
+  const RL = window.RL, el = RL.el, C = RL.content;
+  RL.stages.push({
+    id: 'sort', title: 'Sort', mins: 5,
+    build(root) {
+      const t = RL.tier();
+      root.append(RL.mission({
+        kicker: 'Stage 1 · retrieval warm-up', title: 'Sort the clutter', mins: 5,
+        spec: 'Mixed retrieval across 1(b), 2(a)–(d) · no hints on this screen',
+        steps: ['<b>Drag</b> each card into the pile it belongs to (or click a card, then click a pile).', 'Press <b>Check</b>. Wrong cards bounce back to the table.', 'Keep going until every card is locked in green.'],
+        ladder: { s: '12 cards. Say the topic first, then place.', m: '12 cards. Place all before you press Check.', x: '15 cards including trickier terms that sit on the border of two topics.' },
+      }));
+      const cards = C.sort.base.concat(t === 'x' ? C.sort.extra : []);
+      const board = el('div', { class: 'board sortboard' });
+      const toolbar = el('div', { class: 'toolbar' });
+      const msg = el('div', { class: 'msg info', text: 'Drag the cards into the piles. Keyboard: Tab to a card, arrows to move, Enter to pick up/drop.', role: 'status' });
+      const check = el('button', { class: 'btn', text: 'Check' });
+      const reset = el('button', { class: 'btn alt', text: 'Shuffle again' });
+      toolbar.append(check, reset, msg);
+      root.append(board, toolbar);
+
+      let zones = [], nodes = [], selected = null, first = {}, scoreN = 0;
+      function zoneRect(z) { const b = board.getBoundingClientRect(), r = z.getBoundingClientRect(); return { l: r.left - b.left, t: r.top - b.top, w: r.width, h: r.height }; }
+      function build() {
+        board.innerHTML = ''; zones = []; nodes = []; first = {}; scoreN = 0; selected = null;
+        const n = C.sort.zones.length;
+        C.sort.zones.forEach((z, i) => {
+          const d = el('div', { class: 'zone', 'data-z': z.id, role: 'group', 'aria-label': z.title + ' pile', tabindex: '0', style: { left: (1.5 + i * 33) + '%', width: '31.5%', bottom: '152px' } }, el('h3', { text: z.title }));
+          d.addEventListener('click', e => { if (selected && e.target === d || (selected && e.target.tagName === 'H3')) place(selected, d); });
+          d.addEventListener('keydown', e => { if ((e.key === 'Enter' || e.key === ' ') && selected) { place(selected, d); e.preventDefault(); } });
+          board.append(d); zones.push(d);
+        });
+        board.append(el('div', { class: 'table-label', text: 'Table' }));
+        const rnd = RL.rng(Date.now() % 100000);
+        const order = RL.shuffle(cards, rnd);
+        order.forEach((c, i) => {
+          const node = el('div', { class: 'card', role: 'button', 'aria-label': c[0], text: c[0] });
+          node.dataset.zone = c[1]; node._in = null;
+          board.append(node); nodes.push(node);
+          RL.drag(node, {
+            area: board, margin: 0.2,
+            disabled: nd => nd.classList.contains('good'),
+            onStart: () => { select(null); node._moved = true; },
+            onMove: e => hover(node),
+            onEnd: () => drop(node),
+            onClick: () => select(selected === node ? null : node),
+          });
+        });
+        requestAnimationFrame(layoutTable);
+      }
+      function layoutTable() {
+        const bw = board.clientWidth, bh = board.clientHeight, rnd = RL.rng(7);
+        nodes.forEach((n, i) => {
+          if (n.classList.contains('good') || n._in || n._moved) return;
+          const col = i % 6, row = Math.floor(i / 6);
+          n._setPos(14 + col * (bw - 28) / 6 + rnd() * 10, bh - 138 + row * 44 + rnd() * 8);
+        });
+      }
+      function select(n) {
+        nodes.forEach(x => x.classList.remove('sel')); selected = n;
+        if (n) { n.classList.add('sel'); RL.msg(msg, 'Now click the pile where “' + n.textContent + '” belongs.', 'info'); }
+      }
+      function hover(node) {
+        const c = RL.center(node);
+        zones.forEach(z => z.classList.toggle('over', RL.inRect(c, z.getBoundingClientRect())));
+      }
+      function drop(node) {
+        zones.forEach(z => z.classList.remove('over'));
+        const c = RL.center(node);
+        const z = zones.find(z => RL.inRect(c, z.getBoundingClientRect()));
+        node._in = z ? z.dataset.z : null;
+        if (z) keepInside(node, z);
+      }
+      function keepInside(node, z) {
+        const r = zoneRect(z);
+        node._setPos(RL.clamp(node._x, r.l + 6, r.l + r.w - node.offsetWidth - 6), RL.clamp(node._y, r.t + 34, r.t + r.h - node.offsetHeight - 6));
+      }
+      function place(node, z) {
+        const r = zoneRect(z); const k = nodes.filter(n => n !== node && n._in === z.dataset.z && !n.classList.contains('good')).length;
+        RL.glide(node, r.l + 10 + (k % 2) * (r.w / 2 - 10), r.t + 38 + Math.floor(k / 2) * 40, 220);
+        node._in = z.dataset.z; select(null);
+      }
+      check.onclick = () => {
+        let placed = 0, good = 0, bad = 0;
+        nodes.forEach(n => {
+          if (n.classList.contains('good') || !n._in) return;
+          placed++;
+          const key = n.textContent;
+          if (n._in === n.dataset.zone) { n.classList.add('good'); n.setAttribute('tabindex', '-1'); good++; if (first[key] === undefined) { first[key] = true; scoreN++; } }
+          else {
+            bad++; if (first[key] === undefined) first[key] = false;
+            n.classList.add('wrong'); RL.shake(n);
+            setTimeout(() => { n.classList.remove('wrong'); n._in = null; RL.glide(n, 20 + Math.random() * (board.clientWidth - 200), board.clientHeight - 130 + Math.random() * 60, 350); }, 800);
+          }
+        });
+        const left = nodes.filter(n => !n.classList.contains('good')).length;
+        if (!placed) return RL.msg(msg, 'Place some cards into the piles first.', 'bad');
+        if (!left) {
+          RL.state.scores.sort = scoreN + '/' + nodes.length; RL.markDone('sort');
+          RL.msg(msg, 'All sorted ✓  First-try score: ' + scoreN + ' / ' + nodes.length + '. Next: label the cells.', 'ok');
+        } else RL.msg(msg, good + ' correct (locked in green), ' + bad + ' sent back to the table. ' + left + ' to go.', bad ? 'bad' : 'ok');
+      };
+      reset.onclick = () => { build(); RL.msg(msg, 'Cards shuffled.', 'info'); };
+      build();
+      new ResizeObserver(() => { if (board.offsetParent) layoutTable(); }).observe(board);
+    },
+  });
+})();
+
+/* Stage 2: label the cells in 3D. Orbit the model, drag label chips onto pins. */
+(function () {
+  'use strict';
+  const RL = window.RL, el = RL.el, C = RL.content, V3 = (x, y, z) => new THREE.Vector3(x, y, z);
+
+  /* ---------- 3D models ---------- */
+  function addMesh(g, geo, mat, p, r, s) { const m = new THREE.Mesh(geo, mat); if (p) m.position.set(p[0], p[1], p[2]); if (r) m.rotation.set(r[0], r[1], r[2]); if (s) m.scale.set(s[0], s[1], s[2]); g.add(m); return m; }
+  function dots(g, n, seed, ok, color, rad) {
+    const rnd = RL.rng(seed), geo = new THREE.SphereGeometry(rad || 0.06, 10, 8), mat = RL.mats.solid(color, 0.5), pts = [];
+    let guard = 0;
+    while (pts.length < n && guard++ < 4000) { const p = V3((rnd() * 2 - 1) * 2, (rnd() * 2 - 1) * 2, (rnd() * 2 - 1) * 2); if (ok(p)) { pts.push(p); addMesh(g, geo, mat, [p.x, p.y, p.z]); } }
+    return pts;
+  }
+  function mito(g, p, r) {
+    const m = addMesh(g, new THREE.CapsuleGeometry(0.17, 0.42, 6, 12), RL.mats.solid(0xe0703c, 0.45), p, r);
+    const inner = new THREE.Mesh(new THREE.CapsuleGeometry(0.1, 0.4, 4, 8), RL.mats.solid(0xa23d12, 0.6)); m.add(inner);
+    return m;
+  }
+
+  function buildAnimal() {
+    const g = new THREE.Group();
+    addMesh(g, new THREE.SphereGeometry(1.7, 48, 32), RL.mats.glass(0xe88f8f, 0.24));
+    addMesh(g, new THREE.SphereGeometry(1.64, 32, 24), RL.mats.glass(0xffd9a8, 0.14));
+    const nuc = addMesh(g, new THREE.SphereGeometry(0.55, 32, 24), RL.mats.solid(0x7461c9, 0.4), [0.25, 0.15, 0]);
+    addMesh(nuc, new THREE.SphereGeometry(0.17, 16, 12), RL.mats.solid(0x44358f, 0.5), [-0.1, 0.1, 0.25]);
+    mito(g, [0.95, -0.7, 0.55], [0, 0, 0.9]); mito(g, [-0.95, -0.5, -0.5], [0.4, 0, 1.2]); mito(g, [-0.6, 0.9, 0.5], [0, 0.3, 0.3]); mito(g, [0.6, 0.9, -0.7], [0.6, 0, 0.5]);
+    const rib = [V3(1.0, -0.2, 0.9)];
+    const geo = new THREE.SphereGeometry(0.075, 10, 8), mat = RL.mats.solid(0x2e4057, 0.5);
+    addMesh(g, geo, mat, [1.0, -0.2, 0.9]); [[1.12, -0.12, 0.85], [0.92, -0.3, 0.98], [1.08, -0.3, 0.8]].forEach(p => addMesh(g, geo, mat, p));
+    dots(g, 55, 11, p => p.length() > 0.8 && p.length() < 1.5 && p.distanceTo(V3(0.25, 0.15, 0)) > 0.7, 0x2e4057, 0.05);
+    return { group: g, anchors: { membrane: V3(-1.2, 0.9, 0.85).normalize().multiplyScalar(1.7), cytoplasm: V3(-0.55, -1.0, 0.9), nucleus: V3(0.25, 0.15, 0.56), mito: V3(0.95, -0.7, 0.55), ribo: rib[0] } };
+  }
+
+  function buildPlant() {
+    const g = new THREE.Group();
+    const box = (w, h, d, mat, edge) => { const m = addMesh(g, new THREE.BoxGeometry(w, h, d), mat); if (edge) m.add(new THREE.LineSegments(new THREE.EdgesGeometry(m.geometry), new THREE.LineBasicMaterial({ color: edge }))); return m; };
+    box(3.6, 2.3, 2.3, RL.mats.glass(0x6fbf6f, 0.26), 0x2f7d32);
+    box(3.4, 2.1, 2.1, RL.mats.glass(0xe88f8f, 0.16), 0xc26a6a);
+    box(3.36, 2.06, 2.06, RL.mats.glass(0xffe9b8, 0.1));
+    addMesh(g, new THREE.SphereGeometry(1, 32, 24), RL.mats.glass(0x7fb8e8, 0.55), [0.2, 0, 0], null, [1.35, 0.78, 0.78]);
+    const nuc = addMesh(g, new THREE.SphereGeometry(0.38, 28, 20), RL.mats.solid(0x7461c9, 0.4), [-1.2, 0.55, 0.35]);
+    addMesh(nuc, new THREE.SphereGeometry(0.12, 12, 10), RL.mats.solid(0x44358f), [0.05, 0.05, 0.3]);
+    const chl = [[-1.2, -0.72, 0.55], [-0.2, -0.9, 0.6], [1.25, -0.72, 0.45], [1.35, 0.78, -0.4], [-0.3, 0.88, -0.7], [0.5, 0.9, 0.65], [-1.3, 0.05, -0.65]];
+    const cg = new THREE.SphereGeometry(0.24, 18, 14), cm = RL.mats.solid(0x2e9e44, 0.45);
+    chl.forEach(p => { const c = addMesh(g, cg, cm, p, [0, 0.4, 0.2], [1, 0.5, 0.7]); c.add(new THREE.Mesh(new THREE.TorusGeometry(0.14, 0.015, 6, 16), RL.mats.solid(0x155d27))); });
+    mito(g, [1.3, 0.0, 0.8], [0, 0, 0.8]); mito(g, [-1.35, -0.2, 0.2], [0.3, 0.5, 1.3]); mito(g, [0.2, -0.95, -0.7], [0, 0.4, 1.57]);
+    return { group: g, anchors: { wall: V3(-0.2, 1.15, 0.5), membrane: V3(-0.9, -0.2, 1.05), cytoplasm: V3(-0.2, -0.93, 0.15), vacuole: V3(0.2, 0.05, 0.78), nucleus: V3(-1.2, 0.55, 0.73), chloro: V3(1.25, -0.72, 0.45), mito: V3(1.3, 0, 0.8) } };
+  }
+
+  function buildBacteria() {
+    const pivot = new THREE.Group(), g = new THREE.Group(); pivot.add(g); g.position.x = -1.1;
+    const cap = (r, len, mat) => { const m = new THREE.Mesh(new THREE.CapsuleGeometry(r, len, 12, 28), mat); m.rotation.z = Math.PI / 2; g.add(m); return m; };
+    cap(0.8, 1.8, RL.mats.glass(0x6fbf6f, 0.24)); cap(0.74, 1.8, RL.mats.glass(0xe88f8f, 0.16)); cap(0.72, 1.8, RL.mats.glass(0xffe9b8, 0.12));
+    const pts = [[-0.9, 0.1, 0.2], [-0.5, 0.4, -0.1], [-0.1, 0.1, 0.4], [0.4, 0.35, 0.2], [0.8, 0.0, -0.2], [0.5, -0.35, -0.3], [0.0, -0.4, 0.1], [-0.4, -0.3, 0.35], [-0.8, -0.2, -0.1]].map(p => V3(p[0], p[1], p[2]));
+    const curve = new THREE.CatmullRomCurve3(pts, true);
+    addMesh(g, new THREE.TubeGeometry(curve, 120, 0.035, 6, true), RL.mats.solid(0x3b2f8f, 0.5));
+    const pl = [[0.95, 0.2, 0.3], [-0.3, -0.35, 0.42], [0.25, 0.45, -0.28]];
+    pl.forEach(p => addMesh(g, new THREE.TorusGeometry(0.13, 0.03, 8, 20), RL.mats.solid(0xd9480f, 0.5), p, [Math.random(), Math.random(), 0]));
+    const rg = new THREE.SphereGeometry(0.07, 10, 8), rm = RL.mats.solid(0x2e4057, 0.5);
+    addMesh(g, rg, rm, [-1.1, 0.2, 0.4]); [[-1.2, 0.1, 0.35], [-1.0, 0.28, 0.45]].forEach(p => addMesh(g, rg, rm, p));
+    dots(g, 40, 5, p => Math.abs(p.x) < 1.4 && Math.hypot(p.y, p.z) < 0.62 && curve.getPoints(60).every(q => q.distanceTo(p) > 0.14) && pl.every(q => V3(q[0], q[1], q[2]).distanceTo(p) > 0.22), 0x2e4057, 0.045);
+    const hp = []; for (let i = 0; i <= 60; i++) { const t = i / 60; hp.push(V3(1.7 + t * 2.2, Math.sin(t * 18) * 0.13 * (0.4 + t), Math.cos(t * 18) * 0.13 * (0.4 + t))); }
+    const fc = new THREE.CatmullRomCurve3(hp);
+    addMesh(g, new THREE.TubeGeometry(fc, 100, 0.045, 6, false), RL.mats.solid(0x6b6b6b, 0.5));
+    const anchors = { wall: V3(-0.6, 0.0, 0.8), membrane: V3(0.6, 0.0, 0.74), cytoplasm: V3(0.15, 0.1, 0.5), ribo: V3(-1.1, 0.2, 0.4), dna: curve.getPoint(0.12), plasmid: V3(0.95, 0.2, 0.3), flagellum: fc.getPoint(0.55) };
+    Object.values(anchors).forEach(a => a.add(g.position)); // anchors are in pivot space
+    return { group: pivot, anchors };
+  }
+
+  /* ---------- stage ---------- */
+  RL.stages.push({
+    id: 'cells', title: 'Label cells', mins: 12,
+    build(root) {
+      const tier = RL.tier();
+      root.append(RL.mission({
+        kicker: 'Stage 2 · spec 1(b), 2(a)–(b)', title: 'Label the cells in 3D', mins: 12,
+        spec: 'Animal, plant and bacterial cell structure and function · magnification',
+        steps: ['<b>Drag</b> the model to rotate it; use the wheel or <b>＋ −</b> to zoom.', '<b>Drag</b> a label chip onto the matching ring (or click the chip, then the ring).',
+          'Finish all three cells, then try the <b>Check yourself</b> questions.'],
+        ladder: { s: 'Rings are numbered and chips show a job hint.', m: 'Rings are numbered; chips show names only.', x: 'Rings are unnumbered and the tray includes decoy labels (some cells do not have them!).' },
+      }));
+      const tabs = el('div', { class: 'celltabs', role: 'tablist' });
+      const prog = el('span', { class: 'prog' });
+      const view = el('div', { class: 'view' });
+      const pinlayer = el('div', { class: 'pinlayer' });
+      const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg'); pinlayer.append(svg);
+      const tray = el('div', { class: 'tray' }, el('h3', { text: 'Label chips' }));
+      const trayList = el('div', { style: { display: 'flex', flexDirection: 'column', gap: '6px' } }); tray.append(trayList);
+      const grid = el('div', { class: 'labgrid', style: { position: 'relative' } }, view, tray);
+      const board = el('div', { class: 'board', style: { overflow: 'hidden' } }, tabs, grid);
+      const msg = el('div', { class: 'msg info', role: 'status', text: 'Choose a cell, then drag labels onto the rings.' });
+      const hintBtn = el('button', { class: 'btn alt', text: 'Hint' });
+      const toolbar = el('div', { class: 'toolbar' }, hintBtn, msg);
+      const hud = el('div', { class: 'viewtools' },
+        el('button', { 'aria-label': 'Zoom in', text: '+' }), el('button', { 'aria-label': 'Zoom out', text: '−' }), el('button', { 'aria-label': 'Reset view', text: '⟲' }));
+      view.append(pinlayer, hud);
+      root.append(board, toolbar);
+
+      const th = RL.three(view, { z: 8, label: 'Rotatable 3D cell model' });
+      const models = {}, st = {};
+      let cur = 'animal', selected = null;
+      const keys = Object.keys(C.cells);
+      keys.forEach(k => (st[k] = { placed: {}, first: {}, score: 0, done: false }));
+
+      if (th) {
+        const builders = { animal: buildAnimal, plant: buildPlant, bacteria: buildBacteria };
+        const pivot = new THREE.Group(); th.scene.add(pivot);
+        keys.forEach(k => { const m = builders[k](); m.group.visible = false; pivot.add(m.group); models[k] = m; });
+        RL.orbit(th, pivot, { z: 8, min: 4.5, max: 13 }); th.resetView();
+        hud.children[0].onclick = () => th.zoom(0.88); hud.children[1].onclick = () => th.zoom(1.14); hud.children[2].onclick = () => th.resetView();
+        th.pivot = pivot;
+      }
+
+      /* rings + tags + lines */
+      let rings = [], lines = [];
+      function clearPins() { rings.forEach(r => { r.ring.remove(); if (r.tag) r.tag.remove(); }); svg.innerHTML = ''; rings = []; lines = []; }
+      function mountCell(k) {
+        cur = k; clearPins(); trayList.innerHTML = ''; selected = null;
+        const cell = C.cells[k];
+        keys.forEach((kk, i) => { tabs.children[i].setAttribute('aria-selected', kk === k); if (models[kk]) models[kk].group.visible = kk === k; });
+        cell.pins.forEach((p, i) => {
+          const ring = el('div', { class: 'ring', role: 'button', tabindex: '0', 'aria-label': 'Label target ' + (i + 1), text: tier === 'x' ? '' : String(i + 1) });
+          ring.addEventListener('click', () => placeSelected(p));
+          ring.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { placeSelected(p); e.preventDefault(); } });
+          pinlayer.append(ring);
+          const ln = document.createElementNS('http://www.w3.org/2000/svg', 'line'); ln.setAttribute('stroke', '#21345B'); ln.setAttribute('stroke-width', '2');
+          const dot = document.createElementNS('http://www.w3.org/2000/svg', 'circle'); dot.setAttribute('r', '4'); dot.setAttribute('fill', '#B8860B'); dot.setAttribute('stroke', '#fff'); dot.setAttribute('stroke-width', '1.5');
+          svg.append(ln, dot);
+          const r = { p, ring, ln, dot, tag: null, i, x: 0, y: 0 };
+          rings.push(r);
+          if (st[k].placed[p.id]) addTag(r);
+        });
+        const names = cell.pins.filter(p => !st[k].placed[p.id]).map(p => p.label);
+        const decoys = tier === 'x' ? cell.decoys : [];
+        RL.shuffle(names.concat(decoys), RL.rng(k.length * 13 + names.length)).forEach(n => trayList.append(makeChip(n)));
+        updateProg();
+      }
+      function makeChip(name) {
+        const pin = C.cells[cur].pins.find(p => p.label === name);
+        const chip = el('div', { class: 'card', role: 'button', tabindex: '0', 'aria-label': 'Label: ' + name, style: { position: 'relative', left: 'auto', top: 'auto' } }, name, tier === 's' && pin ? el('small', { text: pin.fn }) : null);
+        chip.dataset.name = name;
+        chip.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { selectChip(chip); e.preventDefault(); } });
+        let ghost = null, moved = false, sx = 0, sy = 0;
+        chip.addEventListener('pointerdown', e => {
+          if (e.button > 0) return; chip.setPointerCapture(e.pointerId); moved = false; sx = e.clientX; sy = e.clientY; e.preventDefault();
+        });
+        chip.addEventListener('pointermove', e => {
+          if (!chip.hasPointerCapture(e.pointerId)) return;
+          if (!moved && Math.hypot(e.clientX - sx, e.clientY - sy) < 5) return;
+          if (!ghost) { ghost = chip.cloneNode(true); ghost.classList.add('drag'); Object.assign(ghost.style, { position: 'fixed', zIndex: 999, pointerEvents: 'none', width: chip.offsetWidth + 'px' }); document.body.append(ghost); chip.style.opacity = '.35'; moved = true; }
+          ghost.style.left = e.clientX - ghost.offsetWidth / 2 + 'px'; ghost.style.top = e.clientY - ghost.offsetHeight / 2 + 'px';
+          const near = nearestRing(e.clientX, e.clientY); rings.forEach(r => r.ring.classList.toggle('hot', r === near));
+        });
+        const up = e => {
+          if (!chip.hasPointerCapture(e.pointerId)) return;
+          chip.releasePointerCapture(e.pointerId);
+          rings.forEach(r => r.ring.classList.remove('hot'));
+          if (!moved) { selectChip(selected === chip ? null : chip); return; }
+          const near = nearestRing(e.clientX, e.clientY);
+          if (ghost) { ghost.remove(); ghost = null; } chip.style.opacity = '';
+          if (near) tryPlace(chip, near.p); else RL.msg(msg, 'Drop the chip right on a ring.', 'info');
+        };
+        chip.addEventListener('pointerup', up); chip.addEventListener('pointercancel', up);
+        return chip;
+      }
+      function nearestRing(cx, cy) {
+        let best = null, bd = 44;
+        rings.forEach(r => { if (st[cur].placed[r.p.id]) return; const b = r.ring.getBoundingClientRect(); const d = Math.hypot(cx - (b.left + b.width / 2), cy - (b.top + b.height / 2)); if (d < bd) { bd = d; best = r; } });
+        return best;
+      }
+      function selectChip(c) {
+        RL.$$('.card', trayList).forEach(x => x.classList.remove('sel')); selected = c;
+        if (c) { c.classList.add('sel'); RL.msg(msg, 'Now click the ring for “' + c.dataset.name + '”.', 'info'); }
+      }
+      function placeSelected(pin) { if (selected) tryPlace(selected, pin); else RL.msg(msg, 'Pick a label chip first.', 'info'); }
+      function tryPlace(chip, pin) {
+        const k = cur, cell = C.cells[k], name = chip.dataset.name, s = st[k];
+        if (s.placed[pin.id]) return;
+        if (name === pin.label) {
+          s.placed[pin.id] = true; if (s.first[pin.id] === undefined) { s.first[pin.id] = true; s.score++; }
+          chip.remove(); selected = null;
+          addTag(rings.find(r => r.p === pin));
+          RL.msg(msg, 'Correct ✓  ' + pin.label + ': ' + pin.fn + '.', 'ok');
+          updateProg();
+          if (Object.keys(s.placed).length === cell.pins.length) { s.done = true; RL.msg(msg, cell.name + ' complete ✓  First-try: ' + s.score + ' / ' + cell.pins.length + '.', 'ok'); finish(); }
+        } else {
+          if (s.first[pin.id] === undefined) s.first[pin.id] = false;
+          RL.shake(chip);
+          const dec = cell.decoys.indexOf(name) >= 0;
+          let t = 'Not that one.';
+          if (dec) t = 'A ' + cell.name.toLowerCase() + ' does not have a ' + name + '. Keep it in the tray.';
+          else if (tier === 's') t = 'Not quite. Look again: this structure ' + pin.fn + '.';
+          else if (tier === 'm') t = 'Not that one: think about the job and the position of this structure.';
+          RL.msg(msg, t, 'bad'); selectChip(null);
+        }
+      }
+      function addTag(r) {
+        const tag = el('div', { class: 'tag', text: r.p.label }); pinlayer.append(tag); r.tag = tag; r.ring.classList.add('done'); r.ring.textContent = '✓'; r.ring.style.pointerEvents = 'none';
+      }
+      function updateProg() {
+        const done = keys.filter(k => st[k].done).length;
+        prog.textContent = 'Placed ' + Object.keys(st[cur].placed).length + '/' + C.cells[cur].pins.length + ' · cells finished ' + done + '/3';
+      }
+      function finish() {
+        const done = keys.filter(k => st[k].done).length;
+        if (done === keys.length) {
+          const total = keys.reduce((a, k) => a + st[k].score, 0), max = keys.reduce((a, k) => a + C.cells[k].pins.length, 0);
+          RL.state.scores.cells = total + '/' + max; RL.markDone('cells');
+          RL.msg(msg, 'All three cells labelled ✓  First-try score ' + total + ' / ' + max + '. Try the questions below, then move on to enzymes.', 'ok');
+        }
+      }
+      hintBtn.onclick = () => {
+        const left = rings.filter(r => !st[cur].placed[r.p.id]);
+        if (!left.length) return RL.msg(msg, 'Nothing left to label here.', 'info');
+        const r = left[0]; r.ring.classList.add('hot'); setTimeout(() => r.ring.classList.remove('hot'), 2200);
+        RL.msg(msg, 'Hint: the highlighted ring marks the structure that ' + r.p.fn + '.', 'info');
+      };
+
+      keys.forEach(k => tabs.append(el('button', { role: 'tab', 'aria-selected': 'false', text: C.cells[k].name, onclick: () => mountCell(k) })));
+      tabs.append(prog);
+
+      /* per-frame pin projection; callout labels sit in two tidy columns */
+      if (th) th.loops.push(() => {
+        if (!models[cur]) return;
+        const k = cur, m = models[k], cell = C.cells[k];
+        th.pivot.updateMatrixWorld(true);
+        const c0 = th.project(th.pivot.localToWorld(V3(0, 0, 0)));
+        rings.forEach(r => {
+          const w = m.group.localToWorld(m.anchors[r.p.id].clone());
+          const a = th.project(w); r.ax = a.x; r.ay = a.y; r.far = a.z > c0.z;
+        });
+        const cols = [[], []];
+        rings.forEach(r => cols[r.ax < c0.x ? 0 : 1].push(r));
+        cols.forEach((list, side) => {
+          list.sort((p, q) => p.ay - q.ay);
+          const gap = 40, x = side === 0 ? Math.max(70, th.w * 0.5 - 300) : Math.min(th.w - 70, th.w * 0.5 + 300);
+          let y = -1e9; list.forEach(r => { r.y = Math.max(r.ay, y + gap, 30); y = r.y; r.x = x; r.side = side; });
+          for (let i = list.length - 1, lim = th.h - 30; i >= 0; i--) { if (list[i].y > lim) list[i].y = lim; lim = list[i].y - gap; }
+        });
+        rings.forEach(r => {
+          r.x = RL.clamp(r.x, 24, th.w - 24); r.y = RL.clamp(r.y, 24, th.h - 24);
+          r.ring.style.left = r.x + 'px'; r.ring.style.top = r.y + 'px'; r.ring.classList.toggle('far', !!r.far && !st[k].placed[r.p.id]);
+          r.ln.setAttribute('x1', r.ax); r.ln.setAttribute('y1', r.ay); r.ln.setAttribute('x2', r.x); r.ln.setAttribute('y2', r.y);
+          r.dot.setAttribute('cx', r.ax); r.dot.setAttribute('cy', r.ay);
+          if (r.tag) { const right = r.side === 1; r.tag.style.left = r.x + (right ? 22 : -22) + 'px'; r.tag.style.top = r.y + 'px'; r.tag.style.transform = 'translate(' + (right ? '0' : '-100%') + ',-50%)'; }
+        });
+      });
+      mountCell('animal');
+
+      /* check yourself + support */
+      const qs = C.cellQs[tier];
+      const checks = el('div', { class: 'panelcard' }, el('h3', { text: 'Check yourself' }), ...qs.map(q => RL.qblock(q)));
+      const sup = C.cellSupport;
+      const support = RL.support({
+        adapt: { lead: sup.adapt.lead, nodes: [RL.cloze(sup.adapt.cloze[0], sup.adapt.cloze[1])] },
+        hot: { lead: 'Think like an examiner: link structure to function.', nodes: [RL.qblock(sup.hot)] },
+      });
+      root.append(el('div', { class: 'below' }, checks, support));
+    },
+  });
+})();
+
+/* Stage 3: lock and key. 3D active site, draggable substrates, temperature/pH sliders that deform the enzyme,
+   and a graph the pupil builds one recorded point at a time. */
+(function () {
+  'use strict';
+  const RL = window.RL, el = RL.el, C = RL.content;
+
+  /* ---- rate model (illustrative; optimum about 40 °C and pH 7) ---- */
+  const faT = T => 1 / (1 + Math.exp((T - 44) / 2));
+  const q10 = T => Math.pow(2, (T - 40) / 10);
+  const rawT = T => q10(T) * faT(T);
+  let peak = 0; for (let T = 0; T <= 80; T += 0.5) peak = Math.max(peak, rawT(T));
+  const faPH = p => Math.exp(-Math.pow((p - 7) / 2.3, 2));
+  const rate = (T, p) => (100 * rawT(T) / peak) * faPH(p);
+  const fit = (T, p) => faT(T) * faPH(p);
+  const RANGE = { temp: { min: 0, max: 80, label: 'Temperature / °C' }, ph: { min: 1, max: 13, label: 'pH' } };
+
+  /* ---- shapes ---- */
+  const R0 = 1.7, HALF = 0.62, ALPHA = Math.asin(HALF / R0);
+  const bodyR = (t, d) => R0 * (1 + 0.05 * Math.sin(3 * t + 1) + 0.03 * Math.sin(5 * t) + d * 0.09 * Math.sin(7 * t + 2));
+  function enzymeShape(d) {
+    const sh = new THREE.Shape(), pts = [];
+    const t0 = Math.PI / 2 - ALPHA, t1 = Math.PI / 2 + ALPHA - 2 * Math.PI;
+    for (let t = t0; t > t1; t -= 0.07) { const r = bodyR(t, d); pts.push([r * Math.cos(t), r * Math.sin(t)]); }
+    const rl = bodyR(t1, d), left = [rl * Math.cos(t1), rl * Math.sin(t1)];
+    const rr = bodyR(t0, d), right = [rr * Math.cos(t0), rr * Math.sin(t0)];
+    const inner = [[-0.62, 1.12], [-0.27, 1.12], [-0.27, 0.62], [0.27, 0.62], [0.27, 1.12], [0.62, 1.12]]
+      .map(p => [p[0] * (1 - 0.5 * d) + 0.9 * d * (p[1] - 1.1), p[1] - 0.22 * d]);
+    pts.push(left, ...inner);
+    sh.moveTo(pts[0][0], pts[0][1]); for (let i = 1; i < pts.length; i++) sh.lineTo(pts[i][0], pts[i][1]);
+    sh.lineTo(right[0], right[1]); sh.closePath();
+    return sh;
+  }
+  const CY = 1.1; // substrate centre in enzyme coordinates
+  const poly = pts => { const s = new THREE.Shape(); pts.forEach((p, i) => (i ? s.lineTo(p[0], p[1]) : s.moveTo(p[0], p[1]))); s.closePath(); return s; };
+  const shapeT = () => poly([[-0.585, 1.55], [-0.585, 1.14], [-0.245, 1.14], [-0.245, 0.65], [0.245, 0.65], [0.245, 1.14], [0.585, 1.14], [0.585, 1.55]].map(p => [p[0], p[1] - CY]));
+  const shapeHat = () => poly([[-0.585, 0.45], [-0.585, 0.04], [0.585, 0.04], [0.585, 0.45]]);
+  const shapeStem = () => poly([[-0.245, -0.45], [-0.245, 0.0], [0.245, 0.0], [0.245, -0.45]]);
+  const shapeCircle = () => { const s = new THREE.Shape(); s.absarc(0, 0, 0.52, 0, Math.PI * 2); return s; };
+  const shapeStar = () => { const pts = []; for (let i = 0; i < 10; i++) { const r = i % 2 ? 0.28 : 0.66, a = Math.PI / 2 + i * Math.PI / 5; pts.push([r * Math.cos(a), r * Math.sin(a)]); } return poly(pts); };
+  const extrude = (shape, depth) => new THREE.ExtrudeGeometry(shape, { depth, bevelEnabled: true, bevelSize: 0.035, bevelThickness: 0.04, bevelSegments: 2, curveSegments: 10 });
+
+  RL.stages.push({
+    id: 'enz', title: 'Enzymes', mins: 15,
+    build(root) {
+      const tier = RL.tier();
+      root.append(RL.mission({
+        kicker: 'Stage 3 · spec 2.10–2.14B · main focus', title: 'Lock and key: build the enzyme graph', mins: 15,
+        spec: 'Enzymes as biological catalysts · active site and specificity · effect of temperature and pH · denaturation',
+        steps: ['<b>Predict first</b> in the right-hand panel (two quick questions).', '<b>Drag</b> a substrate up to the active site (or use the buttons). Try all three shapes.',
+          'Choose temperature <i>or</i> pH to investigate, move the slider, press <b>Record rate</b> and build your graph.'],
+        ladder: { s: 'Make the substrate fit, then break the enzyme with heat. Record 4 points.', m: 'Record 6 temperature points and describe and explain the curve.', x: 'Record temperature and pH curves, mark both optima, and explain both in terms of the active site.' },
+      }));
+      const view = el('div', { class: 'view' });
+      const hud = el('div', { class: 'msg info hudmsg', role: 'status', text: 'Make your predictions first, then drag a shape up to the notch (the active site).' });
+      view.append(hud);
+      const panel = el('div', { class: 'panel' });
+      const gbox = el('div', { class: 'gbox' });
+      const grid = el('div', { class: 'enzgrid' }, el('div', { class: 'enzleft' }, view, gbox), panel);
+      const board = el('div', { class: 'board' }, grid);
+      const trybar = el('div', { class: 'toolbar' }, el('span', { class: 'chip', text: 'Keyboard / touch option:' }));
+      root.append(board, trybar);
+
+      /* panel: predict, sliders, readout, graph */
+      const state = { T: 37, pH: 7, mode: 'temp', pts: { temp: [], ph: [] }, done: 0, pred: 0 };
+      const pbox = el('div', { class: 'predict' });
+      const sT = el('input', { type: 'range', min: 0, max: 80, step: 1, value: 37, 'aria-label': 'Temperature' });
+      const sP = el('input', { type: 'range', min: 1, max: 13, step: 0.5, value: 7, 'aria-label': 'pH' });
+      const vT = el('span', { text: '37 °C' }), vP = el('span', { text: 'pH 7' });
+      const readout = el('div', { class: 'readout' });
+      const modeT = el('input', { type: 'radio', name: 'mode', id: 'm-t', checked: true }), modeP = el('input', { type: 'radio', name: 'mode', id: 'm-p' });
+      const rec = el('button', { class: 'btn gold', text: 'Record rate' });
+      const clr = el('button', { class: 'btn alt', text: 'Clear graph' });
+      const showCurve = el('input', { type: 'checkbox', id: 'sc' });
+      const gc = el('canvas', { class: 'graph', 'aria-label': 'Rate of reaction graph you are building' });
+      const gmsg = el('div', { class: 'msg info', role: 'status' });
+      panel.append(
+        el('h3', { text: '1 · Predict' }), pbox,
+        el('h3', { text: '2 · Conditions' }),
+        el('div', { class: 'slider' }, el('label', null, 'Temperature', vT), sT),
+        el('div', { class: 'slider' }, el('label', null, 'pH', vP), sP),
+        el('div', { style: { fontSize: '12.5px', fontWeight: 600 } },
+          'Investigate: ', modeT, el('label', { for: 'm-t', text: ' temperature ' }), modeP, el('label', { for: 'm-p', text: ' pH' })),
+        readout,
+        el('h3', { text: '3 · Build the graph' }),
+        el('div', { style: { display: 'flex', gap: '6px' } }, rec, clr), gmsg);
+      gbox.append(el('b', { style: { fontSize: '12px', color: '#21345B', textTransform: 'uppercase', letterSpacing: '.06em' }, text: 'Your rate graph' }),
+        el('label', { style: { fontSize: '12px', fontWeight: 600 } }, showCurve, ' Show the true curve (check your graph)'), gc);
+
+      /* prediction flow */
+      function showPredict() {
+        pbox.innerHTML = '';
+        const q = C.enzPredict[state.pred];
+        if (!q) { pbox.append(el('p', { text: 'Predictions done ✓ Now test them in the 3D model.' })); return; }
+        pbox.append(el('p', { text: 'Prediction ' + (state.pred + 1) + ': ' + q.q }));
+        q.opts.forEach((o, i) => {
+          const b = el('button', { class: 'opt', text: o, onclick: () => {
+            RL.$$('.opt', pbox).forEach(x => x.disabled = true);
+            b.classList.add(i === q.ans ? 'good' : 'bad'); if (i !== q.ans) RL.$$('.opt', pbox)[q.ans].classList.add('good');
+            pbox.append(el('p', { style: { fontSize: '12.5px', margin: '6px 0 4px' }, text: (i === q.ans ? 'Yes. ' : 'Not quite. ') + q.why }));
+            pbox.append(el('button', { class: 'btn alt', text: state.pred + 1 < C.enzPredict.length ? 'Next prediction' : 'Done', onclick: () => { state.pred++; showPredict(); } }));
+          } });
+          pbox.append(b);
+        });
+      }
+      showPredict();
+
+      /* ---------------- 3D ---------------- */
+      const th = RL.three(view, { z: 9.5, fov: 38, label: 'Enzyme active site with draggable substrates' });
+      const REC = () => (state.mode === 'temp' ? { x: state.T, y: rate(state.T, 7) } : { x: state.pH, y: rate(37, state.pH) });
+      function currentFit() { return state.mode === 'temp' ? fit(state.T, 7) : fit(37, state.pH); }
+      function update() {
+        state.T = +sT.value; state.pH = +sP.value;
+        vT.textContent = state.T + ' °C'; vP.textContent = 'pH ' + state.pH;
+        const f = currentFit(), r = REC().y;
+        const site = f > 0.85 ? 'normal shape ✓' : f > 0.5 ? 'starting to change shape' : f > 0.12 ? 'badly changed shape' : 'denatured ✗';
+        const ke = state.mode === 'temp' ? (state.T < 15 ? 'low: slow, few collisions (the enzyme is NOT denatured)' : state.T < 45 ? 'medium–high' : 'very high') : 'medium';
+        readout.innerHTML = '<b>What the model shows</b>Active site: ' + site + '<br>Particle energy: ' + ke + '<br>Rate of reaction: ' + Math.round(r) + ' a.u.' + (state.mode === 'temp' ? '' : ' (temperature held at 37 °C)');
+        if (th) setDenature(1 - f);
+        drawGraph();
+      }
+      function setMode() {
+        state.mode = modeT.checked ? 'temp' : 'ph';
+        if (state.mode === 'temp') { sP.value = 7; sP.disabled = true; sT.disabled = false; }
+        else { sT.value = 37; sT.disabled = true; sP.disabled = false; }
+        RL.msg(gmsg, state.mode === 'temp' ? 'Fair test: pH is held at 7 while you change temperature.' : 'Fair test: temperature is held at 37 °C while you change pH.', 'info');
+        update();
+      }
+      modeT.onchange = modeP.onchange = setMode;
+      sT.oninput = sP.oninput = update;
+
+      let enzMesh = null, denat = -1, subMeshes = [], tweens = [], busy = false, prods = [], dockBurst = 0;
+      const home = { T: [-3.4, -2.35], C: [-0.2, -2.55], S: [3.2, -2.35] };
+      const ENZ_Y = 0.55;
+      function matFor(d) { const c = new THREE.Color(0x2aa198).lerp(new THREE.Color(0xb0524a), Math.min(1, d * 1.2)); return new THREE.MeshStandardMaterial({ color: c, roughness: 0.5, metalness: 0.05 }); }
+      function setDenature(d) {
+        if (Math.abs(d - denat) < 0.01) return; denat = d;
+        if (enzMesh) { enzMesh.geometry.dispose(); enzMesh.material.dispose(); th.scene.remove(enzMesh); }
+        enzMesh = new THREE.Mesh(extrude(enzymeShape(d), 0.55), matFor(d)); enzMesh.position.set(0, ENZ_Y, -0.28); th.scene.add(enzMesh);
+      }
+      function addSub(kind) {
+        const mk = { T: [shapeT, 0xe0a21b], C: [shapeCircle, 0xd2527c], S: [shapeStar, 0x4ea0e0] }[kind];
+        const m = new THREE.Mesh(extrude(mk[0](), 0.5), new THREE.MeshStandardMaterial({ color: mk[1], roughness: 0.45 }));
+        m.userData = { kind, home: home[kind].slice(), seed: Math.random() * 10 };
+        m.position.set(home[kind][0], home[kind][1], -0.25); th.scene.add(m); subMeshes.push(m); return m;
+      }
+      function tween(dur, fn, done) { tweens.push({ t: 0, dur, fn, done }); }
+      function say(t, k) { RL.msg(hud, t, k || 'info'); }
+      const dockPos = [0, ENZ_Y + CY];
+
+      function attempt(m) {
+        if (busy) return;
+        if (state.pred < C.enzPredict.length) { say('Make both predictions first (right-hand panel).', 'bad'); return bounceHome(m); }
+        const f = currentFit(), kind = m.userData.kind;
+        busy = true;
+        const from = [m.position.x, m.position.y];
+        const target = dockPos; // every substrate travels to the site; only the right shape binds
+        tween(0.45, k => { m.position.x = from[0] + (target[0] - from[0]) * k; m.position.y = from[1] + (target[1] - from[1]) * k; }, () => {
+          if (kind !== 'T') {
+            say('✗ Wrong shape. The ' + (kind === 'C' ? 'round' : 'star') + ' substrate is not complementary to the active site. Enzymes are specific.', 'bad');
+            return bounceHome(m, true);
+          }
+          const ok = f >= 0.85 || Math.random() < f;
+          if (!ok) { say(f < 0.12 ? '✗ The active site has lost its shape (denatured). The substrate cannot bind, so no product forms.' : '✗ The active site is partly changed in shape, so the substrate did not fit this time. Try again, or move the slider back towards the optimum.', 'bad'); return bounceHome(m, true); }
+          say('✓ Fits! An enzyme–substrate complex forms…', 'ok'); dockBurst = 1;
+          setTimeout(() => react(m), 900);
+        });
+      }
+      function bounceHome(m, wasBusy) {
+        const from = [m.position.x, m.position.y], h = m.userData.home;
+        tween(0.6, k => { const e = 1 - Math.pow(1 - k, 3); m.position.x = from[0] + (h[0] - from[0]) * e + Math.sin(k * 9) * 0.2 * (1 - k); m.position.y = from[1] + (h[1] - from[1]) * e; }, () => { busy = false; });
+        if (!wasBusy) busy = false;
+      }
+      function react(m) {
+        th.scene.remove(m); subMeshes = subMeshes.filter(x => x !== m);
+        const hat = new THREE.Mesh(extrude(shapeHat(), 0.4), new THREE.MeshStandardMaterial({ color: 0xf6d36b, roughness: 0.5 }));
+        const stem = new THREE.Mesh(extrude(shapeStem(), 0.4), new THREE.MeshStandardMaterial({ color: 0xf0a33a, roughness: 0.5 }));
+        hat.position.set(dockPos[0], dockPos[1], -0.2); stem.position.set(dockPos[0], dockPos[1], -0.2); th.scene.add(hat, stem); prods.push(hat, stem);
+        tween(1.6, k => { hat.position.set(-k * 3.1, dockPos[1] + k * 0.9, -0.2); hat.rotation.z = k * 1.2; stem.position.set(k * 3.1, dockPos[1] + k * 0.9, -0.2); stem.rotation.z = -k * 1.4; const s = 1 - Math.max(0, k - 0.7) / 0.3; hat.scale.setScalar(Math.max(0.01, s)); stem.scale.setScalar(Math.max(0.01, s)); }, () => {
+          th.scene.remove(hat, stem); prods = prods.filter(p => p !== hat && p !== stem);
+          state.done++; addSub('T'); busy = false;
+          say('✓ Two products released and the enzyme is unchanged, so it can be used again. Reactions completed: ' + state.done, 'ok');
+        });
+      }
+
+      if (th) {
+        th.camera.position.set(0, 0.3, 9.5);
+        ['T', 'C', 'S'].forEach(addSub);
+        setDenature(0);
+        const ray = new THREE.Raycaster(), V = new THREE.Vector2();
+        let drag = null;
+        const clientOf = (x, y, z) => { const p = th.project(new THREE.Vector3(x, y, z)), r = th.canvas.getBoundingClientRect(); return { x: r.left + p.x, y: r.top + p.y }; };
+        RL.dbg.enz = { sub: kind => { const m = subMeshes.find(s => s.userData.kind === kind); return m ? clientOf(m.position.x, m.position.y, m.position.z) : null; }, dock: () => clientOf(dockPos[0], dockPos[1], 0), state: () => ({ done: state.done, busy, T: state.T, pH: state.pH }) };
+        const toPlane = e => { const p = th.pointer(e); V.set(p.x, p.y); ray.setFromCamera(V, th.camera); const o = ray.ray.origin, d = ray.ray.direction, t = -o.z / d.z; return [o.x + d.x * t, o.y + d.y * t]; };
+        th.canvas.addEventListener('pointerdown', e => {
+          if (busy) return; const p = th.pointer(e); V.set(p.x, p.y); ray.setFromCamera(V, th.camera);
+          const hit = ray.intersectObjects(subMeshes, false)[0]; if (!hit) return;
+          drag = hit.object; th.canvas.setPointerCapture(e.pointerId); th.canvas.style.cursor = 'grabbing';
+        });
+        th.canvas.addEventListener('pointermove', e => {
+          if (drag) { const q = toPlane(e); drag.position.x = q[0]; drag.position.y = q[1]; return; }
+          const p = th.pointer(e); V.set(p.x, p.y); ray.setFromCamera(V, th.camera); th.canvas.style.cursor = ray.intersectObjects(subMeshes, false)[0] ? 'grab' : 'default';
+        });
+        const up = e => {
+          if (!drag) return; const m = drag; drag = null; th.canvas.style.cursor = 'default';
+          const near = Math.hypot(m.position.x - dockPos[0], m.position.y - dockPos[1]) < 1.15;
+          if (near) attempt(m); else { const h = m.userData.home; m.userData.home = h; }
+        };
+        th.canvas.addEventListener('pointerup', up); th.canvas.addEventListener('pointercancel', up);
+        th.loops.push((dt, t) => {
+          const amp = 0.015 + 0.2 * (state.mode === 'temp' ? state.T : 37) / 80;
+          subMeshes.forEach(m => { if (m === drag || busy && Math.hypot(m.position.x - dockPos[0], m.position.y - dockPos[1]) < 2) return; const u = m.userData, h = u.home; if (Math.abs(m.position.x - h[0]) < 0.9 && Math.abs(m.position.y - h[1]) < 0.9) { m.position.x = h[0] + Math.sin(t * 1.7 * (1 + amp * 4) + u.seed) * amp * 2.2; m.position.y = h[1] + Math.cos(t * 2.1 * (1 + amp * 4) + u.seed * 1.3) * amp * 1.6; m.rotation.z = Math.sin(t * 1.3 + u.seed) * amp * 1.4; } });
+          if (enzMesh) { enzMesh.rotation.z = Math.sin(t * 0.8) * 0.02 * (1 + amp * 4); if (dockBurst > 0) { dockBurst = Math.max(0, dockBurst - dt * 0.8); enzMesh.material.emissive = new THREE.Color(0xffd84a).multiplyScalar(dockBurst * 0.5); } else if (enzMesh.material.emissive) enzMesh.material.emissive.setScalar(0); }
+          for (let i = tweens.length - 1; i >= 0; i--) { const w = tweens[i]; w.t += dt; const k = Math.min(1, w.t / w.dur); w.fn(k); if (k >= 1) { tweens.splice(i, 1); w.done && w.done(); } }
+        });
+        [['T', 'Try the T-shaped substrate'], ['C', 'Try the round substrate'], ['S', 'Try the star substrate']].forEach(([k, label]) => trybar.append(el('button', { class: 'btn alt', text: label, onclick: () => { const m = subMeshes.find(s => s.userData.kind === k); if (m) attempt(m); } })));
+      }
+
+      /* ---------------- graph ---------------- */
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      function drawGraph() {
+        const w = gc.clientWidth, h = gc.clientHeight; if (!w) return;
+        if (gc.width !== w * dpr) { gc.width = w * dpr; gc.height = h * dpr; }
+        const g = gc.getContext('2d'); g.setTransform(dpr, 0, 0, dpr, 0, 0); g.clearRect(0, 0, w, h);
+        const rg = RANGE[state.mode], L = 38, B = 28, Rm = 8, Tm = 8, pw = w - L - Rm, ph = h - B - Tm;
+        const X = v => L + (v - rg.min) / (rg.max - rg.min) * pw, Y = v => Tm + ph - v / 100 * ph;
+        g.strokeStyle = '#999'; g.fillStyle = '#333'; g.lineWidth = 1; g.font = '600 10px Montserrat, sans-serif';
+        g.beginPath(); g.moveTo(L, Tm); g.lineTo(L, Tm + ph); g.lineTo(L + pw, Tm + ph); g.stroke();
+        const xt = state.mode === 'temp' ? [0, 20, 40, 60, 80] : [1, 3, 5, 7, 9, 11, 13];
+        g.textAlign = 'center'; xt.forEach(v => { g.fillText(v, X(v), Tm + ph + 12); g.beginPath(); g.moveTo(X(v), Tm + ph); g.lineTo(X(v), Tm + ph + 3); g.stroke(); });
+        g.fillText(rg.label, L + pw / 2, h - 3);
+        g.textAlign = 'right'; [0, 50, 100].forEach(v => g.fillText(v, L - 4, Y(v) + 3));
+        g.save(); g.translate(9, Tm + ph / 2); g.rotate(-Math.PI / 2); g.textAlign = 'center'; g.fillText('Rate / a.u.', 0, 0); g.restore();
+        if (showCurve.checked) {
+          g.strokeStyle = '#B8860B'; g.setLineDash([4, 3]); g.lineWidth = 2; g.beginPath();
+          for (let i = 0; i <= 160; i++) { const v = rg.min + (rg.max - rg.min) * i / 160, y = state.mode === 'temp' ? rate(v, 7) : rate(37, v); i ? g.lineTo(X(v), Y(y)) : g.moveTo(X(v), Y(y)); }
+          g.stroke(); g.setLineDash([]);
+        }
+        const pts = state.pts[state.mode].slice().sort((a, b) => a.x - b.x);
+        if (pts.length > 1) { g.strokeStyle = '#21345B'; g.lineWidth = 2; g.beginPath(); pts.forEach((p, i) => (i ? g.lineTo(X(p.x), Y(p.y)) : g.moveTo(X(p.x), Y(p.y)))); g.stroke(); }
+        g.fillStyle = '#21345B'; pts.forEach(p => { g.beginPath(); g.arc(X(p.x), Y(p.y), 4, 0, 7); g.fill(); });
+        const cur = REC(); g.strokeStyle = '#d33'; g.lineWidth = 2; g.beginPath(); g.arc(X(cur.x), Y(cur.y), 6, 0, 7); g.stroke();
+      }
+      rec.onclick = () => {
+        const p = REC(), arr = state.pts[state.mode];
+        if (arr.some(q => q.x === p.x)) return RL.msg(gmsg, 'You already recorded that value. Move the slider.', 'bad');
+        arr.push({ x: p.x, y: Math.round(p.y * 10) / 10 }); drawGraph();
+        const need = tier === 's' ? 4 : 6, total = state.pts.temp.length + state.pts.ph.length;
+        RL.msg(gmsg, arr.length + ' point' + (arr.length > 1 ? 's' : '') + ' recorded' + (arr.length >= need ? ' ✓ enough for a curve: describe it, then explain it.' : '. Aim for ' + need + ' or more, including near the peak.'), arr.length >= need ? 'ok' : 'info');
+        if (state.done >= 1 && state.pts[state.mode].length >= need && (tier !== 'x' || (state.pts.temp.length >= need && state.pts.ph.length >= need))) RL.markDone('enz');
+      };
+      clr.onclick = () => { state.pts[state.mode] = []; drawGraph(); RL.msg(gmsg, 'Graph cleared.', 'info'); };
+      showCurve.onchange = drawGraph;
+      if (window.ResizeObserver) new ResizeObserver(drawGraph).observe(gc);
+      setMode();
+
+      /* check yourself + support */
+      const checks = el('div', { class: 'panelcard' }, el('h3', { text: 'Check yourself' }), ...C.enzQs[tier].map(q => RL.qblock(q)));
+      const sup = C.enzSupport;
+      const support = RL.support({
+        adapt: { lead: sup.adapt.lead, nodes: [RL.cloze(sup.adapt.cloze[0], sup.adapt.cloze[1])] },
+        hot: { lead: 'Use your 3D evidence to correct a common misconception.', nodes: [RL.qblock(sup.hot)] },
+      });
+      root.append(el('div', { class: 'below' }, checks, support));
+    },
+  });
+})();
+
+/* Stage 4: osmosis practical. CORMMS planner (drag cards into slots), 3D bench (drag potato cylinders into
+   beakers), results table (pupil works out % change), graph (click to plot, drag marker to the zero-crossing). */
+(function () {
+  'use strict';
+  const RL = window.RL, el = RL.el, C = RL.content;
+  const SVGNS = 'http://www.w3.org/2000/svg';
+  const sv = (tag, a) => { const n = document.createElementNS(SVGNS, tag); for (const k in a) n.setAttribute(k, a[k]); return n; };
+
+  RL.stages.push({
+    id: 'osm', title: 'Osmosis practical', mins: 12,
+    build(root) {
+      const tier = RL.tier();
+      root.append(RL.mission({
+        kicker: 'Stage 4 · spec 2.15 and 2.17 required practical', title: 'Plan, run and analyse the potato practical', mins: 12,
+        spec: 'Osmosis in plant tissue · variables · % change in mass · interpreting the zero-crossing as equal water potential',
+        steps: ['<b>Plan:</b> drag the CORMMS cards into the right rows, then press Check.', '<b>Run:</b> drag a potato cylinder into each beaker, then press <b>Leave for 30 min</b>.',
+          '<b>Analyse:</b> work out each % change, plot the points on the graph, then drag the marker to where the line crosses 0 %.'],
+        ladder: { s: 'Rows show the CORMMS word. Two decoy cards only. Work out one % change with the formula frame.', m: 'Rows show only the letter. Decoy cards for every row. Work out all six % changes.', x: 'Subtle decoys. Explain your zero-crossing and evaluate the method in the questions below.' },
+      }));
+
+      /* ================= CORMMS ================= */
+      const cm = C.cormms;
+      const cboard = el('div', { class: 'board', style: { minHeight: '560px', padding: '12px' } });
+      const slotsCol = el('div', { class: 'cormms', style: { width: '54%' } });
+      const slots = cm.rows.map((r, i) => {
+        const slot = el('div', { class: 'slot', 'data-i': i, role: 'group', 'aria-label': 'Slot for ' + r.w, text: tier === 's' ? 'Drop the ' + r.w.toLowerCase() + ' card here' : 'Drop a card here' });
+        slotsCol.append(el('div', { class: 'crow' }, el('div', { class: 'let', 'aria-label': r.w }, r.L, tier === 's' ? el('small', { text: r.w }) : null), slot));
+        return slot;
+      });
+      const poolLabel = el('div', { style: { position: 'absolute', right: '14%', top: '8px', fontSize: '11px', fontWeight: 800, letterSpacing: '.08em', color: '#777', textTransform: 'uppercase' }, text: 'Card pile' });
+      cboard.append(slotsCol, poolLabel);
+      const cmsg = el('div', { class: 'msg info', role: 'status', text: 'C·O·R·M·M·S: Change, Organism, Repeat, Measure, Maintain, Sample. Drag a card into the matching row.' });
+      const ccheck = el('button', { class: 'btn', text: 'Check' }), creset = el('button', { class: 'btn alt', text: 'Reset cards' });
+      const ctool = el('div', { class: 'toolbar' }, ccheck, creset, cmsg);
+      const cwrap = el('div', { class: 'panelcard' }, el('h3', { text: '1 · Plan with CORMMS' }), cboard, ctool,
+        RL.reveal('Show the CORMMS model answer', '<ul>' + cm.rows.map(r => '<li><b>' + r.L + ' (' + r.w + '):</b> ' + r.right.split(': ').slice(1).join(': ') + '</li>').join('') + '</ul>'));
+      root.append(cwrap);
+
+      let cards = [], cfirst = {}, cscore = 0, csel = null;
+      const text = s => s.split(': ').slice(1).join(': ');
+      function slotRect(slot) { const b = cboard.getBoundingClientRect(), r = slot.getBoundingClientRect(); return { l: r.left - b.left, t: r.top - b.top, w: r.width, h: r.height }; }
+      function snapTo(card, slot) { const r = slotRect(slot); card.style.width = (r.w - 10) + 'px'; RL.glide(card, r.l + 5, r.t + Math.max(2, (r.h - card.offsetHeight) / 2), 200); }
+      function layoutPool() {
+        const bw = cboard.clientWidth, rnd = RL.rng(3), free = cards.filter(c => c._slot == null && !c.classList.contains('good'));
+        let need = 40;
+        free.forEach(c => { c.style.width = Math.min(340, bw * 0.4) + 'px'; need += c.offsetHeight + 7; });
+        cboard.style.minHeight = Math.max(520, need + 24) + 'px';
+        let y = 30;
+        free.forEach(c => { c._setPos(bw * 0.575 + rnd() * 14, y); y += c.offsetHeight + 7; });
+      }
+      function buildCards() {
+        cards.forEach(c => c.remove()); cards = []; cfirst = {}; cscore = 0; csel = null; slots.forEach(s => { s.className = 'slot'; });
+        const pool = [];
+        cm.rows.forEach((r, i) => {
+          pool.push({ t: text(r.right), row: i });
+          const nBad = tier === 's' ? (i < 2 ? 1 : 0) : 1;
+          for (let k = 0; k < nBad; k++) pool.push({ t: text(r.bad[k]), row: -1 });
+        });
+        RL.shuffle(pool, RL.rng(Date.now() % 9999)).forEach(p => {
+          const card = el('div', { class: 'card', role: 'button', 'aria-label': p.t, text: p.t });
+          card._row = p.row; card._slot = null; cboard.append(card); cards.push(card);
+          RL.drag(card, {
+            area: cboard, margin: 0.15, disabled: c => c.classList.contains('good'),
+            onStart: () => { card._slot = null; slots.forEach(s => s.classList.remove('good', 'bad')); selectCard(null); },
+            onMove: () => hoverSlot(card),
+            onEnd: () => dropCard(card),
+            onClick: () => selectCard(csel === card ? null : card),
+          });
+        });
+        requestAnimationFrame(layoutPool);
+      }
+      function selectCard(c) { cards.forEach(x => x.classList.remove('sel')); csel = c; if (c) { c.classList.add('sel'); RL.msg(cmsg, 'Now click the row where this card belongs.', 'info'); } }
+      slots.forEach((s, i) => s.addEventListener('click', () => { if (csel) { putIn(csel, i); selectCard(null); } }));
+      function hoverSlot(card) { const c = RL.center(card); slots.forEach(s => s.classList.toggle('over', RL.inRect(c, s.getBoundingClientRect()))); }
+      function dropCard(card) {
+        slots.forEach(s => s.classList.remove('over'));
+        const c = RL.center(card), i = slots.findIndex(s => RL.inRect(c, s.getBoundingClientRect()));
+        if (i >= 0) putIn(card, i); else card._slot = null;
+      }
+      function putIn(card, i) {
+        const taken = cards.find(x => x !== card && x._slot === i);
+        if (taken) { RL.msg(cmsg, 'That row is full. Move the other card out first.', 'bad'); card._slot = null; return layoutPool(); }
+        card._slot = i; snapTo(card, slots[i]);
+      }
+      ccheck.onclick = () => {
+        let placed = 0, good = 0;
+        cards.forEach(c => {
+          if (c._slot == null || c.classList.contains('good')) return; placed++;
+          const key = c.textContent, slot = slots[c._slot];
+          if (c._row === c._slot) { c.classList.add('good'); slot.classList.add('good'); good++; if (cfirst[key] === undefined) { cfirst[key] = true; cscore++; } c.setAttribute('tabindex', '-1'); }
+          else { if (cfirst[key] === undefined) cfirst[key] = false; slot.classList.add('bad'); c.classList.add('wrong'); RL.shake(c); setTimeout(() => { c.classList.remove('wrong'); slot.classList.remove('bad'); c._slot = null; layoutPool(); }, 900); }
+        });
+        const left = cards.filter(c => c._row >= 0 && !c.classList.contains('good')).length;
+        if (!placed) return RL.msg(cmsg, 'Place some cards first.', 'bad');
+        if (!left) { RL.state.scores.cormms = cscore + '/6'; cdone = true; RL.msg(cmsg, 'Plan complete ✓  First-try rows: ' + cscore + ' / 6. Now run the practical below.', 'ok'); cards.filter(c => c._row < 0).forEach(c => (c.style.opacity = '.4')); doneCheck(); }
+        else RL.msg(cmsg, good + ' row' + (good === 1 ? '' : 's') + ' correct. Wrong cards go back to the pile. ' + left + ' to go.', good ? 'ok' : 'bad');
+      };
+      creset.onclick = () => { buildCards(); RL.msg(cmsg, 'Cards reset.', 'info'); };
+      buildCards();
+      if (window.ResizeObserver) new ResizeObserver(() => { if (!cboard.offsetParent) return; layoutPool(); cards.forEach(c => { if (c._slot != null) snapTo(c, slots[c._slot]); }); }).observe(cboard);
+      let cdone = false, tdone = false, gdone = false;
+      const doneCheck = () => { if (cdone && tdone && gdone) RL.markDone('osm'); };
+
+      /* ================= bench + results ================= */
+      const bsec = el('section', null, el('h3', { text: '2 · Run the practical' }));
+      const benchBoard = el('div', { class: 'board bench' });
+      const clock = el('div', { class: 'msg info', style: { position: 'absolute', right: '10px', top: '10px', zIndex: 5 }, text: 'Time: 0 min' });
+      benchBoard.append(clock);
+      const bmsg = el('div', { class: 'msg info', role: 'status', text: 'Drag each potato cylinder (front row) into a beaker.' });
+      const run = el('button', { class: 'btn gold', text: 'Leave for 30 min', disabled: true }), breset = el('button', { class: 'btn alt', text: 'Reset bench' });
+      bsec.append(benchBoard, el('div', { class: 'toolbar' }, run, breset, bmsg),
+        RL.reveal('Why did the cylinders change mass?', '<ul><li><b>Low sucrose (0.0 to about 0.2):</b> the solution is more dilute than the potato cells, so it has a <b>higher water potential</b>. Water moves <b>into</b> the potato by osmosis, so the mass rises.</li><li><b>About 0.3:</b> the water potentials are equal, so there is <b>no net movement</b> of water and no change in mass.</li><li><b>High sucrose (0.4 and above):</b> the solution has a <b>lower water potential</b> than the cells, so water moves <b>out</b> by osmosis and the mass falls.</li><li>Osmosis is <b>passive</b>: no energy from respiration is needed.</li></ul>'));
+
+      const rsec = el('section', null, el('h3', { text: '3 · Results and graph' }));
+      const rows = C.bench;
+      const tbl = el('table', { class: 'rtable' }, el('thead', null, el('tr', null, ['Sucrose / mol dm⁻³', 'Initial / g', 'Final / g', 'Change / %'].map(h => el('th', { text: h })))));
+      const tbody = el('tbody'); tbl.append(tbody);
+      const inputs = rows.map(r => {
+        const inp = el('input', { type: 'text', inputmode: 'decimal', 'aria-label': 'Percentage change at ' + r.c.toFixed(1), disabled: true, placeholder: '?' });
+        const ti = el('td', { text: '—' }), tf = el('td', { text: '—' });
+        tbody.append(el('tr', null, el('td', { text: r.c.toFixed(1) }), ti, tf, el('td', null, inp)));
+        return { inp, ti, tf, r };
+      });
+      const tcheck = el('button', { class: 'btn', text: 'Check % changes', disabled: true });
+      const tmsg = el('div', { class: 'msg info', role: 'status', text: 'Run the practical to fill in the masses.' });
+      rsec.append(tbl, el('div', { class: 'toolbar' }, tcheck, tmsg),
+        RL.reveal('Show the completed table', '<table class="rtable"><tr><th>mol dm⁻³</th><th>initial</th><th>final</th><th>% change</th></tr>' + rows.map(r => '<tr><td>' + r.c.toFixed(1) + '</td><td>' + r.i.toFixed(2) + '</td><td>' + r.f.toFixed(2) + '</td><td>' + (r.pct > 0 ? '+' : '−') + Math.abs(r.pct).toFixed(1) + '</td></tr>').join('') + '</table><p>% change = (final − initial) ÷ initial × 100</p>'));
+
+      /* graph */
+      const gw = 420, gh = 270, GL = 48, GR = 14, GT = 12, GB = 40, YMIN = -25, YMAX = 15;
+      const gx = x => GL + x * (gw - GL - GR), gy = y => GT + (YMAX - y) / (YMAX - YMIN) * (gh - GT - GB);
+      const graph = sv('svg', { viewBox: '0 0 ' + gw + ' ' + gh, role: 'img', 'aria-label': 'Graph of percentage change in mass against sucrose concentration' });
+      const gwrap = el('div', { class: 'graphwrap', style: { marginTop: '10px' } }, graph);
+      const gmsg = el('div', { class: 'msg info', role: 'status', text: 'Finish the table, then click the graph to plot each point.' });
+      const gcheck = el('button', { class: 'btn', text: 'Check my crossing', disabled: true });
+      function drawAxes() {
+        graph.innerHTML = '';
+        for (let y = -20; y <= 10; y += 10) { graph.append(sv('line', { x1: GL, x2: gw - GR, y1: gy(y), y2: gy(y), stroke: y === 0 ? '#444' : '#e1e1e1', 'stroke-width': y === 0 ? 1.8 : 1 })); const t = sv('text', { x: GL - 6, y: gy(y) + 4, 'text-anchor': 'end' }); t.textContent = y; graph.append(t); }
+        for (let x = 0; x <= 1.001; x += 0.2) { graph.append(sv('line', { x1: gx(x), x2: gx(x), y1: GT, y2: gh - GB, stroke: '#eee' })); const t = sv('text', { x: gx(x), y: gh - GB + 14, 'text-anchor': 'middle' }); t.textContent = x.toFixed(1); graph.append(t); }
+        graph.append(sv('line', { x1: GL, x2: GL, y1: GT, y2: gh - GB, stroke: '#444' }));
+        const xl = sv('text', { x: (GL + gw - GR) / 2, y: gh - 6, 'text-anchor': 'middle' }); xl.textContent = 'Sucrose concentration / mol dm⁻³'; graph.append(xl);
+        const yl = sv('text', { x: 12, y: gh / 2, 'text-anchor': 'middle', transform: 'rotate(-90 12 ' + gh / 2 + ')' }); yl.textContent = 'Change in mass / %'; graph.append(yl);
+      }
+      let plotted = [], marker = null, mx = 0.5, graphOn = false, table = false;
+      function redrawPts() {
+        drawAxes();
+        if (plotted.length === rows.length) { const pl = sv('polyline', { fill: 'none', stroke: '#21345B', 'stroke-width': 2, points: plotted.slice().sort((a, b) => a.c - b.c).map(p => gx(p.c) + ',' + gy(p.pct)).join(' ') }); graph.append(pl); }
+        plotted.forEach(p => graph.append(sv('circle', { cx: gx(p.c), cy: gy(p.pct), r: 5, fill: '#1f7a4d', stroke: '#fff', 'stroke-width': 1.5 })));
+        if (plotted.length === rows.length) {
+          marker = sv('g', { tabindex: '0', role: 'slider', 'aria-label': 'Zero-crossing marker', 'aria-valuemin': 0, 'aria-valuemax': 1, 'aria-valuenow': mx.toFixed(2), style: 'cursor:ew-resize' });
+          marker.append(sv('line', { x1: gx(mx), x2: gx(mx), y1: GT, y2: gh - GB, stroke: '#d33', 'stroke-dasharray': '5 3', 'stroke-width': 2, class: 'ml' }), sv('polygon', { points: '0,0 -9,14 9,14', fill: '#d33', class: 'mt', transform: 'translate(' + gx(mx) + ',' + (gy(0) - 2) + ')' }));
+          const rd = sv('text', { x: gx(mx) + 6, y: GT + 12, class: 'mr', style: 'fill:#d33;font-weight:800' }); rd.textContent = mx.toFixed(2); marker.append(rd);
+          graph.append(marker); bindMarker();
+        }
+      }
+      function setMarker(x) { mx = RL.clamp(x, 0, 1); if (!marker) return; marker.querySelector('.ml').setAttribute('x1', gx(mx)); marker.querySelector('.ml').setAttribute('x2', gx(mx)); marker.querySelector('.mt').setAttribute('transform', 'translate(' + gx(mx) + ',' + (gy(0) - 2) + ')'); const r = marker.querySelector('.mr'); r.setAttribute('x', gx(mx) + 6); r.textContent = mx.toFixed(2); marker.setAttribute('aria-valuenow', mx.toFixed(2)); }
+      function svgPt(e) { const p = graph.createSVGPoint(); p.x = e.clientX; p.y = e.clientY; return p.matrixTransform(graph.getScreenCTM().inverse()); }
+      function bindMarker() {
+        let on = false;
+        marker.addEventListener('pointerdown', e => { on = true; marker.setPointerCapture(e.pointerId); e.preventDefault(); });
+        marker.addEventListener('pointermove', e => { if (on) setMarker((svgPt(e).x - GL) / (gw - GL - GR)); });
+        marker.addEventListener('pointerup', () => (on = false));
+        marker.addEventListener('keydown', e => { if (e.key === 'ArrowLeft') setMarker(mx - 0.01); else if (e.key === 'ArrowRight') setMarker(mx + 0.01); else return; e.preventDefault(); });
+        gcheck.disabled = false;
+      }
+      graph.addEventListener('click', e => {
+        if (!graphOn || plotted.length === rows.length) return;
+        const p = svgPt(e), cx = (p.x - GL) / (gw - GL - GR), cy = YMAX - (p.y - GT) / (gh - GT - GB) * (YMAX - YMIN);
+        const hit = rows.find(r => !plotted.includes(r) && Math.abs(r.c - cx) < 0.07 && Math.abs(r.pct - cy) < 2.6);
+        if (!hit) return RL.msg(gmsg, 'Not on a data point. Check the table: read across then up.', 'bad');
+        plotted.push(hit); redrawPts();
+        RL.msg(gmsg, plotted.length === rows.length ? 'All points plotted ✓ Now drag the red marker to where the line crosses 0 %.' : plotted.length + ' of ' + rows.length + ' plotted.', 'ok');
+      });
+      gcheck.onclick = () => {
+        const ok = mx >= 0.27 && mx <= 0.31;
+        if (ok) { gdone = true; RL.state.scores.cross = mx.toFixed(2); RL.msg(gmsg, 'Yes ✓ ' + mx.toFixed(2) + ' mol dm⁻³: no net change in mass, so the sucrose solution and the potato cells have the same water potential.', 'ok'); doneCheck(); }
+        else RL.msg(gmsg, mx.toFixed(2) + ' is not quite where the line crosses 0 %. Look between the last positive and first negative points.', 'bad');
+      };
+      drawAxes();
+      rsec.append(gwrap, el('div', { class: 'toolbar' }, gcheck, gmsg),
+        RL.reveal('Show the zero-crossing answer', '<p>The line crosses 0 % at about <b>0.29 mol dm⁻³</b> (accept 0.27–0.31). There is no net osmosis there, so the sucrose solution has the <b>same water potential</b> as the potato cells.</p>'));
+
+      root.append(el('div', { class: 'osgrid' }, bsec, rsec));
+
+      /* table check */
+      tcheck.onclick = () => {
+        let good = 0, need = 0;
+        inputs.forEach(o => {
+          if (o.inp.disabled) return; need++;
+          const v = parseFloat(o.inp.value.replace('−', '-').replace(',', '.'));
+          const ok = !isNaN(v) && Math.abs(v - o.r.pct) <= 0.15 && ((o.r.pct < 0) === (v < 0) || Math.abs(o.r.pct) < 0.1);
+          o.inp.classList.toggle('good', ok); o.inp.classList.toggle('bad', !ok); if (ok) good++;
+        });
+        if (good === need) { table = true; tdone = true; RL.msg(tmsg, 'All six correct ✓ Now plot them on the graph (click the graph).', 'ok'); graphOn = true; RL.msg(gmsg, 'Click the graph to plot each point (concentration across, % change up).', 'info'); doneCheck(); }
+        else RL.msg(tmsg, good + ' of ' + need + ' correct. Remember the minus sign when mass falls, and (final − initial) ÷ initial × 100.', 'bad');
+      };
+
+      /* ---------- 3D bench ---------- */
+      const th = RL.three(benchBoard, { z: 9, fov: 36, label: 'Virtual potato osmosis bench' });
+      if (th) {
+        th.camera.position.set(0, 5.0, 11.4); th.camera.lookAt(0, 0.1, 0.9);
+        th.scene.background = null;
+        const table3 = new THREE.Mesh(new THREE.BoxGeometry(12, 0.3, 6.4), RL.mats.solid(0xe3d4b6, 0.85)); table3.position.set(0, -0.15, 0.6); th.scene.add(table3);
+        const bx = i => -3.75 + i * 1.5;
+        const labels = [];
+        function label(i) {
+          const c = document.createElement('canvas'); c.width = 256; c.height = 96; const tex = new THREE.CanvasTexture(c);
+          const spr = new THREE.Sprite(new THREE.SpriteMaterial({ map: tex, transparent: true, depthTest: false })); spr.scale.set(1.5, 0.56, 1); spr.position.set(bx(i), 2.0, -0.6); th.scene.add(spr);
+          const o = { c, tex, spr, i, l2: 'empty' }; labels.push(o); drawLabel(o); return o;
+        }
+        function drawLabel(o) {
+          const g = o.c.getContext('2d'); g.clearRect(0, 0, 256, 96); g.fillStyle = 'rgba(255,255,255,.92)'; g.strokeStyle = '#21345B'; g.lineWidth = 4;
+          g.beginPath(); g.roundRect ? g.roundRect(4, 4, 248, 88, 14) : g.rect(4, 4, 248, 88); g.fill(); g.stroke();
+          g.fillStyle = '#21345B'; g.font = '700 30px Montserrat, sans-serif'; g.textAlign = 'center'; g.fillText(rows[o.i].c.toFixed(1) + ' mol dm⁻³', 128, 38);
+          g.font = '600 25px Montserrat, sans-serif'; g.fillStyle = '#444'; g.fillText(o.l2, 128, 75); o.tex.needsUpdate = true;
+        }
+        const beakers = rows.map((r, i) => {
+          const g = new THREE.Group(); g.position.set(bx(i), 0, -0.6);
+          g.add(new THREE.Mesh(new THREE.CylinderGeometry(0.62, 0.56, 1.7, 28, 1, true), RL.mats.glass(0xcfe6ff, 0.22)));
+          const liq = new THREE.Mesh(new THREE.CylinderGeometry(0.6, 0.55, 1.3, 28), RL.mats.glass(0x8ec5ff, 0.38)); liq.position.y = -0.2; g.add(liq);
+          g.children[0].position.y = 0.85; liq.position.y = 0.67;
+          th.scene.add(g); label(i); return g;
+        });
+        let potatoes = [], pieces = [], ran = false;
+        const PM = () => new THREE.MeshStandardMaterial({ color: 0xe6d39a, roughness: 0.85, emissive: 0x2a2410 });
+        function makePotatoes() {
+          potatoes.forEach(p => th.scene.remove(p)); potatoes = [];
+          for (let i = 0; i < rows.length; i++) {
+            const p = new THREE.Mesh(new THREE.CylinderGeometry(0.17, 0.17, 0.95, 18), PM());
+            p.rotation.z = Math.PI / 2; p.userData = { slot: null, rest: [bx(i), 0.18, 2.5], idx: i }; p.position.set(...p.userData.rest); th.scene.add(p); potatoes.push(p);
+          }
+        }
+        function resetBench() {
+          ran = false; makePotatoes(); labels.forEach(o => { o.l2 = 'empty'; drawLabel(o); }); run.disabled = true; clock.textContent = 'Time: 0 min';
+          RL.msg(bmsg, 'Drag each potato cylinder (front row) into a beaker.', 'info');
+          inputs.forEach(o => { o.ti.textContent = '—'; o.tf.textContent = '—'; o.inp.disabled = true; o.inp.value = ''; o.inp.className = ''; }); tcheck.disabled = true;
+        }
+        const ray = new THREE.Raycaster(), V = new THREE.Vector2(); let drag = null;
+        const clientOf = (x, y, z) => { const p = th.project(new THREE.Vector3(x, y, z)), r = th.canvas.getBoundingClientRect(); return { x: r.left + p.x, y: r.top + p.y }; };
+        RL.dbg.osm = { potato: i => { const p = potatoes[i]; return clientOf(p.position.x, p.position.y, p.position.z); }, beaker: i => clientOf(beakers[i].position.x, 0.6, beakers[i].position.z) };
+        const ground = e => { const p = th.pointer(e); V.set(p.x, p.y); ray.setFromCamera(V, th.camera); const o = ray.ray.origin, d = ray.ray.direction, t = (0.5 - o.y) / d.y; return [o.x + d.x * t, o.z + d.z * t]; };
+        th.canvas.addEventListener('pointerdown', e => {
+          if (ran) return; const p = th.pointer(e); V.set(p.x, p.y); ray.setFromCamera(V, th.camera);
+          const hit = ray.intersectObjects(potatoes, false)[0]; if (!hit) return;
+          drag = hit.object; if (drag.userData.slot != null) { labels[drag.userData.slot].l2 = 'empty'; drawLabel(labels[drag.userData.slot]); drag.userData.slot = null; run.disabled = true; }
+          drag.rotation.z = Math.PI / 2; th.canvas.setPointerCapture(e.pointerId); th.canvas.style.cursor = 'grabbing';
+        });
+        th.canvas.addEventListener('pointermove', e => {
+          if (drag) { const [x, z] = ground(e); drag.position.set(RL.clamp(x, -5, 5), 0.6, RL.clamp(z, -1.4, 3)); return; }
+          const p = th.pointer(e); V.set(p.x, p.y); ray.setFromCamera(V, th.camera); th.canvas.style.cursor = !ran && ray.intersectObjects(potatoes, false)[0] ? 'grab' : 'default';
+        });
+        const up = () => {
+          if (!drag) return; const p = drag; drag = null; th.canvas.style.cursor = 'default';
+          let best = -1, bd = 1.0; beakers.forEach((b, i) => { const d = Math.hypot(p.position.x - b.position.x, p.position.z - b.position.z); if (d < bd && !potatoes.some(q => q !== p && q.userData.slot === i)) { bd = d; best = i; } });
+          if (best < 0) { p.position.set(...p.userData.rest); p.rotation.z = Math.PI / 2; return; }
+          p.userData.slot = best; p.rotation.z = 0; p.position.set(beakers[best].position.x, 0.62, beakers[best].position.z);
+          labels[best].l2 = 'start ' + rows[best].i.toFixed(2) + ' g'; drawLabel(labels[best]);
+          const filled = potatoes.filter(q => q.userData.slot != null).length;
+          if (filled === rows.length) { run.disabled = false; RL.msg(bmsg, 'All six beakers loaded. Press “Leave for 30 min”.', 'ok'); } else RL.msg(bmsg, filled + ' of 6 loaded. Each beaker has a different sucrose concentration.', 'info');
+        };
+        th.canvas.addEventListener('pointerup', up); th.canvas.addEventListener('pointercancel', up);
+        run.onclick = () => {
+          if (ran) return; ran = true; run.disabled = true; RL.msg(bmsg, 'Waiting 30 minutes (fast-forwarded)…', 'info');
+          const t0 = performance.now(), dur = RL.reduced ? 100 : 2800;
+          th.loops.push(function anim() {
+            const k = RL.clamp((performance.now() - t0) / dur, 0, 1);
+            clock.textContent = 'Time: ' + Math.round(k * 30) + ' min';
+            potatoes.forEach(p => { const r = rows[p.userData.slot]; if (!r) return; const e = k * k * (3 - 2 * k); p.scale.set(1 + (r.pct / 100) * 1.2 * e, 1 + (r.pct / 100) * 2.2 * e, 1 + (r.pct / 100) * 1.2 * e); p.material.color.set(0xe6d39a).lerp(new THREE.Color(r.pct > 0 ? 0xf8efc8 : 0xa88e4a), Math.abs(r.pct) / 22 * e); });
+            if (k >= 1) {
+              const idx = th.loops.indexOf(anim); if (idx >= 0) th.loops.splice(idx, 1);
+              potatoes.forEach(p => { const s = p.userData.slot, r = rows[s]; labels[s].l2 = r.i.toFixed(2) + ' → ' + r.f.toFixed(2) + ' g'; drawLabel(labels[s]); });
+              inputs.forEach(o => { o.ti.textContent = o.r.i.toFixed(2); o.tf.textContent = o.r.f.toFixed(2); o.inp.disabled = false; }); tcheck.disabled = false;
+              RL.msg(bmsg, 'Done. Blot, reweigh and complete the % change column.', 'ok'); RL.msg(tmsg, 'Work out each % change. Keep the minus sign when mass falls.', 'info');
+            }
+          });
+        };
+        breset.onclick = resetBench; resetBench();
+      } else { run.disabled = true; }
+
+      /* ---------- support + check ---------- */
+      const checks = el('div', { class: 'panelcard' }, el('h3', { text: 'Check yourself' }), ...C.osmQs[tier].map(q => RL.qblock(q)));
+      const frame = el('div', { class: 'q' }, el('div', { class: 'stem', text: 'Cylinder at 0.5 mol dm⁻³: initial 5.00 g, final 4.60 g. Fill the frame.' }));
+      const fv = [['4.60', 4.6], ['5.00', 5], ['', -0.4], ['5.00', 5], ['', -8]];
+      const fins = []; const fl = el('div', { style: { margin: '8px 0', display: 'flex', gap: '6px', alignItems: 'center', flexWrap: 'wrap' } });
+      const mkIn = (ans, ph) => { const i = el('input', { type: 'text', inputmode: 'decimal', 'aria-label': 'Frame box', placeholder: ph || '?', style: { width: '64px', font: 'inherit', fontWeight: 700, textAlign: 'center', border: '2px solid #cfc7b5', borderRadius: '6px' } }); fins.push([i, ans]); return i; };
+      fl.append('(', mkIn(4.6, 'final'), ' − ', mkIn(5, 'initial'), ' = ', mkIn(-0.4), ' ) ÷ ', mkIn(5, 'initial'), ' × 100 = ', mkIn(-8), ' %');
+      const fcheck = el('button', { class: 'btn alt', text: 'Check' }), fm = el('span', { class: 'msg info' });
+      fcheck.onclick = () => { let ok = 0; fins.forEach(([i, a]) => { const v = parseFloat(i.value.replace('−', '-')); const g = !isNaN(v) && Math.abs(v - a) < 0.051; i.style.borderColor = g ? '#1f7a4d' : '#b3261e'; if (g) ok++; }); RL.msg(fm, ok === fins.length ? 'Correct ✓ −8.0 %: the mass fell.' : ok + ' of ' + fins.length + ' correct.', ok === fins.length ? 'ok' : 'bad'); };
+      frame.append(fl, fcheck, fm);
+      const sup = C.osmSupport;
+      const support = RL.support({
+        adapt: { lead: sup.adapt.lead, nodes: [frame] },
+        hot: { lead: 'Predict how the result would change in a new situation.', nodes: [RL.qblock(sup.hot)] },
+      });
+      root.append(el('div', { class: 'below' }, checks, support));
+    },
+  });
+})();
+
+/* Stage 5: Tarsia puzzles (triangle, hexagon, square). Free movement and rotation; pieces snap to a hidden
+   lattice; every shared edge is checked against the design. Texts come from RL.content.tarsia. */
+(function () {
+  'use strict';
+  const RL = window.RL, el = RL.el, C = RL.content;
+  const NS = 'http://www.w3.org/2000/svg';
+  const sv = (tag, a) => { const n = document.createElementNS(NS, tag); for (const k in a) n.setAttribute(k, a[k]); return n; };
+  const R3 = Math.sqrt(3), rad = d => d * Math.PI / 180, mod = (a, n) => ((a % n) + n) % n;
+
+  /* ---------- lattice geometry per shape ---------- */
+  function makeShape(name) {
+    if (name === 'tri') {
+      const L = 215, h = L * R3 / 2;
+      const V = (a, b) => [a * L + b * L / 2, b * h];
+      const S = {
+        name, L, step: 60, n: 3, nrm: [90, 210, 330], apo: L / (2 * R3), SZ: L * 1.25, boardH: 650, maxLines: 3, fs: [11.5, 11, 10.5, 10], maxW: L * 0.56, fill: '#e9f1ff',
+        poly: [[0, -2 * h / 3], [-L / 2, h / 3], [L / 2, h / 3]],
+        parse: k => { const p = k.split(','); return { t: p[0], a: +p[1], b: +p[2] }; },
+        key: (t, a, b) => t + ',' + a + ',' + b,
+        center(k) { const c = S.parse(k); const v = c.t === 'U' ? [V(c.a + 1, c.b), V(c.a + 1, c.b + 1), V(c.a, c.b + 1)] : [V(c.a, c.b), V(c.a + 1, c.b), V(c.a, c.b + 1)]; return [(v[0][0] + v[1][0] + v[2][0]) / 3, (v[0][1] + v[1][1] + v[2][1]) / 3]; },
+        neighbor(k, phi) { const c = S.parse(k), f = mod(phi, 360); const K = S.key;
+          if (c.t === 'U') return f === 90 ? K('D', c.a, c.b + 1) : f === 210 ? K('D', c.a, c.b) : f === 330 ? K('D', c.a + 1, c.b) : null;
+          return f === 270 ? K('U', c.a, c.b - 1) : f === 150 ? K('U', c.a - 1, c.b) : f === 30 ? K('U', c.a, c.b) : null; },
+        need: k => (k[0] === 'U' ? 0 : 1), // required parity of rotation index
+        near(x, y) { const b = y / h, a = (x - b * L / 2) / L, out = []; for (let da = -2; da <= 2; da++) for (let db = -2; db <= 2; db++) { out.push(S.key('U', Math.floor(a) + da, Math.floor(b) + db), S.key('D', Math.floor(a) + da, Math.floor(b) + db)); } return out; },
+        thresh: L * 0.5,
+        org: () => [26 - 1.5 * L, 30], scatter: W => [3.35 * L + 60, W - 1.3 * L - 10],
+      };
+      S.design = [['U', 0, 2], ['U', 1, 1], ['U', 1, 2], ['U', 2, 0], ['U', 2, 1], ['U', 2, 2], ['D', 1, 2], ['D', 2, 1], ['D', 2, 2]].map(c => ({ k: S.key(...c), ri: c[0] === 'U' ? 0 : 1 }));
+      return S;
+    }
+    if (name === 'hex') {
+      const L = 140, D = { 0: [1, 0], 60: [0, 1], 120: [-1, 1], 180: [-1, 0], 240: [0, -1], 300: [1, -1] };
+      const S = {
+        name, L, step: 60, n: 6, nrm: [0, 60, 120, 180, 240, 300], apo: L * R3 / 2, SZ: 2 * L + 6, boardH: 760, maxLines: 3, fs: [11.5, 11, 10.5, 10], maxW: L * 0.7, fill: '#e8f7ec',
+        poly: [0, 1, 2, 3, 4, 5].map(i => [L * Math.cos(rad(30 + 60 * i)), L * Math.sin(rad(30 + 60 * i))]),
+        parse: k => { const p = k.split(','); return { q: +p[1], r: +p[2] }; },
+        key: (q, r) => 'H,' + q + ',' + r,
+        center(k) { const c = S.parse(k); return [R3 * L * (c.q + c.r / 2), 1.5 * L * c.r]; },
+        neighbor(k, phi) { const c = S.parse(k), d = D[mod(phi, 360)]; return d ? S.key(c.q + d[0], c.r + d[1]) : null; },
+        need: () => null,
+        near(x, y) { const q = (R3 / 3 * x - y / 3) / L, r = (2 / 3 * y) / L, out = []; for (let dq = -2; dq <= 2; dq++) for (let dr = -2; dr <= 2; dr++) out.push(S.key(Math.round(q) + dq, Math.round(r) + dr)); return out; },
+        thresh: L * 0.85,
+        org: () => [26 + 2.6 * L, 24 + 2.5 * L], scatter: W => [5.4 * L + 40, W - 2 * L - 14],
+      };
+      S.design = [[0, 0], [1, 0], [0, 1], [-1, 1], [-1, 0], [0, -1], [1, -1]].map(c => ({ k: S.key(...c), ri: 0 }));
+      return S;
+    }
+    const L = 190, S = {
+      name, L, step: 90, n: 4, nrm: [0, 90, 180, 270], apo: L / 2, SZ: L * 1.5, boardH: 640, maxLines: 3, fs: [11, 10.5, 10, 9.5], maxW: L - 76, fill: '#fff3d9',
+      poly: [[-L / 2, -L / 2], [L / 2, -L / 2], [L / 2, L / 2], [-L / 2, L / 2]],
+      parse: k => { const p = k.split(','); return { i: +p[1], j: +p[2] }; },
+      key: (i, j) => 'S,' + i + ',' + j,
+      center(k) { const c = S.parse(k); return [(c.i + 0.5) * L, (c.j + 0.5) * L]; },
+      neighbor(k, phi) { const c = S.parse(k), f = mod(phi, 360); return f === 0 ? S.key(c.i + 1, c.j) : f === 90 ? S.key(c.i, c.j + 1) : f === 180 ? S.key(c.i - 1, c.j) : f === 270 ? S.key(c.i, c.j - 1) : null; },
+      need: () => null,
+      near(x, y) { const i = Math.floor(x / L), j = Math.floor(y / L), out = []; for (let di = -1; di <= 1; di++) for (let dj = -1; dj <= 1; dj++) out.push(S.key(i + di, j + dj)); return out; },
+      thresh: L * 0.62,
+      org: () => [26, 22], scatter: W => [3.4 * L + 40, W - 1.5 * L - 8],
+    };
+    S.design = [0, 1, 2].flatMap(i => [0, 1, 2].map(j => ({ k: S.key(i, j), ri: 0 })));
+    return S;
+  }
+
+  /* ---------- build a puzzle design from pairs ---------- */
+  function design(S, pairs, seed) {
+    const rnd = RL.rng(seed), set = {}; S.design.forEach(d => (set[d.k] = d));
+    const edgeList = [], seen = {};
+    S.design.forEach(d => S.nrm.forEach((n, i) => {
+      const nb = S.neighbor(d.k, n + S.step * d.ri);
+      if (nb && set[nb]) { const key = [d.k, nb].sort().join('|'); if (!seen[key]) { seen[key] = true; edgeList.push({ key, cells: [d.k, nb] }); } }
+    }));
+    if (edgeList.length !== pairs.length) throw new Error('Tarsia design: ' + edgeList.length + ' internal edges but ' + pairs.length + ' pairs (' + S.name + ')');
+    const order = RL.shuffle(pairs.map((p, i) => i), rnd), assigned = {};
+    edgeList.forEach((e, idx) => { const pi = order[idx], flip = rnd() < 0.5; assigned[e.key] = { pi, flip, cells: e.cells, text: pairs[pi] }; });
+    const pieces = S.design.map((d, idx) => {
+      const edges = S.nrm.map((n, i) => {
+        const nb = S.neighbor(d.k, n + S.step * d.ri), key = nb && set[nb] ? [d.k, nb].sort().join('|') : null;
+        if (!key) return { pair: null, text: '' };
+        const a = assigned[key], first = a.cells[0] === d.k, side = (first ? 0 : 1) ^ (a.flip ? 1 : 0);
+        return { pair: a.pi, text: a.text[side] };
+      });
+      return { id: idx, edges, native: d.k, nativeRi: d.ri, ri: 0, cell: null };
+    });
+    return { pieces, total: edgeList.length, adj: edgeList.map(e => e.cells) };
+  }
+
+  /* ---------- text layout ---------- */
+  const mctx = document.createElement('canvas').getContext('2d');
+  function wrapLines(text, S) {
+    let lines = [], fsz = S.fs[S.fs.length - 1];
+    for (const fs of S.fs) {
+      mctx.font = '600 ' + fs + 'px Montserrat, system-ui, sans-serif';
+      const words = text.split(' '); lines = []; let cur = '';
+      words.forEach(w => { const t = cur ? cur + ' ' + w : w; if (mctx.measureText(t).width <= S.maxW * 0.97 || !cur) cur = t; else { lines.push(cur); cur = w; } });
+      lines.push(cur); fsz = fs; if (lines.length <= S.maxLines) break;
+    }
+    return { lines, fs: fsz };
+  }
+  function edgeGroup(S, i, text) {
+    const n = S.nrm[i], g = sv('g', {}); if (!text) return g;
+    let rho = mod(n + 90, 360); if (rho > 90 && rho <= 270) rho = mod(rho + 180, 360); if (rho > 180) rho -= 360;
+    const up = [Math.sin(rad(rho)), -Math.cos(rad(rho))], nv = [Math.cos(rad(n)), Math.sin(rad(n))], tops = up[0] * nv[0] + up[1] * nv[1] > 0;
+    const { lines, fs } = wrapLines(text, S), lh = fs * 1.2, pad = 7;
+    const mx = S.apo * nv[0], my = S.apo * nv[1];
+    const grp = sv('g', { transform: 'translate(' + mx + ' ' + my + ') rotate(' + rho + ')' });
+    lines.forEach((ln, k) => {
+      const y = tops ? pad + fs * 0.82 + k * lh : -pad - (lines.length - 1 - k) * lh - fs * 0.12;
+      const t = sv('text', { x: 0, y, 'text-anchor': 'middle', 'font-size': fs, 'font-weight': 600, 'font-family': 'Montserrat, system-ui, sans-serif', fill: '#1c2233' }); t.textContent = ln; grp.append(t);
+    });
+    g.append(grp); return g;
+  }
+
+  /* ---------- stage ---------- */
+  const stage = {
+    id: 'tarsia', title: 'Tarsia', mins: 10,
+    build(root) {
+      const tier = RL.tier();
+      root.append(RL.mission({
+        kicker: 'Stage 5 · interleaved retrieval', title: 'Tarsia: match the edges', mins: 10,
+        spec: 'Triangle: enzymes · Hexagon: cells · Square: osmosis and the practical · each puzzle mixes recall, explanation and data',
+        steps: ['<b>Drag</b> pieces anywhere. Press <b>↻</b> (or R) to turn a piece. Touching edges must say matching things.', 'Pieces snap to a hidden grid. Build the shape; there is no fixed starting place.',
+          'Press <b>Check joins</b> to see green ✓ and red ✗ on every touching edge. Solve at least one puzzle.'],
+        ladder: { s: 'Picture-and-term recall. Joins are marked live as you go.', m: 'Definitions and cause-and-effect. Check joins when you are ready.', x: 'Data, calculations and exam-style explanations. Check tells you how many joins are right, not which.' },
+      }));
+      const tabs = el('div', { class: 'tarsia-tabs', role: 'tablist' });
+      const host = el('div'); const tools = el('div', { class: 'toolbar' }); const stat = el('div', { class: 'tstat' });
+      const keys = ['tri', 'hex', 'sq'];
+      const puzzles = {};
+      let cur = null;
+      keys.forEach(k => tabs.append(el('button', { role: 'tab', 'aria-selected': 'false', 'data-k': k, text: C.tarsia[k].name, onclick: () => open(k) })));
+      root.append(tabs, stat, tools, host);
+
+      const hintBtn = el('button', { class: 'btn alt', text: 'Hint' }), checkBtn = el('button', { class: 'btn', text: tier === 's' ? 'Live checking is on' : 'Check joins', disabled: tier === 's' });
+      const gridBtn = el('button', { class: 'btn alt', text: 'Show grid', 'aria-pressed': 'false' }), resetBtn = el('button', { class: 'btn alt', text: 'Scramble again' });
+      const tmsg = el('div', { class: 'msg info', role: 'status', text: 'Pick a puzzle and start moving pieces.' });
+      tools.append(checkBtn, hintBtn, gridBtn, resetBtn, tmsg);
+
+      function open(k) {
+        cur = stage._cur = k; tabs.childNodes.forEach(b => b.setAttribute('aria-selected', b.dataset.k === k));
+        keys.forEach(x => puzzles[x] && puzzles[x].board.classList.toggle('hide', x !== k));
+        if (!puzzles[k]) puzzles[k] = createPuzzle(k);
+        puzzles[k].refresh(); RL.msg(tmsg, C.tarsia[k].topic + '. ' + (tier === 's' ? 'Joins are marked as you build.' : 'Press Check joins to test your build.'), 'info');
+      }
+
+      function createPuzzle(k) {
+        const S = makeShape(k), data = C.tarsia[k];
+        const pairs = data.pairs[tier];
+        const D = design(S, pairs, 101 + k.length * 31 + (tier === 'm' ? 7 : tier === 'x' ? 13 : 0));
+        const board = el('div', { class: 'board tboard', style: { height: S.boardH + 'px' } });
+        host.append(board);
+        const overlay = sv('svg', { style: 'position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:150' }); board.append(overlay);
+        const gridG = sv('g', { style: 'display:none' }); overlay.append(gridG); const marks = sv('g', {}); overlay.append(marks);
+        const P = { S, D, board, cells: {}, pieces: [], placedN: 0, solved: false, t0: 0, timer: null, elapsed: 0, hints: 0 };
+        let ORG = [0, 0];
+        const pos = c => { const q = S.center(c); return [q[0] + ORG[0], q[1] + ORG[1]]; };
+
+        function drawGrid() {
+          gridG.innerHTML = ''; const W = board.clientWidth, H = board.clientHeight;
+          const all = {}; for (let x = -100; x < W + 100; x += S.L * 0.5) for (let y = -100; y < H + 100; y += S.L * 0.5) S.near(x - ORG[0], y - ORG[1]).forEach(c => (all[c] = 1));
+          Object.keys(all).forEach(c => { const q = pos(c); if (q[0] < -S.L || q[0] > W + S.L || q[1] < -S.L || q[1] > H + S.L) return;
+            const ri = S.need(c) == null ? 0 : S.need(c); gridG.append(sv('polygon', { points: S.poly.map(p => rotPt(p, ri * S.step, q)).join(' '), fill: 'none', stroke: '#c9bfa4', 'stroke-width': 1, 'stroke-dasharray': '3 4' })); });
+        }
+        const rotPt = (p, deg, q) => { const c = Math.cos(rad(deg)), s = Math.sin(rad(deg)); return [(p[0] * c - p[1] * s + q[0]).toFixed(1), (p[0] * s + p[1] * c + q[1]).toFixed(1)]; };
+
+        function setRot(p, deg, instant) {
+          p.svg.style.transition = instant || RL.reduced ? 'none' : 'transform .22s ease'; p.svg.style.transform = 'rotate(' + deg + 'deg)'; p.deg = deg;
+        }
+        function centreOf(p) { return [p.node._x + S.SZ / 2, p.node._y + S.SZ / 2]; }
+        function moveCentre(p, x, y, glide) { const fx = x - S.SZ / 2, fy = y - S.SZ / 2; if (glide) RL.glide(p.node, fx, fy, 160); else p.node._setPos(fx, fy); }
+
+        function mkPiece(pc) {
+          const node = el('div', { class: 'piece', role: 'button', 'aria-label': 'Puzzle piece ' + (pc.id + 1) + '. Edges: ' + pc.edges.map(e => e.text || 'blank').join('; ') + '. Arrow keys move, R rotates.', style: { width: S.SZ + 'px', height: S.SZ + 'px', pointerEvents: 'none' } });
+          const svg = sv('svg', { width: S.SZ, height: S.SZ, viewBox: (-S.SZ / 2) + ' ' + (-S.SZ / 2) + ' ' + S.SZ + ' ' + S.SZ, style: 'overflow:visible;transform-origin:50% 50%' });
+          svg.append(sv('polygon', { class: 'hit', points: S.poly.map(p => p.join(',')).join(' '), fill: S.fill, stroke: '#21345B', 'stroke-width': 2.5, 'stroke-linejoin': 'round', style: 'pointer-events:all' }));
+          const inset = sv('polygon', { points: S.poly.map(p => (p[0] * 0.965) + ',' + (p[1] * 0.965)).join(' '), fill: 'none', stroke: 'rgba(33,52,91,.25)', 'stroke-width': 1, style: 'pointer-events:none' }); svg.append(inset);
+          pc.edges.forEach((e, i) => { const g = edgeGroup(S, i, e.text); g.style.pointerEvents = 'none'; svg.append(g); });
+          node.append(svg);
+          const rot = el('div', { class: 'rot', text: '↻', title: 'Turn piece (R)', 'aria-label': 'Turn piece', style: { pointerEvents: 'auto' } });
+          rot.addEventListener('pointerdown', e => e.stopPropagation()); rot.addEventListener('click', e => { e.stopPropagation(); rotate(p); });
+          node.append(rot); board.append(node);
+          const p = Object.assign(pc, { node, svg, deg: 0, solvedMark: false });
+          RL.drag(node, { area: board, margin: 0.55, ignore: '.rot', onStart: () => startTimer() , onMove: () => liftPiece(p), onEnd: () => release(p), onRotate: () => rotate(p) });
+          return p;
+        }
+        function liftPiece(p) { if (p.cell) { delete P.cells[p.cell]; p.cell = null; P.placedN--; evaluate(); } }
+        function rotate(p) {
+          startTimer();
+          let steps = 1;
+          if (p.cell && S.need(p.cell) != null) steps = 2; // triangles: keep the same cell (up or down) while snapped
+          p.ri = mod(p.ri + steps, 360 / S.step);
+          p.degAcc = (p.degAcc || 0) + steps * S.step; setRot(p, p.degAcc);
+          if (p.cell) evaluate(); // free pieces never snap on rotation; only a drop snaps
+        }
+        function release(p, soft) {
+          const [cx, cy] = centreOf(p);
+          let best = null, bd = S.thresh; const need = S.name === 'tri' ? p.ri % 2 : null;
+          S.near(cx - ORG[0], cy - ORG[1]).forEach(c => {
+            const nd = S.need(c); if (nd != null && nd !== need) return;
+            const q = pos(c), d = Math.hypot(q[0] - cx, q[1] - cy);
+            if (d < bd && (!P.cells[c] || P.cells[c] === p)) { bd = d; best = c; }
+          });
+          if (best) {
+            if (p.cell && p.cell !== best) { delete P.cells[p.cell]; P.placedN--; p.cell = null; }
+            if (!p.cell) { P.cells[best] = p; p.cell = best; P.placedN++; }
+            const q = pos(best); moveCentre(p, q[0], q[1], true);
+          } else if (!soft) { const occ = S.near(cx - ORG[0], cy - ORG[1]).some(c => P.cells[c] && Math.hypot(pos(c)[0] - cx, pos(c)[1] - cy) < S.thresh); if (occ) RL.msg(tmsg, 'That space is taken. Try another spot.', 'bad'); }
+          evaluate();
+        }
+
+        /* evaluation of every touching edge */
+        function evaluate(show) {
+          const res = { good: 0, bad: 0, marks: [] }, doneKey = {};
+          Object.keys(P.cells).forEach(c => {
+            const p = P.cells[c];
+            S.nrm.forEach((n, i) => {
+              const phi = mod(n + S.step * p.ri, 360), nb = S.neighbor(c, phi), q = nb && P.cells[nb]; if (!q) return;
+              const key = [c, nb].sort().join('|'); if (doneKey[key]) return; doneKey[key] = true;
+              const back = mod(phi + 180, 360), j = S.nrm.findIndex(m => mod(m + S.step * q.ri, 360) === back);
+              if (j < 0) return;
+              const ok = p.edges[i].pair != null && p.edges[i].pair === q.edges[j].pair;
+              ok ? res.good++ : res.bad++;
+              const m = pos(c), nv = [Math.cos(rad(phi)), Math.sin(rad(phi))], tv = [-nv[1], nv[0]], mid = [m[0] + nv[0] * S.apo, m[1] + nv[1] * S.apo];
+              res.marks.push({ ok, pa: p, pb: q, a: [mid[0] - tv[0] * S.L / 2, mid[1] - tv[1] * S.L / 2], b: [mid[0] + tv[0] * S.L / 2, mid[1] + tv[1] * S.L / 2], mid });
+            });
+          });
+          P.res = res;
+          const live = tier === 's' || show; marks.innerHTML = '';
+          if (live && tier !== 'x') res.marks.forEach(m => {
+            marks.append(sv('line', { x1: m.a[0], y1: m.a[1], x2: m.b[0], y2: m.b[1], stroke: m.ok ? '#1f7a4d' : '#b3261e', 'stroke-width': 6, 'stroke-linecap': 'round', opacity: 0.85 }));
+          });
+          if (show && tier !== 'x') setTimeout(() => { if (tier !== 's') marks.innerHTML = ''; }, 3500);
+          refreshStat(show);
+          if (!P.solved && P.placedN === D.pieces.length && res.good === D.total && res.bad === 0) solved();
+        }
+        function startTimer() { if (P.timer || P.solved) return; P.t0 = Date.now() - P.elapsed * 1000; P.timer = setInterval(refreshStat, 1000); }
+        function refreshStat() { if (P.board !== board) return; if (!P.solved && P.t0) P.elapsed = Math.floor((Date.now() - P.t0) / 1000); if (cur === k) paintStat(); }
+        function paintStat() {
+          const r = P.res || { good: 0, bad: 0 }, m = Math.floor(P.elapsed / 60), s = P.elapsed % 60;
+          stat.innerHTML = '';
+          [el('span', { class: 'big', text: 'Joins ' + r.good + ' / ' + D.total }), el('span', { class: 'chip', text: 'Placed ' + P.placedN + ' / ' + D.pieces.length }),
+            el('span', { class: 'chip', text: '⏱ ' + m + ':' + String(s).padStart(2, '0') }), P.solved ? el('span', { class: 'chip t-s', text: 'Solved ✓' }) : null,
+            tier === 'x' && !P.solved ? el('span', { class: 'chip t-x', text: 'Grade 8–9: Check shows the number only' }) : null].forEach(n => n && stat.append(n));
+        }
+        function solved() {
+          P.solved = true; clearInterval(P.timer); P.timer = null; paintStat();
+          RL.state.scores.tarsia = Object.keys(puzzles).filter(x => puzzles[x].solved).length + ' puzzle' + (Object.keys(puzzles).filter(x => puzzles[x].solved).length > 1 ? 's' : '');
+          RL.markDone('tarsia'); marks.innerHTML = '';
+          D.pieces.forEach(p => RL.shake(p.node));
+          RL.msg(tmsg, 'Solved ✓ ' + data.name + ' in ' + Math.floor(P.elapsed / 60) + ':' + String(P.elapsed % 60).padStart(2, '0') + '. Try another shape, or write your own edge pair under “Go further”.', 'ok');
+        }
+        P.check = () => {
+          evaluate(true); const r = P.res;
+          if (P.solved) return;
+          if (!r.good && !r.bad) return RL.msg(tmsg, 'No pieces are touching yet. Build some joins first.', 'info');
+          RL.msg(tmsg, tier === 'x' ? r.good + ' of ' + r.good + r.bad + ' touching edges match. Find the others yourself.' : (r.good + ' joins correct (green), ' + r.bad + ' to fix (red).'), r.bad ? 'bad' : 'ok');
+        };
+        P.hint = () => {
+          const cand = D.adj.map(a => [D.pieces.find(x => x.native === a[0]), D.pieces.find(x => x.native === a[1])]).filter(([A, B]) => !(A.cell && B.cell && joinOk(A, B)));
+          if (!cand.length) return RL.msg(tmsg, 'Every touching pair is already correct.', 'ok');
+          const [A, B] = cand[Math.floor(Math.random() * cand.length)]; P.hints++;
+          [A, B].forEach(x => { x.node.classList.add('hint'); setTimeout(() => x.node.classList.remove('hint'), 3000); });
+          RL.msg(tmsg, 'The two glowing pieces belong next to each other. Look for edges that match in meaning.', 'info');
+        };
+        function joinOk(A, B) { // are A and B placed in adjacent cells with matching edges?
+          return ((P.res && P.res.marks) || []).some(m => m.ok && ((m.pa === A && m.pb === B) || (m.pa === B && m.pb === A)));
+        }
+        P.reset = () => {
+          clearInterval(P.timer); P.timer = null; P.elapsed = 0; P.t0 = 0; P.solved = false; P.cells = {}; P.placedN = 0; P.res = null; marks.innerHTML = '';
+          scatter(); evaluate();
+        };
+        function scatter() {
+          const W = board.clientWidth, H = board.clientHeight, rnd = RL.rng(Date.now() % 100000), half = Math.min(S.SZ * 0.5, W / 2 - 2, H / 2 - 2), placed = [];
+          RL.shuffle(P.pieces, rnd).forEach(p => {
+            p.cell = null; const ri = Math.floor(rnd() * (360 / S.step)); p.ri = ri; p.degAcc = ri * S.step; setRot(p, p.degAcc, true);
+            let best = null, bd = -1;
+            for (let n = 0; n < 60; n++) { const x = half + rnd() * (W - 2 * half), y = half + rnd() * (H - 2 * half), d = placed.reduce((m, q) => Math.min(m, Math.hypot(q[0] - x, q[1] - y)), 1e9); if (d > bd) { bd = d; best = [x, y]; } }
+            placed.push(best); moveCentre(p, best[0], best[1]);
+          });
+        }
+        P.refresh = () => { ORG = S.org(); drawGrid(); if (!P.inited) { P.inited = true; D.pieces.forEach(pc => P.pieces.push(mkPiece(pc))); scatter(); evaluate(); } paintStat(); };
+        P.dbg = () => { const br = board.getBoundingClientRect(); return { ri: P.pieces.map(p => p.ri), pieces: P.pieces.map(p => { const c = centreOf(p), t = pos(p.native); return { id: p.id, ri: p.ri, nativeRi: p.nativeRi, orient: 360 / S.step, cx: br.left + c[0], cy: br.top + c[1], tx: br.left + t[0], ty: br.top + t[1], cell: p.cell }; }), solved: P.solved, total: D.total, res: P.res }; };
+        P.dbgSolve = () => { D.pieces.forEach(p => { p.ri = p.nativeRi; p.degAcc = p.ri * S.step; setRot(p, p.degAcc, true); if (p.cell) { delete P.cells[p.cell]; p.cell = null; P.placedN--; } const q = pos(p.native); moveCentre(p, q[0], q[1]); release(p, true); }); };
+        P.setGrid = on => { gridG.style.display = on ? 'block' : 'none'; };
+        return P;
+      }
+
+      /* join check helper: recomputed from cells so hint can tell correct pairs */
+      checkBtn.onclick = () => cur && puzzles[cur].check();
+      hintBtn.onclick = () => cur && puzzles[cur].hint();
+      gridBtn.onclick = () => { const on = gridBtn.getAttribute('aria-pressed') !== 'true'; gridBtn.setAttribute('aria-pressed', on); gridBtn.textContent = on ? 'Hide grid' : 'Show grid'; keys.forEach(x => puzzles[x] && puzzles[x].setGrid(on)); };
+      resetBtn.onclick = () => cur && puzzles[cur].reset();
+      stage.open = open; RL.dbg.tarsia = () => (cur && puzzles[cur] ? puzzles[cur].dbg() : null); RL.dbg.tarsiaSolve = () => cur && puzzles[cur].dbgSolve();
+
+      /* support + go further */
+      const adaptNodes = [el('ul', { html: '<li>Start with a piece that has <b>blank edges</b>: those go on the outside.</li><li>Pick one keyword on an edge and hunt for its partner.</li><li>Use <b>Hint</b> for a nudge, and <b>Show grid</b> to see where pieces will snap.</li>' }),
+        el('div', { class: 'q' }, el('div', { class: 'stem', text: 'Stuck? The matching pairs for the open puzzle:' }), (function () {
+          const holder = el('div'); const rv = el('details', { class: 'reveal' }, el('summary', { text: 'Show the matching pairs' }), el('div', { class: 'ans' }));
+          rv.addEventListener('toggle', () => { if (!rv.open) return; const k = cur || 'tri', pr = C.tarsia[k].pairs[tier]; rv.lastChild.innerHTML = '<p><b>' + C.tarsia[k].name + '</b></p><ul>' + pr.map(p => '<li>' + p[0] + ' ↔ ' + p[1] + '</li>').join('') + '</ul>'; });
+          holder.append(rv); return holder; })())];
+      const support = RL.support({
+        adapt: { lead: C.tarsiaAdapt.lead, nodes: adaptNodes },
+        hot: { lead: 'Be the puzzle designer.', nodes: [RL.qblock(C.tarsiaHot)] },
+      });
+      root.append(el('div', { class: 'below', style: { gridTemplateColumns: '1fr' } }, support));
+      stage._first = 'tri';
+    },
+    show() { if (stage.open) stage.open(stage._cur || 'tri'); },
+  };
+  RL.stages.push(stage);
+})();
+
+/* Stage 6: exit ticket (no support, protects the evidence), self-marking, confidence compared with score. */
+(function () {
+  'use strict';
+  const RL = window.RL, el = RL.el, C = RL.content;
+  const TOPICS = [['cells', 'Cells'], ['enz', 'Enzymes'], ['osm', 'Osmosis']];
+  RL.stages.push({
+    id: 'exit', title: 'Exit ticket', mins: 6,
+    build(root) {
+      const tier = RL.tier();
+      root.append(RL.mission({
+        kicker: 'Stage 6 · independent evidence', title: 'Exit ticket: show what you know', mins: 6,
+        spec: 'One question per topic · no hints on this screen · mark your own work with the mark scheme',
+        steps: ['<b>Write</b> an answer to each question without any help.', 'Open the mark scheme and <b>tick every point you earned</b> (be honest: only what you wrote).', 'Rate your confidence again and read your summary.'],
+        ladder: { s: 'Recall and describe (3 marks each).', m: 'Explain and calculate (3–4 marks each).', x: 'Apply, calculate and plan (4–5 marks each).' },
+      }));
+      const wrap = el('div', { class: 'panelcard' }, el('h3', { text: 'Questions' }));
+      const marks = {}, maxes = {};
+      TOPICS.forEach(([id, name], idx) => {
+        const q = C.exit[id][tier]; maxes[id] = q.marks; marks[id] = 0;
+        const boxes = q.ms.map((p, i) => el('label', { class: 'msrow' }, el('input', { type: 'checkbox', onchange: () => { marks[id] = RL.$$('input', body).filter(c => c.checked).length; tot.textContent = marks[id] + ' / ' + q.marks; RL.state.scores['exit_' + id] = marks[id] + '/' + q.marks; sum(); } }), el('span', { html: p })));
+        const tot = el('b', { text: '0 / ' + q.marks });
+        const body = el('div', { class: 'ans' }, el('div', null, 'Tick each point you wrote: ', tot), ...boxes, q.note ? el('p', { html: '<i>' + q.note + '</i>' }) : null);
+        const rv = el('details', { class: 'reveal' }, el('summary', { text: 'Mark scheme and self-mark' }), body);
+        wrap.append(el('div', { class: 'q' }, el('div', { class: 'stem', html: '<b>' + (idx + 1) + '. ' + name + ':</b> ' + q.stem + ' <span class="marks">[' + q.marks + ']</span>' }), el('textarea', { 'aria-label': 'Your answer to question ' + (idx + 1), placeholder: 'Write your answer…' }), rv));
+      });
+      const conf = el('div', { class: 'panelcard' }, el('h3', { text: 'How confident are you now? (1 = not at all, 5 = very)' }));
+      const cg = el('div', { class: 'conf' });
+      TOPICS.forEach(([id, name]) => {
+        const out = el('span', { text: String(RL.state.post[id] || 3) });
+        const r = el('input', { type: 'range', min: 1, max: 5, step: 1, value: RL.state.post[id] || 3, 'aria-label': name + ' confidence now', oninput: () => { out.textContent = r.value; RL.state.post[id] = +r.value; sum(); } });
+        RL.state.post[id] = +r.value; cg.append(el('span', { text: name }), r, out);
+      });
+      conf.append(cg);
+      const summary = el('div', { class: 'panelcard summary' }, el('h3', { text: 'Your summary' }));
+      const sumBody = el('div'); summary.append(sumBody);
+      function sum() {
+        const rows = TOPICS.map(([id, name]) => {
+          const pre = RL.state.pre[id] || '–', post = RL.state.post[id] || '–', m = marks[id], max = maxes[id], pc = max ? m / max : 0;
+          let note = 'On track.';
+          if (pc < 0.5 && (RL.state.pre[id] >= 4 || RL.state.post[id] >= 4)) note = 'Confidence higher than score. Revisit this topic.';
+          else if (pc < 0.5) note = 'Go back to the ' + (id === 'cells' ? 'label stage' : id === 'enz' ? 'enzyme lab' : 'osmosis practical') + '.';
+          else if (pc >= 0.8 && tier !== 'x') note = 'Strong. Try the next level up.';
+          else if (pc >= 0.8) note = 'Secure at the top level.';
+          return '<tr><td>' + name + '</td><td>' + pre + '</td><td>' + post + '</td><td>' + m + ' / ' + max + '</td><td style="text-align:left">' + note + '</td></tr>';
+        }).join('');
+        const sc = RL.state.scores;
+        const act = [['Sort', sc.sort], ['Cells labelled (first try)', sc.cells], ['CORMMS rows (first try)', sc.cormms], ['Zero-crossing', sc.cross ? sc.cross + ' mol dm⁻³' : null], ['Tarsia solved', sc.tarsia]].filter(a => a[1]).map(a => '<li>' + a[0] + ': <b>' + a[1] + '</b></li>').join('');
+        sumBody.innerHTML = '<table><tr><th>Topic</th><th>Before</th><th>Now</th><th>Exit score</th><th>Next step</th></tr>' + rows + '</table>' + (act ? '<p><b>Activity results this lesson</b></p><ul>' + act + '</ul>' : '');
+      }
+      sum();
+      root.append(wrap, el('div', { class: 'below split' }, conf, summary));
+      RL.stages.find(s => s.id === 'exit').show = sum;
+    },
+  });
+})();
+
+/* Controller: start overlay (tier + confidence), stepper, rebuild on tier change. */
+(function () {
+  'use strict';
+  const RL = window.RL, el = RL.el, $ = RL.$;
+  const TOPICS = [['cells', 'Cells'], ['enz', 'Enzymes'], ['osm', 'Osmosis']];
+  const DESC = {
+    s: ['Grade 6 · Secure', 'Hints on screen, clear steps, picture-and-term matching. Build solid foundations first.'],
+    m: ['Grade 7 · Strong', 'Names only, explanations and calculations. The core exam skills.'],
+    x: ['Grade 8–9 · Stretch', 'Decoys, data, evaluation and multi-step exam-style answers.'],
+  };
+  let current = 'sort';
+
+  function build() {
+    const main = $('#main'), steps = $('#steps');
+    RL.disposeGL();
+    main.innerHTML = ''; steps.innerHTML = '';
+    RL.stages.forEach((s, i) => {
+      const sec = el('section', { class: 'stage', id: 'stage-' + s.id, 'aria-label': s.title });
+      main.append(sec);
+      try { s.build(sec); } catch (err) { sec.append(el('div', { class: 'msg bad', text: 'This screen failed to load: ' + err.message })); console.error(s.id, err); }
+      steps.append(el('button', { class: 'step' + (RL.state.done[s.id] ? ' done' : ''), 'data-id': s.id, onclick: () => go(s.id) }, el('span', { class: 'n' }, el('span', { text: String(i + 1) })), s.title, el('span', { class: 'mins', text: '⏱ ' + s.mins })));
+    });
+    go(current, true);
+  }
+  function go(id, quiet) {
+    current = id;
+    RL.stages.forEach(s => { $('#stage-' + s.id).classList.toggle('on', s.id === id); });
+    RL.$$('.step').forEach(b => { if (b.dataset.id === id) b.setAttribute('aria-current', 'step'); else b.removeAttribute('aria-current'); });
+    const st = RL.stages.find(s => s.id === id); if (st && st.show) st.show();
+    if (!quiet) { history.replaceState(null, '', '#' + id); window.scrollTo({ top: 0 }); }
+  }
+  function setTier(t) {
+    RL.state.tier = t; RL.state.done = {}; RL.state.scores = {};
+    RL.$$('.tbtn').forEach(b => b.setAttribute('aria-pressed', b.dataset.t === t));
+    build();
+  }
+
+  const bar = $('#tierbar');
+  Object.keys(DESC).forEach(t => bar.append(el('button', { class: 'tbtn', 'data-t': t, 'aria-pressed': 'false', title: DESC[t][1], text: DESC[t][0], onclick: () => { if (RL.state.tier !== t && confirm('Switch to ' + DESC[t][0] + '? Your work on this page will be reset.')) setTier(t); } })));
+
+  /* start overlay */
+  const start = $('#start'), tiers = $('#tiers'), conf = $('#conf'), go1 = $('#go');
+  let chosen = null;
+  Object.keys(DESC).forEach(t => {
+    const b = el('button', { class: 'tiercard', 'data-t': t, 'aria-pressed': 'false', onclick: () => { chosen = t; RL.$$('.tiercard').forEach(x => x.setAttribute('aria-pressed', x.dataset.t === t)); go1.disabled = false; } }, el('b', { text: DESC[t][0] }), el('small', { text: DESC[t][1] }));
+    tiers.append(b);
+  });
+  TOPICS.forEach(([id, name]) => {
+    const out = el('span', { text: '3' }); RL.state.pre[id] = 3;
+    conf.append(el('span', { text: name }), el('input', { type: 'range', min: 1, max: 5, step: 1, value: 3, 'aria-label': name + ' confidence', oninput: e => { out.textContent = e.target.value; RL.state.pre[id] = +e.target.value; } }), out);
+  });
+  go1.onclick = () => { if (!chosen) return; start.hidden = true; setTier(chosen); const h = location.hash.slice(1); if (RL.stages.some(s => s.id === h)) go(h); };
+  window.addEventListener('hashchange', () => { const h = location.hash.slice(1); if (RL.state.tier && RL.stages.some(s => s.id === h)) go(h); });
+  // Test hook / teacher link: ?level=s|m|x skips the overlay
+  const q = new URLSearchParams(location.search).get('level');
+  if (q && DESC[q]) { chosen = q; start.hidden = true; setTier(q); const h = location.hash.slice(1); if (RL.stages.some(s => s.id === h)) go(h); }
+  else setTimeout(() => RL.$('.tiercard').focus(), 50);
+})();
+
+</script>
+</body>
+</html>
