@@ -1,0 +1,2113 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Year 7 Science: Grip or slip? Friction lab</title>
+<meta name="description" content="Year 7 Forces and motion, lesson 5. Interactive friction lab: a 3D friction bench with a graph you build, a force-arrow builder, a trolley design challenge and Tarsia puzzles.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#21345B; --navy2:#2f4a7d; --gold:#B8860B; --gold2:#f0d78a; --paper:#F7F1E3; --ink:#1c2233; --soft:#e8edf5;
+  --line:#cfc7b5; --ok:#1f7a4d; --okbg:#e3f3ea; --bad:#b3261e; --badbg:#fbe7e5; --bg:#e9e7e2; --card:#fff;
+  --s:#2a7f62; --m:#2f5fb3; --x:#8a3ea8;
+  --radius:16px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Montserrat",system-ui,-apple-system,"Segoe UI",sans-serif;font-size:15px;line-height:1.45}
+h1,h2,h3{margin:0}
+button{font:inherit;cursor:pointer}
+.skip{position:absolute;left:-999px;top:8px;background:var(--navy);color:#fff;padding:8px 12px;border-radius:8px;z-index:100}
+.skip:focus{left:8px}
+:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+
+/* ---------- top bar ---------- */
+.top{display:flex;align-items:center;gap:18px;padding:8px 18px;background:var(--navy);color:#fff;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:12px;min-width:0}
+.logo{background:var(--gold);color:#fff;font-weight:800;border-radius:10px;padding:6px 10px;letter-spacing:.04em}
+.brand h1{font-family:Georgia,serif;font-size:21px;font-weight:700;line-height:1.1}
+.brand p{margin:0;font-size:11.5px;opacity:.82}
+.tierbar{display:flex;gap:6px;margin-left:auto;align-items:center}
+.tierbar .lab{font-size:11px;text-transform:uppercase;letter-spacing:.08em;opacity:.8;margin-right:4px}
+.tbtn{border:2px solid rgba(255,255,255,.4);background:transparent;color:#fff;border-radius:999px;padding:5px 12px;font-weight:700;font-size:12.5px}
+.tbtn[aria-pressed="true"]{background:#fff;color:var(--navy);border-color:#fff}
+.tbtn[data-t="s"][aria-pressed="true"]{background:#bfe9d6}
+.tbtn[data-t="m"][aria-pressed="true"]{background:#cfe0ff}
+.tbtn[data-t="x"][aria-pressed="true"]{background:#e9d3f5}
+
+/* ---------- stepper ---------- */
+.steps{display:flex;gap:6px;padding:8px 14px;background:var(--soft);border-bottom:2px solid var(--line);overflow-x:auto}
+.step{display:flex;align-items:center;gap:8px;border:2px solid transparent;background:#fff;border-radius:12px;padding:6px 12px;font-weight:700;color:var(--navy);white-space:nowrap}
+.step .n{width:24px;height:24px;border-radius:50%;background:var(--navy);color:#fff;display:grid;place-items:center;font-size:12px}
+.step .mins{font-weight:600;font-size:11px;color:#555;background:var(--paper);border-radius:999px;padding:1px 8px}
+.step[aria-current="step"]{border-color:var(--gold);box-shadow:0 2px 0 var(--gold)}
+.step.done .n{background:var(--ok)}
+.step.done .n::after{content:"✓"}
+.step.done .n span{display:none}
+
+/* ---------- stage ---------- */
+main{max-width:1320px;margin:0 auto;padding:14px 16px 60px}
+.stage{display:none}
+.stage.on{display:block}
+.mission{background:var(--card);border:2px solid var(--line);border-radius:var(--radius);padding:8px 16px;display:grid;grid-template-columns:1fr 1.5fr;gap:2px 22px;margin-bottom:10px;align-items:start}
+.mission .ymy{font-size:12.5px;margin-top:4px}
+.mission .dothis{font-size:13.5px;align-self:center}
+.mission details.lad{grid-column:1/-1;font-size:12.5px}
+.mission details.lad summary{cursor:pointer;color:var(--navy);font-weight:700;font-size:12px}
+.mission details.lad .spec{margin:4px 0}
+.mission .kick{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:var(--gold)}
+.mission h2{font-family:Georgia,serif;color:var(--navy);font-size:20px;line-height:1.15;margin:1px 0 3px}
+.mission .spec{font-size:12px;color:#555}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:2px}
+.chip{display:inline-block;font-size:11.5px;font-weight:700;border-radius:999px;padding:2px 10px;background:var(--paper);border:1px solid var(--line);color:var(--navy)}
+.chip.t-s{background:#dff3ea;border-color:#9bd1b9;color:#145a42}
+.chip.t-m{background:#e1ebff;border-color:#a9c1ef;color:#1d417f}
+.chip.t-x{background:#f2e4fa;border-color:#cfaee0;color:#5f2a77}
+.dothis{margin:0;padding-left:20px}
+.dothis li{margin:2px 0}
+.dothis b{color:var(--navy)}
+.ladder{grid-column:1/-1;display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:4px}
+.ladder div{font-size:12px;border-radius:10px;padding:6px 10px;border:2px solid transparent;background:#f6f6f2;opacity:.65}
+.ladder div.me{opacity:1;border-color:currentColor;background:#fff}
+.ladder .ls{color:var(--s)} .ladder .lm{color:var(--m)} .ladder .lx{color:var(--x)}
+.ladder b{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.07em}
+.ladder span{color:var(--ink)}
+
+.board{position:relative;background:var(--paper);border:2px solid var(--line);border-radius:var(--radius);overflow:hidden;user-select:none;-webkit-user-select:none}
+.toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:8px 0}
+.btn{border:2px solid var(--navy);background:var(--navy);color:#fff;border-radius:10px;padding:6px 14px;font-weight:700;font-size:13px}
+.btn.alt{background:#fff;color:var(--navy)}
+.btn.gold{background:var(--gold);border-color:var(--gold)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn:hover:not(:disabled){filter:brightness(1.08)}
+.msg{font-weight:600;font-size:13.5px;min-height:20px;padding:4px 10px;border-radius:8px}
+.msg.ok{background:var(--okbg);color:var(--ok)}
+.msg.bad{background:var(--badbg);color:var(--bad)}
+.msg.info{background:var(--soft);color:var(--navy)}
+
+/* draggable cards */
+.card{position:absolute;touch-action:none;cursor:grab;background:#fff;border:2px solid var(--navy);border-radius:12px;padding:6px 10px;font-weight:700;font-size:13px;color:var(--navy);box-shadow:0 3px 0 rgba(33,52,91,.25);z-index:5}
+.card:active,.card.drag{cursor:grabbing;box-shadow:0 10px 18px rgba(0,0,0,.25);transform:scale(1.03)}
+.card.sel{outline:3px solid var(--gold);outline-offset:2px}
+.card.good{border-color:var(--ok);background:var(--okbg);color:var(--ok)}
+.card.wrong{border-color:var(--bad);background:var(--badbg);color:var(--bad)}
+.card small{display:block;font-weight:500;font-size:11px;color:#444}
+@keyframes shake{0%,100%{translate:0}25%{translate:-6px}75%{translate:6px}}
+.shake{animation:shake .3s 2}
+
+/* sort */
+.sortboard{height:460px}
+.zone{position:absolute;top:12px;bottom:12px;border:3px dashed #aab4c8;border-radius:14px;background:rgba(255,255,255,.55);padding:8px;color:var(--navy)}
+.zone h3{font-size:14px;text-transform:uppercase;letter-spacing:.06em;text-align:center}
+.zone.over{background:rgba(240,215,138,.4);border-color:var(--gold)}
+.table-label{position:absolute;bottom:6px;left:12px;font-size:11px;color:#777;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+
+/* label lab */
+.labgrid{display:grid;grid-template-columns:1fr 230px;height:520px}
+.view{position:relative;background:radial-gradient(circle at 50% 40%,#fff 0,#eef2f9 70%)}
+.benchview{background:linear-gradient(#cdd6e6,#aebcd3)}
+.view canvas{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:none;cursor:grab}
+.view canvas:active{cursor:grabbing}
+.pinlayer{position:absolute;inset:0;pointer-events:none}
+.pinlayer svg{position:absolute;inset:0;width:100%;height:100%}
+.ring{position:absolute;width:34px;height:34px;margin:-17px 0 0 -17px;border-radius:50%;border:3px solid var(--navy);background:rgba(255,255,255,.92);display:grid;place-items:center;font-weight:800;font-size:13px;color:var(--navy);pointer-events:auto;cursor:pointer;transition:opacity .2s}
+.ring.far{opacity:.5}
+.ring.hot{background:var(--gold2);border-color:var(--gold);transform:scale(1.15)}
+.ring.done{border-color:var(--ok);background:var(--okbg)}
+.tag{position:absolute;transform:translate(-50%,-50%);background:var(--okbg);border:2px solid var(--ok);color:#0f5132;border-radius:9px;padding:3px 8px;font-weight:700;font-size:12px;white-space:nowrap;pointer-events:none;z-index:4}
+.tray{background:#fff;border-left:2px solid var(--line);padding:8px;display:flex;flex-direction:column;gap:6px;overflow:auto;position:relative}
+.tray h3{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--gold)}
+.tray .card{position:relative;cursor:grab;left:auto;top:auto}
+.tray .card.floating{position:absolute}
+.viewtools{position:absolute;left:8px;bottom:8px;display:flex;gap:6px;z-index:6}
+.viewtools button{border:2px solid var(--navy);background:#fff;color:var(--navy);border-radius:8px;width:32px;height:32px;font-weight:800}
+.celltabs{display:flex;gap:6px;padding:8px;background:#fff;border-bottom:2px solid var(--line)}
+.celltabs button{border:2px solid var(--navy);background:#fff;color:var(--navy);border-radius:999px;padding:4px 14px;font-weight:700;font-size:13px}
+.celltabs button[aria-selected="true"]{background:var(--navy);color:#fff}
+.celltabs .prog{margin-left:auto;font-weight:700;color:var(--navy);align-self:center;font-size:13px}
+
+/* enzyme lab */
+.enzgrid{display:grid;grid-template-columns:1fr 340px;height:640px}
+.enzleft{display:flex;flex-direction:column;min-height:0}
+.enzleft .view{flex:1;min-height:0}
+.enzleft .gbox{border-top:2px solid var(--line);background:#fff;padding:6px 10px 4px;display:grid;grid-template-columns:1fr auto;gap:2px 10px;align-items:center}
+.enzleft .gbox canvas.graph{grid-column:1/-1;height:158px;border:none;border-radius:0}
+.panel{background:#fff;border-left:2px solid var(--line);padding:10px 12px;display:flex;flex-direction:column;gap:8px;overflow:auto}
+.panel h3{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--gold)}
+.slider{display:grid;gap:2px}
+.slider label{font-weight:700;font-size:13px;display:flex;justify-content:space-between;color:var(--navy)}
+.slider input{width:100%;accent-color:var(--navy)}
+.readout{font-size:12.5px;background:var(--soft);border-radius:10px;padding:8px 10px;color:var(--navy)}
+.readout b{display:block}
+.predict{background:var(--paper);border:2px solid var(--gold2);border-radius:10px;padding:8px}
+.predict p{margin:0 0 6px;font-weight:700;font-size:13px}
+.predict .opt{display:block;width:100%;text-align:left;background:#fff;border:2px solid var(--line);border-radius:8px;padding:4px 8px;margin:3px 0;font-size:12.5px;font-weight:600}
+.predict .opt.good{border-color:var(--ok);background:var(--okbg)}
+.predict .opt.bad{border-color:var(--bad);background:var(--badbg)}
+canvas.graph{width:100%;height:158px;background:#fff;display:block}
+.hudmsg{position:absolute;left:50%;top:10px;transform:translateX(-50%);z-index:6;max-width:80%;text-align:center}
+.subs{position:absolute;left:8px;bottom:8px;z-index:6;display:grid;gap:4px;font-size:12px;font-weight:700;color:var(--navy)}
+.subs .hint{background:rgba(255,255,255,.85);border-radius:8px;padding:3px 8px}
+
+/* osmosis */
+.osgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
+.osgrid > section{background:#fff;border:2px solid var(--line);border-radius:var(--radius);padding:12px 14px}
+.osgrid h3{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--gold);margin-bottom:6px}
+.bench{height:380px}
+.bench canvas{position:absolute;inset:0;width:100%;height:100%;touch-action:none}
+.rtable{border-collapse:collapse;width:100%;font-size:13px}
+.rtable th{background:var(--navy);color:#fff;padding:5px 6px;font-size:11.5px}
+.rtable td{border:1px solid var(--line);padding:4px 6px;text-align:center}
+.rtable input{width:74px;font:inherit;font-weight:700;text-align:center;border:2px solid var(--line);border-radius:6px;padding:2px}
+.rtable input.good{border-color:var(--ok);background:var(--okbg)}
+.rtable input.bad{border-color:var(--bad);background:var(--badbg)}
+.cormms{display:grid;gap:6px}
+.crow{display:grid;grid-template-columns:44px 1fr;gap:8px;align-items:stretch}
+.crow .let{background:var(--navy);color:#fff;border-radius:10px;display:grid;place-items:center;font-family:Georgia,serif;font-size:24px;font-weight:700;position:relative}
+.crow .let small{position:absolute;bottom:1px;font:600 8.5px "Montserrat",sans-serif;opacity:.85}
+.slot{min-height:44px;border:3px dashed #aab4c8;border-radius:10px;background:rgba(255,255,255,.7);padding:4px;display:flex;align-items:center;font-size:13px;color:#667;transition:background .2s}
+.slot.over{background:rgba(240,215,138,.45);border-color:var(--gold)}
+.slot.good{border-style:solid;border-color:var(--ok);background:var(--okbg)}
+.slot.bad{border-style:solid;border-color:var(--bad);background:var(--badbg)}
+.slot .card{position:relative;left:auto;top:auto;box-shadow:none;font-weight:600;font-size:12.5px;border-width:1.5px}
+.cpool{position:relative;min-height:140px;border:2px dashed var(--line);border-radius:12px;margin-top:8px;background:var(--paper)}
+.cpool .card{font-weight:600;font-size:12.5px;max-width:300px}
+.graphwrap svg{width:100%;height:auto;display:block;background:#fff;border:2px solid var(--line);border-radius:10px;touch-action:none}
+.graphwrap text{font:600 11px "Montserrat",sans-serif;fill:#333}
+
+/* tarsia */
+.tarsia-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
+.tarsia-tabs button{border:2px solid var(--navy);background:#fff;color:var(--navy);border-radius:12px;padding:6px 14px;font-weight:700}
+.tarsia-tabs button[aria-selected="true"]{background:var(--navy);color:#fff}
+.tboard{height:610px;background:#fbf8ef;background-image:radial-gradient(#ded6c0 1.2px,transparent 1.2px);background-size:26px 26px;touch-action:none}
+.piece{position:absolute;touch-action:none;cursor:grab;z-index:5;filter:drop-shadow(0 3px 3px rgba(0,0,0,.28));transition:filter .15s}
+.piece.drag{cursor:grabbing;filter:drop-shadow(0 12px 12px rgba(0,0,0,.35));z-index:200}
+.piece:focus-visible{outline:none;filter:drop-shadow(0 0 0 var(--gold)) drop-shadow(0 0 6px var(--gold))}
+.piece.hint{filter:drop-shadow(0 0 8px #ff9800) drop-shadow(0 0 4px #ff9800)}
+.piece svg{display:block;overflow:visible}
+.piece .rot{position:absolute;left:50%;top:50%;margin:-14px 0 0 -14px;width:28px;height:28px;border-radius:50%;background:var(--gold);color:#fff;border:2px solid #fff;font-weight:800;font-size:15px;line-height:1;display:grid;place-items:center;cursor:pointer;z-index:2}
+.tstat{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.tstat .big{font-size:20px;font-weight:800;color:var(--navy)}
+
+/* questions / support */
+.below.split{grid-template-columns:1fr 1.3fr}
+.below{display:grid;grid-template-columns:1.3fr 1fr;gap:12px;margin-top:12px;align-items:start}
+.panelcard{min-width:0;background:#fff;border:2px solid var(--line);border-radius:var(--radius);padding:12px 16px}
+.panelcard > h3{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--gold);margin-bottom:6px}
+.q{border-top:1px dashed var(--line);padding:8px 0}
+.q:first-of-type{border-top:none}
+.q .stem{font-weight:600}
+.q .marks{font-weight:800;color:var(--navy)}
+.q textarea{width:100%;min-height:54px;margin:6px 0;font:inherit;border:2px solid var(--line);border-radius:10px;padding:6px 8px;resize:vertical}
+details.reveal{margin:4px 0}
+details.reveal summary{cursor:pointer;font-weight:700;color:var(--navy);border:2px solid var(--navy);border-radius:10px;padding:3px 12px;display:inline-block;list-style:none}
+details.reveal summary::-webkit-details-marker{display:none}
+details.reveal[open] summary{background:var(--navy);color:#fff}
+details.reveal .ans{margin-top:6px;background:var(--okbg);border-left:5px solid var(--ok);border-radius:8px;padding:8px 12px;font-size:13.5px}
+details.reveal .ans ul{margin:4px 0;padding-left:20px}
+.msrow{display:flex;gap:8px;align-items:flex-start}
+.msrow input{margin-top:4px}
+.stabs{display:flex;gap:6px;margin-bottom:8px}
+.stabs button{border:2px solid var(--navy);background:#fff;color:var(--navy);border-radius:999px;padding:4px 14px;font-weight:700;font-size:13px}
+.stabs button[aria-selected="true"]{background:var(--navy);color:#fff}
+.sub{font-size:12px;color:#555;margin:0 0 6px}
+select.cloze{font:inherit;font-weight:700;border:2px solid var(--navy);border-radius:8px;padding:1px 4px;color:var(--navy)}
+.cloze-ok{color:var(--ok);font-weight:800}
+
+/* overlay */
+.overlay{position:fixed;inset:0;background:rgba(20,30,52,.78);display:grid;place-items:center;z-index:300;padding:16px;overflow:auto}
+.overlay[hidden]{display:none}
+.start{background:var(--paper);border-radius:22px;max-width:880px;width:100%;padding:22px 26px;border:3px solid var(--gold)}
+.start h2{font-family:Georgia,serif;color:var(--navy);font-size:28px}
+.start p{margin:6px 0}
+.tiers{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:14px 0}
+.tiercard{background:#fff;border:3px solid var(--line);border-radius:14px;padding:10px 12px;text-align:left;color:var(--ink)}
+.tiercard b{display:block;font-size:17px}
+.tiercard small{display:block;margin-top:4px;font-size:12.5px}
+.tiercard[aria-pressed="true"]{border-width:4px}
+.tiercard[data-t="s"]{border-color:#9bd1b9}.tiercard[data-t="s"][aria-pressed="true"]{border-color:var(--s);background:#eaf8f2}
+.tiercard[data-t="m"]{border-color:#a9c1ef}.tiercard[data-t="m"][aria-pressed="true"]{border-color:var(--m);background:#edf3ff}
+.tiercard[data-t="x"]{border-color:#cfaee0}.tiercard[data-t="x"][aria-pressed="true"]{border-color:var(--x);background:#f7edfc}
+.conf{display:grid;grid-template-columns:110px minmax(0,1fr) 24px;gap:6px 10px;align-items:center;font-weight:700;color:var(--navy);font-size:13.5px}
+.conf input{width:100%;accent-color:var(--gold)}
+.summary table{border-collapse:collapse;width:100%;font-size:13.5px}
+.summary th,.summary td{border:1px solid var(--line);padding:6px 10px;text-align:center}
+.summary th{background:var(--navy);color:#fff}
+
+.smallnote{display:none;background:#fff4dc;border-bottom:2px solid var(--gold2);padding:6px 14px;font-size:12.5px;font-weight:600;color:#6b4f00}
+@media (max-width:820px){.smallnote{display:block}}
+.nogl{padding:30px;text-align:center;font-weight:700;color:var(--bad)}
+.hide{display:none!important}
+@media (max-width:1000px){
+  .below.split{grid-template-columns:1fr}
+  .summary table{display:block;overflow-x:auto}
+  .mission,.below,.osgrid,.labgrid,.enzgrid{grid-template-columns:1fr}
+  .enzgrid{height:auto}.enzleft{height:560px}
+  .labgrid{height:auto}.tray{border-left:none;border-top:2px solid var(--line);flex-direction:row;flex-wrap:wrap}
+  .tiers,.ladder{grid-template-columns:1fr}
+  .view{height:420px}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}html{scroll-behavior:auto}}
+@media print{.top,.steps,.toolbar,.overlay{display:none}.stage{display:block!important}}
+
+
+/* ---------- friction lab additions ---------- */
+.benchgrid{height:700px}
+.benchview .pinlayer{z-index:5}
+.lanelab{position:absolute;transform:translate(0,-50%);background:rgba(255,255,255,.94);border:2px solid var(--navy);color:var(--navy);border-radius:8px;font-weight:800;font-size:12px;padding:2px 9px;pointer-events:auto;cursor:pointer}
+.lanelab:hover{background:var(--gold2)}
+.meterlab{position:absolute;transform:translate(-50%,-100%);background:var(--navy);color:#fff;font-weight:800;font-size:13px;border-radius:8px;padding:2px 9px;white-space:nowrap}
+.arrlab{position:absolute;transform:translate(-50%,-50%);font-weight:800;font-size:12px;border-radius:8px;padding:2px 8px;color:#fff;white-space:nowrap}
+.arrlab.pull{background:#a87100}.arrlab.fric{background:#c0332d}
+.loadlab{position:absolute;transform:translate(-50%,-100%);font-size:12px;font-weight:800;background:#fff;border:2px solid var(--navy);border-radius:8px;padding:1px 8px;color:var(--navy);white-space:nowrap}
+.micro{position:absolute;right:10px;top:58px;width:234px;z-index:6;background:#1c2233;border:2px solid var(--navy);border-radius:12px;overflow:hidden;box-shadow:0 4px 12px rgba(0,0,0,.2)}
+.micro canvas{display:block;position:static!important;width:230px;height:118px;cursor:default!important}
+.microcap{color:#fff;font-size:11px;font-weight:600;padding:4px 8px 2px}
+.microbar{margin:2px 8px 7px;height:6px;border-radius:3px;background:#3a4560}
+.microbar i{display:block;height:100%;border-radius:3px;background:#ff5d4a;transition:width .2s}
+.viewmodes{position:absolute;left:8px;bottom:8px;display:flex;gap:6px;align-items:center;z-index:6;font-size:12px;font-weight:700;color:var(--navy)}
+.viewmodes .btn{padding:3px 10px;font-size:12px}
+.viewmodes .btn[aria-pressed="true"]{background:var(--navy);color:#fff}
+.viewmodes label{background:rgba(255,255,255,.9);border-radius:8px;padding:3px 8px}
+.surfrow{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.surfbtn{border:2px solid var(--line);background:#fff;border-radius:10px;padding:6px 4px;font-weight:700;font-size:13px;display:flex;flex-direction:column;align-items:center;gap:3px;color:var(--navy)}
+.surfbtn[aria-pressed="true"]{border-color:var(--navy);background:var(--soft);box-shadow:0 0 0 2px var(--gold)}
+.surfbtn .sw{width:36px;height:14px;border-radius:4px;border:2px solid}
+.btnrow{display:flex;gap:6px;flex-wrap:wrap}
+.modesrow{font-size:12.5px;font-weight:600}
+.readout .soft{font-weight:500;color:#556}
+.predict .why{font-size:12.5px;margin:6px 0 4px}
+.tablebox{max-height:160px;overflow:auto}
+.rtable.small{font-size:12px}
+.rtable.small th{padding:3px 4px}
+.rtable tr.unfair td{background:var(--badbg)}
+.gtitle{font-size:12px;color:var(--navy);text-transform:uppercase;letter-spacing:.06em}
+.gcheck{font-size:12px;font-weight:600}
+.arrowgrid{height:auto;min-height:560px}
+.arrowleft{display:flex;flex-direction:column;gap:8px;padding:10px;background:#fff;min-width:0}
+.arrowsvg{width:100%;height:auto;display:block;border:2px solid var(--line);border-radius:12px;background:linear-gradient(#f6f8fc,#fff);touch-action:none;user-select:none}
+.arrowcap{font-size:14px;font-weight:600;padding:2px 6px}
+.arrowhud{position:static}
+.ahandle{cursor:grab}.ahandle:focus{outline:none;stroke-width:7;filter:drop-shadow(0 0 5px #B8860B)}.ahandle.locked{cursor:not-allowed}
+.scenetabs{display:flex;gap:6px}
+.scenetabs button{width:36px;height:36px;border-radius:50%;border:3px solid var(--navy);background:#fff;color:var(--navy);font-weight:800}
+.scenetabs button[aria-selected="true"]{background:var(--navy);color:#fff}
+.scenetabs button.done{border-color:var(--ok)}
+.scenetext{background:var(--paper);border:2px solid var(--gold2);border-radius:10px;padding:8px 10px;font-weight:600;font-size:13.5px}
+.resrow{font-size:13px;font-weight:700;color:var(--navy);display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.numin{width:64px;font:inherit;font-weight:800;text-align:center;border:2px solid var(--navy);border-radius:8px;padding:2px}
+.fblist{list-style:none;margin:0;padding:0;font-size:12.5px;font-weight:600}
+.fblist li.ok{color:var(--ok)}.fblist li.bad{color:var(--bad)}
+.ansbox{margin-top:2px}
+.optgroup{display:grid;gap:6px}
+.optcard{text-align:left;border:2px solid var(--line);background:#fff;border-radius:10px;padding:7px 10px;color:var(--ink);font-size:13px}
+.optcard small{display:block;font-weight:500;color:#556;font-size:11.5px}
+.optcard[aria-checked="true"]{border-color:var(--navy);background:var(--soft);box-shadow:0 0 0 2px var(--gold)}
+.optcard.off{opacity:.45;cursor:not-allowed}
+.meters{display:grid;gap:8px;grid-template-columns:1fr 1fr}
+.meterrow{display:grid;grid-template-columns:1fr auto;gap:2px 8px;align-items:center;background:#fff;border:2px solid var(--line);border-radius:12px;padding:6px 10px}
+.ml{font-weight:800;font-size:12px;color:var(--navy);text-transform:uppercase;letter-spacing:.06em;grid-column:1/-1}
+.mb{position:relative;height:16px;border-radius:8px;background:#e8edf5}
+.mb i{display:block;height:100%;border-radius:8px;background:#9aa6bf;transition:width .3s}
+.mb i.ok{background:var(--ok)}.mb i.bad{background:var(--bad)}
+.mb s{position:absolute;top:-3px;bottom:-3px;width:3px;background:var(--navy);text-decoration:none}
+.mv{font-weight:800;font-size:15px}
+.ms{grid-column:1/-1;font-size:11.5px;color:#556}
+.labrow{display:grid;gap:3px;font-size:12.5px;font-weight:600;margin-bottom:6px}
+.brief{margin:0;background:var(--paper);border:2px solid var(--gold2);border-radius:10px;padding:8px 10px;font-size:13px}
+@media (max-width:1000px){.benchgrid{height:auto}.benchgrid .enzleft{height:620px}.arrowgrid{min-height:0}.meters{grid-template-columns:1fr}}
+
+.panel > *{flex-shrink:0}
+.trolgrid .panel{overflow:visible}
+.labcard{background:var(--paper);border:2px solid var(--gold2);border-radius:12px;padding:8px 12px}
+.labcard h3{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--gold);margin-bottom:6px}
+.labcard .labrow{grid-template-columns:1fr minmax(180px,230px);align-items:center;gap:10px;font-size:13px}
+.labcard .btnrow{margin:4px 0}
+
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to the lesson</a>
+<header class="top">
+  <div class="brand"><span class="logo">Y7</span><div><h1>Grip or slip? Friction lab</h1><p>Forces and motion · Lesson 5 · Year 7 Science</p></div></div>
+  <div class="tierbar" id="tierbar" role="group" aria-label="Choose your route"><span class="lab">Route</span></div>
+</header>
+<div class="smallnote">This lesson has drag-and-drop boards and 3D models. It works best on a laptop or tablet in landscape.</div>
+<nav class="steps" id="steps" aria-label="Lesson stages"></nav>
+<main id="main"></main>
+
+<div class="overlay" id="start" role="dialog" aria-modal="true" aria-labelledby="st-h">
+  <div class="start">
+    <h2 id="st-h">Welcome to the friction lab</h2>
+    <p>Fifty minutes, six stages. Test surfaces on a 3D bench, draw force arrows, design a trolley and solve Tarsia puzzles. <b>You choose your route</b>, and you can change it any time. Write your explanations in your book.</p>
+    <div class="tiers" id="tiers" role="group" aria-label="Choose your starting route"></div>
+    <p><b>How confident are you right now?</b> (1 = not at all, 5 = very). This stays on your screen only. Nothing is saved or sent anywhere.</p>
+    <div class="conf" id="conf"></div>
+    <p style="margin-top:14px"><button class="btn gold" id="go" disabled style="font-size:16px;padding:9px 22px">Start the lesson</button></p>
+  </div>
+</div>
+
+<script src="05 Resources/three.min.js"></script>
+<script>
+/* Friction lab core: helpers, drag engine, Three.js scaffolding. */
+(function () {
+  'use strict';
+  const RL = (window.RL = { stages: [], state: { tier: null, pre: {}, post: {}, scores: {}, done: {} }, ticks: [] });
+  RL.reduced = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  RL.TIERS = { s: 'Get started', m: 'Build understanding', x: 'Go further' };
+  RL.TIER_NOTE = { s: 'Grades 2–4 planning range', m: 'Grades 5–6 planning range', x: 'Grades 7–9 planning range' };
+
+  RL.dbg = {}; // read-only helpers used by the QA script
+  RL.$ = (s, r) => (r || document).querySelector(s);
+  RL.$$ = (s, r) => Array.from((r || document).querySelectorAll(s));
+  RL.el = function (tag, attrs, ...kids) {
+    const n = document.createElement(tag);
+    if (attrs) for (const k in attrs) {
+      const v = attrs[k];
+      if (v == null || v === false) continue;
+      if (k === 'class') n.className = v;
+      else if (k === 'html') n.innerHTML = v;
+      else if (k === 'text') n.textContent = v;
+      else if (k === 'style' && typeof v === 'object') Object.assign(n.style, v);
+      else if (k.startsWith('on') && typeof v === 'function') n.addEventListener(k.slice(2), v);
+      else n.setAttribute(k, v === true ? '' : v);
+    }
+    for (const kid of kids.flat()) if (kid != null && kid !== false) n.append(kid.nodeType ? kid : document.createTextNode(kid));
+    return n;
+  };
+  const el = RL.el;
+  RL.sv = (tag, a, ...kids) => { const n = document.createElementNS('http://www.w3.org/2000/svg', tag); for (const k in a) n.setAttribute(k, a[k]); kids.flat().forEach(c => c != null && n.append(c.nodeType ? c : document.createTextNode(c))); return n; };
+  RL.clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+  RL.rng = function (seed) { let s = seed >>> 0 || 1; return () => ((s = (s * 1664525 + 1013904223) >>> 0) / 4294967296); };
+  RL.shuffle = function (arr, rnd) { const a = arr.slice(), r = rnd || Math.random; for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(r() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+  RL.tier = () => RL.state.tier || 'm';
+  RL.pick = (obj) => (obj && (obj[RL.tier()] !== undefined ? obj[RL.tier()] : obj.m));
+
+  /* ---------- messages ---------- */
+  RL.msg = function (node, text, kind) { if (!node) return; node.className = (node.className.replace(/\b(msg|ok|bad|info)\b/g, '').trim() + ' msg ' + (kind || 'info')).trim(); node.textContent = text || ''; };
+
+  /* ---------- reveal + question blocks (every task has a model answer) ---------- */
+  RL.reveal = function (label, html) {
+    return el('details', { class: 'reveal' }, el('summary', { text: label || 'Show model answer' }), el('div', { class: 'ans', html }));
+  };
+  RL.ms = function (points, note) {
+    return '<ul>' + points.map(p => '<li>' + p + '</li>').join('') + '</ul>' + (note ? '<p><i>' + note + '</i></p>' : '');
+  };
+  RL.qblock = function (q) {
+    return el('div', { class: 'q' },
+      el('div', { class: 'stem', html: q.stem + ' <span class="marks">[' + q.marks + ']</span>' }),
+      q.write === false ? null : el('textarea', { 'aria-label': 'Your answer', placeholder: 'Write your answer first, then check it…' }),
+      RL.reveal('Model answer and mark scheme', RL.ms(q.ms, q.note)));
+  };
+
+  /* ---------- stage furniture ---------- */
+  RL.mission = function (o) {
+    const me = RL.tier(), L = o.ladder;
+    return el('div', { class: 'mission' },
+      el('div', null,
+        el('div', { class: 'kick', text: o.kicker }),
+        el('h2', { text: o.title }),
+        el('div', { class: 'chips' }, el('span', { class: 'chip', text: '⏱ ' + o.mins + ' min' }), el('span', { class: 'chip t-' + me, text: RL.TIERS[me] })),
+        L ? el('div', { class: 'ymy', html: '<b>Your level:</b> ' + L[me] }) : null),
+      el('ol', { class: 'dothis', html: o.steps.map(s => '<li>' + s + '</li>').join('') }),
+      el('details', { class: 'lad' }, el('summary', { text: 'Spec link and what each level does' }),
+        el('p', { class: 'spec', html: o.spec }),
+        L ? el('div', { class: 'ladder' },
+          el('div', { class: 'ls' + (me === 's' ? ' me' : '') }, el('b', { text: RL.TIERS.s }), el('span', { html: L.s })),
+          el('div', { class: 'lm' + (me === 'm' ? ' me' : '') }, el('b', { text: RL.TIERS.m }), el('span', { html: L.m })),
+          el('div', { class: 'lx' + (me === 'x' ? ' me' : '') }, el('b', { text: RL.TIERS.x }), el('span', { html: L.x }))) : null));
+  };
+
+  /* Adaptation (Students of Determination) + HOT drawer: o = {adapt:{lead, nodes[]}, hot:{lead, nodes[]}} */
+  RL.support = function (o) {
+    const wrap = el('div', { class: 'panelcard' });
+    const tabs = el('div', { class: 'stabs', role: 'tablist' });
+    const bodies = {};
+    const mk = (key, label, d) => {
+      const b = el('button', { role: 'tab', 'aria-selected': 'false', text: label, onclick: () => show(key) });
+      tabs.append(b);
+      bodies[key] = { b, p: el('div', { class: 'hide', role: 'tabpanel' }, el('p', { class: 'sub', html: d.lead }), ...d.nodes) };
+    };
+    mk('a', 'Adaptation', o.adapt); mk('h', 'Go further (HOT)', o.hot);
+    function show(k) { for (const key in bodies) { const on = key === k; bodies[key].p.classList.toggle('hide', !on); bodies[key].b.setAttribute('aria-selected', on); } }
+    wrap.append(el('h3', { text: 'Support and stretch for this screen' }), tabs, bodies.a.p, bodies.h.p);
+    show('a');
+    return wrap;
+  };
+
+  /* dropdown cloze helper: stem with {{0}} {{1}} placeholders and options */
+  RL.cloze = function (stemHtml, blanks) {
+    const box = el('div', { class: 'q' });
+    const out = el('span', { class: 'msg info', style: { marginLeft: '6px' } });
+    const sels = blanks.map(b => el('select', { class: 'cloze', 'aria-label': 'Choose a word' }, el('option', { value: '', text: '…' }), RL.shuffle(b.opts).map(o => el('option', { value: o, text: o }))));
+    const parts = stemHtml.split(/\{\{(\d+)\}\}/);
+    const line = el('div', { class: 'stem' });
+    parts.forEach((p, i) => { if (i % 2 === 0) line.insertAdjacentHTML('beforeend', p); else line.append(sels[+p]); });
+    const check = el('button', { class: 'btn alt', text: 'Check', onclick: () => {
+      let ok = 0; sels.forEach((s, i) => { const good = s.value === blanks[i].ans; s.classList.toggle('cloze-ok', good); if (good) ok++; });
+      RL.msg(out, ok === blanks.length ? 'All correct ✓' : ok + ' of ' + blanks.length + ' correct — fix the others.', ok === blanks.length ? 'ok' : 'bad');
+    } });
+    box.append(line, el('div', { style: { marginTop: '6px' } }, check, out));
+    return box;
+  };
+
+  /* ---------- drag engine: free movement, optional keyboard control ---------- */
+  RL.zTop = 10;
+  RL.drag = function (node, o) {
+    o = o || {};
+    node.style.touchAction = 'none';
+    if (!node.hasAttribute('tabindex')) node.setAttribute('tabindex', '0');
+    let id = null, sx = 0, sy = 0, nx = 0, ny = 0, moved = false;
+    const area = () => (o.area ? (typeof o.area === 'function' ? o.area() : o.area) : node.offsetParent || node.parentElement);
+    const getPos = () => ({ x: node._x != null ? node._x : node.offsetLeft, y: node._y != null ? node._y : node.offsetTop });
+    node._setPos = (x, y) => {
+      if (o.clamp !== false) {
+        const a = area(); const w = node.offsetWidth, h = node.offsetHeight;
+        const m = o.margin != null ? o.margin : 0.4; // allow some overhang
+        x = RL.clamp(x, -w * m, a.clientWidth - w * (1 - m)); y = RL.clamp(y, -h * m, a.clientHeight - h * (1 - m));
+      }
+      node._x = x; node._y = y; node.style.left = x + 'px'; node.style.top = y + 'px';
+    };
+    node.addEventListener('pointerdown', e => {
+      if (e.button > 0 || (o.ignore && e.target.closest(o.ignore))) return;
+      if (o.disabled && o.disabled(node)) return;
+      id = e.pointerId; node.setPointerCapture(id);
+      const p = getPos(); sx = e.clientX; sy = e.clientY; nx = p.x; ny = p.y; moved = false;
+      node.classList.add('drag'); node.style.zIndex = ++RL.zTop;
+      if (o.onStart) o.onStart(e, node);
+      e.preventDefault();
+    });
+    node.addEventListener('pointermove', e => {
+      if (e.pointerId !== id) return;
+      const dx = e.clientX - sx, dy = e.clientY - sy;
+      if (!moved && Math.hypot(dx, dy) < 4) return;
+      moved = true;
+      node._setPos(nx + dx, ny + dy);
+      if (o.onMove) o.onMove(e, node);
+    });
+    const end = e => {
+      if (e.pointerId !== id) return;
+      try { node.releasePointerCapture(id); } catch (_) {}
+      id = null; node.classList.remove('drag');
+      if (!moved) { if (o.onClick) o.onClick(e, node); }
+      else if (o.onEnd) o.onEnd(e, node);
+    };
+    node.addEventListener('pointerup', end);
+    node.addEventListener('pointercancel', end);
+    node.addEventListener('keydown', e => {
+      const step = e.shiftKey ? 36 : 10; const p = getPos();
+      const k = e.key;
+      if (k === 'ArrowLeft') { node._setPos(p.x - step, p.y); }
+      else if (k === 'ArrowRight') { node._setPos(p.x + step, p.y); }
+      else if (k === 'ArrowUp') { node._setPos(p.x, p.y - step); }
+      else if (k === 'ArrowDown') { node._setPos(p.x, p.y + step); }
+      else if ((k === 'r' || k === 'R') && o.onRotate) { o.onRotate(node); e.preventDefault(); return; }
+      else if (k === 'Enter' || k === ' ') { if (o.onClick) o.onClick(e, node); if (o.onEnd) o.onEnd(e, node); e.preventDefault(); return; }
+      else return;
+      e.preventDefault();
+      if (o.onMove) o.onMove(e, node);
+      clearTimeout(node._kt); node._kt = setTimeout(() => o.onEnd && o.onEnd(e, node), 450);
+    });
+    return node;
+  };
+  RL.center = (n) => { const r = n.getBoundingClientRect(); return { x: r.left + r.width / 2, y: r.top + r.height / 2 }; };
+  RL.inRect = (pt, r) => pt.x >= r.left && pt.x <= r.right && pt.y >= r.top && pt.y <= r.bottom;
+  RL.glide = function (node, x, y, ms) {
+    node.style.transition = RL.reduced ? 'none' : 'left ' + (ms || 250) + 'ms ease, top ' + (ms || 250) + 'ms ease';
+    node._x = x; node._y = y; node.style.left = x + 'px'; node.style.top = y + 'px';
+    setTimeout(() => (node.style.transition = ''), (ms || 250) + 30);
+  };
+  RL.shake = function (n) { n.classList.remove('shake'); void n.offsetWidth; n.classList.add('shake'); setTimeout(() => n.classList.remove('shake'), 650); };
+
+  /* ---------- Three.js scaffolding ---------- */
+  RL.hasGL = function () {
+    try { const c = document.createElement('canvas'); return !!(window.THREE && (c.getContext('webgl2') || c.getContext('webgl'))); } catch (_) { return false; }
+  };
+  RL.three = function (host, o) {
+    o = o || {};
+    if (!RL.hasGL()) { host.append(el('div', { class: 'nogl', text: '3D view needs WebGL. Open this lesson in Chrome, Edge or Safari.' })); return null; }
+    const canvas = el('canvas', { tabindex: '0', 'aria-label': o.label || '3D model' });
+    host.prepend(canvas);
+    const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, preserveDrawingBuffer: !!o.preserve });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(o.fov || 38, 1, 0.1, 100);
+    camera.position.set(0, 0, o.z || 8);
+    scene.add(new THREE.HemisphereLight(0xffffff, 0x8899bb, 0.95));
+    const dl = new THREE.DirectionalLight(0xffffff, 0.9); dl.position.set(3, 5, 6); scene.add(dl);
+    const api = { renderer, scene, camera, canvas, host, loops: [], w: 1, h: 1 };
+    function resize() {
+      const w = Math.max(host.clientWidth, 10), h = Math.max(host.clientHeight, 10);
+      if (w === api.w && h === api.h) return;
+      api.w = w; api.h = h; renderer.setSize(w, h, false); camera.aspect = w / h; camera.updateProjectionMatrix();
+    }
+    api.resize = resize;
+    if (window.ResizeObserver) new ResizeObserver(resize).observe(host);
+    let last = performance.now();
+    (RL._gl = RL._gl || []).push(api);
+    function frame(t) {
+      if (api.dead) return;
+      requestAnimationFrame(frame);
+      if (!host.offsetParent) return; // hidden stage
+      resize(); camera.updateMatrixWorld();
+      const dt = Math.min((t - last) / 1000, 0.05); last = t;
+      for (const f of api.loops) f(dt, t / 1000);
+      renderer.render(scene, camera);
+    }
+    requestAnimationFrame(frame);
+    api.project = function (v3) { const v = v3.clone().project(camera); return { x: (v.x * 0.5 + 0.5) * api.w, y: (-v.y * 0.5 + 0.5) * api.h, z: v.z }; };
+    api.pointer = function (e) { const r = canvas.getBoundingClientRect(); return { x: ((e.clientX - r.left) / r.width) * 2 - 1, y: -((e.clientY - r.top) / r.height) * 2 + 1 }; };
+    return api;
+  };
+  /* drag-to-rotate a group; wheel / buttons to zoom */
+  RL.orbit = function (api, group, o) {
+    o = o || {};
+    let down = false, px = 0, py = 0, vx = 0, vy = 0;
+    const c = api.canvas;
+    c.addEventListener('pointerdown', e => { down = true; px = e.clientX; py = e.clientY; c.setPointerCapture(e.pointerId); });
+    c.addEventListener('pointermove', e => { if (!down) return; const dx = e.clientX - px, dy = e.clientY - py; px = e.clientX; py = e.clientY; group.rotation.y += dx * 0.01; group.rotation.x = RL.clamp(group.rotation.x + dy * 0.01, -1.3, 1.3); vx = dx; });
+    const up = () => { down = false; };
+    c.addEventListener('pointerup', up); c.addEventListener('pointercancel', up);
+    c.addEventListener('wheel', e => { e.preventDefault(); api.zoom(e.deltaY > 0 ? 1.08 : 0.92); }, { passive: false });
+    c.addEventListener('keydown', e => {
+      const k = e.key; const s = 0.15;
+      if (k === 'ArrowLeft') group.rotation.y -= s; else if (k === 'ArrowRight') group.rotation.y += s;
+      else if (k === 'ArrowUp') group.rotation.x = RL.clamp(group.rotation.x - s, -1.3, 1.3); else if (k === 'ArrowDown') group.rotation.x = RL.clamp(group.rotation.x + s, -1.3, 1.3);
+      else if (k === '+' || k === '=') api.zoom(0.92); else if (k === '-') api.zoom(1.08); else return;
+      e.preventDefault();
+    });
+    api.zoom = f => { api.camera.position.z = RL.clamp(api.camera.position.z * f, o.min || 4, o.max || 14); };
+    api.resetView = () => { group.rotation.set(0.15, -0.4, 0); api.camera.position.z = o.z || 8; };
+    api.isDragging = () => down;
+    return api;
+  };
+
+  RL.disposeGL = function () {
+    (RL._gl || []).forEach(a => { a.dead = true; try { a.renderer.dispose(); a.renderer.forceContextLoss(); } catch (_) {} });
+    RL._gl = [];
+  };
+
+  RL.mats = {
+    glass: (color, op) => new THREE.MeshPhysicalMaterial({ color, transparent: true, opacity: op == null ? 0.2 : op, side: THREE.DoubleSide, depthWrite: false, roughness: 0.2, metalness: 0 }),
+    solid: (color, rough) => new THREE.MeshStandardMaterial({ color, roughness: rough == null ? 0.55 : rough, metalness: 0.05 }),
+  };
+  RL.canvasTex = function (w, h, draw) { const c = document.createElement('canvas'); c.width = w; c.height = h; draw(c.getContext('2d'), w, h); const t = new THREE.CanvasTexture(c); t.anisotropy = 4; return t; };
+
+  /* ---------- progress ---------- */
+  RL.markDone = function (id) { RL.state.done[id] = true; const b = RL.$('.step[data-id="' + id + '"]'); if (b) b.classList.add('done'); };
+})();
+
+/* All subject content in one place so it can be reviewed against the Year 7 SoW (39.3 newtons, 39.4 arrows,
+   39.6 friction: friction only) and the previous three forces lessons. Tiers: s = Get started, m = Build
+   understanding, x = Go further.
+   MODEL: sliding friction = k x load, with k = 0.10 paper, 0.20 wood, 0.40 rubber, so the steady pull at
+   10 N load is 1.0 / 2.0 / 4.0 N. Maximum friction before sliding = 0.15 / 0.30 / 0.50 x load. These are
+   illustrative values for a classroom model, not measured properties of real materials. */
+(function () {
+  'use strict';
+  const C = (window.RL.content = {});
+
+  /* ---------- 1. Retrieval sort ---------- */
+  C.sort = {
+    zones: [{ id: 'draw', title: 'Measuring and drawing forces' }, { id: 'bal', title: 'Balanced or unbalanced' }, { id: 'fric', title: 'Friction' }],
+    base: [
+      ['newton (N)', 'draw'], ['force meter', 'draw'], ['arrow length', 'draw'], ['arrow direction', 'draw'],
+      ['resultant force', 'bal'], ['balanced forces', 'bal'], ['unbalanced forces', 'bal'], ['constant speed', 'bal'],
+      ['rough surface', 'fric'], ['lubricant', 'fric'], ['brake pad', 'fric'], ['trainer grip', 'fric'],
+    ],
+    extra: [['pull of 4 N to the right', 'draw'], ['slowing down', 'bal'], ['oil on moving parts', 'fric']],
+  };
+
+  /* ---------- 2. Friction bench ---------- */
+  C.benchPredict = [
+    { q: 'Which surface will need the biggest steady pull?', opts: ['Paper', 'Wood', 'Rubber'], ans: 2, why: 'Rubber grips best: its bumps catch more on the block, so it gives the biggest friction force. Test it!' },
+    { q: 'You double the load on the same surface. What happens to the steady pull?', opts: ['It stays the same', 'It roughly doubles', 'It halves'], ans: 1, why: 'A bigger load presses the surfaces together harder, so the friction force is bigger. Your graph will show how much.' },
+  ];
+  C.benchQs = {
+    s: [
+      { stem: 'Look at your table. Which surface needed the biggest pull and which needed the smallest?', marks: 2, ms: ['Rubber needed the biggest pull (the most friction) ✓', 'Paper needed the smallest pull (the least friction) ✓'], note: 'At a 10 N load the model gives paper 1.0 N, wood 2.0 N and rubber 4.0 N.' },
+      { stem: 'The block is pulled to the right at a steady speed and the force meter reads 4 N. What are the size and direction of the friction force?', marks: 2, ms: ['4 N ✓', 'to the left: opposite to the pull and to the sliding ✓'] },
+    ],
+    m: [
+      { stem: 'Describe what happens to the steady pull when you double the load on the same surface. Use numbers from your table.', marks: 2, ms: ['The pull (and so the friction) roughly doubles ✓', 'A correct pair of readings, e.g. wood 2.0 N at 10 N and 4.0 N at 20 N ✓'] },
+      { stem: 'Use the zoomed-in contact view to explain why rubber has more friction than paper.', marks: 3, ms: ['Both surfaces have tiny bumps that catch on each other ✓', 'Rubber’s bumps are bigger / there are more points of contact ✓', 'More bumps catch, so a bigger pull is needed ✓'], note: 'Attractions between the surfaces also add to friction; either answer earns the mark.' },
+    ],
+    x: [
+      { stem: 'A pupil says: “Load makes no difference to friction.” Use your graph to evaluate this claim.', marks: 3, ms: ['The claim is not supported ✓', 'The pull rises as load rises on every surface, e.g. rubber 4 N at 10 N and 8 N at 20 N ✓', 'Because a bigger load presses the surfaces together harder ✓'] },
+      { stem: 'Use the pattern in your graph to predict the steady pull for rubber at a 25 N load. Say how confident you are and why.', marks: 3, ms: ['10 N ✓ (rubber needs 4 N for every 10 N of load, so 2.5 × 4 N)', 'It lies on the straight line through your points / extends the pattern ✓', 'Confidence is limited: it is a model with illustrative values and real surfaces vary, so a real test is needed ✓'] },
+    ],
+  };
+  C.benchSupport = {
+    adapt: {
+      lead: 'Four small steps. Fill each gap, then go back to the 3D bench.',
+      clozes: [
+        ['To compare surfaces fairly, I change only the {{0}} and keep the {{1}} the same.', [{ opts: ['surface', 'load', 'name'], ans: 'surface' }, { opts: ['load', 'surface', 'name'], ans: 'load' }]],
+        ['At a steady speed the pull is {{0}} the friction, so the resultant force is {{1}}.', [{ opts: ['equal to', 'bigger than', 'smaller than'], ans: 'equal to' }, { opts: ['0 N', '5 N', '10 N'], ans: '0 N' }]],
+        ['A rougher surface has {{0}} bumps, so it needs a {{1}} pull to slide.', [{ opts: ['bigger', 'smaller', 'no'], ans: 'bigger' }, { opts: ['bigger', 'smaller', 'zero'], ans: 'bigger' }]],
+      ],
+    },
+    hot: { stem: 'Sam says: “A block with a big load has the same friction as one with a small load, because it is the same surface.” Use your graph to correct Sam.', marks: 3, ms: ['More load presses the surfaces together harder ✓', 'So the friction is bigger (the graph rises as load rises) ✓', 'The surface matters, but the load matters too: both change the friction ✓'] },
+  };
+
+  /* ---------- 3. Force arrows ---------- */
+  /* pull and fr in newtons. given.pull: pull arrow is pre-set and locked. res is the size of the resultant. */
+  C.arrowMotion = { steady: 'keeps the same speed', faster: 'speeds up', slower: 'slows down', still: 'stays still' };
+  C.arrows = {
+    s: [
+      { text: 'A block slides to the right at a steady speed. The force meter shows a pull of 4 N.', pull: 4, fr: 4, givenPull: true, res: 0, dir: 'none', happens: 'steady', why: 'Steady speed means balanced forces. Friction is 4 N to the left: the same size as the pull and opposite in direction. The resultant is 0 N.' },
+      { text: 'Someone pushes a heavy box to the right with 3 N, but the box does not move.', pull: 3, fr: 3, givenPull: true, res: 0, dir: 'none', happens: 'still', why: 'The box stays still, so the forces are balanced. Friction pushes back with 3 N to the left: friction grows to match the push, up to a limit.' },
+      { text: 'A block slides to the right. The pull is 6 N and the friction is 2 N.', pull: 6, fr: 2, givenPull: true, res: 4, dir: 'right', happens: 'faster', why: '6 N right − 2 N left = 4 N right. The forces are unbalanced and the resultant points right, so the block speeds up.' },
+    ],
+    m: [
+      { text: 'A block slides to the right at a steady speed. The pull is 5 N.', pull: 5, fr: 5, res: 0, dir: 'none', happens: 'steady', why: 'Steady speed: balanced forces. Friction is 5 N left, so the resultant is 0 N.' },
+      { text: 'A block is already sliding to the right. The pull is 9 N and the friction is 6 N.', pull: 9, fr: 6, res: 3, dir: 'right', happens: 'faster', why: '9 − 6 = 3 N to the right. The resultant is in the direction of motion, so the block speeds up.' },
+      { text: 'A block is already sliding to the right. The pull drops to 2 N. The friction is still 5 N.', pull: 2, fr: 5, res: 3, dir: 'left', happens: 'slower', why: '5 − 2 = 3 N to the left. The resultant points left, against the motion, so the block slows down. It is still moving right as it slows.' },
+      { text: 'You let go of a sliding block, so the pull is 0 N. The friction is 3 N.', pull: 0, fr: 3, res: 3, dir: 'left', happens: 'slower', why: 'With no pull, friction is the only horizontal force. The resultant is 3 N left, so the block slows down and stops.' },
+    ],
+    x: [
+      { text: 'A wood block with a 10 N load slides at a steady speed. Use your bench reading for the pull.', pull: 2, fr: 2, res: 0, dir: 'none', happens: 'steady', why: 'On the bench, wood at 10 N needed a 2.0 N steady pull. So friction is 2 N left and the resultant is 0 N.' },
+      { text: 'A rubber block with a 20 N load slides to the right. You pull with 10 N. On the bench, rubber at 20 N needs a steady pull of 8 N.', pull: 10, fr: 8, res: 2, dir: 'right', happens: 'faster', why: 'Sliding friction is 8 N (the steady-pull reading). 10 − 8 = 2 N right, so the block speeds up.' },
+      { text: 'The block is sliding to the right with a 4 N pull and 6 N of friction. Which way does the resultant point, and is the block moving that way?', pull: 4, fr: 6, res: 2, dir: 'left', happens: 'slower', why: '6 − 4 = 2 N left. The block is still moving right, but the leftward resultant is slowing it down. A force changes motion; it does not have to point the way the object is moving.' },
+      { text: 'On wood, the load is doubled from 10 N to 20 N. You pull at a steady speed again. Use the bench pattern to set the arrows.', pull: 4, fr: 4, res: 0, dir: 'none', happens: 'steady', why: 'Doubling the load roughly doubles the friction (2 N to 4 N), so the steady pull is 4 N. The resultant is still 0 N.' },
+    ],
+  };
+  C.arrowSupport = {
+    adapt: {
+      lead: 'Three steps: direction first, then size, then subtract.',
+      clozes: [
+        ['Friction acts {{0}} the direction the block slides.', [{ opts: ['against', 'with'], ans: 'against' }]],
+        ['If the two arrows are equal and opposite, the resultant is {{0}} N.', [{ opts: ['0', '5', '10'], ans: '0' }]],
+        ['If the arrows are different sizes, resultant = {{0}} arrow − {{1}} arrow, in the direction of the bigger one.', [{ opts: ['bigger', 'smaller'], ans: 'bigger' }, { opts: ['smaller', 'bigger'], ans: 'smaller' }]],
+      ],
+    },
+    hot: { stem: 'A block is moving to the right but the resultant force is 2 N to the left. A pupil says: “The force is left, so the block must be moving left.” Explain what is wrong.', marks: 3, ms: ['A leftward resultant acts against the rightward motion ✓', 'So the block slows down while still moving right ✓', 'A force changes motion; it does not have to point the way the object is moving ✓'] },
+  };
+
+  /* ---------- 4. Trolley design ---------- */
+  C.trolley = {
+    needMove: 2, needHold: 6,
+    move: [
+      { id: 'dry', label: 'Wheels on dry axles', effort: 4, hint: 'Metal rubbing on metal: quite a lot of friction.' },
+      { id: 'oiled', label: 'Wheels on oiled axles', effort: 1, hint: 'Oil keeps the moving parts apart: much less friction.' },
+      { id: 'skids', label: 'Fixed skids, no wheels', effort: 6, hint: 'The whole base slides along the floor.' },
+    ],
+    park: [
+      { id: 'none', label: 'No brake', grip: 0, hint: 'Nothing presses on a wheel.' },
+      { id: 'plastic', label: 'Smooth plastic brake pad', grip: 2, hint: 'A small friction force.' },
+      { id: 'rubber', label: 'Rubber brake pad', grip: 6, hint: 'Rubber grips: a big friction force.' },
+    ],
+    brief: {
+      s: 'A school trolley must be <b>easy to push (2 N or less)</b> and must <b>stay put when parked</b> (it has to resist a 6 N push). Choose the parts.',
+      m: 'Design a trolley that needs <b>no more than 2 N</b> to move and is <b>held by 6 N or more</b> when parked. Two tests will check your design.',
+      x: 'Design a trolley that moves with <b>2 N or less</b> and is held by <b>6 N or more</b> when parked. Then plan how you would test a real one fairly.',
+    },
+    labels: [
+      { id: 'a', row: 'Friction at the axles (or skids) while the trolley moves', ans: 'unwanted' },
+      { id: 'b', row: 'Friction at the brake pad when the trolley is parked', ans: 'useful' },
+    ],
+  };
+  C.trolleyQs = {
+    s: [{ stem: 'Name one feature that makes the trolley easy to move and one that keeps it still when parked.', marks: 2, ms: ['Oiled axles / wheels make it easy to move ✓', 'A rubber brake pad keeps it still ✓'] }],
+    m: [{ stem: 'Explain how each of your two features changes friction at its contact.', marks: 3, ms: ['Oil keeps the axle and wheel apart, so friction is less ✓', 'The rubber pad grips the wheel, so friction is bigger ✓', 'So it is easy to push but hard to push away when parked ✓'] }],
+    x: [{ stem: 'Describe a fair test to compare two brake pads. Then explain why this board cannot prove that a real trolley is safe.', marks: 4, ms: ['Change only the brake pad material ✓', 'Keep the load, the floor and the way the pull is applied the same ✓', 'Measure the biggest force it holds with a force meter ✓', 'The board uses illustrative model values, not a real trolley; real tests on real floors, with repeats, are needed ✓'] }],
+  };
+  C.trolleySupport = {
+    adapt: {
+      lead: 'Moving parts and brakes need opposite things. Fill each gap.',
+      clozes: [
+        ['Moving parts need {{0}} friction, so we add {{1}}.', [{ opts: ['less', 'more'], ans: 'less' }, { opts: ['oil', 'rubber'], ans: 'oil' }]],
+        ['A brake needs {{0}} friction, so the pad is made of {{1}}.', [{ opts: ['more', 'less'], ans: 'more' }, { opts: ['rubber', 'oil'], ans: 'rubber' }]],
+      ],
+    },
+    hot: { stem: 'A designer says: “Skids never roll away, so remove the wheels and the brake.” Evaluate this idea.', marks: 3, ms: ['Skids give a large friction force with the floor, so the trolley stays put when parked ✓', 'But the same friction acts while moving, so it is hard to push (6 N) ✓', 'Friction is useful in one place and unwanted in another: oiled wheels plus a brake give both ✓'] },
+  };
+
+  /* ---------- 5. Tarsia puzzles ---------- */
+  /* Each pair is printed on two touching edges. Keep strings under about 40 (triangle) / 44 (hexagon) characters. */
+  C.tarsia = {
+    tri: {
+      name: 'Triangle · Friction ideas', shape: 'tri', topic: 'Friction: causes, direction, uses',
+      pairs: {
+        s: [
+          ['force unit', 'newton (N)'],
+          ['friction needs…', 'two touching surfaces'],
+          ['block slides right', 'friction acts left'],
+          ['block slides left', 'friction acts right'],
+          ['shoes grip the floor', 'stops you slipping'],
+          ['oil in a bike chain', 'less unwanted friction'],
+          ['brake pad on a wheel', 'friction helps it stop'],
+          ['rough surface', 'bigger friction force'],
+          ['steady pull of 4 N', 'friction is also 4 N'],
+        ],
+        m: [
+          ['Pull 6 N right, steady speed', 'Friction 6 N left'],
+          ['Pull 9 N; friction 6 N', 'Resultant: 3 N right'],
+          ['Pull 2 N; friction 5 N, sliding right', 'Resultant 3 N left: slows down'],
+          ['Constant speed in a straight line', 'Zero resultant force'],
+          ['Compare surfaces fairly', 'Same block, load and speed'],
+          ['Greater steady pull needed', 'Greater sliding friction'],
+          ['Oil between moving parts', 'Keeps surfaces apart'],
+          ['Grippy shoe soles', 'Friction resists slipping'],
+          ['Surface bumps and attractions', 'Both cause friction'],
+        ],
+        x: [
+          ['Push 3 N; box stays still', 'Friction balances the push'],
+          ['Different loads, two surfaces', 'Cannot tell which caused it'],
+          ['Model gives the same reading every time', 'Real readings would differ slightly'],
+          ['“All friction is harmful”', 'Grip is helpful friction'],
+          ['“Smooth means no friction”', 'Surface attractions still matter'],
+          ['Trolley: axle and brake', 'Cut one friction, keep the other'],
+          ['Resultant left, block moving right', 'It is slowing down'],
+          ['Rubber needs 8 N at 20 N load', 'Predict 4 N at 10 N load'],
+          ['Parking-brake comparison', 'Same load, floor and pull'],
+        ],
+      },
+    },
+    hex: {
+      name: 'Hexagon · Forces, arrows and friction', shape: 'hex', topic: 'Forces, arrows, resultants and friction',
+      pairs: {
+        s: [
+          ['newton (N)', 'unit of force'],
+          ['force meter', 'measures a pull in newtons'],
+          ['longer arrow', 'bigger force'],
+          ['arrow direction', 'way the force acts'],
+          ['friction', 'force between touching surfaces'],
+          ['friction acts…', 'against the sliding'],
+          ['balanced forces', 'equal and opposite: no change in motion'],
+          ['unbalanced forces', 'speed or direction changes'],
+          ['resultant force', 'one force that replaces all'],
+          ['block at steady speed', 'resultant 0 N'],
+          ['lubricant', 'reduces friction'],
+          ['tyre tread on a wet road', 'helps the tyre grip'],
+        ],
+        m: [
+          ['Friction opposes…', 'the sliding between surfaces'],
+          ['Pull 8 N right, friction 3 N left', 'Resultant 5 N right'],
+          ['Equal pull and friction', 'Resultant 0 N'],
+          ['Zero resultant, moving block', 'Speed stays the same'],
+          ['Doubling the load', 'Roughly doubles the steady pull'],
+          ['Surface bumps interlock', 'This causes friction'],
+          ['Why more load means more friction', 'Surfaces pressed together harder'],
+          ['Lubricant in a hinge', 'Less rubbing, less wear'],
+          ['Brake pad on a wheel', 'Friction slows it down'],
+          ['Smooth glass sliding on glass', 'Still has friction'],
+          ['Walking on a wet floor', 'Less grip: more slipping'],
+          ['Fair test of surfaces', 'Change surface only'],
+        ],
+        x: [
+          ['Wood needs 2 N at 10 N load', 'Wood needs 4 N at 20 N load'],
+          ['Pull 4 N, friction 6 N, sliding right', 'Resultant 2 N left: slowing'],
+          ['Pull 10 N, friction 8 N', 'Resultant 2 N right: speeding up'],
+          ['Friction at a trolley axle', 'Unwanted: wastes effort'],
+          ['Friction at a trolley brake', 'Useful: stops it rolling away'],
+          ['Box not moving, pushed 3 N', 'Friction is 3 N the other way'],
+          ['Only one variable changed', 'Result can be linked to it'],
+          ['Same result every model run', 'Real trials would vary a little'],
+          ['Ice skate on smooth ice', 'Low friction, not zero'],
+          ['Reducing friction in one place', 'Can be unhelpful in another'],
+          ['Evidence from only three surfaces', 'Only true for those three'],
+          ['Grip claim from a model board', 'Check it with a real floor test'],
+        ],
+      },
+    },
+  };
+  C.tarsiaSupport = {
+    hot: { stem: 'Choose one join in your puzzle. Write a different edge that looks like it matches but is wrong, and explain why it is wrong.', marks: 2, ms: ['A plausible but incorrect partner edge written ✓', 'A correct scientific reason it does not match (e.g. wrong direction, wrong size or wrong contact) ✓'] },
+  };
+
+  /* ---------- 6. Exit ticket ---------- */
+  C.exit = {
+    fric: {
+      s: { stem: 'A block slides to the right across a table. In which direction does friction act on the block? Name the two things that are touching. Give one place where friction is useful.', marks: 3, ms: ['To the left, opposite to the sliding ✓', 'The block and the table (the two surfaces) ✓', 'One useful example, e.g. shoe grip or brakes ✓'] },
+      m: { stem: 'A machine has oiled moving parts but its brakes are not oiled. Explain why it needs low friction in its moving parts but high friction at its brakes.', marks: 3, ms: ['Oil reduces friction between moving parts ✓', 'So less force / effort is wasted and it moves more easily ✓', 'A brake needs a large friction force between pad and wheel to resist the movement and slow it down ✓'] },
+      x: { stem: 'Explain why a smooth surface can still have friction, and why pressing two surfaces together harder changes the friction.', marks: 4, ms: ['Even smooth surfaces have tiny bumps that catch on each other ✓', 'Attractions between the surfaces also contribute ✓', 'Pressing harder squeezes more bumps into contact ✓', 'More bumps catch, so the friction force is bigger ✓'] },
+    },
+    res: {
+      s: { stem: 'A block is pulled to the right at a steady speed. The pull is 5 N. State the size and direction of the friction, and the resultant force.', marks: 2, ms: ['Friction is 5 N to the left ✓', 'The resultant force is 0 N ✓'] },
+      m: { stem: 'A block is sliding to the right. The pull is 9 N and the friction is 4 N. Give the size and direction of the resultant force, and say what happens to the speed.', marks: 3, ms: ['9 − 4 = 5 N ✓', 'To the right ✓', 'The block speeds up ✓'] },
+      x: { stem: 'A block slides to the right. The pull is 3 N and the friction is 7 N. Give the resultant force. Explain how the block can still move right while it slows down.', marks: 3, ms: ['4 N to the left ✓', 'The resultant acts against the motion, so the block slows down ✓', 'A force changes motion; it does not have to point the way the object is moving ✓'] },
+    },
+    fair: {
+      s: { stem: 'A pupil compares paper, wood and rubber with a force meter. Name two things they must keep the same.', marks: 2, ms: ['Any one of: the same block / the same load / the same pulling speed ✓', 'A second different one from that list ✓'] },
+      m: { stem: 'A pupil tests wood with a 10 N load and rubber with a 20 N load. Explain why this is not a fair test and how to fix it.', marks: 3, ms: ['Two things were changed: the surface and the load ✓', 'So you cannot tell which one caused the different pull ✓', 'Use the same load on both surfaces ✓'] },
+      x: { stem: 'A pupil says: “This model shows rubber has more friction than wood on every floor.” Evaluate the claim using the readings (wood 2 N, rubber 4 N at a 10 N load).', marks: 4, ms: ['Rubber needed the bigger steady pull in the model (4 N against 2 N), so more friction in this model ✓', 'Only one load and these samples were tested ✓', 'The values are illustrative, so real surfaces vary ✓', 'Real tests with repeats on real floors are needed before claiming “every floor” ✓'] },
+    },
+  };
+})();
+
+/* Stage 1: retrieval sort. Free-moving cards go into three piles; check gives feedback. */
+(function () {
+  'use strict';
+  const RL = window.RL, el = RL.el, C = RL.content;
+  RL.stages.push({
+    id: 'sort', title: 'Sort', mins: 5,
+    build(root) {
+      const t = RL.tier();
+      root.append(RL.mission({
+        kicker: 'Stage 1 · retrieval from lessons 1–4', title: 'Sort the force ideas', mins: 4,
+        spec: 'Forces, arrows, balanced and unbalanced forces, and the new word: friction · no hints on this screen',
+        steps: ['<b>Drag</b> each card into the pile it belongs to (or click a card, then click a pile).', 'Press <b>Check</b>. Wrong cards bounce back to the table.', 'Keep going until every card is locked in green.'],
+        ladder: { s: '12 cards. Say what the idea is about first, then place it.', m: '12 cards. Place all of them before you press Check.', x: '15 cards, including some that need a second thought.' },
+      }));
+      const cards = C.sort.base.concat(t === 'x' ? C.sort.extra : []);
+      const board = el('div', { class: 'board sortboard' });
+      const toolbar = el('div', { class: 'toolbar' });
+      const msg = el('div', { class: 'msg info', text: 'Drag the cards into the piles. Keyboard: Tab to a card, arrows to move, Enter to pick up/drop.', role: 'status' });
+      const check = el('button', { class: 'btn', text: 'Check' });
+      const reset = el('button', { class: 'btn alt', text: 'Shuffle again' });
+      toolbar.append(check, reset, msg);
+      root.append(board, toolbar);
+
+      let zones = [], nodes = [], selected = null, first = {}, scoreN = 0;
+      function zoneRect(z) { const b = board.getBoundingClientRect(), r = z.getBoundingClientRect(); return { l: r.left - b.left, t: r.top - b.top, w: r.width, h: r.height }; }
+      function build() {
+        board.innerHTML = ''; zones = []; nodes = []; first = {}; scoreN = 0; selected = null;
+        const n = C.sort.zones.length;
+        C.sort.zones.forEach((z, i) => {
+          const d = el('div', { class: 'zone', 'data-z': z.id, role: 'group', 'aria-label': z.title + ' pile', tabindex: '0', style: { left: (1.5 + i * 33) + '%', width: '31.5%', bottom: '152px' } }, el('h3', { text: z.title }));
+          d.addEventListener('click', e => { if (selected && e.target === d || (selected && e.target.tagName === 'H3')) place(selected, d); });
+          d.addEventListener('keydown', e => { if ((e.key === 'Enter' || e.key === ' ') && selected) { place(selected, d); e.preventDefault(); } });
+          board.append(d); zones.push(d);
+        });
+        board.append(el('div', { class: 'table-label', text: 'Table' }));
+        const rnd = RL.rng(Date.now() % 100000);
+        const order = RL.shuffle(cards, rnd);
+        order.forEach((c, i) => {
+          const node = el('div', { class: 'card', role: 'button', 'aria-label': c[0], text: c[0] });
+          node.dataset.zone = c[1]; node._in = null;
+          board.append(node); nodes.push(node);
+          RL.drag(node, {
+            area: board, margin: 0.2,
+            disabled: nd => nd.classList.contains('good'),
+            onStart: () => { select(null); node._moved = true; },
+            onMove: e => hover(node),
+            onEnd: () => drop(node),
+            onClick: () => select(selected === node ? null : node),
+          });
+        });
+        requestAnimationFrame(layoutTable);
+      }
+      function layoutTable() {
+        const bw = board.clientWidth, bh = board.clientHeight, rnd = RL.rng(7);
+        nodes.forEach((n, i) => {
+          if (n.classList.contains('good') || n._in || n._moved) return;
+          const col = i % 6, row = Math.floor(i / 6);
+          n._setPos(14 + col * (bw - 28) / 6 + rnd() * 10, bh - 138 + row * 44 + rnd() * 8);
+        });
+      }
+      function select(n) {
+        nodes.forEach(x => x.classList.remove('sel')); selected = n;
+        if (n) { n.classList.add('sel'); RL.msg(msg, 'Now click the pile where “' + n.textContent + '” belongs.', 'info'); }
+      }
+      function hover(node) {
+        const c = RL.center(node);
+        zones.forEach(z => z.classList.toggle('over', RL.inRect(c, z.getBoundingClientRect())));
+      }
+      function drop(node) {
+        zones.forEach(z => z.classList.remove('over'));
+        const c = RL.center(node);
+        const z = zones.find(z => RL.inRect(c, z.getBoundingClientRect()));
+        node._in = z ? z.dataset.z : null;
+        if (z) keepInside(node, z);
+      }
+      function keepInside(node, z) {
+        const r = zoneRect(z);
+        node._setPos(RL.clamp(node._x, r.l + 6, r.l + r.w - node.offsetWidth - 6), RL.clamp(node._y, r.t + 34, r.t + r.h - node.offsetHeight - 6));
+      }
+      function place(node, z) {
+        const r = zoneRect(z); const k = nodes.filter(n => n !== node && n._in === z.dataset.z && !n.classList.contains('good')).length;
+        RL.glide(node, r.l + 10 + (k % 2) * (r.w / 2 - 10), r.t + 38 + Math.floor(k / 2) * 40, 220);
+        node._in = z.dataset.z; select(null);
+      }
+      check.onclick = () => {
+        let placed = 0, good = 0, bad = 0;
+        nodes.forEach(n => {
+          if (n.classList.contains('good') || !n._in) return;
+          placed++;
+          const key = n.textContent;
+          if (n._in === n.dataset.zone) { n.classList.add('good'); n.setAttribute('tabindex', '-1'); good++; if (first[key] === undefined) { first[key] = true; scoreN++; } }
+          else {
+            bad++; if (first[key] === undefined) first[key] = false;
+            n.classList.add('wrong'); RL.shake(n);
+            setTimeout(() => { n.classList.remove('wrong'); n._in = null; RL.glide(n, 20 + Math.random() * (board.clientWidth - 200), board.clientHeight - 130 + Math.random() * 60, 350); }, 800);
+          }
+        });
+        const left = nodes.filter(n => !n.classList.contains('good')).length;
+        if (!placed) return RL.msg(msg, 'Place some cards into the piles first.', 'bad');
+        if (!left) {
+          RL.state.scores.sort = scoreN + '/' + nodes.length; RL.markDone('sort');
+          RL.msg(msg, 'All sorted ✓  First-try score: ' + scoreN + ' / ' + nodes.length + '. Next: the friction bench.', 'ok');
+        } else RL.msg(msg, good + ' correct (locked in green), ' + bad + ' sent back to the table. ' + left + ' to go.', bad ? 'bad' : 'ok');
+      };
+      reset.onclick = () => { build(); RL.msg(msg, 'Cards shuffled.', 'info'); };
+      build();
+      new ResizeObserver(() => { if (board.offsetParent) layoutTable(); }).observe(board);
+    },
+  });
+})();
+
+/* Stage 2: the friction bench. A 3D block on three surfaces, a force meter, live force arrows, a zoomed-in contact
+   view, and a pull-against-load graph the pupil builds one recorded reading at a time.
+   Model: sliding friction = k x load. Starting to slide needs slightly more (static limit). Illustrative values. */
+(function () {
+  'use strict';
+  const RL = window.RL, el = RL.el, C = RL.content;
+
+  const SURF = {
+    paper: { name: 'Paper', mk: 0.10, ms: 0.15, col: '#fbf7ea', ser: '#2f5fb3', mark: 'circle', rough: 0.15 },
+    wood: { name: 'Wood', mk: 0.20, ms: 0.30, col: '#b98b55', ser: '#B8860B', mark: 'square', rough: 0.55 },
+    rubber: { name: 'Rubber', mk: 0.40, ms: 0.50, col: '#363b42', ser: '#8a3ea8', mark: 'triangle', rough: 1.0 },
+  };
+  const KEYS = ['paper', 'wood', 'rubber'];
+  const r1 = v => Math.round(v * 10) / 10;
+  const fk = (s, L) => r1(SURF[s].mk * L);          // sliding friction (N), 1 d.p.
+  const fsMax = (s, L) => SURF[s].ms * L;            // largest friction before sliding
+  const X0 = -2.3, X1 = 2.1, LANE_Z = { paper: -2.4, wood: 0, rubber: 2.4 };
+
+  RL.stages.push({
+    id: 'bench', title: 'Friction bench', mins: 12,
+    build(root) {
+      const tier = RL.tier();
+      root.append(RL.mission({
+        kicker: 'Stage 2 · SoW 39.3 newtons · 39.6 friction · fair tests', title: 'Friction bench: which contact needs the biggest pull?', mins: 12,
+        spec: 'Friction acts between touching surfaces · measure forces in newtons · compare surfaces fairly · steady speed means balanced forces',
+        steps: ['<b>Predict</b> first in the right-hand panel (two quick questions).', '<b>Pick</b> a surface and a load, press <b>Run test</b> and read the force meter. Zoom in on the contact.',
+          '<b>Record</b> each reading to build the graph. Change <b>only one thing</b> between readings.'],
+        ladder: { s: 'Compare three surfaces at one load: three readings.', m: 'Two loads on each of the three surfaces: six readings. Describe the pattern.', x: 'Three loads on each surface: nine readings. Use the graph to predict an untested load.' },
+      }));
+
+      const view = el('div', { class: 'view benchview' });
+      const hud = el('div', { class: 'msg info hudmsg', role: 'status', text: 'Make your predictions first, then choose a surface and a load.' });
+      const labs = el('div', { class: 'pinlayer' });
+      const micro = el('div', { class: 'micro' }, el('canvas', { 'aria-label': 'Zoomed-in view of the two surfaces touching' }), el('div', { class: 'microcap' }), el('div', { class: 'microbar' }, el('i')));
+      const vtools = el('div', { class: 'viewmodes' }, el('button', { class: 'btn alt', 'aria-pressed': 'true', text: 'Angled view' }), el('button', { class: 'btn alt', 'aria-pressed': 'false', text: 'Top view' }), el('label', null, el('input', { type: 'checkbox', checked: true }), ' Force arrows'));
+      view.append(labs, micro, vtools, hud);
+      const panel = el('div', { class: 'panel' });
+      const gbox = el('div', { class: 'gbox' });
+      const grid = el('div', { class: 'enzgrid benchgrid' }, el('div', { class: 'enzleft' }, view, gbox), panel);
+      root.append(el('div', { class: 'board' }, grid));
+
+      /* ---------- state ---------- */
+      const S = { surf: 'wood', load: 10, mode: 'steady', pull: 0, x: X0, v: 0, state: 'idle', reading: null, recs: [], pred: 0, slipped: false, slipAt: null, lastMsg: '' };
+
+      /* ---------- panel ---------- */
+      const pbox = el('div', { class: 'predict' });
+      const surfBtns = KEYS.map(k => el('button', { class: 'surfbtn', 'data-s': k, 'aria-pressed': k === S.surf, onclick: () => setSurf(k) }, el('span', { class: 'sw', style: { background: SURF[k].col, borderColor: SURF[k].ser } }), SURF[k].name));
+      const sL = el('input', { type: 'range', min: 5, max: 30, step: 5, value: 10, 'aria-label': 'Load on the block in newtons' });
+      const vL = el('span', { text: '10 N' });
+      const modeA = el('input', { type: 'radio', name: 'bmode', id: 'bm-a', checked: true }), modeB = el('input', { type: 'radio', name: 'bmode', id: 'bm-b' });
+      const sP = el('input', { type: 'range', min: 0, max: 14, step: 0.5, value: 0, 'aria-label': 'Pull force in newtons' });
+      const vP = el('span', { text: '0.0 N' });
+      const pullBox = el('div', { class: 'slider hide' }, el('label', null, 'Your pull', vP), sP);
+      const readout = el('div', { class: 'readout' });
+      const run = el('button', { class: 'btn', text: 'Run test' });
+      const rewind = el('button', { class: 'btn alt', text: 'Reset block' });
+      const rec = el('button', { class: 'btn gold', text: 'Record reading', disabled: true });
+      const clr = el('button', { class: 'btn alt', text: 'Clear table' });
+      const gmsg = el('div', { class: 'msg info', role: 'status', text: 'Run a test, then record the reading.' });
+      const tableBox = el('div', { class: 'tablebox' });
+      const showLines = el('input', { type: 'checkbox', id: 'bl' });
+      const gc = el('canvas', { class: 'graph', 'aria-label': 'Graph of steady pull in newtons against load in newtons that you are building' });
+      panel.append(
+        el('h3', { text: '1 · Predict' }), pbox,
+        el('h3', { text: '2 · Set up the bench' }),
+        el('div', { class: 'surfrow', role: 'group', 'aria-label': 'Surface' }, ...surfBtns),
+        el('div', { class: 'slider' }, el('label', null, 'Load on the block', vL), sL),
+        el('div', { class: 'modesrow' }, 'Test: ', modeA, el('label', { for: 'bm-a', text: ' steady speed ' }), modeB, el('label', { for: 'bm-b', text: ' pull harder' })),
+        pullBox, readout,
+        el('div', { class: 'btnrow' }, run, rewind),
+        el('h3', { text: '3 · Record and graph' }),
+        el('div', { class: 'btnrow' }, rec, clr), gmsg, tableBox);
+      gbox.append(el('b', { class: 'gtitle', text: 'Your graph: steady pull against load' }),
+        el('label', { class: 'gcheck' }, showLines, ' Show the model lines (check your graph)'), gc);
+
+      /* ---------- predictions ---------- */
+      function showPredict() {
+        pbox.innerHTML = '';
+        const q = C.benchPredict[S.pred];
+        if (!q) { pbox.append(el('p', { text: 'Predictions done ✓ Now test them on the bench.' })); return; }
+        pbox.append(el('p', { text: 'Prediction ' + (S.pred + 1) + ': ' + q.q }));
+        q.opts.forEach((o, i) => {
+          const b = el('button', { class: 'opt', text: o, onclick: () => {
+            RL.$$('.opt', pbox).forEach(x => (x.disabled = true));
+            b.classList.add(i === q.ans ? 'good' : 'bad'); if (i !== q.ans) RL.$$('.opt', pbox)[q.ans].classList.add('good');
+            pbox.append(el('p', { class: 'why', text: (i === q.ans ? 'Yes. ' : 'Not quite. ') + q.why }));
+            pbox.append(el('button', { class: 'btn alt', text: S.pred + 1 < C.benchPredict.length ? 'Next prediction' : 'Done', onclick: () => { S.pred++; showPredict(); say(S.pred >= C.benchPredict.length ? 'Choose a surface and a load, then press Run test.' : 'Make your predictions first.'); } }));
+          } });
+          pbox.append(b);
+        });
+      }
+      showPredict();
+      const say = (t, k) => RL.msg(hud, t, k || 'info');
+
+      /* ---------- physics helpers ---------- */
+      function frictionNow() {
+        const L = S.load, k = SURF[S.surf].mk * L, lim = fsMax(S.surf, L);
+        if (S.mode === 'steady') return S.state === 'idle' ? { pull: 0, f: 0, motion: 'at rest' } : { pull: fk(S.surf, L), f: fk(S.surf, L), motion: 'steady speed' };
+        if (S.v <= 1e-6) return S.pull <= lim + 1e-9 ? { pull: S.pull, f: S.pull, motion: 'at rest' } : { pull: S.pull, f: k, motion: 'speeding up' };
+        return { pull: S.pull, f: k, motion: S.pull > k + 1e-9 ? 'speeding up' : S.pull < k - 1e-9 ? 'slowing down' : 'steady speed' };
+      }
+      function updateReadout() {
+        const o = frictionNow(), res = r1(o.pull - o.f);
+        let resTxt = '0 N: balanced forces';
+        if (Math.abs(res) > 0.05) resTxt = Math.abs(res).toFixed(1) + ' N to the ' + (res > 0 ? 'right' : 'left') + ': unbalanced';
+        let extra = '';
+        if (S.mode === 'steady' && S.state === 'idle') extra = 'Press Run test to see the steady pull.';
+        else if (S.mode === 'steady') extra = 'Moving at a steady speed, so the pull equals the friction.';
+        else if (o.motion === 'at rest') extra = 'Not moving yet: friction grows to match your pull, up to a limit.';
+        else if (S.slipped) extra = 'It slipped when the pull passed ' + r1(S.slipAt).toFixed(1) + ' N. Once sliding, the friction is a little smaller (model).';
+        readout.innerHTML = '<b>What the model shows</b>Force meter (pull): ' + o.pull.toFixed(1) + ' N to the right<br>Friction on the block: ' + o.f.toFixed(1) + ' N to the left<br>Resultant force: ' + resTxt + '<br>Motion: ' + o.motion + '<br><span class="soft">' + extra + '</span>';
+      }
+
+      function setMode() {
+        S.mode = modeA.checked ? 'steady' : 'pull';
+        pullBox.classList.toggle('hide', S.mode === 'steady');
+        run.textContent = S.mode === 'steady' ? 'Run test' : 'Release the block';
+        run.classList.toggle('hide', S.mode === 'pull'); // in pull mode the block responds to the slider live
+        resetBlock(true);
+        say(S.mode === 'steady' ? 'Steady speed test: the model pulls at a steady speed and the meter shows how much pull that needs.' : 'Pull harder: raise the pull slowly and watch friction, the resultant and the motion.', 'info');
+        configChanged();
+      }
+      function resetBlock(silent) {
+        S.x = X0; S.v = 0; S.state = 'idle'; S.pull = 0; S.slipped = false; S.slipAt = null; sP.value = 0; vP.textContent = '0.0 N';
+        updateReadout(); if (!silent) say('Block returned to the start.', 'info');
+      }
+      function configChanged() {
+        if (S.reading && S.unrecorded) { S.reading = null; S.unrecorded = false; }
+        rec.disabled = !S.unrecorded;
+        updateReadout(); drawGraph();
+      }
+      function setSurf(k) {
+        S.surf = k; surfBtns.forEach(b => b.setAttribute('aria-pressed', b.dataset.s === k));
+        S.x = X0; S.v = 0; S.state = 'idle'; S.slipped = false; sP.value = 0; S.pull = 0; vP.textContent = '0.0 N';
+        moveToLane(); configChanged(); say(SURF[k].name + ' selected. Same block, same load: only the surface has changed.', 'info');
+      }
+      function setLoad() {
+        S.load = +sL.value; vL.textContent = S.load + ' N';
+        S.x = X0; S.v = 0; S.state = 'idle'; S.slipped = false; sP.value = 0; S.pull = 0; vP.textContent = '0.0 N';
+        buildMasses(); configChanged();
+      }
+      sL.oninput = setLoad;
+      sP.oninput = () => { if (S.mode !== 'pull') return; if (S.pred < C.benchPredict.length) { sP.value = 0; say('Make both predictions first (right-hand panel).', 'bad'); return; } S.pull = +sP.value; vP.textContent = S.pull.toFixed(1) + ' N'; updateReadout(); };
+      modeA.onchange = modeB.onchange = setMode;
+
+      run.onclick = () => {
+        if (S.state === 'run' || S.state === 'return') return;
+        if (S.pred < C.benchPredict.length) { say('Make both predictions first (right-hand panel).', 'bad'); return; }
+        S.x = X0; S.v = 0; S.state = 'run'; S.reading = null; S.unrecorded = false; rec.disabled = true;
+        say('Pulling at a steady speed…', 'info'); updateReadout();
+      };
+      rewind.onclick = () => { resetBlock(); configChanged(); };
+
+      /* ---------- recording ---------- */
+      function changedFrom(prev, cur) {
+        if (!prev) return [];
+        const c = []; if (prev.surf !== cur.surf) c.push('surface'); if (prev.load !== cur.load) c.push('load'); return c;
+      }
+      function renderTable() {
+        tableBox.innerHTML = '';
+        if (!S.recs.length) return;
+        const t = el('table', { class: 'rtable small' }, el('tr', null, ...['Surface', 'Load', 'Pull', 'Changed'].map(h => el('th', { text: h }))));
+        S.recs.forEach((r, i) => {
+          const ch = r.changed;
+          let cell = i === 0 ? 'first reading' : !ch.length ? 'repeat' : ch.join(' + ');
+          if (tier === 's' && i > 0) cell = ch.length === 1 ? '✓ ' + ch[0] + ' only' : ch.length === 2 ? '✗ both changed' : 'repeat';
+          const bad = i > 0 && ch.length === 2;
+          t.append(el('tr', { class: bad ? 'unfair' : '' }, el('td', { text: SURF[r.surf].name }), el('td', { text: r.load + ' N' }), el('td', { text: r.pull.toFixed(1) + ' N' }), el('td', { text: cell })));
+        });
+        tableBox.append(t);
+      }
+      function progress() {
+        const by = {}; KEYS.forEach(k => (by[k] = new Set())); S.recs.forEach(r => by[r.surf].add(r.load));
+        if (tier === 's') { const loads = {}; S.recs.forEach(r => { (loads[r.load] = loads[r.load] || new Set()).add(r.surf); }); return Object.values(loads).some(s => s.size === 3); }
+        const need = tier === 'm' ? 2 : 3; return KEYS.every(k => by[k].size >= need);
+      }
+      rec.onclick = () => {
+        if (!S.reading) return;
+        const r = { surf: S.reading.surf, load: S.reading.load, pull: S.reading.pull };
+        if (S.recs.some(q => q.surf === r.surf && q.load === r.load)) { RL.msg(gmsg, 'You already recorded that surface and load. Change one thing.', 'bad'); return; }
+        r.changed = changedFrom(S.recs[S.recs.length - 1], r);
+        S.recs.push(r); S.unrecorded = false; rec.disabled = true; renderTable(); drawGraph();
+        const ok = progress();
+        const goal = tier === 's' ? 'all three surfaces at the same load' : tier === 'm' ? 'two loads on every surface' : 'three loads on every surface';
+        RL.msg(gmsg, r.changed.length === 2 ? 'Recorded, but you changed two things at once: you cannot tell which caused the new reading. ' : S.recs.length + ' reading' + (S.recs.length > 1 ? 's' : '') + ' recorded' + (ok ? ' ✓ enough to describe the pattern.' : '. Goal: ' + goal + '.'), r.changed.length === 2 ? 'bad' : ok ? 'ok' : 'info');
+        if (ok) { RL.state.scores.bench = S.recs.length + ' readings'; RL.markDone('bench'); }
+      };
+      clr.onclick = () => { S.recs = []; renderTable(); drawGraph(); RL.msg(gmsg, 'Table and graph cleared.', 'info'); };
+      showLines.onchange = () => drawGraph();
+
+      /* ---------- graph ---------- */
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      function marker(g, kind, x, y, rr, col) {
+        g.fillStyle = col; g.beginPath();
+        if (kind === 'circle') g.arc(x, y, rr, 0, 7);
+        else if (kind === 'square') g.rect(x - rr, y - rr, 2 * rr, 2 * rr);
+        else { g.moveTo(x, y - rr - 1); g.lineTo(x + rr + 1, y + rr); g.lineTo(x - rr - 1, y + rr); g.closePath(); }
+        g.fill();
+      }
+      function drawGraph() {
+        const w = gc.clientWidth, h = gc.clientHeight; if (!w) return;
+        if (gc.width !== Math.round(w * dpr)) { gc.width = Math.round(w * dpr); gc.height = Math.round(h * dpr); }
+        const g = gc.getContext('2d'); g.setTransform(dpr, 0, 0, dpr, 0, 0); g.clearRect(0, 0, w, h);
+        const L = 40, B = 28, Rm = 10, Tm = 8, pw = w - L - Rm, ph = h - B - Tm;
+        const X = v => L + v / 30 * pw, Y = v => Tm + ph - v / 12 * ph;
+        g.font = '600 10px Montserrat, sans-serif'; g.lineWidth = 1;
+        g.strokeStyle = '#ece6d6'; for (let v = 0; v <= 12; v += 2) { g.beginPath(); g.moveTo(L, Y(v)); g.lineTo(L + pw, Y(v)); g.stroke(); }
+        g.strokeStyle = '#999'; g.fillStyle = '#333'; g.beginPath(); g.moveTo(L, Tm); g.lineTo(L, Tm + ph); g.lineTo(L + pw, Tm + ph); g.stroke();
+        g.textAlign = 'center'; for (let v = 0; v <= 30; v += 5) { g.fillText(v, X(v), Tm + ph + 12); g.beginPath(); g.moveTo(X(v), Tm + ph); g.lineTo(X(v), Tm + ph + 3); g.stroke(); }
+        g.fillText('Load on the block / N', L + pw / 2, h - 3);
+        g.textAlign = 'right'; for (let v = 0; v <= 12; v += 2) g.fillText(v, L - 5, Y(v) + 3);
+        g.save(); g.translate(9, Tm + ph / 2); g.rotate(-Math.PI / 2); g.textAlign = 'center'; g.fillText('Steady pull / N', 0, 0); g.restore();
+        if (showLines.checked) KEYS.forEach(k => { g.strokeStyle = SURF[k].ser; g.globalAlpha = 0.55; g.setLineDash([4, 3]); g.lineWidth = 2; g.beginPath(); g.moveTo(X(0), Y(0)); g.lineTo(X(30), Y(SURF[k].mk * 30)); g.stroke(); g.setLineDash([]); g.globalAlpha = 1; });
+        KEYS.forEach(k => {
+          const pts = S.recs.filter(r => r.surf === k).sort((a, b) => a.load - b.load);
+          if (pts.length > 1) { g.strokeStyle = SURF[k].ser; g.lineWidth = 2; g.beginPath(); pts.forEach((p, i) => (i ? g.lineTo(X(p.load), Y(p.pull)) : g.moveTo(X(p.load), Y(p.pull)))); g.stroke(); }
+          pts.forEach(p => marker(g, SURF[k].mark, X(p.load), Y(p.pull), 4, SURF[k].ser));
+        });
+        if (S.reading && S.unrecorded) { g.strokeStyle = '#d33'; g.lineWidth = 2; g.beginPath(); g.arc(X(S.reading.load), Y(S.reading.pull), 7, 0, 7); g.stroke(); }
+        let lx = L + 10; g.textAlign = 'left'; g.fillStyle = '#333';
+        KEYS.forEach(k => { marker(g, SURF[k].mark, lx, Tm + 9, 4, SURF[k].ser); g.fillStyle = '#333'; g.fillText(SURF[k].name, lx + 8, Tm + 12); lx += 66; });
+      }
+      if (window.ResizeObserver) new ResizeObserver(drawGraph).observe(gc);
+
+      /* ---------- 3D ---------- */
+      const th = RL.three(view, { z: 10, fov: 36, label: '3D friction bench: a block on paper, wood and rubber lanes with a force meter' });
+      const laneBtns = {}, ptLabels = {};
+      const mkLab = (cls, txt) => { const n = el('div', { class: cls, text: txt || '' }); labs.append(n); return n; };
+      const place = (n, v, dx, dy) => { const p = th.project(v); n.style.left = (p.x + (dx || 0)) + 'px'; n.style.top = (p.y + (dy || 0)) + 'px'; n.style.display = p.z > 1 ? 'none' : ''; };
+      let blockG, massG, meterG, stringM, parrow, farrow, selPlates = {}, camTarget = { p: [1.0, 7.4, 9.2], l: [1.0, -0.3, 0.2] }, camNow = { p: [1.0, 7.4, 9.2], l: [1.0, -0.3, 0.2] }, laneMeshes = [];
+      function buildMasses() {
+        if (!th) return;
+        while (massG.children.length) { const m = massG.children.pop(); m.geometry.dispose(); m.material.dispose(); }
+        const n = S.load / 5 - 1;
+        for (let i = 0; i < n; i++) { const m = new THREE.Mesh(new THREE.BoxGeometry(1.1, 0.2, 0.75), new THREE.MeshStandardMaterial({ color: 0xd4a52c, roughness: 0.35, metalness: 0.5 })); m.position.y = 0.92 + i * 0.245; massG.add(m); }
+      }
+      function moveToLane() { if (th) S.zTarget = LANE_Z[S.surf]; Object.keys(selPlates).forEach(k => (selPlates[k].visible = k === S.surf)); }
+      if (th) {
+        th.camera.position.set(1.0, 7.4, 9.2);
+        th.scene.children.filter(o => o.isLight).forEach(l => (l.intensity *= 0.62));
+        const rng = RL.rng(5);
+        const tex = {
+          paper: RL.canvasTex(1024, 208, (c, W, H) => { c.fillStyle = '#fbf7ea'; c.fillRect(0, 0, W, H); c.strokeStyle = 'rgba(40,90,190,.5)'; c.lineWidth = 2; for (let y = 22; y < H; y += 30) { c.beginPath(); c.moveTo(0, y); c.lineTo(W, y); c.stroke(); } c.fillStyle = 'rgba(150,140,110,.2)'; for (let i = 0; i < 900; i++) c.fillRect(rng() * W, rng() * H, 2, 2); }),
+          wood: RL.canvasTex(1024, 208, (c, W, H) => { c.fillStyle = '#b98b55'; c.fillRect(0, 0, W, H); for (let i = 0; i < 46; i++) { const y = rng() * H, a = 2 + rng() * 5, f = 0.004 + rng() * 0.01, ph = rng() * 6; c.strokeStyle = 'rgba(95,60,25,' + (0.18 + rng() * 0.25) + ')'; c.lineWidth = 1 + rng() * 2; c.beginPath(); for (let x = 0; x <= W; x += 8) { const yy = y + Math.sin(x * f + ph) * a; x ? c.lineTo(x, yy) : c.moveTo(x, yy); } c.stroke(); } c.fillStyle = 'rgba(80,50,20,.35)'; c.beginPath(); c.ellipse(700, 110, 22, 12, 0, 0, 7); c.fill(); }),
+          rubber: RL.canvasTex(1024, 208, (c, W, H) => { c.fillStyle = '#363b42'; c.fillRect(0, 0, W, H); for (let y = 8; y < H; y += 14) for (let x = (y / 14 % 2) * 7 + 6; x < W; x += 14) { c.fillStyle = '#4b525b'; c.beginPath(); c.arc(x, y, 4.4, 0, 7); c.fill(); c.fillStyle = '#2b2f35'; c.beginPath(); c.arc(x + 1, y + 1, 2.2, 0, 7); c.fill(); } }),
+        };
+        const paint = (tx, k, col) => { const c = tx.image.getContext('2d'); c.font = '800 46px Montserrat, system-ui, sans-serif'; c.textBaseline = 'middle'; c.textAlign = 'center'; c.fillStyle = col; c.globalAlpha = 0.85; c.fillText(SURF[k].name.toUpperCase(), 800, 104); c.globalAlpha = 1; tx.needsUpdate = true; };
+        paint(tex.paper, 'paper', '#21345B'); paint(tex.wood, 'wood', '#4a2f12'); paint(tex.rubber, 'rubber', '#e9edf5');
+        const side = k => new THREE.MeshStandardMaterial({ color: new THREE.Color(SURF[k].col).multiplyScalar(0.72), roughness: 0.8 });
+        KEYS.forEach(k => {
+          const top = new THREE.MeshStandardMaterial({ map: tex[k], roughness: k === 'rubber' ? 0.95 : k === 'paper' ? 0.9 : 0.7 }), sd = side(k);
+          const lane = new THREE.Mesh(new THREE.BoxGeometry(8.4, 0.22, 1.7), [sd, sd, top, sd, sd, sd]); lane.position.set(0, -0.11, LANE_Z[k]); lane.userData.surf = k; th.scene.add(lane); laneMeshes.push(lane);
+          const plate = new THREE.Mesh(new THREE.BoxGeometry(8.7, 0.06, 2.0), new THREE.MeshBasicMaterial({ color: 0xf0b429 })); plate.position.set(0, -0.26, LANE_Z[k]); plate.visible = k === S.surf; th.scene.add(plate); selPlates[k] = plate;
+        });
+        const floor = new THREE.Mesh(new THREE.PlaneGeometry(60, 40), new THREE.MeshStandardMaterial({ color: 0xaebcd3, roughness: 1 })); floor.rotation.x = -Math.PI / 2; floor.position.set(0, -0.3, 0); th.scene.add(floor);
+        blockG = new THREE.Group(); th.scene.add(blockG);
+        const body = new THREE.Mesh(new THREE.BoxGeometry(1.3, 0.8, 0.95), new THREE.MeshStandardMaterial({ color: 0x3b6fb5, roughness: 0.45 })); body.position.y = 0.4; blockG.add(body);
+        const hook = new THREE.Mesh(new THREE.TorusGeometry(0.11, 0.035, 8, 16), new THREE.MeshStandardMaterial({ color: 0xcccccc, metalness: 0.7, roughness: 0.3 })); hook.position.set(0.72, 0.4, 0); hook.rotation.y = Math.PI / 2; blockG.add(hook);
+        massG = new THREE.Group(); blockG.add(massG); buildMasses();
+        meterG = new THREE.Group(); blockG.add(meterG);
+        const tube = new THREE.Mesh(new THREE.CylinderGeometry(0.17, 0.17, 1.0, 20), new THREE.MeshStandardMaterial({ color: 0x21345B, roughness: 0.4 })); tube.rotation.z = Math.PI / 2; tube.position.set(2.15, 0.4, 0); meterG.add(tube);
+        const band = new THREE.Mesh(new THREE.CylinderGeometry(0.18, 0.18, 0.12, 20), new THREE.MeshStandardMaterial({ color: 0xf0b429 })); band.rotation.z = Math.PI / 2; band.position.set(2.15, 0.4, 0); meterG.add(band);
+        const ring = new THREE.Mesh(new THREE.TorusGeometry(0.15, 0.035, 8, 18), new THREE.MeshStandardMaterial({ color: 0xcccccc, metalness: 0.7, roughness: 0.3 })); ring.position.set(2.72, 0.4, 0); ring.rotation.y = Math.PI / 2; meterG.add(ring);
+        stringM = new THREE.Mesh(new THREE.CylinderGeometry(0.015, 0.015, 0.95, 6), new THREE.MeshBasicMaterial({ color: 0x222222 })); stringM.rotation.z = Math.PI / 2; stringM.position.set(1.175, 0.4, 0); blockG.add(stringM);
+        const arrow = col => {
+          const g = new THREE.Group(), mat = new THREE.MeshStandardMaterial({ color: col, roughness: 0.4 });
+          const shaft = new THREE.Mesh(new THREE.CylinderGeometry(0.065, 0.065, 1, 10), mat), head = new THREE.Mesh(new THREE.ConeGeometry(0.17, 0.34, 14), mat);
+          shaft.rotation.z = -Math.PI / 2; head.rotation.z = -Math.PI / 2; g.add(shaft, head);
+          g.setLen = len => { if (len < 0.03) { g.visible = false; return; } g.visible = true; const hl = Math.min(0.34, len * 0.5); head.scale.y = hl / 0.34; head.position.x = len - hl / 2; shaft.scale.y = Math.max(len - hl, 0.001); shaft.position.x = (len - hl) / 2; };
+          return g;
+        };
+        parrow = arrow(0xf2b01e); farrow = arrow(0xe0483e); farrow.rotation.y = Math.PI;
+        parrow.position.set(0, 0.64, 0.56); farrow.position.set(0, 0.2, 0.56); blockG.add(parrow, farrow);
+        blockG.position.set(X0, 0, LANE_Z[S.surf]); S.zNow = LANE_Z[S.surf]; S.zTarget = S.zNow;
+        const lPull = mkLab('arrlab pull'), lFric = mkLab('arrlab fric'), lMeter = mkLab('meterlab'), lLoad = mkLab('loadlab');
+        ptLabels.pull = lPull; ptLabels.fric = lFric; ptLabels.meter = lMeter; ptLabels.load = lLoad;
+        const arrowsOn = vtools.querySelector('input'), vb = vtools.querySelectorAll('button');
+        const view1 = { p: [1.0, 7.4, 9.2], l: [1.0, -0.3, 0.2] }, view2 = { p: [1.0, 12.5, 2.6], l: [1.0, 0, 0.1] };
+        vb[0].onclick = () => { camTarget = view1; vb[0].setAttribute('aria-pressed', true); vb[1].setAttribute('aria-pressed', false); };
+        vb[1].onclick = () => { camTarget = view2; vb[1].setAttribute('aria-pressed', true); vb[0].setAttribute('aria-pressed', false); };
+
+        /* click a lane to choose the surface */
+        const ray = new THREE.Raycaster(), V = new THREE.Vector2();
+        th.canvas.addEventListener('pointerdown', e => { const p = th.pointer(e); V.set(p.x, p.y); ray.setFromCamera(V, th.camera); const hit = ray.intersectObjects(laneMeshes, false)[0]; if (hit && hit.object.userData.surf !== S.surf) setSurf(hit.object.userData.surf); });
+        th.canvas.style.cursor = 'pointer';
+
+        /* microscope view */
+        const mc = micro.querySelector('canvas'), mcap = micro.querySelector('.microcap'), mbar = micro.querySelector('.microbar i');
+        const tri = u => { const f = u - Math.floor(u); return 1 - Math.abs(2 * f - 1); };
+        let phase = 0;
+        function drawMicro() {
+          const W = 230, H = 118; if (mc.width !== W * dpr) { mc.width = W * dpr; mc.height = H * dpr; mc.style.width = W + 'px'; mc.style.height = H + 'px'; }
+          const g = mc.getContext('2d'); g.setTransform(dpr, 0, 0, dpr, 0, 0); g.clearRect(0, 0, W, H);
+          const s = SURF[S.surf], A = 9 + 20 * s.rough, Bd = 8 + 12 * s.rough, P = 19, y0 = 112;
+          const gap = (S.load / 30) * 0.7 * (A + Bd);
+          const yT = y0 - A - Bd + gap;
+          const ys = x => y0 - A * tri(x / P), yb = x => yT + Bd * tri((x + phase) / (P * 1.3) + 0.37);
+          g.fillStyle = '#f4f7fc'; g.fillRect(0, 0, W, H);
+          const top = Math.max(0, yT - 26);
+          g.fillStyle = s.col; g.beginPath(); g.moveTo(0, H); for (let x = 0; x <= W; x += 1.5) g.lineTo(x, ys(x)); g.lineTo(W, H); g.closePath(); g.fill();
+          g.strokeStyle = '#21345B'; g.lineWidth = 1.6; g.beginPath(); for (let x = 0; x <= W; x += 1.5) (x ? g.lineTo(x, ys(x)) : g.moveTo(x, ys(x))); g.stroke();
+          g.fillStyle = '#3b6fb5'; g.beginPath(); g.moveTo(0, top); for (let x = 0; x <= W; x += 1.5) g.lineTo(x, yb(x)); g.lineTo(W, top); g.closePath(); g.fill();
+          g.strokeStyle = '#21345B'; g.beginPath(); for (let x = 0; x <= W; x += 1.5) (x ? g.lineTo(x, yb(x)) : g.moveTo(x, yb(x))); g.stroke();
+          let touching = 0, n = 0;
+          for (let x = 0; x <= W; x += 3) { n++; if (yb(x) >= ys(x) - 0.5) { touching++; g.fillStyle = '#ff3b2b'; g.strokeStyle = '#fff'; g.lineWidth = 1; g.beginPath(); g.arc(x, ys(x), 3, 0, 7); g.fill(); g.stroke(); } }
+          g.font = '800 10px Montserrat, sans-serif'; g.textAlign = 'left'; g.fillStyle = '#fff'; g.fillText('BLOCK', 7, top + 14);
+          g.fillStyle = S.surf === 'rubber' ? '#fff' : '#21345B'; g.fillText(s.name.toUpperCase(), 7, H - 6);
+          const frac = touching / n; mbar.style.width = Math.round(frac * 100) + '%';
+          mcap.textContent = 'Zoomed in: bumps catch (red). ' + (frac < 0.12 ? 'Few touch.' : frac < 0.3 ? 'Some touch.' : 'Many touch.');
+        }
+
+        const tweenCam = k => { for (let i = 0; i < 3; i++) { camNow.p[i] += (camTarget.p[i] - camNow.p[i]) * k; camNow.l[i] += (camTarget.l[i] - camNow.l[i]) * k; } };
+        th.loops.push((dt) => {
+          /* physics */
+          const L = S.load;
+          if (S.mode === 'steady') {
+            if (S.state === 'run') { S.x += 1.15 * dt; S.v = 1.15; phase += 40 * dt; if (S.x >= X1) { S.x = X1; S.v = 0; S.state = 'done'; S.reading = { surf: S.surf, load: L, pull: fk(S.surf, L) }; S.unrecorded = true; rec.disabled = false; say('Steady pull: ' + S.reading.pull.toFixed(1) + ' N. Press Record reading.', 'ok'); RL.msg(gmsg, S.surf[0].toUpperCase() + S.surf.slice(1) + ', ' + L + ' N load: ' + S.reading.pull.toFixed(1) + ' N. Record it.', 'info'); updateReadout(); drawGraph(); setTimeout(() => { if (S.state === 'done') S.state = 'return'; }, 1300); } }
+            else if (S.state === 'return') { S.x -= 5 * dt; if (S.x <= X0) { S.x = X0; S.state = 'idle'; S.v = 0; updateReadout(); } }
+          } else {
+            const m = L / 10, k = SURF[S.surf].mk * L, lim = fsMax(S.surf, L); let a = 0;
+            if (S.v <= 1e-6) { if (S.pull > lim + 1e-9) { a = (S.pull - k) / m; if (!S.slipped) { S.slipped = true; S.slipAt = lim; say('It slipped! Once sliding, the resultant force makes it speed up.', 'info'); } } }
+            else a = (S.pull - k) / m;
+            S.v = Math.max(0, S.v + a * dt); S.x += S.v * dt * 0.12; phase += S.v * 6 * dt;
+            if (S.x >= X1 + 0.6) { S.x = X0; S.v = 0; say('The block reached the end and was returned. Try a different pull.', 'info'); }
+            updateReadoutThrottled();
+          }
+          /* scene */
+          S.zNow += (S.zTarget - S.zNow) * Math.min(1, dt * 9);
+          blockG.position.set(S.x, 0, S.zNow);
+          const o = frictionNow(), show = arrowsOn.checked && (S.mode === 'pull' ? o.pull > 0 : S.state !== 'idle');
+          parrow.setLen(show ? o.pull * 0.3 : 0); farrow.setLen(show ? o.f * 0.3 : 0);
+          stringM.visible = true;
+          /* labels */
+          const bp = new THREE.Vector3(S.x, 0, S.zNow);
+          place(ptLabels.meter, new THREE.Vector3(S.x + 2.15, 0.95, S.zNow), 0, 0); ptLabels.meter.textContent = (S.mode === 'steady' && S.state === 'idle' ? 0 : o.pull).toFixed(1) + ' N';
+          place(ptLabels.load, new THREE.Vector3(S.x, 0.9 + (L / 5 - 1) * 0.245 + 0.32, S.zNow), 0, 0); ptLabels.load.textContent = 'Load ' + L + ' N';
+          ptLabels.pull.style.visibility = show && o.pull > 0.04 ? 'visible' : 'hidden'; ptLabels.fric.style.visibility = show && o.f > 0.04 ? 'visible' : 'hidden';
+          if (show) { place(ptLabels.pull, new THREE.Vector3(S.x + o.pull * 0.3 + 0.1, 0.64, S.zNow + 0.56), 40, 0); ptLabels.pull.textContent = 'Pull ' + o.pull.toFixed(1) + ' N'; place(ptLabels.fric, new THREE.Vector3(S.x - o.f * 0.3 - 0.1, 0.2, S.zNow + 0.56), -52, 4); ptLabels.fric.textContent = 'Friction ' + o.f.toFixed(1) + ' N'; }
+          tweenCam(Math.min(1, dt * 5)); th.camera.position.set(...camNow.p); th.camera.lookAt(...camNow.l); th.camera.updateMatrixWorld();
+          drawMicro();
+        });
+        let rt = 0; function updateReadoutThrottled() { const now = performance.now(); if (now - rt > 120) { rt = now; updateReadout(); } }
+        moveToLane();
+        RL.dbg.bench = {
+          state: () => ({ surf: S.surf, load: S.load, mode: S.mode, st: S.state, recs: S.recs.map(r => [r.surf, r.load, r.pull]), reading: S.reading, x: S.x }),
+          finish: () => { if (S.state === 'run') S.x = X1 - 0.001; },
+        };
+      }
+      setMode();
+      sL.dispatchEvent(new Event('input'));
+
+      /* ---------- check yourself + support ---------- */
+      const checks = el('div', { class: 'panelcard' }, el('h3', { text: 'Check yourself' }), ...C.benchQs[tier].map(q => RL.qblock(q)));
+      const sup = C.benchSupport;
+      const support = RL.support({
+        adapt: { lead: sup.adapt.lead, nodes: sup.adapt.clozes.map(c => RL.cloze(c[0], c[1])) },
+        hot: { lead: 'Use your graph evidence to correct a claim.', nodes: [RL.qblock(sup.hot)] },
+      });
+      root.append(el('div', { class: 'below' }, checks, support));
+      stageHook.show = () => { drawGraph(); };
+    },
+  });
+  const stageHook = RL.stages[RL.stages.length - 1];
+})();
+
+/* Stage 3: force arrows. Pupils drag arrow handles (1 N = one grid step) to show the pull and the friction on a
+   block, work out the resultant, say what happens to the motion, then watch it happen. */
+(function () {
+  'use strict';
+  const RL = window.RL, el = RL.el, C = RL.content;
+  const sv = RL.sv;
+  const U = 24, VBW = 760, VBH = 400, BX0 = 315, BX1 = 445, TAIL_P = BX1, TAIL_F = BX0, Y_P = 192, Y_F = 226, MAXN = 12;
+  const PULL = '#d89a00', FRIC = '#d6403a', GOOD = '#1f7a4d';
+
+  RL.stages.push({
+    id: 'arrows', title: 'Force arrows', mins: 9,
+    build(root) {
+      const tier = RL.tier(), list = C.arrows[tier];
+      root.append(RL.mission({
+        kicker: 'Stage 3 · SoW 39.3 newtons · 39.4 arrows · resultant force', title: 'Make the forces visible', mins: 9,
+        spec: 'Arrow length shows the size of a force and the arrow points the way it acts · resultant = the single force that has the same effect · balanced or unbalanced',
+        steps: ['<b>Read</b> the scenario. Drag each round <b>handle</b> to set the arrow (one grid step = 1 N). Keyboard: Tab to a handle, then ← →.', 'Work out the <b>resultant</b> force and choose what happens to the motion.', 'Press <b>Check</b>. When you are right, press <b>Show what happens</b>.'],
+        ladder: { s: 'The pull arrow is set for you. Direction first, then size. Ticks show each answer.', m: 'You set both arrows from the text. Ticks show which answers are right.', x: 'You set both arrows from the text. Check says how many are right, not which.' },
+      }));
+
+      const wrap = el('div', { class: 'enzgrid arrowgrid' });
+      const left = el('div', { class: 'arrowleft' });
+      const panel = el('div', { class: 'panel' });
+      wrap.append(left, panel);
+      root.append(el('div', { class: 'board' }, wrap));
+
+      /* ---------- scene ---------- */
+      const svg = sv('svg', { viewBox: '0 0 ' + VBW + ' ' + VBH, class: 'arrowsvg', role: 'group', 'aria-label': 'Force diagram: a block on a surface with a pull arrow and a friction arrow you can change' });
+      const defs = sv('defs', {}, sv('pattern', { id: 'hatch', width: 12, height: 12, patternUnits: 'userSpaceOnUse', patternTransform: 'rotate(45)' }, sv('rect', { width: 12, height: 12, fill: '#d9d3c2' }), sv('line', { x1: 0, y1: 0, x2: 0, y2: 12, stroke: '#b9b19a', 'stroke-width': 3 })));
+      const gridG = sv('g', { stroke: '#e3e7ef', 'stroke-width': 1 });
+      for (let x = BX0 - 13 * U; x <= BX1 + 13 * U; x += U) if (x >= 0 && x <= VBW) gridG.append(sv('line', { x1: x, y1: 84, x2: x, y2: 292 }));
+      const tickG = sv('g', {});
+      const lane = sv('g', {}, sv('rect', { x: 0, y: 262, width: VBW, height: 38, fill: 'url(#hatch)' }), sv('line', { x1: 0, y1: 262, x2: VBW, y2: 262, stroke: '#7b7466', 'stroke-width': 3 }));
+      const block = sv('g', {}, sv('rect', { x: BX0, y: 172, width: BX1 - BX0, height: 90, rx: 8, fill: '#3b6fb5', stroke: '#21345B', 'stroke-width': 3 }), sv('text', { x: (BX0 + BX1) / 2, y: 223, 'text-anchor': 'middle', fill: '#fff', 'font-weight': 700, 'font-size': 17 }, 'Block'));
+      const rowLab = (txt, y) => sv('text', { x: 14, y, 'font-size': 12, 'font-weight': 700, fill: '#5c6377' }, txt);
+      const scale = sv('g', {}, sv('line', { x1: 18, y1: 62, x2: 18 + U, y2: 62, stroke: '#21345B', 'stroke-width': 3 }), sv('text', { x: 18 + U + 8, y: 66, 'font-size': 12, 'font-weight': 700, fill: '#21345B' }, '= 1 N'));
+      const motionTag = sv('g', {}), speedG = sv('g', {});
+      const pullG = sv('g', {}), fricG = sv('g', {}), resG = sv('g', {});
+      svg.append(defs, gridG, tickG, lane, block, scale, motionTag, speedG, resG, pullG, fricG);
+      const caption = el('div', { class: 'arrowcap', role: 'status', 'aria-live': 'polite' });
+      const hud = el('div', { class: 'msg info arrowhud', role: 'status', text: 'Pick a scenario on the right.' });
+      left.append(svg, caption, hud);
+
+      /* ---------- state ---------- */
+      const T = { i: 0, pull: 0, fr: 0, solved: list.map(() => false), anim: null };
+      let cur = list[0];
+
+      function arrowShape(g, tailX, y, dx, color, label, handleId, locked) {
+        g.innerHTML = '';
+        const sign = dx >= 0 ? 1 : -1, x2 = tailX + dx * U;
+        if (dx !== 0) {
+          const hl = 16;
+          g.append(sv('line', { x1: tailX, y1: y, x2: x2 - sign * hl + sign * 1, y2: y, stroke: color, 'stroke-width': 7, 'stroke-linecap': 'butt' }));
+          g.append(sv('polygon', { points: x2 + ',' + y + ' ' + (x2 - sign * hl) + ',' + (y - 11) + ' ' + (x2 - sign * hl) + ',' + (y + 11), fill: color }));
+          g.append(sv('text', { x: (tailX + x2) / 2, y: y - 14, 'text-anchor': 'middle', 'font-size': 14, 'font-weight': 800, fill: '#1c2233', stroke: '#fff', 'stroke-width': 4, 'paint-order': 'stroke' }, label + ' ' + Math.abs(dx) + ' N'));
+        } else {
+          g.append(sv('text', { x: tailX + (handleId === 'pull' ? 46 : -46), y: y + 4, 'text-anchor': 'middle', 'font-size': 13, 'font-weight': 700, fill: '#7a8196', stroke: '#fff', 'stroke-width': 4, 'paint-order': 'stroke' }, label + ' 0 N'));
+        }
+        const hx = dx === 0 ? tailX : x2;
+        const h = sv('circle', { cx: hx, cy: y, r: 13, fill: locked ? '#e7e9ef' : '#fff', stroke: color, 'stroke-width': 4, class: 'ahandle' + (locked ? ' locked' : ''), tabindex: locked ? -1 : 0, role: 'slider', 'aria-label': label + ' arrow: drag, or use the left and right arrow keys', 'aria-valuemin': -MAXN, 'aria-valuemax': MAXN, 'aria-valuenow': dx, 'aria-valuetext': Math.abs(dx) + ' newtons ' + (dx === 0 ? '' : dx > 0 ? 'to the right' : 'to the left'), 'data-h': handleId });
+        g.append(h);
+        if (locked) g.append(sv('text', { x: hx, y: y + 4, 'text-anchor': 'middle', 'font-size': 11 }, '🔒'));
+      }
+      function draw() {
+        arrowShape(pullG, TAIL_P, Y_P, T.pull, PULL, 'Pull', 'pull', cur.givenPull);
+        arrowShape(fricG, TAIL_F, Y_F, T.fr, FRIC, 'Friction', 'fr', false);
+        const dp = T.pull === 0 ? 'no pull' : T.pull > 0 ? Math.abs(T.pull) + ' N right' : Math.abs(T.pull) + ' N left', df = T.fr === 0 ? 'no friction' : T.fr > 0 ? Math.abs(T.fr) + ' N right' : Math.abs(T.fr) + ' N left';
+        caption.innerHTML = '<b>Pull:</b> <span style="color:#a87600">' + dp + '</span> &nbsp; <b>Friction:</b> <span style="color:' + FRIC + '">' + df + '</span>';
+        motionTag.innerHTML = '';
+        const mtxt = cur.motion === 'rest' ? 'The block is not moving' : 'The block is sliding to the right';
+        motionTag.append(sv('rect', { x: 18, y: 14, width: 238, height: 30, rx: 15, fill: '#e8edf5', stroke: '#21345B', 'stroke-width': 2 }), sv('text', { x: 137, y: 34, 'text-anchor': 'middle', 'font-size': 13, 'font-weight': 700, fill: '#21345B' }, mtxt));
+      }
+      function setDx(which, dx) {
+        dx = Math.max(-MAXN, Math.min(MAXN, Math.round(dx)));
+        if (which === 'pull') { if (cur.givenPull) return; T.pull = dx; } else T.fr = dx;
+        draw(); clearFeedback(); resG.innerHTML = '';
+      }
+      /* pointer + keyboard on handles (event delegation on the svg) */
+      let drag = null;
+      const toX = e => { const r = svg.getBoundingClientRect(); return (e.clientX - r.left) * (VBW / r.width); };
+      svg.addEventListener('pointerdown', e => {
+        const h = e.target.closest && e.target.closest('.ahandle'); if (!h || h.classList.contains('locked')) return;
+        drag = h.dataset.h; svg.setPointerCapture(e.pointerId); e.preventDefault();
+      });
+      svg.addEventListener('pointermove', e => { if (!drag) return; const tail = drag === 'pull' ? TAIL_P : TAIL_F; setDx(drag, (toX(e) - tail) / U); });
+      const endDrag = () => { if (drag) { const k = drag; drag = null; const h = svg.querySelector('[data-h="' + k + '"]'); if (h) h.focus(); } };
+      svg.addEventListener('pointerup', endDrag); svg.addEventListener('pointercancel', endDrag);
+      svg.addEventListener('keydown', e => {
+        const h = e.target.closest && e.target.closest('.ahandle'); if (!h) return;
+        const k = h.dataset.h, now = k === 'pull' ? T.pull : T.fr; let nx = null;
+        if (e.key === 'ArrowRight' || e.key === 'ArrowUp') nx = now + 1; else if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') nx = now - 1; else if (e.key === 'Home') nx = 0; else return;
+        e.preventDefault(); setDx(k, nx);
+        const nh = svg.querySelector('[data-h="' + k + '"]'); if (nh) nh.focus();
+      });
+
+      /* ---------- panel ---------- */
+      const tabs = el('div', { class: 'scenetabs', role: 'tablist' });
+      const stext = el('div', { class: 'scenetext' });
+      const resIn = el('input', { type: 'number', min: 0, max: 20, step: 1, 'aria-label': 'Size of the resultant force in newtons', class: 'numin' });
+      const resDir = el('select', { 'aria-label': 'Direction of the resultant force', class: 'cloze' }, ...[['', '…'], ['none', 'no direction (0 N)'], ['right', 'to the right'], ['left', 'to the left']].map(o => el('option', { value: o[0], text: o[1] })));
+      const happens = el('select', { 'aria-label': 'What happens to the motion', class: 'cloze' }, el('option', { value: '', text: '…' }), ...Object.keys(C.arrowMotion).map(k => el('option', { value: k, text: 'the block ' + C.arrowMotion[k] })));
+      const check = el('button', { class: 'btn', text: 'Check' });
+      const show = el('button', { class: 'btn gold', text: 'Show what happens', disabled: true });
+      const fb = el('div', { class: 'msg info', role: 'status', text: 'Set the arrows, then fill in the resultant.' });
+      const fbList = el('ul', { class: 'fblist' });
+      const ansBox = el('div', { class: 'ansbox' });
+      panel.append(el('h3', { text: 'Scenario' }), tabs, stext,
+        el('h3', { text: '1 · Set the arrows' }), el('p', { class: 'sub', text: 'Drag the round handles on the diagram. A locked handle (🔒) is given.' }),
+        el('h3', { text: '2 · Resultant and motion' }),
+        el('div', { class: 'resrow' }, 'Resultant force: ', resIn, ' N ', resDir),
+        el('div', { class: 'resrow' }, 'What happens? ', happens),
+        el('div', { class: 'btnrow' }, check, show), fb, fbList, ansBox);
+
+      list.forEach((sc, i) => tabs.append(el('button', { role: 'tab', 'aria-selected': 'false', 'data-i': i, text: String(i + 1), 'aria-label': 'Scenario ' + (i + 1), onclick: () => open(i) })));
+      function clearFeedback() { fbList.innerHTML = ''; show.disabled = !T.solved[T.i]; }
+      function open(i) {
+        stopAnim(); T.i = i; cur = list[i]; T.pull = cur.givenPull ? cur.pull : 0; T.fr = 0; resIn.value = ''; resDir.value = ''; happens.value = '';
+        tabs.childNodes.forEach(b => { b.setAttribute('aria-selected', +b.dataset.i === i); b.classList.toggle('done', T.solved[+b.dataset.i]); });
+        stext.innerHTML = '<b>Scenario ' + (i + 1) + ' of ' + list.length + '.</b> ' + cur.text;
+        ansBox.innerHTML = ''; ansBox.append(RL.reveal('Show the model answer', '<p><b>Pull</b> ' + cur.pull + ' N right · <b>Friction</b> ' + cur.fr + ' N left · <b>Resultant</b> ' + (cur.res ? cur.res + ' N to the ' + cur.dir : '0 N') + ' · the block ' + C.arrowMotion[cur.happens] + '.</p><p>' + cur.why + '</p>'));
+        resG.innerHTML = ''; speedG.innerHTML = ''; tickG.innerHTML = '';
+        show.disabled = !T.solved[i]; fbList.innerHTML = '';
+        RL.msg(fb, T.solved[i] ? 'Solved ✓ Press Show what happens.' : 'Set the arrows, then fill in the resultant.', T.solved[i] ? 'ok' : 'info');
+        RL.msg(hud, cur.givenPull ? 'The pull arrow is set. Set the friction arrow: which way does friction act, and how big is it?' : 'Set both arrows from the text. One grid step is 1 N.', 'info');
+        draw();
+      }
+
+      check.onclick = () => {
+        const res = resIn.value === '' ? null : +resIn.value;
+        const items = [
+          { k: 'Pull arrow', ok: T.pull === cur.pull, hint: T.pull === 0 ? 'Set the pull arrow.' : T.pull < 0 ? 'The pull points the wrong way.' : 'Check the size of the pull: read the scenario again.' },
+          { k: 'Friction arrow', ok: T.fr === -cur.fr, hint: T.fr > 0 ? 'Friction acts against the push or sliding, so it points the other way.' : T.fr === 0 ? 'Set the friction arrow.' : 'The direction is right. Check its size.' },
+          { k: 'Resultant size', ok: res === cur.res, hint: 'Subtract the smaller arrow from the bigger one.' },
+          { k: 'Resultant direction', ok: resDir.value === cur.dir, hint: cur.res === 0 ? 'Equal and opposite arrows give a resultant of 0 N: no direction.' : 'The resultant points the way of the bigger arrow.' },
+          { k: 'Motion', ok: happens.value === cur.happens, hint: 'Balanced forces keep the same motion; unbalanced forces change it.' },
+        ];
+        const good = items.filter(x => x.ok).length;
+        fbList.innerHTML = '';
+        if (tier === 'x') RL.msg(fb, good === items.length ? 'All five parts are correct ✓' : good + ' of 5 parts are correct. Find the others yourself.', good === items.length ? 'ok' : 'bad');
+        else {
+          items.forEach(x => fbList.append(el('li', { class: x.ok ? 'ok' : 'bad', text: (x.ok ? '✓ ' : '✗ ') + x.k + (x.ok ? '' : ': ' + x.hint) })));
+          RL.msg(fb, good === items.length ? 'All five parts are correct ✓' : good + ' of 5 correct. Fix the red ones.', good === items.length ? 'ok' : 'bad');
+        }
+        if (good === items.length) {
+          if (!T.solved[T.i]) { T.solved[T.i] = true; RL.state.scores.arrows = T.solved.filter(Boolean).length + '/' + list.length; if (T.solved.every(Boolean)) RL.markDone('arrows'); }
+          tabs.childNodes[T.i].classList.add('done'); show.disabled = false; drawResultant(); RL.msg(hud, 'Right. The resultant is shown in green. Press Show what happens.', 'ok');
+        }
+      };
+      function drawResultant() {
+        resG.innerHTML = ''; const cx = (BX0 + BX1) / 2, y = 330, d = cur.res === 0 ? 0 : (cur.dir === 'right' ? cur.res : -cur.res);
+        resG.append(sv('text', { x: 14, y: y - 2, 'font-size': 12, 'font-weight': 700, fill: GOOD }, 'Resultant force'));
+        if (d === 0) { resG.append(sv('text', { x: cx, y: y + 5, 'text-anchor': 'middle', 'font-size': 16, 'font-weight': 800, fill: GOOD }, '0 N: balanced')); return; }
+        const sign = d > 0 ? 1 : -1, x2 = cx + d * U, hl = 16;
+        resG.append(sv('line', { x1: cx, y1: y, x2: x2 - sign * hl + sign, y2: y, stroke: GOOD, 'stroke-width': 8 }), sv('polygon', { points: x2 + ',' + y + ' ' + (x2 - sign * hl) + ',' + (y - 12) + ' ' + (x2 - sign * hl) + ',' + (y + 12), fill: GOOD }),
+          sv('text', { x: cx, y: y + 34, 'text-anchor': 'middle', 'font-size': 14, 'font-weight': 800, fill: GOOD }, Math.abs(d) + ' N to the ' + (d > 0 ? 'right' : 'left') + ': unbalanced'));
+      }
+
+      /* ---------- "what happens" animation ---------- */
+      function stopAnim() { if (T.anim) cancelAnimationFrame(T.anim); T.anim = null; speedG.innerHTML = ''; tickG.innerHTML = ''; }
+      show.onclick = () => {
+        stopAnim(); const h = cur.happens, dur = 3.4, t0 = performance.now(); let off = 0, last = t0;
+        const ticks = [], N = 24; for (let i = 0; i < N; i++) { const t = sv('rect', { x: i * 40, y: 276, width: 18, height: 5, fill: '#7b7466', rx: 2 }); tickG.append(t); ticks.push(t); }
+        const bar = sv('rect', { x: 600, y: 22, width: 0, height: 14, rx: 7, fill: '#21345B' });
+        speedG.append(sv('text', { x: 560, y: 34, 'text-anchor': 'end', 'font-size': 12, 'font-weight': 700, fill: '#21345B' }, 'Speed'), sv('rect', { x: 600, y: 22, width: 140, height: 14, rx: 7, fill: '#e8edf5', stroke: '#21345B', 'stroke-width': 1.5 }), bar);
+        const vAt = f => h === 'steady' ? 1 : h === 'faster' ? 0.25 + 1.4 * f : h === 'slower' ? 1.2 * (1 - f) : 0;
+        const stepA = now => {
+          const f = Math.min(1, (now - t0) / (dur * 1000)), dt = (now - last) / 1000; last = now; const v = vAt(f);
+          off = (off + v * 120 * dt) % 40;
+          ticks.forEach((t, i) => t.setAttribute('x', (i * 40 - off).toFixed(1)));
+          bar.setAttribute('width', Math.min(140, v / 1.7 * 140).toFixed(1));
+          if (f < 1) T.anim = requestAnimationFrame(stepA);
+          else { T.anim = null; RL.msg(hud, h === 'steady' ? 'The speed stayed the same: balanced forces.' : h === 'faster' ? 'It sped up: the resultant points the way it moves.' : h === 'slower' ? 'It slowed down: the resultant points against the motion.' : 'It stayed still: the forces are balanced.', 'ok'); }
+        };
+        T.anim = requestAnimationFrame(stepA);
+      };
+
+      RL.dbg.arrows = { solve: () => { T.pull = cur.pull; T.fr = -cur.fr; resIn.value = cur.res; resDir.value = cur.dir; happens.value = cur.happens; draw(); check.click(); }, open, n: list.length, state: () => ({ i: T.i, solved: T.solved.slice(), pull: T.pull, fr: T.fr }) };
+      open(0);
+
+      /* ---------- write-up + support ---------- */
+      const sup = C.arrowSupport;
+      const write = el('div', { class: 'panelcard' }, el('h3', { text: 'Write it in your book' }),
+        el('p', { html: 'Choose <b>one</b> scenario and write three sentences: <b>1.</b> the forces, with size (N) and direction; <b>2.</b> the resultant; <b>3.</b> what happens to the motion and <i>why</i>.' }),
+        el('p', { class: 'sub', html: tier === 's' ? 'Sentence start: “The pull is … N to the …. Friction is … N to the …. So the resultant is … N, and the block …”' : tier === 'm' ? 'Use the words <b>balanced</b> or <b>unbalanced</b> and <b>resultant</b>.' : 'Include why a force pointing one way does not mean the object moves that way.' }));
+      const support = RL.support({
+        adapt: { lead: sup.adapt.lead, nodes: sup.adapt.clozes.map(c => RL.cloze(c[0], c[1])) },
+        hot: { lead: 'Use the idea of a resultant to correct a misconception.', nodes: [RL.qblock(sup.hot)] },
+      });
+      root.append(el('div', { class: 'below' }, write, support));
+    },
+    show() { },
+  });
+})();
+
+/* Stage 4: Move it. Park it. Pupils choose how a trolley moves and how it parks, run two tests, then label each
+   contact as useful or unwanted friction. Model numbers are illustrative.
+   Effort to move = friction at the moving contact. Total friction holding it = that friction + the brake pad's grip (a classroom model, not a real-trolley formula). */
+(function () {
+  'use strict';
+  const RL = window.RL, el = RL.el, C = RL.content, sv = RL.sv;
+  const TR = C.trolley, FLOOR = 300, PX = 12; // 1 N = 12 px in the arrows
+
+  RL.stages.push({
+    id: 'trolley', title: 'Move it. Park it.', mins: 9,
+    build(root) {
+      const tier = RL.tier();
+      root.append(RL.mission({
+        kicker: 'Stage 4 · SoW 39.6 friction · useful and unwanted friction', title: 'Move it. Park it.', mins: 9,
+        spec: 'Friction can be useful (grip, brakes) or unwanted (wasted effort, wear) · reduce it with lubricants and smooth surfaces · increase it with rough, gripping surfaces',
+        steps: ['<b>Choose</b> how the trolley moves and how it parks.', 'Press <b>Test 1</b> (push it) and <b>Test 2</b> (park it, then push). Read the friction numbers.', '<b>Label</b> each contact: is its friction useful or unwanted? Then answer the question below.'],
+        ladder: { s: 'Hints on every card, and the limits are stated for you.', m: 'No hints. The two tests check your design.', x: 'Then plan a fair test and say what this board cannot prove.' },
+      }));
+
+      const wrap = el('div', { class: 'enzgrid trolgrid arrowgrid' });
+      const left = el('div', { class: 'arrowleft' });
+      const panel = el('div', { class: 'panel' });
+      wrap.append(left, panel);
+      root.append(el('div', { class: 'board' }, wrap));
+
+      const T = { move: null, park: null, t1: null, t2: null, labOK: false, anim: null, x: 0, rot: 0, brake: false, push: 0, fric: 0, tag1: '', done: false };
+      const svg = sv('svg', { viewBox: '0 60 760 340', class: 'arrowsvg', role: 'img', 'aria-label': 'A trolley with the parts you choose, on a floor' });
+      const scene = sv('g', {}), troll = sv('g', {}), arrows = sv('g', {}), pins = sv('g', {});
+      svg.append(sv('defs', {}, sv('pattern', { id: 'hatch2', width: 12, height: 12, patternUnits: 'userSpaceOnUse', patternTransform: 'rotate(45)' }, sv('rect', { width: 12, height: 12, fill: '#d9d3c2' }), sv('line', { x1: 0, y1: 0, x2: 0, y2: 12, stroke: '#b9b19a', 'stroke-width': 3 }))),
+        sv('rect', { x: 0, y: FLOOR, width: 760, height: 100, fill: 'url(#hatch2)' }), sv('line', { x1: 0, y1: FLOOR, x2: 760, y2: FLOOR, stroke: '#7b7466', 'stroke-width': 3 }), scene, troll, arrows, pins);
+      const hud = el('div', { class: 'msg info arrowhud', role: 'status', text: 'Choose how the trolley moves and parks, then run the tests.' });
+      const meters = el('div', { class: 'meters' });
+      left.append(svg, meters, hud);
+
+      /* ---------- drawing ---------- */
+      function draw() {
+        troll.innerHTML = ''; pins.innerHTML = ''; arrows.innerHTML = '';
+        const mv = T.move, pk = T.park, skids = mv === 'skids', oiled = mv === 'oiled', x = T.x;
+        const g = sv('g', { transform: 'translate(' + x + ' 0)' }); troll.append(g);
+        /* handle */
+        g.append(sv('path', { d: 'M252 168 L212 112 L236 96', fill: 'none', stroke: '#21345B', 'stroke-width': 8, 'stroke-linecap': 'round', 'stroke-linejoin': 'round' }));
+        /* body */
+        g.append(sv('rect', { x: 250, y: 150, width: 280, height: 82, rx: 12, fill: '#21345B' }), sv('rect', { x: 262, y: 168, width: 256, height: 12, rx: 6, fill: '#f0b429' }), sv('text', { x: 390, y: 214, 'text-anchor': 'middle', 'font-size': 15, 'font-weight': 800, fill: '#fff', 'letter-spacing': 2 }, 'SCHOOL TROLLEY'));
+        if (!mv) { g.append(sv('text', { x: 390, y: 262, 'text-anchor': 'middle', 'font-size': 14, 'font-weight': 700, fill: '#7a8196' }, 'Choose how it moves →')); return; }
+        if (skids) {
+          [[262, 322], [458, 518]].forEach(([a, b]) => { g.append(sv('rect', { x: a, y: 232, width: b - a, height: FLOOR - 232, rx: 6, fill: '#4a5058' }), sv('rect', { x: a, y: FLOOR - 12, width: b - a, height: 12, rx: 4, fill: 'url(#hatch2)', stroke: '#2b2f35', 'stroke-width': 2 })); });
+          pins.append(sv('circle', { cx: 292 + x, cy: FLOOR - 4, r: 30, fill: 'none', stroke: '#e0483e', 'stroke-width': 3, 'stroke-dasharray': '6 5' }), sv('text', { x: 292 + x, y: FLOOR + 40, 'text-anchor': 'middle', 'font-size': 13, 'font-weight': 800, fill: '#c0332d', stroke: '#fff', 'stroke-width': 4, 'paint-order': 'stroke' }, 'Skid on the floor'));
+        } else {
+          [300, 480].forEach(cx => {
+            g.append(sv('rect', { x: cx - 8, y: 232, width: 16, height: 30, fill: '#4a5058' }));
+            const w = sv('g', { transform: 'rotate(' + T.rot + ' ' + cx + ' 270)' }, sv('circle', { cx, cy: 270, r: 30, fill: '#2b2f35' }), sv('circle', { cx, cy: 270, r: 21, fill: '#3a4048' }),
+              ...[0, 60, 120].map(a => sv('line', { x1: cx - 21 * Math.cos(a * Math.PI / 180), y1: 270 - 21 * Math.sin(a * Math.PI / 180), x2: cx + 21 * Math.cos(a * Math.PI / 180), y2: 270 + 21 * Math.sin(a * Math.PI / 180), stroke: '#7b838f', 'stroke-width': 3 })), sv('circle', { cx, cy: 270, r: 9, fill: '#cfd6e0' }));
+            g.append(w);
+            if (oiled) [[-13, 0], [13, 0], [0, -6]].forEach(([dx, dy]) => g.append(sv('path', { d: 'M' + (cx + dx) + ' ' + (236 + dy) + ' q 6 9 0 14 q -6 -5 0 -14', fill: '#c98a00', stroke: '#6b4a00', 'stroke-width': 1.5 })));
+          });
+          pins.append(sv('circle', { cx: 300 + x, cy: 270, r: 15, fill: 'none', stroke: '#e0483e', 'stroke-width': 3, 'stroke-dasharray': '6 5' }), sv('text', { x: 300 + x, y: FLOOR + 30, 'text-anchor': 'middle', 'font-size': 13, 'font-weight': 800, fill: '#c0332d', stroke: '#fff', 'stroke-width': 4, 'paint-order': 'stroke' }, oiled ? 'Oiled axle' : 'Dry axle'));
+          if (pk && pk !== 'none') {
+            const col = pk === 'rubber' ? '#14171b' : '#cfd6e0', press = T.brake ? 2 : -4;
+            g.append(sv('rect', { x: 262, y: 232, width: 8, height: 22, fill: '#4a5058' }), sv('rect', { x: 252 + press, y: 252, width: 16, height: 38, rx: 4, fill: col, stroke: '#14171b', 'stroke-width': 2 }));
+            if (pk === 'rubber') for (let i = 0; i < 4; i++) g.append(sv('line', { x1: 254 + press, y1: 258 + i * 8, x2: 266 + press, y2: 258 + i * 8, stroke: '#3a4048', 'stroke-width': 2 }));
+            pins.append(sv('circle', { cx: 262 + x, cy: 271, r: 17, fill: 'none', stroke: '#2f5fb3', 'stroke-width': 3, 'stroke-dasharray': '6 5' }), sv('text', { x: 238 + x, y: FLOOR + 60, 'text-anchor': 'middle', 'font-size': 13, 'font-weight': 800, fill: '#2f5fb3', stroke: '#fff', 'stroke-width': 4, 'paint-order': 'stroke' }, pk === 'rubber' ? 'Rubber brake pad' : 'Plastic brake pad'));
+          }
+        }
+        /* push and friction arrows */
+        const arr = (x1, y, len, col, label, dir) => { if (len < 1) return; const x2 = x1 + dir * len, hl = 14; arrows.append(sv('line', { x1, y1: y, x2: x2 - dir * hl + dir, y2: y, stroke: col, 'stroke-width': 7 }), sv('polygon', { points: x2 + ',' + y + ' ' + (x2 - dir * hl) + ',' + (y - 10) + ' ' + (x2 - dir * hl) + ',' + (y + 10), fill: col }), sv('text', { x: (x1 + x2) / 2, y: y - 12, 'text-anchor': 'middle', 'font-size': 14, 'font-weight': 800, fill: '#1c2233', stroke: '#fff', 'stroke-width': 4, 'paint-order': 'stroke' }, label)); };
+        if (T.push > 0) arr(160 + x, 190, T.push * PX, '#d89a00', 'Push ' + T.push + ' N', 1);
+        if (T.fric > 0) arr(630 + x, 130, T.fric * PX, '#d6403a', 'Friction ' + T.fric + ' N', -1);
+      }
+
+      /* ---------- panel: choices ---------- */
+      const choices = {};
+      function group(title, key, items) {
+        const g = el('div', { class: 'optgroup', role: 'radiogroup', 'aria-label': title });
+        items.forEach(it => {
+          const b = el('button', { class: 'optcard', role: 'radio', 'aria-checked': 'false', 'data-k': key, 'data-id': it.id, onclick: () => choose(key, it.id) }, el('b', { text: it.label }), tier === 's' ? el('small', { text: it.hint }) : null);
+          g.append(b);
+        });
+        choices[key] = g; return g;
+      }
+      const brief = el('p', { class: 'brief', html: TR.brief[tier] });
+      const t1 = el('button', { class: 'btn', text: 'Test 1: push it along', disabled: true }), t2 = el('button', { class: 'btn', text: 'Test 2: park it, then push', disabled: true });
+      const tmsg = el('div', { class: 'msg info', role: 'status', text: 'Make your choices first.' });
+      const labTable = el('div', { class: 'labtable' });
+      const labMsg = el('div', { class: 'msg info', role: 'status' });
+      const labSel = {};
+      const labBtn = el('button', { class: 'btn alt', text: 'Check my labels' });
+      TR.labels.forEach(l => {
+        const s = el('select', { class: 'cloze', 'aria-label': l.row }, el('option', { value: '', text: '…' }), el('option', { value: 'useful', text: 'useful friction' }), el('option', { value: 'unwanted', text: 'unwanted friction' }));
+        labSel[l.id] = s; labTable.append(el('div', { class: 'labrow' }, el('span', { text: l.row }), s));
+      });
+      panel.append(el('h3', { text: 'The brief' }), brief,
+        el('h3', { text: '1 · How does it move?' }), group('How does it move?', 'move', TR.move),
+        el('h3', { text: '2 · How does it park?' }), group('How does it park?', 'park', TR.park),
+        el('h3', { text: '3 · Test it' }), el('div', { class: 'btnrow' }, t1, t2), tmsg);
+      left.append(el('div', { class: 'labcard' }, el('h3', { text: '4 · Label the contacts: useful or unwanted?' }), labTable, el('div', { class: 'btnrow' }, labBtn), labMsg));
+
+      const mv = id => TR.move.find(m => m.id === id), pk = id => TR.park.find(p => p.id === id);
+      const effort = () => mv(T.move).effort;
+      const hold = () => effort() + (T.move === 'skids' ? 0 : pk(T.park).grip);
+      function refreshChoices() {
+        RL.$$('.optcard', panel).forEach(b => b.setAttribute('aria-checked', T[b.dataset.k] === b.dataset.id));
+        const skids = T.move === 'skids';
+        RL.$$('.optcard', panel).forEach(b => { const off = b.dataset.k === 'park' && skids; b.disabled = off; b.classList.toggle('off', off); });
+        t1.disabled = !T.move; t2.disabled = !(T.move && (T.park || skids));
+        if (skids) T.park = null;
+      }
+      function resetResults() { T.t1 = T.t2 = null; T.brake = false; T.push = 0; T.fric = 0; T.x = 0; renderMeters(); }
+      function choose(key, id) {
+        if (T.anim) return;
+        T[key] = id; if (key === 'move' && id === 'skids') T.park = null;
+        refreshChoices(); resetResults(); draw();
+        RL.msg(tmsg, 'Design changed. Run the tests again.', 'info');
+        if (T.move && (T.park || T.move === 'skids')) RL.msg(hud, 'Now run Test 1 and Test 2.', 'info');
+      }
+
+      /* ---------- meters ---------- */
+      function renderMeters() {
+        meters.innerHTML = '';
+        const row = (label, val, mark, ok, sub) => el('div', { class: 'meterrow' }, el('div', { class: 'ml', text: label }), el('div', { class: 'mb' }, el('i', { class: ok === null ? '' : ok ? 'ok' : 'bad', style: { width: val === null ? '0%' : Math.min(100, val / 12 * 100) + '%' } }), el('s', { style: { left: (mark / 12 * 100) + '%' } })), el('div', { class: 'mv', text: val === null ? '?' : val + ' N' }), el('div', { class: 'ms', text: sub }));
+        meters.append(row('Effort to move', T.t1 ? T.t1.val : null, TR.needMove, T.t1 ? T.t1.ok : null, 'must be ' + TR.needMove + ' N or less (the line)'),
+          row('Total friction holding it', T.t2 ? T.t2.val : null, TR.needHold, T.t2 ? T.t2.ok : null, 'must be ' + TR.needHold + ' N or more (the line)'));
+      }
+      renderMeters();
+
+      /* ---------- animation ---------- */
+      function run(dur, f, done) {
+        const t0 = performance.now(); let last = t0;
+        const step = now => { const k = Math.min(1, (now - t0) / (dur * 1000)), dt = (now - last) / 1000; last = now; f(k, dt); draw(); if (k < 1) T.anim = requestAnimationFrame(step); else { T.anim = null; done && done(); } };
+        T.anim = requestAnimationFrame(step);
+      }
+      const lock = on => { RL.$$('.optcard', panel).forEach(b => { if (on) b.disabled = true; }); t1.disabled = t2.disabled = on; if (!on) refreshChoices(); };
+      t1.onclick = () => {
+        if (T.anim) return; const e = effort(), ok = e <= TR.needMove; lock(true); T.brake = false; T.push = e; T.fric = e; T.x = 0;
+        RL.msg(tmsg, 'Pushing at a steady speed…', 'info');
+        run(2.0, (k, dt) => { T.x = ok ? 150 * k : 16 * Math.sin(k * 14) * (1 - k); T.rot += (ok ? 7 : 0.5) * dt * 60; }, () => {
+          T.t1 = { val: e, ok }; T.x = 0; T.push = 0; T.fric = 0; renderMeters(); lock(false); draw();
+          RL.msg(tmsg, ok ? '✓ Easy to push: it needs only ' + e + ' N. The moving parts have little friction.' : '✗ It needs ' + e + ' N to keep it moving: more than ' + TR.needMove + ' N. There is too much friction at the moving parts.', ok ? 'ok' : 'bad'); check();
+        });
+      };
+      t2.onclick = () => {
+        if (T.anim) return; const h = hold(), ok = h >= TR.needHold; lock(true); T.brake = true; T.push = TR.needHold; T.fric = Math.min(h, 99); T.x = 0;
+        RL.msg(tmsg, 'Parked. A draught pushes with ' + TR.needHold + ' N…', 'info');
+        run(2.2, (k, dt) => { T.x = ok ? 3 * Math.sin(k * 30) * (1 - k) : 190 * k * k; T.rot += (ok ? 0 : 6) * dt * 60; }, () => {
+          T.t2 = { val: h, ok }; T.x = 0; T.push = 0; T.fric = 0; T.brake = false; renderMeters(); lock(false); draw();
+          RL.msg(tmsg, ok ? '✓ It stays put: ' + h + ' N of friction holds it against the ' + TR.needHold + ' N push.' : '✗ It rolled away: only ' + h + ' N of friction holds it, which is less than the ' + TR.needHold + ' N push.', ok ? 'ok' : 'bad'); check();
+        });
+      };
+      function check() {
+        if (T.t1 && T.t2 && T.t1.ok && T.t2.ok) { RL.msg(hud, 'Both tests passed ✓ Now label the contacts.', 'ok'); finish(); }
+        else if (T.t1 && T.t2) RL.msg(hud, 'One test failed. Change a part and test again: which friction is too big or too small?', 'bad');
+      }
+      function finish() { T.done = true; if (T.labOK) { RL.state.scores.trolley = 'passed both tests'; RL.markDone('trolley'); } }
+      labBtn.onclick = () => {
+        let good = 0; const out = [];
+        TR.labels.forEach(l => { const v = labSel[l.id].value, ok = v === l.ans; if (ok) good++; labSel[l.id].classList.toggle('cloze-ok', ok); out.push(ok ? '✓' : '✗'); });
+        T.labOK = good === TR.labels.length;
+        RL.msg(labMsg, T.labOK ? 'Both correct ✓ Friction at the moving parts wastes effort (unwanted). Friction at the brake keeps it still (useful). The same force can be useful or unwanted depending on the job.' : good + ' of ' + TR.labels.length + ' correct. Ask: does this friction help the trolley do its job, or get in the way?', T.labOK ? 'ok' : 'bad');
+        if (T.done) finish();
+      };
+      RL.dbg.trolley = { choose, t1: () => t1.click(), t2: () => t2.click(), state: () => ({ move: T.move, park: T.park, t1: T.t1, t2: T.t2, anim: !!T.anim, lab: T.labOK }), labels: () => { TR.labels.forEach(l => (labSel[l.id].value = l.ans)); labBtn.click(); } };
+      refreshChoices(); draw();
+
+      /* ---------- check yourself + support ---------- */
+      const checks = el('div', { class: 'panelcard' }, el('h3', { text: 'Check yourself' }), ...C.trolleyQs[tier].map(q => RL.qblock(q)));
+      const sup = C.trolleySupport;
+      const support = RL.support({
+        adapt: { lead: sup.adapt.lead, nodes: sup.adapt.clozes.map(c => RL.cloze(c[0], c[1])) },
+        hot: { lead: 'Weigh up a design idea: where is friction useful, and where is it not?', nodes: [RL.qblock(sup.hot)] },
+      });
+      root.append(el('div', { class: 'below' }, checks, support));
+    },
+  });
+})();
+
+/* Stage 5: Tarsia puzzles (triangle, hexagon). Free movement and rotation; pieces snap to a hidden
+   lattice; every shared edge is checked against the design. Texts come from RL.content.tarsia. */
+(function () {
+  'use strict';
+  const RL = window.RL, el = RL.el, C = RL.content;
+  const NS = 'http://www.w3.org/2000/svg';
+  const sv = (tag, a) => { const n = document.createElementNS(NS, tag); for (const k in a) n.setAttribute(k, a[k]); return n; };
+  const R3 = Math.sqrt(3), rad = d => d * Math.PI / 180, mod = (a, n) => ((a % n) + n) % n;
+
+  /* ---------- lattice geometry per shape ---------- */
+  function makeShape(name) {
+    if (name === 'tri') {
+      const L = 215, h = L * R3 / 2;
+      const V = (a, b) => [a * L + b * L / 2, b * h];
+      const S = {
+        name, L, step: 60, n: 3, nrm: [90, 210, 330], apo: L / (2 * R3), SZ: L * 1.25, boardH: 650, maxLines: 3, fs: [11.5, 11, 10.5, 10], maxW: L * 0.56, fill: '#e9f1ff',
+        poly: [[0, -2 * h / 3], [-L / 2, h / 3], [L / 2, h / 3]],
+        parse: k => { const p = k.split(','); return { t: p[0], a: +p[1], b: +p[2] }; },
+        key: (t, a, b) => t + ',' + a + ',' + b,
+        center(k) { const c = S.parse(k); const v = c.t === 'U' ? [V(c.a + 1, c.b), V(c.a + 1, c.b + 1), V(c.a, c.b + 1)] : [V(c.a, c.b), V(c.a + 1, c.b), V(c.a, c.b + 1)]; return [(v[0][0] + v[1][0] + v[2][0]) / 3, (v[0][1] + v[1][1] + v[2][1]) / 3]; },
+        neighbor(k, phi) { const c = S.parse(k), f = mod(phi, 360); const K = S.key;
+          if (c.t === 'U') return f === 90 ? K('D', c.a, c.b + 1) : f === 210 ? K('D', c.a, c.b) : f === 330 ? K('D', c.a + 1, c.b) : null;
+          return f === 270 ? K('U', c.a, c.b - 1) : f === 150 ? K('U', c.a - 1, c.b) : f === 30 ? K('U', c.a, c.b) : null; },
+        need: k => (k[0] === 'U' ? 0 : 1), // required parity of rotation index
+        near(x, y) { const b = y / h, a = (x - b * L / 2) / L, out = []; for (let da = -2; da <= 2; da++) for (let db = -2; db <= 2; db++) { out.push(S.key('U', Math.floor(a) + da, Math.floor(b) + db), S.key('D', Math.floor(a) + da, Math.floor(b) + db)); } return out; },
+        thresh: L * 0.5,
+        org: () => [26 - 1.5 * L, 30], scatter: W => [3.35 * L + 60, W - 1.3 * L - 10],
+      };
+      S.design = [['U', 0, 2], ['U', 1, 1], ['U', 1, 2], ['U', 2, 0], ['U', 2, 1], ['U', 2, 2], ['D', 1, 2], ['D', 2, 1], ['D', 2, 2]].map(c => ({ k: S.key(...c), ri: c[0] === 'U' ? 0 : 1 }));
+      return S;
+    }
+    if (name === 'hex') {
+      const L = 140, D = { 0: [1, 0], 60: [0, 1], 120: [-1, 1], 180: [-1, 0], 240: [0, -1], 300: [1, -1] };
+      const S = {
+        name, L, step: 60, n: 6, nrm: [0, 60, 120, 180, 240, 300], apo: L * R3 / 2, SZ: 2 * L + 6, boardH: 760, maxLines: 3, fs: [11.5, 11, 10.5, 10], maxW: L * 0.7, fill: '#e8f7ec',
+        poly: [0, 1, 2, 3, 4, 5].map(i => [L * Math.cos(rad(30 + 60 * i)), L * Math.sin(rad(30 + 60 * i))]),
+        parse: k => { const p = k.split(','); return { q: +p[1], r: +p[2] }; },
+        key: (q, r) => 'H,' + q + ',' + r,
+        center(k) { const c = S.parse(k); return [R3 * L * (c.q + c.r / 2), 1.5 * L * c.r]; },
+        neighbor(k, phi) { const c = S.parse(k), d = D[mod(phi, 360)]; return d ? S.key(c.q + d[0], c.r + d[1]) : null; },
+        need: () => null,
+        near(x, y) { const q = (R3 / 3 * x - y / 3) / L, r = (2 / 3 * y) / L, out = []; for (let dq = -2; dq <= 2; dq++) for (let dr = -2; dr <= 2; dr++) out.push(S.key(Math.round(q) + dq, Math.round(r) + dr)); return out; },
+        thresh: L * 0.85,
+        org: () => [26 + 2.6 * L, 24 + 2.5 * L], scatter: W => [5.4 * L + 40, W - 2 * L - 14],
+      };
+      S.design = [[0, 0], [1, 0], [0, 1], [-1, 1], [-1, 0], [0, -1], [1, -1]].map(c => ({ k: S.key(...c), ri: 0 }));
+      return S;
+    }
+    const L = 190, S = {
+      name, L, step: 90, n: 4, nrm: [0, 90, 180, 270], apo: L / 2, SZ: L * 1.5, boardH: 640, maxLines: 3, fs: [11, 10.5, 10, 9.5], maxW: L - 76, fill: '#fff3d9',
+      poly: [[-L / 2, -L / 2], [L / 2, -L / 2], [L / 2, L / 2], [-L / 2, L / 2]],
+      parse: k => { const p = k.split(','); return { i: +p[1], j: +p[2] }; },
+      key: (i, j) => 'S,' + i + ',' + j,
+      center(k) { const c = S.parse(k); return [(c.i + 0.5) * L, (c.j + 0.5) * L]; },
+      neighbor(k, phi) { const c = S.parse(k), f = mod(phi, 360); return f === 0 ? S.key(c.i + 1, c.j) : f === 90 ? S.key(c.i, c.j + 1) : f === 180 ? S.key(c.i - 1, c.j) : f === 270 ? S.key(c.i, c.j - 1) : null; },
+      need: () => null,
+      near(x, y) { const i = Math.floor(x / L), j = Math.floor(y / L), out = []; for (let di = -1; di <= 1; di++) for (let dj = -1; dj <= 1; dj++) out.push(S.key(i + di, j + dj)); return out; },
+      thresh: L * 0.62,
+      org: () => [26, 22], scatter: W => [3.4 * L + 40, W - 1.5 * L - 8],
+    };
+    S.design = [0, 1, 2].flatMap(i => [0, 1, 2].map(j => ({ k: S.key(i, j), ri: 0 })));
+    return S;
+  }
+
+  /* ---------- build a puzzle design from pairs ---------- */
+  function design(S, pairs, seed) {
+    const rnd = RL.rng(seed), set = {}; S.design.forEach(d => (set[d.k] = d));
+    const edgeList = [], seen = {};
+    S.design.forEach(d => S.nrm.forEach((n, i) => {
+      const nb = S.neighbor(d.k, n + S.step * d.ri);
+      if (nb && set[nb]) { const key = [d.k, nb].sort().join('|'); if (!seen[key]) { seen[key] = true; edgeList.push({ key, cells: [d.k, nb] }); } }
+    }));
+    if (edgeList.length !== pairs.length) throw new Error('Tarsia design: ' + edgeList.length + ' internal edges but ' + pairs.length + ' pairs (' + S.name + ')');
+    const order = RL.shuffle(pairs.map((p, i) => i), rnd), assigned = {};
+    edgeList.forEach((e, idx) => { const pi = order[idx], flip = rnd() < 0.5; assigned[e.key] = { pi, flip, cells: e.cells, text: pairs[pi] }; });
+    const pieces = S.design.map((d, idx) => {
+      const edges = S.nrm.map((n, i) => {
+        const nb = S.neighbor(d.k, n + S.step * d.ri), key = nb && set[nb] ? [d.k, nb].sort().join('|') : null;
+        if (!key) return { pair: null, text: '' };
+        const a = assigned[key], first = a.cells[0] === d.k, side = (first ? 0 : 1) ^ (a.flip ? 1 : 0);
+        return { pair: a.pi, text: a.text[side] };
+      });
+      return { id: idx, edges, native: d.k, nativeRi: d.ri, ri: 0, cell: null };
+    });
+    return { pieces, total: edgeList.length, adj: edgeList.map(e => e.cells) };
+  }
+
+  /* ---------- text layout ---------- */
+  const mctx = document.createElement('canvas').getContext('2d');
+  function wrapLines(text, S) {
+    let lines = [], fsz = S.fs[S.fs.length - 1];
+    for (const fs of S.fs) {
+      mctx.font = '600 ' + fs + 'px Montserrat, system-ui, sans-serif';
+      const words = text.split(' '); lines = []; let cur = '';
+      words.forEach(w => { const t = cur ? cur + ' ' + w : w; if (mctx.measureText(t).width <= S.maxW * 0.97 || !cur) cur = t; else { lines.push(cur); cur = w; } });
+      lines.push(cur); fsz = fs; if (lines.length <= S.maxLines) break;
+    }
+    return { lines, fs: fsz };
+  }
+  function edgeGroup(S, i, text) {
+    const n = S.nrm[i], g = sv('g', {}); if (!text) return g;
+    let rho = mod(n + 90, 360); if (rho > 90 && rho <= 270) rho = mod(rho + 180, 360); if (rho > 180) rho -= 360;
+    const up = [Math.sin(rad(rho)), -Math.cos(rad(rho))], nv = [Math.cos(rad(n)), Math.sin(rad(n))], tops = up[0] * nv[0] + up[1] * nv[1] > 0;
+    const { lines, fs } = wrapLines(text, S), lh = fs * 1.2, pad = 7;
+    const mx = S.apo * nv[0], my = S.apo * nv[1];
+    const grp = sv('g', { transform: 'translate(' + mx + ' ' + my + ') rotate(' + rho + ')' });
+    lines.forEach((ln, k) => {
+      const y = tops ? pad + fs * 0.82 + k * lh : -pad - (lines.length - 1 - k) * lh - fs * 0.12;
+      const t = sv('text', { x: 0, y, 'text-anchor': 'middle', 'font-size': fs, 'font-weight': 600, 'font-family': 'Montserrat, system-ui, sans-serif', fill: '#1c2233' }); t.textContent = ln; grp.append(t);
+    });
+    g.append(grp); return g;
+  }
+
+  /* ---------- stage ---------- */
+  const stage = {
+    id: 'tarsia', title: 'Tarsia', mins: 10,
+    build(root) {
+      const tier = RL.tier();
+      root.append(RL.mission({
+        kicker: 'Stage 5 · consolidate and explain', title: 'Tarsia: match the edges', mins: 10,
+        spec: 'Triangle: friction ideas · Hexagon: forces, arrows, resultants and friction · explain three joins in your book',
+        steps: ['<b>Drag</b> pieces anywhere. Press <b>↻</b> (or R) to turn a piece. Touching edges must say matching things.', 'Pieces snap to a hidden grid. Build the shape; there is no fixed starting place.',
+          'Press <b>Check joins</b> to see green ✓ and red ✗ on every touching edge. Solve one puzzle, then <b>explain three joins</b> to your partner.'],
+        ladder: { s: 'Joins are marked live as you go. Short, picture-able ideas.', m: 'Check joins when you are ready. Arrows, resultants and causes.', x: 'Check tells you how many joins are right, not which. Evaluation and fair-test ideas.' },
+      }));
+      const tabs = el('div', { class: 'tarsia-tabs', role: 'tablist' });
+      const host = el('div'); const tools = el('div', { class: 'toolbar' }); const stat = el('div', { class: 'tstat' });
+      const keys = ['tri', 'hex'];
+      const puzzles = {};
+      let cur = null;
+      keys.forEach(k => tabs.append(el('button', { role: 'tab', 'aria-selected': 'false', 'data-k': k, text: C.tarsia[k].name, onclick: () => open(k) })));
+      root.append(tabs, stat, tools, host);
+
+      const hintBtn = el('button', { class: 'btn alt', text: 'Hint' }), checkBtn = el('button', { class: 'btn', text: tier === 's' ? 'Live checking is on' : 'Check joins', disabled: tier === 's' });
+      const gridBtn = el('button', { class: 'btn alt', text: 'Show grid', 'aria-pressed': 'false' }), resetBtn = el('button', { class: 'btn alt', text: 'Scramble again' });
+      const tmsg = el('div', { class: 'msg info', role: 'status', text: 'Pick a puzzle and start moving pieces.' });
+      tools.append(checkBtn, hintBtn, gridBtn, resetBtn, tmsg);
+
+      function open(k) {
+        cur = stage._cur = k; tabs.childNodes.forEach(b => b.setAttribute('aria-selected', b.dataset.k === k));
+        keys.forEach(x => puzzles[x] && puzzles[x].board.classList.toggle('hide', x !== k));
+        if (!puzzles[k]) puzzles[k] = createPuzzle(k);
+        puzzles[k].refresh(); RL.msg(tmsg, C.tarsia[k].topic + '. ' + (tier === 's' ? 'Joins are marked as you build.' : 'Press Check joins to test your build.'), 'info');
+      }
+
+      function createPuzzle(k) {
+        const S = makeShape(k), data = C.tarsia[k];
+        const pairs = data.pairs[tier];
+        const D = design(S, pairs, 101 + k.length * 31 + (tier === 'm' ? 7 : tier === 'x' ? 13 : 0));
+        const board = el('div', { class: 'board tboard', style: { height: S.boardH + 'px' } });
+        host.append(board);
+        const overlay = sv('svg', { style: 'position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:150' }); board.append(overlay);
+        const gridG = sv('g', { style: 'display:none' }); overlay.append(gridG); const marks = sv('g', {}); overlay.append(marks);
+        const P = { S, D, board, cells: {}, pieces: [], placedN: 0, solved: false, t0: 0, timer: null, elapsed: 0, hints: 0 };
+        let ORG = [0, 0];
+        const pos = c => { const q = S.center(c); return [q[0] + ORG[0], q[1] + ORG[1]]; };
+
+        function drawGrid() {
+          gridG.innerHTML = ''; const W = board.clientWidth, H = board.clientHeight;
+          const all = {}; for (let x = -100; x < W + 100; x += S.L * 0.5) for (let y = -100; y < H + 100; y += S.L * 0.5) S.near(x - ORG[0], y - ORG[1]).forEach(c => (all[c] = 1));
+          Object.keys(all).forEach(c => { const q = pos(c); if (q[0] < -S.L || q[0] > W + S.L || q[1] < -S.L || q[1] > H + S.L) return;
+            const ri = S.need(c) == null ? 0 : S.need(c); gridG.append(sv('polygon', { points: S.poly.map(p => rotPt(p, ri * S.step, q)).join(' '), fill: 'none', stroke: '#c9bfa4', 'stroke-width': 1, 'stroke-dasharray': '3 4' })); });
+        }
+        const rotPt = (p, deg, q) => { const c = Math.cos(rad(deg)), s = Math.sin(rad(deg)); return [(p[0] * c - p[1] * s + q[0]).toFixed(1), (p[0] * s + p[1] * c + q[1]).toFixed(1)]; };
+
+        function setRot(p, deg, instant) {
+          p.svg.style.transition = instant || RL.reduced ? 'none' : 'transform .22s ease'; p.svg.style.transform = 'rotate(' + deg + 'deg)'; p.deg = deg;
+        }
+        function centreOf(p) { return [p.node._x + S.SZ / 2, p.node._y + S.SZ / 2]; }
+        function moveCentre(p, x, y, glide) { const fx = x - S.SZ / 2, fy = y - S.SZ / 2; if (glide) RL.glide(p.node, fx, fy, 160); else p.node._setPos(fx, fy); }
+
+        function mkPiece(pc) {
+          const node = el('div', { class: 'piece', role: 'button', 'aria-label': 'Puzzle piece ' + (pc.id + 1) + '. Edges: ' + pc.edges.map(e => e.text || 'blank').join('; ') + '. Arrow keys move, R rotates.', style: { width: S.SZ + 'px', height: S.SZ + 'px', pointerEvents: 'none' } });
+          const svg = sv('svg', { width: S.SZ, height: S.SZ, viewBox: (-S.SZ / 2) + ' ' + (-S.SZ / 2) + ' ' + S.SZ + ' ' + S.SZ, style: 'overflow:visible;transform-origin:50% 50%' });
+          svg.append(sv('polygon', { class: 'hit', points: S.poly.map(p => p.join(',')).join(' '), fill: S.fill, stroke: '#21345B', 'stroke-width': 2.5, 'stroke-linejoin': 'round', style: 'pointer-events:all' }));
+          const inset = sv('polygon', { points: S.poly.map(p => (p[0] * 0.965) + ',' + (p[1] * 0.965)).join(' '), fill: 'none', stroke: 'rgba(33,52,91,.25)', 'stroke-width': 1, style: 'pointer-events:none' }); svg.append(inset);
+          pc.edges.forEach((e, i) => { const g = edgeGroup(S, i, e.text); g.style.pointerEvents = 'none'; svg.append(g); });
+          node.append(svg);
+          const rot = el('div', { class: 'rot', text: '↻', title: 'Turn piece (R)', 'aria-label': 'Turn piece', style: { pointerEvents: 'auto' } });
+          rot.addEventListener('pointerdown', e => e.stopPropagation()); rot.addEventListener('click', e => { e.stopPropagation(); rotate(p); });
+          node.append(rot); board.append(node);
+          const p = Object.assign(pc, { node, svg, deg: 0, solvedMark: false });
+          RL.drag(node, { area: board, margin: 0.55, ignore: '.rot', onStart: () => startTimer() , onMove: () => liftPiece(p), onEnd: () => release(p), onRotate: () => rotate(p) });
+          return p;
+        }
+        function liftPiece(p) { if (p.cell) { delete P.cells[p.cell]; p.cell = null; P.placedN--; evaluate(); } }
+        function rotate(p) {
+          startTimer();
+          let steps = 1;
+          if (p.cell && S.need(p.cell) != null) steps = 2; // triangles: keep the same cell (up or down) while snapped
+          p.ri = mod(p.ri + steps, 360 / S.step);
+          p.degAcc = (p.degAcc || 0) + steps * S.step; setRot(p, p.degAcc);
+          if (p.cell) evaluate(); // free pieces never snap on rotation; only a drop snaps
+        }
+        function release(p, soft) {
+          const [cx, cy] = centreOf(p);
+          let best = null, bd = S.thresh; const need = S.name === 'tri' ? p.ri % 2 : null;
+          S.near(cx - ORG[0], cy - ORG[1]).forEach(c => {
+            const nd = S.need(c); if (nd != null && nd !== need) return;
+            const q = pos(c), d = Math.hypot(q[0] - cx, q[1] - cy);
+            if (d < bd && (!P.cells[c] || P.cells[c] === p)) { bd = d; best = c; }
+          });
+          if (best) {
+            if (p.cell && p.cell !== best) { delete P.cells[p.cell]; P.placedN--; p.cell = null; }
+            if (!p.cell) { P.cells[best] = p; p.cell = best; P.placedN++; }
+            const q = pos(best); moveCentre(p, q[0], q[1], true);
+          } else if (!soft) { const occ = S.near(cx - ORG[0], cy - ORG[1]).some(c => P.cells[c] && Math.hypot(pos(c)[0] - cx, pos(c)[1] - cy) < S.thresh); if (occ) RL.msg(tmsg, 'That space is taken. Try another spot.', 'bad'); }
+          evaluate();
+        }
+
+        /* evaluation of every touching edge */
+        function evaluate(show) {
+          const res = { good: 0, bad: 0, marks: [] }, doneKey = {};
+          Object.keys(P.cells).forEach(c => {
+            const p = P.cells[c];
+            S.nrm.forEach((n, i) => {
+              const phi = mod(n + S.step * p.ri, 360), nb = S.neighbor(c, phi), q = nb && P.cells[nb]; if (!q) return;
+              const key = [c, nb].sort().join('|'); if (doneKey[key]) return; doneKey[key] = true;
+              const back = mod(phi + 180, 360), j = S.nrm.findIndex(m => mod(m + S.step * q.ri, 360) === back);
+              if (j < 0) return;
+              const ok = p.edges[i].pair != null && p.edges[i].pair === q.edges[j].pair;
+              ok ? res.good++ : res.bad++;
+              const m = pos(c), nv = [Math.cos(rad(phi)), Math.sin(rad(phi))], tv = [-nv[1], nv[0]], mid = [m[0] + nv[0] * S.apo, m[1] + nv[1] * S.apo];
+              res.marks.push({ ok, pa: p, pb: q, a: [mid[0] - tv[0] * S.L / 2, mid[1] - tv[1] * S.L / 2], b: [mid[0] + tv[0] * S.L / 2, mid[1] + tv[1] * S.L / 2], mid });
+            });
+          });
+          P.res = res;
+          const live = tier === 's' || show; marks.innerHTML = '';
+          if (live && tier !== 'x') res.marks.forEach(m => {
+            marks.append(sv('line', { x1: m.a[0], y1: m.a[1], x2: m.b[0], y2: m.b[1], stroke: m.ok ? '#1f7a4d' : '#b3261e', 'stroke-width': 6, 'stroke-linecap': 'round', opacity: 0.85 }));
+          });
+          if (show && tier !== 'x') setTimeout(() => { if (tier !== 's') marks.innerHTML = ''; }, 3500);
+          refreshStat(show);
+          if (!P.solved && P.placedN === D.pieces.length && res.good === D.total && res.bad === 0) solved();
+        }
+        function startTimer() { if (P.timer || P.solved) return; P.t0 = Date.now() - P.elapsed * 1000; P.timer = setInterval(refreshStat, 1000); }
+        function refreshStat() { if (P.board !== board) return; if (!P.solved && P.t0) P.elapsed = Math.floor((Date.now() - P.t0) / 1000); if (cur === k) paintStat(); }
+        function paintStat() {
+          const r = P.res || { good: 0, bad: 0 }, m = Math.floor(P.elapsed / 60), s = P.elapsed % 60;
+          stat.innerHTML = '';
+          [el('span', { class: 'big', text: 'Joins ' + r.good + ' / ' + D.total }), el('span', { class: 'chip', text: 'Placed ' + P.placedN + ' / ' + D.pieces.length }),
+            el('span', { class: 'chip', text: '⏱ ' + m + ':' + String(s).padStart(2, '0') }), P.solved ? el('span', { class: 'chip t-s', text: 'Solved ✓' }) : null,
+            tier === 'x' && !P.solved ? el('span', { class: 'chip t-x', text: 'Grade 8–9: Check shows the number only' }) : null].forEach(n => n && stat.append(n));
+        }
+        function solved() {
+          P.solved = true; clearInterval(P.timer); P.timer = null; paintStat();
+          RL.state.scores.tarsia = Object.keys(puzzles).filter(x => puzzles[x].solved).length + ' puzzle' + (Object.keys(puzzles).filter(x => puzzles[x].solved).length > 1 ? 's' : '');
+          RL.markDone('tarsia'); marks.innerHTML = '';
+          D.pieces.forEach(p => RL.shake(p.node));
+          RL.msg(tmsg, 'Solved ✓ ' + data.name + ' in ' + Math.floor(P.elapsed / 60) + ':' + String(P.elapsed % 60).padStart(2, '0') + '. Try the other shape, then explain three joins in your book.', 'ok');
+        }
+        P.check = () => {
+          evaluate(true); const r = P.res;
+          if (P.solved) return;
+          if (!r.good && !r.bad) return RL.msg(tmsg, 'No pieces are touching yet. Build some joins first.', 'info');
+          RL.msg(tmsg, tier === 'x' ? r.good + ' of ' + r.good + r.bad + ' touching edges match. Find the others yourself.' : (r.good + ' joins correct (green), ' + r.bad + ' to fix (red).'), r.bad ? 'bad' : 'ok');
+        };
+        P.hint = () => {
+          const cand = D.adj.map(a => [D.pieces.find(x => x.native === a[0]), D.pieces.find(x => x.native === a[1])]).filter(([A, B]) => !(A.cell && B.cell && joinOk(A, B)));
+          if (!cand.length) return RL.msg(tmsg, 'Every touching pair is already correct.', 'ok');
+          const [A, B] = cand[Math.floor(Math.random() * cand.length)]; P.hints++;
+          [A, B].forEach(x => { x.node.classList.add('hint'); setTimeout(() => x.node.classList.remove('hint'), 3000); });
+          RL.msg(tmsg, 'The two glowing pieces belong next to each other. Look for edges that match in meaning.', 'info');
+        };
+        function joinOk(A, B) { // are A and B placed in adjacent cells with matching edges?
+          return ((P.res && P.res.marks) || []).some(m => m.ok && ((m.pa === A && m.pb === B) || (m.pa === B && m.pb === A)));
+        }
+        P.reset = () => {
+          clearInterval(P.timer); P.timer = null; P.elapsed = 0; P.t0 = 0; P.solved = false; P.cells = {}; P.placedN = 0; P.res = null; marks.innerHTML = '';
+          scatter(); evaluate();
+        };
+        function scatter() {
+          const W = board.clientWidth, H = board.clientHeight, rnd = RL.rng(Date.now() % 100000), half = Math.min(S.SZ * 0.5, W / 2 - 2, H / 2 - 2), placed = [];
+          RL.shuffle(P.pieces, rnd).forEach(p => {
+            p.cell = null; const ri = Math.floor(rnd() * (360 / S.step)); p.ri = ri; p.degAcc = ri * S.step; setRot(p, p.degAcc, true);
+            let best = null, bd = -1;
+            for (let n = 0; n < 60; n++) { const x = half + rnd() * (W - 2 * half), y = half + rnd() * (H - 2 * half), d = placed.reduce((m, q) => Math.min(m, Math.hypot(q[0] - x, q[1] - y)), 1e9); if (d > bd) { bd = d; best = [x, y]; } }
+            placed.push(best); moveCentre(p, best[0], best[1]);
+          });
+        }
+        P.refresh = () => { ORG = S.org(); drawGrid(); if (!P.inited) { P.inited = true; D.pieces.forEach(pc => P.pieces.push(mkPiece(pc))); scatter(); evaluate(); } paintStat(); };
+        P.dbg = () => { const br = board.getBoundingClientRect(); return { ri: P.pieces.map(p => p.ri), pieces: P.pieces.map(p => { const c = centreOf(p), t = pos(p.native); return { id: p.id, ri: p.ri, nativeRi: p.nativeRi, orient: 360 / S.step, cx: br.left + c[0], cy: br.top + c[1], tx: br.left + t[0], ty: br.top + t[1], cell: p.cell }; }), solved: P.solved, total: D.total, res: P.res }; };
+        P.dbgSolve = () => { D.pieces.forEach(p => { p.ri = p.nativeRi; p.degAcc = p.ri * S.step; setRot(p, p.degAcc, true); if (p.cell) { delete P.cells[p.cell]; p.cell = null; P.placedN--; } const q = pos(p.native); moveCentre(p, q[0], q[1]); release(p, true); }); };
+        P.setGrid = on => { gridG.style.display = on ? 'block' : 'none'; };
+        return P;
+      }
+
+      /* join check helper: recomputed from cells so hint can tell correct pairs */
+      checkBtn.onclick = () => cur && puzzles[cur].check();
+      hintBtn.onclick = () => cur && puzzles[cur].hint();
+      gridBtn.onclick = () => { const on = gridBtn.getAttribute('aria-pressed') !== 'true'; gridBtn.setAttribute('aria-pressed', on); gridBtn.textContent = on ? 'Hide grid' : 'Show grid'; keys.forEach(x => puzzles[x] && puzzles[x].setGrid(on)); };
+      resetBtn.onclick = () => cur && puzzles[cur].reset();
+      stage.open = open; RL.dbg.tarsia = () => (cur && puzzles[cur] ? puzzles[cur].dbg() : null); RL.dbg.tarsiaSolve = () => cur && puzzles[cur].dbgSolve();
+
+      /* support + go further */
+      const adaptNodes = [el('ul', { html: '<li>Start with a piece that has <b>blank edges</b>: those go on the outside.</li><li>Pick one keyword on an edge and hunt for its partner.</li><li>Use <b>Hint</b> for a nudge, and <b>Show grid</b> to see where pieces will snap.</li>' }),
+        el('div', { class: 'q' }, el('div', { class: 'stem', text: 'Stuck? The matching pairs for the open puzzle:' }), (function () {
+          const holder = el('div'); const rv = el('details', { class: 'reveal' }, el('summary', { text: 'Show the matching pairs' }), el('div', { class: 'ans' }));
+          rv.addEventListener('toggle', () => { if (!rv.open) return; const k = cur || 'tri', pr = C.tarsia[k].pairs[tier]; rv.lastChild.innerHTML = '<p><b>' + C.tarsia[k].name + '</b></p><ul>' + pr.map(p => '<li>' + p[0] + ' ↔ ' + p[1] + '</li>').join('') + '</ul>'; });
+          holder.append(rv); return holder; })())];
+      const support = RL.support({
+        adapt: { lead: 'Smaller steps for the puzzle: outside edges first, then one keyword at a time.', nodes: adaptNodes },
+        hot: { lead: 'Be the puzzle designer.', nodes: [RL.qblock(C.tarsiaSupport.hot)] },
+      });
+      root.append(el('div', { class: 'below', style: { gridTemplateColumns: '1fr' } }, support));
+      stage._first = 'tri';
+    },
+    show() { if (stage.open) stage.open(stage._cur || 'tri'); },
+  };
+  RL.stages.push(stage);
+})();
+
+/* Stage 6: exit ticket (no support, protects the evidence), self-marking, confidence compared with score. */
+(function () {
+  'use strict';
+  const RL = window.RL, el = RL.el, C = RL.content;
+  const TOPICS = [['fric', 'Friction'], ['res', 'Arrows and resultants'], ['fair', 'Fair tests']];
+  RL.stages.push({
+    id: 'exit', title: 'Exit ticket', mins: 6,
+    build(root) {
+      const tier = RL.tier();
+      root.append(RL.mission({
+        kicker: 'Stage 6 · independent evidence', title: 'Exit ticket: show what you know', mins: 6,
+        spec: 'One question per idea · no hints on this screen · write in your book, then mark your own work',
+        steps: ['<b>Write</b> an answer to each question without any help.', 'Open the mark scheme and <b>tick every point you earned</b> (be honest: only what you wrote).', 'Rate your confidence again and read your summary.'],
+        ladder: { s: 'State and describe (2–3 marks each).', m: 'Explain and calculate (3 marks each).', x: 'Evaluate and apply (4 marks each).' },
+      }));
+      const wrap = el('div', { class: 'panelcard' }, el('h3', { text: 'Questions' }));
+      const marks = {}, maxes = {};
+      TOPICS.forEach(([id, name], idx) => {
+        const q = C.exit[id][tier]; maxes[id] = q.marks; marks[id] = 0;
+        const boxes = q.ms.map((p, i) => el('label', { class: 'msrow' }, el('input', { type: 'checkbox', onchange: () => { marks[id] = RL.$$('input', body).filter(c => c.checked).length; tot.textContent = marks[id] + ' / ' + q.marks; RL.state.scores['exit_' + id] = marks[id] + '/' + q.marks; sum(); } }), el('span', { html: p })));
+        const tot = el('b', { text: '0 / ' + q.marks });
+        const body = el('div', { class: 'ans' }, el('div', null, 'Tick each point you wrote: ', tot), ...boxes, q.note ? el('p', { html: '<i>' + q.note + '</i>' }) : null);
+        const rv = el('details', { class: 'reveal' }, el('summary', { text: 'Mark scheme and self-mark' }), body);
+        wrap.append(el('div', { class: 'q' }, el('div', { class: 'stem', html: '<b>' + (idx + 1) + '. ' + name + ':</b> ' + q.stem + ' <span class="marks">[' + q.marks + ']</span>' }), el('textarea', { 'aria-label': 'Your answer to question ' + (idx + 1), placeholder: 'Write your answer…' }), rv));
+      });
+      const conf = el('div', { class: 'panelcard' }, el('h3', { text: 'How confident are you now? (1 = not at all, 5 = very)' }));
+      const cg = el('div', { class: 'conf' });
+      TOPICS.forEach(([id, name]) => {
+        const out = el('span', { text: String(RL.state.post[id] || 3) });
+        const r = el('input', { type: 'range', min: 1, max: 5, step: 1, value: RL.state.post[id] || 3, 'aria-label': name + ' confidence now', oninput: () => { out.textContent = r.value; RL.state.post[id] = +r.value; sum(); } });
+        RL.state.post[id] = +r.value; cg.append(el('span', { text: name }), r, out);
+      });
+      conf.append(cg);
+      const summary = el('div', { class: 'panelcard summary' }, el('h3', { text: 'Your summary' }));
+      const sumBody = el('div'); summary.append(sumBody);
+      function sum() {
+        const rows = TOPICS.map(([id, name]) => {
+          const pre = RL.state.pre[id] || '–', post = RL.state.post[id] || '–', m = marks[id], max = maxes[id], pc = max ? m / max : 0;
+          let note = 'On track.';
+          if (pc < 0.5 && (RL.state.pre[id] >= 4 || RL.state.post[id] >= 4)) note = 'Confidence higher than score. Revisit this topic.';
+          else if (pc < 0.5) note = 'Go back to the ' + (id === 'fric' ? 'friction bench' : id === 'res' ? 'force-arrow stage' : 'friction bench (fair test)') + '.';
+          else if (pc >= 0.8 && tier !== 'x') note = 'Strong. Try the next route up.';
+          else if (pc >= 0.8) note = 'Secure on the top route.';
+          return '<tr><td>' + name + '</td><td>' + pre + '</td><td>' + post + '</td><td>' + m + ' / ' + max + '</td><td style="text-align:left">' + note + '</td></tr>';
+        }).join('');
+        const sc = RL.state.scores;
+        const act = [['Sort (first try)', sc.sort], ['Bench readings recorded', sc.bench], ['Force-arrow scenarios solved', sc.arrows], ['Trolley design', sc.trolley], ['Tarsia solved', sc.tarsia]].filter(a => a[1]).map(a => '<li>' + a[0] + ': <b>' + a[1] + '</b></li>').join('');
+        sumBody.innerHTML = '<table><tr><th>Topic</th><th>Before</th><th>Now</th><th>Exit score</th><th>Next step</th></tr>' + rows + '</table>' + (act ? '<p><b>Activity results this lesson</b></p><ul>' + act + '</ul>' : '');
+      }
+      sum();
+      root.append(wrap, el('div', { class: 'below split' }, conf, summary));
+      RL.stages.find(s => s.id === 'exit').show = sum;
+    },
+  });
+})();
+
+/* Controller: start overlay (tier + confidence), stepper, rebuild on tier change. */
+(function () {
+  'use strict';
+  const RL = window.RL, el = RL.el, $ = RL.$;
+  const TOPICS = [['fric', 'Friction'], ['res', 'Arrows and resultants'], ['fair', 'Fair tests']];
+  const DESC = {
+    s: ['Get started', 'Short steps, sentence helpers and readable hints. Build a secure foundation first. (Grades 2–4 planning range)'],
+    m: ['Build understanding', 'Explain and calculate with the evidence you collect. The main route. (Grades 5–6 planning range)'],
+    x: ['Go further', 'Evaluate claims, control variables and apply your ideas to new problems. (Grades 7–9 planning range)'],
+  };
+  let current = 'sort';
+
+  function build() {
+    const main = $('#main'), steps = $('#steps');
+    RL.disposeGL();
+    main.innerHTML = ''; steps.innerHTML = '';
+    RL.stages.forEach((s, i) => {
+      const sec = el('section', { class: 'stage', id: 'stage-' + s.id, 'aria-label': s.title });
+      main.append(sec);
+      try { s.build(sec); } catch (err) { sec.append(el('div', { class: 'msg bad', text: 'This screen failed to load: ' + err.message })); console.error(s.id, err); }
+      steps.append(el('button', { class: 'step' + (RL.state.done[s.id] ? ' done' : ''), 'data-id': s.id, onclick: () => go(s.id) }, el('span', { class: 'n' }, el('span', { text: String(i + 1) })), s.title, el('span', { class: 'mins', text: '⏱ ' + s.mins })));
+    });
+    go(current, true);
+  }
+  function go(id, quiet) {
+    current = id;
+    RL.stages.forEach(s => { $('#stage-' + s.id).classList.toggle('on', s.id === id); });
+    RL.$$('.step').forEach(b => { if (b.dataset.id === id) b.setAttribute('aria-current', 'step'); else b.removeAttribute('aria-current'); });
+    const st = RL.stages.find(s => s.id === id); if (st && st.show) st.show();
+    if (!quiet) { history.replaceState(null, '', '#' + id); window.scrollTo({ top: 0 }); }
+  }
+  function setTier(t) {
+    RL.state.tier = t; RL.state.done = {}; RL.state.scores = {};
+    RL.$$('.tbtn').forEach(b => b.setAttribute('aria-pressed', b.dataset.t === t));
+    build();
+  }
+
+  const bar = $('#tierbar');
+  Object.keys(DESC).forEach(t => bar.append(el('button', { class: 'tbtn', 'data-t': t, 'aria-pressed': 'false', title: DESC[t][1], text: DESC[t][0], onclick: () => { if (RL.state.tier !== t && confirm('Switch to ' + DESC[t][0] + '? Your work on this page will be reset.')) setTier(t); } })));
+
+  /* start overlay */
+  const start = $('#start'), tiers = $('#tiers'), conf = $('#conf'), go1 = $('#go');
+  let chosen = null;
+  Object.keys(DESC).forEach(t => {
+    const b = el('button', { class: 'tiercard', 'data-t': t, 'aria-pressed': 'false', onclick: () => { chosen = t; RL.$$('.tiercard').forEach(x => x.setAttribute('aria-pressed', x.dataset.t === t)); go1.disabled = false; } }, el('b', { text: DESC[t][0] }), el('small', { text: DESC[t][1] }));
+    tiers.append(b);
+  });
+  TOPICS.forEach(([id, name]) => {
+    const out = el('span', { text: '3' }); RL.state.pre[id] = 3;
+    conf.append(el('span', { text: name }), el('input', { type: 'range', min: 1, max: 5, step: 1, value: 3, 'aria-label': name + ' confidence', oninput: e => { out.textContent = e.target.value; RL.state.pre[id] = +e.target.value; } }), out);
+  });
+  go1.onclick = () => { if (!chosen) return; start.hidden = true; setTier(chosen); const h = location.hash.slice(1); if (RL.stages.some(s => s.id === h)) go(h); };
+  window.addEventListener('hashchange', () => { const h = location.hash.slice(1); if (RL.state.tier && RL.stages.some(s => s.id === h)) go(h); });
+  // Test hook / teacher link: ?level=s|m|x skips the overlay
+  const q = new URLSearchParams(location.search).get('level');
+  if (q && DESC[q]) { chosen = q; start.hidden = true; setTier(q); const h = location.hash.slice(1); if (RL.stages.some(s => s.id === h)) go(h); }
+  else setTimeout(() => RL.$('.tiercard').focus(), 50);
+})();
+
+</script>
+</body>
+</html>
