@@ -1,0 +1,1888 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Year 8 Science revision lab: seasons, mass and weight, speed and graphs</title>
+<meta name="description" content="Interactive Year 8 revision lab: sort, a 3D seasons model, a mass and weight bench, a distance–time graph builder and Tarsia puzzles. Choose your own level.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#21345B; --navy2:#2f4a7d; --gold:#B8860B; --gold2:#f0d78a; --paper:#F7F1E3; --ink:#1c2233; --soft:#e8edf5;
+  --line:#cfc7b5; --ok:#1f7a4d; --okbg:#e3f3ea; --bad:#b3261e; --badbg:#fbe7e5; --bg:#e9e7e2; --card:#fff;
+  --s:#2a7f62; --m:#2f5fb3; --x:#8a3ea8;
+  --radius:16px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Montserrat",system-ui,-apple-system,"Segoe UI",sans-serif;font-size:15px;line-height:1.45}
+h1,h2,h3{margin:0}
+button{font:inherit;cursor:pointer}
+.skip{position:absolute;left:-999px;top:8px;background:var(--navy);color:#fff;padding:8px 12px;border-radius:8px;z-index:100}
+.skip:focus{left:8px}
+:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+
+/* ---------- top bar ---------- */
+.top{display:flex;align-items:center;gap:18px;padding:8px 18px;background:var(--navy);color:#fff;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:12px;min-width:0}
+.logo{background:var(--gold);color:#fff;font-weight:800;border-radius:10px;padding:6px 10px;letter-spacing:.04em}
+.brand h1{font-family:Georgia,serif;font-size:21px;font-weight:700;line-height:1.1}
+.brand p{margin:0;font-size:11.5px;opacity:.82}
+.tierbar{display:flex;gap:6px;margin-left:auto;align-items:center}
+.tierbar .lab{font-size:11px;text-transform:uppercase;letter-spacing:.08em;opacity:.8;margin-right:4px}
+.tbtn{border:2px solid rgba(255,255,255,.4);background:transparent;color:#fff;border-radius:999px;padding:5px 12px;font-weight:700;font-size:12.5px}
+.tbtn[aria-pressed="true"]{background:#fff;color:var(--navy);border-color:#fff}
+.tbtn[data-t="s"][aria-pressed="true"]{background:#bfe9d6}
+.tbtn[data-t="m"][aria-pressed="true"]{background:#cfe0ff}
+.tbtn[data-t="x"][aria-pressed="true"]{background:#e9d3f5}
+
+/* ---------- stepper ---------- */
+.steps{display:flex;gap:6px;padding:8px 14px;background:var(--soft);border-bottom:2px solid var(--line);overflow-x:auto}
+.step{display:flex;align-items:center;gap:8px;border:2px solid transparent;background:#fff;border-radius:12px;padding:6px 12px;font-weight:700;color:var(--navy);white-space:nowrap}
+.step .n{width:24px;height:24px;border-radius:50%;background:var(--navy);color:#fff;display:grid;place-items:center;font-size:12px}
+.step .mins{font-weight:600;font-size:11px;color:#555;background:var(--paper);border-radius:999px;padding:1px 8px}
+.step[aria-current="step"]{border-color:var(--gold);box-shadow:0 2px 0 var(--gold)}
+.step.done .n{background:var(--ok)}
+.step.done .n::after{content:"✓"}
+.step.done .n span{display:none}
+
+/* ---------- stage ---------- */
+main{max-width:1320px;margin:0 auto;padding:14px 16px 60px}
+.stage{display:none}
+.stage.on{display:block}
+.mission{background:var(--card);border:2px solid var(--line);border-radius:var(--radius);padding:8px 16px;display:grid;grid-template-columns:1fr 1.5fr;gap:2px 22px;margin-bottom:10px;align-items:start}
+.mission .ymy{font-size:12.5px;margin-top:4px}
+.mission .dothis{font-size:13.5px;align-self:center}
+.mission details.lad{grid-column:1/-1;font-size:12.5px}
+.mission details.lad summary{cursor:pointer;color:var(--navy);font-weight:700;font-size:12px}
+.mission details.lad .spec{margin:4px 0}
+.mission .kick{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:var(--gold)}
+.mission h2{font-family:Georgia,serif;color:var(--navy);font-size:20px;line-height:1.15;margin:1px 0 3px}
+.mission .spec{font-size:12px;color:#555}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:2px}
+.chip{display:inline-block;font-size:11.5px;font-weight:700;border-radius:999px;padding:2px 10px;background:var(--paper);border:1px solid var(--line);color:var(--navy)}
+.chip.t-s{background:#dff3ea;border-color:#9bd1b9;color:#145a42}
+.chip.t-m{background:#e1ebff;border-color:#a9c1ef;color:#1d417f}
+.chip.t-x{background:#f2e4fa;border-color:#cfaee0;color:#5f2a77}
+.dothis{margin:0;padding-left:20px}
+.dothis li{margin:2px 0}
+.dothis b{color:var(--navy)}
+.ladder{grid-column:1/-1;display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:4px}
+.ladder div{font-size:12px;border-radius:10px;padding:6px 10px;border:2px solid transparent;background:#f6f6f2;opacity:.65}
+.ladder div.me{opacity:1;border-color:currentColor;background:#fff}
+.ladder .ls{color:var(--s)} .ladder .lm{color:var(--m)} .ladder .lx{color:var(--x)}
+.ladder b{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.07em}
+.ladder span{color:var(--ink)}
+
+.board{position:relative;background:var(--paper);border:2px solid var(--line);border-radius:var(--radius);overflow:hidden;user-select:none;-webkit-user-select:none}
+.toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:8px 0}
+.btn{border:2px solid var(--navy);background:var(--navy);color:#fff;border-radius:10px;padding:6px 14px;font-weight:700;font-size:13px}
+.btn.alt{background:#fff;color:var(--navy)}
+.btn.gold{background:var(--gold);border-color:var(--gold)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn:hover:not(:disabled){filter:brightness(1.08)}
+.msg{font-weight:600;font-size:13.5px;min-height:20px;padding:4px 10px;border-radius:8px}
+.msg.ok{background:var(--okbg);color:var(--ok)}
+.msg.bad{background:var(--badbg);color:var(--bad)}
+.msg.info{background:var(--soft);color:var(--navy)}
+
+/* draggable cards */
+.card{position:absolute;touch-action:none;cursor:grab;background:#fff;border:2px solid var(--navy);border-radius:12px;padding:6px 10px;font-weight:700;font-size:13px;color:var(--navy);box-shadow:0 3px 0 rgba(33,52,91,.25);z-index:5}
+.card:active,.card.drag{cursor:grabbing;box-shadow:0 10px 18px rgba(0,0,0,.25);transform:scale(1.03)}
+.card.sel{outline:3px solid var(--gold);outline-offset:2px}
+.card.good{border-color:var(--ok);background:var(--okbg);color:var(--ok)}
+.card.wrong{border-color:var(--bad);background:var(--badbg);color:var(--bad)}
+.card small{display:block;font-weight:500;font-size:11px;color:#444}
+@keyframes shake{0%,100%{translate:0}25%{translate:-6px}75%{translate:6px}}
+.shake{animation:shake .3s 2}
+
+/* sort */
+.sortboard{height:460px}
+.zone{position:absolute;top:12px;bottom:12px;border:3px dashed #aab4c8;border-radius:14px;background:rgba(255,255,255,.55);padding:8px;color:var(--navy)}
+.zone h3{font-size:14px;text-transform:uppercase;letter-spacing:.06em;text-align:center}
+.zone.over{background:rgba(240,215,138,.4);border-color:var(--gold)}
+.table-label{position:absolute;bottom:6px;left:12px;font-size:11px;color:#777;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+
+/* label lab */
+.labgrid{display:grid;grid-template-columns:1fr 230px;height:520px}
+.view{position:relative;background:radial-gradient(circle at 50% 40%,#fff 0,#eef2f9 70%)}
+.view canvas{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:none;cursor:grab}
+.view canvas:active{cursor:grabbing}
+.pinlayer{position:absolute;inset:0;pointer-events:none}
+.pinlayer svg{position:absolute;inset:0;width:100%;height:100%}
+.ring{position:absolute;width:34px;height:34px;margin:-17px 0 0 -17px;border-radius:50%;border:3px solid var(--navy);background:rgba(255,255,255,.92);display:grid;place-items:center;font-weight:800;font-size:13px;color:var(--navy);pointer-events:auto;cursor:pointer;transition:opacity .2s}
+.ring.far{opacity:.5}
+.ring.hot{background:var(--gold2);border-color:var(--gold);transform:scale(1.15)}
+.ring.done{border-color:var(--ok);background:var(--okbg)}
+.tag{position:absolute;transform:translate(-50%,-50%);background:var(--okbg);border:2px solid var(--ok);color:#0f5132;border-radius:9px;padding:3px 8px;font-weight:700;font-size:12px;white-space:nowrap;pointer-events:none;z-index:4}
+.tray{background:#fff;border-left:2px solid var(--line);padding:8px;display:flex;flex-direction:column;gap:6px;overflow:auto;position:relative}
+.tray h3{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--gold)}
+.tray .card{position:relative;cursor:grab;left:auto;top:auto}
+.tray .card.floating{position:absolute}
+.viewtools{position:absolute;left:8px;bottom:8px;display:flex;gap:6px;z-index:6}
+.viewtools button{border:2px solid var(--navy);background:#fff;color:var(--navy);border-radius:8px;width:32px;height:32px;font-weight:800}
+.celltabs{display:flex;gap:6px;padding:8px;background:#fff;border-bottom:2px solid var(--line)}
+.celltabs button{border:2px solid var(--navy);background:#fff;color:var(--navy);border-radius:999px;padding:4px 14px;font-weight:700;font-size:13px}
+.celltabs button[aria-selected="true"]{background:var(--navy);color:#fff}
+.celltabs .prog{margin-left:auto;font-weight:700;color:var(--navy);align-self:center;font-size:13px}
+
+/* enzyme lab */
+.enzgrid{display:grid;grid-template-columns:1fr 340px;height:640px}
+.enzleft{display:flex;flex-direction:column;min-height:0}
+.enzleft .view{flex:1;min-height:0}
+.enzleft .gbox{border-top:2px solid var(--line);background:#fff;padding:6px 10px 4px;display:grid;grid-template-columns:1fr auto;gap:2px 10px;align-items:center}
+.enzleft .gbox canvas.graph{grid-column:1/-1;height:158px;border:none;border-radius:0}
+.panel{background:#fff;border-left:2px solid var(--line);padding:10px 12px;display:flex;flex-direction:column;gap:8px;overflow:auto}
+.panel h3{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--gold)}
+.slider{display:grid;gap:2px}
+.slider label{font-weight:700;font-size:13px;display:flex;justify-content:space-between;color:var(--navy)}
+.slider input{width:100%;accent-color:var(--navy)}
+.readout{font-size:12.5px;background:var(--soft);border-radius:10px;padding:8px 10px;color:var(--navy)}
+.readout b{display:block}
+.predict{background:var(--paper);border:2px solid var(--gold2);border-radius:10px;padding:8px}
+.predict p{margin:0 0 6px;font-weight:700;font-size:13px}
+.predict .opt{display:block;width:100%;text-align:left;background:#fff;border:2px solid var(--line);border-radius:8px;padding:4px 8px;margin:3px 0;font-size:12.5px;font-weight:600}
+.predict .opt.good{border-color:var(--ok);background:var(--okbg)}
+.predict .opt.bad{border-color:var(--bad);background:var(--badbg)}
+canvas.graph{width:100%;height:158px;background:#fff;display:block}
+.hudmsg{position:absolute;left:50%;top:10px;transform:translateX(-50%);z-index:6;max-width:80%;text-align:center}
+.subs{position:absolute;left:8px;bottom:8px;z-index:6;display:grid;gap:4px;font-size:12px;font-weight:700;color:var(--navy)}
+.subs .hint{background:rgba(255,255,255,.85);border-radius:8px;padding:3px 8px}
+
+/* osmosis */
+.osgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
+.osgrid > section{background:#fff;border:2px solid var(--line);border-radius:var(--radius);padding:12px 14px}
+.osgrid h3{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--gold);margin-bottom:6px}
+.bench{height:380px}
+.bench canvas{position:absolute;inset:0;width:100%;height:100%;touch-action:none}
+.rtable{border-collapse:collapse;width:100%;font-size:13px}
+.rtable th{background:var(--navy);color:#fff;padding:5px 6px;font-size:11.5px}
+.rtable td{border:1px solid var(--line);padding:4px 6px;text-align:center}
+.rtable input{width:74px;font:inherit;font-weight:700;text-align:center;border:2px solid var(--line);border-radius:6px;padding:2px}
+.rtable input.good{border-color:var(--ok);background:var(--okbg)}
+.rtable input.bad{border-color:var(--bad);background:var(--badbg)}
+.cormms{display:grid;gap:6px}
+.crow{display:grid;grid-template-columns:44px 1fr;gap:8px;align-items:stretch}
+.crow .let{background:var(--navy);color:#fff;border-radius:10px;display:grid;place-items:center;font-family:Georgia,serif;font-size:24px;font-weight:700;position:relative}
+.crow .let small{position:absolute;bottom:1px;font:600 8.5px "Montserrat",sans-serif;opacity:.85}
+.slot{min-height:44px;border:3px dashed #aab4c8;border-radius:10px;background:rgba(255,255,255,.7);padding:4px;display:flex;align-items:center;font-size:13px;color:#667;transition:background .2s}
+.slot.over{background:rgba(240,215,138,.45);border-color:var(--gold)}
+.slot.good{border-style:solid;border-color:var(--ok);background:var(--okbg)}
+.slot.bad{border-style:solid;border-color:var(--bad);background:var(--badbg)}
+.slot .card{position:relative;left:auto;top:auto;box-shadow:none;font-weight:600;font-size:12.5px;border-width:1.5px}
+.cpool{position:relative;min-height:140px;border:2px dashed var(--line);border-radius:12px;margin-top:8px;background:var(--paper)}
+.cpool .card{font-weight:600;font-size:12.5px;max-width:300px}
+.graphwrap svg{width:100%;height:auto;display:block;background:#fff;border:2px solid var(--line);border-radius:10px;touch-action:none}
+.graphwrap text{font:600 11px "Montserrat",sans-serif;fill:#333}
+
+/* tarsia */
+.tarsia-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
+.tarsia-tabs button{border:2px solid var(--navy);background:#fff;color:var(--navy);border-radius:12px;padding:6px 14px;font-weight:700}
+.tarsia-tabs button[aria-selected="true"]{background:var(--navy);color:#fff}
+.tboard{height:610px;background:#fbf8ef;background-image:radial-gradient(#ded6c0 1.2px,transparent 1.2px);background-size:26px 26px;touch-action:none}
+.piece{position:absolute;touch-action:none;cursor:grab;z-index:5;filter:drop-shadow(0 3px 3px rgba(0,0,0,.28));transition:filter .15s}
+.piece.drag{cursor:grabbing;filter:drop-shadow(0 12px 12px rgba(0,0,0,.35));z-index:200}
+.piece:focus-visible{outline:none;filter:drop-shadow(0 0 0 var(--gold)) drop-shadow(0 0 6px var(--gold))}
+.piece.hint{filter:drop-shadow(0 0 8px #ff9800) drop-shadow(0 0 4px #ff9800)}
+.piece svg{display:block;overflow:visible}
+.piece .rot{position:absolute;left:50%;top:50%;margin:-14px 0 0 -14px;width:28px;height:28px;border-radius:50%;background:var(--gold);color:#fff;border:2px solid #fff;font-weight:800;font-size:15px;line-height:1;display:grid;place-items:center;cursor:pointer;z-index:2}
+.tstat{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.tstat .big{font-size:20px;font-weight:800;color:var(--navy)}
+
+/* questions / support */
+.below.split{grid-template-columns:1fr 1.3fr}
+.below{display:grid;grid-template-columns:1.3fr 1fr;gap:12px;margin-top:12px;align-items:start}
+.panelcard{min-width:0;background:#fff;border:2px solid var(--line);border-radius:var(--radius);padding:12px 16px}
+.panelcard > h3{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--gold);margin-bottom:6px}
+.q{border-top:1px dashed var(--line);padding:8px 0}
+.q:first-of-type{border-top:none}
+.q .stem{font-weight:600}
+.q .marks{font-weight:800;color:var(--navy)}
+.q textarea{width:100%;min-height:54px;margin:6px 0;font:inherit;border:2px solid var(--line);border-radius:10px;padding:6px 8px;resize:vertical}
+details.reveal{margin:4px 0}
+details.reveal summary{cursor:pointer;font-weight:700;color:var(--navy);border:2px solid var(--navy);border-radius:10px;padding:3px 12px;display:inline-block;list-style:none}
+details.reveal summary::-webkit-details-marker{display:none}
+details.reveal[open] summary{background:var(--navy);color:#fff}
+details.reveal .ans{margin-top:6px;background:var(--okbg);border-left:5px solid var(--ok);border-radius:8px;padding:8px 12px;font-size:13.5px}
+details.reveal .ans ul{margin:4px 0;padding-left:20px}
+.msrow{display:flex;gap:8px;align-items:flex-start}
+.msrow input{margin-top:4px}
+.stabs{display:flex;gap:6px;margin-bottom:8px}
+.stabs button{border:2px solid var(--navy);background:#fff;color:var(--navy);border-radius:999px;padding:4px 14px;font-weight:700;font-size:13px}
+.stabs button[aria-selected="true"]{background:var(--navy);color:#fff}
+.sub{font-size:12px;color:#555;margin:0 0 6px}
+select.cloze{font:inherit;font-weight:700;border:2px solid var(--navy);border-radius:8px;padding:1px 4px;color:var(--navy)}
+.cloze-ok{color:var(--ok);font-weight:800}
+
+/* overlay */
+.overlay{position:fixed;inset:0;background:rgba(20,30,52,.78);display:grid;place-items:center;z-index:300;padding:16px;overflow:auto}
+.overlay[hidden]{display:none}
+.start{background:var(--paper);border-radius:22px;max-width:880px;width:100%;padding:22px 26px;border:3px solid var(--gold)}
+.start h2{font-family:Georgia,serif;color:var(--navy);font-size:28px}
+.start p{margin:6px 0}
+.tiers{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:14px 0}
+.tiercard{background:#fff;border:3px solid var(--line);border-radius:14px;padding:10px 12px;text-align:left;color:var(--ink)}
+.tiercard b{display:block;font-size:17px}
+.tiercard small{display:block;margin-top:4px;font-size:12.5px}
+.tiercard[aria-pressed="true"]{border-width:4px}
+.tiercard[data-t="s"]{border-color:#9bd1b9}.tiercard[data-t="s"][aria-pressed="true"]{border-color:var(--s);background:#eaf8f2}
+.tiercard[data-t="m"]{border-color:#a9c1ef}.tiercard[data-t="m"][aria-pressed="true"]{border-color:var(--m);background:#edf3ff}
+.tiercard[data-t="x"]{border-color:#cfaee0}.tiercard[data-t="x"][aria-pressed="true"]{border-color:var(--x);background:#f7edfc}
+.conf{display:grid;grid-template-columns:110px minmax(0,1fr) 24px;gap:6px 10px;align-items:center;font-weight:700;color:var(--navy);font-size:13.5px}
+.conf input{width:100%;accent-color:var(--gold)}
+.summary table{border-collapse:collapse;width:100%;font-size:13.5px}
+.summary th,.summary td{border:1px solid var(--line);padding:6px 10px;text-align:center}
+.summary th{background:var(--navy);color:#fff}
+
+.smallnote{display:none;background:#fff4dc;border-bottom:2px solid var(--gold2);padding:6px 14px;font-size:12.5px;font-weight:600;color:#6b4f00}
+@media (max-width:820px){.smallnote{display:block}}
+.nogl{padding:30px;text-align:center;font-weight:700;color:var(--bad)}
+.hide{display:none!important}
+@media (max-width:1000px){
+  .below.split{grid-template-columns:1fr}
+  .summary table{display:block;overflow-x:auto}
+  .mission,.below,.osgrid,.labgrid,.enzgrid{grid-template-columns:1fr}
+  .enzgrid{height:auto}.enzleft{height:560px}
+  .labgrid{height:auto}.tray{border-left:none;border-top:2px solid var(--line);flex-direction:row;flex-wrap:wrap}
+  .tiers,.ladder{grid-template-columns:1fr}
+  .view{height:420px}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}html{scroll-behavior:auto}}
+@media print{.top,.steps,.toolbar,.overlay{display:none}.stage{display:block!important}}
+
+.enzgrid.seas{height:540px}
+
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to the lesson</a>
+<header class="top">
+  <div class="brand"><span class="logo">Y8</span><div><h1>Science revision lab</h1><p>Seasons · Mass and weight · Speed · Distance–time graphs</p></div></div>
+  <div class="tierbar" id="tierbar" role="group" aria-label="Choose your level"><span class="lab">Level</span></div>
+</header>
+<div class="smallnote">This lesson has drag-and-drop boards and 3D models. It works best on a laptop or tablet in landscape.</div>
+<nav class="steps" id="steps" aria-label="Lesson stages"></nav>
+<main id="main"></main>
+
+<div class="overlay" id="start" role="dialog" aria-modal="true" aria-labelledby="st-h">
+  <div class="start">
+    <h2 id="st-h">Welcome to the revision lab</h2>
+    <p>About fifty minutes, six stages. You can drag things anywhere, turn them, and move between stages whenever you like. <b>You choose your level</b>, and you can change it any time.</p>
+    <div class="tiers" id="tiers" role="group" aria-label="Choose your starting level"></div>
+    <p><b>How confident are you right now?</b> (1 = not at all, 5 = very). This stays on your screen only and is compared with your exit ticket.</p>
+    <div class="conf" id="conf"></div>
+    <p style="margin-top:14px"><button class="btn gold" id="go" disabled style="font-size:16px;padding:9px 22px">Start the lesson</button></p>
+  </div>
+</div>
+
+<script src="09 Resources/three.min.js"></script>
+<script>
+/* Revision lab core: helpers, drag engine, Three.js scaffolding. */
+(function () {
+  'use strict';
+  const RL = (window.RL = { stages: [], state: { tier: null, pre: {}, post: {}, scores: {}, done: {} }, ticks: [] });
+  RL.reduced = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  RL.TIERS = { s: 'Grade 6 · Secure', m: 'Grade 7 · Strong', x: 'Grade 8–9 · Stretch' };
+
+  RL.dbg = {}; // read-only helpers used by the QA script
+  RL.$ = (s, r) => (r || document).querySelector(s);
+  RL.$$ = (s, r) => Array.from((r || document).querySelectorAll(s));
+  RL.el = function (tag, attrs, ...kids) {
+    const n = document.createElement(tag);
+    if (attrs) for (const k in attrs) {
+      const v = attrs[k];
+      if (v == null || v === false) continue;
+      if (k === 'class') n.className = v;
+      else if (k === 'html') n.innerHTML = v;
+      else if (k === 'text') n.textContent = v;
+      else if (k === 'style' && typeof v === 'object') Object.assign(n.style, v);
+      else if (k.startsWith('on') && typeof v === 'function') n.addEventListener(k.slice(2), v);
+      else n.setAttribute(k, v === true ? '' : v);
+    }
+    for (const kid of kids.flat()) if (kid != null && kid !== false) n.append(kid.nodeType ? kid : document.createTextNode(kid));
+    return n;
+  };
+  const el = RL.el;
+  RL.clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+  RL.rng = function (seed) { let s = seed >>> 0 || 1; return () => ((s = (s * 1664525 + 1013904223) >>> 0) / 4294967296); };
+  RL.shuffle = function (arr, rnd) { const a = arr.slice(), r = rnd || Math.random; for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(r() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+  RL.tier = () => RL.state.tier || 'm';
+  RL.pick = (obj) => (obj && (obj[RL.tier()] !== undefined ? obj[RL.tier()] : obj.m));
+
+  /* ---------- messages ---------- */
+  RL.msg = function (node, text, kind) { if (!node) return; node.className = (node.className.replace(/\b(msg|ok|bad|info)\b/g, '').trim() + ' msg ' + (kind || 'info')).trim(); node.textContent = text || ''; };
+
+  /* ---------- reveal + question blocks (every task has a model answer) ---------- */
+  RL.reveal = function (label, html) {
+    return el('details', { class: 'reveal' }, el('summary', { text: label || 'Show model answer' }), el('div', { class: 'ans', html }));
+  };
+  RL.ms = function (points, note) {
+    return '<ul>' + points.map(p => '<li>' + p + '</li>').join('') + '</ul>' + (note ? '<p><i>' + note + '</i></p>' : '');
+  };
+  RL.qblock = function (q) {
+    return el('div', { class: 'q' },
+      el('div', { class: 'stem', html: q.stem + ' <span class="marks">[' + q.marks + ']</span>' }),
+      q.write === false ? null : el('textarea', { 'aria-label': 'Your answer', placeholder: 'Write your answer first, then check it…' }),
+      RL.reveal('Model answer and mark scheme', RL.ms(q.ms, q.note)));
+  };
+
+  /* ---------- stage furniture ---------- */
+  RL.mission = function (o) {
+    const me = RL.tier(), L = o.ladder;
+    return el('div', { class: 'mission' },
+      el('div', null,
+        el('div', { class: 'kick', text: o.kicker }),
+        el('h2', { text: o.title }),
+        el('div', { class: 'chips' }, el('span', { class: 'chip', text: '⏱ ' + o.mins + ' min' }), el('span', { class: 'chip t-' + me, text: RL.TIERS[me] })),
+        L ? el('div', { class: 'ymy', html: '<b>Your level:</b> ' + L[me] }) : null),
+      el('ol', { class: 'dothis', html: o.steps.map(s => '<li>' + s + '</li>').join('') }),
+      el('details', { class: 'lad' }, el('summary', { text: 'Spec link and what each level does' }),
+        el('p', { class: 'spec', html: o.spec }),
+        L ? el('div', { class: 'ladder' },
+          el('div', { class: 'ls' + (me === 's' ? ' me' : '') }, el('b', { text: 'Grade 6 · Secure' }), el('span', { html: L.s })),
+          el('div', { class: 'lm' + (me === 'm' ? ' me' : '') }, el('b', { text: 'Grade 7 · Strong' }), el('span', { html: L.m })),
+          el('div', { class: 'lx' + (me === 'x' ? ' me' : '') }, el('b', { text: 'Grade 8–9 · Stretch' }), el('span', { html: L.x }))) : null));
+  };
+
+  /* Adaptation (Students of Determination) + HOT drawer: o = {adapt:{lead, nodes[]}, hot:{lead, nodes[]}} */
+  RL.support = function (o) {
+    const wrap = el('div', { class: 'panelcard' });
+    const tabs = el('div', { class: 'stabs', role: 'tablist' });
+    const bodies = {};
+    const mk = (key, label, d) => {
+      const b = el('button', { role: 'tab', 'aria-selected': 'false', text: label, onclick: () => show(key) });
+      tabs.append(b);
+      bodies[key] = { b, p: el('div', { class: 'hide', role: 'tabpanel' }, el('p', { class: 'sub', html: d.lead }), ...d.nodes) };
+    };
+    mk('a', 'Adaptation', o.adapt); mk('h', 'Go further (HOT)', o.hot);
+    function show(k) { for (const key in bodies) { const on = key === k; bodies[key].p.classList.toggle('hide', !on); bodies[key].b.setAttribute('aria-selected', on); } }
+    wrap.append(el('h3', { text: 'Support and stretch for this screen' }), tabs, bodies.a.p, bodies.h.p);
+    show('a');
+    return wrap;
+  };
+
+  /* dropdown cloze helper: stem with {{0}} {{1}} placeholders and options */
+  RL.cloze = function (stemHtml, blanks) {
+    const box = el('div', { class: 'q' });
+    const out = el('span', { class: 'msg info', style: { marginLeft: '6px' } });
+    const sels = blanks.map(b => el('select', { class: 'cloze', 'aria-label': 'Choose a word' }, el('option', { value: '', text: '…' }), RL.shuffle(b.opts).map(o => el('option', { value: o, text: o }))));
+    const parts = stemHtml.split(/\{\{(\d+)\}\}/);
+    const line = el('div', { class: 'stem' });
+    parts.forEach((p, i) => { if (i % 2 === 0) line.insertAdjacentHTML('beforeend', p); else line.append(sels[+p]); });
+    const check = el('button', { class: 'btn alt', text: 'Check', onclick: () => {
+      let ok = 0; sels.forEach((s, i) => { const good = s.value === blanks[i].ans; s.classList.toggle('cloze-ok', good); if (good) ok++; });
+      RL.msg(out, ok === blanks.length ? 'All correct ✓' : ok + ' of ' + blanks.length + ' correct — fix the others.', ok === blanks.length ? 'ok' : 'bad');
+    } });
+    box.append(line, el('div', { style: { marginTop: '6px' } }, check, out));
+    return box;
+  };
+
+  /* ---------- drag engine: free movement, optional keyboard control ---------- */
+  RL.zTop = 10;
+  RL.drag = function (node, o) {
+    o = o || {};
+    node.style.touchAction = 'none';
+    if (!node.hasAttribute('tabindex')) node.setAttribute('tabindex', '0');
+    let id = null, sx = 0, sy = 0, nx = 0, ny = 0, moved = false;
+    const area = () => (o.area ? (typeof o.area === 'function' ? o.area() : o.area) : node.offsetParent || node.parentElement);
+    const getPos = () => ({ x: node._x != null ? node._x : node.offsetLeft, y: node._y != null ? node._y : node.offsetTop });
+    node._setPos = (x, y) => {
+      if (o.clamp !== false) {
+        const a = area(); const w = node.offsetWidth, h = node.offsetHeight;
+        const m = o.margin != null ? o.margin : 0.4; // allow some overhang
+        x = RL.clamp(x, -w * m, a.clientWidth - w * (1 - m)); y = RL.clamp(y, -h * m, a.clientHeight - h * (1 - m));
+      }
+      node._x = x; node._y = y; node.style.left = x + 'px'; node.style.top = y + 'px';
+    };
+    node.addEventListener('pointerdown', e => {
+      if (e.button > 0 || (o.ignore && e.target.closest(o.ignore))) return;
+      if (o.disabled && o.disabled(node)) return;
+      id = e.pointerId; node.setPointerCapture(id);
+      const p = getPos(); sx = e.clientX; sy = e.clientY; nx = p.x; ny = p.y; moved = false;
+      node.classList.add('drag'); node.style.zIndex = ++RL.zTop;
+      if (o.onStart) o.onStart(e, node);
+      e.preventDefault();
+    });
+    node.addEventListener('pointermove', e => {
+      if (e.pointerId !== id) return;
+      const dx = e.clientX - sx, dy = e.clientY - sy;
+      if (!moved && Math.hypot(dx, dy) < 4) return;
+      moved = true;
+      node._setPos(nx + dx, ny + dy);
+      if (o.onMove) o.onMove(e, node);
+    });
+    const end = e => {
+      if (e.pointerId !== id) return;
+      try { node.releasePointerCapture(id); } catch (_) {}
+      id = null; node.classList.remove('drag');
+      if (!moved) { if (o.onClick) o.onClick(e, node); }
+      else if (o.onEnd) o.onEnd(e, node);
+    };
+    node.addEventListener('pointerup', end);
+    node.addEventListener('pointercancel', end);
+    node.addEventListener('keydown', e => {
+      const step = e.shiftKey ? 36 : 10; const p = getPos();
+      const k = e.key;
+      if (k === 'ArrowLeft') { node._setPos(p.x - step, p.y); }
+      else if (k === 'ArrowRight') { node._setPos(p.x + step, p.y); }
+      else if (k === 'ArrowUp') { node._setPos(p.x, p.y - step); }
+      else if (k === 'ArrowDown') { node._setPos(p.x, p.y + step); }
+      else if ((k === 'r' || k === 'R') && o.onRotate) { o.onRotate(node); e.preventDefault(); return; }
+      else if (k === 'Enter' || k === ' ') { if (o.onClick) o.onClick(e, node); if (o.onEnd) o.onEnd(e, node); e.preventDefault(); return; }
+      else return;
+      e.preventDefault();
+      if (o.onMove) o.onMove(e, node);
+      clearTimeout(node._kt); node._kt = setTimeout(() => o.onEnd && o.onEnd(e, node), 450);
+    });
+    return node;
+  };
+  RL.center = (n) => { const r = n.getBoundingClientRect(); return { x: r.left + r.width / 2, y: r.top + r.height / 2 }; };
+  RL.inRect = (pt, r) => pt.x >= r.left && pt.x <= r.right && pt.y >= r.top && pt.y <= r.bottom;
+  RL.glide = function (node, x, y, ms) {
+    node.style.transition = RL.reduced ? 'none' : 'left ' + (ms || 250) + 'ms ease, top ' + (ms || 250) + 'ms ease';
+    node._x = x; node._y = y; node.style.left = x + 'px'; node.style.top = y + 'px';
+    setTimeout(() => (node.style.transition = ''), (ms || 250) + 30);
+  };
+  RL.shake = function (n) { n.classList.remove('shake'); void n.offsetWidth; n.classList.add('shake'); setTimeout(() => n.classList.remove('shake'), 650); };
+
+  /* ---------- Three.js scaffolding ---------- */
+  RL.hasGL = function () {
+    try { const c = document.createElement('canvas'); return !!(window.THREE && (c.getContext('webgl2') || c.getContext('webgl'))); } catch (_) { return false; }
+  };
+  RL.three = function (host, o) {
+    o = o || {};
+    if (!RL.hasGL()) { host.append(el('div', { class: 'nogl', text: '3D view needs WebGL. Open this lesson in Chrome, Edge or Safari.' })); return null; }
+    const canvas = el('canvas', { tabindex: '0', 'aria-label': o.label || '3D model' });
+    host.prepend(canvas);
+    const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, preserveDrawingBuffer: !!o.preserve });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(o.fov || 38, 1, 0.1, 100);
+    camera.position.set(0, 0, o.z || 8);
+    scene.add(new THREE.HemisphereLight(0xffffff, 0x8899bb, 0.95));
+    const dl = new THREE.DirectionalLight(0xffffff, 0.9); dl.position.set(3, 5, 6); scene.add(dl);
+    const api = { renderer, scene, camera, canvas, host, loops: [], w: 1, h: 1 };
+    function resize() {
+      const w = Math.max(host.clientWidth, 10), h = Math.max(host.clientHeight, 10);
+      if (w === api.w && h === api.h) return;
+      api.w = w; api.h = h; renderer.setSize(w, h, false); camera.aspect = w / h; camera.updateProjectionMatrix();
+    }
+    api.resize = resize;
+    if (window.ResizeObserver) new ResizeObserver(resize).observe(host);
+    let last = performance.now();
+    (RL._gl = RL._gl || []).push(api);
+    function frame(t) {
+      if (api.dead) return;
+      requestAnimationFrame(frame);
+      if (!host.offsetParent) return; // hidden stage
+      resize(); camera.updateMatrixWorld();
+      const dt = Math.min((t - last) / 1000, 0.05); last = t;
+      for (const f of api.loops) f(dt, t / 1000);
+      renderer.render(scene, camera);
+    }
+    requestAnimationFrame(frame);
+    api.project = function (v3) { const v = v3.clone().project(camera); return { x: (v.x * 0.5 + 0.5) * api.w, y: (-v.y * 0.5 + 0.5) * api.h, z: v.z }; };
+    api.pointer = function (e) { const r = canvas.getBoundingClientRect(); return { x: ((e.clientX - r.left) / r.width) * 2 - 1, y: -((e.clientY - r.top) / r.height) * 2 + 1 }; };
+    return api;
+  };
+  /* drag-to-rotate a group; wheel / buttons to zoom */
+  RL.orbit = function (api, group, o) {
+    o = o || {};
+    let down = false, px = 0, py = 0, vx = 0, vy = 0;
+    const c = api.canvas;
+    c.addEventListener('pointerdown', e => { down = true; px = e.clientX; py = e.clientY; c.setPointerCapture(e.pointerId); });
+    c.addEventListener('pointermove', e => { if (!down) return; const dx = e.clientX - px, dy = e.clientY - py; px = e.clientX; py = e.clientY; group.rotation.y += dx * 0.01; group.rotation.x = RL.clamp(group.rotation.x + dy * 0.01, -1.3, 1.3); vx = dx; });
+    const up = () => { down = false; };
+    c.addEventListener('pointerup', up); c.addEventListener('pointercancel', up);
+    c.addEventListener('wheel', e => { e.preventDefault(); api.zoom(e.deltaY > 0 ? 1.08 : 0.92); }, { passive: false });
+    c.addEventListener('keydown', e => {
+      const k = e.key; const s = 0.15;
+      if (k === 'ArrowLeft') group.rotation.y -= s; else if (k === 'ArrowRight') group.rotation.y += s;
+      else if (k === 'ArrowUp') group.rotation.x = RL.clamp(group.rotation.x - s, -1.3, 1.3); else if (k === 'ArrowDown') group.rotation.x = RL.clamp(group.rotation.x + s, -1.3, 1.3);
+      else if (k === '+' || k === '=') api.zoom(0.92); else if (k === '-') api.zoom(1.08); else return;
+      e.preventDefault();
+    });
+    api.zoom = f => { api.camera.position.z = RL.clamp(api.camera.position.z * f, o.min || 4, o.max || 14); };
+    api.resetView = () => { group.rotation.set(0.15, -0.4, 0); api.camera.position.z = o.z || 8; };
+    api.isDragging = () => down;
+    return api;
+  };
+
+  RL.disposeGL = function () {
+    (RL._gl || []).forEach(a => { a.dead = true; try { a.renderer.dispose(); a.renderer.forceContextLoss(); } catch (_) {} });
+    RL._gl = [];
+  };
+
+  RL.mats = {
+    glass: (color, op) => new THREE.MeshPhysicalMaterial({ color, transparent: true, opacity: op == null ? 0.2 : op, side: THREE.DoubleSide, depthWrite: false, roughness: 0.2, metalness: 0 }),
+    solid: (color, rough) => new THREE.MeshStandardMaterial({ color, roughness: rough == null ? 0.55 : rough, metalness: 0.05 }),
+  };
+  RL.canvasTex = function (w, h, draw) { const c = document.createElement('canvas'); c.width = w; c.height = h; draw(c.getContext('2d'), w, h); const t = new THREE.CanvasTexture(c); t.anisotropy = 4; return t; };
+
+  /* ---------- progress ---------- */
+  RL.markDone = function (id) { RL.state.done[id] = true; const b = RL.$('.step[data-id="' + id + '"]'); if (b) b.classList.add('done'); };
+})();
+
+/* Year 8 revision lab content: Seasons, Mass and weight, Speed, Distance–time graphs. All original.
+   Tarsia pairs are [textA, textB]; keep strings short (triangle <= 40 chars, hexagon <= 44, square <= 56). */
+(function () {
+  'use strict';
+  const C = (window.RL.content = {});
+  C.topics = [['seasons', 'Seasons'], ['weight', 'Mass and weight'], ['speed', 'Speed'], ['graphs', 'Graphs']];
+
+  /* ---------- 1. Retrieval sort ---------- */
+  C.sort = {
+    zones: [{ id: 'seasons', title: 'Seasons' }, { id: 'weight', title: 'Mass & weight' }, { id: 'speed', title: 'Speed' }, { id: 'graphs', title: 'Distance–time graphs' }],
+    base: [
+      ['axis tilt', 'seasons'], ['rotation', 'seasons'], ['orbit', 'seasons'],
+      ['newton (N)', 'weight'], ['W = m × g', 'weight'], ['kilogram (kg)', 'weight'],
+      ['m/s', 'speed'], ['average speed', 'speed'], ['total time', 'speed'],
+      ['horizontal line', 'graphs'], ['steeper line', 'graphs'], ['gradient of the line', 'graphs'],
+    ],
+    extra: [['direct sunlight', 'seasons'], ['g on the Moon', 'weight'], ['km/h', 'speed'], ['total distance never falls', 'graphs']],
+  };
+
+  /* ---------- 2. Seasons ---------- */
+  C.seasonsQs = {
+    s: [{ stem: 'Explain what causes day and night.', marks: 2,
+      ms: ['the Earth rotates / spins on its axis ✓', 'the side facing the Sun has day, the side facing away has night ✓'], note: 'Reject “the Earth goes round the Sun” for day and night.' }],
+    m: [{ stem: 'Explain why June is summer in the Northern Hemisphere but winter in the Southern Hemisphere.', marks: 3,
+      ms: ['in June the Northern Hemisphere is tilted towards the Sun ✓', 'so the sunlight is more direct ✓', 'and the days are longer ✓', 'the Southern Hemisphere is tilted away, so it has less direct light and shorter days (winter) ✓'], note: 'Any three. Reject “closer to the Sun”.' }],
+    x: [{ stem: 'The longest and shortest days (about) are: Dubai (25° N) 13.6 h on 21 June and 10.4 h on 21 December; UK (52° N) 16.5 h and 7.5 h. (i) Calculate the difference in day length for each place. (ii) Explain why the UK’s seasons are more extreme than Dubai’s.', marks: 4,
+      ms: ['Dubai: 13.6 − 10.4 = 3.2 h ✓', 'UK: 16.5 − 7.5 = 9.0 h ✓', 'the UK is further from the equator ✓', 'so the tilt changes its day length and Sun angle by more (longer summer days, lower winter Sun) ✓'], note: 'Accept 3 h and 9 h.' }],
+  };
+  C.seasonsSupport = {
+    adapt: { lead: 'A foothold first. Choose the best word for each gap, then check.',
+      cloze: ['The Earth’s axis {{0}} causes the seasons. In June the northern hemisphere is tilted {{1}} the Sun, so its sunlight is more {{2}}.',
+        [{ opts: ['tilt', 'spin', 'distance'], ans: 'tilt' }, { opts: ['towards', 'away from', 'level with'], ans: 'towards' }, { opts: ['direct', 'spread out', 'blue'], ans: 'direct' }]] },
+    hot: { stem: 'Imagine the Earth’s axis was not tilted at all. Describe the day length and the seasons through the year.', marks: 2,
+      ms: ['day length would be about 12 hours all year / the same every day ✓', 'there would be no seasons ✓'], note: 'Day and night would still happen because of rotation.' },
+  };
+
+  /* ---------- 3. Mass and weight ---------- */
+  C.planets = [['Earth', 10], ['Moon', 1.6], ['Mars', 3.7], ['Jupiter', 25]];
+  C.weightQs = {
+    s: [{ stem: 'A bag has a mass of 4 kg. Use g = 10 N/kg. Calculate its weight.', marks: 2,
+      ms: ['weight = mass × g (W = m × g) ✓', '4 × 10 = 40 N ✓'], note: 'The unit N is needed for the second mark. Accept 40 N with no formula shown for both marks.' }],
+    m: [{ stem: 'A rock has a mass of 250 g. (i) Calculate its weight on Earth (g = 10 N/kg). (ii) State its mass on the Moon.', marks: 3,
+      ms: ['250 g = 0.25 kg ✓', '0.25 × 10 = 2.5 N ✓', 'mass on the Moon is the same: 250 g (0.25 kg) ✓'], note: 'Reject 2500 N (grams not converted).' }],
+    x: [{ stem: 'A probe has a weight of 90 N on Earth (g = 10 N/kg) and 36 N on Planet X. (i) Calculate g on Planet X. (ii) Calculate the weight of a 2.5 kg instrument on Planet X.', marks: 4,
+      ms: ['mass of probe = 90 ÷ 10 = 9 kg ✓', 'g = 36 ÷ 9 ✓', '= 4 N/kg ✓', 'weight = 2.5 × 4 = 10 N ✓'], note: 'Unit needed on each final answer. Accept a different valid method.' }],
+  };
+  C.weightSupport = {
+    adapt: { lead: 'One word at a time. Choose, then check.',
+      cloze: ['Weight is a {{0}}, measured in {{1}}. Mass is measured in {{2}} and {{3}} change when you move to the Moon.',
+        [{ opts: ['force', 'amount of matter', 'speed'], ans: 'force' }, { opts: ['newtons', 'kilograms', 'seconds'], ans: 'newtons' }, { opts: ['kilograms', 'newtons', 'metres'], ans: 'kilograms' }, { opts: ['does not', 'always does', 'sometimes does'], ans: 'does not' }]] },
+    hot: { stem: 'The same 2 kg object is taken from Earth to the Moon. Say what happens to its mass and its weight, and explain why.', marks: 3,
+      ms: ['mass stays 2 kg ✓', 'weight is smaller ✓', 'weight depends on g, which is smaller on the Moon; mass is the amount of matter ✓'] },
+  };
+
+  /* ---------- 4. Speed and graphs ---------- */
+  C.speedQs = {
+    s: [{ stem: 'A cyclist travels 60 m in 12 s. Calculate her speed.', marks: 2,
+      ms: ['speed = distance ÷ time ✓', '60 ÷ 12 = 5 m/s ✓'], note: 'Unit needed. Accept 5 m/s with no formula shown for both marks.' }],
+    m: [{ stem: 'A student walks 900 m in 10 minutes, rests for 5 minutes, then walks 600 m in 5 minutes. Calculate the average speed for the whole journey in m/s.', marks: 3,
+      ms: ['total distance = 1500 m ✓', 'total time = 20 minutes (the rest is included) ✓', '= 1200 s and 1500 ÷ 1200 = 1.25 m/s ✓'], note: 'Reject a time that leaves out the rest.' }],
+    x: [{ stem: 'A 60 km journey has an average speed of 40 km/h and includes a 15 minute stop. Calculate (i) the total time, (ii) the time spent moving, (iii) the speed while moving.', marks: 3,
+      ms: ['total time = 60 ÷ 40 = 1.5 h ✓', 'moving time = 1.5 − 0.25 = 1.25 h ✓', 'speed while moving = 60 ÷ 1.25 = 48 km/h ✓'], note: 'Reject 15 min used as 15 h or 0.15 h.' }],
+  };
+  C.speedSupport = {
+    adapt: { lead: 'Fill the formula in words first.',
+      cloze: ['Average speed = total {{0}} ÷ total {{1}}. The time must include any {{2}}.',
+        [{ opts: ['distance', 'weight', 'mass'], ans: 'distance' }, { opts: ['time', 'force', 'speed'], ans: 'time' }, { opts: ['stops', 'hills', 'maps'], ans: 'stops' }]] },
+    hot: { stem: 'Explain why you must change minutes to seconds before finding a speed in m/s.', marks: 2,
+      ms: ['the unit m/s needs the time in seconds ✓', 'using minutes would give an answer 60 times too big (or in m/min) ✓'] },
+  };
+  C.graphQs = {
+    s: [{ stem: 'A distance–time graph has a horizontal section. Say what the object is doing.', marks: 1,
+      ms: ['it is stationary / not moving ✓'], note: 'Reject “moving at a steady speed”.' }],
+    m: [{ stem: 'A graph passes through (0 min, 0 m), (2 min, 120 m), (5 min, 120 m) and (6 min, 240 m). (i) Describe the object between 2 and 5 minutes. (ii) Calculate its speed between 5 and 6 minutes.', marks: 3,
+      ms: ['it is stationary / has stopped ✓', 'change in distance = 120 m in 1 minute ✓', 'speed = 120 m/min ✓'], note: 'Accept 2 m/s.' }],
+    x: [{ stem: 'A student draws a graph of total distance travelled for a return journey. The line falls back to zero. Explain what is wrong and how it should look.', marks: 3,
+      ms: ['total distance travelled cannot decrease ✓', 'on the way back the object is still travelling, so the total keeps increasing ✓', 'the line should keep rising (steeper = faster, flat = stopped) ✓'], note: 'A graph of distance from the start can fall; this graph is of total distance travelled.' },
+    { stem: 'A student plots a runner on axes with time in minutes and distance in km. The line is straight from (0 min, 0 km) to (30 min, 6 km). The student writes “speed = 6 ÷ 30 = 0.2 m/s”. Evaluate the answer and give the speed in m/s.', marks: 3,
+      ms: ['the units were not matched: 0.2 is km per minute, not m/s ✓', '6 km = 6000 m and 30 min = 1800 s ✓', '6000 ÷ 1800 = 3.3 m/s (accept 3.33; accept 12 km/h as an alternative unit) ✓'] }],
+  };
+  C.graphSupport = {
+    adapt: { lead: 'Match the line to its meaning.',
+      cloze: ['A {{0}} line means stopped. A {{1}} line means faster. A total-distance graph can never slope {{2}}.',
+        [{ opts: ['horizontal', 'steep', 'curved'], ans: 'horizontal' }, { opts: ['steeper', 'flatter', 'shorter'], ans: 'steeper' }, { opts: ['downwards', 'upwards', 'sideways'], ans: 'downwards' }]] },
+    hot: { stem: 'Describe how a distance–time graph shows an object slowing down, and how that differs from stopping.', marks: 2,
+      ms: ['the line gets less steep (flatter) but keeps rising ✓', 'stopping is a horizontal line; slowing down is still moving forward ✓'] },
+  };
+  /* journeys for the graph builder: time points 0..10 min, fixed. Targets for challenges. */
+  C.journeys = { times: [0, 2, 4, 6, 8, 10], units: 'm', max: 600 };
+
+  /* ---------- 5. Tarsia ---------- */
+  C.tarsia = {
+    tri: {
+      name: 'Triangle · Seasons', shape: 'tri', topic: 'Seasons and Earth’s tilt',
+      pairs: {
+        s: [
+          ['Rotation', 'Earth turns once in about 24 hours'],
+          ['Orbit', 'Earth goes round the Sun'],
+          ['Cause of day and night', 'spin on the axis'],
+          ['Axis tilt', 'Earth’s axis is tilted about 23.5°'],
+          ['Summer', 'hemisphere tilted towards the Sun'],
+          ['Winter', 'hemisphere tilted away from the Sun'],
+          ['Time for one orbit', 'about 365 days'],
+          ['Seasons in Australia', 'opposite to those in the north'],
+          ['Equator', 'about 12 h of daylight all year'],
+        ],
+        m: [
+          ['Tilted towards the Sun', 'more direct sunlight, longer days'],
+          ['Tilted away from the Sun', 'less direct sunlight, shorter days'],
+          ['Seasons are NOT caused by', 'distance from the Sun'],
+          ['Direct sunlight', 'energy spread over a smaller area'],
+          ['Low-angle sunlight', 'energy spread over a larger area'],
+          ['Earth nearest the Sun in January', 'yet it is winter in the north'],
+          ['June in the UK', 'summer'],
+          ['June in Australia', 'winter'],
+          ['Orbit plus tilt', 'gives the cycle of seasons'],
+        ],
+        x: [
+          ['Equinox', 'day and night both about 12 hours'],
+          ['At noon on 21 June, Dubai (25° N)', 'Sun almost directly overhead'],
+          ['At noon on 21 Dec, Dubai (25° N)', 'Sun about 42° above the horizon'],
+          ['Both hemispheres, same distance', 'but opposite seasons at once'],
+          ['Same beam, low Sun', 'covers a larger area: less heating'],
+          ['If Earth had no tilt', 'there would be no seasons'],
+          ['Axis direction in space', 'stays the same during the orbit'],
+          ['Day length changes through the year', 'because of tilt as Earth orbits'],
+          ['UK: 16.5 h in June', 'but only 7.5 h in December'],
+        ],
+      },
+    },
+    hex: {
+      name: 'Hexagon · Mass and weight', shape: 'hex', topic: 'Mass, weight, gravity and W = m × g',
+      pairs: {
+        s: [
+          ['mass', 'amount of matter'],
+          ['weight', 'force of gravity on an object'],
+          ['unit of mass', 'kilogram'],
+          ['unit of weight', 'newton'],
+          ['Mass on the Moon', 'same as on Earth'],
+          ['Weight on the Moon', 'less than on Earth'],
+          ['Newton meter', 'a spring that measures force'],
+          ['Beam balance', 'compares masses'],
+          ['g on Earth', 'we use 10 N/kg'],
+          ['1 kg on Earth', 'pulled by about 10 N'],
+          ['1000 g', '= 1 kg'],
+          ['Gravity', 'attracts objects to a planet'],
+        ],
+        m: [
+          ['Formula for weight', 'W = m × g'],
+          ['Mass 3 kg, g = 10 N/kg', 'weight = 30 N'],
+          ['Mass 500 g on Earth', 'weight = 5 N'],
+          ['Weight 80 N, g = 10 N/kg', 'mass = 8 kg'],
+          ['g on the Moon', 'about 1.6 N/kg'],
+          ['g on Jupiter', 'about 25 N/kg'],
+          ['Mass stays the same', 'wherever the object is'],
+          ['Weight changes', 'because g changes with the planet'],
+          ['A 2 kg bag on the Moon', 'weighs about 3.2 N'],
+          ['Rearrange for g', 'g = W ÷ m'],
+          ['Rearrange for mass', 'm = W ÷ g'],
+          ['Mass 0.2 kg on Earth', 'weight = 2 N'],
+        ],
+        x: [
+          ['Weight 12 N, mass 2 kg', 'g = 6 N/kg'],
+          ['Mass 250 g on Mars (g 3.7 N/kg)', 'weight = 0.925 N'],
+          ['Astronaut: mass 80 kg on Earth', 'still 80 kg on the Moon'],
+          ['Same astronaut weighs 800 N on Earth', 'about 128 N on the Moon'],
+          ['Weight 60 N on Earth', 'mass = 6 kg'],
+          ['Weight 100 N on Jupiter (g 25 N/kg)', 'mass = 4 kg'],
+          ['5 kg on Earth and on Mars', 'weighs 50 N and 18.5 N'],
+          ['Unit slip: 250 g used as 250 kg', 'weight 1000 times too big'],
+          ['Mass 0.4 kg, g = 10 N/kg', 'weight = 4 N'],
+          ['A balance reads 5 kg on Earth', 'weight about 50 N'],
+          ['Weight and g known, find mass', 'divide W by g'],
+          ['Same mass, larger g', 'larger weight'],
+        ],
+      },
+    },
+    sq: {
+      name: 'Square · Speed and graphs', shape: 'sq', topic: 'Speed calculations and distance–time graphs',
+      pairs: {
+        s: [
+          ['speed', 'how fast something moves'],
+          ['Speed formula', 'distance ÷ time'],
+          ['Unit of speed', 'metres per second (m/s)'],
+          ['Distance in 10 s at 5 m/s', '50 m'],
+          ['Horizontal line on a distance–time graph', 'the object is stationary'],
+          ['Steeper line', 'object moving faster'],
+          ['Straight sloping line', 'constant rate of travel'],
+          ['Time axis', 'x-axis'],
+          ['Distance axis', 'y-axis'],
+          ['100 m in 20 s', '5 m/s'],
+          ['1 km', '1000 m'],
+          ['1 minute', '60 seconds'],
+        ],
+        m: [
+          ['Average speed', 'total distance ÷ total time'],
+          ['Rest stops in a journey', 'count in the total time'],
+          ['6 km in 2 hours', '3 km/h'],
+          ['Distance =', 'speed × time'],
+          ['Time =', 'distance ÷ speed'],
+          ['Speed 4 m/s for 30 s', 'distance 120 m'],
+          ['Line gets steeper', 'the object is speeding up'],
+          ['Line gets less steep', 'the object is slowing down'],
+          ['Section speed from a graph', 'change in distance ÷ change in time'],
+          ['Before using speed = d ÷ t', 'match the units (m and s)'],
+          ['A total-distance graph', 'never slopes downwards'],
+          ['600 m in 5 minutes', '2 m/s'],
+        ],
+        x: [
+          ['3 km in 0.5 h, then 2 km in 0.5 h', 'average speed 5 km/h'],
+          ['Average speed with a stop', 'use the whole elapsed time'],
+          ['Time to cover 150 m at 6 m/s', '25 s'],
+          ['Line from (0, 0) to (20 s, 140 m)', 'speed = 7 m/s'],
+          ['Graph flat for 3 minutes', 'stopped for 3 minutes'],
+          ['Curve getting steeper', 'speeding up (accelerating)'],
+          ['Return journey, total-distance graph', 'still slopes upward'],
+          ['40 m in 8 s, then 40 m in 2 s', 'second section is 4 times faster'],
+          ['Distance 150 m, speed 3 m/s', 'time = 50 s'],
+          ['Runner: 400 m in 100 s', 'average speed 4 m/s'],
+          ['Mixing 2 km and 50 s', 'convert km to m before dividing'],
+          ['120 m in 40 s including a 10 s stop', 'average speed 3 m/s'],
+        ],
+      },
+    },
+  };
+  C.tarsiaAdapt = {
+    lead: 'Use the blank outer edges first, turn pieces with the ↻ button, and press Hint for one nudge.',
+    nodes: [],
+  };
+  C.tarsiaHot = { stem: 'Write one new pair of edges (a term and its meaning, or a cause and its effect) that could replace any pair in your puzzle.', marks: 2,
+    ms: ['a correct, specific term or cause on one edge ✓', 'a correct matching meaning or effect on the other edge, using the right units or keywords ✓'], note: 'Example: “A 3 kg object on the Moon (g = 1.6 N/kg)” ↔ “weighs 4.8 N”.' };
+
+  /* ---------- 6. Exit ticket (different contexts from the stage questions) ---------- */
+  C.exit = {
+    seasons: {
+      s: { stem: 'Name the movement of the Earth that causes day and night, and the movement that takes one year.', marks: 2,
+        ms: ['rotation (about its axis) ✓', 'orbit (round the Sun) ✓'] },
+      m: { stem: 'Explain why Australia has summer in December while the UK has winter.', marks: 3,
+        ms: ['in December the Southern Hemisphere is tilted towards the Sun ✓', 'so sunlight is more direct and days are longer there ✓', 'the Northern Hemisphere (UK) is tilted away, so it has winter ✓'] },
+      x: { stem: 'At noon on 21 June the Sun is 88° above the horizon in Dubai (25° N) but 61° in the UK (52° N). Use the idea of a beam spreading out to explain why the UK is cooler in June, and say why both places are cooler in December.', marks: 3,
+        ms: ['at the lower angle in the UK the same beam spreads over a larger area, so each square metre gets less energy ✓', 'in December each hemisphere is tilted away from the Sun, so the Sun is lower at both places ✓', 'so the beam spreads over a larger area and gives less energy per square metre ✓'] },
+    },
+    weight: {
+      s: { stem: 'Calculate the weight of a 6 kg object on Earth (g = 10 N/kg).', marks: 2,
+        ms: ['W = m × g ✓', '= 60 N ✓'] },
+      m: { stem: 'A 500 g mass hangs on a newton meter on Earth (g = 10 N/kg). (i) Calculate the reading. (ii) Say whether the reading on the Moon is larger or smaller, and why.', marks: 3,
+        ms: ['500 g = 0.5 kg, so W = 0.5 × 10 ✓', '= 5 N ✓', 'smaller, because g is smaller on the Moon ✓'] },
+      x: { stem: 'An 8 kg object weighs 20 N on Planet Y. (i) Calculate g on Planet Y. (ii) A different object has a mass of 5 kg. Calculate its weight on Planet Y and state its mass there.', marks: 4,
+        ms: ['g = W ÷ m = 20 ÷ 8 ✓', '= 2.5 N/kg ✓', 'weight = 5 × 2.5 = 12.5 N ✓', 'mass is still 5 kg (mass does not depend on place) ✓'] },
+    },
+    speed: {
+      s: { stem: 'A car travels 150 m in 10 s. Calculate its speed.', marks: 2,
+        ms: ['speed = distance ÷ time ✓', '= 15 m/s ✓'] },
+      m: { stem: 'A cyclist rides 18 km in 1.5 h. (i) Calculate her speed. (ii) How long would 30 km take at the same speed?', marks: 3,
+        ms: ['18 ÷ 1.5 = 12 km/h ✓', 'time = distance ÷ speed = 30 ÷ 12 ✓', '= 2.5 h ✓'] },
+      x: { stem: 'Runner A runs 400 m in 100 s. Runner B runs 1.5 km in 6 minutes. Who has the greater average speed? Show your working.', marks: 4,
+        ms: ['A: 400 ÷ 100 = 4 m/s ✓', '6 minutes = 360 s (units matched) ✓', 'B: 1500 ÷ 360 = 4.2 m/s (accept 4.17) ✓', 'B is faster ✓'] },
+    },
+    graphs: {
+      s: { stem: 'What does a steeper line on a distance–time graph show?', marks: 1,
+        ms: ['a faster speed ✓'] },
+      m: { stem: 'A graph goes through (0 s, 0 m), (4 s, 8 m), (8 s, 8 m) and (10 s, 20 m). (i) Calculate the speed in the first 4 s. (ii) Describe 4 s to 8 s. (iii) Calculate the speed in the last 2 s.', marks: 3,
+        ms: ['8 ÷ 4 = 2 m/s ✓', 'stationary ✓', '(20 − 8) ÷ 2 = 6 m/s ✓'] },
+      x: { stem: 'Object A goes from 0 to 60 m in 10 s, then stays still until 30 s. Object B moves steadily from 0 to 60 m in 30 s. (i) Calculate A’s speed in its first 10 s. (ii) Calculate the average speed of each over the 30 s. (iii) Explain how they can have the same average speed.', marks: 4,
+        ms: ['A: 60 ÷ 10 = 6 m/s ✓', 'A average: 60 ÷ 30 = 2 m/s ✓', 'B average: 60 ÷ 30 = 2 m/s ✓', 'A was faster while moving but its stop is included in the time, so the averages are equal ✓'] },
+    },
+  };
+})();
+
+/* Stage 1: retrieval sort. Free-moving cards go into three piles; check gives feedback. */
+(function () {
+  'use strict';
+  const RL = window.RL, el = RL.el, C = RL.content;
+  RL.stages.push({
+    id: 'sort', title: 'Sort', mins: 5,
+    build(root) {
+      const t = RL.tier();
+      root.append(RL.mission({
+        kicker: 'Stage 1 · retrieval warm-up', title: 'Sort the clutter', mins: 5,
+        spec: 'Mixed retrieval across seasons, mass and weight, speed and distance–time graphs · no hints on this screen',
+        steps: ['<b>Drag</b> each card into the pile it belongs to (or click a card, then click a pile).', 'Press <b>Check</b>. Wrong cards bounce back to the table.', 'Keep going until every card is locked in green.'],
+        ladder: { s: '12 cards. Say the topic first, then place.', m: '12 cards. Place all before you press Check.', x: '16 cards including trickier terms that sit on the border of two topics.' },
+      }));
+      const cards = C.sort.base.concat(t === 'x' ? C.sort.extra : []);
+      const board = el('div', { class: 'board sortboard' });
+      const toolbar = el('div', { class: 'toolbar' });
+      const msg = el('div', { class: 'msg info', text: 'Drag the cards into the piles. Keyboard: Tab to a card, arrows to move, Enter to pick up/drop.', role: 'status' });
+      const check = el('button', { class: 'btn', text: 'Check' });
+      const reset = el('button', { class: 'btn alt', text: 'Shuffle again' });
+      toolbar.append(check, reset, msg);
+      root.append(board, toolbar);
+
+      let zones = [], nodes = [], selected = null, first = {}, scoreN = 0;
+      function zoneRect(z) { const b = board.getBoundingClientRect(), r = z.getBoundingClientRect(); return { l: r.left - b.left, t: r.top - b.top, w: r.width, h: r.height }; }
+      function build() {
+        board.innerHTML = ''; zones = []; nodes = []; first = {}; scoreN = 0; selected = null;
+        const n = C.sort.zones.length;
+        C.sort.zones.forEach((z, i) => {
+          const d = el('div', { class: 'zone', 'data-z': z.id, role: 'group', 'aria-label': z.title + ' pile', tabindex: '0', style: { left: (1.2 + i * (97.6 / n)) + '%', width: (97.6 / n - 1.4) + '%', bottom: '152px' } }, el('h3', { text: z.title }));
+          d.addEventListener('click', e => { if (selected && e.target === d || (selected && e.target.tagName === 'H3')) place(selected, d); });
+          d.addEventListener('keydown', e => { if ((e.key === 'Enter' || e.key === ' ') && selected) { place(selected, d); e.preventDefault(); } });
+          board.append(d); zones.push(d);
+        });
+        board.append(el('div', { class: 'table-label', text: 'Table' }));
+        const rnd = RL.rng(Date.now() % 100000);
+        const order = RL.shuffle(cards, rnd);
+        order.forEach((c, i) => {
+          const node = el('div', { class: 'card', role: 'button', 'aria-label': c[0], text: c[0] });
+          node.dataset.zone = c[1]; node._in = null;
+          board.append(node); nodes.push(node);
+          RL.drag(node, {
+            area: board, margin: 0.2,
+            disabled: nd => nd.classList.contains('good'),
+            onStart: () => { select(null); node._moved = true; },
+            onMove: e => hover(node),
+            onEnd: () => drop(node),
+            onClick: () => select(selected === node ? null : node),
+          });
+        });
+        requestAnimationFrame(layoutTable);
+      }
+      function layoutTable() {
+        const bw = board.clientWidth, bh = board.clientHeight, rnd = RL.rng(7);
+        nodes.forEach((n, i) => {
+          if (n.classList.contains('good') || n._in || n._moved) return;
+          const col = i % 6, row = Math.floor(i / 6);
+          n._setPos(14 + col * (bw - 28) / 6 + rnd() * 10, bh - 138 + row * 44 + rnd() * 8);
+        });
+      }
+      function select(n) {
+        nodes.forEach(x => x.classList.remove('sel')); selected = n;
+        if (n) { n.classList.add('sel'); RL.msg(msg, 'Now click the pile where “' + n.textContent + '” belongs.', 'info'); }
+      }
+      function hover(node) {
+        const c = RL.center(node);
+        zones.forEach(z => z.classList.toggle('over', RL.inRect(c, z.getBoundingClientRect())));
+      }
+      function drop(node) {
+        zones.forEach(z => z.classList.remove('over'));
+        const c = RL.center(node);
+        const z = zones.find(z => RL.inRect(c, z.getBoundingClientRect()));
+        node._in = z ? z.dataset.z : null;
+        if (z) keepInside(node, z);
+      }
+      function keepInside(node, z) {
+        const r = zoneRect(z);
+        node._setPos(RL.clamp(node._x, r.l + 6, r.l + r.w - node.offsetWidth - 6), RL.clamp(node._y, r.t + 34, r.t + r.h - node.offsetHeight - 6));
+      }
+      function place(node, z) {
+        const r = zoneRect(z); const k = nodes.filter(n => n !== node && n._in === z.dataset.z && !n.classList.contains('good')).length;
+        RL.glide(node, r.l + 10 + (k % 2) * (r.w / 2 - 10), r.t + 38 + Math.floor(k / 2) * 40, 220);
+        node._in = z.dataset.z; select(null);
+      }
+      check.onclick = () => {
+        let placed = 0, good = 0, bad = 0;
+        nodes.forEach(n => {
+          if (n.classList.contains('good') || !n._in) return;
+          placed++;
+          const key = n.textContent;
+          if (n._in === n.dataset.zone) { n.classList.add('good'); n.setAttribute('tabindex', '-1'); good++; if (first[key] === undefined) { first[key] = true; scoreN++; } }
+          else {
+            bad++; if (first[key] === undefined) first[key] = false;
+            n.classList.add('wrong'); RL.shake(n);
+            setTimeout(() => { n.classList.remove('wrong'); n._in = null; RL.glide(n, 20 + Math.random() * (board.clientWidth - 200), board.clientHeight - 130 + Math.random() * 60, 350); }, 800);
+          }
+        });
+        const left = nodes.filter(n => !n.classList.contains('good')).length;
+        if (!placed) return RL.msg(msg, 'Place some cards into the piles first.', 'bad');
+        if (!left) {
+          RL.state.scores.sort = scoreN + '/' + nodes.length; RL.markDone('sort');
+          RL.msg(msg, 'All sorted ✓  First-try score: ' + scoreN + ' / ' + nodes.length + '. Next: the seasons model.', 'ok');
+        } else RL.msg(msg, good + ' correct (locked in green), ' + bad + ' sent back to the table. ' + left + ' to go.', bad ? 'bad' : 'ok');
+      };
+      reset.onclick = () => { build(); RL.msg(msg, 'Cards shuffled.', 'info'); };
+      build();
+      new ResizeObserver(() => { if (board.offsetParent) layoutTable(); }).observe(board);
+    },
+  });
+})();
+
+/* Stage 2: Seasons. Drag the Earth round its orbit. The axis tilt stays fixed in space; the model computes the
+   Sun's declination, day length and noon Sun angle at a chosen latitude and shows why a low Sun spreads light out. */
+(function () {
+  'use strict';
+  const RL = window.RL, el = RL.el, C = RL.content, V3 = (x, y, z) => new THREE.Vector3(x, y, z);
+  const ALPHA = 23.5, rad = d => d * Math.PI / 180, deg = r => r * 180 / Math.PI;
+  const R = 3.3;
+
+  function physics(theta, tiltOn, lat) {
+    const a = tiltOn ? ALPHA : 0, sinD = Math.sin(rad(a)) * Math.cos(rad(theta));
+    const dec = deg(Math.asin(sinD));
+    const x = -Math.tan(rad(lat)) * Math.tan(rad(dec)); let hours;
+    if (x <= -1) hours = 24; else if (x >= 1) hours = 0; else hours = 2 * deg(Math.acos(x)) / 15;
+    const elev = 90 - Math.abs(lat - dec);
+    return { dec, hours, elev };
+  }
+  function dateOf(theta) {
+    const d = Math.round((172 + theta / 360 * 365)) % 365, names = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'], len = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+    let day = d, m = 0; while (day > len[m]) { day -= len[m]; m++; if (m > 11) { m = 0; } }
+    return day + ' ' + names[m];
+  }
+  function season(dec, lat, tiltOn) {
+    if (!tiltOn) return 'no seasons (no tilt)';
+    if (Math.abs(lat) < 8) return 'about the same all year (near the equator)';
+    const north = lat > 0 ? dec : -dec;
+    return north > 14 ? 'summer' : north < -14 ? 'winter' : 'spring or autumn';
+  }
+
+  RL.stages.push({
+    id: 'seasons', title: 'Seasons', mins: 10,
+    build(root) {
+      const tier = RL.tier();
+      root.append(RL.mission({
+        kicker: 'Stage 2 · seasons and Earth’s tilt', title: 'Move the Earth and explain the seasons', mins: 10,
+        spec: 'Rotation (about 24 h) and orbit (about 1 year) · axis tilt of about 23.5° · sunlight angle and day length · seasons are not caused by distance',
+        steps: ['<b>Drag</b> the Earth round its orbit, or use the date buttons. Watch which hemisphere is tilted towards the Sun.', 'Change the <b>latitude</b> and time of day. Read the day length and the Sun’s height at noon.', 'Complete the three <b>challenges</b>. Try the tilt switch.'],
+        ladder: { s: 'Find June and December. Say which hemisphere has summer. Do challenges 1 and 2.', m: 'Link tilt to day length and Sun angle at two latitudes. Do all three challenges.', x: 'Explain why distance cannot cause seasons and why the beam spreads out. Use evidence from the model.' },
+      }));
+      const view = el('div', { class: 'view' });
+      const hud = el('div', { class: 'msg info hudmsg', role: 'status', text: 'Drag the Earth round its orbit. Drag empty space to turn the view.' });
+      view.append(hud);
+      const panel = el('div', { class: 'panel' });
+      const grid = el('div', { class: 'enzgrid seas' }, view, panel);
+      root.append(el('div', { class: 'board' }, grid));
+
+      const st = { theta: 0, tilt: true, lat: 25, hour: 12, done: {} };
+      const sDate = el('input', { type: 'range', min: 0, max: 359, step: 1, value: 0, 'aria-label': 'Position in the orbit' });
+      const sHour = el('input', { type: 'range', min: 0, max: 24, step: 0.5, value: 12, 'aria-label': 'Time of day' });
+      const vDate = el('span'), vHour = el('span');
+      const latSel = el('select', { class: 'cloze', 'aria-label': 'Latitude' }, ...[[25, 'Dubai, 25° N'], [52, 'UK, 52° N'], [0, 'Equator, 0°'], [-34, 'Sydney, 34° S'], [-52, '52° S']].map(o => el('option', { value: o[0], text: o[1] })));
+      const tiltBtn = el('button', { class: 'btn alt', 'aria-pressed': 'true', text: 'Axis tilt: ON' });
+      const quick = el('div', { style: { display: 'flex', gap: '4px', flexWrap: 'wrap' } }, ...[['June', 0], ['Sept', 90], ['Dec', 180], ['March', 270]].map(([n, t]) => el('button', { class: 'btn alt', style: { padding: '3px 10px' }, text: n, onclick: () => { st.theta = t; sync(); } })));
+      const readout = el('div', { class: 'readout' });
+      const beam = document.createElementNS('http://www.w3.org/2000/svg', 'svg'); beam.setAttribute('viewBox', '0 0 300 120'); beam.setAttribute('role', 'img'); beam.style.cssText = 'width:100%;height:auto;background:#fff;border:2px solid #cfc7b5;border-radius:10px';
+      const beamTxt = el('div', { style: { fontSize: '12px', fontWeight: 600 } });
+      panel.append(
+        el('h3', { text: '1 · Date and place' }),
+        el('div', { class: 'slider' }, el('label', null, 'Position in orbit', vDate), sDate), quick,
+        el('div', { class: 'slider' }, el('label', null, 'Time of day at the marker', vHour), sHour),
+        el('div', { style: { display: 'flex', gap: '8px', alignItems: 'center', flexWrap: 'wrap' } }, el('label', { style: { fontWeight: 700, fontSize: '13px' }, text: 'Marker:' }), latSel, tiltBtn),
+        readout,
+        el('h3', { text: '2 · Same beam, different angle' }), beam, beamTxt);
+
+      /* ---------- 3D ---------- */
+      const th = RL.three(view, { z: 9.5, fov: 36, label: 'Earth orbiting the Sun. Drag the Earth to move it round the orbit.' });
+      let earthPos = V3(R, 0, 0), world = null, earth, tiltG, spinG, marker;
+      function earthTexture() {
+        return RL.canvasTex(512, 256, (g, w, h) => {
+          g.fillStyle = '#2b6cb0'; g.fillRect(0, 0, w, h); const rnd = RL.rng(9);
+          g.fillStyle = '#4c9a53';
+          [[110, 90, 55, 38], [190, 60, 30, 20], [150, 170, 30, 40], [330, 80, 62, 36], [360, 150, 36, 40], [440, 190, 40, 22], [60, 160, 26, 16]].forEach(b => { for (let i = 0; i < 6; i++) { g.beginPath(); g.ellipse(b[0] + (rnd() - .5) * 30, b[1] + (rnd() - .5) * 20, b[2] * (0.5 + rnd() * .6), b[3] * (0.5 + rnd() * .6), rnd() * 3, 0, 7); g.fill(); } });
+          g.fillStyle = '#f4f8fb'; g.fillRect(0, 0, w, 16); g.fillRect(0, h - 16, w, 16);
+          g.strokeStyle = 'rgba(255,255,255,.55)'; g.lineWidth = 1.2; for (let lat = -60; lat <= 60; lat += 30) { const y = h / 2 - lat / 90 * h / 2; g.beginPath(); g.moveTo(0, y); g.lineTo(w, y); g.stroke(); }
+          g.strokeStyle = '#ffd34a'; g.lineWidth = 3; g.beginPath(); g.moveTo(0, h / 2); g.lineTo(w, h / 2); g.stroke();
+        });
+      }
+      function sprite(text, color) {
+        const t = RL.canvasTex(256, 72, (g, w, h) => { g.fillStyle = 'rgba(255,255,255,.92)'; g.strokeStyle = color || '#21345B'; g.lineWidth = 4; g.beginPath(); g.roundRect ? g.roundRect(3, 3, w - 6, h - 6, 14) : g.rect(3, 3, w - 6, h - 6); g.fill(); g.stroke(); g.fillStyle = '#21345B'; g.font = '700 32px Montserrat, sans-serif'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText(text, w / 2, h / 2 + 2); });
+        const s = new THREE.Sprite(new THREE.SpriteMaterial({ map: t, transparent: true, depthTest: false })); s.scale.set(1.15, 0.33, 1); s.renderOrder = 10; return s;
+      }
+      if (th) {
+        th.camera.position.set(0, 7.2, 12.2); th.camera.lookAt(0, -0.2, 0);
+        th.scene.children.filter(o => o.isLight).forEach(l => (l.intensity *= 0.45));
+        world = new THREE.Group(); th.scene.add(world);
+        const sun = new THREE.Mesh(new THREE.SphereGeometry(0.62, 32, 24), new THREE.MeshBasicMaterial({ color: 0xffc933 })); world.add(sun);
+        const glow = new THREE.Sprite(new THREE.SpriteMaterial({ map: RL.canvasTex(128, 128, (g, w, h) => { const r = g.createRadialGradient(64, 64, 4, 64, 64, 64); r.addColorStop(0, 'rgba(255,220,90,.9)'); r.addColorStop(1, 'rgba(255,220,90,0)'); g.fillStyle = r; g.fillRect(0, 0, w, h); }), transparent: true, depthWrite: false })); glow.scale.set(3.4, 3.4, 1); world.add(glow);
+        const pl = new THREE.PointLight(0xffffff, 120, 0, 2); world.add(pl);
+        const orbit = new THREE.Line(new THREE.BufferGeometry().setFromPoints(Array.from({ length: 129 }, (_, i) => V3(R * Math.cos(i / 128 * 6.2832), 0, -R * Math.sin(i / 128 * 6.2832)))), new THREE.LineBasicMaterial({ color: 0x8a96ad })); world.add(orbit);
+        [['21 June', 0], ['20 Sept', 90], ['21 Dec', 180], ['22 March', 270]].forEach(([t, a]) => { const s = sprite(t); s.position.set(R * 1.28 * Math.cos(rad(a)), 0.1, -R * 1.28 * Math.sin(rad(a))); world.add(s); });
+        earth = new THREE.Group(); world.add(earth);
+        tiltG = new THREE.Group(); earth.add(tiltG);
+        spinG = new THREE.Group(); tiltG.add(spinG);
+        spinG.add(new THREE.Mesh(new THREE.SphereGeometry(0.55, 40, 28), new THREE.MeshStandardMaterial({ map: earthTexture(), roughness: 0.8 })));
+        const axis = new THREE.Line(new THREE.BufferGeometry().setFromPoints([V3(0, -1.05, 0), V3(0, 1.05, 0)]), new THREE.LineBasicMaterial({ color: 0xc0392b })); tiltG.add(axis);
+        const north = sprite('N', '#c0392b'); north.scale.set(0.5, 0.36, 1); north.position.set(0, 1.25, 0); tiltG.add(north);
+        marker = new THREE.Mesh(new THREE.SphereGeometry(0.075, 12, 10), new THREE.MeshBasicMaterial({ color: 0xff3b30 })); spinG.add(marker);
+        // fixed direction reference: dashed line showing the axis keeps pointing the same way
+        const ghost = new THREE.Line(new THREE.BufferGeometry().setFromPoints([V3(0, -1.6, 0), V3(0, 1.6, 0)]), new THREE.LineDashedMaterial({ color: 0x5b6b8a, dashSize: 0.12, gapSize: 0.1 })); ghost.computeLineDistances();
+        const ghostG = new THREE.Group(); ghostG.add(ghost); ghostG.rotation.z = rad(ALPHA); earth.add(ghostG); earth.userData.ghost = ghostG;
+        const ray = new THREE.Raycaster(), Vv = new THREE.Vector2(); let mode = null, px = 0;
+        const pick = e => { const p = th.pointer(e); Vv.set(p.x, p.y); ray.setFromCamera(Vv, th.camera); return ray.intersectObject(earth, true).length > 0; };
+        const planeTheta = e => { const p = th.pointer(e); Vv.set(p.x, p.y); ray.setFromCamera(Vv, th.camera); const o = ray.ray.origin, d = ray.ray.direction, t = -o.y / d.y; const pt = world.worldToLocal(V3(o.x + d.x * t, 0, o.z + d.z * t)); return mod(deg(Math.atan2(-pt.z, pt.x)), 360); };
+        th.canvas.addEventListener('pointerdown', e => { th.canvas.setPointerCapture(e.pointerId); if (pick(e)) { mode = 'earth'; th.canvas.style.cursor = 'grabbing'; } else { mode = 'view'; px = e.clientX; } });
+        th.canvas.addEventListener('pointermove', e => { if (mode === 'earth') { st.theta = Math.round(planeTheta(e)) % 360; sync(); } else if (mode === 'view') { world.rotation.y += (e.clientX - px) * 0.008; px = e.clientX; } else th.canvas.style.cursor = pick(e) ? 'grab' : 'default'; });
+        const up = () => { mode = null; th.canvas.style.cursor = 'default'; }; th.canvas.addEventListener('pointerup', up); th.canvas.addEventListener('pointercancel', up);
+        th.canvas.addEventListener('keydown', e => { if (e.key === 'ArrowLeft') st.theta = mod(st.theta - 5, 360); else if (e.key === 'ArrowRight') st.theta = mod(st.theta + 5, 360); else return; e.preventDefault(); sync(); });
+        th.loops.push(() => { /* static scene; updates happen in sync() */ });
+      }
+      const mod = (a, n) => ((a % n) + n) % n;
+
+      function sync() {
+        sDate.value = st.theta; sHour.value = st.hour;
+        const P = physics(st.theta, st.tilt, st.lat), sw = season(P.dec, st.lat, st.tilt);
+        vDate.textContent = 'about ' + dateOf(st.theta); vHour.textContent = st.hour === 12 ? 'noon' : st.hour === 0 || st.hour === 24 ? 'midnight' : (st.hour % 1 ? Math.floor(st.hour) + ':30' : st.hour + ':00');
+        if (th) {
+          earth.position.set(R * Math.cos(rad(st.theta)), 0, -R * Math.sin(rad(st.theta)));
+          tiltG.rotation.z = st.tilt ? rad(ALPHA) : 0;
+          earth.userData.ghost.visible = st.tilt;
+          // spin so that the marker faces the Sun at noon
+          earth.updateMatrixWorld(true); tiltG.updateMatrixWorld(true);
+          const sl = tiltG.worldToLocal(world.localToWorld(V3(0, 0, 0))); sl.y = 0;
+          const psi = Math.atan2(-sl.z, sl.x) + (st.hour - 12) / 24 * 2 * Math.PI; spinG.rotation.y = psi;
+          marker.position.set(0.56 * Math.cos(rad(st.lat)), 0.56 * Math.sin(rad(st.lat)), 0);
+        }
+        const day = P.hours >= 23.9 ? 'about 24 h (Sun does not set)' : P.hours <= 0.1 ? 'about 0 h (Sun does not rise)' : P.hours.toFixed(1) + ' h';
+        readout.innerHTML = '<b>What the model shows</b>Date: about ' + dateOf(st.theta) + '<br>' + (!st.tilt ? 'No tilt: neither hemisphere leans to the Sun' : Math.abs(P.dec) < 2.5 ? 'Neither hemisphere is tilted towards the Sun (an equinox)' : (P.dec >= 0 ? 'Northern' : 'Southern') + ' Hemisphere tilted towards the Sun') + '<br>Day length at the marker: ' + day + '<br>Sun at noon: ' + Math.max(0, Math.round(P.elev)) + '° above the horizon<br>Marker’s season: ' + sw + '<br>Distance to the Sun: about 150 million km (changes by only about 3% in a year)';
+        drawBeam(Math.max(8, Math.min(90, P.elev)));
+        tiltBtn.textContent = 'Axis tilt: ' + (st.tilt ? 'ON' : 'OFF'); tiltBtn.setAttribute('aria-pressed', st.tilt);
+        st.P = P; checkAuto();
+      }
+      function drawBeam(e) {
+        beam.innerHTML = ''; const NS = 'http://www.w3.org/2000/svg', mk = (t, a) => { const n = document.createElementNS(NS, t); for (const k in a) n.setAttribute(k, a[k]); beam.append(n); return n; };
+        const gy = 100, w = 40, ang = rad(e), dx = Math.cos(ang), dy = Math.sin(ang), foot = w / Math.sin(ang), cx = 150;
+        mk('rect', { x: 0, y: gy, width: 300, height: 20, fill: '#c9b98f' });
+        const x1 = cx - foot / 2, x2 = cx + foot / 2; // footprint on the ground
+        const L = 90, ox = dx * L, oy = dy * L; // beam comes from upper left towards lower right
+        mk('polygon', { points: `${x1},${gy} ${x2},${gy} ${x2 - ox},${gy - oy} ${x1 - ox},${gy - oy}`, fill: 'rgba(255,200,40,.55)', stroke: '#e0a800' });
+        mk('line', { x1: x1, y1: gy, x2: x2, y2: gy, stroke: '#c0392b', 'stroke-width': 5 });
+        const t = mk('text', { x: 8, y: 16, 'font-size': 12, 'font-weight': 700, fill: '#21345B' }); t.textContent = 'Sun ' + Math.round(e) + '° above the horizon';
+        beamTxt.textContent = e > 80 ? 'A high Sun: the beam lands on a small patch, so each square metre gets a lot of energy.' : 'A lower Sun: the same beam spreads over about ' + (1 / Math.sin(ang)).toFixed(1) + '× the ground, so each square metre gets less energy.';
+      }
+      sDate.oninput = () => { st.theta = +sDate.value; sync(); };
+      sHour.oninput = () => { st.hour = +sHour.value; sync(); };
+      latSel.onchange = () => { st.lat = +latSel.value; sync(); };
+      tiltBtn.onclick = () => { st.tilt = !st.tilt; st.touchedTilt = true; sync(); RL.msg(hud, st.tilt ? 'Tilt on again: the seasons return.' : 'Tilt OFF: step through the dates. Is the day length changing?', 'info'); };
+
+      /* challenges */
+      const ch = el('div', { class: 'predict', style: { marginTop: '6px' } });
+      const results = {};
+      const items = [
+        { id: 'c1', t: 'Challenge 1: put the Earth where the Northern Hemisphere is tilted towards the Sun, and the Southern is tilted away.', test: () => st.tilt && st.P.dec > 20, ok: 'Yes: that is about 21 June. North has summer, south has winter.', no: 'Not yet. Try the date buttons: the model reads “tilted towards the Sun” for the north.' },
+        { id: 'c2', t: 'Challenge 2: find a date when day and night are about equal everywhere (12 h and 12 h).', test: () => st.tilt && Math.abs(st.P.dec) < 2.5, ok: 'Yes: an equinox (about 23 Sept or 20 March). The axis tilts sideways, not towards the Sun.', no: 'Not yet. Look for dates where neither hemisphere leans towards the Sun.' },
+        { id: 'c3', t: 'Challenge 3: turn the tilt OFF. What would happen to the seasons?', test: () => !st.tilt, ok: 'With no tilt, the day length stays at about 12 h all year, so there are no seasons.', no: 'Press the tilt button, then move the Earth through the year.' },
+      ];
+      items.forEach(it => {
+        const b = el('button', { class: 'btn alt', style: { padding: '3px 10px', marginTop: '4px' }, text: 'Check', onclick: () => { const g = it.test(); results[it.id] = results[it.id] || g; RL.msg(m, g ? it.ok : it.no, g ? 'ok' : 'bad'); if (items.every(x => results[x.id])) { RL.markDone('seasons'); } } });
+        const m = el('div', { class: 'msg info', style: { marginTop: '4px', fontSize: '12.5px' } });
+        ch.append(el('p', { style: { margin: '6px 0 0', fontWeight: 700, fontSize: '12.5px' }, text: it.t }), b, m);
+      });
+      panel.append(el('h3', { text: '3 · Challenges' }), ch);
+      const mc = el('div', { class: 'predict' });
+      const q = { q: 'A friend says: “It is summer because the Earth is closer to the Sun.” Which fact in the model shows this is wrong?', opts: ['Both hemispheres are the same distance from the Sun but have opposite seasons', 'The Sun is hotter in summer', 'The Earth spins faster in summer'], ans: 0, why: 'Both hemispheres are the same distance away at the same time but have opposite seasons, so the cause must be the tilt.' };
+      mc.append(el('p', { text: q.q }));
+      q.opts.forEach((o, i) => { const b = el('button', { class: 'opt', text: o, onclick: () => { RL.$$('.opt', mc).forEach(x => (x.disabled = true)); b.classList.add(i === q.ans ? 'good' : 'bad'); RL.$$('.opt', mc)[q.ans].classList.add('good'); mc.append(el('p', { style: { fontSize: '12.5px', margin: '6px 0 0' }, text: (i === q.ans ? 'Yes. ' : 'Not quite. ') + q.why })); } }); mc.append(b); });
+      panel.append(mc);
+      function checkAuto() { /* hook for future auto-checks */ }
+      sync();
+
+      const checks = el('div', { class: 'panelcard' }, el('h3', { text: 'Check yourself' }), ...C.seasonsQs[tier].map(q => RL.qblock(q)));
+      const sup = C.seasonsSupport;
+      root.append(el('div', { class: 'below' }, checks, RL.support({ adapt: { lead: sup.adapt.lead, nodes: [RL.cloze(sup.adapt.cloze[0], sup.adapt.cloze[1])] }, hot: { lead: 'Use what the model showed you.', nodes: [RL.qblock(sup.hot)] } })));
+    },
+  });
+})();
+
+/* Stage 3: Mass and weight. Drag masses onto a newton meter (weight, N) and a mass balance (mass, kg).
+   Change planet: the balance reading stays the same, the newton meter reading changes. */
+(function () {
+  'use strict';
+  const RL = window.RL, el = RL.el, C = RL.content;
+  const MASSES = [['100 g', 0.1], ['200 g', 0.2], ['500 g', 0.5], ['1 kg', 1], ['2 kg', 2]];
+  const MAXN = 30;
+
+  RL.stages.push({
+    id: 'weight', title: 'Mass and weight', mins: 10,
+    build(root) {
+      const tier = RL.tier();
+      root.append(RL.mission({
+        kicker: 'Stage 3 · mass and weight', title: 'Weigh it on the newton meter, balance it by mass', mins: 10,
+        spec: 'Mass (kg) and weight (N) · W = m × g · g = 10 N/kg on Earth · weight changes with g, mass does not · grams to kilograms',
+        steps: ['<b>Drag</b> masses onto the newton meter (left) and the balance (right). Try the same mass in each place.', '<b>Change planet.</b> Watch which reading changes and which stays the same.', '<b>Predict then test</b> in the tasks. Convert grams to kilograms first.'],
+        ladder: { s: 'Do tasks A and B on Earth, Moon and Mars. Use W = m × g.', m: 'Do A, B and the mystery block (find a mass from a weight).', x: 'Add Planet X: find g from a reading, then predict on a new planet.' },
+      }));
+      const planets = C.planets.slice(); if (tier === 'x') planets.push(['Planet X', 6]);
+      const st = { p: 0, hook: [], pan: [], logged: {}, mystery: tier === 'x' ? 0.35 : 0.6 };
+      const view = el('div', { class: 'view' });
+      const hud = el('div', { class: 'msg info hudmsg', role: 'status', text: 'Drag a mass onto the newton meter or the balance.' });
+      view.append(hud);
+      const panel = el('div', { class: 'panel' });
+      root.append(el('div', { class: 'board' }, el('div', { class: 'enzgrid seas' }, view, panel)));
+      const trybar = el('div', { class: 'toolbar' }, el('span', { class: 'chip', text: 'Keyboard / touch option:' }));
+      root.append(trybar);
+
+      const pbtns = planets.map((p, i) => el('button', { class: 'btn alt', 'aria-pressed': 'false', text: p[0] + (p[0] === 'Planet X' ? ' (g hidden)' : ' · g = ' + p[1]), onclick: () => { st.p = i; refresh(); } }));
+      const readout = el('div', { class: 'readout' });
+      const gOf = () => planets[st.p][1];
+      const sum = a => a.reduce((t, m) => t + m.mass, 0);
+
+      panel.append(el('h3', { text: '1 · Planet' }), el('div', { style: { display: 'flex', flexWrap: 'wrap', gap: '4px' } }, ...pbtns), readout);
+
+      /* tasks */
+      const tasks = el('div', { class: 'predict' });
+      const mk = (label, ans, tol, hint) => { const i = el('input', { type: 'text', inputmode: 'decimal', 'aria-label': label, placeholder: '?', style: { width: '66px', font: 'inherit', fontWeight: 700, textAlign: 'center', border: '2px solid #cfc7b5', borderRadius: '6px' } }); i._ans = ans; i._tol = tol || 0.011; return i; };
+      const val = i => parseFloat(i.value.replace('−', '-').replace(',', '.'));
+      const checkInputs = (inputs, msgNode, okText, key) => { let ok = 0; inputs.forEach(i => { const v = val(i), g = !isNaN(v) && Math.abs(v - i._ans) <= i._tol * Math.max(1, Math.abs(i._ans) * 0.02); i.style.borderColor = g ? '#1f7a4d' : '#b3261e'; if (g) ok++; }); const all = ok === inputs.length; RL.msg(msgNode, all ? okText : ok + ' of ' + inputs.length + ' correct. Check grams to kg and use W = m × g.', all ? 'ok' : 'bad'); if (all) { st.logged[key] = true; maybeDone(); } };
+      const maybeDone = () => { const need = tier === 's' ? ['A', 'B'] : ['A', 'B', 'C']; if (need.every(k => st.logged[k])) RL.markDone('weight'); };
+
+      // Task A
+      const ia = mk('Weight of 200 g on Earth', 2); const ma = el('div', { class: 'msg info', style: { fontSize: '12.5px' } });
+      const ta = el('div', null, el('p', { style: { margin: '0 0 4px', fontWeight: 700, fontSize: '12.5px' }, text: 'A · Predict the weight of 200 g on Earth (N).' }), el('div', { style: { display: 'flex', gap: '6px', alignItems: 'center' } }, ia, ' N ', el('button', { class: 'btn alt', style: { padding: '2px 10px' }, text: 'Check', onclick: () => checkInputs([ia], ma, 'Yes: 200 g = 0.2 kg, 0.2 × 10 = 2 N. Now load it on the meter to see.', 'A') })), ma);
+      // Task B: weights of 500 g on other planets
+      const rowsB = planets.filter(p => ['Moon', 'Mars', 'Jupiter'].includes(p[0]));
+      const ibs = rowsB.map(p => mk('Weight of 500 g on ' + p[0], 0.5 * p[1], 0.011)); const mb = el('div', { class: 'msg info', style: { fontSize: '12.5px' } });
+      const tb = el('div', null, el('p', { style: { margin: '8px 0 4px', fontWeight: 700, fontSize: '12.5px' }, text: 'B · Predict the weight of 500 g (N), then test it on each planet.' }),
+        ...rowsB.map((p, i) => el('div', { style: { display: 'flex', gap: '6px', alignItems: 'center', margin: '2px 0', fontSize: '12.5px' } }, el('span', { style: { width: '70px' }, text: p[0] }), ibs[i], ' N')),
+        el('button', { class: 'btn alt', style: { padding: '2px 10px', marginTop: '4px' }, text: 'Check', onclick: () => checkInputs(ibs, mb, 'All correct ✓ Mass is the same (0.5 kg); the weight changes because g changes.', 'B') }), mb);
+      // Task C: mystery block
+      const ic = mk('Mass of the mystery block in kg', st.mystery, 0.011); const mc = el('div', { class: 'msg info', style: { fontSize: '12.5px' } });
+      const tc = el('div', null, el('p', { style: { margin: '8px 0 4px', fontWeight: 700, fontSize: '12.5px' }, text: 'C · Mystery block: hang it on Earth, read the weight, then work out its mass (kg) using m = W ÷ g.' }),
+        el('div', { style: { display: 'flex', gap: '6px', alignItems: 'center' } }, ic, ' kg ', el('button', { class: 'btn alt', style: { padding: '2px 10px' }, text: 'Check', onclick: () => checkInputs([ic], mc, 'Yes. Put it on the balance to confirm: the mass is the same on every planet.', 'C') })), mc);
+      tasks.append(ta);
+      if (tier !== 's' || true) tasks.append(tb);
+      if (tier !== 's') tasks.append(tc);
+      let td = null;
+      if (tier === 'x') {
+        const idd = mk('g on Planet X', 6, 0.011); const md = el('div', { class: 'msg info', style: { fontSize: '12.5px' } });
+        td = el('div', null, el('p', { style: { margin: '8px 0 4px', fontWeight: 700, fontSize: '12.5px' }, text: 'D · Planet X: hang 500 g, read the weight, then work out g (N/kg) using g = W ÷ m.' }), el('div', { style: { display: 'flex', gap: '6px', alignItems: 'center' } }, idd, ' N/kg ', el('button', { class: 'btn alt', style: { padding: '2px 10px' }, text: 'Check', onclick: () => checkInputs([idd], md, 'Yes: g = W ÷ m. So a 2 kg object would weigh 12 N on Planet X.', 'D') })), md);
+        tasks.append(td);
+      }
+      panel.append(el('h3', { text: '2 · Predict, then test' }), tasks,
+        RL.reveal('Show the answers to the tasks', '<ul><li><b>A:</b> 0.2 kg × 10 N/kg = <b>2 N</b>.</li><li><b>B (500 g = 0.5 kg):</b> Moon 0.8 N · Mars 1.85 N · Jupiter 12.5 N.</li>' + (tier !== 's' ? '<li><b>C:</b> mass = weight ÷ g = ' + (st.mystery * 10).toFixed(1) + ' N ÷ 10 N/kg = <b>' + st.mystery + ' kg</b>.</li>' : '') + (tier === 'x' ? '<li><b>D:</b> 500 g weighs 3 N on Planet X, so g = 3 ÷ 0.5 = <b>6 N/kg</b>.</li>' : '') + '</ul>'));
+
+      /* ---------- 3D ---------- */
+      const th = RL.three(view, { z: 11, fov: 36, label: 'Newton meter and mass balance with draggable masses' });
+      let meter, rod, hookG, pointer, readTex, balTex, shelf = [], blocks = [], tubeBottom = 0.4, extNow = 0, extTarget = 0;
+      const HOOKX = -1.0, PANX = 3.3, PANY = -1.65, TOPY = 3.1;
+      function textTex(w, h, draw) { return RL.canvasTex(w, h, draw); }
+      function drawMeterFace(g, w, h) {
+        g.fillStyle = '#fbf7ea'; g.fillRect(0, 0, w, h); g.fillStyle = '#21345B'; g.font = '700 26px Montserrat, sans-serif'; g.textAlign = 'left'; g.textBaseline = 'middle';
+        for (let n = 0; n <= MAXN; n += 5) { const y = 18 + n / MAXN * (h - 36); g.fillRect(w - 30, y - 1.5, 26, 3); g.fillText(String(n), 6, y); }
+        g.lineWidth = 1; for (let n = 1; n < MAXN; n++) if (n % 5) { const y = 18 + n / MAXN * (h - 36); g.fillRect(w - 16, y - 0.5, 12, 1.5); }
+        g.font = '700 22px Montserrat, sans-serif'; g.fillText('N', 6, h - 10);
+      }
+      function screen(w, h, lines) { return textTex(w, h, (g, W, H) => { g.fillStyle = '#10243a'; g.fillRect(0, 0, W, H); g.fillStyle = '#8df0b0'; g.font = '700 ' + Math.round(H * 0.4) + 'px "Courier New", monospace'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText(lines, W / 2, H / 2 + 2); }); }
+      if (th) {
+        th.camera.position.set(0, 0.6, 14.5); th.camera.lookAt(0, 0.5, 0);
+        const S = THREE;
+        const wood = RL.mats.solid(0xb9a27a, 0.8), steel = RL.mats.solid(0x7d8aa0, 0.4);
+        const base = new S.Mesh(new S.BoxGeometry(11, 0.25, 2.4), RL.mats.solid(0xd9c9a4, 0.9)); base.position.set(0, -3.2, 0); th.scene.add(base);
+        const post = new S.Mesh(new S.CylinderGeometry(0.1, 0.1, 6.5, 12), steel); post.position.set(-2.2, 0, -0.5); th.scene.add(post);
+        const arm = new S.Mesh(new S.BoxGeometry(1.5, 0.14, 0.14), steel); arm.position.set(-1.45, TOPY, -0.5); th.scene.add(arm);
+        meter = new S.Group(); meter.position.set(HOOKX, 0, -0.3); th.scene.add(meter);
+        const tube = new S.Mesh(new S.CylinderGeometry(0.3, 0.3, TOPY - tubeBottom, 20), RL.mats.glass(0xdde8f2, 0.45)); tube.position.y = (TOPY + tubeBottom) / 2 - 0.05; meter.add(tube);
+        const faceH = TOPY - tubeBottom - 0.2, face = new S.Mesh(new S.PlaneGeometry(0.42, faceH), new S.MeshBasicMaterial({ map: textTex(128, 512, drawMeterFace) })); face.position.set(0, (TOPY + tubeBottom) / 2 - 0.05, 0.305); meter.add(face);
+        pointer = new S.Mesh(new S.BoxGeometry(0.46, 0.05, 0.03), new S.MeshBasicMaterial({ color: 0xd33b2c })); pointer.position.z = 0.32; meter.add(pointer);
+        rod = new S.Mesh(new S.CylinderGeometry(0.04, 0.04, 1, 8), steel); meter.add(rod);
+        hookG = new S.Group(); meter.add(hookG); hookG.add(new S.Mesh(new S.TorusGeometry(0.1, 0.025, 8, 16, Math.PI * 1.5), steel));
+        readTex = new S.Mesh(new S.PlaneGeometry(1.5, 0.5), new S.MeshBasicMaterial({ map: screen(256, 86, '0.0 N') })); readTex.position.set(HOOKX, 3.75, -0.3); th.scene.add(readTex);
+        // balance
+        const bb = new S.Mesh(new S.BoxGeometry(2.9, 0.9, 1.6), RL.mats.solid(0x32465f, 0.5)); bb.position.set(PANX, -2.55, 0); th.scene.add(bb);
+        const pan = new S.Mesh(new S.CylinderGeometry(1.0, 1.0, 0.1, 28), steel); pan.position.set(PANX, PANY - 0.08, 0); th.scene.add(pan);
+        const stem = new S.Mesh(new S.CylinderGeometry(0.08, 0.08, 0.7, 10), steel); stem.position.set(PANX, -2.0, 0); th.scene.add(stem);
+        balTex = new S.Mesh(new S.PlaneGeometry(2.0, 0.55), new S.MeshBasicMaterial({ map: screen(256, 70, '0.000 kg') })); balTex.position.set(PANX, -2.5, 0.81); th.scene.add(balTex);
+        const tag = new S.Sprite(new S.SpriteMaterial({ map: textTex(256, 64, (g, w, h) => { g.fillStyle = 'rgba(255,255,255,.92)'; g.fillRect(0, 0, w, h); g.strokeStyle = '#21345B'; g.lineWidth = 4; g.strokeRect(2, 2, w - 4, h - 4); g.fillStyle = '#21345B'; g.font = '700 26px Montserrat'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText('BEAM BALANCE (kg)', w / 2, h / 2); }), transparent: true, depthTest: false })); tag.scale.set(2.4, 0.6, 1); tag.position.set(PANX, 0.6, 0); th.scene.add(tag);
+        const tag2 = tag.clone(); tag2.material = tag.material.clone(); tag2.material.map = textTex(256, 64, (g, w, h) => { g.fillStyle = 'rgba(255,255,255,.92)'; g.fillRect(0, 0, w, h); g.strokeStyle = '#21345B'; g.lineWidth = 4; g.strokeRect(2, 2, w - 4, h - 4); g.fillStyle = '#21345B'; g.font = '700 24px Montserrat'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText('NEWTON METER (N)', w / 2, h / 2); }); tag2.position.set(HOOKX - 0.1, 4.5, 0); th.scene.add(tag2);
+        // masses
+        const defs = MASSES.map(m => ({ label: m[0], mass: m[1] })).concat([{ label: '?', mass: st.mystery, mystery: true }]);
+        defs.forEach((d, i) => {
+          const r = 0.3 + 0.06 * Math.min(i, 4), h = 0.34 + 0.1 * Math.min(i, 4);
+          const m = new S.Mesh(new S.CylinderGeometry(r, r, h, 24), RL.mats.solid(d.mystery ? 0x8a8f99 : 0xc8a24a, 0.35));
+          const lab = new S.Mesh(new S.PlaneGeometry(r * 1.5, h * 0.7), new S.MeshBasicMaterial({ map: textTex(128, 64, (g, w, hh) => { g.fillStyle = d.mystery ? '#fff' : '#fff8e1'; g.fillRect(0, 0, w, hh); g.fillStyle = '#21345B'; g.font = '700 ' + (d.label.length > 3 ? 36 : 44) + 'px Montserrat, sans-serif'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText(d.label, w / 2, hh / 2 + 2); }) })); lab.position.z = r + 0.01; m.add(lab);
+          m.userData = { mass: d.mass, h, r, where: 'shelf', slot: i, label: d.label };
+          th.scene.add(m); blocks.push(m);
+        });
+        const sx = i => -3.9 + i * 1.12;
+        const place = (m, animate) => {
+          const u = m.userData;
+          if (u.where === 'shelf') u.target = [sx(u.slot) - (u.slot > 1 ? 0.0 : 0), -2.95 + u.h / 2 + 0.0, 0.2 + (u.slot % 2) * 0.4];
+          else if (u.where === 'hook') { const idx = st.hook.indexOf(m); let y = hookBottom(); for (let k = 0; k < idx; k++) y -= st.hook[k].userData.h + 0.02; u.target = [HOOKX, y - u.h / 2 - 0.25, -0.3]; }
+          else { const idx = st.pan.indexOf(m); let y = PANY; for (let k = 0; k < idx; k++) y += st.pan[k].userData.h + 0.02; u.target = [PANX + (idx % 2) * 0.05, y + u.h / 2, 0]; }
+        };
+        const hookBottom = () => tubeBottom - 0.25 - extNow;
+        blocks.forEach(m => place(m));
+        blocks.forEach(m => m.position.set(...m.userData.target));
+        function refreshAll() {
+          const W = sum(st.hook.map(b => ({ mass: b.userData.mass }))) * gOf();
+          extTarget = Math.min(W, MAXN) / MAXN;
+          blocks.forEach(m => place(m));
+        }
+        st.refreshAll = refreshAll;
+        function updateScreens() {
+          const W = sum(st.hook.map(b => ({ mass: b.userData.mass }))) * gOf(), M = sum(st.pan.map(b => ({ mass: b.userData.mass })));
+          readTex.material.map = screen(256, 86, (W > MAXN ? '> 30' : W.toFixed(1)) + ' N'); balTex.material.map = screen(256, 70, M.toFixed(3) + ' kg');
+        }
+        st.updateScreens = updateScreens;
+        const ray = new S.Raycaster(), V = new S.Vector2(); let drag = null;
+        const hitTest = e => { const p = th.pointer(e); V.set(p.x, p.y); ray.setFromCamera(V, th.camera); return ray.intersectObjects(blocks, false)[0]; };
+        const toPlane = e => { const p = th.pointer(e); V.set(p.x, p.y); ray.setFromCamera(V, th.camera); const o = ray.ray.origin, d = ray.ray.direction, t = -o.z / d.z; return [o.x + d.x * t, o.y + d.y * t]; };
+        const clientOf = (x, y, z) => { const p = th.project(new S.Vector3(x, y, z)), r = th.canvas.getBoundingClientRect(); return { x: r.left + p.x, y: r.top + p.y }; };
+        RL.dbg.weight = { block: i => { const m = blocks[i]; return clientOf(m.position.x, m.position.y, m.position.z); }, hook: () => clientOf(HOOKX, hookBottom() - 0.6, -0.3), pan: () => clientOf(PANX, PANY + 0.4, 0) };
+        const detach = m => { const u = m.userData; if (u.where === 'hook') st.hook = st.hook.filter(x => x !== m); if (u.where === 'pan') st.pan = st.pan.filter(x => x !== m); u.where = 'shelf'; };
+        th.canvas.addEventListener('pointerdown', e => { const h = hitTest(e); if (!h) return; drag = h.object; th.canvas.setPointerCapture(e.pointerId); th.canvas.style.cursor = 'grabbing'; detach(drag); refreshAll(); updateScreens(); drag.userData.dragging = true; });
+        th.canvas.addEventListener('pointermove', e => { if (drag) { const q = toPlane(e); drag.position.set(RL.clamp(q[0], -5, 5), RL.clamp(q[1], -2.8, 3.8), 0.3); } else th.canvas.style.cursor = hitTest(e) ? 'grab' : 'default'; });
+        const drop = () => {
+          if (!drag) return; const m = drag; drag = null; m.userData.dragging = false; th.canvas.style.cursor = 'default';
+          const hookPt = [HOOKX, hookBottom() - 0.6], dh = Math.hypot(m.position.x - hookPt[0], m.position.y - hookPt[1] - st.hook.length * 0.3), dp = Math.hypot(m.position.x - PANX, m.position.y - (PANY + 0.5));
+          if (dh < 1.3 && st.hook.length < 3 && m.position.x < 0.8) { m.userData.where = 'hook'; st.hook.push(m); }
+          else if (dp < 1.5 && st.pan.length < 3) { m.userData.where = 'pan'; st.pan.push(m); }
+          else m.userData.where = 'shelf';
+          refreshAll(); updateScreens(); refresh(true);
+        };
+        th.canvas.addEventListener('pointerup', drop); th.canvas.addEventListener('pointercancel', drop);
+        th.loops.push(dt => {
+          extNow += (extTarget - extNow) * Math.min(1, dt * 6);
+          const len = 0.25 + extNow * 1.6;
+          rod.scale.y = len; rod.position.y = tubeBottom - len / 2; hookG.position.y = tubeBottom - len - 0.1;
+          const faceTop = (TOPY + tubeBottom) / 2 - 0.05 + (TOPY - tubeBottom - 0.2) / 2 - 0.2, faceH2 = TOPY - tubeBottom - 0.2;
+          pointer.position.y = faceTop - 0.1 - extNow * (faceH2 - 0.6);
+          blocks.forEach(m => { const u = m.userData; if (u.dragging || !u.target) return; place(m); m.position.x += (u.target[0] - m.position.x) * Math.min(1, dt * 10); m.position.y += (u.target[1] - m.position.y) * Math.min(1, dt * 10); m.position.z += (u.target[2] - m.position.z) * Math.min(1, dt * 10); });
+        });
+        [['Hang 200 g on the meter', 1], ['Put 500 g on the balance', 2], ['Hang the mystery block', 5]].forEach(([label, idx]) => trybar.append(el('button', { class: 'btn alt', text: label, onclick: () => { const m = blocks[idx]; detach(m); if (/balance/.test(label)) { m.userData.where = 'pan'; st.pan.push(m); } else { m.userData.where = 'hook'; st.hook.push(m); } refreshAll(); updateScreens(); refresh(true); } })));
+        trybar.append(el('button', { class: 'btn alt', text: 'Clear everything', onclick: () => { blocks.forEach(m => { m.userData.where = 'shelf'; }); st.hook = []; st.pan = []; refreshAll(); updateScreens(); refresh(true); } }));
+      }
+
+      function refresh(moved) {
+        pbtns.forEach((b, i) => b.setAttribute('aria-pressed', i === st.p));
+        const W = sum(st.hook.map(b => ({ mass: b.userData.mass }))) * gOf(), M = sum(st.pan.map(b => ({ mass: b.userData.mass })));
+        const hookTxt = st.hook.length ? st.hook.map(b => b.userData.label === '?' ? 'mystery block' : b.userData.label).join(' + ') : 'nothing';
+        readout.innerHTML = '<b>What the bench shows</b>Planet: ' + planets[st.p][0] + (planets[st.p][0] === 'Planet X' ? '' : ' (g = ' + gOf() + ' N/kg)') + '<br>On the newton meter: ' + hookTxt + '<br>Weight reading: ' + (W > MAXN ? 'off the scale' : W.toFixed(2) + ' N') + '<br>Balance reading: ' + M.toFixed(3) + ' kg';
+        if (th && st.refreshAll) { st.refreshAll(); st.updateScreens(); }
+        if (moved && st.hook.length && st.pan.length) RL.msg(hud, 'Same mass on both? The balance and the meter tell different stories when you change planet.', 'info');
+        else RL.msg(hud, moved ? 'Loaded. Now change planet and watch the readings.' : 'Planet: ' + planets[st.p][0] + '. Watch the newton meter, not the balance.', 'info');
+      }
+      refresh();
+
+      const checks = el('div', { class: 'panelcard' }, el('h3', { text: 'Check yourself' }), ...C.weightQs[tier].map(q => RL.qblock(q)));
+      const sup = C.weightSupport;
+      root.append(el('div', { class: 'below' }, checks, RL.support({ adapt: { lead: sup.adapt.lead, nodes: [RL.cloze(sup.adapt.cloze[0], sup.adapt.cloze[1])] }, hot: { lead: 'Use the bench to explain.', nodes: [RL.qblock(sup.hot)] } })));
+    },
+  });
+})();
+
+/* Stage 4: Speed and distance–time graphs.
+   A) drag stories onto the matching graphs; B) drag the points of a distance–time graph (it can never slope down),
+   read each section's speed, and answer challenges; C) speed calculations with fresh numbers and worked steps. */
+(function () {
+  'use strict';
+  const RL = window.RL, el = RL.el, C = RL.content;
+  const NS = 'http://www.w3.org/2000/svg';
+  const sv = (tag, a, parent) => { const n = document.createElementNS(NS, tag); for (const k in a) n.setAttribute(k, a[k]); if (parent) parent.append(n); return n; };
+
+  const GRAPHS = [
+    { id: 'steady', pts: [[0, 0], [10, 500]], story: 'A cyclist rides at one steady speed the whole time.' },
+    { id: 'stop', pts: [[0, 0], [3, 300], [6, 300], [10, 500]], story: 'A student walks, waits at a shop, then walks on.' },
+    { id: 'faster', pts: [[0, 0], [2, 20], [4, 80], [6, 180], [8, 320], [10, 500]], story: 'A car starts from rest and gets faster and faster.' },
+    { id: 'slower', pts: [[0, 0], [2, 240], [4, 380], [6, 450], [8, 490], [10, 500]], story: 'A runner starts fast but tires and slows down.' },
+  ];
+
+  function miniGraph(pts, w, h) {
+    const s = sv('svg', { viewBox: '0 0 ' + w + ' ' + h, role: 'img', style: 'width:100%;height:auto;background:#fff;border:2px solid #cfc7b5;border-radius:10px' });
+    const L = 26, B = 22, T = 8, Rr = 8, X = t => L + t / 10 * (w - L - Rr), Y = d => h - B - d / 500 * (h - B - T);
+    sv('line', { x1: L, y1: T, x2: L, y2: h - B, stroke: '#555' }, s); sv('line', { x1: L, y1: h - B, x2: w - Rr, y2: h - B, stroke: '#555' }, s);
+    const tx = (x, y, t, a) => { const n = sv('text', { x, y, 'font-size': 10, 'font-weight': 700, fill: '#333', 'text-anchor': a || 'middle' }, s); n.textContent = t; };
+    tx(w / 2, h - 5, 'Time'); const yl = sv('text', { x: 8, y: h / 2, 'font-size': 10, 'font-weight': 700, fill: '#333', 'text-anchor': 'middle', transform: 'rotate(-90 8 ' + h / 2 + ')' }, s); yl.textContent = 'Distance';
+    sv('polyline', { fill: 'none', stroke: '#21345B', 'stroke-width': 3, 'stroke-linejoin': 'round', points: smooth(pts).map(p => X(p[0]) + ',' + Y(p[1])).join(' ') }, s);
+    return s;
+  }
+  function smooth(pts) { // linear segments, but curves drawn through more points for the curved graphs
+    if (pts.length <= 4) return pts;
+    const out = []; for (let i = 0; i < pts.length - 1; i++) for (let k = 0; k < 8; k++) { const f = k / 8, p0 = pts[i], p1 = pts[i + 1], p00 = pts[Math.max(0, i - 1)], p11 = pts[Math.min(pts.length - 1, i + 2)]; const t2 = f * f, t3 = t2 * f; out.push([0.5 * ((2 * p0[0]) + (-p00[0] + p1[0]) * f + (2 * p00[0] - 5 * p0[0] + 4 * p1[0] - p11[0]) * t2 + (-p00[0] + 3 * p0[0] - 3 * p1[0] + p11[0]) * t3), 0.5 * ((2 * p0[1]) + (-p00[1] + p1[1]) * f + (2 * p00[1] - 5 * p0[1] + 4 * p1[1] - p11[1]) * t2 + (-p00[1] + 3 * p0[1] - 3 * p1[1] + p11[1]) * t3)]); }
+    out.push(pts[pts.length - 1]); return out;
+  }
+
+  RL.stages.push({
+    id: 'speed', title: 'Speed and graphs', mins: 12,
+    build(root) {
+      const tier = RL.tier();
+      root.append(RL.mission({
+        kicker: 'Stage 4 · speed and distance–time graphs', title: 'Match it, draw it, calculate it', mins: 12,
+        spec: 'Average speed = total distance ÷ total time · include stops · match units · horizontal = stationary · steeper = faster · a graph of total distance travelled never slopes down',
+        steps: ['<b>Match:</b> drag each story onto the graph it describes, then press Check.', '<b>Draw:</b> drag the points of the graph. Read each section’s speed. Complete the challenges.', '<b>Calculate:</b> answer the speed questions. Three correct in a row finishes this stage.'],
+        ladder: { s: 'Match the stories. Draw a graph with a stop. Do the first speed questions.', m: 'Also double a section’s speed and find the average speed including the stop.', x: 'Add the return-journey trap, unit changes and average speed with a stop.' },
+      }));
+      const done = { match: false, c1: false, c2: false, c3: false, calc: false };
+      const maybeDone = () => { if (done.match && done.c1 && done.c2 && done.calc && (tier === 's' || done.c3)) RL.markDone('speed'); };
+
+      /* ================= A: match ================= */
+      const mboard = el('div', { class: 'board', style: { minHeight: '330px', padding: '10px' } });
+      const gridRow = el('div', { style: { display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: '12px' } });
+      const order = RL.shuffle(GRAPHS, RL.rng(Date.now() % 997));
+      const slots = order.map((g, i) => {
+        const slot = el('div', { class: 'slot', style: { minHeight: '58px', justifyContent: 'center', textAlign: 'center' }, 'data-g': g.id, text: 'Drop the story here', role: 'group', 'aria-label': 'Slot for graph ' + (i + 1) });
+        gridRow.append(el('div', null, el('div', { style: { fontWeight: 800, color: '#21345B', fontSize: '12px', marginBottom: '2px' }, text: 'Graph ' + 'ABCD'[i] }), miniGraph(g.pts, 230, 140), slot)); return slot;
+      });
+      mboard.append(gridRow);
+      const mmsg = el('div', { class: 'msg info', role: 'status', text: 'Each graph shows distance against time. Drag a story to its graph.' });
+      const mcheck = el('button', { class: 'btn', text: 'Check' }), mreset = el('button', { class: 'btn alt', text: 'Reset' });
+      const mwrap = el('div', { class: 'panelcard' }, el('h3', { text: '1 · Match the story to the graph' }), mboard, el('div', { class: 'toolbar' }, mcheck, mreset, mmsg),
+        RL.reveal('Show the matches', '<ul>' + GRAPHS.map(g => '<li><b>' + g.story + '</b> ' + ({ steady: 'A straight sloping line: constant speed.', stop: 'A flat section: stationary.', faster: 'The line gets steeper: speeding up.', slower: 'The line gets flatter but keeps rising: slowing down.' })[g.id] + '</li>').join('') + '</ul>'));
+      root.append(mwrap);
+      let cards = [], csel = null;
+      const slotRect = s => { const b = mboard.getBoundingClientRect(), r = s.getBoundingClientRect(); return { l: r.left - b.left, t: r.top - b.top, w: r.width, h: r.height }; };
+      function snap(card, slot) { const r = slotRect(slot); card.style.width = (r.w - 8) + 'px'; RL.glide(card, r.l + 4, r.t + Math.max(2, (r.h - card.offsetHeight) / 2), 180); }
+      function layoutPile() {
+        const bw = mboard.clientWidth, free = cards.filter(c => c._slot == null && !c.classList.contains('good')); let x = 10;
+        const cw = Math.min(250, (bw - 40) / 4); const top = (gridRow.offsetHeight || 230) + 20;
+        free.forEach((c, i) => { c.style.width = cw + 'px'; c._setPos(10 + i * (cw + 10), top + (i % 2) * 6); });
+        mboard.style.minHeight = (top + 80) + 'px';
+      }
+      function build() {
+        cards.forEach(c => c.remove()); cards = []; slots.forEach(s => (s.className = 'slot')); csel = null;
+        RL.shuffle(GRAPHS, RL.rng(Date.now() % 313)).forEach(g => {
+          const c = el('div', { class: 'card', role: 'button', tabindex: '0', 'aria-label': g.story, text: g.story, style: { fontSize: '12.5px', fontWeight: 600 } }); c._g = g.id; c._slot = null; mboard.append(c); cards.push(c);
+          RL.drag(c, { area: mboard, margin: 0.15, disabled: n => n.classList.contains('good'), onStart: () => { c._slot = null; slots.forEach(s => s.classList.remove('good', 'bad')); sel(null); }, onMove: () => hov(c), onEnd: () => drp(c), onClick: () => sel(csel === c ? null : c) });
+        });
+        requestAnimationFrame(layoutPile);
+      }
+      const sel = c => { cards.forEach(x => x.classList.remove('sel')); csel = c; if (c) { c.classList.add('sel'); RL.msg(mmsg, 'Now click the graph this story matches.', 'info'); } };
+      slots.forEach((s, i) => s.addEventListener('click', () => { if (csel) { put(csel, i); sel(null); } }));
+      const hov = c => { const ct = RL.center(c); slots.forEach(s => s.classList.toggle('over', RL.inRect(ct, s.getBoundingClientRect()))); };
+      const drp = c => { slots.forEach(s => s.classList.remove('over')); const ct = RL.center(c), i = slots.findIndex(s => RL.inRect(ct, s.getBoundingClientRect())); if (i >= 0) put(c, i); else { c._slot = null; } };
+      function put(c, i) { const t = cards.find(x => x !== c && x._slot === i); if (t) { RL.msg(mmsg, 'That graph already has a story. Move it first.', 'bad'); c._slot = null; return layoutPile(); } c._slot = i; snap(c, slots[i]); }
+      mcheck.onclick = () => {
+        let placed = 0, good = 0;
+        cards.forEach(c => { if (c._slot == null || c.classList.contains('good')) return; placed++; const ok = order[c._slot].id === c._g; if (ok) { c.classList.add('good'); slots[c._slot].classList.add('good'); good++; c.setAttribute('tabindex', '-1'); } else { slots[c._slot].classList.add('bad'); c.classList.add('wrong'); RL.shake(c); setTimeout(() => { c.classList.remove('wrong'); slots.forEach(s => s.classList.remove('bad')); c._slot = null; layoutPile(); }, 900); } });
+        const left = cards.filter(c => !c.classList.contains('good')).length;
+        if (!placed) return RL.msg(mmsg, 'Place some stories first.', 'bad');
+        if (!left) { done.match = true; RL.msg(mmsg, 'All four match ✓ Flat = stopped; steeper = faster; curving up = speeding up; flattening = slowing down.', 'ok'); maybeDone(); } else RL.msg(mmsg, good + ' correct. Think: flat means stopped, steeper means faster.', good ? 'ok' : 'bad');
+      };
+      mreset.onclick = () => { build(); RL.msg(mmsg, 'Reset.', 'info'); };
+      build(); if (window.ResizeObserver) new ResizeObserver(() => { if (mboard.offsetParent) { layoutPile(); cards.forEach(c => { if (c._slot != null) snap(c, slots[c._slot]); }); } }).observe(mboard);
+
+      /* ================= B: draw ================= */
+      const W = 520, H = 300, GL = 56, GR = 16, GT = 14, GB = 42, YMAX = 600;
+      const X = t => GL + t / 10 * (W - GL - GR), Y = d => GT + (YMAX - d) / YMAX * (H - GT - GB);
+      const pts = [0, 100, 200, 300, 400, 500]; // distance at t = 0,2,4,6,8,10
+      const svg = sv('svg', { viewBox: '0 0 ' + W + ' ' + H, role: 'img', 'aria-label': 'Distance–time graph you can edit by dragging the points', style: 'width:100%;height:auto;background:#fff;border:2px solid #cfc7b5;border-radius:10px;touch-action:none' });
+      const table = el('table', { class: 'rtable' }), tbody = el('tbody'), thead = el('thead', null, el('tr', null, ['Section', 'Time', 'Distance moved', 'Speed (m/min)', 'Speed (m/s)', 'What it shows'].map(h => el('th', { text: h })))); table.append(thead, tbody);
+      const dmsg = el('div', { class: 'msg info', role: 'status', text: 'Drag a point up or down. This graph shows total distance travelled, so it can never go downwards.' });
+      const track = el('div', { style: { position: 'relative', height: '34px', background: 'linear-gradient(#e9e2cc,#e9e2cc) center/100% 6px no-repeat', margin: '6px 0' } });
+      const dot = el('div', { style: { position: 'absolute', top: '4px', left: '0', width: '26px', height: '26px', borderRadius: '50%', background: '#d33b2c', border: '3px solid #fff', boxShadow: '0 2px 4px rgba(0,0,0,.3)' } });
+      track.append(el('span', { style: { position: 'absolute', left: 0, top: '-14px', fontSize: '11px', fontWeight: 700 }, text: 'Home (0 m)' }), el('span', { style: { position: 'absolute', right: 0, top: '-14px', fontSize: '11px', fontWeight: 700 }, text: 'School (600 m)' }), dot);
+      const play = el('button', { class: 'btn gold', text: 'Play the journey' }), rst = el('button', { class: 'btn alt', text: 'Reset graph' });
+      const handles = [];
+      function draw() {
+        svg.innerHTML = '';
+        const ty = (x, y, t, a, rot) => { const n = sv('text', { x, y, 'font-size': 11, 'font-weight': 700, fill: '#333', 'text-anchor': a || 'middle' }, svg); n.textContent = t; return n; };
+        for (let d = 0; d <= 600; d += 100) { sv('line', { x1: GL, x2: W - GR, y1: Y(d), y2: Y(d), stroke: '#ececec' }, svg); ty(GL - 6, Y(d) + 4, d, 'end'); }
+        for (let t = 0; t <= 10; t += 2) { sv('line', { x1: X(t), x2: X(t), y1: GT, y2: H - GB, stroke: '#f1f1f1' }, svg); ty(X(t), H - GB + 14, t); }
+        sv('line', { x1: GL, y1: GT, x2: GL, y2: H - GB, stroke: '#444' }, svg); sv('line', { x1: GL, y1: H - GB, x2: W - GR, y2: H - GB, stroke: '#444' }, svg);
+        ty((GL + W - GR) / 2, H - 6, 'Time / minutes'); const yl = ty(14, H / 2, 'Distance / m'); yl.setAttribute('transform', 'rotate(-90 14 ' + H / 2 + ')');
+        for (let i = 0; i < 5; i++) { const d = pts[i + 1] - pts[i], col = d === 0 ? '#b3261e' : '#21345B'; sv('line', { x1: X(i * 2), y1: Y(pts[i]), x2: X(i * 2 + 2), y2: Y(pts[i + 1]), stroke: col, 'stroke-width': 4, 'stroke-linecap': 'round' }, svg); ty((X(i * 2) + X(i * 2 + 2)) / 2, Math.min(Y(pts[i]), Y(pts[i + 1])) - 8, d === 0 ? 'stopped' : (d / 2) + ' m/min'); }
+        handles.length = 0;
+        for (let i = 1; i <= 5; i++) {
+          const g = sv('g', { tabindex: '0', role: 'slider', 'aria-label': 'Distance at ' + i * 2 + ' minutes', 'aria-valuemin': 0, 'aria-valuemax': YMAX, 'aria-valuenow': pts[i], style: 'cursor:ns-resize' }, svg);
+          sv('circle', { cx: X(i * 2), cy: Y(pts[i]), r: 14, fill: 'transparent' }, g); sv('circle', { cx: X(i * 2), cy: Y(pts[i]), r: 7, fill: '#B8860B', stroke: '#fff', 'stroke-width': 2.5 }, g);
+          bind(g, i); handles.push(g);
+        }
+        tableUpdate();
+      }
+      function svgPt(e) { const p = svg.createSVGPoint(); p.x = e.clientX; p.y = e.clientY; return p.matrixTransform(svg.getScreenCTM().inverse()); }
+      function setPt(i, v) {
+        v = Math.round(RL.clamp(v, 0, YMAX) / 10) * 10;
+        const lo = pts[i - 1], hi = i < 5 ? pts[i + 1] : YMAX;
+        if (v < lo) { RL.msg(dmsg, 'A graph of total distance travelled can never go downwards, even on a return journey (the object is still adding distance).', 'bad'); v = lo; st4.triedDown = true; }
+        pts[i] = Math.min(v, YMAX); for (let j = i + 1; j <= 5; j++) if (pts[j] < pts[i]) pts[j] = pts[i];
+      }
+      function bind(g, i) {
+        g.dataset.i = i;
+        g.addEventListener('keydown', e => { if (e.key === 'ArrowUp') setPt(i, pts[i] + 10); else if (e.key === 'ArrowDown') setPt(i, pts[i] - 10); else return; e.preventDefault(); draw(); handles[i - 1].focus({ preventScroll: true }); });
+      }
+      let activeI = 0; // pointer handling lives on the svg so a redraw never drops the drag
+      svg.addEventListener('pointerdown', e => { const g = e.target.closest && e.target.closest('g[data-i]'); if (!g) return; activeI = +g.dataset.i; svg.setPointerCapture(e.pointerId); e.preventDefault(); });
+      svg.addEventListener('pointermove', e => { if (!activeI) return; const p = svgPt(e); setPt(activeI, YMAX - (p.y - GT) / (H - GT - GB) * YMAX); draw(); });
+      const endDrag = () => { activeI = 0; }; svg.addEventListener('pointerup', endDrag); svg.addEventListener('pointercancel', endDrag);
+      const st4 = { triedDown: false };
+      function tableUpdate() {
+        tbody.innerHTML = '';
+        for (let i = 0; i < 5; i++) { const d = pts[i + 1] - pts[i], v = d / 2; tbody.append(el('tr', null, el('td', { text: (i * 2) + '–' + (i * 2 + 2) + ' min' }), el('td', { text: '2 min' }), el('td', { text: d + ' m' }), el('td', { text: v.toFixed(0) }), el('td', { text: (v / 60).toFixed(2) }), el('td', { style: { textAlign: 'left' }, text: d === 0 ? 'Stationary' : v > 0 && i > 0 && v > (pts[i] - pts[i - 1]) / 2 ? 'Faster than the section before' : v > 0 && i > 0 && v < (pts[i] - pts[i - 1]) / 2 ? 'Slower than the section before' : 'Moving' }))); }
+        const total = pts[5], avg = total / 10;
+        tbody.append(el('tr', { style: { fontWeight: 800, background: '#e8edf5' } }, el('td', { text: 'Whole journey' }), el('td', { text: '10 min' }), el('td', { text: total + ' m' }), el('td', { text: avg.toFixed(1) }), el('td', { text: (avg / 60).toFixed(2) }), el('td', { style: { textAlign: 'left' }, text: 'Average speed (stops included)' })));
+      }
+      rst.onclick = () => { for (let i = 0; i <= 5; i++) pts[i] = i * 100; draw(); RL.msg(dmsg, 'Graph reset.', 'info'); };
+      let anim = null;
+      play.onclick = () => {
+        if (anim) cancelAnimationFrame(anim); const t0 = performance.now(), dur = RL.reduced ? 50 : 6000;
+        const f = now => { const k = Math.min(1, (now - t0) / dur), t = k * 10, i = Math.min(4, Math.floor(t / 2)), fr = (t - i * 2) / 2, d = pts[i] + (pts[i + 1] - pts[i]) * fr; dot.style.left = 'calc(' + (d / 600 * 100) + '% - ' + (d / 600 * 26) + 'px)'; if (k < 1) anim = requestAnimationFrame(f); }; anim = requestAnimationFrame(f);
+      };
+
+      /* challenges */
+      const chal = el('div', { class: 'predict', style: { marginTop: '8px' } });
+      const cm = el('div', { class: 'msg info', style: { fontSize: '12.5px', marginTop: '6px' } });
+      const cs = [
+        ['c1', 'Challenge 1: draw a journey where the walker stops for at least 4 minutes.', () => { let run = 0, best = 0; for (let i = 0; i < 5; i++) { if (pts[i + 1] === pts[i]) { run += 2; best = Math.max(best, run); } else run = 0; } return best >= 4 && pts[5] > 0; }, 'Yes: flat sections mean stopped. Two flat sections side by side make 4 minutes.', 'Make two neighbouring sections flat (no change in distance).'],
+        ['c2', 'Challenge 2: make the section from 4 to 6 minutes exactly twice as fast as the section from 0 to 2 minutes.', () => { const a = pts[1] - pts[0], b = pts[3] - pts[2]; return a > 0 && b === 2 * a; }, 'Yes: twice the distance in the same time is twice the speed, so the line is twice as steep.', 'Read the first section’s distance, then give 4–6 min double that distance.'],
+      ];
+      if (tier !== 's') cs.push(['c3', 'Challenge 3: for your graph, type the average speed for the whole 10 minutes in m/min.', null]);
+      cs.forEach(c => {
+        if (c[2]) { const b = el('button', { class: 'btn alt', style: { padding: '3px 10px' }, text: 'Check', onclick: () => { const g = c[2](); done[c[0]] = done[c[0]] || g; RL.msg(m, g ? c[3] : c[4], g ? 'ok' : 'bad'); maybeDone(); } }); const m = el('div', { class: 'msg info', style: { fontSize: '12.5px', margin: '4px 0' } }); chal.append(el('p', { style: { margin: '6px 0 0', fontWeight: 700, fontSize: '12.5px' }, text: c[1] }), b, m); }
+        else {
+          const inp = el('input', { type: 'text', inputmode: 'decimal', placeholder: '?', 'aria-label': 'Average speed in m per minute', style: { width: '70px', font: 'inherit', fontWeight: 700, textAlign: 'center', border: '2px solid #cfc7b5', borderRadius: '6px' } }); const m = el('div', { class: 'msg info', style: { fontSize: '12.5px', margin: '4px 0' } });
+          const b = el('button', { class: 'btn alt', style: { padding: '3px 10px' }, text: 'Check', onclick: () => { const v = parseFloat(inp.value.replace(',', '.')), exp = pts[5] / 10, g = !isNaN(v) && Math.abs(v - exp) < 0.06; inp.style.borderColor = g ? '#1f7a4d' : '#b3261e'; done.c3 = done.c3 || g; RL.msg(m, g ? 'Yes: ' + pts[5] + ' m ÷ 10 min = ' + exp + ' m/min. Stops count, so use the whole 10 minutes.' : 'Use total distance ÷ total time. Time includes stops: 10 minutes.', g ? 'ok' : 'bad'); maybeDone(); } });
+          chal.append(el('p', { style: { margin: '6px 0 0', fontWeight: 700, fontSize: '12.5px' }, text: c[1] }), el('div', { style: { display: 'flex', gap: '6px', alignItems: 'center' } }, inp, ' m/min ', b), m);
+        }
+      });
+      if (tier === 'x') { const b = el('button', { class: 'btn alt', style: { padding: '3px 10px', marginTop: '6px' }, text: 'Trap: try to drag point 3 below point 2', onclick: () => { setPt(3, pts[2] - 100); draw(); } }); chal.append(el('p', { style: { margin: '8px 0 0', fontWeight: 700, fontSize: '12.5px' }, text: 'Challenge 4: this graph shows total distance travelled. Can it go down on a return journey? Test it.' }), b); }
+      const wrapB = el('div', { class: 'panelcard' }, el('h3', { text: '2 · Draw and read a distance–time graph' }),
+        el('div', { style: { display: 'grid', gridTemplateColumns: '1.15fr 1fr', gap: '14px' } }, el('div', null, svg, track, el('div', { class: 'toolbar' }, play, rst, dmsg)), el('div', null, table, chal)),
+        RL.reveal('Show how to read the graph', '<ul><li>Section speed = change in distance ÷ change in time.</li><li>A <b>horizontal</b> section: stationary. A <b>steeper</b> section: faster.</li><li>Average speed = <b>total distance ÷ total time</b>, including any stops.</li><li>A graph of <b>total distance travelled</b> can never go downwards, even on a return journey.</li></ul>'));
+      root.append(wrapB);
+      draw();
+
+      /* ================= C: calculations ================= */
+      let streak = 0, cur = null, k = 0; const rnd = RL.rng(Date.now() % 997);
+      const pickR = a => a[Math.floor(rnd() * a.length)];
+      function gen() {
+        k++;
+        if (tier === 's') { const t = pickR([2, 4, 5, 10, 20]), v = pickR([2, 3, 4, 5, 6, 8]), d = v * t; return { q: 'A runner travels ' + d + ' m in ' + t + ' s. Calculate her speed in m/s.', ans: v, unit: 'm/s', work: ['speed = distance ÷ time', d + ' ÷ ' + t + ' = ' + v + ' m/s'] }; }
+        if (tier === 'm') { const kind = k % 3; if (kind === 0) { const t = pickR([30, 45, 60]), v = pickR([4, 6, 8]), d = v * t / 60; return { q: 'A bike travels ' + d + ' km in ' + t + ' minutes. Calculate its speed in km/h.', ans: v, unit: 'km/h', work: ['change ' + t + ' minutes into hours: ' + t + ' ÷ 60 = ' + (t / 60), 'speed = ' + d + ' ÷ ' + (t / 60) + ' = ' + v + ' km/h'] }; } if (kind === 1) { const m = pickR([3, 5, 10]), v = pickR([2, 3, 4]), d = v * m * 60; return { q: 'A student walks ' + d + ' m in ' + m + ' minutes. Calculate her speed in m/s.', ans: v, unit: 'm/s', work: ['change minutes to seconds: ' + m + ' × 60 = ' + m * 60 + ' s', d + ' ÷ ' + m * 60 + ' = ' + v + ' m/s'] }; } const v = pickR([5, 8, 12]), t = pickR([2, 3, 4]); return { q: 'A car travels at ' + v + ' m/s for ' + t * 10 + ' s. Calculate the distance it travels in m.', ans: v * t * 10, unit: 'm', work: ['distance = speed × time', v + ' × ' + t * 10 + ' = ' + v * t * 10 + ' m'] }; }
+        if (tier === 'x' && k % 2 === 0) { const [D, v, stop, ans] = pickR([[60, 40, 15, 48], [90, 45, 30, 60], [120, 60, 30, 80], [30, 20, 30, 30]]); const T = D / v; return { q: 'A ' + D + ' km journey has an average speed of ' + v + ' km/h, including a stop of ' + stop + ' minutes. Calculate the speed while the vehicle was moving, in km/h.', ans, unit: 'km/h', work: ['total time = ' + D + ' ÷ ' + v + ' = ' + T + ' h', 'moving time = ' + T + ' h − ' + stop / 60 + ' h = ' + (T - stop / 60) + ' h', 'speed while moving = ' + D + ' ÷ ' + (T - stop / 60) + ' = ' + ans + ' km/h'] }; }
+        const d1 = pickR([600, 900, 1200]), t1 = pickR([5, 10]), stop = pickR([5, 10]), d2 = pickR([300, 600]), t2 = pickR([5]), D = d1 + d2, T = (t1 + stop + t2) * 60; const ans = Math.round(D / T * 100) / 100;
+        return { q: 'A student walks ' + d1 + ' m in ' + t1 + ' min, rests for ' + stop + ' min, then walks ' + d2 + ' m in ' + t2 + ' min. Calculate the average speed for the whole journey in m/s (2 d.p.).', ans, unit: 'm/s', tol: 0.011, work: ['total distance = ' + d1 + ' + ' + d2 + ' = ' + D + ' m', 'total time = ' + (t1 + stop + t2) + ' min = ' + T + ' s (the rest counts)', D + ' ÷ ' + T + ' = ' + ans + ' m/s'] };
+      }
+      const qBox = el('div', { class: 'stem', style: { fontSize: '15px' } }), qIn = el('input', { type: 'text', inputmode: 'decimal', 'aria-label': 'Your answer', placeholder: '?', style: { width: '90px', font: 'inherit', fontWeight: 700, textAlign: 'center', border: '2px solid #cfc7b5', borderRadius: '6px', margin: '0 6px' } });
+      const qUnit = el('span', { style: { fontWeight: 700 } }), qMsg = el('div', { class: 'msg info', role: 'status', style: { marginTop: '6px' } }), qWork = el('details', { class: 'reveal' });
+      const strk = el('span', { class: 'chip', text: 'In a row: 0 / 3' });
+      const qCheck = el('button', { class: 'btn', text: 'Check' }), qNext = el('button', { class: 'btn alt', text: 'Another question' });
+      function newQ() { cur = gen(); qBox.textContent = cur.q; qUnit.textContent = cur.unit; qIn.value = ''; qIn.style.borderColor = '#cfc7b5'; RL.msg(qMsg, 'Write the working in your book first.', 'info'); qWork.innerHTML = ''; qWork.append(el('summary', { text: 'Show the working' }), el('div', { class: 'ans', html: '<ul>' + cur.work.map(w => '<li>' + w + '</li>').join('') + '</ul>' })); qWork.open = false; }
+      qCheck.onclick = () => { const v = parseFloat(qIn.value.replace(',', '.')), ok = !isNaN(v) && Math.abs(v - cur.ans) <= (cur.tol || 0.001 + Math.abs(cur.ans) * 0.005); qIn.style.borderColor = ok ? '#1f7a4d' : '#b3261e'; if (ok) { streak++; RL.msg(qMsg, 'Correct ✓ ' + cur.ans + ' ' + cur.unit, 'ok'); } else { streak = 0; RL.msg(qMsg, 'Not quite. Open the working to see each step.', 'bad'); } strk.textContent = 'In a row: ' + Math.min(streak, 3) + ' / 3'; if (streak >= 3) { done.calc = true; maybeDone(); } };
+      qNext.onclick = newQ; newQ();
+      root.append(el('div', { class: 'panelcard', style: { marginTop: '12px' } }, el('h3', { text: '3 · Speed calculations (new numbers each time)' }), qBox, el('div', { style: { margin: '8px 0' } }, 'Answer:', qIn, qUnit), el('div', { class: 'toolbar' }, qCheck, qNext, strk), qMsg, qWork));
+
+      const checks = el('div', { class: 'panelcard' }, el('h3', { text: 'Check yourself' }), ...C.speedQs[tier].concat(C.graphQs[tier]).map(q => RL.qblock(q)));
+      const sS = C.speedSupport, sG = C.graphSupport;
+      root.append(el('div', { class: 'below' }, checks, RL.support({
+        adapt: { lead: 'Choose the words, then check.', nodes: [RL.cloze(sS.adapt.cloze[0], sS.adapt.cloze[1]), RL.cloze(sG.adapt.cloze[0], sG.adapt.cloze[1])] },
+        hot: { lead: 'Explain in your own words.', nodes: [RL.qblock(sS.hot), RL.qblock(sG.hot)] },
+      })));
+    },
+  });
+})();
+
+/* Stage 5: Tarsia puzzles (triangle, hexagon, square). Free movement and rotation; pieces snap to a hidden
+   lattice; every shared edge is checked against the design. Texts come from RL.content.tarsia. */
+(function () {
+  'use strict';
+  const RL = window.RL, el = RL.el, C = RL.content;
+  const NS = 'http://www.w3.org/2000/svg';
+  const sv = (tag, a) => { const n = document.createElementNS(NS, tag); for (const k in a) n.setAttribute(k, a[k]); return n; };
+  const R3 = Math.sqrt(3), rad = d => d * Math.PI / 180, mod = (a, n) => ((a % n) + n) % n;
+
+  /* ---------- lattice geometry per shape ---------- */
+  function makeShape(name) {
+    if (name === 'tri') {
+      const L = 215, h = L * R3 / 2;
+      const V = (a, b) => [a * L + b * L / 2, b * h];
+      const S = {
+        name, L, step: 60, n: 3, nrm: [90, 210, 330], apo: L / (2 * R3), SZ: L * 1.25, boardH: 650, maxLines: 3, fs: [11.5, 11, 10.5, 10], maxW: L * 0.56, fill: '#e9f1ff',
+        poly: [[0, -2 * h / 3], [-L / 2, h / 3], [L / 2, h / 3]],
+        parse: k => { const p = k.split(','); return { t: p[0], a: +p[1], b: +p[2] }; },
+        key: (t, a, b) => t + ',' + a + ',' + b,
+        center(k) { const c = S.parse(k); const v = c.t === 'U' ? [V(c.a + 1, c.b), V(c.a + 1, c.b + 1), V(c.a, c.b + 1)] : [V(c.a, c.b), V(c.a + 1, c.b), V(c.a, c.b + 1)]; return [(v[0][0] + v[1][0] + v[2][0]) / 3, (v[0][1] + v[1][1] + v[2][1]) / 3]; },
+        neighbor(k, phi) { const c = S.parse(k), f = mod(phi, 360); const K = S.key;
+          if (c.t === 'U') return f === 90 ? K('D', c.a, c.b + 1) : f === 210 ? K('D', c.a, c.b) : f === 330 ? K('D', c.a + 1, c.b) : null;
+          return f === 270 ? K('U', c.a, c.b - 1) : f === 150 ? K('U', c.a - 1, c.b) : f === 30 ? K('U', c.a, c.b) : null; },
+        need: k => (k[0] === 'U' ? 0 : 1), // required parity of rotation index
+        near(x, y) { const b = y / h, a = (x - b * L / 2) / L, out = []; for (let da = -2; da <= 2; da++) for (let db = -2; db <= 2; db++) { out.push(S.key('U', Math.floor(a) + da, Math.floor(b) + db), S.key('D', Math.floor(a) + da, Math.floor(b) + db)); } return out; },
+        thresh: L * 0.5,
+        org: () => [26 - 1.5 * L, 30], scatter: W => [3.35 * L + 60, W - 1.3 * L - 10],
+      };
+      S.design = [['U', 0, 2], ['U', 1, 1], ['U', 1, 2], ['U', 2, 0], ['U', 2, 1], ['U', 2, 2], ['D', 1, 2], ['D', 2, 1], ['D', 2, 2]].map(c => ({ k: S.key(...c), ri: c[0] === 'U' ? 0 : 1 }));
+      return S;
+    }
+    if (name === 'hex') {
+      const L = 140, D = { 0: [1, 0], 60: [0, 1], 120: [-1, 1], 180: [-1, 0], 240: [0, -1], 300: [1, -1] };
+      const S = {
+        name, L, step: 60, n: 6, nrm: [0, 60, 120, 180, 240, 300], apo: L * R3 / 2, SZ: 2 * L + 6, boardH: 760, maxLines: 3, fs: [11.5, 11, 10.5, 10], maxW: L * 0.7, fill: '#e8f7ec',
+        poly: [0, 1, 2, 3, 4, 5].map(i => [L * Math.cos(rad(30 + 60 * i)), L * Math.sin(rad(30 + 60 * i))]),
+        parse: k => { const p = k.split(','); return { q: +p[1], r: +p[2] }; },
+        key: (q, r) => 'H,' + q + ',' + r,
+        center(k) { const c = S.parse(k); return [R3 * L * (c.q + c.r / 2), 1.5 * L * c.r]; },
+        neighbor(k, phi) { const c = S.parse(k), d = D[mod(phi, 360)]; return d ? S.key(c.q + d[0], c.r + d[1]) : null; },
+        need: () => null,
+        near(x, y) { const q = (R3 / 3 * x - y / 3) / L, r = (2 / 3 * y) / L, out = []; for (let dq = -2; dq <= 2; dq++) for (let dr = -2; dr <= 2; dr++) out.push(S.key(Math.round(q) + dq, Math.round(r) + dr)); return out; },
+        thresh: L * 0.85,
+        org: () => [26 + 2.6 * L, 24 + 2.5 * L], scatter: W => [5.4 * L + 40, W - 2 * L - 14],
+      };
+      S.design = [[0, 0], [1, 0], [0, 1], [-1, 1], [-1, 0], [0, -1], [1, -1]].map(c => ({ k: S.key(...c), ri: 0 }));
+      return S;
+    }
+    const L = 190, S = {
+      name, L, step: 90, n: 4, nrm: [0, 90, 180, 270], apo: L / 2, SZ: L * 1.5, boardH: 640, maxLines: 3, fs: [11, 10.5, 10, 9.5], maxW: L - 76, fill: '#fff3d9',
+      poly: [[-L / 2, -L / 2], [L / 2, -L / 2], [L / 2, L / 2], [-L / 2, L / 2]],
+      parse: k => { const p = k.split(','); return { i: +p[1], j: +p[2] }; },
+      key: (i, j) => 'S,' + i + ',' + j,
+      center(k) { const c = S.parse(k); return [(c.i + 0.5) * L, (c.j + 0.5) * L]; },
+      neighbor(k, phi) { const c = S.parse(k), f = mod(phi, 360); return f === 0 ? S.key(c.i + 1, c.j) : f === 90 ? S.key(c.i, c.j + 1) : f === 180 ? S.key(c.i - 1, c.j) : f === 270 ? S.key(c.i, c.j - 1) : null; },
+      need: () => null,
+      near(x, y) { const i = Math.floor(x / L), j = Math.floor(y / L), out = []; for (let di = -1; di <= 1; di++) for (let dj = -1; dj <= 1; dj++) out.push(S.key(i + di, j + dj)); return out; },
+      thresh: L * 0.62,
+      org: () => [26, 22], scatter: W => [3.4 * L + 40, W - 1.5 * L - 8],
+    };
+    S.design = [0, 1, 2].flatMap(i => [0, 1, 2].map(j => ({ k: S.key(i, j), ri: 0 })));
+    return S;
+  }
+
+  /* ---------- build a puzzle design from pairs ---------- */
+  function design(S, pairs, seed) {
+    const rnd = RL.rng(seed), set = {}; S.design.forEach(d => (set[d.k] = d));
+    const edgeList = [], seen = {};
+    S.design.forEach(d => S.nrm.forEach((n, i) => {
+      const nb = S.neighbor(d.k, n + S.step * d.ri);
+      if (nb && set[nb]) { const key = [d.k, nb].sort().join('|'); if (!seen[key]) { seen[key] = true; edgeList.push({ key, cells: [d.k, nb] }); } }
+    }));
+    if (edgeList.length !== pairs.length) throw new Error('Tarsia design: ' + edgeList.length + ' internal edges but ' + pairs.length + ' pairs (' + S.name + ')');
+    const order = RL.shuffle(pairs.map((p, i) => i), rnd), assigned = {};
+    edgeList.forEach((e, idx) => { const pi = order[idx], flip = rnd() < 0.5; assigned[e.key] = { pi, flip, cells: e.cells, text: pairs[pi] }; });
+    const pieces = S.design.map((d, idx) => {
+      const edges = S.nrm.map((n, i) => {
+        const nb = S.neighbor(d.k, n + S.step * d.ri), key = nb && set[nb] ? [d.k, nb].sort().join('|') : null;
+        if (!key) return { pair: null, text: '' };
+        const a = assigned[key], first = a.cells[0] === d.k, side = (first ? 0 : 1) ^ (a.flip ? 1 : 0);
+        return { pair: a.pi, text: a.text[side] };
+      });
+      return { id: idx, edges, native: d.k, nativeRi: d.ri, ri: 0, cell: null };
+    });
+    return { pieces, total: edgeList.length, adj: edgeList.map(e => e.cells) };
+  }
+
+  /* ---------- text layout ---------- */
+  const mctx = document.createElement('canvas').getContext('2d');
+  function wrapLines(text, S) {
+    let lines = [], fsz = S.fs[S.fs.length - 1];
+    for (const fs of S.fs) {
+      mctx.font = '600 ' + fs + 'px Montserrat, system-ui, sans-serif';
+      const words = text.split(' '); lines = []; let cur = '';
+      words.forEach(w => { const t = cur ? cur + ' ' + w : w; if (mctx.measureText(t).width <= S.maxW * 0.97 || !cur) cur = t; else { lines.push(cur); cur = w; } });
+      lines.push(cur); fsz = fs; if (lines.length <= S.maxLines) break;
+    }
+    return { lines, fs: fsz };
+  }
+  function edgeGroup(S, i, text) {
+    const n = S.nrm[i], g = sv('g', {}); if (!text) return g;
+    let rho = mod(n + 90, 360); if (rho > 90 && rho <= 270) rho = mod(rho + 180, 360); if (rho > 180) rho -= 360;
+    const up = [Math.sin(rad(rho)), -Math.cos(rad(rho))], nv = [Math.cos(rad(n)), Math.sin(rad(n))], tops = up[0] * nv[0] + up[1] * nv[1] > 0;
+    const { lines, fs } = wrapLines(text, S), lh = fs * 1.2, pad = 7;
+    const mx = S.apo * nv[0], my = S.apo * nv[1];
+    const grp = sv('g', { transform: 'translate(' + mx + ' ' + my + ') rotate(' + rho + ')' });
+    lines.forEach((ln, k) => {
+      const y = tops ? pad + fs * 0.82 + k * lh : -pad - (lines.length - 1 - k) * lh - fs * 0.12;
+      const t = sv('text', { x: 0, y, 'text-anchor': 'middle', 'font-size': fs, 'font-weight': 600, 'font-family': 'Montserrat, system-ui, sans-serif', fill: '#1c2233' }); t.textContent = ln; grp.append(t);
+    });
+    g.append(grp); return g;
+  }
+
+  /* ---------- stage ---------- */
+  const stage = {
+    id: 'tarsia', title: 'Tarsia', mins: 10,
+    build(root) {
+      const tier = RL.tier();
+      root.append(RL.mission({
+        kicker: 'Stage 5 · interleaved retrieval', title: 'Tarsia: match the edges', mins: 10,
+        spec: 'Triangle: seasons · Hexagon: mass and weight · Square: speed and graphs · each puzzle mixes recall, explanation and data',
+        steps: ['<b>Drag</b> pieces anywhere. Press <b>↻</b> (or R) to turn a piece. Touching edges must say matching things.', 'Pieces snap to a hidden grid. Build the shape; there is no fixed starting place.',
+          'Press <b>Check joins</b> to see green ✓ and red ✗ on every touching edge. Solve at least one puzzle.'],
+        ladder: { s: 'Terms and meanings. Joins are marked live as you go.', m: 'Cause-and-effect and calculations. Check joins when you are ready.', x: 'Multi-step values, units and evaluation. Check tells you how many joins are right, not which.' },
+      }));
+      const tabs = el('div', { class: 'tarsia-tabs', role: 'tablist' });
+      const host = el('div'); const tools = el('div', { class: 'toolbar' }); const stat = el('div', { class: 'tstat' });
+      const keys = ['tri', 'hex', 'sq'];
+      const puzzles = {};
+      let cur = null;
+      keys.forEach(k => tabs.append(el('button', { role: 'tab', 'aria-selected': 'false', 'data-k': k, text: C.tarsia[k].name, onclick: () => open(k) })));
+      root.append(tabs, stat, tools, host);
+
+      const hintBtn = el('button', { class: 'btn alt', text: 'Hint' }), checkBtn = el('button', { class: 'btn', text: tier === 's' ? 'Live checking is on' : 'Check joins', disabled: tier === 's' });
+      const gridBtn = el('button', { class: 'btn alt', text: 'Show grid', 'aria-pressed': 'false' }), resetBtn = el('button', { class: 'btn alt', text: 'Scramble again' });
+      const tmsg = el('div', { class: 'msg info', role: 'status', text: 'Pick a puzzle and start moving pieces.' });
+      tools.append(checkBtn, hintBtn, gridBtn, resetBtn, tmsg);
+
+      function open(k) {
+        cur = stage._cur = k; tabs.childNodes.forEach(b => b.setAttribute('aria-selected', b.dataset.k === k));
+        keys.forEach(x => puzzles[x] && puzzles[x].board.classList.toggle('hide', x !== k));
+        if (!puzzles[k]) puzzles[k] = createPuzzle(k);
+        puzzles[k].refresh(); RL.msg(tmsg, C.tarsia[k].topic + '. ' + (tier === 's' ? 'Joins are marked as you build.' : 'Press Check joins to test your build.'), 'info');
+      }
+
+      function createPuzzle(k) {
+        const S = makeShape(k), data = C.tarsia[k];
+        const pairs = data.pairs[tier];
+        const D = design(S, pairs, 101 + k.length * 31 + (tier === 'm' ? 7 : tier === 'x' ? 13 : 0));
+        const board = el('div', { class: 'board tboard', style: { height: S.boardH + 'px' } });
+        host.append(board);
+        const overlay = sv('svg', { style: 'position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:150' }); board.append(overlay);
+        const gridG = sv('g', { style: 'display:none' }); overlay.append(gridG); const marks = sv('g', {}); overlay.append(marks);
+        const P = { S, D, board, cells: {}, pieces: [], placedN: 0, solved: false, t0: 0, timer: null, elapsed: 0, hints: 0 };
+        let ORG = [0, 0];
+        const pos = c => { const q = S.center(c); return [q[0] + ORG[0], q[1] + ORG[1]]; };
+
+        function drawGrid() {
+          gridG.innerHTML = ''; const W = board.clientWidth, H = board.clientHeight;
+          const all = {}; for (let x = -100; x < W + 100; x += S.L * 0.5) for (let y = -100; y < H + 100; y += S.L * 0.5) S.near(x - ORG[0], y - ORG[1]).forEach(c => (all[c] = 1));
+          Object.keys(all).forEach(c => { const q = pos(c); if (q[0] < -S.L || q[0] > W + S.L || q[1] < -S.L || q[1] > H + S.L) return;
+            const ri = S.need(c) == null ? 0 : S.need(c); gridG.append(sv('polygon', { points: S.poly.map(p => rotPt(p, ri * S.step, q)).join(' '), fill: 'none', stroke: '#c9bfa4', 'stroke-width': 1, 'stroke-dasharray': '3 4' })); });
+        }
+        const rotPt = (p, deg, q) => { const c = Math.cos(rad(deg)), s = Math.sin(rad(deg)); return [(p[0] * c - p[1] * s + q[0]).toFixed(1), (p[0] * s + p[1] * c + q[1]).toFixed(1)]; };
+
+        function setRot(p, deg, instant) {
+          p.svg.style.transition = instant || RL.reduced ? 'none' : 'transform .22s ease'; p.svg.style.transform = 'rotate(' + deg + 'deg)'; p.deg = deg;
+        }
+        function centreOf(p) { return [p.node._x + S.SZ / 2, p.node._y + S.SZ / 2]; }
+        function moveCentre(p, x, y, glide) { const fx = x - S.SZ / 2, fy = y - S.SZ / 2; if (glide) RL.glide(p.node, fx, fy, 160); else p.node._setPos(fx, fy); }
+
+        function mkPiece(pc) {
+          const node = el('div', { class: 'piece', role: 'button', 'aria-label': 'Puzzle piece ' + (pc.id + 1) + '. Edges: ' + pc.edges.map(e => e.text || 'blank').join('; ') + '. Arrow keys move, R rotates.', style: { width: S.SZ + 'px', height: S.SZ + 'px', pointerEvents: 'none' } });
+          const svg = sv('svg', { width: S.SZ, height: S.SZ, viewBox: (-S.SZ / 2) + ' ' + (-S.SZ / 2) + ' ' + S.SZ + ' ' + S.SZ, style: 'overflow:visible;transform-origin:50% 50%' });
+          svg.append(sv('polygon', { class: 'hit', points: S.poly.map(p => p.join(',')).join(' '), fill: S.fill, stroke: '#21345B', 'stroke-width': 2.5, 'stroke-linejoin': 'round', style: 'pointer-events:all' }));
+          const inset = sv('polygon', { points: S.poly.map(p => (p[0] * 0.965) + ',' + (p[1] * 0.965)).join(' '), fill: 'none', stroke: 'rgba(33,52,91,.25)', 'stroke-width': 1, style: 'pointer-events:none' }); svg.append(inset);
+          pc.edges.forEach((e, i) => { const g = edgeGroup(S, i, e.text); g.style.pointerEvents = 'none'; svg.append(g); });
+          node.append(svg);
+          const rot = el('div', { class: 'rot', text: '↻', title: 'Turn piece (R)', 'aria-label': 'Turn piece', style: { pointerEvents: 'auto' } });
+          rot.addEventListener('pointerdown', e => e.stopPropagation()); rot.addEventListener('click', e => { e.stopPropagation(); rotate(p); });
+          node.append(rot); board.append(node);
+          const p = Object.assign(pc, { node, svg, deg: 0, solvedMark: false });
+          RL.drag(node, { area: board, margin: 0.55, ignore: '.rot', onStart: () => startTimer() , onMove: () => liftPiece(p), onEnd: () => release(p), onRotate: () => rotate(p) });
+          return p;
+        }
+        function liftPiece(p) { if (p.cell) { delete P.cells[p.cell]; p.cell = null; P.placedN--; evaluate(); } }
+        function rotate(p) {
+          startTimer();
+          let steps = 1;
+          if (p.cell && S.need(p.cell) != null) steps = 2; // triangles: keep the same cell (up or down) while snapped
+          p.ri = mod(p.ri + steps, 360 / S.step);
+          p.degAcc = (p.degAcc || 0) + steps * S.step; setRot(p, p.degAcc);
+          if (p.cell) evaluate(); // free pieces never snap on rotation; only a drop snaps
+        }
+        function release(p, soft) {
+          const [cx, cy] = centreOf(p);
+          let best = null, bd = S.thresh; const need = S.name === 'tri' ? p.ri % 2 : null;
+          S.near(cx - ORG[0], cy - ORG[1]).forEach(c => {
+            const nd = S.need(c); if (nd != null && nd !== need) return;
+            const q = pos(c), d = Math.hypot(q[0] - cx, q[1] - cy);
+            if (d < bd && (!P.cells[c] || P.cells[c] === p)) { bd = d; best = c; }
+          });
+          if (best) {
+            if (p.cell && p.cell !== best) { delete P.cells[p.cell]; P.placedN--; p.cell = null; }
+            if (!p.cell) { P.cells[best] = p; p.cell = best; P.placedN++; }
+            const q = pos(best); moveCentre(p, q[0], q[1], true);
+          } else if (!soft) { const occ = S.near(cx - ORG[0], cy - ORG[1]).some(c => P.cells[c] && Math.hypot(pos(c)[0] - cx, pos(c)[1] - cy) < S.thresh); if (occ) RL.msg(tmsg, 'That space is taken. Try another spot.', 'bad'); }
+          evaluate();
+        }
+
+        /* evaluation of every touching edge */
+        function evaluate(show) {
+          const res = { good: 0, bad: 0, marks: [] }, doneKey = {};
+          Object.keys(P.cells).forEach(c => {
+            const p = P.cells[c];
+            S.nrm.forEach((n, i) => {
+              const phi = mod(n + S.step * p.ri, 360), nb = S.neighbor(c, phi), q = nb && P.cells[nb]; if (!q) return;
+              const key = [c, nb].sort().join('|'); if (doneKey[key]) return; doneKey[key] = true;
+              const back = mod(phi + 180, 360), j = S.nrm.findIndex(m => mod(m + S.step * q.ri, 360) === back);
+              if (j < 0) return;
+              const ok = p.edges[i].pair != null && p.edges[i].pair === q.edges[j].pair;
+              ok ? res.good++ : res.bad++;
+              const m = pos(c), nv = [Math.cos(rad(phi)), Math.sin(rad(phi))], tv = [-nv[1], nv[0]], mid = [m[0] + nv[0] * S.apo, m[1] + nv[1] * S.apo];
+              res.marks.push({ ok, pa: p, pb: q, a: [mid[0] - tv[0] * S.L / 2, mid[1] - tv[1] * S.L / 2], b: [mid[0] + tv[0] * S.L / 2, mid[1] + tv[1] * S.L / 2], mid });
+            });
+          });
+          P.res = res;
+          const live = tier === 's' || show; marks.innerHTML = '';
+          if (live && tier !== 'x') res.marks.forEach(m => {
+            marks.append(sv('line', { x1: m.a[0], y1: m.a[1], x2: m.b[0], y2: m.b[1], stroke: m.ok ? '#1f7a4d' : '#b3261e', 'stroke-width': 6, 'stroke-linecap': 'round', opacity: 0.85 }));
+          });
+          if (show && tier !== 'x') setTimeout(() => { if (tier !== 's') marks.innerHTML = ''; }, 3500);
+          refreshStat(show);
+          if (!P.solved && P.placedN === D.pieces.length && res.good === D.total && res.bad === 0) solved();
+        }
+        function startTimer() { if (P.timer || P.solved) return; P.t0 = Date.now() - P.elapsed * 1000; P.timer = setInterval(refreshStat, 1000); }
+        function refreshStat() { if (P.board !== board) return; if (!P.solved && P.t0) P.elapsed = Math.floor((Date.now() - P.t0) / 1000); if (cur === k) paintStat(); }
+        function paintStat() {
+          const r = P.res || { good: 0, bad: 0 }, m = Math.floor(P.elapsed / 60), s = P.elapsed % 60;
+          stat.innerHTML = '';
+          [el('span', { class: 'big', text: 'Joins ' + r.good + ' / ' + D.total }), el('span', { class: 'chip', text: 'Placed ' + P.placedN + ' / ' + D.pieces.length }),
+            el('span', { class: 'chip', text: '⏱ ' + m + ':' + String(s).padStart(2, '0') }), P.solved ? el('span', { class: 'chip t-s', text: 'Solved ✓' }) : null,
+            tier === 'x' && !P.solved ? el('span', { class: 'chip t-x', text: 'Grade 8–9: Check shows the number only' }) : null].forEach(n => n && stat.append(n));
+        }
+        function solved() {
+          P.solved = true; clearInterval(P.timer); P.timer = null; paintStat();
+          RL.state.scores.tarsia = Object.keys(puzzles).filter(x => puzzles[x].solved).length + ' puzzle' + (Object.keys(puzzles).filter(x => puzzles[x].solved).length > 1 ? 's' : '');
+          RL.markDone('tarsia'); marks.innerHTML = '';
+          D.pieces.forEach(p => RL.shake(p.node));
+          RL.msg(tmsg, 'Solved ✓ ' + data.name + ' in ' + Math.floor(P.elapsed / 60) + ':' + String(P.elapsed % 60).padStart(2, '0') + '. Try another shape, or write your own edge pair under “Go further”.', 'ok');
+        }
+        P.check = () => {
+          evaluate(true); const r = P.res;
+          if (P.solved) return;
+          if (!r.good && !r.bad) return RL.msg(tmsg, 'No pieces are touching yet. Build some joins first.', 'info');
+          RL.msg(tmsg, tier === 'x' ? r.good + ' of ' + r.good + r.bad + ' touching edges match. Find the others yourself.' : (r.good + ' joins correct (green), ' + r.bad + ' to fix (red).'), r.bad ? 'bad' : 'ok');
+        };
+        P.hint = () => {
+          const cand = D.adj.map(a => [D.pieces.find(x => x.native === a[0]), D.pieces.find(x => x.native === a[1])]).filter(([A, B]) => !(A.cell && B.cell && joinOk(A, B)));
+          if (!cand.length) return RL.msg(tmsg, 'Every touching pair is already correct.', 'ok');
+          const [A, B] = cand[Math.floor(Math.random() * cand.length)]; P.hints++;
+          [A, B].forEach(x => { x.node.classList.add('hint'); setTimeout(() => x.node.classList.remove('hint'), 3000); });
+          RL.msg(tmsg, 'The two glowing pieces belong next to each other. Look for edges that match in meaning.', 'info');
+        };
+        function joinOk(A, B) { // are A and B placed in adjacent cells with matching edges?
+          return ((P.res && P.res.marks) || []).some(m => m.ok && ((m.pa === A && m.pb === B) || (m.pa === B && m.pb === A)));
+        }
+        P.reset = () => {
+          clearInterval(P.timer); P.timer = null; P.elapsed = 0; P.t0 = 0; P.solved = false; P.cells = {}; P.placedN = 0; P.res = null; marks.innerHTML = '';
+          scatter(); evaluate();
+        };
+        function scatter() {
+          const W = board.clientWidth, H = board.clientHeight, rnd = RL.rng(Date.now() % 100000), half = Math.min(S.SZ * 0.5, W / 2 - 2, H / 2 - 2), placed = [];
+          RL.shuffle(P.pieces, rnd).forEach(p => {
+            p.cell = null; const ri = Math.floor(rnd() * (360 / S.step)); p.ri = ri; p.degAcc = ri * S.step; setRot(p, p.degAcc, true);
+            let best = null, bd = -1;
+            for (let n = 0; n < 60; n++) { const x = half + rnd() * (W - 2 * half), y = half + rnd() * (H - 2 * half), d = placed.reduce((m, q) => Math.min(m, Math.hypot(q[0] - x, q[1] - y)), 1e9); if (d > bd) { bd = d; best = [x, y]; } }
+            placed.push(best); moveCentre(p, best[0], best[1]);
+          });
+        }
+        P.refresh = () => { ORG = S.org(); drawGrid(); if (!P.inited) { P.inited = true; D.pieces.forEach(pc => P.pieces.push(mkPiece(pc))); scatter(); evaluate(); } paintStat(); };
+        P.dbg = () => { const br = board.getBoundingClientRect(); return { ri: P.pieces.map(p => p.ri), pieces: P.pieces.map(p => { const c = centreOf(p), t = pos(p.native); return { id: p.id, ri: p.ri, nativeRi: p.nativeRi, orient: 360 / S.step, cx: br.left + c[0], cy: br.top + c[1], tx: br.left + t[0], ty: br.top + t[1], cell: p.cell }; }), solved: P.solved, total: D.total, res: P.res }; };
+        P.dbgSolve = () => { D.pieces.forEach(p => { p.ri = p.nativeRi; p.degAcc = p.ri * S.step; setRot(p, p.degAcc, true); if (p.cell) { delete P.cells[p.cell]; p.cell = null; P.placedN--; } const q = pos(p.native); moveCentre(p, q[0], q[1]); release(p, true); }); };
+        P.setGrid = on => { gridG.style.display = on ? 'block' : 'none'; };
+        return P;
+      }
+
+      /* join check helper: recomputed from cells so hint can tell correct pairs */
+      checkBtn.onclick = () => cur && puzzles[cur].check();
+      hintBtn.onclick = () => cur && puzzles[cur].hint();
+      gridBtn.onclick = () => { const on = gridBtn.getAttribute('aria-pressed') !== 'true'; gridBtn.setAttribute('aria-pressed', on); gridBtn.textContent = on ? 'Hide grid' : 'Show grid'; keys.forEach(x => puzzles[x] && puzzles[x].setGrid(on)); };
+      resetBtn.onclick = () => cur && puzzles[cur].reset();
+      stage.open = open; RL.dbg.tarsia = () => (cur && puzzles[cur] ? puzzles[cur].dbg() : null); RL.dbg.tarsiaSolve = () => cur && puzzles[cur].dbgSolve();
+
+      /* support + go further */
+      const adaptNodes = [el('ul', { html: '<li>Start with a piece that has <b>blank edges</b>: those go on the outside.</li><li>Pick one keyword on an edge and hunt for its partner.</li><li>Use <b>Hint</b> for a nudge, and <b>Show grid</b> to see where pieces will snap.</li>' }),
+        el('div', { class: 'q' }, el('div', { class: 'stem', text: 'Stuck? The matching pairs for the open puzzle:' }), (function () {
+          const holder = el('div'); const rv = el('details', { class: 'reveal' }, el('summary', { text: 'Show the matching pairs' }), el('div', { class: 'ans' }));
+          rv.addEventListener('toggle', () => { if (!rv.open) return; const k = cur || 'tri', pr = C.tarsia[k].pairs[tier]; rv.lastChild.innerHTML = '<p><b>' + C.tarsia[k].name + '</b></p><ul>' + pr.map(p => '<li>' + p[0] + ' ↔ ' + p[1] + '</li>').join('') + '</ul>'; });
+          holder.append(rv); return holder; })())];
+      const support = RL.support({
+        adapt: { lead: C.tarsiaAdapt.lead, nodes: adaptNodes },
+        hot: { lead: 'Be the puzzle designer.', nodes: [RL.qblock(C.tarsiaHot)] },
+      });
+      root.append(el('div', { class: 'below', style: { gridTemplateColumns: '1fr' } }, support));
+      stage._first = 'tri';
+    },
+    show() { if (stage.open) stage.open(stage._cur || 'tri'); },
+  };
+  RL.stages.push(stage);
+})();
+
+/* Stage 6: exit ticket (no support, protects the evidence), self-marking, confidence compared with score. */
+(function () {
+  'use strict';
+  const RL = window.RL, el = RL.el, C = RL.content;
+  const TOPICS = RL.content.topics;
+  RL.stages.push({
+    id: 'exit', title: 'Exit ticket', mins: 6,
+    build(root) {
+      const tier = RL.tier();
+      root.append(RL.mission({
+        kicker: 'Stage 6 · independent evidence', title: 'Exit ticket: show what you know', mins: 6,
+        spec: 'One question per topic · no hints on this screen · mark your own work with the mark scheme',
+        steps: ['<b>Write</b> an answer to each question without any help.', 'Open the mark scheme and <b>tick every point you earned</b> (be honest: only what you wrote).', 'Rate your confidence again and read your summary.'],
+        ladder: { s: 'Recall and one-step calculations (1–2 marks each).', m: 'Explain and calculate (3 marks each).', x: 'Evaluate, multi-step and explain (3–4 marks each).' },
+      }));
+      const wrap = el('div', { class: 'panelcard' }, el('h3', { text: 'Questions' }));
+      const marks = {}, maxes = {};
+      TOPICS.forEach(([id, name], idx) => {
+        const q = C.exit[id][tier]; maxes[id] = q.marks; marks[id] = 0;
+        const boxes = q.ms.map((p, i) => el('label', { class: 'msrow' }, el('input', { type: 'checkbox', onchange: () => { marks[id] = RL.$$('input', body).filter(c => c.checked).length; tot.textContent = marks[id] + ' / ' + q.marks; RL.state.scores['exit_' + id] = marks[id] + '/' + q.marks; sum(); } }), el('span', { html: p })));
+        const tot = el('b', { text: '0 / ' + q.marks });
+        const body = el('div', { class: 'ans' }, el('div', null, 'Tick each point you wrote: ', tot), ...boxes, q.note ? el('p', { html: '<i>' + q.note + '</i>' }) : null);
+        const rv = el('details', { class: 'reveal' }, el('summary', { text: 'Mark scheme and self-mark' }), body);
+        wrap.append(el('div', { class: 'q' }, el('div', { class: 'stem', html: '<b>' + (idx + 1) + '. ' + name + ':</b> ' + q.stem + ' <span class="marks">[' + q.marks + ']</span>' }), el('textarea', { 'aria-label': 'Your answer to question ' + (idx + 1), placeholder: 'Write your answer…' }), rv));
+      });
+      const conf = el('div', { class: 'panelcard' }, el('h3', { text: 'How confident are you now? (1 = not at all, 5 = very)' }));
+      const cg = el('div', { class: 'conf' });
+      TOPICS.forEach(([id, name]) => {
+        const out = el('span', { text: String(RL.state.post[id] || 3) });
+        const r = el('input', { type: 'range', min: 1, max: 5, step: 1, value: RL.state.post[id] || 3, 'aria-label': name + ' confidence now', oninput: () => { out.textContent = r.value; RL.state.post[id] = +r.value; sum(); } });
+        RL.state.post[id] = +r.value; cg.append(el('span', { text: name }), r, out);
+      });
+      conf.append(cg);
+      const summary = el('div', { class: 'panelcard summary' }, el('h3', { text: 'Your summary' }));
+      const sumBody = el('div'); summary.append(sumBody);
+      function sum() {
+        const rows = TOPICS.map(([id, name]) => {
+          const pre = RL.state.pre[id] || '–', post = RL.state.post[id] || '–', m = marks[id], max = maxes[id], pc = max ? m / max : 0;
+          let note = 'On track.';
+          if (pc < 0.5 && (RL.state.pre[id] >= 4 || RL.state.post[id] >= 4)) note = 'Confidence higher than score. Revisit this topic.';
+          else if (pc < 0.5) note = 'Go back to the ' + ({ seasons: 'seasons model', weight: 'weight bench', speed: 'speed and graphs stage', graphs: 'speed and graphs stage' })[id] + '.';
+          else if (pc >= 0.8 && tier !== 'x') note = 'Strong. Try the next level up.';
+          else if (pc >= 0.8) note = 'Secure at the top level.';
+          return '<tr><td>' + name + '</td><td>' + pre + '</td><td>' + post + '</td><td>' + m + ' / ' + max + '</td><td style="text-align:left">' + note + '</td></tr>';
+        }).join('');
+        const sc = RL.state.scores;
+        const act = [['Sort (first try)', sc.sort], ['Tarsia puzzles solved', sc.tarsia]].filter(a => a[1]).map(a => '<li>' + a[0] + ': <b>' + a[1] + '</b></li>').join('');
+        sumBody.innerHTML = '<table><tr><th>Topic</th><th>Before</th><th>Now</th><th>Exit score</th><th>Next step</th></tr>' + rows + '</table>' + (act ? '<p><b>Activity results this lesson</b></p><ul>' + act + '</ul>' : '');
+      }
+      sum();
+      root.append(wrap, el('div', { class: 'below split' }, conf, summary));
+      RL.stages.find(s => s.id === 'exit').show = sum;
+    },
+  });
+})();
+
+/* Controller: start overlay (tier + confidence), stepper, rebuild on tier change. */
+(function () {
+  'use strict';
+  const RL = window.RL, el = RL.el, $ = RL.$;
+  const TOPICS = RL.content.topics;
+  const DESC = {
+    s: ['Grade 6 · Secure', 'Hints on screen, clear steps, picture-and-term matching. Build solid foundations first.'],
+    m: ['Grade 7 · Strong', 'Names only, explanations and calculations. The core exam skills.'],
+    x: ['Grade 8–9 · Stretch', 'Decoys, data, evaluation and multi-step exam-style answers.'],
+  };
+  let current = 'sort';
+
+  function build() {
+    const main = $('#main'), steps = $('#steps');
+    RL.disposeGL();
+    main.innerHTML = ''; steps.innerHTML = '';
+    RL.stages.forEach((s, i) => {
+      const sec = el('section', { class: 'stage', id: 'stage-' + s.id, 'aria-label': s.title });
+      main.append(sec);
+      try { s.build(sec); } catch (err) { sec.append(el('div', { class: 'msg bad', text: 'This screen failed to load: ' + err.message })); console.error(s.id, err); }
+      steps.append(el('button', { class: 'step' + (RL.state.done[s.id] ? ' done' : ''), 'data-id': s.id, onclick: () => go(s.id) }, el('span', { class: 'n' }, el('span', { text: String(i + 1) })), s.title, el('span', { class: 'mins', text: '⏱ ' + s.mins })));
+    });
+    go(current, true);
+  }
+  function go(id, quiet) {
+    current = id;
+    RL.stages.forEach(s => { $('#stage-' + s.id).classList.toggle('on', s.id === id); });
+    RL.$$('.step').forEach(b => { if (b.dataset.id === id) b.setAttribute('aria-current', 'step'); else b.removeAttribute('aria-current'); });
+    const st = RL.stages.find(s => s.id === id); if (st && st.show) st.show();
+    if (!quiet) { history.replaceState(null, '', '#' + id); window.scrollTo({ top: 0 }); }
+  }
+  function setTier(t) {
+    RL.state.tier = t; RL.state.done = {}; RL.state.scores = {};
+    RL.$$('.tbtn').forEach(b => b.setAttribute('aria-pressed', b.dataset.t === t));
+    build();
+  }
+
+  const bar = $('#tierbar');
+  Object.keys(DESC).forEach(t => bar.append(el('button', { class: 'tbtn', 'data-t': t, 'aria-pressed': 'false', title: DESC[t][1], text: DESC[t][0], onclick: () => { if (RL.state.tier !== t && confirm('Switch to ' + DESC[t][0] + '? Your work on this page will be reset.')) setTier(t); } })));
+
+  /* start overlay */
+  const start = $('#start'), tiers = $('#tiers'), conf = $('#conf'), go1 = $('#go');
+  let chosen = null;
+  Object.keys(DESC).forEach(t => {
+    const b = el('button', { class: 'tiercard', 'data-t': t, 'aria-pressed': 'false', onclick: () => { chosen = t; RL.$$('.tiercard').forEach(x => x.setAttribute('aria-pressed', x.dataset.t === t)); go1.disabled = false; } }, el('b', { text: DESC[t][0] }), el('small', { text: DESC[t][1] }));
+    tiers.append(b);
+  });
+  TOPICS.forEach(([id, name]) => {
+    const out = el('span', { text: '3' }); RL.state.pre[id] = 3;
+    conf.append(el('span', { text: name }), el('input', { type: 'range', min: 1, max: 5, step: 1, value: 3, 'aria-label': name + ' confidence', oninput: e => { out.textContent = e.target.value; RL.state.pre[id] = +e.target.value; } }), out);
+  });
+  go1.onclick = () => { if (!chosen) return; start.hidden = true; setTier(chosen); const h = location.hash.slice(1); if (RL.stages.some(s => s.id === h)) go(h); };
+  window.addEventListener('hashchange', () => { const h = location.hash.slice(1); if (RL.state.tier && RL.stages.some(s => s.id === h)) go(h); });
+  // Test hook / teacher link: ?level=s|m|x skips the overlay
+  const q = new URLSearchParams(location.search).get('level');
+  if (q && DESC[q]) { chosen = q; start.hidden = true; setTier(q); const h = location.hash.slice(1); if (RL.stages.some(s => s.id === h)) go(h); }
+  else setTimeout(() => RL.$('.tiercard').focus(), 50);
+})();
+
+</script>
+</body>
+</html>
