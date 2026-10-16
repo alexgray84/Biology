@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Pondweed lab · simulated investigation</title>
+<style>
+:root{color-scheme:light;--navy:#182944;--navy-900:#182944;--navy-950:#13213a;--gold:#bd8126;--gold-600:#8a5a14;--paper:#f8f6ee;--card:#fffdf8;--line:#c9c8bd;--ink-600:#4b5667;--sans:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;--serif:Georgia,"Times New Roman",serif}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--paper);color:var(--navy);font:18px/1.5 var(--sans);overflow-wrap:break-word}
+.toolbar{position:sticky;top:0;z-index:20;background:rgba(248,246,238,.97);border-bottom:1px solid var(--line)}
+.toolbar-inner{max-width:1240px;margin:auto;padding:8px 20px;display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center}
+.toolbar a{font:600 16px/1.2 var(--sans);padding:9px 16px;border-radius:6px;text-decoration:none;min-height:44px;display:inline-flex;align-items:center;color:var(--navy);border:1px solid var(--navy)}
+.toolbar .tag{font-size:13px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--gold-600)}
+a:focus-visible,button:focus-visible,canvas:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+main{max-width:1240px;margin:auto;padding:14px 20px 48px}
+h1{font:500 32px/1.15 var(--serif);margin:4px 0 6px}
+h2{font:800 15px/1.3 var(--sans);letter-spacing:.1em;text-transform:uppercase;color:var(--gold-600);margin:22px 0 8px}
+.eyebrow{font-size:14px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gold-600);margin:0}
+.do-this{display:grid;grid-template-columns:auto 1fr;gap:4px 16px;margin:8px 0 12px;padding:10px 16px;border:1px solid var(--navy);border-left:6px solid var(--gold);border-radius:10px;background:var(--card)}
+.do-this b{font-size:13px;letter-spacing:.12em;text-transform:uppercase;padding-top:3px}
+.do-this ol{margin:0;padding-left:1.2em}
+.do-this li{font-weight:600;font-size:16px;line-height:1.35}
+.lab{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,.75fr);gap:18px;align-items:start}
+.model-view{position:relative;width:100%;height:min(52vh,460px);min-height:220px;border:1px solid var(--line);border-radius:12px;background:#fbf8f0;overflow:hidden;touch-action:pan-y}
+.model-view canvas{display:block;width:100%;height:100%;touch-action:none;cursor:grab}
+.model-fallback{height:100%;display:flex;align-items:center;justify-content:center;padding:8px}
+.model-fallback svg{width:100%;height:100%}
+.model-view.is-live .model-fallback{display:none}
+.model-fallback .diagram-label{font-size:22px;font-weight:650}.model-fallback .diagram-small{font-size:17px;font-weight:500}
+.caption{font-size:14px;color:var(--ink-600);margin:6px 0 0}
+.webgl-note{font-size:14px;color:#7a1f1f;margin:4px 0 0}
+.panel{font-size:22px}
+.model-readout{font-size:.8em;line-height:1.32;outline:none}
+.model-readout p{margin:0 0 8px}
+.model-readout .readout-key{display:block;color:var(--gold-600);font-size:.72em;font-weight:800;letter-spacing:.08em;text-transform:uppercase;margin-bottom:3px}
+.model-readout .readout-value{font:500 1.2em/1.15 var(--serif);color:var(--navy-950)}
+.bio-controls{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0 0}
+.bio-controls button{font:650 .68em/1.2 var(--sans);border-radius:8px;padding:10px 12px;min-height:44px;border:1px solid var(--navy);background:#f1efe8;color:var(--navy);cursor:pointer;touch-action:manipulation}
+.bio-controls button[aria-pressed="true"]{color:#fbf5e6;background:var(--navy)}
+.bio-controls button.is-primary{background:var(--navy);color:#fbf5e6}
+.model-controls .control-group{display:flex;flex-wrap:wrap;align-items:center;gap:6px;width:100%}
+.model-controls .control-label{font-size:.58em;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-600);margin-right:4px}
+.table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;border:1px solid var(--line);border-radius:8px;background:var(--card);max-width:100%}
+table{border-collapse:collapse;width:100%;font-size:16px;min-width:480px}
+th,td{border:1px solid var(--line);padding:8px 10px;text-align:center}
+th{background:#eeeade}
+thead tr:first-child th{border-top:0}
+td{font:600 17px/1.2 var(--sans);height:40px}
+td.calc{background:repeating-linear-gradient(135deg,#fffdf8 0 8px,#f3efe3 8px 10px)}
+.you{font-weight:500;font-size:13px;color:var(--ink-600)}
+.note{font-size:15px;color:var(--ink-600)}
+.status{position:absolute;left:-9999px}
+@media (max-width:860px){
+  .lab{grid-template-columns:1fr}
+  .model-view{height:300px}
+  .panel{font-size:20px}
+  h1{font-size:27px}
+  main{padding:10px 16px 40px}
+  .toolbar-inner{padding:8px 16px}
+  .do-this{grid-template-columns:1fr}
+  table{min-width:0;font-size:14px}
+  th,td{padding:6px 5px}
+  td{font-size:16px}
+}
+@media print{.toolbar{display:none}.model-view{height:280px}}
+</style>
+</head>
+<body>
+<header class="toolbar"><div class="toolbar-inner"><a href="../02%20Limiting%20factors%20of%20photosynthesis.html#collect">Return to lesson</a><span class="tag">Simulated data</span></div></header>
+<main>
+<p class="eyebrow">Year 10 Triple Biology · Limiting factors of photosynthesis</p>
+<h1>Pondweed lab</h1>
+<div class="do-this"><b>Do this</b><ol>
+<li>Choose what to investigate, then choose a prediction. Run stays locked until you predict.</li>
+<li>Run 3 repeats at each value. Copy every volume into your results table.</li>
+<li>Calculate each mean in your book, leaving out any anomaly. This page never calculates or plots for you.</li>
+</ol></div>
+<div class="lab">
+  <div>
+    <div class="model-view" id="model-view" data-model="pondweed"><div class="model-fallback"></div></div>
+    <p class="caption">Simulated data: every reading comes from a computer model, not a real plant. Simulated time runs 60× faster (5 minutes in 5 seconds). Drag or use arrow keys to turn the bench.</p>
+    <p class="webgl-note" id="webgl-note" hidden>3D view unavailable on this device: the diagram, readout and controls still work.</p>
+  </div>
+  <div class="panel">
+    <div class="model-readout" id="model-readout" aria-live="polite" tabindex="-1"></div>
+    <div class="bio-controls model-controls" id="model-controls"></div>
+  </div>
+</div>
+<h2>Results table to copy</h2>
+<p class="note" id="results-fixed"></p>
+<div class="table-wrap"><table id="results-table"></table></div>
+<p class="note">Copy the headings and units into your book or the results sheet. Fill the mean column yourself. Changing the fixed conditions shows a fresh table.</p>
+<p class="status" id="status" role="status" aria-live="polite"></p>
+</main>
+<script src="three.min.js"></script>
+<script src="lesson-diagrams.js"></script>
+<script src="pondweed-model.js"></script>
+<script src="pondweed-lab-host.js"></script>
+</body>
+</html>
