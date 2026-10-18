@@ -1,0 +1,128 @@
+/* Extensions to the approved Arcadia 1.0.0 frame: pace labels, explicit steps, layered success criteria,
+   reveal tables, local Three.js model views and a task timer. Uses the frame tokens only. */
+.meta-time, .meta-optional { display: inline-block; margin-left: 14px; padding: 2px 9px; border: 1px solid var(--line-strong); border-radius: 999px; color: var(--navy-950); font-size: .92em; letter-spacing: .04em; font-weight: 700; }
+.meta-optional { border-color: var(--gold-600); color: var(--gold-600); }
+
+.do-this { display: grid; grid-template-columns: auto 1fr; gap: 6px 16px; align-items: start; margin: 14px 0 0; padding: 12px 16px; border: 1px solid var(--navy-900); border-left: 6px solid var(--gold-500); border-radius: 10px; background: var(--paper-50); }
+.do-this-label { color: var(--navy-950); font-size: .6em; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; padding-top: .45em; white-space: nowrap; }
+.do-this ol { margin: 0; padding-left: 1.2em; }
+.do-this li { padding: 2px 0 2px 4px; font-weight: 600; font-size: .86em; line-height: 1.3; }
+
+.ladder { list-style: none; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0; margin: 14px 0 0; padding: 0; border: 1px solid var(--line-strong); border-radius: 10px; overflow: hidden; }
+.ladder li { padding: 10px 12px; border-left: 1px solid var(--line); font-size: .7em; line-height: 1.3; }
+.ladder li:first-child { border-left: 0; }
+.ladder li:last-child { background: var(--navy-100); }
+.ladder b { display: block; margin-bottom: 4px; color: var(--gold-600); font-size: .8em; letter-spacing: .08em; text-transform: uppercase; }
+
+.safety-note { margin: 12px 0 0; padding: 10px 14px; border: 1px solid var(--resist); border-radius: 10px; font-size: .7em; line-height: 1.35; }
+.safety-note b { margin-right: 8px; color: var(--resist); letter-spacing: .08em; text-transform: uppercase; font-size: .9em; }
+
+.table-wrap { margin-top: 10px; overflow: hidden; border: 1px solid var(--line-strong); border-radius: 10px; }
+.science-table { width: 100%; border-collapse: collapse; font-size: .68em; line-height: 1.28; }
+.science-table th, .science-table td { padding: 8px 12px; text-align: left; vertical-align: top; border-bottom: 1px solid var(--line); }
+.science-table thead th { background: var(--navy-900); color: var(--paper-100); font-size: .9em; letter-spacing: .03em; }
+.science-table tbody th { color: var(--navy-950); font-weight: 750; white-space: nowrap; }
+.science-table tr:last-child th, .science-table tr:last-child td { border-bottom: 0; }
+.science-table:has(tbody tr:nth-child(6)) { font-size: .6em; }
+.science-table:has(tbody tr:nth-child(6)) th, .science-table:has(tbody tr:nth-child(6)) td { padding-block: 6px; }
+.blank-cell { color: var(--ink-600); letter-spacing: .2em; }
+.is-hidden-row td { background: var(--paper-200); }
+
+.model3d-layout { grid-template-columns: minmax(0, 1.08fr) minmax(0, .92fr); align-items: stretch; }
+.model-view { position: relative; width: 100%; height: 44vh; min-height: 200px; border: 1px solid var(--line); border-radius: 12px; background: var(--paper-50); overflow: hidden; touch-action: pan-y; }
+.model-view canvas { display: block; width: 100%; height: 100%; touch-action: none; cursor: grab; }
+.model-view canvas:active { cursor: grabbing; }
+.model-view canvas:focus-visible { outline: 3px solid var(--gold-500); outline-offset: -3px; }
+.model-fallback { height: 100%; display: flex; align-items: center; justify-content: center; padding: 8px; }
+.model-fallback svg { width: 100%; height: 100%; }
+.model-view.is-live .model-fallback { display: none; }
+.model-panel { display: flex; flex-direction: column; justify-content: center; min-height: 0; }
+.model-readout { font-size: .8em; line-height: 1.32; }
+.model-readout p { margin: 0 0 8px; }
+.model-readout .readout-key { display: block; color: var(--gold-600); font-size: .75em; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; margin-bottom: 4px; }
+.model-readout .readout-value { font: 500 1.25em/1.15 var(--serif); color: var(--navy-950); }
+.model-controls { gap: 6px; }
+.model-controls .control-group { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; width: 100%; }
+.model-controls .control-label { font-size: .58em; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-600); margin-right: 4px; }
+.model-controls input[type="range"] { flex: 1; min-width: 160px; accent-color: var(--navy-900); height: 32px; }
+.model-controls output { font: 600 .7em/1 var(--sans); color: var(--navy-950); min-width: 4.5em; }
+.bio-controls button.is-primary { background: var(--navy-900); border-color: var(--navy-900); color: var(--paper-100); }
+.step-controls { margin-top: 8px; }
+
+.timer-layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(210px, .32fr); gap: 28px; align-items: start; }
+.mini-timer { padding: 4px 0 4px 22px; border-left: 1px solid var(--line-strong); }
+.mini-timer output { display: block; font: 400 clamp(52px, 5.4vw, 96px)/1 var(--serif); font-variant-numeric: tabular-nums; margin: 8px 0; color: var(--navy-950); }
+.mini-timer .bio-controls button { padding: 7px 10px; }
+
+@media (min-width: 761px) {
+  .workspace.has-drawer .model-view { height: 26vh; min-height: 150px; }
+  .workspace.has-drawer .timer-layout { grid-template-columns: 1fr; gap: 10px; }
+  .workspace.has-drawer .mini-timer { padding: 8px 0 0; border-left: 0; border-top: 1px solid var(--line-strong); display: grid; grid-template-columns: auto auto 1fr; align-items: center; gap: 8px 14px; }
+  .workspace.has-drawer .mini-timer .bio-eyebrow, .workspace.has-drawer .mini-timer .exam-note { display: none; }
+  .workspace.has-drawer .mini-timer output { font-size: 44px; margin: 0; }
+  .workspace.has-drawer .ladder { grid-template-columns: 1fr; }
+  .workspace.has-drawer .ladder li { border-left: 0; border-top: 1px solid var(--line); padding-block: 6px; }
+  .workspace.has-drawer .ladder li:first-child { border-top: 0; }
+  .workspace.has-drawer .science-table { font-size: .6em; }
+  .workspace.has-drawer .do-this { padding: 8px 12px; margin-top: 10px; }
+}
+@media (max-height: 760px) and (min-width: 761px) {
+  .model-view { height: 40vh; }
+  .do-this li { font-size: .82em; }
+}
+@media (max-width: 760px) {
+  .model3d-layout { grid-template-columns: 1fr; }
+  .model-view { height: 300px; }
+  .timer-layout { grid-template-columns: 1fr; }
+  .mini-timer { border-left: 0; padding-left: 0; border-top: 1px solid var(--line-strong); padding-top: 12px; }
+  .ladder { grid-template-columns: 1fr; }
+  .ladder li { border-left: 0; border-top: 1px solid var(--line); }
+  .ladder li:first-child { border-top: 0; }
+  .table-wrap { overflow-x: auto; }
+  .science-table { font-size: 15px; min-width: 560px; }
+  .do-this { grid-template-columns: 1fr; }
+  .meta-time, .meta-optional { margin-left: 8px; }
+}
+@media (prefers-reduced-motion: reduce) { .model-view canvas { cursor: default; } }
+
+/* Children keep their natural height so any excess shows up as measurable overflow (no silent overlap). */
+.screen.bio-screen > * { flex-shrink: 0; }
+.model3d-layout .bio-figure { display: flex; flex-direction: column; }
+.model-view { height: 36vh; }
+.workspace.has-drawer .model-view { height: 24vh; }
+
+/* Answer review sits in the screen's top-right corner so it costs no vertical space. */
+.screen.bio-screen { position: relative; }
+.bio-screen > .review-access-row { position: absolute; top: 12px; right: var(--board-inset, 24px); margin: 0; z-index: 2; }
+.workspace.has-drawer .bio-screen > .review-access-row { right: 20px; }
+.bio-screen .bio-eyebrow { min-height: 38px; display: flex; align-items: center; flex-wrap: wrap; padding-right: 290px; margin-bottom: 4px; }
+.workspace.has-drawer .bio-screen .bio-eyebrow { padding-right: 250px; }
+.model-col { display: flex; flex-direction: column; min-width: 0; }
+.model-col .do-this, .model-col .bio-task { margin-top: 10px; }
+.workspace.has-drawer .model3d-layout { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 14px; align-items: start; }
+.workspace.has-drawer .model-readout { font-size: .72em; }
+.workspace.has-drawer .model-col .do-this li { font-size: .78em; }
+@media (max-width: 760px) {
+  .bio-screen > .review-access-row { position: static; justify-content: flex-end; margin-bottom: 8px; }
+  .bio-screen .bio-eyebrow { padding-right: 0; }
+  .workspace.has-drawer .model3d-layout { grid-template-columns: 1fr; }
+}
+.workspace.has-drawer .bio-figure svg { max-height: 18vh; }
+.workspace.has-drawer .bio-screen .bio-list li { font-size: .95em; }
+
+/* Integration fixes (28 Sep): ladders are a closed-drawer scaffold (the review drawer repeats the criteria);
+   figures stay readable beside a drawer; model columns drop the caption when a drawer is open. */
+.workspace.has-drawer .ladder { display: none; }
+.workspace.has-drawer .bio-figure svg { max-height: 24vh; }
+.workspace.has-drawer .model-col figcaption { display: none; }
+.model-panel .ladder { grid-template-columns: 1fr; margin-top: 10px; }
+.model-panel .ladder li { border-left: 0; border-top: 1px solid var(--line); padding-block: 6px; }
+.model-panel .ladder li:first-child { border-top: 0; }
+/* Step-by-step model screens: figure and step side by side when a drawer is open. */
+@media (min-width: 761px) {
+  .workspace.has-drawer .screen-steps .bio-layout { grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr); gap: 14px; align-items: start; }
+  .workspace.has-drawer .screen-steps .bio-figure svg { max-height: 30vh; }
+  .workspace.has-drawer .screen-steps .bio-figure figcaption { display: none; }
+  .workspace.has-drawer .screen-steps .bio-step p { font-size: .9em; }
+}
+@media (min-width: 761px) { .workspace.has-drawer .screen-steps .safety-note { display: none; } }
