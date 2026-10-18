@@ -9,9 +9,10 @@ Interactive resources for the Science and Biology classes taught in 2026–27.
 ## Current classes
 
 - Year 7 Science: `7/SCI/01` and `7/SCI/04`
-- Year 8 Science: `8/SCI/04`
+- Year 8 Science: `8/SCI/02` and `8/SCI/05`
 - Year 9 Science: `9/SCI/Z`
 - Year 10 Triple Biology: `10/Bio/Tri2`
+- Year 10 Double Biology: `10/Bio/Dblx`
 - Year 10 BTEC Applied Science: `10/Bio/BTEC`
 - Year 11 BTEC Applied Science: `11/Bio/BTEC`
 
@@ -26,7 +27,7 @@ units/<course>/<unit>/index.html   # Lessons grouped in teaching order
 current/<course>/<unit>/           # Approved pupil lesson packages
 ```
 
-The two Year 7 classes share the same Year 7 unit pages and lesson packages. Other classes have their own course unit pages.
+The two Year 7 classes share the same Year 7 unit pages and lesson packages. The Year 8 classes share a resource library; pupils open the unit assigned by their teacher. The former `classes/8-sci-04/` address redirects to `classes/8-sci-02/`. Year 10 Double Biology has a dedicated class homepage; its lesson links will be added as approved resources become available. Other classes have their own course unit pages.
 
 ## Current lesson-building approach
 
