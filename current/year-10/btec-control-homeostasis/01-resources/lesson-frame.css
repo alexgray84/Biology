@@ -1,0 +1,92 @@
+/* Six screen families share a projection canvas and optional task widgets. */
+.app { grid-template-rows: minmax(0, 1fr) auto 58px; }
+.nav-context { grid-template-columns: minmax(0, 1fr) auto; }
+.student-tools {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr)) minmax(0, 1.6fr);
+  gap: 8px;
+  padding: 0 12px 8px;
+}
+.student-tools:empty { padding: 0; }
+.tool-control { justify-content: center; gap: 0; border-radius: 8px; font-size: 16px; padding: 8px 10px; }
+.tool-control[aria-expanded="true"] { background: var(--navy-900); border-color: var(--navy-900); color: var(--paper-100); }
+.topic[hidden] { display: none; }
+.app[data-family="Title"] .lesson-stage { grid-template-rows: minmax(0, 1fr); }
+.title-layout { display: flex; flex-direction: column; justify-content: center; height: 100%; }
+.title-layout .screen-heading { font-size: clamp(72px, min(8.2vw, 13vh), 148px); max-width: 12ch; margin: 20px 0; }
+.title-question { font: 500 clamp(32px, min(4.2vw, 6.8vh), 72px)/1.15 var(--serif); max-width: 22ch; margin: 0 0 32px; }
+.title-path { display: flex; flex-wrap: wrap; gap: 14px 32px; border-top: 1px solid var(--line-strong); padding-top: 24px; font-size: var(--board-body, 24px); }
+.title-path span + span::before { content: "→"; color: var(--gold-600); margin-right: 24px; }
+.outcome-layout { width: 100%; }
+.outcome-list { list-style: none; counter-reset: outcome; padding: 0; margin: 24px 0 0; border-top: 1px solid var(--line-strong); }
+.outcome-list li { counter-increment: outcome; display: grid; grid-template-columns: 32px 1fr; gap: 14px; border-bottom: 1px solid var(--line); padding: 20px 0; }
+.outcome-list li::before { content: counter(outcome, decimal-leading-zero); font-family: var(--serif); }
+.outcome-list strong { display: block; font-weight: 650; }
+.outcome-list p { margin: 8px 0 0; }
+.outcome-open { margin-top: 20px; }
+.workspace.has-drawer .lesson-stage { visibility: visible; }
+.workspace.has-drawer .lesson-stage, .workspace.has-drawer .student-drawer { grid-area: auto; }
+.student-drawer { grid-template-rows: auto auto minmax(0, 1fr) auto; animation: none; }
+.drawer-head { align-items: start; }
+.drawer-head p { margin-top: 8px; }
+.drawer-tabs { flex-wrap: wrap; overflow: visible; }
+.drawer-tabs:empty { display: none; }
+.drawer-body { overflow: hidden; max-height: none; }
+.widget-page h3 { font: 500 1.35em/1.15 var(--serif); margin: 0 0 18px; }
+.widget-page p { margin: 0 0 18px; }
+.widget-page ul { margin: 20px 0; padding-left: 1.15em; }
+.widget-page li { padding-left: 5px; margin: 0 0 16px; }
+.widget-page blockquote { margin: 0 0 20px; font: 500 1.25em/1.25 var(--serif); }
+.widget-note { font-size: 0.7em; text-transform: uppercase; letter-spacing: 0.08em; font-weight: 700; }
+.widget-action { display: flex; align-items: center; justify-content: space-between; gap: 18px; padding: 14px 18px; border: 1px solid var(--navy-900); border-radius: 8px; background: var(--navy-900); color: var(--paper-100); font: 650 0.8em/1.3 var(--sans); cursor: pointer; }
+.widget-source { color: var(--navy-700); font-size: 0.75em; text-underline-offset: 4px; }
+.widget-diagram { margin-bottom: 18px; }
+.widget-diagram .force-diagram { width: 100%; max-height: 180px; }
+.widget-diagram .diagram-label { font-size: 46px; }
+.widget-pagination { display: grid; grid-template-columns: 44px 1fr 44px; align-items: center; gap: 12px; padding: 10px 20px; border-top: 1px solid var(--line); }
+.widget-pagination span { text-align: center; font-size: 16px; }
+.context-anchor { margin-block: 0 !important; }
+.context-key { margin: 24px 0 0; padding-top: 20px; border-top: 1px solid var(--line-strong); font-weight: 600; }
+.context-key span { display: block; margin-bottom: 8px; font-size: 0.75em; text-transform: uppercase; letter-spacing: 0.06em; }
+.context-key p { margin: 0; }
+.context-options, .context-tasks { padding-left: 1.2em; margin: 22px 0 0; }
+.context-options li, .context-tasks li { margin-bottom: 16px; padding-left: 8px; }
+
+@media (min-width: 761px) {
+  .app { grid-template-rows: minmax(0, 1fr) auto 58px; }
+  .workspace.has-drawer { grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); grid-template-rows: minmax(0, 1fr); gap: 8px; }
+  .workspace.has-drawer .screen, .workspace.has-drawer .topic { padding-inline: 26px; }
+  .workspace.has-drawer .screen { font-size: clamp(22px, min(2.1vw, 3.3vh), 36px); }
+  .workspace.has-drawer .screen-heading { font-size: clamp(32px, min(3.3vw, 5.3vh), 56px); }
+  .workspace.has-drawer .screen-lead { font-size: inherit; }
+  .workspace.has-drawer .topic { font-size: clamp(22px, 2.2vw, 36px); }
+  .workspace.has-drawer .screen-outcome { justify-content: center; }
+  .outcome-list li { padding-block: 16px; }
+  .outcome-list p { font-size: 0.85em; }
+  .drawer-head { padding: 20px 22px 14px; gap: 8px; }
+  .drawer-head h2 { font-size: clamp(28px, min(2.8vw, 4.8vh), 46px); }
+  .drawer-head p { font-size: clamp(18px, min(1.8vw, 2.8vh), 28px); line-height: 1.3; }
+  .drawer-tabs { padding: 10px 16px; gap: 6px; }
+  .support-tab { font-size: clamp(16px, 1.45vw, 22px); padding: 8px 12px; min-height: 40px; }
+  .drawer-body { padding: 22px; color: var(--navy-950); font-size: clamp(23px, min(2.15vw, 3.4vh), 36px); line-height: 1.3; }
+  .screen-model .force-diagram { max-height: 23vh; }
+  .screen-model .model-layout { gap: 14px; }
+  .screen-model .model-step { padding-block: 8px; }
+}
+
+@media (max-width: 760px) {
+  .app { grid-template-rows: auto auto 58px; }
+  .student-tools { grid-template-columns: repeat(3, minmax(0, 1fr)); padding: 0 12px 8px; }
+  .tool-control { font-size: 13px; min-height: 44px; }
+  .title-layout .screen-heading { font-size: clamp(56px, 15vw, 100px); }
+  .title-question { font-size: 32px; }
+  .title-path { flex-direction: column; font-size: 20px; }
+  .title-path span + span::before { content: none; }
+  .workspace.has-drawer { grid-template-columns: 1fr; grid-template-rows: auto auto; }
+  .workspace.has-drawer .lesson-stage, .workspace.has-drawer .student-drawer { grid-area: auto; }
+  .drawer-body { overflow: visible; font-size: 21px; }
+  .student-drawer { min-height: 500px; }
+  .screen-outcome { font-size: 22px; }
+  .context-anchor { font-size: 21px; }
+  .nav-context { grid-template-columns: minmax(0, 1fr); }
+}
