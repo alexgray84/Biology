@@ -1,0 +1,1 @@
+window.BioDiagrams={render(name){return {"alive-model": "<img src=\"01 Resources/alive-model.svg\" alt=\"A wind-up toy car that only moves, compared with a seedling that is taller on Day 5 and bends towards a sunny window, labelled growth, movement and sensitivity.\">"}[name]||"";}};
