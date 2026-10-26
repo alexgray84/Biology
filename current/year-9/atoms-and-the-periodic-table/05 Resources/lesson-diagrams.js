@@ -1,0 +1,1 @@
+window.BioDiagrams={render(name){return {"bohr-na": "<img src=\"05 Resources/bohr-na.svg\" alt=\"Shell diagram of sodium: 2,8,1; three shells, period 3, one outer electron, Group 1.\">"}[name]||"";}};

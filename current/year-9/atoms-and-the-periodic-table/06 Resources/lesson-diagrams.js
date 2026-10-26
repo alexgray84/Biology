@@ -1,0 +1,1 @@
+window.BioDiagrams={render(name){return {"alkali": "<img src=\"06 Resources/alkali.svg\" alt=\"Lithium, sodium and potassium on water behind a safety screen, with observations: lithium steady fizzing, sodium more vigorous and melts into a ball, potassium very rapid with a lilac flame.\">"}[name]||"";}};
