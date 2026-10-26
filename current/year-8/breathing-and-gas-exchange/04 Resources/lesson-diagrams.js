@@ -1,0 +1,1 @@
+window.BioDiagrams={render(name){return {"air-chart": "<img src=\"04 Resources/air-chart.svg\" alt=\"Bar chart of approximate oxygen, carbon dioxide and nitrogen percentages in inspired and expired air.\">", "relaxed": "<img src=\"04 Resources/relaxed.svg\" alt=\"Chest schematic with a domed (relaxed) diaphragm.\">"}[name]||"";}};

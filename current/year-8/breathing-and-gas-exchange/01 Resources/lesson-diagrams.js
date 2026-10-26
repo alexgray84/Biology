@@ -1,0 +1,1 @@
+window.BioDiagrams={render(name){return {"chest": "<img src=\"01 Resources/chest.svg\" alt=\"Labelled chest schematic: trachea branching into bronchi, two lungs, ribs and a domed diaphragm below the lungs.\">"}[name]||"";}};

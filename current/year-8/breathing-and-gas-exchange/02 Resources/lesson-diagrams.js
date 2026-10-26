@@ -1,0 +1,1 @@
+window.BioDiagrams={render(name){return {"chest": "<img src=\"02 Resources/chest.svg\" alt=\"Chest schematic with a domed diaphragm.\">", "outlines": "<img src=\"02 Resources/outlines.svg\" alt=\"Two unlabelled chest outlines, A breathing in and B breathing out, without the diaphragm drawn.\">"}[name]||"";}};

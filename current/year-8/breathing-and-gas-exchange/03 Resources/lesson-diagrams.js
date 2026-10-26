@@ -1,0 +1,1 @@
+window.BioDiagrams={render(name){return {"alveolus": "<img src=\"03 Resources/alveolus.svg\" alt=\"One alveolus beside a capillary: oxygen arrow from air into blood, carbon dioxide arrow from blood into air.\">"}[name]||"";}};
