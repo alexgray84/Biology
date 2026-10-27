@@ -116,8 +116,28 @@ window.LessonModels.leaf = (() => {
     guard(1);guard(-1);
     let disposed=false,visible=true,lost=false,last=null,lastView=state.view,raf=0;
     function draw(){if(!disposed&&!lost&&visible)renderer.render(scene,camera);}
-    function resize(){if(disposed||lost)return;const r=host.getBoundingClientRect();if(!r.width||!r.height)return;renderer.setSize(r.width,r.height,false);camera.aspect=r.width/r.height;camera.updateProjectionMatrix();draw();}
-    function apply(s){ensure(s,phase);state=s;section.visible=s.view==='section';whole.visible=s.view==='whole';stoma.visible=s.view==='stoma';rays.visible=s.focus==='light';route.visible=!!s.route;root.rotation.set(s.rx,s.ry,0);root.scale.setScalar(s.zoom*(s.view==='whole'?.88:1));camera.position.set(0,.15,10.8);camera.lookAt(0,.05,0);if(lastView!==s.view){lastView=s.view;if(ctx.announce)ctx.announce(describe(s));}draw();}
+    /* Fit the scientific subject, rather than using one distant camera for
+       every canvas shape. The pore view deliberately frames the guard-cell
+       pair: the surrounding epidermis is context and may extend off canvas.
+       Use the visible meshes' cached bounds; the distant corner of one whole
+       scene box would needlessly shrink these shallow anatomical models. */
+    function frame(s){
+      const subject=s.view==='whole'?whole:s.view==='stoma'?stoma:section,points=[],box=new T.Box3();root.updateMatrixWorld(true);
+      subject.traverseVisible(object=>{
+        const geometry=object.geometry;if(!geometry)return;
+        if(s.view==='stoma'&&geometry.type!=='ExtrudeGeometry'&&object.material!==chloroMat)return;
+        if(!geometry.boundingBox)geometry.computeBoundingBox();const b=geometry.boundingBox;if(!b)return;
+        for(const x of [b.min.x,b.max.x])for(const y of [b.min.y,b.max.y])for(const z of [b.min.z,b.max.z]){
+          const point=new T.Vector3(x,y,z).applyMatrix4(object.matrixWorld);points.push(point);box.expandByPoint(point);
+        }
+      });
+      if(!points.length)return;
+      const center=box.getCenter(new T.Vector3()),tan=Math.tan(T.MathUtils.degToRad(camera.fov/2)),fill=.88;let distance=.5;
+      for(const point of points){const dz=point.z-center.z;distance=Math.max(distance,dz+Math.abs(point.y-center.y)/(tan*fill),dz+Math.abs(point.x-center.x)/(tan*camera.aspect*fill));}
+      camera.position.set(center.x,center.y,center.z+distance);camera.lookAt(center);camera.zoom=s.zoom;camera.updateProjectionMatrix();
+    }
+    function resize(){if(disposed||lost)return;const r=host.getBoundingClientRect();if(!r.width||!r.height)return;renderer.setSize(r.width,r.height,false);camera.aspect=r.width/r.height;frame(state);draw();}
+    function apply(s){ensure(s,phase);state=s;section.visible=s.view==='section';whole.visible=s.view==='whole';stoma.visible=s.view==='stoma';rays.visible=s.focus==='light';route.visible=!!s.route;root.rotation.set(s.rx,s.ry,0);root.scale.setScalar(s.view==='whole'?.88:1);frame(s);if(lastView!==s.view){lastView=s.view;if(ctx.announce)ctx.announce(describe(s));}draw();}
     function changed(){ensure(state,phase);apply(state);}
     const down=e=>{if(e.button!==0)return;last=[e.clientX,e.clientY];canvas.style.touchAction='none';try{canvas.setPointerCapture(e.pointerId);}catch(_){}};
     const move=e=>{if(!last)return;state.ry+=(e.clientX-last[0])*.008;state.rx+=(e.clientY-last[1])*.007;last=[e.clientX,e.clientY];changed();};

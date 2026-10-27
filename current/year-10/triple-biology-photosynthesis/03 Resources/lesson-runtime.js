@@ -24,7 +24,7 @@
   const names=[['resources','Resources'],['assessments','Assessments'],['adaptation','Adaptation'],['hot','HOT'],['ai','AI literacy'],['uae','UAE National Agenda']];
   const button=(label,action,value,attrs='')=>`<button type="button" data-action="${action}" data-value="${esc(value)}" ${attrs}>${label}</button>`;
   const list=items=>`<ul class="bio-list">${items.map(s=>`<li>${s}</li>`).join('')}</ul>`;
-  const figure=(name,caption,secondary=false)=>`<figure tabindex="0" aria-label="Scientific diagram" class="bio-figure${secondary?' is-secondary':''}">${BioDiagrams.render(name,state())}<figcaption>${caption||'Schematic model. Colours and sizes are illustrative.'}</figcaption></figure>`;
+  const figure=(name,caption,secondary=false)=>`<figure tabindex="0" aria-label="Scientific diagram" class="bio-figure${secondary?' is-secondary':''}" data-fit-companion>${BioDiagrams.render(name,state())}<figcaption>${caption||'Schematic model. Colours and sizes are illustrative.'}</figcaption></figure>`;
   const doThis=p=>p.doThis&&p.doThis.length?`<div class="do-this"><span class="do-this-label">Do this</span><ol>${p.doThis.map(x=>`<li>${x}</li>`).join('')}</ol></div>`:'';
   const ladder=p=>p.ladder&&p.ladder.length?`<ol class="ladder" aria-label="Build your answer in layers">${p.ladder.map(([k,t])=>`<li><b>${k}</b><span>${t}</span></li>`).join('')}</ol>`:'';
   const safety=p=>p.safety?`<p class="safety-note"><b>Safety</b> ${p.safety}</p>`:'';
@@ -41,14 +41,15 @@
     const units=[],containers=[];
     const add=nodes=>{const a=(Array.isArray(nodes)?nodes:[nodes]).filter(Boolean);if(a.length)units.push(a);};
     function walk(node){
-      if(node.hidden||node.hasAttribute('data-fit-persistent')||getComputedStyle(node).display==='none')return;
+      if(node.hidden||node.hasAttribute('data-fit-persistent')||(innerWidth>=600&&node.hasAttribute('data-fit-companion'))||getComputedStyle(node).display==='none')return;
       if(node.hasAttribute('data-fit-split')){containers.push(node);const tokens=[...node.querySelectorAll('[data-fit-token]')];for(let i=0;i<tokens.length;i+=8)add(tokens.slice(i,i+8));return;}
       if(node.matches('details')){if(!node.open){add(node);return;}containers.push(node);[...node.children].filter(c=>!c.matches('summary')).forEach(walk);return;}
       if(node.matches('h1.screen-heading,.bio-eyebrow,h3')&&node.parentElement===host)return;
       if(node.matches('.widget-page')){containers.push(node);[...node.children].forEach(c=>{if(!c.matches('h3'))walk(c);});return;}
+      if(innerWidth>=600&&node.matches('figure.widget-diagram')){containers.push(node);[...node.children].forEach(walk);return;}
       if(node.matches('table')){containers.push(node);const rows=[...node.querySelectorAll('tbody>tr')];if(rows.length)rows.forEach(add);else add(node);return;}
       if(node.matches('dl')){containers.push(node);const children=[...node.children];for(let i=0;i<children.length;i++){if(children[i].tagName==='DT')add([children[i],children[i+1]?.tagName==='DD'?children[++i]:null]);else add(children[i]);}return;}
-      const narrowModelCopy=innerWidth<=360&&phase().type==='model'&&node.tagName==='DIV'&&node.parentElement?.classList.contains('bio-layout');
+      const narrowModelCopy=phase().type==='model'&&node.tagName==='DIV'&&node.parentElement?.classList.contains('bio-layout');
       if(node.matches(fitContainer)||node.matches('ul,ol')||narrowModelCopy){
         containers.push(node);const children=[...node.children];
         if(!children.length){add(node);return;}
@@ -63,14 +64,32 @@
     record.units.forEach((nodes,i)=>nodes.forEach(n=>n.toggleAttribute('data-fit-hidden',!selected.has(i))));
     [...record.containers].reverse().forEach(n=>{
       const descendants=record.units.map((nodes,i)=>nodes.some(u=>n===u||n.contains(u))?i:-1).filter(i=>i>=0);
-      n.toggleAttribute('data-fit-hidden',descendants.length>0&&!descendants.some(i=>selected.has(i))&&!n.querySelector('[data-fit-persistent]'));
+      n.toggleAttribute('data-fit-hidden',descendants.length>0&&!descendants.some(i=>selected.has(i))&&!n.querySelector('[data-fit-persistent]')&&!(innerWidth>=600&&n.querySelector('[data-fit-companion]')));
     });
+    record.host.querySelectorAll('.bio-layout').forEach(layout=>{const columns=[...layout.children].filter(n=>!n.hasAttribute('data-fit-hidden'));layout.classList.toggle('has-single-column',columns.length===1);});
+  }
+  function sizeTeachingVisual(host){
+    if(innerWidth<600)return;
+    // Geometry must have its final size during synchronous packing. Even a
+    // reduced-motion 0.01ms transition retains the previous height until the
+    // browser advances a frame, which would falsely mark every part oversize.
+    const media=[...host.querySelectorAll('.model-view,.bio-figure>svg,.widget-diagram>svg')];
+    media.forEach(n=>{n.style.transitionProperty='none';});
+    const headers=host.id==='widget-page'?[...host.querySelectorAll(':scope>h3,:scope>.widget-page>h3')]:[...host.children].filter(n=>n.matches('.bio-eyebrow,h1.screen-heading'));
+    const header=headers.reduce((h,n)=>{const box=n.getBoundingClientRect();if(!box.height)return h;const c=getComputedStyle(n);return h+box.height+parseFloat(c.marginTop)+parseFloat(c.marginBottom);},0);
+    const caption=host.querySelector('.bio-figure figcaption,figure figcaption');
+    const captionHeight=caption?Math.max(caption.getBoundingClientRect().height,parseFloat(getComputedStyle(caption).fontSize)*2.6):0;
+    const height=Math.max(188,host.clientHeight-header-captionHeight-26);
+    host.style.setProperty('--teaching-visual-height',height+'px');
+    // Apply the measured slot before packing; newly mounted media can otherwise
+    // retain the55dvh fallback for the first synchronous layout measurement.
+    media.forEach(n=>{n.style.height=height+'px';});
   }
   function boundsFit(host){
     const r=host.getBoundingClientRect();
     const descendants=[...host.querySelectorAll('*')].filter(n=>!n.closest('[data-fit-hidden]')&&!n.hidden&&n.getClientRects().length&&getComputedStyle(n).display!=='none');
     const edge=descendants.reduce((b,n)=>{if(n.closest('svg')||n.matches('svg,canvas,option'))return b;const x=n.getBoundingClientRect();return {right:Math.max(b.right,x.right),bottom:Math.max(b.bottom,x.bottom)};},{right:r.left,bottom:r.top});
-    return {fits:host.scrollHeight<=host.clientHeight+2&&host.scrollWidth<=host.clientWidth+2&&edge.bottom<=r.bottom-20&&edge.right<=r.right+2,height:host.clientHeight,width:host.clientWidth,scrollHeight:host.scrollHeight,scrollWidth:host.scrollWidth,bottom:edge.bottom-r.top,right:edge.right-r.left};
+    return {fits:host.scrollHeight<=host.clientHeight+2&&host.scrollWidth<=host.clientWidth+2&&edge.bottom<=r.bottom+2&&edge.right<=r.right+2,height:host.clientHeight,width:host.clientWidth,scrollHeight:host.scrollHeight,scrollWidth:host.scrollWidth,bottom:edge.bottom-r.top,right:edge.right-r.left};
   }
   function pagerMarkup(id,record){return `${button('← Previous part','component-page',id+':-1',`aria-label="Previous part of this ${id==='main'?'screen':'resource page'}" ${record.index===0?'disabled':''}`)}<span role="status">Part ${record.index+1} of ${record.pages.length}</span>${button('Next part →','component-page',id+':1',`aria-label="Next part of this ${id==='main'?'screen':'resource page'}" ${record.index===record.pages.length-1?'disabled':''}`)}`;}
   function splitLongUnit(nodes){
@@ -88,6 +107,7 @@
     if(record.key!==key){record.key=key;record.index=0;}
     host.querySelectorAll('[data-fit-hidden]').forEach(n=>n.removeAttribute('data-fit-hidden'));
     nav.hidden=false;nav.style.visibility='hidden';nav.setAttribute('aria-hidden','true');nav.innerHTML=pagerMarkup(id,{index:0,pages:[[]]});
+    sizeTeachingVisual(host);
     const data=fitUnits(host);record.host=host;record.nav=nav;record.units=data.units;record.containers=data.containers;
     record.oversize=[];
     const all=record.units.map((_,i)=>i);
@@ -105,11 +125,12 @@
     if(repair&&record.oversize.map(i=>splitLongUnit(record.units[i])).some(Boolean)){fitOne(id,host,nav,key,false);return;}
     record.pages=pages.length?pages:[[]];record.index=Math.min(record.index,record.pages.length-1);
     showFitUnits(record,record.pages[record.index]);
-    nav.innerHTML=pagerMarkup(id,record);nav.style.visibility=record.pages.length>1?'visible':'hidden';nav.toggleAttribute('aria-hidden',record.pages.length===1);if(record.pages.length===1)nav.setAttribute('aria-hidden','true');record.bounds=boundsFit(host);
+    nav.innerHTML=pagerMarkup(id,record);nav.style.visibility=record.pages.length>1?'visible':'hidden';nav.toggleAttribute('aria-hidden',record.pages.length===1);if(record.pages.length===1)nav.setAttribute('aria-hidden','true');window.LeafDiagramAccess?.recrop(host);record.bounds=boundsFit(host);
   }
   function runFit(){
     fitQueued=false;if(fitRunning)return;fitRunning=true;
     try{
+      window.LeafDiagramAccess?.recrop($('screen-content'));window.LeafDiagramAccess?.recrop($('widget-page'));
       fitOne('main',$('screen-content'),$('screen-components'),phase().id);
       fitOne('drawer',$('widget-page'),$('drawer-components'),activeWidget?panelKey()+':'+widgetStates[panelKey()]?.tab+':'+widgetStates[panelKey()]?.page:'closed');
       watchFitHosts();
@@ -121,7 +142,7 @@
   function turnComponent(value){
     const [id,delta]=value.split(':'),record=componentPages[id];if(!record?.host||!record.pages.length)return;
     record.index=Math.max(0,Math.min(record.pages.length-1,record.index+Number(delta)));
-    showFitUnits(record,record.pages[record.index]);record.nav.innerHTML=pagerMarkup(id,record);record.bounds=boundsFit(record.host);
+    showFitUnits(record,record.pages[record.index]);window.LeafDiagramAccess?.recrop(record.host);record.nav.innerHTML=pagerMarkup(id,record);record.bounds=boundsFit(record.host);
     record.host.tabIndex=-1;record.host.focus({preventScroll:true});
     $('status').textContent=`Part ${record.index+1} of ${record.pages.length}. All parts belong to this ${id==='main'?'screen':'resource page'}.`;
   }
@@ -179,7 +200,7 @@
     if($('model-caption'))$('model-caption').textContent=modelCaption(p,s);
     window.LeafDiagramAccess?.prepare($('screen-content'));
     if(keepFocus&&key)document.querySelector('#model-controls '+key)?.focus({preventScroll:true});
-    runFit();document.fonts?.ready.then(runFit);
+    runFit();scheduleFit();document.fonts?.ready.then(scheduleFit);
   }
   function parseValue(v){if(v==='true')return true;if(v==='false')return false;if(/^-?\d+(\.\d+)?$/.test(v))return Number(v);return v;}
 
@@ -187,13 +208,15 @@
     const s=state();
     if(p.type==='title')return `<div class="title-layout"><p class="screen-kicker">Year 10 Triple Biology · ${esc(lesson.unit)} · Lesson ${lesson.unitLesson}</p><h1 class="screen-heading" tabindex="-1">${lesson.title}</h1><p class="title-question">${lesson.question}</p><div class="title-path">${lesson.path.map(x=>`<span>${x}</span>`).join('')}</div></div>`;
     const meta=[p.mins?`<span class="meta-time">⏱ ${p.mins} min</span>`:'',p.optional?`<span class="meta-optional">If time</span>`:''].join('');
-    const heading=`<p class="bio-eyebrow">${p.label||p.family}${meta}</p><h1 class="screen-heading" tabindex="-1">${p.title}</h1>${p.lead?`<p class="screen-lead">${p.lead}</p>`:''}${criteria(p)}`;
+    const media=Boolean(p.type==='model3d'||p.diagram);
+    const mediaIntro=media?`${p.lead?`<p class="screen-lead">${p.lead}</p>`:''}${criteria(p)}`:'';
+    const heading=`<p class="bio-eyebrow">${p.label||p.family}${meta}</p><h1 class="screen-heading" tabindex="-1">${p.title}</h1>${!media&&p.lead?`<p class="screen-lead">${p.lead}</p>`:''}${media?'':criteria(p)}`;
     if(p.type==='outcome')return `${heading}<ol class="outcome-list">${lesson.outcomes.map(o=>`<li><div><strong>${o[0]}</strong><span class="spec-ref">${esc(lesson.spec||'Pearson 4XBI1')} · ${o[1]}</span></div></li>`).join('')}</ol>${lesson.specificationPoints?`<details class="specification-detail"><summary>Specification points: ${lesson.specificationPoints.map(x=>esc(x.code)).join(' · ')}</summary><ul>${lesson.specificationPoints.map(x=>`<li><b>${esc(x.code)}</b> ${esc(x.text)}</li>`).join('')}</ul></details>`:''}${task(p)}`;
     if(p.type==='model3d'){
       const M=Models[p.model]||{};
-      return `${heading}<div class="bio-layout model3d-layout"><div class="model-col"><figure class="bio-figure" data-fit-persistent><div class="model-view" id="model-view" data-model="${esc(p.model)}"><div class="model-fallback" tabindex="0" role="region" aria-label="Static scientific diagram">${p.fallback?BioDiagrams.render(p.fallback,s):''}</div></div><figcaption id="model-caption">${modelCaption(p,s)||M.caption||'Interactive schematic model. Drag or use arrow keys to rotate. Colours and sizes are illustrative.'}</figcaption></figure>${task(p)}</div><div class="bio-copy model-panel">${modelSteps(p,s)}<div class="model-readout" id="model-readout" aria-live="polite">${modelReadout(p,s)}</div><div class="bio-controls model-controls" id="model-controls">${modelControls(p,s)}</div></div></div>`;
+      return `${heading}<div class="bio-layout model3d-layout"><div class="model-col"><figure class="bio-figure" data-fit-persistent><div class="model-view" id="model-view" data-model="${esc(p.model)}"><div class="model-fallback" tabindex="0" role="region" aria-label="Static scientific diagram">${p.fallback?BioDiagrams.render(p.fallback,s):''}</div></div><figcaption id="model-caption">${modelCaption(p,s)||M.caption||'Interactive schematic model. Drag or use arrow keys to rotate. Colours and sizes are illustrative.'}</figcaption></figure></div><div class="bio-copy model-panel">${mediaIntro}${modelSteps(p,s)}<div class="model-readout" id="model-readout" aria-live="polite">${modelReadout(p,s)}</div><div class="bio-controls model-controls" id="model-controls">${modelControls(p,s)}</div>${task(p)}</div></div>`;
     }
-    if(p.type==='model')return `${heading}<div class="bio-layout">${figure(p.diagram,p.caption,p.secondaryDiagram)}<div><div class="bio-step"><span class="step-number">STEP ${s.step+1} OF ${p.steps.length}</span><p>${p.steps[s.step]}</p></div><div class="bio-controls">${button('← Back','step',-1,s.step===0?'disabled':'')}${button('Next step →','step',1,s.step===p.steps.length-1?'disabled':'')}</div>${ladder(p)}${safety(p)}${task(p)}</div></div>`;
+    if(p.type==='model')return `${heading}<div class="bio-layout">${figure(p.diagram,p.caption,p.secondaryDiagram)}<div>${mediaIntro}<div class="bio-step"><span class="step-number">STEP ${s.step+1} OF ${p.steps.length}</span><p>${p.steps[s.step]}</p></div><div class="bio-controls">${button('← Back','step',-1,s.step===0?'disabled':'')}${button('Next step →','step',1,s.step===p.steps.length-1?'disabled':'')}</div>${ladder(p)}${safety(p)}${task(p)}</div></div>`;
     if(p.type==='hinge')return `${heading}<div class="answer-grid">${p.options.map((opt,i)=>button(`<span class="answer-letter">${'ABCD'[i]}</span><span>${opt}</span>`,'choice',i,`class="answer-option" aria-pressed="${s.choice===i}"`)).join('')}</div><p class="bio-task">${p.task||'Choose one answer. Give the evidence that supports it.'}</p>${s.choice!==undefined?`<p class="exam-note">Selected: ${'ABCD'[s.choice]}. Explain your reasoning in your book or aloud.</p>`:''}`;
     if(p.type==='cases')return `${heading}${withTimer(p,`<div class="bio-cases">${p.cases.map(c=>`<div class="bio-case"><b>${c[0]}</b><p>${c[1]}</p></div>`).join('')}</div>${safety(p)}${task(p)}`)}`;
     if(p.type==='table'){
@@ -203,7 +226,7 @@
       return `${heading}${withTimer(p,`<div class="table-wrap"><table class="science-table"><thead><tr>${p.columns.map(c=>`<th scope="col">${c}</th>`).join('')}</tr></thead><tbody>${rows}</tbody></table></div>${controls}${safety(p)}${task(p)}`)}`;
     }
     if(p.type==='quote')return `${heading}<blockquote class="bio-quote">${p.quote}</blockquote>${list(p.items)}${p.credit?`<p class="routine-credit">${p.credit}</p>`:''}${task(p)}`;
-    const copy=`<div class="bio-copy">${p.text?`<p>${p.text}</p>`:''}${p.items?list(p.items):''}${p.formula?`<div class="bio-formula">${p.formula.map(x=>`<span>${x}</span>`).join('')}</div>`:''}${ladder(p)}${safety(p)}${task(p)}</div>`;
+    const copy=`<div class="bio-copy">${mediaIntro}${p.text?`<p>${p.text}</p>`:''}${p.items?list(p.items):''}${p.formula?`<div class="bio-formula">${p.formula.map(x=>`<span>${x}</span>`).join('')}</div>`:''}${ladder(p)}${safety(p)}${task(p)}</div>`;
     return `${heading}${withTimer(p,p.diagram?`<div class="bio-layout">${copy}${figure(p.diagram,p.caption,p.secondaryDiagram)}</div>`:copy)}`;
   }
 
@@ -230,7 +253,7 @@
     $('screen').innerHTML=review+`<div class="fit-content" id="screen-content">${content(p)}</div><nav class="component-pagination" id="screen-components" aria-label="Parts of this screen" hidden></nav>`;
     $('phase-position').textContent=`Screen ${index+1} of ${lesson.phases.length}`;
     $('phase-name').textContent=p.nav||p.title||lesson.title;
-    $('next-context').innerHTML=`${index<lesson.phases.length-1?`Next: <strong>${esc(lesson.phases[index+1].nav||lesson.phases[index+1].title)}</strong>`:'Lesson complete'} ${button('⛶','fullscreen','',`class="nav-fullscreen" aria-label="Toggle fullscreen"`)}`;
+    $('next-context').innerHTML=`<span class="next-label">${index<lesson.phases.length-1?`Next: <strong>${esc(lesson.phases[index+1].nav||lesson.phases[index+1].title)}</strong>`:'Lesson complete'}</span> ${button('⛶','fullscreen','',`class="nav-fullscreen" aria-label="Toggle fullscreen"`)}`;
     $('previous-screen').disabled=index===0;$('next-screen').disabled=index===lesson.phases.length-1;
     const widgets=p.secure?[]:p.family==='Learning outcome'?[names[0]]:['Input','Assess','Thinking'].includes(p.family)?names:[];
     if(activeWidget!=='answers'&&!widgets.some(w=>w[0]===activeWidget))activeWidget=null;
@@ -242,7 +265,7 @@
     if(p.timer)tick();
     try{history.replaceState(null,'','#'+p.id);}catch(_){}
     if(focusHeading)$('screen').querySelector('h1')?.focus({preventScroll:true});
-    runFit();document.fonts?.ready.then(runFit);
+    runFit();scheduleFit();document.fonts?.ready.then(scheduleFit);
   }
   function go(id) {
     const target=typeof id==='number'?id:lesson.phases.findIndex(p=>p.id===id);
@@ -257,7 +280,7 @@
     document.querySelectorAll('[data-action="widget"]').forEach(b=>b.setAttribute('aria-expanded',String(b.dataset.value===activeWidget)));
     document.querySelector('[data-action="answers"]')?.setAttribute('aria-expanded',String(activeWidget==='answers'&&!answerContext));
     drawer.hidden=!activeWidget;
-    if(!activeWidget){drawer.innerHTML='';runFit();document.fonts?.ready.then(runFit);return;}
+    if(!activeWidget){drawer.innerHTML='';runFit();scheduleFit();document.fonts?.ready.then(scheduleFit);return;}
     const panel=activeWidget==='answers'?LessonAnswers.panel(phase(),lesson,state(),answerContext):LessonWidgets.panel(activeWidget,phase(),lesson);
     const key=panelKey();
     const w=widgetStates[key]??(widgetStates[key]={tab:0,page:0});
@@ -266,7 +289,7 @@
     drawer.innerHTML=`<header class="drawer-head"><div><h2 id="drawer-title" tabindex="-1">${panel.title}</h2><p>${panel.subtitle}</p>${activeWidget==='answers'&&answerContext?button('← Return to task','answer-back','',`class="review-return"`):''}</div>${button('×','close','',`class="icon-control" aria-label="Close ${panel.title}"`)}</header><div class="drawer-tabs" role="tablist" aria-label="${panel.title} sections">${panel.tabs.map((t,i)=>button(t.label,'tab',i,`class="support-tab" role="tab" id="widget-tab-${i}" aria-selected="${i===w.tab}" aria-controls="widget-page" tabindex="${i===w.tab?0:-1}"`)).join('')}</div><div class="drawer-body" role="tabpanel" id="widget-page" aria-labelledby="widget-tab-${w.tab}"><article class="widget-page">${page.note?`<p class="widget-note">${page.note}</p>`:''}<h3>${page.heading}</h3>${page.quote?`<blockquote>${page.quote}</blockquote>`:''}${page.text?`<p>${page.text}</p>`:''}${page.diagram?`<figure class="widget-diagram" tabindex="0" aria-label="Support scientific diagram">${BioDiagrams.render(page.diagram,page.diagramState||{})}</figure>`:''}${page.html||''}${page.items?`<ul>${page.items.map(x=>`<li>${x}</li>`).join('')}</ul>`:''}${page.source?`<a class="widget-source" target="_blank" rel="noopener" href="${esc(page.source)}">${page.sourceLabel||'Read the source'} ↗</a>`:''}${page.action?button(page.action.label+' →','go',page.action.id,'class="widget-action"'):''}${page.href?`<a class="widget-action" href="${esc(page.href)}" target="_blank" rel="noopener">${page.linkLabel||'Open resource'} ↗</a>`:''}${activeWidget!=='answers'&&LessonAnswers.widget(activeWidget,phase(),lesson,w.tab,w.page)?button('Model answer &amp; mark scheme','widget-answer','',`class="widget-action review-widget" aria-controls="student-drawer"`):''}</article></div><nav class="widget-pagination" aria-label="Widget pages"><div class="widget-page-navigation">${button('←','page',-1,`aria-label="Previous widget page" ${w.page===0?'disabled':''}`)}<span>${w.page+1} / ${tab.pages.length}</span>${button('→','page',1,`aria-label="Next widget page" ${w.page===tab.pages.length-1?'disabled':''}`)}</div><div class="component-pagination" id="drawer-components" aria-label="Parts of this resource page" hidden></div></nav>`;
     window.LeafDiagramAccess?.prepare(drawer);
     if(focus)$('drawer-title').focus();
-    runFit();document.fonts?.ready.then(runFit);
+    runFit();scheduleFit();document.fonts?.ready.then(scheduleFit);
   }
   document.addEventListener('submit',e=>{e.preventDefault();});
   setInterval(tick,500);

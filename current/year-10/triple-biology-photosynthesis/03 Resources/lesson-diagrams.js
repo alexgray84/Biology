@@ -124,6 +124,22 @@ window.BioDiagrams = (() => {
    keep their full labels unless this progressive enhancement is requested. */
 window.LeafDiagramAccess=(()=>{
   let serial=0;
+  function crop(svg){
+    const b=svg.getBBox();if(!b.width||!b.height)return;
+    let left=b.x,top=b.y,right=b.x+b.width,bottom=b.y+b.height;
+    const matrix=svg.getScreenCTM();
+    if(innerWidth>=600&&matrix){
+      const inverse=matrix.inverse();
+      for(const text of svg.querySelectorAll('text')){
+        const range=document.createRange();range.selectNodeContents(text);const box=range.getBoundingClientRect();
+        if(!box.width||!box.height)continue;
+        const a=new DOMPoint(box.left,box.top).matrixTransform(inverse),z=new DOMPoint(box.right,box.bottom).matrixTransform(inverse);
+        left=Math.min(left,a.x,z.x);top=Math.min(top,a.y,z.y);right=Math.max(right,a.x,z.x);bottom=Math.max(bottom,a.y,z.y);
+      }
+    }
+    const pad=28;svg.setAttribute('viewBox',[left-pad,top-pad,right-left+2*pad,bottom-top+2*pad].join(' '));
+  }
+  function recrop(host){if(innerWidth<600||!host)return;for(const svg of host.querySelectorAll('svg.leaf-science-diagram[data-label-key-ready]'))crop(svg);}
   function prepare(host){
     if(!host)return;
     for(const svg of host.querySelectorAll('svg.leaf-science-diagram:not([data-label-key-ready])')){
@@ -145,7 +161,7 @@ window.LeafDiagramAccess=(()=>{
         if(next&&((/^(Upper|Lower)$/.test(value)&&next.textContent.trim()==='epidermis')||(value==='Branching'&&next.textContent.trim()==='veins')||(value==='Vein: xylem'&&next.textContent.trim()==='and phloem'))){value+=' '+next.textContent.trim();next.remove();i++;}
         const ox=Number(node.getAttribute('x')),oy=Number(node.getAttribute('y')),leader=node.previousElementSibling;
         if(!/^[AB]$/.test(value)){entries.push(value);node.textContent=String(entries.length);node.setAttribute('aria-label',entries.length+': '+value);}
-        node.style.setProperty('font-size','64px','important');node.style.fontWeight='700';
+        node.setAttribute('font-size','64');node.style.setProperty('font-size','64px','important');node.style.fontWeight='700';
         if(leader?.tagName.toLowerCase()==='path'&&leader.getAttribute('stroke-width')==='3'){
           const ends=[leader.getPointAtLength(0),leader.getPointAtLength(leader.getTotalLength())];
           const end=ends.sort((a,b)=>Math.hypot(a.x-ox,a.y-oy)-Math.hypot(b.x-ox,b.y-oy))[0],anchor=node.getAttribute('text-anchor');
@@ -157,15 +173,20 @@ window.LeafDiagramAccess=(()=>{
         const dy=box.y<v.y+8?v.y+8-box.y:box.y+box.height>v.y+v.height-8?v.y+v.height-8-box.y-box.height:0;
         if(dy)node.setAttribute('y',String(Number(node.getAttribute('y')||0)+dy));
       }
+      // Remove the obsolete full-label margins only in prepared teaching diagrams.
+      // Scientific paths, leader endpoints and resource-document originals stay intact.
+      crop(svg);
       if(!entries.length)continue;
       const key=document.createElement('ol');key.className='diagram-key';key.dataset.labelKeyFor=owner;key.setAttribute('aria-label','Diagram label key');
       entries.forEach((label,i)=>{const li=document.createElement('li'),n=document.createElement('b'),name=document.createElement('span');n.textContent=String(i+1);n.setAttribute('aria-hidden','true');name.textContent=label;li.append(n,name);key.append(li);});
-      figure.after(key);
+      const layout=host.id==='screen-content'?figure.closest('.bio-layout'):null;
+      const copy=layout&&[...layout.children].find(n=>n!==figure&&(n.matches('.bio-copy,.model-panel')||(!n.matches('.model-col')&&n.tagName==='DIV')));
+      if(copy)copy.append(key);else figure.after(key);
     }
     for(const figure of host.querySelectorAll('figure[data-label-key-owner]')){
       const key=document.querySelector('[data-label-key-for="'+figure.dataset.labelKeyOwner+'"]');
       if(key)key.hidden=Boolean(figure.querySelector('.model-view.is-live'));
     }
   }
-  return {prepare};
+  return {prepare,recrop};
 })();
