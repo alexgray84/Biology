@@ -1,6 +1,6 @@
 /* Year 8 breathing and gas exchange: local Three.js (r160, global THREE) schematic models. Original geometry.
    No network, no storage. Animation stops with prefers-reduced-motion (end states instead).
-   thorax    State {breath: 0 (out) … 1 (in), target, highlight, labels, route}. Airway: trachea → bronchi → bronchioles → alveoli.
+   thorax    v2 (27 Oct): lungs on the diaphragm, hinged ribs, sternum, heart. State {breath: 0 (out) … 1 (in), target, highlight, labels, route}. Airway: trachea → bronchi → bronchioles → alveoli.
              Inhale: diaphragm contracts and flattens; external intercostals contract, ribs up/out; volume ↑; pressure inside < outside; air in.
              Quiet exhale: muscles relax, diaphragm domes, ribs down/in, elastic recoil; volume ↓; pressure inside > outside; air out.
    alveolus  v2 (27 Oct): cut-open alveolus in a cluster, capillary network with red blood cells, O2/CO2 molecules. Classroom particle model of one alveolus and its capillary. O2 and CO2 each diffuse net from higher to lower
@@ -62,15 +62,19 @@ window.LessonModels = window.LessonModels || {};
   const std = (T, color, o = {}) => new T.MeshStandardMaterial({ color, roughness: o.rough ?? 0.45, metalness: 0.02, transparent: o.opacity !== undefined, opacity: o.opacity ?? 1, depthWrite: o.opacity === undefined, side: o.side ?? T.FrontSide, emissive: new T.Color(color), emissiveIntensity: 0 });
 
   /* =============================== thorax =============================== */
+  // v2 (27 Oct): lungs rest on the diaphragm and follow it (no gap); seven sloping rib pairs hinge at the spine
+  // (pump- and bucket-handle movement) with costal cartilage, sternum and intercostal muscles; heart between the lungs
+  // (smaller left lung with a cardiac notch, on the viewer's right); trachea with C-shaped cartilage rings.
   const PARTS = {
-    trachea: ['Trachea', 'Airway: carries air towards the bronchi.'],
+    trachea: ['Trachea', 'Airway: carries air towards the bronchi. Rings of cartilage keep it open.'],
     bronchi: ['Bronchi', 'Two airways, one into each lung.'],
     bronchioles: ['Bronchioles', 'Smaller and smaller airways inside each lung.'],
     alveoli: ['Alveoli', 'Tiny air sacs: the gas-exchange surface, beside capillaries.'],
-    lungs: ['Lungs', 'Organs that hold the airways and alveoli.'],
+    lungs: ['Lungs', 'Organs that hold the airways and alveoli. They rest on the diaphragm.'],
     ribs: ['Ribs', 'Bones that protect the lungs; they move up/out and down/in.'],
     intercostals: ['Intercostal muscles', 'Muscles between the ribs that move the ribs.'],
-    diaphragm: ['Diaphragm', 'Sheet of muscle below the lungs. Not part of the air route.']
+    diaphragm: ['Diaphragm', 'Dome of muscle below the lungs. Not part of the air route.'],
+    heart: ['Heart', 'Pumps blood; sits between the lungs. Not part of the air route.']
   };
   const breathOf = s => Math.max(0, Math.min(1, +s.breath || 0));
   const chain = b => b >= 0.5
@@ -99,36 +103,80 @@ window.LessonModels = window.LessonModels || {};
     mount(host, state, phase, ctx) {
       const S = stage(host); if (!S) return null; const { T, world, camera, keep } = S;
       const parts = {}, partMat = {}; const add = (k, m) => { const key = k + ':' + m.material.uuid; if (!partMat[key]) { partMat[key] = keep(m.material.clone()); partMat[key].userData.base = m.material.opacity; } m.material = partMat[key]; (parts[k] = parts[k] || []).push(m); m.userData.part = k; world.add(m); return m; };
-      const M = { airway: keep(std(T, 0xe9d7b8, { rough: 0.6 })), lung: keep(std(T, 0xf2a7a7, { opacity: 0.4, side: T.DoubleSide })), alv: keep(std(T, 0xc76a8a)), rib: keep(std(T, 0xe8dfcc, { rough: 0.5, opacity: 0.55 })), ic: keep(std(T, 0xb84a4a, { opacity: 0.16, side: T.DoubleSide })), dia: keep(std(T, 0xa8463f, { opacity: 0.85, side: T.DoubleSide })) };
+      const phys = (color, o = {}) => keep(new T.MeshPhysicalMaterial({ color, roughness: o.rough ?? 0.5, sheen: o.sheen ? 1 : 0, sheenRoughness: 0.5, sheenColor: new T.Color(o.sheen || 0xffffff), clearcoat: o.coat ?? 0.1, clearcoatRoughness: 0.5, transparent: o.opacity !== undefined, opacity: o.opacity ?? 1, depthWrite: o.opacity === undefined, side: o.side ?? T.FrontSide, vertexColors: !!o.vc, emissive: new T.Color(color), emissiveIntensity: 0 }));
+      const M = { airway: phys(0xe9d7b8, { rough: 0.55, sheen: 0xfff3dc }), ring: phys(0xf4efe4, { rough: 0.4, coat: 0.3 }), lung: phys(0xf2a3aa, { opacity: 0.42, side: T.DoubleSide, sheen: 0xffd9df }), alv: phys(0xc76a8a, { sheen: 0xffc2d0 }),
+        rib: phys(0xece2cf, { rough: 0.4, coat: 0.3 }), cart: phys(0xcfe0e6, { rough: 0.35, coat: 0.5 }), ic: phys(0xb5403f, { opacity: 0.32, side: T.DoubleSide, sheen: 0xff9a9a }), dia: phys(0xffffff, { side: T.DoubleSide, vc: true, sheen: 0xffb0a8, opacity: 0.92 }),
+        heart: phys(0x7d1a26, { rough: 0.5, sheen: 0xd06070, coat: 0.35 }), bone: phys(0xd9cfbd, { rough: 0.6 }) };
       const tube = (a, b, r, mat, k) => { const d = new T.Vector3().subVectors(b, a), len = d.length(); const m = new T.Mesh(keep(new T.CylinderGeometry(r * 0.8, r, len, 14)), mat); m.position.copy(a).addScaledVector(d, 0.5); m.quaternion.setFromUnitVectors(new T.Vector3(0, 1, 0), d.clone().normalize()); return add(k, m); };
-      // airway tree
+      // diaphragm dome: rim on the lower ribs; flattens and lowers when it contracts
+      const RX = 2.05, RZ = 1.3, RIM = -1.75;
+      const domeY = (x, z, b) => { const rho2 = (x / (RX * (1 + 0.04 * b))) ** 2 + (z / (RZ * (1 + 0.06 * b))) ** 2; return RIM + (1.05 - 0.62 * b) * (1 - Math.min(1, rho2)) * (1 + 0.06 * Math.sign(-x) * Math.min(1, Math.abs(x))); };
+      // airway tree (same layout as v1, so the traced route is unchanged)
       const top = new T.Vector3(0, 2.6, 0), fork = new T.Vector3(0, 1.1, 0);
       tube(top, fork, 0.17, M.airway, 'trachea');
-      const lungC = [new T.Vector3(-1.05, 0.15, 0), new T.Vector3(1.05, 0.15, 0)];
+      const ringGeo = keep(new T.TorusGeometry(0.185, 0.026, 8, 32, Math.PI * 1.55));
+      for (let y = 2.45; y > 1.2; y -= 0.16) { const r = new T.Mesh(ringGeo, M.ring); r.position.set(0, y, 0); r.rotation.set(Math.PI / 2, 0, Math.PI * 0.725); add('trachea', r); }
+      const LUNG = [{ cx: -1.02, wx: 0.9, wz: 1.0, notch: false }, { cx: 1.02, wx: 0.8, wz: 0.95, notch: true }];
       const sacs = [];
-      lungC.forEach((c, side) => {
+      LUNG.forEach((L, side) => {
         const sgn = side ? 1 : -1, b1 = new T.Vector3(sgn * 0.7, 0.75, 0);
         tube(fork, b1, 0.12, M.airway, 'bronchi');
-        const lung = new T.Mesh(keep(new T.SphereGeometry(1, 36, 28)), M.lung); lung.position.copy(c); lung.scale.set(0.95, 1.45, 0.75); add('lungs', lung);
         const grow = (from, dir, depth) => {
           if (depth === 0) { const sac = new T.Mesh(keep(new T.SphereGeometry(0.075, 12, 10)), M.alv); sac.position.copy(from); add('alveoli', sac); sacs.push(sac); for (let k = 0; k < 3; k++) { const s2 = sac.clone(); s2.position.add(new T.Vector3((k - 1) * 0.07, -0.05 * k, 0.04)); add('alveoli', s2); } return; }
           const len = 0.42 * Math.pow(0.78, 3 - depth);
           [-0.55, 0.55].forEach(a => { const d = dir.clone().applyAxisAngle(new T.Vector3(0, 0, 1), a * (depth === 3 ? 0.6 : 1)).normalize(); const to = from.clone().addScaledVector(d, len); tube(from, to, 0.05 * depth / 3 + 0.015, M.airway, 'bronchioles'); grow(to, d, depth - 1); });
         };
         grow(b1, new T.Vector3(sgn * 0.45, -1, 0).normalize(), 3);
+        // lung: a reshaped sphere whose base sits on the diaphragm
+        const g = keep(new T.SphereGeometry(1, 48, 36)); g.userData.u = g.attributes.position.array.slice(); L.mesh = add('lungs', new T.Mesh(g, M.lung)); L.geo = g;
       });
-      // ribs (front arcs) and intercostal bands
-      const ribs = []; const ribGeo = keep(new T.TorusGeometry(1.95, 0.035, 8, 64, Math.PI * 0.95));
-      for (let i = 0; i < 6; i++) { const r = new T.Mesh(ribGeo, M.rib); r.position.set(0, 1.55 - i * 0.42, 0); r.rotation.set(Math.PI / 2 + 0.25, 0, Math.PI * 0.025); r.scale.set(1, 0.62, 1); add('ribs', r); ribs.push(r); }
-      const ics = []; for (let i = 0; i < 5; i++) { const b = new T.Mesh(keep(new T.CylinderGeometry(1.93, 1.93, 0.3, 48, 1, true, Math.PI * 1.03, Math.PI * 0.94)), M.ic); b.position.set(0, 1.34 - i * 0.42, 0); b.scale.set(1, 1, 0.62); add('intercostals', b); ics.push(b); }
-      // diaphragm dome
-      const dia = new T.Mesh(keep(new T.SphereGeometry(2.05, 40, 16, 0, Math.PI * 2, 0, Math.PI * 0.42)), M.dia); add('diaphragm', dia);
+      function shapeLung(L, b) {
+        const u = L.geo.userData.u, pos = L.geo.attributes.position.array, yTop = 1.95;
+        for (let i = 0; i < u.length; i += 3) {
+          const ux = u[i], uy = u[i + 1], uz = u[i + 2], t = (uy + 1) / 2, h = Math.hypot(ux, uz) || 1e-6; let dx = ux / h, dz = uz / h;
+          let r = (t > 0.35 ? Math.sqrt(Math.max(0, 1 - ((t - 0.35) / 0.65) ** 2)) : 1) * Math.min(1, t / 0.05);
+          const medial = dx * Math.sign(L.cx) < 0; if (medial) r *= 0.72;
+          if (L.notch && medial && dz > 0.1 && t < 0.5) r *= 0.62 + 0.38 * Math.min(1, Math.abs(t - 0.22) / 0.28);
+          const x = L.cx + dx * L.wx * (1 + 0.07 * b) * r, z = dz * L.wz * (1 + 0.1 * b) * r;
+          const yb = domeY(x, z, b) + 0.03; pos[i] = x; pos[i + 1] = yb + (yTop - yb) * Math.pow(t, 0.9); pos[i + 2] = z;
+        }
+        L.geo.attributes.position.needsUpdate = true; L.geo.computeVertexNormals();
+      }
+      // diaphragm sheet with a lighter central tendon
+      const DR = 26, DS = 72, dg = keep(new T.BufferGeometry()), dpos = new Float32Array((DR + 1) * DS * 3), dcol = [], didx = [];
+      for (let r = 0; r <= DR; r++) for (let s = 0; s < DS; s++) { const rho = r / DR; const c = rho < 0.32 ? new T.Color(0xe9ddd2) : new T.Color(0xb1453c).lerp(new T.Color(0x8e2f2a), (rho - 0.32) / 0.68); dcol.push(c.r, c.g, c.b); if (r < DR) { const a = r * DS + s, b2 = r * DS + (s + 1) % DS, c2 = (r + 1) * DS + s, d2 = (r + 1) * DS + (s + 1) % DS; didx.push(a, c2, b2, b2, c2, d2); } }
+      dg.setAttribute('position', new T.BufferAttribute(dpos, 3)); dg.setAttribute('color', new T.Float32BufferAttribute(dcol, 3)); dg.setIndex(didx);
+      const dia = add('diaphragm', new T.Mesh(dg, M.dia));
+      function shapeDia(b) { for (let r = 0; r <= DR; r++) for (let s = 0; s < DS; s++) { const rho = r / DR, th = s / DS * Math.PI * 2, i = (r * DS + s) * 3; const x = Math.cos(th) * RX * (1 + 0.04 * b) * rho * 0.999, z = Math.sin(th) * RZ * (1 + 0.06 * b) * rho * 0.999; dpos[i] = x; dpos[i + 1] = domeY(x, z, b); dpos[i + 2] = z; } dg.attributes.position.needsUpdate = true; dg.computeVertexNormals(); }
+      // ribs: seven pairs hinged at the spine; costal cartilage to the sternum
+      const NR = 7, ribs = [];
+      for (let i = 0; i < NR; i++) {
+        const k = Math.min(1, (i + 1) / 4), rx = 1.2 + 0.85 * Math.sqrt(k), rz = 0.85 + 0.42 * Math.sqrt(k), ys = 1.62 - i * 0.43, drop = 0.8 + 0.05 * i, sMax = i === NR - 1 ? 0.86 : 1;
+        const pivot = new T.Vector3(0, ys, -rz - 0.05), grp = new T.Group(); grp.position.copy(pivot); world.add(grp);
+        const local = (sx, s) => new T.Vector3(sx * rx * Math.sin(Math.PI * s), ys - drop * Math.pow(s, 1.3) + 0.08 * Math.sin(Math.PI * s * 0.6), -rz * Math.cos(Math.PI * s)).sub(pivot);
+        const rib = { grp, pivot, local, sides: [] };
+        [-1, 1].forEach(sx => {
+          const bonePts = Array.from({ length: 24 }, (_, j) => local(sx, 0.03 + j / 23 * (Math.min(0.8, sMax) - 0.03)));
+          const bone = new T.Mesh(keep(new T.TubeGeometry(new T.CatmullRomCurve3(bonePts), 48, 0.036, 8, false)), M.rib); grp.add(bone); add('ribs', bone); world.remove(bone); grp.add(bone);
+          if (sMax > 0.8) { const cp = Array.from({ length: 8 }, (_, j) => local(sx, 0.8 + j / 7 * (sMax - 0.8))); const c = new T.Mesh(keep(new T.TubeGeometry(new T.CatmullRomCurve3(cp), 16, 0.03, 8, false)), M.cart); add('ribs', c); world.remove(c); grp.add(c); }
+          rib.sides.push({ sx, samples: Array.from({ length: 22 }, (_, j) => local(sx, 0.06 + j / 21 * 0.84)) });
+        });
+        ribs.push(rib);
+      }
+      const sternum = add('ribs', new T.Mesh(keep(new T.CylinderGeometry(0.12, 0.1, 1, 12)), M.cart)); sternum.scale.z = 0.45;
+      // intercostal muscles: strips between neighbouring ribs, rebuilt as the ribs move
+      const ICS = []; for (let i = 0; i < NR - 1; i++) [0, 1].forEach(si => { const n = ribs[i].sides[si].samples.length, g = keep(new T.BufferGeometry()), idx = []; g.setAttribute('position', new T.BufferAttribute(new Float32Array(n * 2 * 3), 3)); for (let j = 0; j < n - 1; j++) { const a = j * 2; idx.push(a, a + 1, a + 2, a + 1, a + 3, a + 2); } g.setIndex(idx); const m = add('intercostals', new T.Mesh(g, M.ic)); ICS.push({ m, g, i, si }); });
+      const wpt = (rib, p) => p.clone().applyMatrix4(rib.grp.matrix);
+      // heart, between the lungs (mostly on the viewer's right), resting on the diaphragm; spine at the back
+      const hg = keep(new T.SphereGeometry(0.5, 40, 30)), hp = hg.attributes.position; for (let i = 0; i < hp.count; i++) { const y = hp.getY(i); const f = y < 0 ? 1 + y * 1.1 : 1 + 0.12 * Math.sin(Math.PI * y / 0.5); hp.setX(i, hp.getX(i) * f); hp.setZ(i, hp.getZ(i) * f * 0.85); } hg.computeVertexNormals();
+      const heart = add('heart', new T.Mesh(hg, M.heart)); heart.scale.set(1.0, 1.15, 0.95); heart.rotation.set(0.15, 0.3, 0.7);
+      for (let y = -1.85; y < 2.0; y += 0.3) { const v = new T.Mesh(keep(new T.CylinderGeometry(0.16, 0.16, 0.22, 14)), M.bone); v.position.set(0, y, -1.45); add('spine', v); }
       // air particles for route tracing / airflow
       const airMat = keep(std(T, 0x2d6cdf)); airMat.emissiveIntensity = 0.4; const airs = Array.from({ length: 10 }, () => { const m = new T.Mesh(keep(new T.SphereGeometry(0.06, 10, 8)), airMat); m.visible = false; world.add(m); return m; });
       const routePts = [top, fork, new T.Vector3(-0.7, 0.75, 0)].concat((() => { let p = new T.Vector3(-0.7, 0.75, 0), d = new T.Vector3(-0.45, -1, 0).normalize(), out = []; for (let depth = 3; depth >= 1; depth--) { const len = 0.42 * Math.pow(0.78, 3 - depth); d = d.clone().applyAxisAngle(new T.Vector3(0, 0, 1), -0.55 * (depth === 3 ? 0.6 : 1)).normalize(); p = p.clone().addScaledVector(d, len); out.push(p); } return out; })());
       const curve = new T.CatmullRomCurve3(routePts);
-      // labels
-      const LBL = { trachea: [new T.Vector3(0.05, 2.2, 0), 1, 2.35], bronchi: [new T.Vector3(0.45, 0.88, 0), 1, 1.75], lungs: [new T.Vector3(1.6, 0.6, 0), 1, 1.15], ribs: [new T.Vector3(1.85, 0.2, 0.4), 1, 0.55], intercostals: [new T.Vector3(1.86, -0.05, 0.45), 1, -0.05], diaphragm: [new T.Vector3(1.2, -1.35, 0.3), 1, -1.6], bronchioles: [new T.Vector3(-0.95, 0.3, 0), -1, 0.75], alveoli: [sacs[0].position, -1, -0.45] };
+      // labels (anchors are functions so they follow moving parts)
+      const LBL = { trachea: [() => new T.Vector3(0.05, 2.2, 0.15), 1, 2.35], bronchi: [() => new T.Vector3(0.45, 0.88, 0), 1, 1.75], lungs: [() => new T.Vector3(1.75, 0.55, 0.25), 1, 1.15], ribs: [() => wpt(ribs[3], ribs[3].sides[1].samples[16]), 1, 0.45], intercostals: [() => { const a = wpt(ribs[3], ribs[3].sides[1].samples[14]), b2 = wpt(ribs[4], ribs[4].sides[1].samples[14]); return a.add(b2).multiplyScalar(0.5); }, 1, -0.25], diaphragm: [() => new T.Vector3(1.25, domeY(1.25, 0.4, b) + 0.02, 0.4), 1, -1.6], heart: [() => heart.position.clone().add(new T.Vector3(-0.1, 0, 0.45)), -1, -1.05], bronchioles: [() => new T.Vector3(-0.95, 0.3, 0), -1, 0.75], alveoli: [() => sacs[0].position.clone(), -1, -0.3] };
       const labels = {};
       Object.entries(LBL).forEach(([k, [a, side, ly]]) => { const sp = S.label(PARTS[k][0], { px: 15 }); world.add(sp); const ln = S.line(new T.Vector3(), new T.Vector3()); world.add(ln); labels[k] = { sp, ln, a, side, ly }; });
       const airLbl = S.label('air in', { px: 16, box: false, ink: '#1d4fa8' }); world.add(airLbl);
@@ -136,15 +184,16 @@ window.LessonModels = window.LessonModels || {};
       let raf = 0, lastT = 0, disposed = false, b = breathOf(state), clock = 0;
       const mode = () => (phase && phase.mode) || state.mode;
       function placeLabels() {
-        Object.values(labels).forEach(L => { const x = L.side * 2.85; const pos = new T.Vector3(x, L.ly, 0.6); L.sp.position.copy(pos); L.ln.geometry.setFromPoints([L.a, new T.Vector3(x - L.side * 0.55, L.ly, 0.6)]); });
         S.scaleLabels(world);
+        Object.values(labels).forEach(L => { if (!L.sp.visible) return; const x = L.side * 3.0; L.sp.position.set(x, L.ly, 0.6); L.ln.geometry.setFromPoints([L.a(), new T.Vector3(x - L.side * (0.08 + L.sp.scale.x / 2), L.ly, 0.6)]); });
       }
       function pose() {
-        // inhale: diaphragm flattens and lowers, ribs rise and swing out, lungs grow
-        const sy = 0.6 - 0.4 * b; dia.scale.set(0.95, sy, 0.7); dia.position.y = (-1.25 - 0.3 * b) - 2.05 * sy; // dome top sits just below the lungs and drops as it flattens
-        ribs.forEach((r, i) => { r.rotation.x = Math.PI / 2 + 0.25 - 0.18 * b; r.scale.set(1 + 0.05 * b, 0.62 + 0.04 * b, 1); r.position.y = 1.55 - i * 0.42 + 0.08 * b * (i + 1) / 3; });
-        ics.forEach((c, i) => { c.position.y = 1.34 - i * 0.42 + 0.08 * b * (i + 1) / 3; c.scale.set(1 + 0.05 * b, 1, 0.62 + 0.04 * b); });
-        (parts.lungs || []).forEach(l => l.scale.set(0.95 + 0.07 * b, 1.45 + 0.2 * b, 0.75 + 0.05 * b));
+        ribs.forEach((r, i) => { r.grp.rotation.x = -(0.11 + 0.016 * i) * b; r.grp.scale.x = 1 + 0.08 * b * Math.min(1, (i + 1) / 3); r.grp.updateMatrix(); });
+        const sTop = wpt(ribs[0], ribs[0].local(1, 1)), sBot = wpt(ribs[5], ribs[5].local(1, 1)); sTop.x = sBot.x = 0;
+        const sd = new T.Vector3().subVectors(sTop, sBot); sternum.position.copy(sBot).addScaledVector(sd, 0.5).add(new T.Vector3(0, 0, 0.04)); sternum.scale.y = sd.length() + 0.25; sternum.quaternion.setFromUnitVectors(new T.Vector3(0, 1, 0), sd.normalize());
+        ICS.forEach(c => { const A = ribs[c.i], B = ribs[c.i + 1], sa = A.sides[c.si].samples, sb = B.sides[c.si].samples, pa = c.g.attributes.position.array; for (let j = 0; j < sa.length; j++) { const p1 = wpt(A, sa[j]), p2 = wpt(B, sb[j]); pa.set([p1.x, p1.y - 0.03, p1.z, p2.x, p2.y + 0.03, p2.z], j * 6); } c.g.attributes.position.needsUpdate = true; c.g.computeVertexNormals(); });
+        shapeDia(b); LUNG.forEach(L => shapeLung(L, b));
+        heart.position.set(0.35, domeY(0.35, 0.25, b) + 0.5, 0.25);
       }
       function applyLook(s) {
         const h = s.highlight; const showL = s.labels !== false && mode() !== 'breathing';
@@ -153,23 +202,23 @@ window.LessonModels = window.LessonModels || {};
         const br = mode() === 'breathing'; const c = chain(s.target ?? b);
         airLbl.visible = br && s.reveal !== false; if (br) { const L2 = S.label(`air ${c.a}`, { px: 16, box: false, ink: '#1d4fa8' }); airLbl.material = L2.material; airLbl.userData = L2.userData; airLbl.position.set(0.55, 2.55, 0.3); }
         pLbl.visible = br && s.reveal !== false; if (br) { const L3 = S.label(`pressure inside ${c.p}`, { px: 15 }); pLbl.material = L3.material; pLbl.userData = L3.userData; pLbl.position.set(0, -2.35, 0.6); }
-        S.scaleLabels(world);
+        placeLabels();
       }
-      function fit() { if (!S.size()) return; const t = Math.tan(T.MathUtils.degToRad(camera.fov / 2)); const d = Math.max(2.85 / (0.92 * t), 3.9 / (0.95 * t * camera.aspect)); camera.position.set(0, 0.0, d); camera.lookAt(0, 0.0, 0); placeLabels(); }
+      function fit() { if (!S.size()) return; const t = Math.tan(T.MathUtils.degToRad(camera.fov / 2)); const d = Math.max(2.85 / (0.92 * t), 4.1 / (0.95 * t * camera.aspect)); camera.position.set(0, 0.0, d); camera.lookAt(0, 0.0, 0); placeLabels(); }
       const animating = () => !reduce() && (Math.abs((state.target ?? b) - b) > 0.002 || (state.routeT !== undefined && state.routeT < 1) || mode() === 'breathing');
       function frame(now) {
         raf = 0; if (disposed) return; const dt = lastT ? Math.min(0.05, (now - lastT) / 1000) : 0; lastT = now; clock += dt;
-        const tgt = state.target ?? b; b += Math.sign(tgt - b) * Math.min(Math.abs(tgt - b), dt * 0.55); state.breath = b; pose();
+        const tgt = state.target ?? b; const was = b; b += Math.sign(tgt - b) * Math.min(Math.abs(tgt - b), dt * 0.55); state.breath = b; if (b !== was) { pose(); placeLabels(); }
         if (state.routeT !== undefined && state.routeT < 1) { state.routeT = Math.min(1, state.routeT + dt * 0.28); airs.forEach((a, i) => { const u = state.routeT - i * 0.035; a.visible = u > 0 && u < 1; if (a.visible) a.position.copy(curve.getPointAt(Math.min(1, u))); }); if (state.routeT >= 1) airs.forEach(a => { a.visible = false; }); }
         if (mode() === 'breathing' && state.reveal !== false) { const moving = Math.abs(tgt - b) > 0.01; airs.forEach((a, i) => { const u = ((clock * 0.45 + i / airs.length) % 1); a.visible = moving; if (moving) a.position.copy(curve.getPointAt(tgt >= 0.5 ? u * 0.35 : 0.35 - u * 0.35)); }); }
         S.render(); if (animating()) raf = requestAnimationFrame(frame); else lastT = 0;
       }
       const kick = () => { if (!raf && animating()) raf = requestAnimationFrame(frame); };
       S.onRotate = () => { state.rx = world.rotation.x; state.ry = world.rotation.y; S.render(); };
-      world.rotation.set(typeof state.rx === 'number' ? state.rx : 0.08, typeof state.ry === 'number' ? state.ry : -0.25, 0);
+      world.rotation.set(typeof state.rx === 'number' ? state.rx : 0.14, typeof state.ry === 'number' ? state.ry : -0.5, 0);
       const ro = new ResizeObserver(() => { fit(); S.render(); }); ro.observe(host);
-      function apply(s) { if (reduce()) { b = s.target ?? b; s.breath = b; if (s.routeT !== undefined) s.routeT = 1; } pose(); applyLook(s); S.canvas.setAttribute('aria-label', mode() === 'breathing' ? `Thorax, ${chain(s.target ?? b).phase}.` : 'Breathing system: trachea, bronchi, bronchioles, alveoli, lungs, ribs, intercostal muscles and diaphragm.'); S.render(); kick(); }
-      fit(); apply(state);
+      function apply(s) { if (reduce()) { b = s.target ?? b; s.breath = b; if (s.routeT !== undefined) s.routeT = 1; } pose(); applyLook(s); S.canvas.setAttribute('aria-label', mode() === 'breathing' ? `Chest, ${chain(s.target ?? b).phase}: the lungs rest on the diaphragm and move with it; the ribs swing ${chain(s.target ?? b).r}.` : 'Breathing system: trachea with cartilage rings, bronchi, bronchioles, alveoli, lungs resting on the diaphragm, ribs with intercostal muscles and sternum, and the heart between the lungs.'); S.render(); kick(); }
+      pose(); fit(); apply(state);
       return { update(s) { if (!disposed) apply(s); }, visibility(v) { if (!v) { cancelAnimationFrame(raf); raf = 0; } else { S.render(); kick(); } }, dispose() { disposed = true; cancelAnimationFrame(raf); ro.disconnect(); S.dispose(); } };
     }
   };
@@ -181,7 +230,7 @@ window.LessonModels = window.LessonModels || {};
   // Not modelled on purpose: the moist lining (the AI fact-check relies on the model not showing it).
   const O2C = 0x2d6cdf, C2O = 0x9aa0a8, C2C = 0x2f3237, DARK = new (window.THREE ? window.THREE.Color : Object)(0x6e1423), BRIGHT = new (window.THREE ? window.THREE.Color : Object)(0xd8323b);
   const alveolus = {
-    caption: 'Classroom model, not to scale: relative counts, not measurements. Drag to turn.',
+    caption: 'Classroom model, not to scale: relative counts, not measurements. Shows net movement only; real particles cross both ways. Drag to turn.',
     defaults: { wall: 'thin', flow: 'normal', show: 'both', running: true, view: 'close' },
     readout(p, s) {
       const r = s._r || { o2a: 0, o2b: 0, c2a: 0, c2b: 0, moved: 0 };
@@ -310,6 +359,7 @@ window.LessonModels = window.LessonModels || {};
       rbcs.forEach(m => m.position.copy(mainCurve.getPointAt(m.userData.t)));
       if (reduce()) { for (let i = 0; i < 40; i++) tick(); zoom = state.view === 'cluster' ? 1 : 0; }
       world.updateMatrixWorld(true); fit(); vis(); tick(); S.render(); kick();
+      if (ctx && ctx.refresh) setTimeout(() => { if (!disposed) ctx.refresh(); }, 0); // show the starting counts even while paused
       S.canvas.setAttribute('aria-label', 'An alveolus cut open, in a cluster of alveoli, wrapped by capillaries with red blood cells. Blue two-atom oxygen molecules move net from alveolus air into the blood; grey three-atom carbon dioxide molecules move net from the blood into the air. Blood arrives dark red and leaves bright red.');
       return { update(s) { if (disposed) return; vis(); S.render(); kick(); }, visibility(v) { if (!v) { cancelAnimationFrame(raf); raf = 0; } else { S.render(); kick(); } }, dispose() { disposed = true; cancelAnimationFrame(raf); ro.disconnect(); S.dispose(); } };
     }
