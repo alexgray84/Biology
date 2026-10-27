@@ -118,3 +118,54 @@ window.BioDiagrams = (() => {
   };
   return {render(name,state={}) {return figures[name]?figures[name](state):'';}};
 })();
+
+/* Fixed teaching canvases use large reference numbers and a readable label key.
+   The drawing and leader endpoints are retained; original resource documents
+   keep their full labels unless this progressive enhancement is requested. */
+window.LeafDiagramAccess=(()=>{
+  let serial=0;
+  function prepare(host){
+    if(!host)return;
+    for(const svg of host.querySelectorAll('svg.leaf-science-diagram:not([data-label-key-ready])')){
+      svg.setAttribute('data-label-key-ready','');
+      const figure=svg.closest('figure')||svg.parentElement;
+      const owner=figure.dataset.labelKeyOwner||(figure.dataset.labelKeyOwner='leaf-key-'+(++serial));
+      document.querySelectorAll('[data-label-key-for="'+owner+'"]').forEach(e=>e.remove());
+      const title=svg.querySelector('title')?.textContent||'';
+      const texts=[...svg.querySelectorAll('text')];
+      if(/Partial gas-route/i.test(title)){
+        const route=document.createElement('ol');route.className='diagram-route';route.setAttribute('aria-label','Partial gas pathway');
+        for(const value of ['Outside air','Open stomatal pore','Complete this step','Complete this step']){const li=document.createElement('li');li.textContent=value;if(value.startsWith('Complete'))li.className='route-blank';route.append(li);}
+        svg.replaceWith(route);continue;
+      }
+      const entries=[];
+      for(let i=0;i<texts.length;i++){
+        const node=texts[i];let value=node.textContent.replace(/\s+/g,' ').trim();if(!value)continue;
+        const next=texts[i+1];
+        if(next&&((/^(Upper|Lower)$/.test(value)&&next.textContent.trim()==='epidermis')||(value==='Branching'&&next.textContent.trim()==='veins')||(value==='Vein: xylem'&&next.textContent.trim()==='and phloem'))){value+=' '+next.textContent.trim();next.remove();i++;}
+        const ox=Number(node.getAttribute('x')),oy=Number(node.getAttribute('y')),leader=node.previousElementSibling;
+        if(!/^[AB]$/.test(value)){entries.push(value);node.textContent=String(entries.length);node.setAttribute('aria-label',entries.length+': '+value);}
+        node.style.setProperty('font-size','64px','important');node.style.fontWeight='700';
+        if(leader?.tagName.toLowerCase()==='path'&&leader.getAttribute('stroke-width')==='3'){
+          const ends=[leader.getPointAtLength(0),leader.getPointAtLength(leader.getTotalLength())];
+          const end=ends.sort((a,b)=>Math.hypot(a.x-ox,a.y-oy)-Math.hypot(b.x-ox,b.y-oy))[0],anchor=node.getAttribute('text-anchor');
+          node.setAttribute('x',String(anchor==='end'?end.x+86:anchor==='start'?end.x-86:end.x));
+          node.setAttribute('y',String(anchor==='middle'?end.y+(oy>end.y?70:-12):end.y+18));
+        }
+        if(value==='Light'){node.setAttribute('x','300');node.setAttribute('y','90');}
+        const box=node.getBBox(),v=svg.viewBox.baseVal;
+        const dy=box.y<v.y+8?v.y+8-box.y:box.y+box.height>v.y+v.height-8?v.y+v.height-8-box.y-box.height:0;
+        if(dy)node.setAttribute('y',String(Number(node.getAttribute('y')||0)+dy));
+      }
+      if(!entries.length)continue;
+      const key=document.createElement('ol');key.className='diagram-key';key.dataset.labelKeyFor=owner;key.setAttribute('aria-label','Diagram label key');
+      entries.forEach((label,i)=>{const li=document.createElement('li'),n=document.createElement('b'),name=document.createElement('span');n.textContent=String(i+1);n.setAttribute('aria-hidden','true');name.textContent=label;li.append(n,name);key.append(li);});
+      figure.after(key);
+    }
+    for(const figure of host.querySelectorAll('figure[data-label-key-owner]')){
+      const key=document.querySelector('[data-label-key-for="'+figure.dataset.labelKeyOwner+'"]');
+      if(key)key.hidden=Boolean(figure.querySelector('.model-view.is-live'));
+    }
+  }
+  return {prepare};
+})();

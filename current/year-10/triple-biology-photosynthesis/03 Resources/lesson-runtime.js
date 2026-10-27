@@ -7,9 +7,7 @@
   const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const states={}, widgetStates={};
   let index=0, activeWidget=null, instance=null, answerContext=null;
-  let access={view:'pupil',scale:'1',diagram:false};
-  try{const saved=JSON.parse(sessionStorage.getItem('arcadia-leaf-access')||'null');if(saved)access={...access,...saved};}catch(_){}
-  function applyAccess(){document.documentElement.dataset.view=access.view==='present'?'present':'pupil';document.documentElement.style.setProperty('--lesson-scale',['1','1.25','1.5','2'].includes(access.scale)?access.scale:'1');document.querySelectorAll('[data-access-view]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.accessView===access.view)));$('access-size').value=access.scale;$('access-diagram').checked=access.diagram;try{sessionStorage.setItem('arcadia-leaf-access',JSON.stringify(access));}catch(_){}}
+  const access={diagram:false};
   const initial=location.hash.slice(1);
   if(lesson.phases.some(p=>p.id===initial)) index=lesson.phases.findIndex(p=>p.id===initial);
   const phase=()=>lesson.phases[index];
@@ -26,12 +24,116 @@
   const names=[['resources','Resources'],['assessments','Assessments'],['adaptation','Adaptation'],['hot','HOT'],['ai','AI literacy'],['uae','UAE National Agenda']];
   const button=(label,action,value,attrs='')=>`<button type="button" data-action="${action}" data-value="${esc(value)}" ${attrs}>${label}</button>`;
   const list=items=>`<ul class="bio-list">${items.map(s=>`<li>${s}</li>`).join('')}</ul>`;
-  const figure=(name,caption,secondary=false)=>`<figure tabindex="0" aria-label="Scientific diagram. Use arrow keys to scroll within it if needed." class="bio-figure${secondary?' is-secondary':''}">${BioDiagrams.render(name,state())}<figcaption>${caption||'Schematic model. Colours and sizes are illustrative.'}</figcaption></figure>`;
+  const figure=(name,caption,secondary=false)=>`<figure tabindex="0" aria-label="Scientific diagram" class="bio-figure${secondary?' is-secondary':''}">${BioDiagrams.render(name,state())}<figcaption>${caption||'Schematic model. Colours and sizes are illustrative.'}</figcaption></figure>`;
   const doThis=p=>p.doThis&&p.doThis.length?`<div class="do-this"><span class="do-this-label">Do this</span><ol>${p.doThis.map(x=>`<li>${x}</li>`).join('')}</ol></div>`:'';
   const ladder=p=>p.ladder&&p.ladder.length?`<ol class="ladder" aria-label="Build your answer in layers">${p.ladder.map(([k,t])=>`<li><b>${k}</b><span>${t}</span></li>`).join('')}</ol>`:'';
   const safety=p=>p.safety?`<p class="safety-note"><b>Safety</b> ${p.safety}</p>`:'';
   const task=p=>`${p.task?`<p class="bio-task">${p.task}</p>`:''}${doThis(p)}${(p.resources||[]).length?`<div class="task-resources">${p.resources.map(r=>`<a href="${esc(r.href)}" target="_blank" rel="noopener">${esc(r.label)} <span aria-hidden="true">↗</span></a>`).join('')}</div>`:''}`;
   const criteria=p=>p.criteria?.length?`<section class="visible-criteria" aria-label="Success criteria"><h2>What success looks like</h2><ul>${p.criteria.map(c=>`<li>${c}</li>`).join('')}</ul></section>`:'';
+
+  /* ---------- one-screen component paging ----------
+     Keep every authored node and its state. Content that does not fit the actual
+     available canvas is presented as numbered parts, never scaled or scrolled. */
+  const componentPages={main:{key:null,index:0,pages:[],units:[],containers:[]},drawer:{key:null,index:0,pages:[],units:[],containers:[]}};
+  let fitQueued=false,fitRunning=false;
+  const fitContainer='.bio-layout,.timer-layout,.timer-main,.bio-copy,.model-col,.model-panel,.visible-criteria,.bio-list,.outcome-list,.do-this,.answer-grid,.bio-cases,.model-readout,.model-controls,.concentration-pair,.support-word-map,.causal-strip,.table-wrap,.control-group,.bio-step,.mini-timer,.diagram-key';
+  function fitUnits(host){
+    const units=[],containers=[];
+    const add=nodes=>{const a=(Array.isArray(nodes)?nodes:[nodes]).filter(Boolean);if(a.length)units.push(a);};
+    function walk(node){
+      if(node.hidden||node.hasAttribute('data-fit-persistent')||getComputedStyle(node).display==='none')return;
+      if(node.hasAttribute('data-fit-split')){containers.push(node);const tokens=[...node.querySelectorAll('[data-fit-token]')];for(let i=0;i<tokens.length;i+=8)add(tokens.slice(i,i+8));return;}
+      if(node.matches('details')){if(!node.open){add(node);return;}containers.push(node);[...node.children].filter(c=>!c.matches('summary')).forEach(walk);return;}
+      if(node.matches('h1.screen-heading,.bio-eyebrow,h3')&&node.parentElement===host)return;
+      if(node.matches('.widget-page')){containers.push(node);[...node.children].forEach(c=>{if(!c.matches('h3'))walk(c);});return;}
+      if(node.matches('table')){containers.push(node);const rows=[...node.querySelectorAll('tbody>tr')];if(rows.length)rows.forEach(add);else add(node);return;}
+      if(node.matches('dl')){containers.push(node);const children=[...node.children];for(let i=0;i<children.length;i++){if(children[i].tagName==='DT')add([children[i],children[i+1]?.tagName==='DD'?children[++i]:null]);else add(children[i]);}return;}
+      const narrowModelCopy=innerWidth<=360&&phase().type==='model'&&node.tagName==='DIV'&&node.parentElement?.classList.contains('bio-layout');
+      if(node.matches(fitContainer)||node.matches('ul,ol')||narrowModelCopy){
+        containers.push(node);const children=[...node.children];
+        if(!children.length){add(node);return;}
+        children.forEach(c=>{if(!c.matches('.do-this-label,.step-number')&&!(node.matches('.visible-criteria')&&c.matches('h2')))walk(c);});return;
+      }
+      add(node);
+    }
+    [...host.children].forEach(walk);return {units,containers};
+  }
+  function showFitUnits(record,indices){
+    const selected=new Set(indices);
+    record.units.forEach((nodes,i)=>nodes.forEach(n=>n.toggleAttribute('data-fit-hidden',!selected.has(i))));
+    [...record.containers].reverse().forEach(n=>{
+      const descendants=record.units.map((nodes,i)=>nodes.some(u=>n===u||n.contains(u))?i:-1).filter(i=>i>=0);
+      n.toggleAttribute('data-fit-hidden',descendants.length>0&&!descendants.some(i=>selected.has(i))&&!n.querySelector('[data-fit-persistent]'));
+    });
+  }
+  function boundsFit(host){
+    const r=host.getBoundingClientRect();
+    const descendants=[...host.querySelectorAll('*')].filter(n=>!n.closest('[data-fit-hidden]')&&!n.hidden&&n.getClientRects().length&&getComputedStyle(n).display!=='none');
+    const edge=descendants.reduce((b,n)=>{if(n.closest('svg')||n.matches('svg,canvas,option'))return b;const x=n.getBoundingClientRect();return {right:Math.max(b.right,x.right),bottom:Math.max(b.bottom,x.bottom)};},{right:r.left,bottom:r.top});
+    return {fits:host.scrollHeight<=host.clientHeight+2&&host.scrollWidth<=host.clientWidth+2&&edge.bottom<=r.bottom-20&&edge.right<=r.right+2,height:host.clientHeight,width:host.clientWidth,scrollHeight:host.scrollHeight,scrollWidth:host.scrollWidth,bottom:edge.bottom-r.top,right:edge.right-r.left};
+  }
+  function pagerMarkup(id,record){return `${button('← Previous part','component-page',id+':-1',`aria-label="Previous part of this ${id==='main'?'screen':'resource page'}" ${record.index===0?'disabled':''}`)}<span role="status">Part ${record.index+1} of ${record.pages.length}</span>${button('Next part →','component-page',id+':1',`aria-label="Next part of this ${id==='main'?'screen':'resource page'}" ${record.index===record.pages.length-1?'disabled':''}`)}`;}
+  function splitLongUnit(nodes){
+    if(nodes.length!==1)return false;const node=nodes[0];
+    if(!node.matches('p,li,blockquote')||node.hasAttribute('data-fit-split')||node.querySelector('button,input,textarea,select'))return false;
+    const walker=document.createTreeWalker(node,NodeFilter.SHOW_TEXT),texts=[];let text;while(text=walker.nextNode())if(text.textContent.trim())texts.push(text);
+    if(texts.reduce((n,t)=>n+t.textContent.trim().split(/\s+/).length,0)<12)return false;
+    texts.forEach(t=>{const fragment=document.createDocumentFragment();for(const word of t.textContent.match(/\S+\s*|\s+/g)||[]){const span=document.createElement('span');span.setAttribute('data-fit-token','');span.textContent=word;fragment.append(span);}t.replaceWith(fragment);});
+    node.setAttribute('data-fit-split','');return true;
+  }
+  function fitOne(id,host,nav,key,repair=true){
+    if(!host||!nav||host.closest('[hidden]'))return;
+    const record=componentPages[id];
+    host.querySelectorAll('[data-fit-guard]').forEach(n=>n.remove());
+    if(record.key!==key){record.key=key;record.index=0;}
+    host.querySelectorAll('[data-fit-hidden]').forEach(n=>n.removeAttribute('data-fit-hidden'));
+    nav.hidden=false;nav.style.visibility='hidden';nav.setAttribute('aria-hidden','true');nav.innerHTML=pagerMarkup(id,{index:0,pages:[[]]});
+    const data=fitUnits(host);record.host=host;record.nav=nav;record.units=data.units;record.containers=data.containers;
+    record.oversize=[];
+    const all=record.units.map((_,i)=>i);
+    host.setAttribute('data-component-paged','');
+    nav.style.visibility='visible';nav.removeAttribute('aria-hidden');
+    // Reserve exactly the same control row used by the final page while measuring.
+    nav.innerHTML=pagerMarkup(id,{index:0,pages:[[],[]]});
+    const pages=[];let page=[];
+    for(const i of all){
+      showFitUnits(record,[...page,i]);
+      if(page.length&&!boundsFit(host).fits){pages.push(page);page=[i];showFitUnits(record,page);}else page.push(i);
+      if(page.length===1&&!boundsFit(host).fits)record.oversize.push(i);
+    }
+    if(page.length)pages.push(page);
+    if(repair&&record.oversize.map(i=>splitLongUnit(record.units[i])).some(Boolean)){fitOne(id,host,nav,key,false);return;}
+    record.pages=pages.length?pages:[[]];record.index=Math.min(record.index,record.pages.length-1);
+    showFitUnits(record,record.pages[record.index]);
+    nav.innerHTML=pagerMarkup(id,record);nav.style.visibility=record.pages.length>1?'visible':'hidden';nav.toggleAttribute('aria-hidden',record.pages.length===1);if(record.pages.length===1)nav.setAttribute('aria-hidden','true');record.bounds=boundsFit(host);
+  }
+  function runFit(){
+    fitQueued=false;if(fitRunning)return;fitRunning=true;
+    try{
+      fitOne('main',$('screen-content'),$('screen-components'),phase().id);
+      fitOne('drawer',$('widget-page'),$('drawer-components'),activeWidget?panelKey()+':'+widgetStates[panelKey()]?.tab+':'+widgetStates[panelKey()]?.page:'closed');
+      watchFitHosts();
+      const verify=()=>{if(Object.values(componentPages).some(r=>r.host?.isConnected&&!r.host.closest('[hidden]')&&!r.oversize?.length&&!boundsFit(r.host).fits))scheduleFit();};
+      requestAnimationFrame(verify);setTimeout(verify,80);
+    }finally{fitRunning=false;}
+  }
+  function scheduleFit(){if(fitQueued)return;fitQueued=true;const flush=()=>{if(fitQueued)runFit();};requestAnimationFrame(()=>requestAnimationFrame(flush));setTimeout(flush,50);}
+  function turnComponent(value){
+    const [id,delta]=value.split(':'),record=componentPages[id];if(!record?.host||!record.pages.length)return;
+    record.index=Math.max(0,Math.min(record.pages.length-1,record.index+Number(delta)));
+    showFitUnits(record,record.pages[record.index]);record.nav.innerHTML=pagerMarkup(id,record);record.bounds=boundsFit(record.host);
+    record.host.tabIndex=-1;record.host.focus({preventScroll:true});
+    $('status').textContent=`Part ${record.index+1} of ${record.pages.length}. All parts belong to this ${id==='main'?'screen':'resource page'}.`;
+  }
+  function fitDebug(){return Object.fromEntries(Object.entries(componentPages).map(([id,r])=>[id,{key:r.key,page:r.index+1,pages:r.pages.length,units:r.units.length,coverageComplete:new Set(r.pages.flat()).size===r.units.length,missingUnits:r.units.map((_,i)=>i).filter(i=>!r.pages.flat().includes(i)),oversize:r.oversize||[],bounds:r.host?.isConnected?boundsFit(r.host):null}]));}
+  window.addEventListener('resize',scheduleFit);
+  document.fonts?.ready.then(scheduleFit);
+  document.fonts?.addEventListener('loadingdone',scheduleFit);
+  document.addEventListener('toggle',e=>{if(e.target.matches('details'))scheduleFit();},true);
+  const fitObserver=new ResizeObserver(scheduleFit);
+  let watchedFitHosts=[];
+  function watchFitHosts(){const hosts=[$('screen-content'),$('widget-page')].filter(Boolean);if(hosts.length===watchedFitHosts.length&&hosts.every((n,i)=>n===watchedFitHosts[i]))return;watchedFitHosts.forEach(n=>fitObserver.unobserve(n));watchedFitHosts=hosts;hosts.forEach(n=>fitObserver.observe(n));}
+  if($('lesson-main'))fitObserver.observe($('lesson-main'));
 
   /* ---------- timer (one lesson clock, set per screen) ---------- */
   let duration=5*60, remaining=duration, deadline=null, timerPhase=null;
@@ -62,7 +164,7 @@
   const stepControls=(p,s)=>`<div class="bio-controls step-controls">${button('← Back','step',-1,s.step===0?'disabled':'')}${button('Next step →','step',1,s.step===p.steps.length-1?'disabled':'')}</div>`;
   function modelSteps(p,s){return p.steps?stepBox(p,s)+stepControls(p,s):'';}
   function modelReadout(p,s){const M=Models[p.model];return M&&M.readout?M.readout(p,s):'';}
-  function modelControls(p,s){const M=Models[p.model];return M&&M.controls?M.controls(p,s):'';}
+  function modelControls(p,s){const M=Models[p.model];return `${button(access.diagram?'Use 3D model':'Use 2D diagram','diagram','',`aria-pressed="${access.diagram}"`)}${M&&M.controls?M.controls(p,s):''}`;}
   function modelCaption(p,s){return s.view==='stoma'?'Pore and guard cells, surface view. Schematic.':s.view==='whole'?'Whole leaf: lamina and veins. Schematic.':p.caption;}
   function refreshModelPanel(keepFocus=true){
     const p=phase(),s=state();
@@ -75,7 +177,9 @@
     if($('model-controls')?.querySelector('.model-camera'))$('model-controls').querySelector('.model-camera').open=cameraOpen;
     const camera=$('model-controls')?.querySelector('.model-camera');if(camera)camera.hidden=!document.querySelector('#model-view.is-live canvas');
     if($('model-caption'))$('model-caption').textContent=modelCaption(p,s);
+    window.LeafDiagramAccess?.prepare($('screen-content'));
     if(keepFocus&&key)document.querySelector('#model-controls '+key)?.focus({preventScroll:true});
+    runFit();document.fonts?.ready.then(runFit);
   }
   function parseValue(v){if(v==='true')return true;if(v==='false')return false;if(/^-?\d+(\.\d+)?$/.test(v))return Number(v);return v;}
 
@@ -87,7 +191,7 @@
     if(p.type==='outcome')return `${heading}<ol class="outcome-list">${lesson.outcomes.map(o=>`<li><div><strong>${o[0]}</strong><span class="spec-ref">${esc(lesson.spec||'Pearson 4XBI1')} · ${o[1]}</span></div></li>`).join('')}</ol>${lesson.specificationPoints?`<details class="specification-detail"><summary>Specification points: ${lesson.specificationPoints.map(x=>esc(x.code)).join(' · ')}</summary><ul>${lesson.specificationPoints.map(x=>`<li><b>${esc(x.code)}</b> ${esc(x.text)}</li>`).join('')}</ul></details>`:''}${task(p)}`;
     if(p.type==='model3d'){
       const M=Models[p.model]||{};
-      return `${heading}<div class="bio-layout model3d-layout"><div class="model-col"><figure class="bio-figure"><div class="model-view" id="model-view" data-model="${esc(p.model)}"><div class="model-fallback" tabindex="0" role="region" aria-label="Static diagram. Use arrow keys to scroll within it if needed.">${p.fallback?BioDiagrams.render(p.fallback,s):''}</div></div><figcaption id="model-caption">${modelCaption(p,s)||M.caption||'Interactive schematic model. Drag or use arrow keys to rotate. Colours and sizes are illustrative.'}</figcaption></figure>${task(p)}</div><div class="bio-copy model-panel">${modelSteps(p,s)}<div class="model-readout" id="model-readout" aria-live="polite">${modelReadout(p,s)}</div><div class="bio-controls model-controls" id="model-controls">${modelControls(p,s)}</div></div></div>`;
+      return `${heading}<div class="bio-layout model3d-layout"><div class="model-col"><figure class="bio-figure" data-fit-persistent><div class="model-view" id="model-view" data-model="${esc(p.model)}"><div class="model-fallback" tabindex="0" role="region" aria-label="Static scientific diagram">${p.fallback?BioDiagrams.render(p.fallback,s):''}</div></div><figcaption id="model-caption">${modelCaption(p,s)||M.caption||'Interactive schematic model. Drag or use arrow keys to rotate. Colours and sizes are illustrative.'}</figcaption></figure>${task(p)}</div><div class="bio-copy model-panel">${modelSteps(p,s)}<div class="model-readout" id="model-readout" aria-live="polite">${modelReadout(p,s)}</div><div class="bio-controls model-controls" id="model-controls">${modelControls(p,s)}</div></div></div>`;
     }
     if(p.type==='model')return `${heading}<div class="bio-layout">${figure(p.diagram,p.caption,p.secondaryDiagram)}<div><div class="bio-step"><span class="step-number">STEP ${s.step+1} OF ${p.steps.length}</span><p>${p.steps[s.step]}</p></div><div class="bio-controls">${button('← Back','step',-1,s.step===0?'disabled':'')}${button('Next step →','step',1,s.step===p.steps.length-1?'disabled':'')}</div>${ladder(p)}${safety(p)}${task(p)}</div></div>`;
     if(p.type==='hinge')return `${heading}<div class="answer-grid">${p.options.map((opt,i)=>button(`<span class="answer-letter">${'ABCD'[i]}</span><span>${opt}</span>`,'choice',i,`class="answer-option" aria-pressed="${s.choice===i}"`)).join('')}</div><p class="bio-task">${p.task||'Choose one answer. Give the evidence that supports it.'}</p>${s.choice!==undefined?`<p class="exam-note">Selected: ${'ABCD'[s.choice]}. Explain your reasoning in your book or aloud.</p>`:''}`;
@@ -123,7 +227,7 @@
     document.querySelector('.topic').hidden=p.family==='Title';
     $('screen').className='screen '+(p.type==='title'?'':'bio-screen')+(p.type==='model3d'?' screen-model3d':'')+(p.type==='table'?' screen-table':'')+(p.type==='model'?' screen-steps':'');
     const review=LessonAnswers.has(p,lesson)?`<div class="review-access-row">${p.secure&&!state().reviewReady?button('Finish attempt, then review','finish-attempt','',`class="review-access"`):button('Model answer &amp; mark scheme','answers','',`class="review-access" aria-expanded="${activeWidget==='answers'&&!answerContext}" aria-controls="student-drawer"`)}</div>`:'';
-    $('screen').innerHTML=review+content(p);
+    $('screen').innerHTML=review+`<div class="fit-content" id="screen-content">${content(p)}</div><nav class="component-pagination" id="screen-components" aria-label="Parts of this screen" hidden></nav>`;
     $('phase-position').textContent=`Screen ${index+1} of ${lesson.phases.length}`;
     $('phase-name').textContent=p.nav||p.title||lesson.title;
     $('next-context').innerHTML=`${index<lesson.phases.length-1?`Next: <strong>${esc(lesson.phases[index+1].nav||lesson.phases[index+1].title)}</strong>`:'Lesson complete'} ${button('⛶','fullscreen','',`class="nav-fullscreen" aria-label="Toggle fullscreen"`)}`;
@@ -134,9 +238,11 @@
     renderPanel();
     mountModel();
     if(p.type==='model3d')refreshModelPanel(false);
+    window.LeafDiagramAccess?.prepare($('screen-content'));
     if(p.timer)tick();
     try{history.replaceState(null,'','#'+p.id);}catch(_){}
     if(focusHeading)$('screen').querySelector('h1')?.focus({preventScroll:true});
+    runFit();document.fonts?.ready.then(runFit);
   }
   function go(id) {
     const target=typeof id==='number'?id:lesson.phases.findIndex(p=>p.id===id);
@@ -151,14 +257,16 @@
     document.querySelectorAll('[data-action="widget"]').forEach(b=>b.setAttribute('aria-expanded',String(b.dataset.value===activeWidget)));
     document.querySelector('[data-action="answers"]')?.setAttribute('aria-expanded',String(activeWidget==='answers'&&!answerContext));
     drawer.hidden=!activeWidget;
-    if(!activeWidget){drawer.innerHTML='';return;}
+    if(!activeWidget){drawer.innerHTML='';runFit();document.fonts?.ready.then(runFit);return;}
     const panel=activeWidget==='answers'?LessonAnswers.panel(phase(),lesson,state(),answerContext):LessonWidgets.panel(activeWidget,phase(),lesson);
     const key=panelKey();
     const w=widgetStates[key]??(widgetStates[key]={tab:0,page:0});
     const tab=panel.tabs[w.tab]||panel.tabs[0];
     w.page=Math.min(w.page,tab.pages.length-1);const page=tab.pages[w.page];
-    drawer.innerHTML=`<header class="drawer-head"><div><h2 id="drawer-title" tabindex="-1">${panel.title}</h2><p>${panel.subtitle}</p>${activeWidget==='answers'&&answerContext?button('← Return to task','answer-back','',`class="review-return"`):''}</div>${button('×','close','',`class="icon-control" aria-label="Close ${panel.title}"`)}</header><div class="drawer-tabs" role="tablist" aria-label="${panel.title} sections">${panel.tabs.map((t,i)=>button(t.label,'tab',i,`class="support-tab" role="tab" id="widget-tab-${i}" aria-selected="${i===w.tab}" aria-controls="widget-page" tabindex="${i===w.tab?0:-1}"`)).join('')}</div><div class="drawer-body" role="tabpanel" id="widget-page" aria-labelledby="widget-tab-${w.tab}"><article class="widget-page">${page.note?`<p class="widget-note">${page.note}</p>`:''}<h3>${page.heading}</h3>${page.quote?`<blockquote>${page.quote}</blockquote>`:''}${page.text?`<p>${page.text}</p>`:''}${page.diagram?`<figure class="widget-diagram" tabindex="0" aria-label="Support diagram. Use arrow keys to scroll within it if needed.">${BioDiagrams.render(page.diagram,page.diagramState||{})}</figure>`:''}${page.html||''}${page.items?`<ul>${page.items.map(x=>`<li>${x}</li>`).join('')}</ul>`:''}${page.source?`<a class="widget-source" target="_blank" rel="noopener" href="${esc(page.source)}">${page.sourceLabel||'Read the source'} ↗</a>`:''}${page.action?button(page.action.label+' →','go',page.action.id,'class="widget-action"'):''}${page.href?`<a class="widget-action" href="${esc(page.href)}" target="_blank" rel="noopener">${page.linkLabel||'Open resource'} ↗</a>`:''}${activeWidget!=='answers'&&LessonAnswers.widget(activeWidget,phase(),lesson,w.tab,w.page)?button('Model answer &amp; mark scheme','widget-answer','',`class="widget-action review-widget" aria-controls="student-drawer"`):''}</article></div><nav class="widget-pagination" aria-label="Widget pages">${button('←','page',-1,`aria-label="Previous widget page" ${w.page===0?'disabled':''}`)}<span>${w.page+1} / ${tab.pages.length}</span>${button('→','page',1,`aria-label="Next widget page" ${w.page===tab.pages.length-1?'disabled':''}`)}</nav>`;
+    drawer.innerHTML=`<header class="drawer-head"><div><h2 id="drawer-title" tabindex="-1">${panel.title}</h2><p>${panel.subtitle}</p>${activeWidget==='answers'&&answerContext?button('← Return to task','answer-back','',`class="review-return"`):''}</div>${button('×','close','',`class="icon-control" aria-label="Close ${panel.title}"`)}</header><div class="drawer-tabs" role="tablist" aria-label="${panel.title} sections">${panel.tabs.map((t,i)=>button(t.label,'tab',i,`class="support-tab" role="tab" id="widget-tab-${i}" aria-selected="${i===w.tab}" aria-controls="widget-page" tabindex="${i===w.tab?0:-1}"`)).join('')}</div><div class="drawer-body" role="tabpanel" id="widget-page" aria-labelledby="widget-tab-${w.tab}"><article class="widget-page">${page.note?`<p class="widget-note">${page.note}</p>`:''}<h3>${page.heading}</h3>${page.quote?`<blockquote>${page.quote}</blockquote>`:''}${page.text?`<p>${page.text}</p>`:''}${page.diagram?`<figure class="widget-diagram" tabindex="0" aria-label="Support scientific diagram">${BioDiagrams.render(page.diagram,page.diagramState||{})}</figure>`:''}${page.html||''}${page.items?`<ul>${page.items.map(x=>`<li>${x}</li>`).join('')}</ul>`:''}${page.source?`<a class="widget-source" target="_blank" rel="noopener" href="${esc(page.source)}">${page.sourceLabel||'Read the source'} ↗</a>`:''}${page.action?button(page.action.label+' →','go',page.action.id,'class="widget-action"'):''}${page.href?`<a class="widget-action" href="${esc(page.href)}" target="_blank" rel="noopener">${page.linkLabel||'Open resource'} ↗</a>`:''}${activeWidget!=='answers'&&LessonAnswers.widget(activeWidget,phase(),lesson,w.tab,w.page)?button('Model answer &amp; mark scheme','widget-answer','',`class="widget-action review-widget" aria-controls="student-drawer"`):''}</article></div><nav class="widget-pagination" aria-label="Widget pages"><div class="widget-page-navigation">${button('←','page',-1,`aria-label="Previous widget page" ${w.page===0?'disabled':''}`)}<span>${w.page+1} / ${tab.pages.length}</span>${button('→','page',1,`aria-label="Next widget page" ${w.page===tab.pages.length-1?'disabled':''}`)}</div><div class="component-pagination" id="drawer-components" aria-label="Parts of this resource page" hidden></div></nav>`;
+    window.LeafDiagramAccess?.prepare(drawer);
     if(focus)$('drawer-title').focus();
+    runFit();document.fonts?.ready.then(runFit);
   }
   document.addEventListener('submit',e=>{e.preventDefault();});
   setInterval(tick,500);
@@ -175,6 +283,8 @@
   document.addEventListener('click',async e=>{
     const b=e.target.closest('[data-action]');if(!b||b.disabled)return;
     const a=b.dataset.action,v=b.dataset.value,s=state();
+    if(a==='component-page'){turnComponent(v);return;}
+    if(a==='diagram'){access.diagram=!access.diagram;disposeModel();const view=$('model-view');if(view){view.classList.remove('is-live');view.querySelector('canvas')?.remove();}mountModel();refreshModelPanel(false);scheduleFit();return;}
     if(a==='widget'){answerContext=null;activeWidget=activeWidget===v?null:v;renderPanel(Boolean(activeWidget));if(!activeWidget)document.querySelector(`[data-action="widget"][data-value="${v}"]`)?.focus();}
     if(a==='close'){const old=activeWidget;activeWidget=null;answerContext=null;renderPanel();focusTrigger(old);}
     if(a==='tab'||a==='page'){const w=widgetStates[panelKey()];if(a==='tab'){w.tab=Number(v);w.page=0;}else w.page+=Number(v);renderPanel();if(a==='tab')document.getElementById('widget-tab-'+w.tab)?.focus();else {$('widget-page').tabIndex=-1;$('widget-page').focus();}}
@@ -221,10 +331,6 @@
     /* Arrow keys belong to the focused control/reading region, never global lesson navigation. */
   });
   window.addEventListener('hashchange',()=>{const id=location.hash.slice(1);if(id&&id!==phase().id&&lesson.phases.some(p=>p.id===id))go(id);});
-  window.LessonDebug={go,state:()=>state(),phase:()=>phase(),index:()=>index};
-  document.querySelectorAll('[data-access-view]').forEach(b=>b.addEventListener('click',()=>{access.view=b.dataset.accessView;applyAccess();render();}));
-  $('access-size').addEventListener('change',e=>{access.scale=e.target.value;applyAccess();});
-  $('access-diagram').addEventListener('change',e=>{access.diagram=e.target.checked;applyAccess();render();});
-  applyAccess();
+  window.LessonDebug={go,state:()=>state(),phase:()=>phase(),index:()=>index,fit:()=>fitDebug(),refit:()=>scheduleFit()};
   render();
 })();

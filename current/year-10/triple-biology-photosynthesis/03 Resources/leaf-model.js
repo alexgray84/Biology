@@ -124,7 +124,7 @@ window.LessonModels.leaf = (() => {
     const up=()=>{last=null;canvas.style.touchAction='pan-y';};
     const keydown=e=>{const commands={ArrowLeft:'rotate-left',ArrowRight:'rotate-right',ArrowUp:'tilt-up',ArrowDown:'tilt-down','+':'zoom-in','=':'zoom-in','-':'zoom-out',Home:'reset'};if(!commands[e.key])return;e.preventDefault();e.stopPropagation();command(commands[e.key],state,phase);changed();};
     const contextlost=e=>{e.preventDefault();lost=true;host.classList.remove('is-live');canvas.hidden=true;if(ctx.refresh)ctx.refresh();if(ctx.announce)ctx.announce('The 3D view is unavailable. Use the static labelled diagram and text description.');};
-    const contextrestored=()=>{lost=false;canvas.hidden=false;host.classList.add('is-live');resize();apply(state);};
+    const contextrestored=()=>{lost=false;canvas.hidden=false;host.classList.add('is-live');resize();apply(state);if(ctx.refresh)ctx.refresh();};
     canvas.addEventListener('pointerdown',down);canvas.addEventListener('pointermove',move);canvas.addEventListener('pointerup',up);canvas.addEventListener('pointercancel',up);canvas.addEventListener('lostpointercapture',up);canvas.addEventListener('keydown',keydown);canvas.addEventListener('webglcontextlost',contextlost);canvas.addEventListener('webglcontextrestored',contextrestored);
     const observer=typeof ResizeObserver!=='undefined'?new ResizeObserver(resize):null;if(observer)observer.observe(host);else window.addEventListener('resize',resize);
     apply(state);resize();raf=requestAnimationFrame(resize);
