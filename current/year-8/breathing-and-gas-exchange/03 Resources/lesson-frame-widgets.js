@@ -20,7 +20,7 @@ window.LessonWidgets=(()=>{
     const definitions={
       resources:{title:'Resources',subtitle:'Use a reference, then return to the task.',tabs:[{id:'kit',label:'Resources',pages:lesson.resourcePages},{id:'words',label:'Key words',pages:pages(lesson.vocabulary)},{id:'models',label:'Models',pages:lesson.modelPages}]},
       assessments:{title:'Assessments',subtitle:'Choose a check and show your reasoning.',tabs:[{id:'checks',label:'Checks',pages:lesson.checkPages}]},
-      adaptation:{title:'Adaptation',subtitle:'Support for Students of Determination — a foothold first, then work on your own.',tabs:[{id:'start',label:'Get started',pages:pages(s.start)},{id:'understand',label:'Build understanding',pages:pages(s.understand)}]},
+      adaptation:{title:'Adaptation',subtitle:'Support for anyone who needs it — a foothold first, then work on your own.',tabs:[{id:'start',label:'Get started',pages:pages(s.start)},{id:'understand',label:'Build understanding',pages:pages(s.understand)}]},
       hot:{title:'Higher-order thinking',subtitle:'Explain a limit, test a claim or transfer an idea.',tabs:[{id:'reason',label:'Go further',pages:pages(s.hot)}]},
       ai:{title:'AI literacy',subtitle:'Think first. Check the claim against evidence.',tabs:ai(current,lesson)},
       uae:{title:'UAE National Agenda',subtitle:'Use the science in a local context.',tabs:uae(current,lesson)}
