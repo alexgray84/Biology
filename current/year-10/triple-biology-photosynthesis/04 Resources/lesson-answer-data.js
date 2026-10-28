@@ -19,15 +19,15 @@ window.LessonAnswerData=(()=>{
   const main={
     'do-now':A([
       m('1 · Route','Air → open stomata → air spaces → moist mesophyll surface → cell, by diffusion down a concentration gradient.'),
-      m('2 · Pre-check (not marked)','Yes. Respiration continues in the dark; photosynthesis needs light, so it stops. This is used only to decide how much to stress respiration next.')
+      m('2 · Pre-check (not marked)','Yes. Respiration continues in the dark; photosynthesis needs light, so it stops. This one is not marked; it shows what you already know.')
     ],[c('What to check',['Route in order, through open stomata.','Pre-check: respiration named as the source of CO₂ in the dark. Not scored.'])]),
     outcomes:S('What today’s evidence will show','Your own predictions, a plan answering an exam-style question (not from an exam board), an interpretation with its source, a rewritten sentence, a revised plan line and an unaided fresh check.',['Net exchange from two rates.','Indicator read as CO₂ change, with the control.','Fair plan with how, why, control and repeats.']),
     'l3-return':A([
       m('O · Order','Air → open stomatal pore → air spaces → moist mesophyll surface → cell. Not through the cuticle or the xylem.'),
       m('Y · Direction','Name the higher side: CO₂ is higher in the outside air than inside, so net diffusion is inward.'),
       m('J · Named only','Add the physical effect: e.g. thin leaf → short diffusion distance → gases reach cells quickly.')
-    ],[c('What to check',['The revision matches the code.','Made in a different pen; first attempt kept.','The teacher samples at least six books and checks the changed line.'])]),
-    'route-item':A([m('Model','Outside air → open stomata → air spaces → moist mesophyll surface → cell. O₂ diffuses in, from the higher concentration outside (21%) to the lower concentration inside (18%). The cells keep using O₂ in respiration, which keeps the inside concentration lower. Feature, any one: many stomata on the lower surface give many entry points; air spaces in the spongy mesophyll let the gas reach the cells; a thin leaf gives a short diffusion distance; moist cell surfaces let O₂ dissolve and diffuse in.')],[c('Success criteria',['Route in the correct order.','Higher concentration outside, lower inside.','One feature named with how it helps (not just named).','Credit, not required: continued use in respiration maintains the gradient.'])]),
+    ],[c('What to check',['The revision matches the code.','Made in a different pen; first attempt kept.','Your teacher will check some changed lines.'])]),
+    'route-item':A([m('Model','Outside air → stomata (still partly open at dusk) → air spaces → moist mesophyll surface → cell. O₂ diffuses in, from the higher concentration outside (21%) to the lower concentration inside (18%). The cells keep using O₂ in respiration, which keeps the inside concentration lower. Feature, any one: many stomata on the lower surface give many entry points; air spaces in the spongy mesophyll let the gas reach the cells; a thin leaf gives a short diffusion distance; moist cell surfaces let O₂ dissolve and diffuse in.')],[c('Success criteria',['Route in the correct order.','Higher concentration outside, lower inside.','One feature named with how it helps (not just named).','Credit, not required: continued use in respiration maintains the gradient.'])]),
     'two-rates':A([
       m('Whiteboard check','In bright light, both processes happen: photosynthesis and respiration.'),
       m('The rule','Respiration releases CO₂ in all living cells, light and dark. Photosynthesis uses CO₂ only in light. Net = compare the two rates. Energy is released by respiration, not created.'),

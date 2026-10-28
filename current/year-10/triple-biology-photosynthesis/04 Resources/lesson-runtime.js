@@ -343,7 +343,7 @@
       refreshModelPanel(true);
       if(activeWidget==='answers')renderPanel();
     }
-    if(a==='mode'){mode=v==='A'?'A':'B';try{sessionStorage.setItem('y10-l4-mode',mode);}catch(_){}render();document.querySelector(`[data-action="mode"][data-value="${mode}"]`)?.focus();$('status').textContent=mode==='A'?'Mode A: real tubes selected.':'Mode B: demo set, model and illustrative photos selected.';return;}
+    if(a==='mode'){mode=v==='A'?'A':'B';try{sessionStorage.setItem('y10-l4-mode',mode);}catch(_){}render();document.querySelector(`[data-action="mode"][data-value="${mode}"]`)?.focus();$('status').textContent=mode==='A'?'Mode A: real tubes selected.':'Mode B: demo set, model and illustrative results selected.';return;}
     if(a==='choice'){s.choice=Number(v);render();document.querySelector(`[data-action="choice"][data-value="${v}"]`)?.focus();}
     if(a==='timer'){
       tick();

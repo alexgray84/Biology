@@ -44,7 +44,7 @@ window.BioDiagrams = (() => {
     const head=`url(#co2-head-${serial})`;
     if(S.light==='slider'){
       b+=sun(70,70,'dim')+`<rect x="130" y="58" width="300" height="24" rx="12" fill="#efe6c4" stroke="${C.lightLine}" stroke-width="3"/>`+T(460,88,'Dark → Bright',{size:46});
-    }else b+=sun(70,70,S.light)+T(130,92,'Light: '+S.lightWord.replace('Light: ',''),{size:50});
+    }else b+=sun(70,70,S.light)+T(165,92,'Light: '+S.lightWord.replace('Light: ',''),{size:50});
     b+=leafShape(155,430,250,190);
     b+=T(155,575,'leaf',{anchor:'middle',size:46,fill:C.leafDark});
     const arrow=(y,len,dir,dashed)=>{
