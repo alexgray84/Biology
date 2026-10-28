@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Gas exchange lab · simulated tubes</title>
+<style>
+:root{color-scheme:light;--navy:#182944;--navy-950:#13213a;--gold:#bd8126;--gold-600:#8a5a14;--paper:#f8f6ee;--card:#fffdf8;--line:#c9c8bd;--ink-600:#4b5667;--co2:#6b7280;--o2:#24748d;--light:#d8b23a;--sans:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;--serif:Georgia,"Times New Roman",serif}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--paper);color:var(--navy);font:17px/1.5 var(--sans);overflow-wrap:break-word}
+.toolbar{position:sticky;top:0;z-index:20;background:rgba(248,246,238,.97);border-bottom:1px solid var(--line)}
+.toolbar-inner{max-width:1280px;margin:auto;padding:8px 20px;display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center}
+.toolbar .tag{font-size:13px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--gold-600)}
+a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible,canvas:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+main{max-width:1280px;margin:auto;padding:12px 20px 48px}
+h1{font:500 30px/1.15 var(--serif);margin:2px 0 6px}
+h2{font:800 14px/1.3 var(--sans);letter-spacing:.1em;text-transform:uppercase;color:var(--gold-600);margin:20px 0 8px}
+h3{font:700 17px/1.25 var(--sans);margin:0 0 2px}
+.eyebrow{font-size:13px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gold-600);margin:0}
+.do-this{display:grid;grid-template-columns:auto 1fr;gap:4px 16px;margin:8px 0 12px;padding:10px 16px;border:1px solid var(--navy);border-left:6px solid var(--gold);border-radius:10px;background:var(--card)}
+.do-this b{font-size:13px;letter-spacing:.12em;text-transform:uppercase;padding-top:3px}
+.do-this ol{margin:0;padding-left:1.2em}
+.do-this li{font-weight:600;font-size:15.5px;line-height:1.35}
+.lab{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:18px;align-items:start}
+.stage{position:sticky;top:64px}
+.model-view{position:relative;width:100%;height:min(56vh,440px);min-height:240px;border:1px solid var(--line);border-radius:12px;background:linear-gradient(#f4f1e8,#e9e3d4);overflow:hidden;touch-action:pan-y}
+.model-view canvas{display:block;width:100%;height:100%;touch-action:none;cursor:grab}
+#fallback{height:100%;display:flex;align-items:center;justify-content:center;padding:6px}
+#fallback svg{width:100%;height:100%}
+.model-view.is-live #fallback{display:none}
+.caption{font-size:13.5px;color:var(--ink-600);margin:6px 0 0}
+.webgl-note{font-size:14px;color:#7a1f1f;margin:4px 0 0}
+.panel{display:grid;gap:12px}
+.box{border:1px solid var(--line);border-radius:10px;background:var(--card);padding:10px 14px}
+.clock-row{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.clock{font:500 26px/1.1 var(--serif)}
+.sim-tag{font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--gold-600)}
+.seg{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:8px 0 0}
+.seg-label{font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-600);margin-right:2px}
+button{font:650 15px/1.2 var(--sans);border-radius:8px;padding:9px 12px;min-height:44px;border:1px solid var(--navy);background:#f1efe8;color:var(--navy);cursor:pointer;touch-action:manipulation}
+button[aria-pressed="true"]{color:#fbf5e6;background:var(--navy)}
+button.is-primary{background:var(--navy);color:#fbf5e6}
+button[disabled]{opacity:.5;cursor:not-allowed}
+.gate{font-size:14px;color:var(--ink-600);margin:8px 0 0}
+.tube-card{border:1px solid var(--line);border-left:6px solid var(--navy);border-radius:10px;background:var(--card);padding:10px 14px}
+.tube-card.is-transfer{border-left-color:var(--gold)}
+.letter{display:inline-flex;width:26px;height:26px;border-radius:50%;background:var(--navy);color:#fbf5e6;align-items:center;justify-content:center;font-size:14px;margin-right:4px}
+.setup{font-size:14.5px;color:var(--ink-600);margin:2px 0 4px}
+.cards{display:grid;gap:10px}
+fieldset.pred{border:1px dashed #9a8f7a;border-radius:8px;margin:8px 0 0;padding:8px 10px 10px}
+fieldset.pred legend{font-weight:700;font-size:14.5px;padding:0 4px}
+.choices{display:flex;flex-wrap:wrap;gap:6px}
+.choice{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);border-radius:8px;padding:6px 10px;min-height:44px;font-size:14.5px;background:#fff;cursor:pointer}
+.choice input{width:18px;height:18px;margin:0}
+.sw{display:inline-block;width:16px;height:16px;border-radius:50%;border:1px solid #0003}
+.sw-yellow{background:#e9cd3c}.sw-orange-red{background:#d4482e}.sw-purple{background:#4b2a7f}
+.reason-label{display:block;font-size:14px;font-weight:700;margin:8px 0 3px}
+.reason,textarea{width:100%;font:16px/1.4 var(--sans);padding:8px 10px;border:1px solid #8f8a7c;border-radius:8px;background:#fff;color:var(--navy)}
+.help{font-size:13px;color:var(--ink-600);margin:4px 0 6px}
+.help.is-error{color:#8a1f1f;font-weight:700}
+.mine{font-size:14.5px;margin:6px 0}
+.why{color:var(--ink-600)}
+.obs{display:flex;gap:10px;align-items:center;margin:6px 0 4px}
+.swatch{flex:0 0 40px;height:40px;border-radius:8px;border:1px solid #0003}
+.meaning{font-size:14px;color:var(--ink-600)}
+.co2{font-size:13.5px;color:var(--ink-600)}
+.bars{margin-top:4px}
+.bar-row{display:grid;grid-template-columns:minmax(0,9.5em) minmax(0,1fr) 3em;gap:8px;align-items:center;margin:3px 0}
+.bar-name{font-size:14px;font-weight:700;line-height:1.15}
+.bar-name small{display:block;font-weight:600;color:var(--ink-600);font-size:12px}
+.bar-track{height:14px;border-radius:7px;background:#ebe7dc;overflow:hidden;border:1px solid #d6d1c3}
+.bar{display:block;height:100%}
+.bar-r{background:var(--co2)}
+.bar-p{background:repeating-linear-gradient(135deg,var(--co2) 0 5px,#aeb3ba 5px 10px)}
+.bar-val{font:600 14px/1 var(--sans);text-align:right}
+.bar-unit{font-size:12px;color:var(--ink-600);margin:2px 0 0}
+.locked{font-size:14.5px;color:var(--ink-600);margin:4px 0}
+.note{font-size:13.5px;color:var(--ink-600);margin:6px 0 0}
+.seg.wrap button{flex:1 1 auto}
+.assume{font-size:14.5px;margin:0;padding-left:1.2em}
+.assume li{margin:2px 0}
+.key-row{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:13.5px;margin:6px 0 0}
+.key-row span{display:inline-flex;align-items:center;gap:5px}
+.scale{height:16px;border-radius:8px;border:1px solid #0002;margin-top:6px}
+.scale-labels{display:flex;justify-content:space-between;font-size:12.5px;color:var(--ink-600)}
+.status{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+@media (max-width:900px){
+  .toolbar{position:static}
+  .lab{grid-template-columns:1fr}
+  .stage{position:relative;top:0}
+  .model-view{height:300px}
+  h1{font-size:26px}
+  main{padding:10px 16px 40px}
+  .toolbar-inner{padding:8px 16px}
+  .do-this{grid-template-columns:1fr}
+}
+@media (max-width:420px){
+  .model-view{height:260px}
+  .bar-row{grid-template-columns:minmax(0,7.8em) minmax(0,1fr) 2.8em}
+  .choice{flex:1 1 100%}
+  button{padding:9px 10px}
+}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<header class="toolbar"><div class="toolbar-inner"><a class="return-link" href="../04%20Net%20gas%20exchange.html#sim-test" style="color:inherit;font-weight:700;margin-right:16px;display:inline-flex;align-items:center;min-height:44px">← Return to lesson</a><span class="tag">Simulated model · not real measurements</span></div></header>
+<main>
+<p class="eyebrow">Year 10 Triple Biology · What can changing carbon dioxide tell us about a plant?</p>
+<h1>Gas exchange lab</h1>
+<div class="do-this"><b>Do this</b><ol>
+<li>Predict the indicator colour of each tube at 60 minutes, with a reason. Each result stays hidden, and the clock stays locked, until you predict.</li>
+<li>Run the clock. Watch the two separate rates for each tube: respiration releases CO₂, photosynthesis uses CO₂.</li>
+<li>Explain one tube in your own words, then try a new condition. Predict first again.</li>
+</ol></div>
+<div class="lab">
+  <div class="stage">
+    <div class="model-view" id="model-view"><div id="fallback"></div></div>
+    <p class="caption">Model, not a real plant: colours come from an illustrative calculation. Foil is drawn cut away so you can see inside. Drag or use the arrow keys on the view to turn the rack.</p>
+    <p class="webgl-note" id="webgl-note" hidden>3D view unavailable on this device: the diagram shows the same tubes, and every control still works.</p>
+    <div class="box" style="margin-top:10px">
+      <h2 style="margin-top:0">Indicator colour key</h2>
+      <div class="scale" id="scale" aria-hidden="true"></div>
+      <div class="scale-labels"><span>purple: CO₂ reduced</span><span>orange-red: about atmospheric</span><span>yellow: CO₂ raised</span></div>
+      <div class="key-row"><span><span class="sw" style="background:var(--co2)"></span>CO₂ (grey)</span><span><span class="sw" style="background:var(--light)"></span>light (yellow)</span></div>
+    </div>
+  </div>
+  <div class="panel">
+    <section class="box" id="clock" aria-label="Simulated clock"></section>
+    <section aria-label="Tubes"><h2 style="margin-top:0">Tubes</h2><div class="cards" id="cards"></div></section>
+    <section class="box" id="explain-box" hidden aria-labelledby="h-explain">
+      <h2 id="h-explain" style="margin-top:0">Explain it</h2>
+      <label for="explain" style="font-size:15px;font-weight:600">Choose one tube. Compare its respiration rate with its photosynthesis rate, and use that comparison to explain its colour. Use your own words.</label>
+      <textarea id="explain" rows="4" style="margin-top:6px"></textarea>
+      <p class="note">This stays on this page only. Copy your final explanation into your book.</p>
+    </section>
+    <section class="box" aria-labelledby="h-transfer"><h2 id="h-transfer" style="margin-top:0">New condition</h2><div id="transfer"></div></section>
+    <section class="box" aria-labelledby="h-assume">
+      <h2 id="h-assume" style="margin-top:0">What this model assumes</h2>
+      <ul class="assume">
+        <li>Temperature stays constant, so each leaf's respiration rate stays constant. Temperature is not a variable in this model.</li>
+        <li>Every tube is sealed: no gas enters or leaves.</li>
+        <li>Every leaf is the same size and type; tubes start with the same indicator volume and colour.</li>
+        <li>The rates are simplified. Photosynthesis rises with light and slows as CO₂ is used up.</li>
+        <li>The indicator responds to CO₂ only. It is not an oxygen test and does not measure total photosynthesis. The model does not track oxygen.</li>
+        <li>CO₂ values and colours are an illustrative calibration, not real indicator data. Real dim tubes need not match this model.</li>
+      </ul>
+    </section>
+  </div>
+</div>
+<p class="status" id="status" role="status" aria-live="polite"></p>
+</main>
+<script src="three.min.js"></script>
+<script src="gas-exchange-model.js"></script>
+<script src="gas-exchange-lab-host.js"></script>
+<script>
+(() => { const M = window.GasExchangeModel, el = document.getElementById('scale'); if (!M || !el) return;
+  const lo = Math.log(150), hi = Math.log(1000), stops = [];
+  for (let i = 0; i <= 12; i++) { const c = Math.exp(lo + (hi - lo) * i / 12); stops.push(`${M.indicatorColour(c)} ${(i / 12 * 100).toFixed(1)}%`); }
+  el.style.background = `linear-gradient(90deg, ${stops.join(',')})`; })();
+</script>
+</body>
+</html>

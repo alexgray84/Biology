@@ -1,0 +1,157 @@
+/* Original Arcadia top; fixed teaching canvas. Dense content uses readable pages. */
+:root { --lesson-body:clamp(22px,min(2.2vw,3dvh),32px); }
+[hidden] { display:none!important; }
+html,body { width:100%;height:100%;min-height:0;overflow:hidden;overscroll-behavior:none; }
+body { font-family:var(--sans); }
+button,select,input { font:inherit;touch-action:manipulation; }
+button:focus-visible,a:focus-visible,summary:focus-visible,[tabindex]:focus-visible { outline:3px solid var(--navy-700);outline-offset:3px; }
+.app { height:100dvh;min-height:0;display:grid;grid-template-rows:minmax(0,1fr) auto 58px; }
+.workspace { padding:8px;gap:8px;min-height:0;align-items:stretch;grid-template-rows:minmax(0,1fr); }
+.lesson-stage { height:100%;min-height:0;display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:auto minmax(0,1fr);overflow:hidden;border-radius:12px;box-shadow:none; }
+.topic,.workspace.has-drawer .topic { min-height:50px;padding:12px 24px 4px;padding-right:265px;font:500 clamp(18px,1.6vw,27px)/1.2 var(--serif); }
+.screen,.screen.bio-screen,.workspace.has-drawer .screen.bio-screen { position:relative;min-height:0;height:100%;padding:8px 24px 16px;display:flex;flex-direction:column;justify-content:flex-start;gap:0;font-size:var(--lesson-body);line-height:1.3;animation:none; }
+.screen>* { min-width:0; }
+.screen-heading,.bio-screen .screen-heading,.workspace.has-drawer .bio-screen .screen-heading { margin:4px 0 10px;max-width:none;font:500 clamp(32px,4.4dvh,52px)/1.08 var(--serif);letter-spacing:-.025em; }
+.screen-lead,.bio-screen .screen-lead,.workspace.has-drawer .screen-lead { margin:0 0 10px;max-width:none;font-size:1em;line-height:1.3;color:var(--navy-950); }
+.bio-eyebrow { display:flex;flex-wrap:wrap;gap:8px;margin:0 0 4px;font-size:.67em;line-height:1.25;color:var(--gold-600);letter-spacing:.06em; }
+.meta-time,.meta-optional { margin-left:4px;font-size:1em;font-weight:650;letter-spacing:0; }
+.review-access-row { position:absolute;top:-46px;right:24px;margin:0;display:flex;justify-content:flex-end; }
+.review-access,.review-return { min-height:38px;padding:8px 12px;font-size:14px;line-height:1.25; }
+.visible-criteria { margin:6px 0 12px;padding:8px 0;border-block:1px solid var(--line-strong);font-size:.84em;line-height:1.3; }
+.visible-criteria h2 { margin:0 0 4px;font-size:1em; }.visible-criteria ul { margin:0;padding-left:1.15em; }.visible-criteria li { margin:3px 0; }
+.bio-layout,.model3d-layout,.workspace.has-drawer .bio-layout,.workspace.has-drawer .model3d-layout { display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start;gap:24px;min-height:0; }
+.bio-copy p { margin:0 0 10px;line-height:1.3; }.bio-list { margin:8px 0;padding-left:1.15em; }
+.bio-list li,.workspace.has-drawer .bio-list li { padding:6px 0 6px 4px;font-size:1em;line-height:1.3; }
+.bio-task,.workspace.has-drawer .bio-task { margin-top:10px;padding-top:10px;line-height:1.3; }
+.do-this { margin:10px 0 0;padding:10px 12px;border:1px solid var(--line-strong);border-radius:8px;background:var(--paper-50); }.do-this-label { display:block;margin-bottom:4px;font-size:.8em;font-weight:700; }.do-this ol { margin:0;padding-left:1.2em; }.do-this li { padding:3px 0;line-height:1.3; }
+.task-resources { display:flex;flex-wrap:wrap;gap:8px;margin-top:10px; }.task-resources a { display:inline-flex;align-items:center;gap:10px;min-height:40px;padding:8px 12px;border:1px solid var(--navy-900);border-radius:8px;background:var(--navy-900);color:var(--paper-100);font-size:.8em;font-weight:650;text-decoration:none; }
+.bio-controls,.workspace.has-drawer .bio-controls { display:flex;flex-wrap:wrap;gap:6px;margin-top:8px; }.bio-controls button,.workspace.has-drawer .bio-controls button { min-height:40px;padding:8px 11px;border:1px solid var(--line-strong);border-radius:8px;background:var(--paper-50);color:var(--navy-950);font-size:16px;line-height:1.25; }.bio-controls button[aria-pressed="true"],.bio-controls button.is-primary { background:var(--navy-900);color:var(--paper-100); }
+.bio-step,.workspace.has-drawer .bio-step { min-height:0;margin:8px 0 0;padding-top:10px; }.bio-step p { margin:6px 0 0;line-height:1.3; }.step-number { display:block;font-size:.7em;color:var(--gold-600);font-weight:700; }
+.bio-figure { min-width:0;margin:0;overflow:visible; }.bio-figure svg,.workspace.has-drawer .bio-figure svg { display:block;min-width:0;width:100%;height:auto;max-height:32dvh;overflow:hidden; }.bio-figure .diagram-label { font-size:32px; }.bio-figure .diagram-small { font-size:28px; }.bio-figure figcaption,.workspace.has-drawer .bio-figure figcaption { display:block;margin-top:6px;font-size:.65em;line-height:1.3;color:var(--ink-600); }.workspace.has-drawer .bio-figure.is-secondary { display:block; }
+.model-col,.model-panel { min-width:0;min-height:0; }.model-view,.workspace.has-drawer .model-view { position:relative;min-height:150px;height:clamp(160px,25dvh,290px);max-height:none;width:100%;border:1px solid var(--line-strong);border-radius:10px;background:var(--paper-50);overflow:hidden; }.model-view canvas { display:block;width:100%;height:100%;touch-action:none; }.model-view canvas:focus-visible { outline-offset:-4px; }.model-fallback { height:100%;padding:5px;overflow:hidden; }.model-fallback svg { width:100%;height:100%;min-width:0;max-height:100%; }.model-view.is-live .model-fallback { display:none; }
+.model-panel { display:flex;flex-direction:column;gap:4px; }.model-readout { font-size:.8em;line-height:1.3; }.model-readout p { margin:0 0 8px; }.readout-key { display:block;margin-bottom:4px;font-size:.8em;font-weight:700;color:var(--gold-600); }.readout-value { color:var(--navy-950); }.model-controls .control-group { display:flex;flex-wrap:wrap;gap:6px;width:100%; }.model-camera { width:100%;font-size:16px; }.model-camera summary { min-height:40px;padding:9px 0;font-weight:650;cursor:pointer; }.model-camera:not([open])>.control-group { display:none; }
+.outcome-list { margin:8px 0 0; }.outcome-list li,.workspace.has-drawer .outcome-list li { padding:8px 0; }.outcome-list strong { font-size:1em;line-height:1.3; }.spec-ref { font-size:.7em;line-height:1.3;margin-top:4px; }.specification-detail { margin-top:8px;font-size:.75em; }.specification-detail summary { min-height:40px;padding:8px 0;cursor:pointer; }.specification-detail li { margin:6px 0; }
+.answer-grid { margin-top:10px;gap:10px; }.answer-option,.bio-screen .answer-option,.workspace.has-drawer .answer-option { min-height:54px;padding:10px;font-size:.9em;line-height:1.3; }.bio-cases { gap:0; }.bio-case { grid-template-columns:minmax(0,.7fr) minmax(0,1fr); }.bio-case p { line-height:1.3; }.exam-note,.routine-credit { margin-top:8px;font-size:.7em;line-height:1.3; }
+.workspace.has-drawer { grid-template-columns:minmax(0,1fr);grid-template-rows:minmax(0,1fr); }.workspace.has-drawer .lesson-stage,.workspace.has-drawer .student-drawer { grid-area:1/1; }.workspace.has-drawer .lesson-stage { visibility:hidden; }
+.student-drawer { position:relative;height:100%;min-height:0;max-height:100%;overflow:hidden;grid-template-rows:auto auto minmax(0,1fr) auto;align-self:stretch;border-radius:12px;box-shadow:none; }.drawer-head { padding:14px 24px 10px;gap:12px; }.drawer-head>div { min-width:0;flex:1; }.drawer-head h2 { font:500 clamp(26px,3.5dvh,38px)/1.15 var(--serif); }.drawer-head p { margin-top:5px;font-size:16px;line-height:1.3; }.icon-control { min-width:40px;min-height:40px;flex-shrink:0; }.drawer-tabs { padding:8px 24px;gap:6px;overflow:visible;flex-wrap:wrap; }.support-tab { min-height:40px;padding:7px 11px;font-size:16px;line-height:1.2;white-space:normal; }.drawer-body { min-height:0;max-height:none;padding:14px 24px;overflow:visible;font-size:var(--lesson-body);line-height:1.3; }
+.widget-page { min-width:0;max-width:100%; }.widget-page h3 { margin:0 0 10px;font:500 1.25em/1.15 var(--serif); }.widget-page p,.widget-page li { line-height:1.3; }.widget-page p { margin:0 0 10px; }.widget-page ul { margin:10px 0;padding-left:1.2em; }.widget-page li { margin-bottom:8px;padding-left:0; }.widget-note { font-size:.7em;letter-spacing:0;text-transform:none; }.widget-action { min-height:40px;padding:9px 12px;font-size:.75em;line-height:1.3;margin-top:10px; }.widget-pagination { padding:8px 24px;grid-template-columns:44px 1fr 44px; }.widget-pagination button { min-width:44px;min-height:40px;height:auto; }.widget-diagram { margin:8px 0;overflow:visible; }.widget-diagram svg { width:100%;min-width:0;height:auto;max-height:34dvh;overflow:hidden; }.widget-diagram text { font-size:30px; }
+.widget-page table,.science-table { width:100%;border-collapse:collapse;font-size:.85em; }.widget-page td,.widget-page th,.science-table td,.science-table th { padding:7px;border:1px solid var(--line-strong);text-align:left; }.widget-page input,.widget-page textarea { min-width:0;max-width:100%; }
+.student-tools { padding:0 8px 8px;gap:6px; }.tool-control { min-height:40px;padding:7px 9px;font-size:14px;line-height:1.2; }.lesson-nav { position:static;min-height:58px;padding:6px 12px; }.nav-control,.nav-fullscreen { min-width:40px;min-height:40px; }.phase-context strong { font-size:18px;line-height:1.2; }.phase-context small,.next-context { font-size:12px; }
+.timer-layout { display:grid;grid-template-columns:minmax(0,1fr) 190px;gap:20px;align-items:start; }.mini-timer { padding:10px 0;border-top:1px solid var(--line); }.mini-timer output { display:block;font:500 2.5rem/1.1 var(--serif); }.table-wrap { overflow:visible;margin-top:8px; }.bio-formula { font-size:1em; }.bio-quote { font-size:1.1em;line-height:1.3; }
+.support-word-map { margin:8px 0; }.support-word-map dt { font-weight:700;color:var(--navy-950);margin-top:8px; }.support-word-map dd { margin:2px 0 0; }.causal-strip { margin:8px 0;padding-left:1.2em; }.causal-strip li { padding:4px 0; }.partial-route { padding-block:8px;border-block:1px solid var(--line-strong); }
+.fit-content { flex:1;min-height:0;overflow:visible; }[data-fit-hidden] { display:none!important; }.component-pagination { flex:none;display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:44px;padding-top:6px;border-top:1px solid var(--line);font-size:14px; }.component-pagination button { min-height:38px;padding:7px 12px;border:1px solid var(--line-strong);border-radius:8px;background:var(--paper-50);color:var(--navy-950);cursor:pointer; }.component-pagination span { text-align:center; }
+.widget-pagination { display:flex;flex-direction:column;gap:4px;align-items:stretch; }
+.widget-page-navigation { display:grid;grid-template-columns:44px 1fr 44px;align-items:center;gap:12px;text-align:center; }
+.visible-criteria,.model-readout,.specification-detail,.science-table,.widget-page table { font-size:1em; }
+.answer-option,.bio-screen .answer-option,.workspace.has-drawer .answer-option { font-size:1em; }
+.diagram-key { list-style:none;margin:8px 0;padding:0;grid-column:1/-1; }
+.diagram-key li { display:flex;align-items:baseline;gap:12px;margin:0;padding:5px 0;border-bottom:1px solid var(--line);font-size:1em;line-height:1.3; }
+.diagram-key li>b { min-width:1.6em;color:var(--gold-600);font-weight:700; }
+.diagram-route { margin:8px 0;padding-left:1.3em;font-size:1em; }
+.diagram-route li { padding:8px;border:1px solid var(--line-strong);margin:0 0 8px; }
+.diagram-route .route-blank { border-style:dashed; }
+.model-fallback { padding:0; }
+.model-view,.workspace.has-drawer .model-view { min-height:180px;height:clamp(180px,25dvh,290px); }
+@media(min-width:1500px) { .workspace.has-drawer { grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px; }.workspace.has-drawer .lesson-stage,.workspace.has-drawer .student-drawer { grid-area:auto; }.workspace.has-drawer .lesson-stage { visibility:visible; }.workspace.has-drawer .drawer-body { font-size:clamp(22px,2.5dvh,28px); } }
+@media(max-width:760px) { :root { --lesson-body:18px; }.workspace { padding:5px; }.topic,.workspace.has-drawer .topic { min-height:50px;padding:10px 12px 4px;padding-right:185px;font-size:14px; }.screen,.screen.bio-screen,.workspace.has-drawer .screen.bio-screen { padding:6px 12px 8px;font-size:18px; }.screen-heading,.bio-screen .screen-heading,.workspace.has-drawer .bio-screen .screen-heading { font-size:28px;margin-bottom:8px; }.review-access-row { right:12px;top:-43px; }.review-access { min-height:36px;max-width:170px;padding:7px 8px;font-size:11px; }.bio-layout,.workspace.has-drawer .bio-layout,.model3d-layout,.workspace.has-drawer .model3d-layout,.timer-layout { grid-template-columns:minmax(0,1fr);gap:10px; }.model-view,.workspace.has-drawer .model-view { min-height:140px;height:180px; }.bio-figure svg,.workspace.has-drawer .bio-figure svg { max-height:220px; }.bio-controls button,.workspace.has-drawer .bio-controls button { font-size:14px; }.visible-criteria { font-size:16px; }.answer-grid { grid-template-columns:minmax(0,1fr);gap:6px; }.answer-option { min-height:44px; }.student-tools { grid-template-columns:repeat(3,minmax(0,1fr));gap:4px;padding:0 5px 5px; }.tool-control { min-height:36px;font-size:11px;padding:5px 4px; }.lesson-nav { grid-template-columns:40px minmax(0,1fr) 40px;gap:8px;padding:5px 8px; }.next-context { display:none; }.nav-context { grid-template-columns:minmax(0,1fr); }.phase-context strong { font-size:15px; }.phase-context small { font-size:10px; }.drawer-head { padding:10px 12px 8px;gap:8px; }.drawer-head h2 { font-size:25px; }.drawer-head p { font-size:14px; }.drawer-tabs { padding:6px 12px;gap:4px; }.support-tab { min-height:36px;padding:6px 9px;font-size:14px; }.drawer-body { padding:10px 12px;font-size:18px; }.widget-pagination { padding:6px 12px; }.bio-case { grid-template-columns:minmax(0,1fr);gap:6px; } }
+@media(max-width:760px) { .visible-criteria { font-size:18px; } }
+@media(max-width:760px) { .widget-diagram svg { max-height:200px; } }
+@media(prefers-reduced-motion:reduce) { .screen,.motion-path { animation:none; } }
+@media print { html,body,.app,.lesson-stage,.screen,.fit-content { height:auto!important;overflow:visible!important; }.student-tools,.lesson-nav,.review-access-row,.student-drawer,.component-pagination { display:none!important; }.workspace { display:block; }[data-fit-hidden] { display:revert!important; }.model-view canvas { display:none; }.model-fallback { display:block!important; } }
+
+/* Very narrow personal devices retain their own finite drawer track. */
+@media(max-width:360px) {
+ .student-drawer { grid-template-columns:minmax(0,1fr); }
+ .student-drawer>* { min-width:0;max-width:100%; }
+ .widget-diagram { margin-block:4px; }
+ .widget-diagram svg { display:block;max-height:180px; }
+ .widget-page:has(> .widget-diagram:not([data-fit-hidden]))>h3,
+ .widget-page:has(> table:not([data-fit-hidden]))>h3 { display:none; }
+ .widget-page table { table-layout:fixed;width:100%;max-width:100%; }
+ .widget-page th,.widget-page td { overflow-wrap:anywhere;word-break:normal;padding:1px 4px; }
+}
+
+/* Teaching scale: keep the science large on boards, laptops and tablets.
+   This uses the same frame and controls; excess copy is paged at readable size. */
+@media(min-width:600px) {
+ :root { --lesson-body:24px;--lesson-heading:clamp(40px,4.4vw,48px);--lesson-control:18px; }
+ .app { grid-template-rows:minmax(0,1fr) auto 64px; }
+ .topic,.workspace.has-drawer .topic { min-height:54px;padding:12px 20px 4px;padding-right:280px;font-size:20px; }
+ .screen,.screen.bio-screen,.workspace.has-drawer .screen.bio-screen { padding:6px 20px 12px;font-size:var(--lesson-body); }
+ .screen-heading,.bio-screen .screen-heading,.workspace.has-drawer .bio-screen .screen-heading { font-size:var(--lesson-heading);margin:4px 0 12px;line-height:1.08; }
+ .screen-lead,.bio-screen .screen-lead,.workspace.has-drawer .screen-lead { font-size:1em; }
+ .visible-criteria,.model-readout,.specification-detail,.science-table,.widget-page table { font-size:1em; }
+ .visible-criteria { margin:0 0 12px;padding:8px 0; }
+ .bio-layout,.model3d-layout,.workspace.has-drawer .bio-layout,.workspace.has-drawer .model3d-layout { grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:24px;align-items:start; }
+ .bio-layout.has-single-column,.workspace.has-drawer .bio-layout.has-single-column { grid-template-columns:minmax(0,1fr); }
+ .bio-layout>*,.model-col,.model-panel { min-width:0; }
+ .bio-figure svg,.workspace.has-drawer .bio-figure svg { height:var(--teaching-visual-height,55dvh);max-height:none;width:100%; }
+ .bio-figure figcaption,.workspace.has-drawer .bio-figure figcaption { font-size:clamp(18px,1.1vw,24px);line-height:1.25;margin-top:8px; }
+ .model-view,.workspace.has-drawer .model-view { height:var(--teaching-visual-height,55dvh);min-height:0;max-height:none; }
+ .model-fallback,.model-fallback svg { height:100%;max-height:100%; }
+ .model-panel { gap:4px; }
+ .bio-step,.workspace.has-drawer .bio-step { margin-top:0;padding-top:0; }
+ .bio-controls button,.workspace.has-drawer .bio-controls button,.model-camera { font-size:var(--lesson-control);min-height:44px; }
+ .bio-controls button { padding:9px 12px; }
+ .review-access-row { top:-46px;right:20px; }
+ .review-access,.review-return { min-height:42px;font-size:16px;max-width:260px;padding:9px 12px; }
+ .component-pagination { min-height:48px;font-size:16px; }
+ .component-pagination button { min-height:44px;font-size:16px; }
+ .student-tools { gap:6px; }
+ .tool-control { min-height:44px;font-size:14px; }
+ .lesson-nav { min-height:64px; }
+ .phase-context strong { font-size:20px; }
+ .workspace.has-drawer { grid-template-columns:minmax(0,1fr);grid-template-rows:minmax(0,1fr); }
+ .workspace.has-drawer .lesson-stage,.workspace.has-drawer .student-drawer { grid-area:1/1; }
+ .workspace.has-drawer .lesson-stage { visibility:hidden; }
+ .student-drawer { grid-template-columns:minmax(0,1fr); }
+ .student-drawer>* { min-width:0;max-width:100%; }
+ .drawer-body,.workspace.has-drawer .drawer-body { font-size:var(--lesson-body); }
+ .drawer-head h2 { font-size:var(--lesson-heading); }
+ .drawer-head p,.support-tab { font-size:var(--lesson-control); }
+ .support-tab { min-height:44px; }
+ .widget-diagram svg { display:block;height:var(--teaching-visual-height,50dvh);max-height:none; }
+ .widget-page th,.widget-page td { overflow-wrap:anywhere;word-break:normal; }
+}
+@media(min-width:1100px) {
+ :root { --lesson-body:clamp(28px,2vw,40px);--lesson-heading:clamp(50px,3.65vw,76px);--lesson-control:clamp(18px,1.2vw,24px); }
+ .topic,.workspace.has-drawer .topic { font-size:clamp(22px,1.6vw,30px); }
+ .component-pagination,.component-pagination button { font-size:18px; }
+ .tool-control { font-size:clamp(16px,1.05vw,21px); }
+ .phase-context strong { font-size:24px; }
+}
+@media(min-width:600px) and (max-width:1099px) {
+ .nav-context { grid-template-columns:minmax(0,1fr) auto; }
+ .next-context { display:flex;align-items:center; }
+ .next-context .next-label { display:none; }
+ .phase-context strong { font-size:18px;line-height:1.15; }
+ .topic,.workspace.has-drawer .topic { padding-right:225px; }
+ .review-access { max-width:210px;font-size:14px; }
+ .bio-layout,.model3d-layout,.workspace.has-drawer .bio-layout,.workspace.has-drawer .model3d-layout { gap:18px; }
+}
+@media(min-width:600px) {
+ /* The source introduction stays on its text part; the drawing gets its own part. */
+ .widget-page:has(.widget-diagram>svg:not([data-fit-hidden]))>h3 { display:none; }
+ .widget-diagram figcaption { font-size:clamp(18px,1.1vw,24px);line-height:1.3; }
+}
+@media(prefers-reduced-motion:reduce) {
+ /* Zero motion must not create a tiny default transition on every CSS property. */
+ *,*::before,*::after { transition:none!important;animation:none!important; }
+}
+/* L4: teacher mode switch, self-coding key and source labels. */
+.mode-switch { display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin:0 0 12px; }
+.mode-switch .mode-label { font-size:.6em;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-600); }
+.mode-option { min-height:48px;padding:8px 16px;border:2px solid var(--navy-900);border-radius:999px;background:var(--paper-50);color:var(--navy-950);font-weight:700;font-size:.7em;cursor:pointer; }
+.mode-option[aria-pressed="true"] { background:var(--navy-900);color:var(--paper-100); }
+.self-key { margin-top:12px;border:2px solid var(--gold-600);border-radius:12px;background:var(--gold-100); }
+.self-key summary { min-height:44px;padding:8px 14px;font-weight:700;cursor:pointer;color:var(--navy-950); }
+.self-key ul { margin:0;padding:4px 18px 12px 18px;list-style:none; }
+.self-key li { margin:6px 0; }
+.self-key b { display:inline-block;min-width:1.6em;padding:0 .35em;margin-right:.4em;border-radius:6px;background:var(--navy-900);color:var(--paper-100);text-align:center; }
+.card-visual { border:2px dashed var(--navy-700);border-radius:10px;padding:10px 12px;margin:8px 0;background:var(--paper-50); }
+.card-visual .blank { display:inline-block;min-width:5em;border-bottom:2px solid var(--navy-900); }
+.claim-ladder { list-style:none;margin:8px 0;padding:0; }
+.claim-ladder li { border:2px solid var(--navy-700);border-radius:8px;padding:4px 10px;margin:4px 0; }
+/* L4 phones: let scientific figures take their natural height so labels stay at or above 16 px. */
+@media(max-width:599px){ .bio-figure svg,.workspace.has-drawer .bio-figure svg{height:auto!important;max-height:64dvh!important;} .widget-diagram svg{height:auto!important;max-height:60dvh!important;} }
+.self-key:not([open]) > ul { display:none; }
