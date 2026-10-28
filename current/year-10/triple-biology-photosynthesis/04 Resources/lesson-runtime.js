@@ -2,7 +2,12 @@
    L4 adds a teacher-only practical set-up switch (Real tubes / Demo set) on screens that declare `modes`.
    The switch is hidden from pupil screens; the teacher shows it with the presenter key T (or ?teacher in the URL).
    L4 redesign (28 Oct 2026): Quick-check options numbered 1-4 (the best-supported option is never marked),
-   a teacher-revealed recheck-answers panel screen, a reveal table on a model step, and go-links between screens.
+   a reveal table on a model step, and go-links between screens.
+   L4 rebuild "Two rates, one net" (28 Oct 2026, later): content screens accept an html block (data tables),
+   panel screens take their buttons from p.panelButtons (one part at a time), and a drawer button is
+   shown only when that drawer has a page on the current screen (no empty AI or HOT drawers).
+   The task timer is never paged away: it stays visible in every part of its screen.
+   The quick check can carry an on-screen recheck: the question and its answer each have their own reveal.
    Screen IDs are explicit; pupil answers stay in books. No responses are stored or transmitted. */
 (() => {
   const lesson=window.LESSON;
@@ -169,7 +174,7 @@
   let duration=5*60, remaining=duration, deadline=null, timerPhase=null;
   function timerPanel(p){
     if(!p.timer)return '';
-    return `<aside class="mini-timer" aria-label="Task timer"><p class="bio-eyebrow">Time remaining</p><output id="exam-clock" aria-label="Time remaining" aria-live="off"></output><div class="bio-controls">${button('Start','timer','start')}${button('Pause','timer','pause')}${button('Reset','timer','reset')}${button('+1 min','timer','add')}</div><p class="exam-note" id="timer-status" role="status">Ready to start.</p></aside>`;
+    return `<aside class="mini-timer" aria-label="Task timer" data-fit-persistent><p class="bio-eyebrow">Time remaining</p><output id="exam-clock" aria-label="Time remaining" aria-live="off"></output><div class="bio-controls">${button('Start','timer','start')}${button('Pause','timer','pause')}${button('Reset','timer','reset')}${button('+1 min','timer','add')}</div><p class="exam-note" id="timer-status" role="status">Ready to start.</p></aside>`;
   }
   function prepareTimer(p){
     if(!p.timer||timerPhase===p.id)return;
@@ -219,12 +224,12 @@
     const controls=`<div class="bio-controls">${button('← Hide row','reveal',-1,shown===0?'disabled':'')}${button('Reveal next row →','reveal',1,shown===p.rows.length?'disabled':'')}${button('Reveal all','reveal','all',shown===p.rows.length?'disabled':'')}</div>`;
     return `<div class="table-wrap"><table class="science-table"><thead><tr>${p.columns.map(c=>`<th scope="col">${c}</th>`).join('')}</tr></thead><tbody>${rows}</tbody></table></div>${controls}`;
   };
-  const panelBody=a=>`${a.models.map(x=>a.models.length===1?`<p>${x.text}</p>`:`<p><strong>${x.heading}.</strong> ${x.text}</p>`).join('')}${a.criteria.map(c=>`<p class="panel-criteria"><strong>Check:</strong> ${c.items.join(' · ')}</p>`).join('')}`;
+  const panelBody=a=>`${a.models.map(x=>a.models.length===1||!x.heading?`<p>${x.text}</p>`:`<p><strong>${x.heading}.</strong> ${x.text}</p>`).join('')}${a.criteria.map(c=>`<p class="panel-criteria"><strong>Check:</strong> ${c.items.join(' · ')}</p>`).join('')}`;
   function content(p) {
     p=withMode(p);
     const s=state();
     if(p.type==='title')return `<div class="title-layout"><p class="screen-kicker">Year 10 Triple Biology · ${esc(lesson.unit)} · Lesson ${lesson.unitLesson}</p><h1 class="screen-heading" tabindex="-1">${lesson.title}</h1><p class="title-question">${lesson.question}</p><div class="title-path">${lesson.path.map(x=>`<span>${x}</span>`).join('')}</div></div>`;
-    const meta=[p.mins?`<span class="meta-time">⏱ ${p.mins} min</span>`:'',p.optional?`<span class="meta-optional">If time</span>`:''].join('');
+    const meta=[p.mins&&!p.hideMins?`<span class="meta-time">⏱ ${p.mins} min</span>`:'',p.optional?`<span class="meta-optional">If time</span>`:''].join('');
     const media=Boolean(p.type==='model3d'||p.diagram);
     const mediaIntro=media?`${p.lead?`<p class="screen-lead">${p.lead}</p>`:''}${criteria(p)}`:'';
     const heading=`<p class="bio-eyebrow">${p.label||p.family}${meta}</p><h1 class="screen-heading" tabindex="-1">${p.title}</h1>${modeSwitch(p)}${!media&&p.lead?`<p class="screen-lead">${p.lead}</p>`:''}${media?'':criteria(p)}`;
@@ -234,11 +239,11 @@
       return `${heading}<div class="bio-layout model3d-layout"><div class="model-col"><figure class="bio-figure" data-fit-persistent><div class="model-view" id="model-view" data-model="${esc(p.model)}"><div class="model-fallback" tabindex="0" role="region" aria-label="Static scientific diagram">${p.fallback?BioDiagrams.render(p.fallback,s):''}</div></div><figcaption id="model-caption">${modelCaption(p,s)||M.caption||'Interactive schematic model. Drag or use arrow keys to rotate. Colours and sizes are illustrative.'}</figcaption></figure></div><div class="bio-copy model-panel">${mediaIntro}${modelSteps(p,s)}<div class="model-readout" id="model-readout" aria-live="polite">${modelReadout(p,s)}</div><div class="bio-controls model-controls" id="model-controls">${modelControls(p,s)}</div>${task(p)}</div></div>`;
     }
     if(p.type==='model')return `${heading}<div class="bio-layout">${figure(p.diagram,p.caption,p.secondaryDiagram)}<div>${mediaIntro}<div class="bio-step"><span class="step-number">STEP ${s.step+1} OF ${p.steps.length}</span><p>${p.steps[s.step]}</p></div><div class="bio-controls">${button('← Back','step',-1,s.step===0?'disabled':'')}${button('Next step →','step',1,s.step===p.steps.length-1?'disabled':'')}</div>${p.rows&&s.step===p.tableStep?revealTable(p,s.rows||0):''}${ladder(p)}${safety(p)}${task(p)}</div></div>`;
-    if(p.type==='hinge')return `${heading}<div class="answer-grid">${p.options.map((opt,i)=>button(`<span class="answer-letter">${'1234'[i]}</span><span>${opt}</span>`,'choice',i,`class="answer-option" aria-pressed="${s.choice===i}"`)).join('')}</div><p class="bio-task">${p.task||'Choose one answer. Give the evidence that supports it.'}</p>${s.choice!==undefined?`<p class="exam-note">Selected: ${'1234'[s.choice]}. Explain your reasoning in your book or aloud.</p>`:''}`;
+    if(p.type==='hinge')return `${heading}<div class="answer-grid">${p.options.map((opt,i)=>button(`<span class="answer-letter">${'1234'[i]}</span><span>${opt}</span>`,'choice',i,`class="answer-option" aria-pressed="${s.choice===i}"`)).join('')}</div><p class="bio-task">${p.task||'Choose one answer. Give the evidence that supports it.'}</p>${s.choice!==undefined?`<p class="exam-note">Selected: ${'1234'[s.choice]}. Explain your reasoning in your book or aloud.</p>`:''}${p.recheck?`<div class="bio-step hinge-recheck">${s.recheckQ?`<p>${p.recheck.question}</p>${s.recheckA?`<p><strong>Recheck answer:</strong> ${p.recheck.answer}</p>`:''}<div class="bio-controls">${button(s.recheckA?'Hide recheck answer':'Show recheck answer','recheck','a')}</div>`:`<div class="bio-controls">${button('Show the recheck question','recheck','q')}</div>`}</div>`:''}`;
     if(p.type==='cases')return `${heading}${withTimer(p,`${p.before||''}<div class="bio-cases${p.caseGrid?' is-grid':''}">${p.cases.map(c=>/^<(ol|ul)/.test(c[1])?`<div class="bio-case is-list"><b>${c[0]}</b>${c[1]}</div>`:`<div class="bio-case"><b>${c[0]}</b><p>${c[1]}</p></div>`).join('')}</div>${p.after||''}${safety(p)}${task(p)}`)}`;
     if(p.type==='panels'){
       const shown=s.panels||[];
-      return `${heading}<div class="bio-controls panel-controls" data-fit-persistent>${button('Show Quick check, B, Z and H','panel-set','first',`aria-pressed="${shown.length===p.panelSets.first.length&&p.panelSets.first.every(i=>shown.includes(i))}"`)}${button('Also show K and Q','panel-set','all',`aria-pressed="${shown.length===p.panels.length}"`)}${button('Hide all','panel-set','none',shown.length?'':'disabled')}</div><div class="recheck-panels">${p.panels.map((x,i)=>shown.includes(i)?`<section class="recheck-panel is-shown" aria-label="${esc(x.title)}"><h2>${x.title}</h2>${panelBody(x.answer)}</section>`:'').join('')}</div>${shown.length<p.panels.length?`<p class="panel-hidden">${shown.length?'Not shown yet':'Hidden until your teacher shows them'}: ${p.panels.filter((x,i)=>!shown.includes(i)).map(x=>x.short).join(' · ')}.</p>`:''}${task(p)}`;
+      return `${heading}<div class="bio-controls panel-controls" data-fit-persistent>${(p.panelButtons||[]).map(([k,label])=>button(label,'panel-set',k,`aria-pressed="${shown.length===p.panelSets[k].length&&p.panelSets[k].every(i=>shown.includes(i))}"`)).join('')}${button('Hide all','panel-set','none',shown.length?'':'disabled')}</div><div class="recheck-panels">${p.panels.map((x,i)=>shown.includes(i)?`<section class="recheck-panel is-shown" aria-label="${esc(x.title)}"><h2>${x.title}</h2>${panelBody(x.answer)}</section>`:'').join('')}</div>${shown.length<p.panels.length?`<p class="panel-hidden">${shown.length?'Not shown yet':'Hidden until your teacher shows them'}: ${p.panels.filter((x,i)=>!shown.includes(i)).map(x=>x.short).join(' · ')}.</p>`:''}${task(p)}`;
     }
     if(p.type==='table'){
       const shown=p.reveal?s.step:p.rows.length;
@@ -247,7 +252,7 @@
       return `${heading}${withTimer(p,`<div class="table-wrap"><table class="science-table"><thead><tr>${p.columns.map(c=>`<th scope="col">${c}</th>`).join('')}</tr></thead><tbody>${rows}</tbody></table></div>${controls}${safety(p)}${task(p)}`)}`;
     }
     if(p.type==='quote')return `${heading}<blockquote class="bio-quote">${p.quote}</blockquote>${list(p.items)}${p.credit?`<p class="routine-credit">${p.credit}</p>`:''}${task(p)}`;
-    const copy=`<div class="bio-copy">${mediaIntro}${p.text?`<p>${p.text}</p>`:''}${p.items?list(p.items):''}${p.formula?`<div class="bio-formula">${p.formula.map(x=>`<span>${x}</span>`).join('')}</div>`:''}${ladder(p)}${safety(p)}${task(p)}</div>`;
+    const copy=`<div class="bio-copy">${mediaIntro}${p.text?`<p>${p.text}</p>`:''}${p.html||''}${p.items?list(p.items):''}${p.formula?`<div class="bio-formula">${p.formula.map(x=>`<span>${x}</span>`).join('')}</div>`:''}${ladder(p)}${safety(p)}${task(p)}</div>`;
     return `${heading}${withTimer(p,p.diagram?`<div class="bio-layout">${copy}${figure(p.diagram,p.caption,p.secondaryDiagram)}</div>`:copy)}`;
   }
 
@@ -276,7 +281,7 @@
     $('phase-name').textContent=p.nav||p.title||lesson.title;
     $('next-context').innerHTML=`<span class="next-label">${index<lesson.phases.length-1?`Next: <strong>${esc(lesson.phases[index+1].nav||lesson.phases[index+1].title)}</strong>`:'Lesson complete'}</span> ${button('⛶','fullscreen','',`class="nav-fullscreen" aria-label="Toggle fullscreen"`)}`;
     $('previous-screen').disabled=index===0;$('next-screen').disabled=index===lesson.phases.length-1;
-    const widgets=p.secure?[]:p.family==='Learning outcome'?[names[0]]:['Input','Assess','Thinking'].includes(p.family)?names:[];
+    const widgets=(p.secure?[]:p.family==='Learning outcome'?[names[0]]:['Input','Assess','Thinking'].includes(p.family)?names:[]).filter(([id])=>!LessonWidgets.available||LessonWidgets.available(id,p,lesson));
     if(activeWidget!=='answers'&&!widgets.some(w=>w[0]===activeWidget))activeWidget=null;
     $('student-tools').innerHTML=widgets.map(([id,label])=>button(label,'widget',id,`class="tool-control" aria-expanded="${id===activeWidget}" aria-controls="student-drawer"`)).join('');
     renderPanel();
@@ -349,7 +354,7 @@
         $('model-step')?.setAttribute('tabindex','-1');$('model-step')?.focus({preventScroll:true});
       } else {render();const st=$('screen').querySelector('.bio-step');if(st){st.setAttribute('tabindex','-1');st.focus({preventScroll:true});}}
     }
-    if(a==='panel-set'){const p=phase();s.panels=v==='none'?[]:[...p.panelSets[v]];componentPages.main.index=0;render();document.querySelector(`[data-action="panel-set"][data-value="${v}"]:not([disabled])`)?.focus();$('status').textContent=v==='none'?'All recheck answers hidden.':'Recheck answers shown.';return;}
+    if(a==='panel-set'){const p=phase();s.panels=v==='none'?[]:[...p.panelSets[v]];componentPages.main.index=0;render();document.querySelector(`[data-action="panel-set"][data-value="${v}"]:not([disabled])`)?.focus();$('status').textContent=v==='none'?'All panels hidden.':'Panel shown.';return;}
     if(a==='reveal'){const p=phase(),k=p.type==='table'?'step':'rows';s[k]=v==='all'?p.rows.length:Math.max(0,Math.min(p.rows.length,(s[k]||0)+Number(v)));render();document.querySelector(`[data-action="reveal"][data-value="${v}"]:not([disabled])`)?.focus()||document.querySelector('[data-action="reveal"]:not([disabled])')?.focus();}
     if(a==='model'||a==='model-cmd'){
       const p=phase(),M=Models[p.model];
@@ -360,6 +365,7 @@
       if(activeWidget==='answers')renderPanel();
     }
     if(a==='mode'){mode=v==='A'?'A':'B';try{sessionStorage.setItem('y10-l4-mode',mode);}catch(_){}render();document.querySelector(`[data-action="mode"][data-value="${mode}"]`)?.focus();$('status').textContent=mode==='A'?'Real tubes selected.':'Demo set and illustrative results selected.';return;}
+    if(a==='recheck'){if(v==='q')s.recheckQ=true;else s.recheckA=!s.recheckA;render();document.querySelector('[data-action="recheck"]')?.focus();return;}
     if(a==='choice'){s.choice=Number(v);render();document.querySelector(`[data-action="choice"][data-value="${v}"]`)?.focus();}
     if(a==='timer'){
       tick();
