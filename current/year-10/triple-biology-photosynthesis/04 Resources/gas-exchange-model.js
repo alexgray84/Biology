@@ -97,10 +97,10 @@
   function baseTubes(dimLayers) {
     const L = PARAMS.DIM_LEVELS[dimLayers] ? dimLayers : PARAMS.DIM_DEFAULT, dimI = PARAMS.DIM_LEVELS[L];
     return [
-      { id: 'dark', key: 'dark', letter: 'A', name: 'Dark', wrap: 'foil', setup: 'Leaf, tube wrapped in foil', cond: { leaves: 1, light: [[0, 0]] } },
-      { id: 'dim', key: `dim-${L}`, letter: 'B', name: 'Dim', wrap: 'muslin', layers: L, setup: `Leaf, ${L} layer${L > 1 ? 's' : ''} of muslin (${dimI} % of the bright light)`, cond: { leaves: 1, light: [[0, dimI]] } },
-      { id: 'bright', key: 'bright', letter: 'C', name: 'Bright', wrap: null, setup: 'Leaf, LED about 10 cm away', cond: { leaves: 1, light: [[0, B]] } },
-      { id: 'control', key: 'control', letter: 'D', name: 'Control', wrap: null, setup: 'No leaf, same light position', cond: { leaves: 0, light: [[0, B]] } }
+      { id: 'bright', key: 'bright', letter: '1', name: 'Bright', wrap: null, setup: 'Leaf, LED about 10 cm away', cond: { leaves: 1, light: [[0, B]] } },
+      { id: 'dim', key: `dim-${L}`, letter: '2', name: 'Dim', wrap: 'muslin', layers: L, setup: `Leaf, ${L} layer${L > 1 ? 's' : ''} of muslin (${dimI} % of the bright light)`, cond: { leaves: 1, light: [[0, dimI]] } },
+      { id: 'dark', key: 'dark', letter: '3', name: 'Dark', wrap: 'foil', setup: 'Leaf, tube wrapped in foil', cond: { leaves: 1, light: [[0, 0]] } },
+      { id: 'control', key: 'control', letter: '4', name: 'Control', wrap: null, setup: 'No leaf, same light position', cond: { leaves: 0, light: [[0, B]] } }
     ];
   }
   const TRANSFER = [
@@ -109,7 +109,7 @@
     { id: 'two-bright', name: 'Two leaves, bright', wrap: null, leaves: 2, setup: 'Two equal leaves in one tube, LED about 10 cm away', cond: { leaves: 2, light: [[0, B]] } },
     { id: 'two-dark', name: 'Two leaves, dark', wrap: 'foil', leaves: 2, setup: 'Two equal leaves in one tube, wrapped in foil', cond: { leaves: 2, light: [[0, 0]] } }
   ];
-  const transferTube = id => { const s = TRANSFER.find(x => x.id === id); return s ? Object.assign({ key: `x-${s.id}`, letter: 'E', transfer: true }, s) : null; };
+  const transferTube = id => { const s = TRANSFER.find(x => x.id === id); return s ? Object.assign({ key: `x-${s.id}`, letter: '5', transfer: true }, s) : null; };
   const wrapAt = (tube, t) => (tube.wrap === 'foil-late' ? (t >= 30 ? 'foil' : null) : tube.wrap === 'foil-early' ? (t < 30 ? 'foil' : null) : tube.wrap);
 
   const Model = Object.freeze({ PARAMS, respirationRate, photosynthesisRate, lightAt, netRate, co2At, ratesAt, trajectory, indicatorColour, indicatorBand, BANDS, STOPS, baseTubes, TRANSFER, transferTube, wrapAt });

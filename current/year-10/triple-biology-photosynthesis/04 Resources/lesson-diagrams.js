@@ -122,7 +122,7 @@ window.BioDiagrams = (() => {
     const lab=(tx,ty,word,y)=>`<path d="M252 ${y-16}L${tx} ${ty}" stroke="${C.ink}" stroke-width="3"/>`+T(240,y,word,{anchor:'end',size:62});
     b+=lab(312,138,'bung',160)+lab(345,380,'leaf',320)+lab(330,398,'gauze',425)+lab(340,500,'indicator',530);
     const names=s.blankNames?[['Tube 1',''],['Tube 2','muslin'],['Tube 3','foil'],['Tube 4','no leaf']]:[['Bright',''],['Dim','muslin'],['Dark','foil'],['No leaf','control']];
-    names.forEach(([a,c],i)=>{b+=T(xs[i],660,a,{anchor:'middle',size:58});if(c)b+=T(xs[i],740,c,{anchor:'middle',size:54,weight:500,fill:C.soft});});
+    names.forEach(([a,c],i)=>{b+=T(xs[i],660,s.blankNames?a.replace('Tube ',''):a,{anchor:'middle',size:s.blankNames?66:58});if(c)b+=T(xs[i],740,c,{anchor:'middle',size:54,weight:500,fill:C.soft});});
     b+=T(780,-34,'LED lamp, same distance for every tube',{anchor:'middle',size:54});
     return svg('Four sealed tubes for the hydrogencarbonate indicator investigation','Four boiling tubes with bungs under one LED lamp at the same distance. Each has the same volume of orange-red indicator at the bottom and a gauze platform above it. Tubes 1 to 3 hold a leaf on the gauze, not touching the indicator. Tube 1 is uncovered (bright), tube 2 is wrapped in muslin (dim), tube 3 is wrapped in foil (dark). Tube 4 has no leaf and is the control in the light.',b,1260,780);
   }

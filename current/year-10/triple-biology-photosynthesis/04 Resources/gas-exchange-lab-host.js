@@ -69,7 +69,7 @@
   function transferHTML() {
     if (!transferOpen()) return `<p class="locked">Locked: predict and observe all four tubes to 60 minutes first.</p>`;
     const list = M.TRANSFER;
-    let h = `<p>Choose a new condition. Predict its colour at 60 minutes before it appears on the rack as tube E.</p><div class="seg wrap" role="group" aria-label="New condition">${list.map(x => `<button type="button" data-cmd="transfer" data-value="${x.id}" aria-pressed="${S.transferId === x.id}"${S.playing ? ' disabled' : ''}>${esc(x.name)}</button>`).join('')}</div>`;
+    let h = `<p>Choose a new condition. Predict its colour at 60 minutes before it appears on the rack as tube 5.</p><div class="seg wrap" role="group" aria-label="New condition">${list.map(x => `<button type="button" data-cmd="transfer" data-value="${x.id}" aria-pressed="${S.transferId === x.id}"${S.playing ? ' disabled' : ''}>${esc(x.name)}</button>`).join('')}</div>`;
     if (S.transferId) h += `<p class="note">Changing the set-up resets the clock to 0 min.</p>`;
     return h;
   }
