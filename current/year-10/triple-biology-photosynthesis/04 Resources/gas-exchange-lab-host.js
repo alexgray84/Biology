@@ -151,8 +151,8 @@
     else if (c === 'step') { S.t = Math.min(M.PARAMS.T_END, S.t + 5); if (S.t >= M.PARAMS.T_END) { finishRun(); return; } announce(stateSentence()); }
     else if (c === 'reset') { resetClock(); announce('Clock reset to 0 minutes.'); }
     else if (c === 'speed') { S.speed = Number(v); S.lastTick = 0; announce(`Speed ${v} simulated minutes per second.`); }
-    else if (c === 'dim') { if (Number(v) !== S.dimLayers) { S.dimLayers = Number(v); resetClock(); const tb = M.baseTubes(S.dimLayers)[1]; announce(`Tube B now has ${v} muslin layer${v > 1 ? 's' : ''}. Clock reset. ${revealed(tb) ? '' : 'Predict tube B for this set-up before the clock unlocks.'}`); } }
-    else if (c === 'transfer') { S.transferId = v; resetClock(); const tb = M.transferTube(v); announce(`New condition: ${tb.name}. Clock reset. ${revealed(tb) ? '' : 'Predict tube E before the clock unlocks.'}`); }
+    else if (c === 'dim') { if (Number(v) !== S.dimLayers) { S.dimLayers = Number(v); resetClock(); const tb = M.baseTubes(S.dimLayers)[1]; announce(`Tube 2 now has ${v} muslin layer${v > 1 ? 's' : ''}. Clock reset. ${revealed(tb) ? '' : 'Predict tube 2 for this set-up before the clock unlocks.'}`); } }
+    else if (c === 'transfer') { S.transferId = v; resetClock(); const tb = M.transferTube(v); announce(`New condition: ${tb.name}. Clock reset. ${revealed(tb) ? '' : 'Predict tube 5 before the clock unlocks.'}`); }
     else return;
     render();
   });
