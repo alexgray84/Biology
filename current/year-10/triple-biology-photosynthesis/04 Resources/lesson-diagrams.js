@@ -56,7 +56,7 @@ window.BioDiagrams = (() => {
     };
     b+=T(x0,200,'Photosynthesis: CO₂ in',{size:48})+T(x0,264,'needs light',{size:46,weight:500,fill:C.soft});
     b+=arrow(322,S.P,'in',S.P===null);
-    b+=T(x0,420,'Respiration: CO₂ out',{size:48})+T(x0,484,'all cells, light and dark',{size:46,weight:500,fill:C.soft});
+    b+=T(x0,420,'Respiration: CO₂ out',{size:48})+T(x0,484,'all living cells, light and dark',{size:46,weight:500,fill:C.soft});
     b+=arrow(542,S.R,'out',S.R===null);
     b+=`<rect x="${x0-10}" y="604" width="760" height="96" rx="14" fill="${C.paper}" stroke="${C.ink}" stroke-width="4"/>`+T(x0+10,670,S.net,{size:48});
     const words=S.P===null&&S.R===null?'Both rates are blank. Draw the arrow lengths and write the net result.':S.P===null?`Respiration releases ${S.R} model units of CO₂. The photosynthesis rate is not given, so the net result depends on both rates.`:`${S.lightWord} light. Photosynthesis uses ${S.P} and respiration releases ${S.R} model units of CO₂. ${S.net}.`;
