@@ -30,8 +30,8 @@ window.BioDiagrams = (() => {
      Arrow length = rate in model units (48 px per unit). */
   const SETTINGS = {
     dark:{light:'dark',lightWord:'Dark',P:0,R:3,net:'Net: CO₂ given out'},
-    dim:{light:'dim',lightWord:'Dim',P:2,R:3,net:'Net: CO₂ given out'},
-    'dim-other':{light:'dim',lightWord:'Dim · leaf 2',P:2,R:1,net:'Net: CO₂ taken in'},
+    dim:{light:'dim',lightWord:'Dim · heavy shade',P:2,R:3,net:'Net: CO₂ given out'},
+    'dim-other':{light:'dim',lightWord:'Same shade · leaf 2',P:2,R:1,net:'Net: CO₂ taken in'},
     bright:{light:'bright',lightWord:'Bright',P:8,R:3,net:'Net: CO₂ taken in'},
     unknown:{light:'dim',lightWord:'Dim',P:null,R:3,net:'Net: depends on both rates'},
     predict:{light:'dim',lightWord:'Light: ?',P:null,R:null,net:'Net = ?  Predict first'},
@@ -59,7 +59,7 @@ window.BioDiagrams = (() => {
     b+=T(x0,420,'Respiration: CO₂ out',{size:48})+T(x0,484,'all living cells, light and dark',{size:46,weight:500,fill:C.soft});
     b+=arrow(542,S.R,'out',S.R===null);
     b+=`<rect x="${x0-10}" y="604" width="760" height="96" rx="14" fill="${C.paper}" stroke="${C.ink}" stroke-width="4"/>`+T(x0+10,670,S.net,{size:48});
-    const words=S.P===null&&S.R===null?'Both rates are blank. Draw the arrow lengths and write the net result.':S.P===null?`Respiration releases ${S.R} model units of CO₂. The photosynthesis rate is not given, so the net result depends on both rates.`:`${S.lightWord} light. Photosynthesis uses ${S.P} and respiration releases ${S.R} model units of CO₂. ${S.net}.`;
+    const words=S.P===null&&S.R===null?'Both rates are blank. Draw the arrow lengths and write the net result.':S.P===null?`Respiration releases ${S.R} model units of CO₂. The photosynthesis rate is not given, so the net result depends on both rates.`:`Light: ${S.lightWord}. Photosynthesis uses ${S.P} and respiration releases ${S.R} model units of CO₂. ${S.net}.`;
     return svg('Two-rate CO₂ budget for one leaf',words+' Grey arrows show CO₂. Arrow length shows rate in illustrative model units.',b,1100,720);
   }
 

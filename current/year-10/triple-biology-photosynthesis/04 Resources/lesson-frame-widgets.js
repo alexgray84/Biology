@@ -1,9 +1,9 @@
 /* Pupil-safe contextual support for L4. One shared task, three dials:
-   support cards chosen from the barrier seen in the work (B I K H Q; L3 return O Y J),
-   access arrangements kept separately, and depth cards open to anyone whose core is secure. */
+   support cards chosen from the barrier seen in the work (B Z K H Q; L3 return O Y J),
+   access arrangements kept separately, and depth cards routed by evidence in the depth-or-revision slot. */
 window.LessonWidgets=(()=>{
-  const ORDER=['key','O','Y','J','B','I','K','H','Q'];
-  const LABEL={key:'Which card?',O:'Card O',Y:'Card Y',J:'Card J',B:'Card B',I:'Card I',K:'Card K',H:'Card H',Q:'Card Q'};
+  const ORDER=['key','O','Y','J','B','Z','K','H','Q'];
+  const LABEL={key:'Which card?',O:'Card O',Y:'Card Y',J:'Card J',B:'Card B',Z:'Card Z',K:'Card K',H:'Card H',Q:'Card Q'};
   const pages=rows=>(rows||[]).map(r=>{const {answer,...page}=r;return page;});
   const supportKeys=s=>ORDER.filter(k=>s[k]?.length);
   const supportTabs=s=>supportKeys(s).map(k=>({id:k,label:LABEL[k],pages:pages(s[k])}));

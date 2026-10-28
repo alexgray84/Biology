@@ -1,5 +1,8 @@
 /* Arcadia biology lesson renderer, extended for local Three.js models, reveal tables, timers and explicit pupil steps.
-   L4 adds a teacher-chosen practical mode (A real tubes / B demo set + model + illustrative photos) on screens that declare `modes`.
+   L4 adds a teacher-only practical set-up switch (Real tubes / Demo set) on screens that declare `modes`.
+   The switch is hidden from pupil screens; the teacher shows it with the presenter key T (or ?teacher in the URL).
+   L4 redesign (28 Oct 2026): Quick-check options numbered 1-4 (the best-supported option is never marked),
+   a teacher-revealed recheck-answers panel screen, a reveal table on a model step, and go-links between screens.
    Screen IDs are explicit; pupil answers stay in books. No responses are stored or transmitted. */
 (() => {
   const lesson=window.LESSON;
@@ -10,6 +13,7 @@
   let index=0, activeWidget=null, instance=null, answerContext=null;
   const access={diagram:false};
   let mode=(()=>{try{return sessionStorage.getItem('y10-l4-mode')||'B';}catch(_){return 'B';}})();
+  let teacherControls=(()=>{try{return /[?&]teacher\b/.test(location.search)||sessionStorage.getItem('y10-l4-teacher')==='1';}catch(_){return false;}})();
   const withMode=p=>p.modes?{...p,...p.modes[mode]}:p;
   const initial=location.hash.slice(1);
   if(lesson.phases.some(p=>p.id===initial)) index=lesson.phases.findIndex(p=>p.id===initial);
@@ -32,7 +36,8 @@
   const ladder=p=>p.ladder&&p.ladder.length?`<ol class="ladder" aria-label="Build your answer in layers">${p.ladder.map(([k,t])=>`<li><b>${k}</b><span>${t}</span></li>`).join('')}</ol>`:'';
   const safety=p=>p.safety?`<p class="safety-note"><b>Safety</b> ${p.safety}</p>`:'';
   const selfKey=p=>p.selfKey&&p.selfKey.length&&lesson.selfKey?`<details class="self-key"><summary>Stuck? Pick the line that sounds like you, then open that card in Adaptation.</summary><ul>${p.selfKey.map(k=>`<li><b>${k}</b> ${lesson.selfKey[k]}</li>`).join('')}</ul></details>`:'';
-  const task=p=>`${p.task?`<p class="bio-task">${p.task}</p>`:''}${doThis(p)}${selfKey(p)}${(p.resources||[]).length?`<div class="task-resources">${p.resources.map(r=>`<a href="${esc(r.href)}" target="_blank" rel="noopener">${esc(r.label)} <span aria-hidden="true">↗</span></a>`).join('')}</div>`:''}`;
+  const goLinks=p=>(p.links||[]).length?`<div class="bio-controls screen-links">${p.links.map(l=>button(l.back?'← '+esc(l.label):esc(l.label)+' →','go',l.id,'class="screen-link"')).join('')}</div>`:'';
+  const task=p=>`${p.task?`<p class="bio-task">${p.task}</p>`:''}${doThis(p)}${selfKey(p)}${goLinks(p)}${(p.resources||[]).length?`<div class="task-resources">${p.resources.map(r=>`<a href="${esc(r.href)}" target="_blank" rel="noopener">${esc(r.label)} <span aria-hidden="true">↗</span></a>`).join('')}</div>`:''}`;
   const criteria=p=>p.criteria?.length?`<section class="visible-criteria" aria-label="Success criteria"><h2>What success looks like</h2><ul>${p.criteria.map(c=>`<li>${c}</li>`).join('')}</ul></section>`:'';
 
   /* ---------- one-screen component paging ----------
@@ -40,7 +45,7 @@
      available canvas is presented as numbered parts, never scaled or scrolled. */
   const componentPages={main:{key:null,index:0,pages:[],units:[],containers:[]},drawer:{key:null,index:0,pages:[],units:[],containers:[]}};
   let fitQueued=false,fitRunning=false;
-  const fitContainer='.bio-layout,.timer-layout,.timer-main,.bio-copy,.model-col,.model-panel,.visible-criteria,.bio-list,.outcome-list,.do-this,.answer-grid,.bio-cases,.model-readout,.model-controls,.concentration-pair,.support-word-map,.causal-strip,.table-wrap,.control-group,.bio-step,.mini-timer,.diagram-key';
+  const fitContainer='.recheck-panels,.recheck-panel,.bio-case.is-list,.bio-layout,.timer-layout,.timer-main,.bio-copy,.model-col,.model-panel,.visible-criteria,.bio-list,.outcome-list,.do-this,.answer-grid,.bio-cases,.model-readout,.model-controls,.concentration-pair,.support-word-map,.causal-strip,.table-wrap,.control-group,.bio-step,.mini-timer,.diagram-key';
   function fitUnits(host){
     const units=[],containers=[];
     const add=nodes=>{const a=(Array.isArray(nodes)?nodes:[nodes]).filter(Boolean);if(a.length)units.push(a);};
@@ -182,7 +187,7 @@
       if($('timer-status')&&$('timer-status').textContent!==message)$('timer-status').textContent=message;
     }
   }
-  const withTimer=(p,body)=>p.timer?`<div class="timer-layout"><div class="timer-main">${body}</div>${timerPanel(p)}</div>`:body;
+  const withTimer=(p,body)=>p.timer?(p.timerFirst?`<div class="timer-layout is-timer-first">${timerPanel(p)}<div class="timer-main">${body}</div></div>`:`<div class="timer-layout"><div class="timer-main">${body}</div>${timerPanel(p)}</div>`):body;
 
   /* ---------- 3D model panel ---------- */
   const stepBox=(p,s)=>`<div class="bio-step" id="model-step"><span class="step-number">STEP ${s.step+1} OF ${p.steps.length}</span><p>${p.steps[s.step]}</p></div>`;
@@ -208,7 +213,13 @@
   }
   function parseValue(v){if(v==='true')return true;if(v==='false')return false;if(/^-?\d+(\.\d+)?$/.test(v))return Number(v);return v;}
 
-  const modeSwitch=p=>p.modes?`<div class="mode-switch" role="group" aria-label="Practical mode: teacher's choice"><span class="mode-label">Teacher's choice</span>${button('Mode A · real tubes','mode','A',`aria-pressed="${mode==='A'}" class="mode-option"`)}${button('Mode B · demo set + model','mode','B',`aria-pressed="${mode==='B'}" class="mode-option"`)}</div>`:'';
+  const modeSwitch=p=>p.modes&&teacherControls?`<div class="mode-switch" role="group" aria-label="Practical set-up: teacher control"><span class="mode-label">Teacher only</span>${button('Real tubes','mode','A',`aria-pressed="${mode==='A'}" class="mode-option"`)}${button('Demo set','mode','B',`aria-pressed="${mode==='B'}" class="mode-option"`)}</div>`:'';
+  const revealTable=(p,shown,key)=>{
+    const rows=p.rows.map((r,i)=>`<tr${i<shown?'':' class="is-hidden-row"'}>${r.map((cell,j)=>j===0?`<th scope="row">${cell}</th>`:`<td>${i<shown?cell:'<span class="blank-cell" aria-label="Not yet revealed">…</span>'}</td>`).join('')}</tr>`).join('');
+    const controls=`<div class="bio-controls">${button('← Hide row','reveal',-1,shown===0?'disabled':'')}${button('Reveal next row →','reveal',1,shown===p.rows.length?'disabled':'')}${button('Reveal all','reveal','all',shown===p.rows.length?'disabled':'')}</div>`;
+    return `<div class="table-wrap"><table class="science-table"><thead><tr>${p.columns.map(c=>`<th scope="col">${c}</th>`).join('')}</tr></thead><tbody>${rows}</tbody></table></div>${controls}`;
+  };
+  const panelBody=a=>`${a.models.map(x=>a.models.length===1?`<p>${x.text}</p>`:`<p><strong>${x.heading}.</strong> ${x.text}</p>`).join('')}${a.criteria.map(c=>`<p class="panel-criteria"><strong>Check:</strong> ${c.items.join(' · ')}</p>`).join('')}`;
   function content(p) {
     p=withMode(p);
     const s=state();
@@ -222,9 +233,13 @@
       const M=Models[p.model]||{};
       return `${heading}<div class="bio-layout model3d-layout"><div class="model-col"><figure class="bio-figure" data-fit-persistent><div class="model-view" id="model-view" data-model="${esc(p.model)}"><div class="model-fallback" tabindex="0" role="region" aria-label="Static scientific diagram">${p.fallback?BioDiagrams.render(p.fallback,s):''}</div></div><figcaption id="model-caption">${modelCaption(p,s)||M.caption||'Interactive schematic model. Drag or use arrow keys to rotate. Colours and sizes are illustrative.'}</figcaption></figure></div><div class="bio-copy model-panel">${mediaIntro}${modelSteps(p,s)}<div class="model-readout" id="model-readout" aria-live="polite">${modelReadout(p,s)}</div><div class="bio-controls model-controls" id="model-controls">${modelControls(p,s)}</div>${task(p)}</div></div>`;
     }
-    if(p.type==='model')return `${heading}<div class="bio-layout">${figure(p.diagram,p.caption,p.secondaryDiagram)}<div>${mediaIntro}<div class="bio-step"><span class="step-number">STEP ${s.step+1} OF ${p.steps.length}</span><p>${p.steps[s.step]}</p></div><div class="bio-controls">${button('← Back','step',-1,s.step===0?'disabled':'')}${button('Next step →','step',1,s.step===p.steps.length-1?'disabled':'')}</div>${ladder(p)}${safety(p)}${task(p)}</div></div>`;
-    if(p.type==='hinge')return `${heading}<div class="answer-grid">${p.options.map((opt,i)=>button(`<span class="answer-letter">${'ABCD'[i]}</span><span>${opt}</span>`,'choice',i,`class="answer-option" aria-pressed="${s.choice===i}"`)).join('')}</div><p class="bio-task">${p.task||'Choose one answer. Give the evidence that supports it.'}</p>${s.choice!==undefined?`<p class="exam-note">Selected: ${'ABCD'[s.choice]}. Explain your reasoning in your book or aloud.</p>`:''}`;
-    if(p.type==='cases')return `${heading}${withTimer(p,`<div class="bio-cases">${p.cases.map(c=>`<div class="bio-case"><b>${c[0]}</b><p>${c[1]}</p></div>`).join('')}</div>${safety(p)}${task(p)}`)}`;
+    if(p.type==='model')return `${heading}<div class="bio-layout">${figure(p.diagram,p.caption,p.secondaryDiagram)}<div>${mediaIntro}<div class="bio-step"><span class="step-number">STEP ${s.step+1} OF ${p.steps.length}</span><p>${p.steps[s.step]}</p></div><div class="bio-controls">${button('← Back','step',-1,s.step===0?'disabled':'')}${button('Next step →','step',1,s.step===p.steps.length-1?'disabled':'')}</div>${p.rows&&s.step===p.tableStep?revealTable(p,s.rows||0):''}${ladder(p)}${safety(p)}${task(p)}</div></div>`;
+    if(p.type==='hinge')return `${heading}<div class="answer-grid">${p.options.map((opt,i)=>button(`<span class="answer-letter">${'1234'[i]}</span><span>${opt}</span>`,'choice',i,`class="answer-option" aria-pressed="${s.choice===i}"`)).join('')}</div><p class="bio-task">${p.task||'Choose one answer. Give the evidence that supports it.'}</p>${s.choice!==undefined?`<p class="exam-note">Selected: ${'1234'[s.choice]}. Explain your reasoning in your book or aloud.</p>`:''}`;
+    if(p.type==='cases')return `${heading}${withTimer(p,`${p.before||''}<div class="bio-cases${p.caseGrid?' is-grid':''}">${p.cases.map(c=>/^<(ol|ul)/.test(c[1])?`<div class="bio-case is-list"><b>${c[0]}</b>${c[1]}</div>`:`<div class="bio-case"><b>${c[0]}</b><p>${c[1]}</p></div>`).join('')}</div>${p.after||''}${safety(p)}${task(p)}`)}`;
+    if(p.type==='panels'){
+      const shown=s.panels||[];
+      return `${heading}<div class="bio-controls panel-controls" data-fit-persistent>${button('Show Quick check, B, Z and H','panel-set','first',`aria-pressed="${shown.length===p.panelSets.first.length&&p.panelSets.first.every(i=>shown.includes(i))}"`)}${button('Also show K and Q','panel-set','all',`aria-pressed="${shown.length===p.panels.length}"`)}${button('Hide all','panel-set','none',shown.length?'':'disabled')}</div><div class="recheck-panels">${p.panels.map((x,i)=>shown.includes(i)?`<section class="recheck-panel is-shown" aria-label="${esc(x.title)}"><h2>${x.title}</h2>${panelBody(x.answer)}</section>`:'').join('')}</div>${shown.length<p.panels.length?`<p class="panel-hidden">${shown.length?'Not shown yet':'Hidden until your teacher shows them'}: ${p.panels.filter((x,i)=>!shown.includes(i)).map(x=>x.short).join(' · ')}.</p>`:''}${task(p)}`;
+    }
     if(p.type==='table'){
       const shown=p.reveal?s.step:p.rows.length;
       const rows=p.rows.map((r,i)=>`<tr${i<shown?'':' class="is-hidden-row"'}>${r.map((cell,j)=>j===0?`<th scope="row">${cell}</th>`:`<td>${i<shown?cell:'<span class="blank-cell" aria-label="Not yet revealed">…</span>'}</td>`).join('')}</tr>`).join('');
@@ -334,7 +349,8 @@
         $('model-step')?.setAttribute('tabindex','-1');$('model-step')?.focus({preventScroll:true});
       } else {render();const st=$('screen').querySelector('.bio-step');if(st){st.setAttribute('tabindex','-1');st.focus({preventScroll:true});}}
     }
-    if(a==='reveal'){const p=phase();s.step=v==='all'?p.rows.length:Math.max(0,Math.min(p.rows.length,s.step+Number(v)));render();document.querySelector(`[data-action="reveal"][data-value="${v}"]:not([disabled])`)?.focus()||document.querySelector('[data-action="reveal"]:not([disabled])')?.focus();}
+    if(a==='panel-set'){const p=phase();s.panels=v==='none'?[]:[...p.panelSets[v]];componentPages.main.index=0;render();document.querySelector(`[data-action="panel-set"][data-value="${v}"]:not([disabled])`)?.focus();$('status').textContent=v==='none'?'All recheck answers hidden.':'Recheck answers shown.';return;}
+    if(a==='reveal'){const p=phase(),k=p.type==='table'?'step':'rows';s[k]=v==='all'?p.rows.length:Math.max(0,Math.min(p.rows.length,(s[k]||0)+Number(v)));render();document.querySelector(`[data-action="reveal"][data-value="${v}"]:not([disabled])`)?.focus()||document.querySelector('[data-action="reveal"]:not([disabled])')?.focus();}
     if(a==='model'||a==='model-cmd'){
       const p=phase(),M=Models[p.model];
       if(a==='model'){const i=v.indexOf('=');const k=v.slice(0,i),val=parseValue(v.slice(i+1));s[k]=val;if(M&&M.onChange)M.onChange(k,s,p);}
@@ -343,7 +359,7 @@
       refreshModelPanel(true);
       if(activeWidget==='answers')renderPanel();
     }
-    if(a==='mode'){mode=v==='A'?'A':'B';try{sessionStorage.setItem('y10-l4-mode',mode);}catch(_){}render();document.querySelector(`[data-action="mode"][data-value="${mode}"]`)?.focus();$('status').textContent=mode==='A'?'Mode A: real tubes selected.':'Mode B: demo set, model and illustrative results selected.';return;}
+    if(a==='mode'){mode=v==='A'?'A':'B';try{sessionStorage.setItem('y10-l4-mode',mode);}catch(_){}render();document.querySelector(`[data-action="mode"][data-value="${mode}"]`)?.focus();$('status').textContent=mode==='A'?'Real tubes selected.':'Demo set and illustrative results selected.';return;}
     if(a==='choice'){s.choice=Number(v);render();document.querySelector(`[data-action="choice"][data-value="${v}"]`)?.focus();}
     if(a==='timer'){
       tick();
@@ -355,12 +371,14 @@
     }
     if(a==='fullscreen'){try{if(document.fullscreenElement)await document.exitFullscreen();else await document.documentElement.requestFullscreen();}catch(_){$('status').textContent='Fullscreen is unavailable in this viewer. Open the HTML in your browser.';}}
   });
+  function setTeacher(on){teacherControls=Boolean(on);try{sessionStorage.setItem('y10-l4-teacher',teacherControls?'1':'0');}catch(_){}render();$('status').textContent=teacherControls?'Teacher controls shown.':'Teacher controls hidden.';}
   document.addEventListener('keydown',e=>{
+    if((e.key==='t'||e.key==='T')&&!e.ctrlKey&&!e.metaKey&&!e.altKey&&!e.target.closest('input,textarea,select,[contenteditable]')){e.preventDefault();setTeacher(!teacherControls);return;}
     if(e.key==='Escape'&&activeWidget){e.preventDefault();const old=activeWidget;activeWidget=null;answerContext=null;renderPanel();focusTrigger(old);return;}
     if(e.target.closest('[role="tablist"]')&&['ArrowLeft','ArrowRight'].includes(e.key)){e.preventDefault();const w=widgetStates[panelKey()];const tabs=(activeWidget==='answers'?LessonAnswers.panel(phase(),lesson,state(),answerContext):LessonWidgets.panel(activeWidget,phase(),lesson)).tabs;const focused=Number(e.target.closest('[role="tab"]')?.dataset.value??w.tab);w.tab=(focused+(e.key==='ArrowRight'?1:-1)+tabs.length)%tabs.length;w.page=0;renderPanel();document.getElementById('widget-tab-'+w.tab)?.focus();return;}
     /* Arrow keys belong to the focused control/reading region, never global lesson navigation. */
   });
   window.addEventListener('hashchange',()=>{const id=location.hash.slice(1);if(id&&id!==phase().id&&lesson.phases.some(p=>p.id===id))go(id);});
-  window.LessonDebug={mode:()=>mode,go,state:()=>state(),phase:()=>phase(),index:()=>index,fit:()=>fitDebug(),refit:()=>scheduleFit()};
+  window.LessonDebug={mode:()=>mode,teacher:on=>{if(on!==undefined)setTeacher(on);return teacherControls;},go,state:()=>state(),phase:()=>phase(),index:()=>index,fit:()=>fitDebug(),refit:()=>scheduleFit()};
   render();
 })();
