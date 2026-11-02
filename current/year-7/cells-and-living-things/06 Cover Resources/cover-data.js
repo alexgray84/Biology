@@ -81,7 +81,7 @@ window.COVER_DATA = {
       "kicker": "A2 · Worked model",
       "time": "5–13 minutes",
       "diagram": "rbc",
-      "caption": "Mature human red blood cell. Schematic, not to scale; the centre is thin, not a hole.",
+      "caption": "Mature human red blood cell. 3D teaching model: thin centre, not a hole; not to scale.",
       "nav": "A2 · Worked model"
     },
     {
@@ -133,7 +133,7 @@ window.COVER_DATA = {
       "kicker": "B1 · The model",
       "time": "13–21 minutes",
       "diagram": "nerve",
-      "caption": "One nerve cell, simplified. Schematic, not to scale.",
+      "caption": "One nerve cell. 3D teaching model; colours highlight structures, not to scale.",
       "nav": "B1 · Nerve cell diagram"
     },
     {
@@ -247,7 +247,7 @@ window.COVER_DATA = {
       "kicker": "C · The model",
       "time": "26–31 minutes",
       "diagram": "phagocyte",
-      "caption": "A phagocyte: one type of white blood cell. Simplified stages, not to scale.",
+      "caption": "A phagocyte, one type of white blood cell. 3D teaching model with an explanatory cutaway; not to scale.",
       "nav": "C · Phagocyte diagram"
     },
     {
@@ -267,7 +267,7 @@ window.COVER_DATA = {
       "kicker": "C · The model",
       "time": "26–31 minutes",
       "diagram": "muscle",
-      "caption": "Simplified muscle cell before and during contraction. Schematic, not to scale.",
+      "caption": "One skeletal muscle fibre. 3D teaching model with a cutaway showing mitochondria; not to scale.",
       "nav": "C · Muscle diagram"
     },
     {
@@ -341,7 +341,7 @@ window.COVER_DATA = {
       "kicker": "D · The model",
       "time": "Complete C and D by minute 42",
       "diagram": "intestine",
-      "caption": "One human small-intestine lining cell. Simplified schematic, not to scale.",
+      "caption": "One human intestinal lining cell. 3D teaching model with microvilli and an explanatory cutaway; not to scale.",
       "nav": "D · Intestinal cell diagram"
     },
     {

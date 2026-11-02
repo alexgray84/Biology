@@ -29,6 +29,25 @@ body { color: var(--navy-950); }
 .cell-diagram { width: 100%; max-height: 270px; display: block; }
 .cell-diagram text { fill: var(--navy-950); font: 600 18px var(--sans); }
 .diagram-caption { font-size: 14px; color: var(--ink-600); margin-top: 6px !important; }
+.cell-figure { min-width: 0; margin: 0; }
+.cell-viewer { min-width: 0; position: relative; }
+.cell-viewer-stage { position: relative; width: 100%; height: clamp(210px, 29vh, 340px); overflow: hidden; border-radius: 9px; background: oklch(94.7% .019 85); }
+.cell-model-canvas { display: block; width: 100%; height: 100%; cursor: grab; touch-action: pan-y; }
+.cell-model-canvas.is-dragging { cursor: grabbing; }
+.cell-model-canvas:focus-visible { outline: 3px solid var(--gold-500); outline-offset: -4px; }
+.cell-model-labels { position: absolute; inset: 0; height: 100%; width: 100%; pointer-events: none; overflow: visible; }
+.cell-model-labels text { font-family: var(--sans); font-weight: 650; stroke: oklch(94.7% .019 85); stroke-width: 3px; stroke-linejoin: round; paint-order: stroke fill; }
+.cell-viewer-controls { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-start; gap: 5px 12px; margin-top: 7px; }
+.cell-viewer-controls button { padding: 5px 0; min-height: 36px; border: 0; border-bottom: 1px solid var(--line-strong); border-radius: 0; background: transparent; color: var(--navy-950); font: 600 13px/1.2 var(--sans); cursor: pointer; }
+.cell-viewer-controls button:hover { color: var(--gold-600); border-color: currentColor; }
+.cell-viewer-controls button:focus-visible { outline: 3px solid var(--gold-500); outline-offset: 3px; }
+.cell-stage-controls { display: flex; gap: 4px; flex: 1 0 100%; }
+.cell-stage-controls button { min-height: 36px; padding: 5px 12px; border: 1px solid var(--line-strong); border-radius: 5px; font-weight: 500; }
+.cell-stage-controls button[aria-pressed="true"] { background: var(--navy-900); color: var(--paper-100); border-color: var(--navy-900); }
+.cell-viewer-help, .cell-static-note { font: 12px/1.35 var(--sans); color: var(--ink-600); margin-top: 5px !important; }
+.cell-viewer.is-ready .cell-fallback { display: none; }
+.cell-still { display: block; width: 100%; max-height: 320px; object-fit: contain; }
+.cell-label-description { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px !important; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 .app[data-family="Title"] .screen { padding: 35px 5vw; }
 .title-layout .screen-heading { font-size: clamp(64px, min(7vw, 12vh), 132px); max-width: 15ch; margin: 10px 0; }
 .title-path { font-size: .8em; padding-top: 18px; margin-top: 12px; }
@@ -63,11 +82,17 @@ body { color: var(--navy-950); }
 .workspace.has-drawer .screen-heading { font-size: clamp(32px, min(3.1vw, 5.1vh), 54px); }
 .workspace.has-drawer .diagram-layout { grid-template-columns: 1fr; gap: 12px; }
 .workspace.has-drawer .cell-diagram { max-height: 155px; }
+.workspace.has-drawer .cell-viewer-stage { height: 170px; }
+.workspace.has-drawer .cell-viewer-controls { gap: 3px 12px; margin-top: 3px; }
+.workspace.has-drawer .cell-stage-controls { flex: 0 1 auto; }
+.workspace.has-drawer .cell-stage-controls button { padding-inline: 8px; }
+.workspace.has-drawer .cell-still { max-height: 210px; }
 .workspace.has-drawer .cover-copy { gap: 13px; }
 .workspace.has-drawer .cover-copy li { margin-bottom: 10px; }
 .workspace.has-drawer .cover-copy .chain { padding-block: 10px; }
 @media (min-width: 1600px) { .screen, .workspace.has-drawer .screen { gap: 22px; } .drawer-body { gap: 22px; } .cell-diagram { max-height: 360px; } .workspace.has-drawer .cell-diagram { max-height: 210px; } }
 @media (max-height: 730px) and (min-width: 761px) { .screen { gap: 12px; padding-block: 14px 18px; } .topic { padding-top: 14px; } .drawer-body { gap: 12px; padding: 16px 20px; } .cell-diagram { max-height: 220px; } }
+@media (max-height: 730px) and (min-width: 761px) { .cell-viewer-stage { height: 190px; } .workspace.has-drawer .cell-viewer-stage { height: 140px; } .cell-viewer-help { display: none; } }
 @media (max-width: 760px) {
  html, body { height: auto; }
  .app { height: auto; min-height: 100dvh; grid-template-rows: auto auto 64px; }
@@ -78,6 +103,8 @@ body { color: var(--navy-950); }
  .topic { padding: 20px 24px 0; }
  .title-layout .screen-heading { font-size: 58px; }
  .diagram-layout { grid-template-columns: 1fr; }
+ .cell-viewer-stage, .workspace.has-drawer .cell-viewer-stage { height: clamp(230px, 65vw, 360px); }
+ .cell-viewer-controls button { min-height: 44px; }
  .student-drawer { min-height: 480px; }
  .drawer-body { font-size: 22px; overflow: visible; }
  .student-tools { grid-template-columns: repeat(3, minmax(0, 1fr)); }

@@ -9,6 +9,7 @@
   let index = Math.max(0, data.screens.findIndex(s => s.id === startId));
   let panelType = null, panelPage = 0, widgetReview = false, reviewPart = 0, returnFocus = null;
   const pagesByScreen = new Map();
+  let cellViewer = null;
   const current = () => data.screens[index];
   const button = (text, attrs = '') => `<button type="button" class="reveal-control" ${attrs}>${text}</button>`;
   const points = items => items?.length ? `<ul>${items.map(t => `<li>${t}</li>`).join('')}</ul>` : '';
@@ -20,6 +21,8 @@
     return `${keepQuestion ? `<p class="review-question"><b>${answer.id || ''}</b> ${answer.question}</p>` : ''}${content}`;
   }
   function renderScreen(focus = true) {
+    cellViewer?.dispose();
+    cellViewer = null;
     const s = current();
     panelType = null; panelPage = 0; widgetReview = false;
     el.panel.hidden = true;
@@ -29,7 +32,7 @@
     el.topic.hidden = s.family === 'Title';
     el.screen.className = `screen screen-${s.family.toLowerCase().replaceAll(' ', '-')}`;
     const copy = `<div class="cover-copy">${s.html}</div>`;
-    const content = s.diagram ? `<div class="diagram-layout">${copy}<div>${window.COVER_DIAGRAMS[s.diagram]}<p class="diagram-caption">${s.caption || 'Schematic, not to scale.'}</p></div></div>` : copy;
+    const content = s.diagram ? `<div class="diagram-layout">${copy}<figure class="cell-figure"><div class="cell-viewer" data-cell-viewer="${s.diagram}"><div class="cell-fallback">${window.COVER_DIAGRAMS[s.diagram] || ''}</div></div><figcaption class="diagram-caption">${s.caption || 'Explanatory 3D model, not a microscope image. Not to scale.'}</figcaption></figure></div>` : copy;
     el.screen.innerHTML = `<div class="${s.family === 'Title' ? 'title-layout' : 'cover-copy'}">
       <p class="screen-kicker">${s.kicker || s.family}${s.time ? ` · ${s.time}` : ''}</p>
       <h1 class="screen-heading" id="screen-title" tabindex="-1">${s.title}</h1>
@@ -42,6 +45,7 @@
     el['screen-select'].value = s.id;
     el['screen-counter'].textContent = `${index + 1} / ${data.screens.length} · ${s.family}`;
     el.screen.querySelector('#main-review')?.addEventListener('click', event => togglePanel('review', event.currentTarget));
+    if (s.diagram && window.COVER_CELL_VIEWER) cellViewer = window.COVER_CELL_VIEWER.mount(el.screen.querySelector('[data-cell-viewer]'), s.diagram);
     if (focus) byId('screen-title').focus({preventScroll:true});
     if (s.family === 'Learning outcome') openPanel('resources', null, false);
   }
@@ -125,6 +129,7 @@
   el['panel-next'].addEventListener('click', () => movePanel(1));
   el['screen-select'].addEventListener('change', event => goToId(event.target.value));
   document.addEventListener('keydown', event => {
+    if (event.defaultPrevented) return;
     if (event.key === 'Escape' && panelType) { event.preventDefault(); closePanel(); return; }
     if (event.target.closest('button, a, select, input, textarea')) return;
     if (event.key === 'ArrowRight' && index < data.screens.length-1) { event.preventDefault(); goToId(data.screens[index+1].id); }
