@@ -79,7 +79,7 @@
     for(let ix=0;ix<15;ix++)for(let iz=0;iz<10;iz++) {
       const x=-.665+ix*.095+(rnd()-.5)*.018,z=-.405+iz*.09+(rnd()-.5)*.013;
       const h=.245+rnd()*.075;
-      microvilli.push({position:[x,1.325+h/2,z],scale:[.023,h/.24,.023],rotation:[(rnd()-.5)*.1,0,(rnd()-.5)*.1]});
+      microvilli.push({position:[x,1.305+h/2,z],scale:[.023,h/.24,.023],rotation:[(rnd()-.5)*.1,0,(rnd()-.5)*.1]});
     }
     U.instances(T,new T.CapsuleGeometry(1,8.6,3,7),U.material(T,'#d0a17f',{roughness:.69}),microvilli.map(e=>({...e,scale:[e.scale[0],(e.scale[1]*.24)/10.6,e.scale[2]]})),object);
     const nuclear=U.material(T,'#89758e',{roughness:.70});

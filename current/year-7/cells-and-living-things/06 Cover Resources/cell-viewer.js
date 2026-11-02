@@ -209,7 +209,7 @@
       const gap = forExport ? font * 2.4 : font * 2.8;
       for (const side of ['left', 'right']) {
         const sideLabels = result.filter(item => item.side === side).sort((a,b) => a.y - b.y);
-        sideLabels.forEach((item, i) => { item.labelY = clamp(item.y, top, bottom); if (i) item.labelY = Math.max(item.labelY, sideLabels[i-1].labelY + gap); });
+        sideLabels.forEach((item, i) => { item.labelY = forExport ? (sideLabels.length > 1 ? top + i * (bottom - top) / (sideLabels.length - 1) : item.y < h / 2 ? top : bottom) : clamp(item.y, top, bottom); if (i) item.labelY = Math.max(item.labelY, sideLabels[i-1].labelY + gap); });
         for (let i = sideLabels.length - 1; i >= 0; i--) {
           sideLabels[i].labelY = Math.min(sideLabels[i].labelY, i < sideLabels.length - 1 ? sideLabels[i+1].labelY - gap : bottom);
         }
@@ -256,7 +256,7 @@
         renderer.render(scene, camera);
         context.fillStyle = paper; context.fillRect(0, 0, exportWidth, exportHeight);
         context.drawImage(renderer.domElement, 0, 0);
-        const font = 60;
+        const font = 64;
         context.lineWidth = 3; context.lineJoin = 'round';
         context.font = `600 ${font}px system-ui, sans-serif`;
         for (const label of labelLayout(exportWidth, exportHeight, font, true)) {

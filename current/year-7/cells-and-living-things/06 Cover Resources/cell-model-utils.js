@@ -92,25 +92,17 @@
     });
     batch.castShadow = true; batch.receiveShadow = true; group.add(batch); return batch;
   };
-  // Exposed mitochondria have a membrane and a contrasting folded inner membrane.
+  // Intact mitochondria are shown from outside; internal cristae are not exposed.
   U.mitochondria = (T, parent, entries, scale = 1) => {
     const group = new T.Group(); parent.add(group);
     const outer = U.material(T, '#be7651', { roughness: 0.68 });
-    const folds = U.material(T, '#6d3d37', { roughness: 0.72 });
-    const bodies = [], ridgeGeometries = [];
+    const bodies = [];
     entries.forEach(e => {
-      const center = new T.Vector3(...e.position), a = e.angle || 0;
+      const a = e.angle || 0;
       const sy = e.size || 1, long = 0.22 * scale * sy, short = 0.095 * scale * sy;
       bodies.push({ position: e.position, scale: [long, short, short * 0.75], rotation: [0, 0, a] });
-      const points = [];
-      for (let j = 0; j < 11; j++) {
-        const x = (-0.78 + j / 10 * 1.56) * long, y = (j % 2 ? 0.56 : -0.56) * short * Math.sin(j / 10 * Math.PI);
-        points.push([center.x + x * Math.cos(a) - y * Math.sin(a), center.y + x * Math.sin(a) + y * Math.cos(a), center.z + short * 0.67]);
-      }
-      ridgeGeometries.push(U.tubeGeometry(T, points, short * 0.09, short * 0.09, 22, 5));
     });
     U.instances(T, new T.SphereGeometry(1, 18, 12), outer, bodies, group);
-    if (ridgeGeometries.length) U.mesh(T, U.merge(T, ridgeGeometries), folds, group);
     return group;
   };
   U.label = (T, text, xyz, side = 'right') => ({ text, position: new T.Vector3(...xyz), side });
