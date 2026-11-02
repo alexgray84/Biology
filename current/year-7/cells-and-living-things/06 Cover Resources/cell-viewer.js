@@ -1,7 +1,7 @@
 /* Pupil-safe, local Three.js r160 viewer. Rendering occurs only after an interaction. */
 (() => {
   'use strict';
-  const resourceURL = new URL('.', document.currentScript.src);
+  const resourceURL = new URL('.', document.currentScript.src), assetVersion = new URL(document.currentScript.src).search;
   const SVG = 'http://www.w3.org/2000/svg';
   const names = {rbc:'Mature human red blood cell', nerve:'Nerve cell', phagocyte:'Phagocyte', muscle:'Muscle cell', intestine:'Small-intestine lining cell'};
   const paper = '#f3ecdf', ink = '#26332f', leader = '#66736a';
@@ -43,7 +43,7 @@
     fallbackImage.addEventListener('load', () => {
       if (!disposed && fallback) fallback.replaceChildren(fallbackImage);
     }, {signal:events.signal});
-    fallbackImage.src = new URL(`cell-stills/${kind}.png`, resourceURL).href;
+    fallbackImage.src = new URL(`cell-stills/${kind}.png${assetVersion}`, resourceURL).href;
     const reset = () => {
       yaw = initialAngle.y; pitch = initialAngle.x;
       if (model) model.object.rotation.set(pitch, yaw, 0);

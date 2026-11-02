@@ -68,7 +68,7 @@ window.COVER_DATA = {
       "id": "rbc-read",
       "family": "Input",
       "title": "A mature human red blood cell",
-      "html": "<p>Its job is to carry oxygen from the lungs to the body. It has <b>no nucleus</b>, leaving more room for <b>haemoglobin</b>, the substance that carries oxygen.</p><p>It is a <b>flexible disc, thin in the middle</b>. Flexibility helps it squeeze through narrow blood vessels. A thin centre gives oxygen a short distance to cross as it enters or leaves.</p><p>The pale middle is <b>not a hole</b>.</p>",
+      "html": "<p>Its job is to carry oxygen from the lungs to the body. It has <b>no nucleus</b>, leaving more room for <b>haemoglobin</b>, the substance that carries oxygen.</p><p>It is a <b>flexible disc, thin in the middle</b>. Flexibility helps it squeeze through narrow blood vessels. A thin centre gives oxygen a short distance to cross as it enters or leaves.</p><p>The thin centre is <b>not a hole</b>.</p>",
       "kicker": "A2 · Read first",
       "time": "5–13 minutes",
       "nav": "A2 · Red blood cell input"
