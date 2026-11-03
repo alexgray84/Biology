@@ -378,6 +378,7 @@ window.LessonModels.cell = (() => {
     const onMove = e => { if (!last) return; world.rotation.y += (e.clientX - last[0]) * 0.008; world.rotation.x = clampX(world.rotation.x + (e.clientY - last[1]) * 0.008); last = [e.clientX, e.clientY]; rotated(); };
     const onUp = () => { last = null; };
     const onKey = e => {
+      if (e.defaultPrevented || e.metaKey || e.ctrlKey || e.altKey) return;
       if (!['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].includes(e.key)) return;
       e.preventDefault(); e.stopPropagation();
       world.rotation.y += e.key === 'ArrowLeft' ? -0.15 : e.key === 'ArrowRight' ? 0.15 : 0;

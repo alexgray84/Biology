@@ -147,6 +147,7 @@
       canvas.addEventListener('pointercancel', stopDrag, {signal:events.signal});
       canvas.addEventListener('lostpointercapture', stopDrag, {signal:events.signal});
       canvas.addEventListener('keydown', event => {
+        if (event.defaultPrevented || event.metaKey || event.ctrlKey || event.altKey) return;
         if (!['ArrowLeft','ArrowRight','ArrowUp','ArrowDown'].includes(event.key)) return;
         event.preventDefault(); event.stopPropagation();
         if (event.key === 'ArrowLeft') yaw -= .12;

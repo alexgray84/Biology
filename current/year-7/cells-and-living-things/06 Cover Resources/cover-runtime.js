@@ -129,9 +129,9 @@
   el['panel-next'].addEventListener('click', () => movePanel(1));
   el['screen-select'].addEventListener('change', event => goToId(event.target.value));
   document.addEventListener('keydown', event => {
-    if (event.defaultPrevented) return;
+    if (event.defaultPrevented || event.metaKey || event.ctrlKey || event.altKey) return;
     if (event.key === 'Escape' && panelType) { event.preventDefault(); closePanel(); return; }
-    if (event.target.closest('button, a, select, input, textarea')) return;
+    if (event.target.isContentEditable || event.target.closest('canvas, select, input, textarea, [role="slider"],[role="spinbutton"],[role="combobox"],[role="listbox"],[role="option"],[role="menu"],[role="menubar"],[role="menuitem"],[role="menuitemcheckbox"],[role="menuitemradio"],[role="tree"],[role="treeitem"],[role="treegrid"],[role="grid"],[role="gridcell"],[role="radiogroup"],[role="radio"],[role="tablist"],[role="tab"]')) return;
     if (event.key === 'ArrowRight' && index < data.screens.length-1) { event.preventDefault(); goToId(data.screens[index+1].id); }
     if (event.key === 'ArrowLeft' && index > 0) { event.preventDefault(); goToId(data.screens[index-1].id); }
   });
