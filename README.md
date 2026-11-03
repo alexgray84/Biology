@@ -27,7 +27,7 @@ units/<course>/<unit>/index.html   # Lessons grouped in teaching order
 current/<course>/<unit>/           # Approved pupil lesson packages
 ```
 
-The two Year 7 classes share the same Year 7 unit pages and lesson packages. The Year 8 classes share a resource library; pupils open the unit assigned by their teacher. The former `classes/8-sci-04/` address redirects to `classes/8-sci-02/`. Year 10 Double Biology has a dedicated class homepage; its lesson links will be added as approved resources become available. Other classes have their own course unit pages.
+The two Year 7 classes share common lesson packages. Cells and living things has a separate lesson index under each class homepage, so class-specific lessons stay with 7/SCI/01 or 7/SCI/04. The shared Cells unit URL opens a class chooser. AP2 revision stays first on both Year 7 homepages, with a pinned header shortcut. The Year 8 classes share a resource library; pupils open the unit assigned by their teacher. The former `classes/8-sci-04/` address redirects to `classes/8-sci-02/`. Year 10 Double Biology has a dedicated class homepage; its lesson links will be added as approved resources become available. Other classes have their own course unit pages.
 
 ## Current lesson-building approach
 
