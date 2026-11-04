@@ -1,144 +1,645 @@
-/* Pupil-safe lesson content. All responses are reviewed only after an explicit reveal. */
-(() => {
-  const answer=(id,question,model,criteria=[],marks=null)=>({id,question,model,criteria,marks});
-  const stage=(html,criteria,answers)=>({html,criteria,answers});
-  const s=(id,family,title,html,extra={})=>({id,family,title,html,...extra});
-  const c={
-    recall:['Name three families; two porcelain properties.','Define monomer; name plastic raw-material source.'],
-    analogy:['Match strands/chains and joins/cross-links.','Explain reshaping through relative chain movement.','State one limitation of the model.'],
-    chain:['Link structure, movement and heating behaviour.','Distinguish along-chain bonds from between-chain forces.'],
-    test:['Separate extension, units and endpoint.','Compare specimens: control and limitation.','Use observations to reconsider predictions.'],
-    graph:['Plot common-load extension with units.','Label early fracture; never invent zero.','Limit claims to specimens and measurements.'],
-    use:['Explain property usefulness for stated use.','Explain warm shape using chain movement.','Reconsider selection when the job changes.'],
-    recheck:['Explain structural effects on chain movement.','Qualify the heating claim.'],
-    independent:['Explain heating using relative chain movement.','Connect each structure to its job.'],
-    fresh:['Repair causes; apply to fresh example.','Name another property the job needs.','Explain why one property is insufficient.'],
-    exit:['Define chains; give two correct examples.','Connect foam structure to heat transfer.'],
-    homework:['Record five codes or honest uncertainty.','Match each marked code to resin.','Distinguish resin identification from recycling decisions.'],
-    packing:['Link packing, interactions and relative movement.','Separate molecular models from measured evidence.','Qualify the product comparison.']
-  };
-  const a={
-    recall1:answer('T01-families','Name three families; give two typical porcelain properties.','Metals, ceramics and polymers. Porcelain is typically hard, brittle and an electrical insulator; any two suitable properties.',c.recall),
-    recall2:answer('T01-monomer','Name a common plastic raw-material source; define monomer.','Many common manufactured plastics use crude-oil-derived raw materials. A monomer is a small molecule that can join with others to make a polymer.',c.recall),
-    recallGold:answer('T01-gold','Why is “all polymers come from crude oil” too strong?','“Many common manufactured plastics” does not mean every polymer. Natural polymers, such as cellulose, provide counterexamples. Qualify the claim rather than generalising from common examples.',['Qualify claims using evidence or counterexamples.']),
-    analogy:answer('T02-model','Explain loose and joined strands, then identify a model limit.','A strand represents a chain; a glued join represents a cross-link. Loose strands slide more easily; joins restrict relative movement. Spaghetti does not establish actual bonds, scale, service temperatures or complete polymer behaviour.',c.analogy),
-    analogyGold:answer('T02-gold','The demand changes to retaining shape when warm. Choose a model and qualify it.','The joined model is more useful because joins restrict relative strand movement. It cannot establish the material’s actual service temperature or all of its properties.',['Match strands/chains and joins/cross-links.','Explain movement for the changed demand.','State one limitation of the model.']),
-    board:answer('T03-board','Sketch both arrangements and show possible or restricted movement when warm.','Separate chains: relative sliding becomes easier with sufficient heating. Network: cross-links restrict relative movement. Distinguish weaker forces between chains from strong bonds along chains; do not show chains breaking during normal softening.',c.chain),
-    comparison:answer('T03-compare','Compare thermosoftening and thermosetting polymers on heating.','In a thermosoftening polymer, sufficient heating overcomes weaker forces between separate chains, allowing sliding and reshaping. Strong cross-links in a thermoset restrict this movement. Normal softening does not break the strong bonds along chains.',c.chain),
-    nochange:answer('T03-gold','A bottle strip shows no visible change in hot water. Does this identify a thermoset?','No. A thermoplastic may need a higher temperature or show only a subtle change. One no-change observation does not establish cross-links or identify a thermoset.',['State limits of a single observation.']),
-    predict:answer('T04-predict','Predict extension and flexibility for two assigned specimens.','Predictions depend on the identified specimens. State the expected relative extension and bending behaviour, with a property-based reason. Reconsider the prediction after recording actual observations; a prediction is not a result.',c.test),
-    record:answer('T04-record','Record the two specimens, a control and a comparison limitation.','Record genuine measurements with units and the actual endpoint. Keep extension separate from fracture. Example control: gauge length. Example limitation: unmatched thickness means results compare these specimens, not intrinsic polymer strength.',c.test),
-    heat:answer('T04-heat','Record bending and heat observations; reconsider your prediction.','Record what actually happened: bends, returns, permanent bend or fracture; then visible heating change or “no visible change”. Compare with your prediction. No visible change in one warm-water test does not prove thermosetting.',c.test),
-    thickness:answer('T04-gold','A replacement strip of the same polymer has half the thickness. Interpret a changed result.','Half the thickness changes cross-sectional area and can change extension or breaking behaviour under the same load. The strip test has not measured molecular structure, so a changed result does not establish different chains.',['Separate extension, units and endpoint.','Compare specimens: control and limitation.','Separate specimen dimensions from molecular evidence.']),
-    graph:answer('T05-graph','Plot extension at the common load and make one qualified comparison.','Illustrative bars: LDPE 12 mm; food-bag sample 8 mm; PET 1 mm; PVC 2 mm. Annotate polystyrene “fractured before 50 g”; do not plot zero. LDPE extended most among these surviving specimens; thicknesses were unmatched.',c.graph),
-    graphGold:answer('T05-gold','Can the extension chart choose the greatest-breaking-load carrying strap?','No. Extension at one load is not breaking load. Further comparable breaking-load measurements are needed, using an approved method and comparable dimensions, particularly cross-sectional area. Unmatched specimens still limit the conclusion.',['Plot common-load extension with units.','Label early fracture; never invent zero.','Identify evidence for the changed job.']),
-    foam:answer('T06-foam','Explain why foam suits an insulating sleeve.','Foam contains trapped air, which reduces heat transfer. This helps a sleeve insulate the drink. Warm shape retention alone does not establish effective insulation.',c.use),
-    melamine:answer('T06-melamine','Explain suitable warm shape retention in melamine-formaldehyde resin.','Strong cross-links join chains into a network and restrict relative movement. This helps suitable melamine items retain shape when warm within their service conditions; it does not establish suitability for every temperature or product.',c.use),
-    carrying:answer('T06-gold','The job changes to a flexible carrying part. Reconsider the choice.','A carrying part may need flexibility and suitable load-bearing behaviour. Retaining shape when warm alone is insufficient. Poly(ethene)’s flexibility or nylon’s strong fibres provide relevant starting properties, but actual product requirements need checking.',c.use),
-    hinge:answer('T07-hinge','Choose A–D and explain chain movement.','B. Strong cross-links join chains into a network and restrict relative movement. A confuses chain length with a network; C and D confuse material composition. A correct letter needs a causal movement explanation.',['Explain how chosen structure affects movement.']),
-    recheck:answer('T08-rs','Which model retains shape more readily when warm? Explain and qualify heating.','R: cross-links restrict relative chain movement, making it more likely to retain shape under suitable warming. Excessive heating can cause decomposition or charring; this is not unlimited heat resistance.',c.recheck),
-    independentA:answer('T09-a','An artist warms a thermosoftening sheet to reshape it. Explain using its chain structure. (2)','Weak forces between separate chains (1). Sufficient heating overcomes these forces, allowing chains to move past one another so the sheet can be reshaped (1). Accept equivalent causal wording; “it melts” alone is insufficient.', ['Weak interchain forces (1).','Heating permits sliding and reshaping (1).'],2),
-    independentB:answer('T09-b','A protective enclosure must retain its shape when warm. Explain why cross-linked thermosetting material may suit this requirement. (2)','Strong cross-links form a network (1). They restrict relative chain movement, helping the enclosure retain shape under suitable warm conditions (1). Accept equivalent causal wording; “strong material” alone does not explain the mechanism.',['Strong cross-linked network (1).','Restricted movement retains shape (1).'],2),
-    repair:answer('T10-repair','Repair one causal gap in T09, or identify a complete causal link.','A useful repair adds the missing structure → movement → behaviour link. For example: cross-links restrict relative chain movement, helping the enclosure retain shape. If already complete, identify why your existing explanation earns a mechanism point.',c.fresh),
-    fresh:answer('T10-fresh','Name the switch-base polymer type, explain warm shape retention, and name another necessary property.','Thermosetting polymer. Cross-links restrict relative chain movement, so suitable warming does not allow flow and reshaping. The switch base also needs electrical insulation. Shape retention alone does not establish suitability.',c.fresh),
-    freshGold:answer('T10-gold','Why is warm shape retention insufficient to approve the switch-base material?','A material may retain shape yet conduct electricity or fail other product requirements. Electrical insulation and the actual service temperature also matter; one suitable property cannot establish complete suitability.',c.fresh),
-    exitRecall:answer('T11-recall','Complete “long ___ molecules”; name one polymer of each heating type.','Chain. Thermosoftening: poly(ethene), PVC or PET. Thermosetting: melamine-formaldehyde resin or Bakelite. Accept an accurate example of each type.',c.exit),
-    exitFoam:answer('T11-insulation','Why can foam insulate a cup better than a thin solid-PET wall?','Trapped air in the foam reduces heat transfer through it, helping insulate the cup. This compares the described structures and designs; it does not mean all polystyrene products outperform all PET products.',c.exit),
-    exitGold:answer('T11-gold','The job changes from sleeve to bottle body. Why is insulation alone insufficient?','The body also needs suitable shape retention, toughness, water resistance and other actual product requirements. An insulation comparison does not establish those properties.',['Explain changed demands need more evidence.']),
-    homework:answer('T12-homework','Record five identification codes or missing-code observations; explain what a code establishes.','Supplied alternatives: A PET; B HDPE; C LDPE; D polypropylene; E not marked, resin unknown. Accept accurate real-item records. Codes identify resin categories, not local collection acceptance. Do not guess unmarked items.',c.homework),
-    homeworkGold:answer('T12-gold','Two items share a resin code but have different formats or additional materials. Evaluate collection acceptance.','A shared resin category does not establish acceptance of every format or mixed-material product. Actual collection guidance also matters. Check it before making a local disposal decision.',c.homework),
-    packing:answer('T13-packing','Explain the typical HDPE/LDPE comparison using packing and interactions.','Less-branched chains commonly pack closer, allowing more effective attractions between neighbouring chain sections and restricting relative movement. Branching disrupts packing. This helps explain generally greater stiffness and tensile strength of HDPE compared with LDPE.',c.packing),
-    packingGold:answer('T13-gold','Do today’s strips prove the chain-level cause or a universal HDPE ranking?','No. Thickness, processing and additives can differ; molecular arrangement was not measured. The practical cannot establish that molecular cause or show that every HDPE product outperforms every LDPE product.',c.packing)
-  };
-  const stages=(blue,green,gold,criteria,ba,ga,goa,gc)=>({
-    blue:stage(blue,criteria,ba),green:stage(green,criteria,ga),gold:stage(gold,gc||criteria,goa)
-  });
-  const bookResources=[
-    {title:'Science books and boards',html:'<p>Responses go in science books or on mini-whiteboards. The next pages display short book headings; no separate pupil sheet is needed.</p>'},
-    {title:'Book prediction headings',html:'<p><strong>Specimen | predicted extension/flexibility | reason</strong></p><p>Two specimen entries. Predictions are separate from measured observations.</p>'},
-    {title:'Book measurement headings',html:'<p><strong>Specimen | start length / mm | new length / mm</strong></p><p><strong>Common load / g | extension / mm</strong></p><p>Extension = new length − starting length.</p>'},
-    {title:'Book endpoint headings',html:'<p><strong>Specimen | first endpoint | mass at endpoint / g</strong></p><p>Endpoint: 5 cm extension, fracture, or approved maximum. An early fracture is not zero common-load extension.</p>'},
-    {title:'Book observation headings',html:'<p><strong>Specimen | bending | demonstrated heating</strong></p><p>Bending: bends, returns, permanent bend or fracture. Heating: actual visible change or “no visible change”.</p><p>Notes: controlled condition; limitation; prediction reconsidered.</p>'}
-  ];
-  const graphResources=[
-    {title:'Book graph setup',html:'<p><strong>Horizontal:</strong> specimen. <strong>Vertical:</strong> extension / mm at the common load.</p><p>For illustrative data: 0–12 mm, 2 mm steps. For class data: a suitable scale. Early fracture is labelled separately.</p>'},
-    {title:'Common-load observations',html:'<p>Use class measurements where available. The labelled illustrative alternative is on the data screen; it is not a loading instruction.</p>',target:'chart-data'}
-  ];
-  const propertyResources=[
-    {title:'Property/use 1 · poly(ethene)',html:'<p><strong>Poly(ethene)</strong></p><p>Flexible, light, water-resistant → carrier bag.</p>'},
-    {title:'Property/use 2 · PVC',html:'<p><strong>PVC</strong></p><p>Tough, water-resistant, resists rotting → water pipe.</p>'},
-    {title:'Property/use 3 · foam',html:'<p><strong>Polystyrene foam</strong></p><p>Air-filled, light, thermal insulator → insulating sleeve, cup or packaging.</p><p>Trapped air reduces heat transfer; this does not describe every solid-polystyrene product.</p>'},
-    {title:'Property/use 4 · nylon',html:'<p><strong>Nylon</strong></p><p>Strong fibres → rope. Actual load requirements and product design still matter.</p>'},
-    {title:'Property/use 5 · melamine',html:'<p><strong>Melamine-formaldehyde thermoset</strong></p><p>Hard; suitable products retain shape when warm → suitable tableware or surface, within service conditions.</p><p>Cross-links restrict chain movement; this does not approve every temperature or food-contact use.</p>'}
-  ];
-  const resinResources=[
-    {title:'Resin key · codes 1–4',html:'<p><strong>1</strong> PET<br><strong>2</strong> HDPE<br><strong>3</strong> PVC<br><strong>4</strong> LDPE</p><p>Categories identify resin, not local recycling acceptance.</p>'},
-    {title:'Resin key · codes 5–7',html:'<p><strong>5</strong> Polypropylene<br><strong>6</strong> Polystyrene<br><strong>7</strong> Other plastics/mixtures</p><p>No code: record “not marked”; do not guess from appearance.</p>'},
-    {title:'Supplied alternatives · A–C',html:'<p>Invented packaging examples:</p><p><strong>A</strong> bottle · code 1<br><strong>B</strong> bottle · code 2<br><strong>C</strong> film bag · code 4</p><p>The stated code, not the shape, identifies the category.</p>'},
-    {title:'Supplied alternatives · D–E',html:'<p>Invented packaging examples:</p><p><strong>D</strong> tub · code 5<br><strong>E</strong> tray · not marked</p><p>These are alternatives to household items; no household details are needed.</p>'},
-    {title:'Homework book headings',html:'<p><strong>Item / A–E | code or not marked | resin category / uncertainty</strong></p><p>Five brief book entries; a sentence distinguishing resin identification from a recycling decision. Use safe items only; no dangerous containers or electrical parts.</p>'}
-  ];
-  const support=(html,ans)=>[{title:'Blue · Get started',html,answer:ans}];
-  const hot=(html,ans)=>[{title:'Gold · Go further',html,answer:ans}];
-  window.LESSON_DATA={
-    title:'Properties and uses of materials',year:'Year 9',date:'Thursday 5 November 2026',number:2,
-    screens:[
-      s('title','Title','Materials for a job','<p>Choose polymer parts for a reusable drinks container.</p><p>A body holds shape. A carrying part bends. A sleeve insulates.</p>',{kicker:'Year 9 · Materials · Lesson 2',time:'50 minutes'}),
-      s('outcomes','Learning outcome','Explain the choice','<p>Use a chain model to explain heating behaviour and choose a polymer for a stated demand.</p><p>SoW 19.1–19.2 · selected polymer components</p>',{criteria:['Name and model materials accurately.','Link structure, movement and heating behaviour.','Explain how properties suit stated jobs.']}),
-      s('recall-families','Do now','Retrieve the families','<p>Name the three material families. Give two typical properties of porcelain.</p>',{taskId:'L2-T01',time:'0–4 min',criteria:c.recall,answers:[a.recall1],stages:stages('<p>Name three material families and two porcelain properties. Word bank: metal · ceramic · polymer · hard · brittle · insulator.</p>','<p>Name all three families and two porcelain properties in your book or on your board.</p>','<p>Explain why “all polymers come from crude oil” is too strong.</p>',c.recall,[a.recall1],[a.recall1],[a.recallGold],[...c.recall,'Qualify claims using evidence or counterexamples.'])}),
-      s('recall-monomer','Do now','Retrieve the building block','<p>Name a common raw-material source for manufactured plastics. Define a monomer.</p>',{taskId:'L2-T01',criteria:c.recall,answers:[a.recall2],stages:stages('<p>Name a common source for manufactured plastics and define monomer. Use: crude oil · small molecule · join · polymer.</p>','<p>Name a common raw-material source for manufactured plastics. Define monomer. After feedback, correct one uncertainty.</p>','<p>Explain why “all polymers come from crude oil” is too strong.</p>',c.recall,[a.recall2],[a.recall2],[a.recallGold],[...c.recall,'Qualify claims using evidence or counterexamples.'])}),
-      s('spaghetti','Thinking','Predict with a model','<p>Loose or joined strands: which reshapes more easily? Explain movement and one limit of this analogy.</p>',{taskId:'L2-T02',time:'4–7 min',diagram:'spaghetti',criteria:c.analogy,answers:[a.analogy],stages:stages('<p>Label chains and cross-links. Predict which arrangement reshapes more easily; explain the movement.</p>','<p>Compare movement and reshaping in loose and joined strands. State one model limitation.</p>','<p>The job changes to retaining shape when warm. Choose loose or joined strands; explain movement and one model limit.</p>',c.analogy,[a.analogy],[a.analogy],[a.analogyGold],['Match strands/chains and joins/cross-links.','Explain movement for the changed demand.','State one limitation of the model.'])}),
-      s('chain-definition','Input','Build the chain model','<p>A polymer contains very large molecules. Our model shows long chains made from many monomer units.</p><p>Strong chemical bonds join the units along each chain.</p>',{time:'7–13 min',criteria:['Link structure, movement and heating behaviour.']}),
-      s('separate-chains','Input','Between and along','<p>Thermosoftening polymers have separate chains, without a permanent cross-linked network.</p><p>Forces between neighbouring chains are much weaker than bonds along each chain.</p>',{diagram:'separate',criteria:['Link structure, movement and heating behaviour.']}),
-      s('heat-movement','Input','Heating permits movement','<p>Sufficient heating overcomes weaker forces between chains. Chains move past one another more easily, so the material softens and can be reshaped.</p>',{diagram:'heated',criteria:['Link structure, movement and heating behaviour.']}),
-      s('normal-softening','Input','Keep the chain intact','<p>Normal softening does not require breaking the strong bonds along the chains.</p><p>Thermosoftening examples: poly(ethene), PVC and PET.</p>',{criteria:['Distinguish along-chain bonds from between-chain forces.']}),
-      s('network-input','Input','Cross-links restrict movement','<p>In a thermosetting polymer, strong cross-links join chains into a network. They restrict relative movement, so the material does not soften and flow like a thermoplastic.</p>',{diagram:'network',criteria:['Link structure, movement and heating behaviour.']}),
-      s('heating-limits','Input','Heating has limits','<p>Excessive heating can cause decomposition or charring. Thermosetting does not mean safe at every temperature.</p><p>Examples: melamine-formaldehyde resin and Bakelite. Actual products may contain fillers or coatings.</p>'),
-      s('model-explanation','Input','Build a causal explanation','<p>“Strong cross-links join chains into a network → relative chain movement is restricted → suitable warming does not allow easy reshaping.”</p><p>Structure → movement → behaviour</p>',{criteria:['Link structure, movement and heating behaviour.']}),
-      s('board-chains','Thinking','Sketch and explain','<p>Individually sketch separate and cross-linked chains. Show possible or restricted movement when warm; add a causal phrase. Boards down, then show together.</p>',{taskId:'L2-T03',criteria:c.chain,answers:[a.board],stages:stages('<p>Sketch separate chains, then a cross-linked network. Show how relative movement differs when warm. Boards down; show together.</p>','<p>Individually sketch separate and cross-linked chains. Add a structure → movement → heating phrase for each. Boards down; show together.</p>','<p>A rigid bottle strip shows no visible change in hot water. Explain why this cannot identify a thermoset.</p>',c.chain,[a.board],[a.board],[a.nochange],[...c.chain,'State limits of a single observation.']),widgets:{adaptation:support('<p>Use structure → movement → behaviour. Distinguish forces between chains from bonds along them.</p>',a.board),hot:hot('<p>Explain why one no-change observation cannot identify a thermoset.</p>',a.nochange)}}),
-      s('book-chains','Thinking','Explain without the model','<p>Close the labelled model. In your book, write your own two-sentence comparison of thermosoftening and thermosetting polymers on heating.</p>',{taskId:'L2-T03',criteria:c.chain,answers:[a.comparison],stages:stages('<p>Use “Heating allows ___, so ___” for a thermosoftening polymer. Close the stem; compare thermosoftening and thermosetting heating behaviour in your book.</p>','<p>Compare thermosoftening and thermosetting polymers on heating in two own sentences. Explain structure and chain movement, without the stem or completed diagram.</p>','<p>Explain why no visible change in one hot-water test cannot identify a thermoset.</p>',c.chain,[a.comparison],[a.comparison],[a.nochange],[...c.chain,'State limits of a single observation.'])}),
-      s('extension-input','Input','Measure extension','<p>Extension = new gauge length − starting gauge length.</p><p>Example: 92 mm − 80 mm = 12 mm extension.</p><p>Large extension alone does not establish high tensile strength.</p>',{time:'13–27 min'}),
-      s('endpoints-input','Input','Separate the endpoints','<p>Breaking load is the load at fracture.</p><p>Record the first endpoint separately: 5 cm extension, fracture, or approved maximum reached. Record the mass at that endpoint.</p>'),
-      s('comparison-limits','Input','Compare these specimens','<p>Width, thickness, damage, clamping and material affect a strip result.</p><p>Without comparable cross-sectional area, compare these specimens rather than claiming an intrinsic polymer-strength ranking.</p>'),
-      s('predict-tests','Thinking','Predict two specimens','<p>In your science book, predict extension and flexibility for two assigned specimens. Use headings: specimen | prediction | property-based reason.</p>',{taskId:'L2-T04',widgets:{resources:bookResources},criteria:c.test,answers:[a.predict],stages:stages('<p>Book headings: specimen | prediction | reason. Predict extension and bending for your first assigned specimen, then the second.</p>','<p>In your science book: specimen | predicted extension/flexibility | reason. Predict both specimens before testing.</p>','<p>A replacement strip of the same polymer has half the thickness. Explain why a changed test result would not prove different chain structure.</p>',c.test,[a.predict],[a.predict],[a.thickness],['Separate extension, units and endpoint.','Compare specimens: control and limitation.','Separate specimen dimensions from molecular evidence.'])}),
-      s('record-tests','Thinking','Measure and record','<p>Use the displayed book headings in Resources. Record both specimens’ common-load extension, units and endpoint. Explain one control and limitation.</p>',{taskId:'L2-T04',widgets:{resources:bookResources},criteria:c.test,answers:[a.record],stages:stages('<p>Record extension and units for your first specimen: new length − starting length. Record endpoint type and mass separately; continue with the second specimen.</p>','<p>In your science-book table, record both specimens’ common-load extension, units and endpoint type/mass. Explain one control and limitation. Resources displays headings.</p>','<p>After loading, consider a same-polymer strip with half the thickness. Explain why changed extension or breaking behaviour would not establish different chain structure.</p>',c.test,[a.record],[a.record],[a.thickness],['Separate extension, units and endpoint.','Compare specimens: control and limitation.','Separate specimen dimensions from molecular evidence.'])}),
-      s('observe-tests','Thinking','Observe and reconsider','<p>In your science book, record bending and demonstrated heating. Write “no visible change” where appropriate. Reconsider your prediction using actual observations.</p>',{taskId:'L2-T04',widgets:{resources:bookResources},criteria:c.test,answers:[a.heat],stages:stages('<p>For both specimens, record actual bending: bends · returns · permanent bend · fracture. Record the demonstrated heat change, or “no visible change”.</p>','<p>In your science book, record both specimens’ bending and demonstrated heat observations. Compare with predictions; write “no visible change” where appropriate.</p>','<p>Explain why either no visible change in a hot-water test or a changed result from a thinner strip cannot establish molecular structure.</p>',c.test,[a.heat],[a.heat],[a.nochange,a.thickness],['Separate extension, units and endpoint.','Compare specimens: control and limitation.','Separate specimen dimensions from molecular evidence.'])}),
-      s('chart-data','Input','Fallback extension data','<p><strong>Illustrative only · not class observations or loading instructions.</strong></p><table><tr><th>At 50 g</th><th>Extension</th></tr><tr><td>LDPE</td><td>12 mm</td></tr><tr><td>Food-bag sample</td><td>8 mm</td></tr><tr><td>PET</td><td>1 mm</td></tr><tr><td>PVC</td><td>2 mm</td></tr></table>',{time:'27–31 min'}),
-      s('chart-fracture','Input','An early fracture','<p>Illustrative polystyrene specimen: fractured before 50 g.</p><p>There is no surviving-specimen extension measurement at 50 g. “Fractured before 50 g” is not zero extension.</p><p>Specimen thicknesses were unmatched.</p>'),
-      s('chart','Thinking','Plot and qualify','<p>In your science book, plot common-load extension against specimen. Use class data where available; label early fracture. Write one comparison and limitation.</p>',{taskId:'L2-T05',widgets:{resources:graphResources},criteria:c.graph,answers:[a.graph],stages:stages('<p>Draw book axes: specimen horizontally; extension / mm vertically. Plot the first surviving specimen, then continue. Label early fracture separately.</p>','<p>In your science book, plot extension / mm against specimen using class or illustrative data. Label early fracture; write one comparison and limitation.</p>','<p>The team needs the greatest-breaking-load carrying strap. Explain why a common-load extension chart cannot choose it; identify further comparable evidence needed.</p>',c.graph,[a.graph],[a.graph],[a.graphGold],['Plot common-load extension with units.','Label early fracture; never invent zero.','Identify evidence for the changed job.'])}),
-      s('foam-input','Input','Trap air to insulate','<p>Foam contains trapped air, which reduces heat transfer. A foam sleeve can help insulate a drink.</p><p>This does not establish suitability for every part of the container.</p>',{time:'31–34 min',diagram:'foam'}),
-      s('foam-job','Thinking','Explain the sleeve choice','<p>In your science book, explain why foam suits the insulating sleeve. Write the property → mechanism → usefulness link.</p>',{taskId:'L2-T06',criteria:c.use,answers:[a.foam],stages:stages('<p>For an insulating drinks-container sleeve, say “Foam traps air. This helps because …” Then write your own property → heat transfer → usefulness explanation.</p>','<p>Explain why foam’s trapped air helps a drinks-container sleeve insulate. Write the property → heat transfer → usefulness link.</p>','<p>The drinks-container job changes to a flexible carrying part. Explain why warm shape retention alone is insufficient; suggest a relevant displayed property.</p>',c.use,[a.foam],[a.foam],[a.carrying]),widgets:{resources:propertyResources,uae:[{title:'Hypothetical UAE design brief',html:'<p>For a hypothetical UAE drinks-container design, use the same sleeve and carrying-part demands. Product selection still needs evidence about the stated job.</p>',target:'foam-job'}]}}),
-      s('melamine-job','Thinking','Explain the warm shape','<p>In your science book, explain how melamine’s chain structure helps suitable items retain shape when warm.</p>',{taskId:'L2-T06',widgets:{resources:propertyResources},criteria:c.use,answers:[a.melamine],stages:stages('<p>Explain melamine’s warm shape retention. Identify cross-links; say “They restrict ___, so ___.” Then write your own structure → movement → behaviour link.</p>','<p>Explain how melamine-formaldehyde resin’s chain structure helps suitable items retain shape when warm. Connect structure, relative movement and behaviour.</p>','<p>The job changes to a flexible carrying part. Explain why melamine’s warm shape retention alone is insufficient; choose a relevant displayed property.</p>',c.use,[a.melamine],[a.melamine],[a.carrying])}),
-      s('hinge','Assess','Choose and explain','<p>Why does a thermoset resist reshaping on heating? Show a letter <strong>and movement reason</strong>.</p><ol type="A"><li>Short chains</li><li>Cross-links</li><li>Contains metal</li><li>Clay</li></ol>',{taskId:'L2-T07',time:'34–37 min',criteria:['Explain how chosen structure affects movement.'],answers:[a.hinge],widgets:{adaptation:support('<p>After your first response: identify what joins chains in a network, then explain which movement is restricted.</p>',a.hinge),hot:[{title:'Move to the recheck',html:'<p>Use the R/S recheck to apply the mechanism to equal-length chains.</p>',target:'recheck'}]}}),
-      s('recheck','Assess','Recheck the mechanism','<p>R and S have equal-length chains. Which retains shape more readily when warm, and why? State what excessive heating could cause. Show individually.</p>',{taskId:'L2-T08',diagram:'rs',criteria:c.recheck,answers:[a.recheck],stages:stages('<p>Circle R’s cross-links. Explain which movement they restrict when warm and what excessive heating could cause. Close completed support before rechecking.</p>','<p>For equal-length R/S chains, choose which retains shape when warm. Explain movement and excessive-heating risk. Show your own board together.</p>','<p>R has cross-links between equal-length chains. Reject “R is therefore safe at any temperature” with a scientific reason.</p>',c.recheck,[a.recheck],[a.recheck],[a.recheck])}),
-      s('independent-a','Assess','Explain the sheet','<p>An artist warms a thermosoftening sheet to reshape it. Explain using its chain structure. <strong>(2)</strong></p><p>Original practice · part A of 4 marks</p>',{taskId:'L2-T09',time:'37–42 min · both parts',independent:true,criteria:c.independent,answers:[a.independentA]}),
-      s('independent-b','Assess','Explain the enclosure','<p>A protective enclosure must retain its shape when warm. Explain why cross-linked thermosetting material may suit this requirement. <strong>(2)</strong></p>',{taskId:'L2-T09',kicker:'Original practice · part B of 4 marks',independent:true,criteria:c.independent,answers:[a.independentB]}),
-      s('feedback','Assess','Repair the cause','<p>Review T09. Repair one causal gap in your response. If complete, annotate why one link earns a mechanism point. Then close the review.</p>',{taskId:'L2-T10',time:'42–46 min',criteria:c.fresh,answers:[a.independentA,a.independentB,a.repair],stages:stages('<p>In T09, find a missing structure, movement or heating-behaviour link. Repair your own response; if complete, identify a mechanism point.</p>','<p>Review your T09 sheet/enclosure explanations. Repair one causal gap, or explain a complete mechanism point. Close the review before the fresh example.</p>','<p>In T09, identify how your causal link explains reshaping the sheet or retaining the enclosure’s warm shape, rather than merely naming a feature.</p>',c.fresh,[a.independentA,a.independentB,a.repair],[a.independentA,a.independentB,a.repair],[a.independentA,a.independentB,a.repair])}),
-      s('fresh-switch','Assess','Apply it afresh','<p>Electrical-switch base: name this network’s polymer type, explain warm shape retention, and name another necessary property.</p>',{taskId:'L2-T10',independent:true,diagram:'blanknetwork',criteria:c.fresh,answers:[a.fresh],stages:stages('<p>Close T09 review. This network is an electrical-switch base: name its polymer type, explain warm shape retention, and name another necessary property.</p>','<p>Close T09 review. Electrical-switch base: name this network’s polymer type, explain warm shape retention, and name another necessary property.</p>','<p>This network is an electrical-switch base. Explain why warm shape retention alone cannot establish suitability; name an additional necessary property.</p>',c.fresh,[a.fresh],[a.fresh],[a.freshGold])}),
-      s('exit-recall','Assess','Retrieve the model','<p>Complete “long ___ molecules”. Name one thermosoftening polymer and one thermosetting polymer.</p>',{taskId:'L2-T11',time:'46–49 min',independent:true,criteria:c.exit,answers:[a.exitRecall]}),
-      s('exit-insulation','Assess','Explain the insulation','<p>Explain why foam can insulate a cup better than a thin solid-PET wall.</p>',{taskId:'L2-T11',independent:true,criteria:c.exit,answers:[a.exitFoam],stages:stages('<p>Explain why foam can insulate a cup better than a thin solid-PET wall. Start with the feature inside foam; connect it to heat transfer.</p>','<p>Explain why foam can insulate a cup better than a thin solid-PET wall. Write your own feature → heat-transfer → usefulness explanation.</p>','<p>The job changes from sleeve to bottle body. Explain why “insulates well” alone cannot decide the choice.</p>',c.exit,[a.exitFoam],[a.exitFoam],[a.exitGold],[...c.exit,'Explain changed demands need more evidence.'])}),
-      s('homework','Assess','Identify five resins','<p>In your book, record five safe-item codes and resin categories, or use Resources A–E. Record uncertainty; explain why codes are not recycling instructions.</p>',{taskId:'L2-T12',time:'49–50 min',criteria:c.homework,answers:[a.homework],stages:stages('<p>Use the onscreen resin key. Book headings: item | code | resin/uncertainty. Complete five safe items or Resources A–E; record missing codes honestly.</p>','<p>In your book, record five safe-item codes and resin categories, or use Resources A–E. Record uncertainty; explain why codes are not recycling instructions.</p>','<p>Two items share a resin code but differ in format or added materials. Explain why shared local collection acceptance is not established.</p>',c.homework,[a.homework],[a.homework],[a.homeworkGold]),widgets:{resources:resinResources}}),
-      s('packing-input','Input','Optional polymer packing','<p>HDPE commonly has less-branched chains that pack more closely. LDPE has more branching.</p><p>Properties also depend on molecular size, processing and additives.</p>',{optional:true,diagram:'packing',nav:'Optional · polymer packing'}),
-      s('packing-task','Thinking','Explain and test packing','<p>Use packing and interactions to explain the typical HDPE/LDPE difference. Separate this model from what today’s specimen tests can establish.</p>',{taskId:'L2-T13',optional:true,diagram:'packing',criteria:c.packing,answers:[a.packing,a.packingGold],stages:stages('<p>Compare the HDPE/LDPE packing diagrams. Identify the less-branched representation and annotate where chains can pack more closely.</p>','<p>Use packing and interchain interactions to explain why HDPE is generally stiffer and has greater tensile strength than LDPE. Include relative chain movement.</p>','<p>Evaluate: “Today’s strip tests prove chain packing causes HDPE’s greater strength, and every HDPE product outperforms every LDPE product.”</p>',c.packing,[a.packing],[a.packing],[a.packingGold])})
-    ],
-    widgets:{
-      resources:[
-        ...bookResources,
-        ...graphResources,
-        {title:'Between and along',html:'<p>Review separate chains, weaker between-chain forces and strong along-chain bonds.</p>',target:'separate-chains'},
-        {title:'Extension and endpoints',html:'<p>Extension is an increase in gauge length. Breaking load is the load at fracture. These measurements answer different questions.</p>',target:'extension-input'},
-        ...propertyResources,
-        ...resinResources
+/* Authored pupil-safe content; generated by private build.py. */
+window.LESSON_DATA = {
+  "title": "Properties and uses of materials",
+  "year": "Year 9",
+  "screens": [
+    {
+      "id": "recall",
+      "family": "Title",
+      "title": "What do you remember about materials?",
+      "html": "<ol><li>Name three material families.</li><li>Give two typical ceramic properties.</li><li>What is a monomer?</li></ol><p class=\"response-place\">Write in your science book. Then check and correct.</p>",
+      "criteria": [
+        "Use family names and properties accurately.",
+        "Define monomer as a small molecule."
       ],
-      assessments:[
-        {title:'Independent explanation',html:'<p>Two original 2-mark explanations; four marks in total. Attempt both before opening the exact review.</p>',target:'independent-a'},
-        {title:'Fresh application',html:'<p>Apply the mechanism to an electrical-switch base with the earlier review closed.</p>',target:'fresh-switch'},
-        {title:'Exit explanation',html:'<p>Retrieve chain examples, then explain the foam comparison.</p>',target:'exit-recall'}
+      "answers": [
+        {
+          "id": "L2-R",
+          "question": "Recall three families, two ceramic properties and monomer.",
+          "model": "Metals, ceramics and polymers. Typical ceramic properties include hard, brittle and electrically insulating. A monomer is a small molecule that can join to others to form a polymer.",
+          "criteria": [
+            "All three families; any two valid typical properties.",
+            "Monomer definition must refer to a small molecule that can join others."
+          ],
+          "marks": null
+        }
       ],
-      adaptation:[{title:'Use a movable stage',html:'<p>Blue supplies a first step. Green explains and applies. After a successful supported attempt, close the stem or labels and try independently.</p>'},{title:'Structure → movement → behaviour',html:'<p>Use the chain-model explanation before returning to your own task. The words “strong” or “plastic” alone do not explain movement.</p>',target:'model-explanation'}],
-      hot:[{title:'Optional · packing and evidence',html:'<p>Use T13 instead of already-secure repetition. Compare the chain-packing model with what the strip evidence can establish.</p>',target:'packing-input'}],
-      ai:[{title:'Check a generated claim',html:'<p>A generated statement that “strip tests prove chain structure” exceeds the evidence. The test measures specimen behaviour; it does not observe molecular arrangement. Check claims against the measurement and its limits. No live AI is needed.</p>'}],
-      uae:[{title:'Hypothetical UAE product brief',html:'<p>A hypothetical UAE drinks-container design needs a body that holds shape, a carrying part that bends and a sleeve that insulates. Use the same scientific selection criteria for each demand.</p>',target:'foam-job'},{title:'Resin is not collection advice',html:'<p>Resin-identification codes describe categories of plastic. They do not establish local recycling acceptance; actual collection guidance must be checked for the item and format.</p>'}]
+      "minutes": 4,
+      "layout": "retrieval-sheet",
+      "assessment_label": "Self-assessment"
+    },
+    {
+      "id": "outcomes",
+      "family": "Learning outcome",
+      "title": "Why does structure matter?",
+      "html": "<p class=\"lesson-question\">Why can some plastics be reshaped by heating?</p><ol><li>Describe polymer chain structures.</li><li>Explain how structure affects heating behaviour.</li><li>Justify a polymer choice for a particular use.</li></ol><p class=\"source\">19.1: names and properties of common polymers and ceramics. 19.2: how their uses relate to their properties. Chain structure: unit outcome.</p>",
+      "criteria": [
+        "Identify the outcome that needs an explanation."
+      ],
+      "answers": [
+        {
+          "id": "L2-LO",
+          "question": "Which outcome needs more than naming or describing?",
+          "model": "Explaining heating behaviour needs a causal link from structure to movement. Justifying a choice also needs that behaviour linked to the product’s job.",
+          "criteria": [
+            "Distinguish describing a feature from explaining its effect."
+          ],
+          "marks": null
+        }
+      ],
+      "minutes": 2,
+      "layout": "full-question"
+    },
+    {
+      "id": "chains",
+      "family": "Input",
+      "title": "Heating and chain movement",
+      "html": "<p><strong>Thermosoftening:</strong> suitable heating overcomes weaker forces between chains, allowing sliding and reshaping.</p><p><strong>Thermosetting:</strong> strong cross-links restrict sliding.</p><p>Identify an intact chain. Ordinary softening leaves its along-chain bonds intact.</p>",
+      "criteria": [
+        "Distinguish bonds along chains from links between chains.",
+        "Explain the effect on relative movement."
+      ],
+      "answers": [
+        {
+          "id": "L2-C",
+          "question": "Distinguish the along-chain bond from forces and links between chains.",
+          "model": "Strong covalent bonds join the atoms along a polymer chain. Separate chains attract through weaker forces. In a cured thermoset, strong covalent cross-links connect different chains.",
+          "criteria": [
+            "Along and between must be distinguished.",
+            "Cross-links connect different chains; they are not broken chains."
+          ],
+          "marks": null
+        }
+      ],
+      "minutes": 3,
+      "layout": "model-stage",
+      "model": {
+        "type": "polymer",
+        "mode": "static",
+        "variant": "compare",
+        "controls": false
+      }
+    },
+    {
+      "id": "compare",
+      "family": "Thinking",
+      "title": "Which change matters?",
+      "html": "<p>On your whiteboard, compare A and B, then C.</p><p>Predict which can reshape on suitable heating. Give a structural reason <strong>before testing</strong>.</p>",
+      "criteria": [
+        "Distinguish bonds along chains from links between chains.",
+        "Explain the effect on relative movement."
+      ],
+      "answers": [
+        {
+          "id": "L2-V",
+          "question": "Does a different viewing angle change the heating prediction? What matters in C?",
+          "model": "A and B show the same separate-chain structure, so changing the view alone does not change the prediction. C has cross-links. These restrict relative sliding. Suitable heating lets separate chains slide more easily without breaking bonds along them.",
+          "criteria": [
+            "A/B: same structure, same prediction.",
+            "C: cross-links restrict relative chain movement."
+          ],
+          "marks": null
+        }
+      ],
+      "minutes": 4,
+      "layout": "visual-first-explanation",
+      "model": {
+        "type": "polymer",
+        "mode": "predict",
+        "variant": "controlled"
+      }
+    },
+    {
+      "id": "model",
+      "family": "Input",
+      "title": "Build an explanation: a warm electrical fitting",
+      "html": "<p>The fitting must keep its shape when warm.</p><p>Predict the next link as the explanation is built.</p>",
+      "criteria": [
+        "Connect structure, movement and behaviour.",
+        "Finish with the benefit for this fitting."
+      ],
+      "answers": [
+        {
+          "id": "L2-M",
+          "question": "Explain why a suitable thermosetting polymer is used for a warm electrical fitting.",
+          "model": "Strong cross-links join different polymer chains. They restrict relative sliding when warmed, so the cured polymer does not melt and flow like a thermoplastic. Keeping its shape helps the fitting hold its parts in place within its safe operating range.",
+          "criteria": [
+            "Structure: cross-links between chains.",
+            "Movement/behaviour: restricted sliding and shape retention.",
+            "Use: shape retention linked to holding parts in place."
+          ],
+          "marks": null
+        }
+      ],
+      "minutes": 2,
+      "layout": "worked-model",
+      "steps": [
+        {
+          "label": "1 · Requirement",
+          "body": "Keep the fitting’s shape within its safe operating range."
+        },
+        {
+          "label": "2 · Structure",
+          "body": "Strong cross-links join different polymer chains."
+        },
+        {
+          "label": "3 · Movement",
+          "body": "The cross-links restrict relative sliding when warmed."
+        },
+        {
+          "label": "4 · Benefit",
+          "body": "The fitting retains its shape and holds its parts in place."
+        }
+      ]
+    },
+    {
+      "id": "parallel",
+      "family": "Assess",
+      "title": "Your turn: a tray for warm dishes",
+      "html": "<p>A tray’s polymer has strong cross-links. It must remain rigid while holding warm dishes.</p><p><strong>Explain how its structure helps it do this job.</strong> Write your own explanation first.</p>",
+      "criteria": [
+        "Explain the chain movement.",
+        "Link the behaviour to this tray’s job."
+      ],
+      "answers": [
+        {
+          "id": "L2-P",
+          "question": "Explain why strong cross-links help a serving tray remain rigid under warm dishes.",
+          "model": "Strong cross-links connect different chains and restrict relative sliding when the polymer is warmed. This helps the suitable cured polymer retain its shape, so the tray supports the dishes within its safe operating range.",
+          "criteria": [
+            "Identify cross-links between chains.",
+            "Explain restricted movement and shape retention.",
+            "Connect shape retention to supporting warm dishes."
+          ],
+          "marks": null
+        }
+      ],
+      "minutes": 3,
+      "layout": "context-brief",
+      "assessment_label": "Self-assessment"
+    },
+    {
+      "id": "hinge",
+      "family": "Assess",
+      "title": "Choose — and explain why",
+      "html": "<p>Why does a cross-linked polymer resist melting and reshaping?</p><ol class=\"options\" type=\"A\"><li>Its chains are always shorter.</li><li>Cross-links restrict chain movement.</li><li>Heating must break bonds along every chain.</li><li>Every plastic behaves the same.</li></ol><p class=\"response-place\">Write the letter AND a reason. Show together.</p>",
+      "criteria": [
+        "Use structure to justify your choice."
+      ],
+      "answers": [
+        {
+          "id": "L2-H",
+          "question": "Why does the cross-linked polymer not melt and flow like a thermoplastic?",
+          "model": "B. Strong cross-links restrict relative sliding between chains. Ordinary thermoplastic softening does not break the strong bonds along chains. Thermosets are not indefinitely heatproof; severe heating can cause chemical breakdown.",
+          "criteria": [
+            "Choose B and explain restricted relative movement.",
+            "Do not claim that normal softening breaks chains."
+          ],
+          "marks": null
+        }
+      ],
+      "minutes": 3,
+      "layout": "diagnostic-decision",
+      "independent": true,
+      "recheck": {
+        "title": "Different check · P and Q",
+        "html": "<div class=\"mini-pair\"><div><strong>P</strong><span>Separate chains</span><svg class=\"chain-diagram\" viewBox=\"0 0 400 150\" role=\"img\" aria-label=\"Three separate continuous polymer chains\"><g fill=\"none\" stroke=\"#194e68\" stroke-width=\"6\"><path d=\"M20 30 C70 12,90 48,140 30 S210 12,250 30 S310 48,360 30\"/><path d=\"M20 75 C70 57,90 93,140 75 S210 57,250 75 S310 93,360 75\"/><path d=\"M20 120 C70 102,90 138,140 120 S210 102,250 120 S310 138,360 120\"/></g></svg></div><div><strong>Q</strong><span>Cross-linked chains</span><svg class=\"chain-diagram\" viewBox=\"0 0 400 150\" role=\"img\" aria-label=\"Three chains joined by cross-links between different chains\"><g fill=\"none\" stroke=\"#194e68\" stroke-width=\"6\"><path d=\"M20 30 C70 12,90 48,140 30 S210 12,250 30 S310 48,360 30\"/><path d=\"M20 75 C70 57,90 93,140 75 S210 57,250 75 S310 93,360 75\"/><path d=\"M20 120 C70 102,90 138,140 120 S210 102,250 120 S310 138,360 120\"/></g><path d=\"M140 30V75M250 75V120\" stroke=\"#ad7a27\" stroke-width=\"7\"/></svg></div></div><p>Which can reshape on suitable heating? Explain from structure and movement.</p>",
+        "answers": [
+          {
+            "id": "L2-H2",
+            "question": "Which of new P/Q can reshape on suitable heating, and why?",
+            "model": "P: suitable heating overcomes weaker forces between separate chains, allowing relative sliding and reshaping. Q has cross-links that restrict this sliding.",
+            "criteria": [
+              "Choose P using the stated structure.",
+              "Explain relative sliding rather than breaking along-chain bonds."
+            ],
+            "marks": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "evidence",
+      "family": "Thinking",
+      "title": "What does this result show?",
+      "html": "<p class=\"source\">Illustrative data · same comparison load · not class measurements or loading instructions.</p><div class=\"data-work\"><table><tr><th>Specimen</th><th>Extension</th></tr><tr><td>A</td><td>12 mm</td></tr><tr><td>B</td><td>2 mm</td></tr></table><svg class=\"worked-graph\" viewBox=\"0 0 560 275\" role=\"img\" aria-label=\"Worked bar chart with extension in millimetres from zero to twelve. A is drawn at twelve. B is left blank to complete.\"><g font-size=\"32\" fill=\"#194e68\"><path d=\"M75 176H500\" stroke=\"#b9c3c4\" stroke-width=\"1\"/><text x=\"60\" y=\"185\" text-anchor=\"end\">0</text><path d=\"M75 128H500\" stroke=\"#b9c3c4\" stroke-width=\"1\"/><text x=\"60\" y=\"137\" text-anchor=\"end\">4</text><path d=\"M75 80H500\" stroke=\"#b9c3c4\" stroke-width=\"1\"/><text x=\"60\" y=\"89\" text-anchor=\"end\">8</text><path d=\"M75 32H500\" stroke=\"#b9c3c4\" stroke-width=\"1\"/><text x=\"60\" y=\"41\" text-anchor=\"end\">12</text><path d=\"M75 20V176H510\" fill=\"none\" stroke=\"#194e68\" stroke-width=\"3\"/><rect x=\"140\" y=\"32\" width=\"85\" height=\"144\" fill=\"#194e68\"/><rect x=\"330\" y=\"27\" width=\"110\" height=\"149\" fill=\"none\" stroke=\"#7c929a\" stroke-width=\"2\" stroke-dasharray=\"6 7\"/><text x=\"182\" y=\"210\" text-anchor=\"middle\">A</text><text x=\"385\" y=\"210\" text-anchor=\"middle\">B: draw</text><text x=\"95\" y=\"23\">Extension (mm)</text><text x=\"260\" y=\"265\">Specimen</text></g></svg></div><p>Plot B in your book. Compare extension. What further evidence would justify a strength claim?</p>",
+      "criteria": [
+        "Plot with axes and units.",
+        "Separate the measurement from the strength claim."
+      ],
+      "answers": [
+        {
+          "id": "L2-D",
+          "question": "Complete the graph and make a justified specimen comparison. What extra evidence is needed for a strength claim?",
+          "model": "Plot A at 12 mm and B at 2 mm; label specimen and extension in mm. A extends 10 mm more than B under the same comparison load. These data do not establish tensile strength. To compare tensile strength, control dimensions and measure maximum tensile stress using force and cross-sectional area.",
+          "criteria": [
+            "Accurate bars, axes and mm.",
+            "Limit the conclusion to extension of these specimens.",
+            "Identify dimensions and failure evidence for a strength claim."
+          ],
+          "marks": null
+        }
+      ],
+      "minutes": 7,
+      "layout": "evidence-workbench"
+    },
+    {
+      "id": "practice",
+      "family": "Assess",
+      "title": "Explain your material choice",
+      "html": "<p><strong>1.</strong> A water pipe must keep its shape and resist water. Choose a polymer from the reference.</p><p><strong>2.</strong> Explain how foam helps a cup keep a drink warm.</p>",
+      "criteria": [
+        "Name a relevant property.",
+        "Explain how it helps the stated job."
+      ],
+      "answers": [
+        {
+          "id": "L2-U1",
+          "question": "Choose a pipe material from the supplied evidence and explain why it suits the job.",
+          "model": "PVC is a suitable choice for the stated pipe because it is rigid and water-resistant. Rigidity helps maintain the pipe’s shape, while water resistance helps it contain and carry water. A real pipe must also meet the required pressure and temperature specification.",
+          "criteria": [
+            "Name a relevant property.",
+            "Explain how it helps the stated job."
+          ],
+          "marks": null
+        },
+        {
+          "id": "L2-U2",
+          "question": "Explain how polystyrene foam helps a cup keep a drink warm.",
+          "model": "The foam contains many small pockets of trapped air. Relatively still air reduces energy transfer, so energy leaves the warm drink more slowly. The insulation does not create heat or stop all energy transfer.",
+          "criteria": [
+            "Identify trapped air.",
+            "Link reduced energy transfer to slower cooling."
+          ],
+          "marks": null
+        }
+      ],
+      "minutes": 7,
+      "layout": "task-and-criteria",
+      "assessment_label": "Self-assessment",
+      "pages": [
+        {
+          "title": "Evidence for these two jobs",
+          "html": "<div class=\"reference-pairs\"><span><b>PVC</b> Rigid, water-resistant · pipes</span><span><b>Polystyrene foam</b> Trapped air reduces energy transfer · insulation</span></div>"
+        },
+        {
+          "title": "Other useful polymer examples",
+          "html": "<div class=\"reference-pairs extra-references\"><span><b>Poly(ethene)</b> Flexible · bags</span><span><b>Nylon</b> Useful tensile strength · ropes</span><span><b>Suitable thermoset</b> Warm shape retention · fittings</span></div>"
+        }
+      ],
+      "stages": {
+        "green": {
+          "html": "<p><strong>1.</strong> Choose a pipe polymer. Explain the useful property.</p><p><strong>2.</strong> Explain how foam slows a drink’s cooling.</p>",
+          "criteria": [
+            "Name a relevant property.",
+            "Explain how it helps the stated job."
+          ],
+          "answers": [
+            {
+              "id": "L2-U1",
+              "question": "Choose a pipe material from the supplied evidence and explain why it suits the job.",
+              "model": "PVC is a suitable choice for the stated pipe because it is rigid and water-resistant. Rigidity helps maintain the pipe’s shape, while water resistance helps it contain and carry water. A real pipe must also meet the required pressure and temperature specification.",
+              "criteria": [
+                "Name a relevant property.",
+                "Explain how it helps the stated job."
+              ],
+              "marks": null
+            },
+            {
+              "id": "L2-U2",
+              "question": "Explain how polystyrene foam helps a cup keep a drink warm.",
+              "model": "The foam contains many small pockets of trapped air. Relatively still air reduces energy transfer, so energy leaves the warm drink more slowly. The insulation does not create heat or stop all energy transfer.",
+              "criteria": [
+                "Identify trapped air.",
+                "Link reduced energy transfer to slower cooling."
+              ],
+              "marks": null
+            }
+          ]
+        },
+        "blue": {
+          "html": "<p>Explain the pipe choice and the foam cup. Complete these links in your book.</p><div class=\"organiser\"><span>PVC → rigidity → pipe benefit: ____</span><span>Foam → trapped air → reduced energy transfer → drink benefit: ____</span></div>",
+          "criteria": [
+            "Name a relevant property.",
+            "Explain how it helps the stated job."
+          ],
+          "answers": [
+            {
+              "id": "L2-U1",
+              "question": "Choose a pipe material from the supplied evidence and explain why it suits the job.",
+              "model": "PVC is a suitable choice for the stated pipe because it is rigid and water-resistant. Rigidity helps maintain the pipe’s shape, while water resistance helps it contain and carry water. A real pipe must also meet the required pressure and temperature specification.",
+              "criteria": [
+                "Name a relevant property.",
+                "Explain how it helps the stated job."
+              ],
+              "marks": null
+            },
+            {
+              "id": "L2-U2",
+              "question": "Explain how polystyrene foam helps a cup keep a drink warm.",
+              "model": "The foam contains many small pockets of trapped air. Relatively still air reduces energy transfer, so energy leaves the warm drink more slowly. The insulation does not create heat or stop all energy transfer.",
+              "criteria": [
+                "Identify trapped air.",
+                "Link reduced energy transfer to slower cooling."
+              ],
+              "marks": null
+            }
+          ]
+        },
+        "gold": {
+          "html": "<p>The job changes: a product must be <strong>repeatedly reshaped by heating</strong>.</p><p>Would you keep the cross-linked structure? Justify a changed choice and one trade-off.</p>",
+          "criteria": [
+            "Explain how the changed job changes the choice.",
+            "Identify a linked trade-off."
+          ],
+          "answers": [
+            {
+              "id": "L2-G",
+              "question": "Choose a structure for repeated reshaping and identify a trade-off.",
+              "model": "Choose a suitable thermoplastic: heating lets separate chains slide and reshape. Trade-off: its tendency to soften can make warm shape retention less suitable. Service limits depend on the material.",
+              "criteria": [
+                "Use structure and movement to justify the changed choice.",
+                "Link the trade-off to shape retention; qualify service temperatures."
+              ],
+              "marks": null
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "improve",
+      "family": "Assess",
+      "title": "Make your explanation better",
+      "html": "<ol><li>Underline the property in your pipe or cup answer.</li><li>Box the benefit for the product.</li><li>Find a missing causal link. Rewrite the weaker answer in a different pen.</li></ol><p>Keep your first answer beside your improvement.</p>",
+      "criteria": [
+        "Name the exact gap.",
+        "Add the missing scientific explanation."
+      ],
+      "answers": [
+        {
+          "id": "L2-U1",
+          "question": "Choose a pipe material from the supplied evidence and explain why it suits the job.",
+          "model": "PVC is a suitable choice for the stated pipe because it is rigid and water-resistant. Rigidity helps maintain the pipe’s shape, while water resistance helps it contain and carry water. A real pipe must also meet the required pressure and temperature specification.",
+          "criteria": [
+            "Name a relevant property.",
+            "Explain how it helps the stated job."
+          ],
+          "marks": null
+        },
+        {
+          "id": "L2-U2",
+          "question": "Explain how polystyrene foam helps a cup keep a drink warm.",
+          "model": "The foam contains many small pockets of trapped air. Relatively still air reduces energy transfer, so energy leaves the warm drink more slowly. The insulation does not create heat or stop all energy transfer.",
+          "criteria": [
+            "Identify trapped air.",
+            "Link reduced energy transfer to slower cooling."
+          ],
+          "marks": null
+        },
+        {
+          "id": "L2-I",
+          "question": "How should the revision improve the explanation?",
+          "model": "Example revision: “Foam keeps it warm” becomes “Foam traps relatively still air, reducing energy transfer from the drink, so it cools more slowly.” The revision supplies the missing mechanism and links it to the product.",
+          "criteria": [
+            "A scientific causal link must be added or corrected.",
+            "Changing presentation alone does not repair the explanation."
+          ],
+          "marks": null
+        }
+      ],
+      "minutes": 5,
+      "layout": "worked-model",
+      "assessment_label": "Self-assessment"
+    },
+    {
+      "id": "fresh",
+      "family": "Assess",
+      "title": "Explain a new material choice",
+      "html": "<div class=\"mini-pair\"><div><strong>R</strong><span>Separate chains</span><svg class=\"chain-diagram\" viewBox=\"0 0 400 150\" role=\"img\" aria-label=\"Three separate continuous polymer chains\"><g fill=\"none\" stroke=\"#194e68\" stroke-width=\"6\"><path d=\"M20 30 C70 12,90 48,140 30 S210 12,250 30 S310 48,360 30\"/><path d=\"M20 75 C70 57,90 93,140 75 S210 57,250 75 S310 93,360 75\"/><path d=\"M20 120 C70 102,90 138,140 120 S210 102,250 120 S310 138,360 120\"/></g></svg></div><div><strong>S</strong><span>Cross-linked chains</span><svg class=\"chain-diagram\" viewBox=\"0 0 400 150\" role=\"img\" aria-label=\"Three chains joined by cross-links between different chains\"><g fill=\"none\" stroke=\"#194e68\" stroke-width=\"6\"><path d=\"M20 30 C70 12,90 48,140 30 S210 12,250 30 S310 48,360 30\"/><path d=\"M20 75 C70 57,90 93,140 75 S210 57,250 75 S310 93,360 75\"/><path d=\"M20 120 C70 102,90 138,140 120 S210 102,250 120 S310 138,360 120\"/></g><path d=\"M140 30V75M250 75V120\" stroke=\"#ad7a27\" stroke-width=\"7\"/></svg></div></div><p><strong>(a)</strong> Explain why R can be reshaped on suitable heating. <b>[2]</b></p><p><strong>(b)</strong> Explain why S suits a warm control enclosure that must keep its shape. <b>[2]</b></p><p class=\"source\">Original practice · 4 marks · write independently in your book.</p>",
+      "criteria": [
+        "Use evidence from each new structure.",
+        "Explain behaviour and connect it to the stated job."
+      ],
+      "answers": [
+        {
+          "id": "L2-F",
+          "question": "R has separate chains; S has cross-links. Explain R reshaping and S suitability for a warm enclosure.",
+          "model": "(a) Suitable heating overcomes weaker forces between R’s chains [1], allowing the chains to slide relative to one another and the polymer to reshape [1]. (b) Cross-links in S restrict relative chain movement [1], helping the warm enclosure retain the shape needed to hold and protect its controls [1].",
+          "criteria": [
+            "(a) Weaker interchain forces overcome: 1; relative sliding and reshaping: 1.",
+            "(b) Cross-links restrict movement: 1; shape retention linked to enclosure job: 1.",
+            "Accept equivalent accurate wording. Do not credit breaking along-chain bonds for ordinary softening."
+          ],
+          "marks": 4
+        }
+      ],
+      "minutes": 6,
+      "layout": "quiet-exit",
+      "assessment_label": "Teacher-marked evidence",
+      "independent": true
+    },
+    {
+      "id": "review",
+      "family": "Thinking",
+      "title": "Check the link you needed",
+      "html": "<p>Check your four-mark answer. Mark one precise gap and correct it.</p><p><strong>For next lesson:</strong> be ready to explain heating from a new chain diagram.</p><p><strong>Homework:</strong> record five plastic resin codes or use the supplied A–E examples. Identify each polymer.</p>",
+      "criteria": [
+        "Correct a specific scientific point.",
+        "Separate resin identification from recycling acceptance."
+      ],
+      "answers": [
+        {
+          "id": "L2-F",
+          "question": "R has separate chains; S has cross-links. Explain R reshaping and S suitability for a warm enclosure.",
+          "model": "(a) Suitable heating overcomes weaker forces between R’s chains [1], allowing the chains to slide relative to one another and the polymer to reshape [1]. (b) Cross-links in S restrict relative chain movement [1], helping the warm enclosure retain the shape needed to hold and protect its controls [1].",
+          "criteria": [
+            "(a) Weaker interchain forces overcome: 1; relative sliding and reshaping: 1.",
+            "(b) Cross-links restrict movement: 1; shape retention linked to enclosure job: 1.",
+            "Accept equivalent accurate wording. Do not credit breaking along-chain bonds for ordinary softening."
+          ],
+          "marks": 4
+        },
+        {
+          "id": "L2-HW",
+          "question": "Identify the supplied resin-code examples and explain what the code does not show.",
+          "model": "A: code 1, PET. B: code 2, HDPE. C: code 3, PVC. D: code 4, LDPE. E: code 5, PP. A resin code identifies a plastic category; it does not prove that your local collection accepts the item for recycling.",
+          "criteria": [
+            "Record the actual code or use the labelled supplied examples.",
+            "Correct polymer category; recycling acceptance requires local information."
+          ],
+          "marks": null
+        }
+      ],
+      "minutes": 2,
+      "layout": "claim-verification",
+      "pages": [
+        {
+          "title": "Supplied homework examples",
+          "html": "<p>A: bottle, code 1 · B: milk container, code 2 · C: pipe, code 3 · D: bag, code 4 · E: food tub, code 5.</p><p>Use the code key in Resources. Do not guess a code from appearance.</p>"
+        }
+      ],
+      "widgets": {
+        "resources": [
+          {
+            "title": "Resin code key · 1–3",
+            "html": "<p><strong>1 · PET</strong> — poly(ethylene terephthalate)</p><p><strong>2 · HDPE</strong> — high-density poly(ethene)</p><p><strong>3 · PVC</strong> — poly(vinyl chloride)</p>"
+          },
+          {
+            "title": "Resin code key · 4–5",
+            "html": "<p><strong>4 · LDPE</strong> — low-density poly(ethene)</p><p><strong>5 · PP</strong> — poly(propene)</p><p>A code identifies a resin category. It does not show whether local recycling accepts the item.</p><p><a href=\"https://blog.ansi.org/ansi/resin-identification-codes-rics-astm-d7611/\" target=\"_blank\" rel=\"noopener\">Source: ANSI · resin identification</a></p>"
+          }
+        ]
+      }
     }
-  };
-})();
+  ],
+  "widgets": {
+    "resources": [
+      {
+        "title": "Polymer science",
+        "html": "<p>Use the university explanation to check how structure affects heating.</p><p><a href=\"https://courses.ems.psu.edu/matse81/book/export/html/2209\" target=\"_blank\" rel=\"noopener\">Penn State · thermoplastic and thermosetting polymers</a></p>"
+      },
+      {
+        "title": "Heating has limits",
+        "html": "<p>Thermosets do not melt and flow like thermoplastics. Severe heating can damage them.</p><p><a href=\"https://compositeskn.org/KPC/A105\" target=\"_blank\" rel=\"noopener\">Composites Knowledge Network · thermosets</a></p>"
+      },
+      {
+        "title": "Foam and trapped air",
+        "html": "<p><a href=\"https://www.energy.gov.au/households/insulation-and-draught-proofing\" target=\"_blank\" rel=\"noopener\">Australian Government · insulation</a></p><p>Bulk insulation traps relatively still air and resists energy transfer.</p>"
+      }
+    ],
+    "assessments": [
+      {
+        "title": "Explain the tray",
+        "html": "<p>Apply the model to your own thermoset explanation.</p>",
+        "target": "parallel"
+      },
+      {
+        "title": "Fresh independent response",
+        "html": "<p>Use a different structure and product without completed models.</p>",
+        "target": "fresh"
+      }
+    ],
+    "adaptation": [
+      {
+        "title": "Blue · identify the chain links",
+        "html": "<div class=\"partial-chain\"><svg class=\"chain-diagram\" viewBox=\"0 0 400 150\" role=\"img\" aria-label=\"Three chains joined by cross-links between different chains\"><g fill=\"none\" stroke=\"#194e68\" stroke-width=\"6\"><path d=\"M20 30 C70 12,90 48,140 30 S210 12,250 30 S310 48,360 30\"/><path d=\"M20 75 C70 57,90 93,140 75 S210 57,250 75 S310 93,360 75\"/><path d=\"M20 120 C70 102,90 138,140 120 S210 102,250 120 S310 138,360 120\"/></g><path d=\"M140 30V75M250 75V120\" stroke=\"#ad7a27\" stroke-width=\"7\"/></svg><p><strong>Along one chain:</strong> strong bonds.</p><p><strong>Between two chains:</strong> the gold link is ______.</p><p>Complete: links between chains restrict relative ______.</p></div>",
+        "answers": [
+          {
+            "id": "L2-SCIENCE-SUPPORT",
+            "question": "Complete the gold link and relative-movement labels.",
+            "model": "The gold join connects different chains: it is a cross-link. Cross-links restrict relative sliding. Strong bonds along a chain remain intact during ordinary thermoplastic softening.",
+            "criteria": [
+              "Identify a cross-link between distinct chains.",
+              "Explain restricted relative sliding."
+            ],
+            "marks": null
+          }
+        ]
+      },
+      {
+        "title": "Blue · organise the tray explanation",
+        "html": "<p>Explain the warm-dish tray. Complete these connected headings, then write your paragraph.</p><div class=\"organiser\"><span>Cross-links →</span><span>Movement: ____</span><span>Heating behaviour: ____</span><span>Benefit for the tray: ____</span></div>",
+        "answers": [
+          {
+            "id": "L2-P",
+            "question": "Explain why strong cross-links help a serving tray remain rigid under warm dishes.",
+            "model": "Strong cross-links connect different chains and restrict relative sliding when the polymer is warmed. This helps the suitable cured polymer retain its shape, so the tray supports the dishes within its safe operating range.",
+            "criteria": [
+              "Identify cross-links between chains.",
+              "Explain restricted movement and shape retention.",
+              "Connect shape retention to supporting warm dishes."
+            ],
+            "marks": null
+          }
+        ]
+      }
+    ],
+    "hot": [
+      {
+        "title": "Change the requirement",
+        "html": "<p>A product must be reshaped repeatedly by heating. Explain which structure you would choose and identify a trade-off.</p>",
+        "answers": [
+          {
+            "id": "L2-G",
+            "question": "Choose a structure for repeated reshaping and identify a trade-off.",
+            "model": "Choose a suitable thermoplastic: heating lets separate chains slide and reshape. Trade-off: its tendency to soften can make warm shape retention less suitable. Service limits depend on the material.",
+            "criteria": [
+              "Use structure and movement to justify the changed choice.",
+              "Link the trade-off to shape retention; qualify service temperatures."
+            ],
+            "marks": null
+          }
+        ]
+      }
+    ],
+    "ai": [
+      {
+        "title": "Explain your use of a digital model",
+        "html": "<p>After your own explanation, record what the digital model helped you inspect, which source you checked and which scientific decision you made yourself.</p><p>Why is a model animation not experimental evidence?</p>",
+        "answers": [
+          {
+            "id": "L2-AI",
+            "question": "Disclose the tool contribution, source check and your own decision. Explain a limit.",
+            "model": "Example: “I inspected cross-links using the model, checked Penn State and wrote my own material choice. The animation illustrates an idea; it does not measure real samples or safe operating temperatures.”",
+            "criteria": [
+              "Name the specific tool contribution and source check.",
+              "Identify your own scientific decision and one limit of the representation."
+            ],
+            "marks": null
+          }
+        ]
+      }
+    ],
+    "uae": [
+      {
+        "title": "A pipe in a warm service space",
+        "html": "<p>A UAE building’s pipe must carry water at its specified pressure and temperature.</p><p>Why is “it is plastic” insufficient to justify the choice?</p>",
+        "answers": [
+          {
+            "id": "L2-UAE",
+            "question": "Why does a water-pipe choice need more than the label plastic?",
+            "model": "Different polymers have different stiffness, temperature and pressure limits. Select a material rated for the actual service conditions and link relevant properties to the job. Climate context alone does not establish a safe specification.",
+            "criteria": [
+              "Identify relevant service conditions.",
+              "Explain that a material family does not establish suitability."
+            ],
+            "marks": null
+          }
+        ]
+      }
+    ]
+  },
+  "outcomes": [
+    "Describe polymer chain structures.",
+    "Explain how structure affects heating behaviour.",
+    "Justify a polymer choice for a particular use."
+  ],
+  "specification": [
+    {
+      "id": "19.1",
+      "statement": "Names and properties of common polymers and ceramics."
+    },
+    {
+      "id": "19.2",
+      "statement": "How their uses relate to their properties."
+    }
+  ],
+  "sources": [
+    {
+      "title": "Penn State · polymers",
+      "url": "https://courses.ems.psu.edu/matse81/book/export/html/2209",
+      "claim": "Separate-chain thermoplastics and cross-linked thermosets; heating behaviour."
+    },
+    {
+      "title": "Composites Knowledge Network",
+      "url": "https://compositeskn.org/KPC/A105",
+      "claim": "Thermoset transitions and chemical breakdown limits."
+    },
+    {
+      "title": "Australian Government · insulation",
+      "url": "https://www.energy.gov.au/households/insulation-and-draught-proofing",
+      "claim": "Trapped relatively still air resists heat transfer."
+    }
+  ]
+};

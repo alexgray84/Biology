@@ -1,157 +1,899 @@
-/* Original teaching content; Arcadia Frame 1.0.0. See the private source/QA record. */
-(() => {
-  'use strict';
-  const src = {
-    twi:'https://www.twi-global.com/technical-knowledge/faqs/what-is-a-composite-material',
-    grp:'https://www.twi-global.com/technical-knowledge/faqs/faq-what-are-the-functions-of-the-fibres-and-matrix-in-glass-reinforced-plastics-grp',
-    grpuse:'https://www.twi-global.com/technical-knowledge/faqs/what-are-glass-reinforced-plastic-grp-composites',
-    apa:'https://www.apawood.org/engineered-wood-products/plywood-osb/plywood/',
-    wood:'https://research.fs.usda.gov/treesearch/22049',
-    mud:'https://www.yourhome.gov.au/materials/mud-brick',
-    som:'https://www.som.com/projects/burj-khalifa/',
-    burj:'https://www.burjkhalifa.ae/the-tower/structures/'
-  };
-  const link = (url,label) => `<a href="${url}" target="_blank" rel="noopener noreferrer">${label}</a>`;
-  const ans = (id,question,model,criteria,marks=null) => ({id,question,model,criteria,marks});
-  const sc = {
-    overall:['Identify: name composite and components.','Explain: connect each component to function.','Judge: support claim; state evidence limit.'],
-    t01:['Define the material','Distinguish two test outcomes','Link structure to movement'],
-    hw:['Match code to polymer','Flag uncertainty'],
-    t02:['Identify components in all five','Explain both contributions','Cite the case evidence'],
-    t02gold:['Identify components in all five','Explain both contributions','Justify a changed-loading comparison'],
-    t03:['Choose one option','Explain both component roles'],
-    t04:['Distinguish squashing from stretching',"Explain both materials’ roles",'Link the roles to bending'],
-    t05:['Predict all three with a reason','Name two controls','State what deliberately changes'],
-    t05gold:['Predict all three with a reason','Name two controls','Specify equal-mass measurements or matching'],
-    t06:['Record two deflections/design in mm','Keep the agreed controls and method','Describe observed joint movement honestly'],
-    t06gold:['Record two deflections/design in mm','Keep the agreed controls and method','Distinguish slipping from bending using observations'],
-    t07:['Use two results to judge','Separate measurement from explanation','State a limit or justified retest'],
-    t07gold:['Use two results to judge','Separate measurement from explanation','Justify a controlled slipping retest'],
-    t08:['Define and give another example','Use both stress types','Explain complementary roles'],
-    t09:['Improve one link','Write a fresh explanation unaided','Explain both stresses and material roles'],
-    t10:['Name natural composite and components','Explain a specific useful combination'],
-    t11:['Name components and distinct roles','Connect a property to its use','Qualify limitations; cite your source'],
-    t11gold:['Name components and distinct roles','Connect a property to its use','Judge changed use; identify missing evidence']
-  };
-  const records = [
-    ans('L3-T02-C1','C1: identify the components and both roles.','Glass fibres provide strength/stiffness. Polymer resin binds the fibres and transfers loads. Together these help a tent pole resist deformation. Source: C1/TWI.',sc.t02),
-    ans('L3-T02-C2','C2: identify the components and both roles.','Carbon fibres carry loads, especially along their length. Polymer holds them together. Their combination can give high strength/stiffness for its mass, useful in a bike frame. Source: C2/TWI.',sc.t02),
-    ans('L3-T02-C3','C3: identify the components and both roles.','Wood veneers carry loads; adhesive bonds them into a panel. Crossing adjacent grain directions reduces dependence on one grain direction. Source: C3/APA.',sc.t02),
-    ans('L3-T02-C4','C4: identify the components and both roles.','Cellulose-rich structures reinforce wood. The surrounding matrix containing lignin and hemicelluloses binds and supports them. Together they form a stiff tree-supporting material. Source: C4/USDA.',sc.t02),
-    ans('L3-T02-C5','C5: identify the components and both roles.','Earth forms the brick body; plant fibres such as straw can reduce cracking during drying. Properties depend on the mix and moisture. Source: C5/YourHome.',sc.t02)
-  ];
-  const explain = ans('L3-T02-explain','Explain how both components help a tent pole or bike frame; cite a case.','In a tent pole, glass fibres resist deformation; resin holds them together and transfers loads. Both contributions help the pole carry its load (C1/TWI). Accept an accurate C2 bike-frame explanation.',sc.t02);
-  const researchGold = ans('L3-T02-gold','For bending in several directions, compare the evidence in C2 and C3. State a comparison needed.','C2 describes performance especially along fibres; a panel can load across them. C3 has crossed layers. Compare bending in both required directions with matched dimensions/loading. The cases alone cannot establish the best panel.',sc.t02gold);
-  const board = ans('L3-T02-board','Draw two component → contribution arrows for C1. Link both to a tent pole.','Glass fibres → strength/stiffness. Polymer resin → holds fibres together and transfers loads. Together these help a tent pole resist deformation. “Both make it strong” needs distinct component contributions.',sc.t02);
-  const predict = ans('L3-T05-common','Predict all three designs; give a reason, two controls and the deliberate change.','A plausible prediction is least deflection for the joined beam: its joined parts resist bending together. Control support spacing and central load. Change the joined construction. Other defensible predictions are acceptable; reconsider them using results.',sc.t05);
-  const equalMass = ans('L3-T05-gold','Complete the prediction and controls, then address an equal-mass design brief.','Joining may reduce bending; compare all three with fixed spacing/load. Weigh specimens before designing an equal-mass comparison: adding straws also changes amount and geometry. Keep today’s demonstrated method unchanged.',sc.t05gold);
-  const record = ans('L3-T06-record','Record two deflections/design in mm and one joint observation.','Record actual readings; the joined beam need not win. Example observation only: “The tape held the parts together.” Use two readings/design, the agreed controls and safe stop. Deflection tests bending response, not breaking strength.',sc.t06);
-  const slipping = ans('L3-T06-gold','Record both repeats; distinguish slipping from bending using an observation.','Record actual readings. Relative card/straw movement at tape suggests slipping; a curved beam with no relative movement suggests bending while joined. These are possible observations, not supplied class results. Retain the same method and controls.',sc.t06gold);
-  const judge = ans('L3-T07-common','Judge your prediction with two results, a joining explanation and a limitation.','Illustrative example only: joined 3 mm versus card 12 mm supports less bending in that comparison. Joining may allow load sharing; amount and geometry also differ. This cannot establish every composite’s strength or reproduce concrete/steel behaviour.',sc.t07);
-  const retest = ans('L3-T07-gold','After your two-result judgement, evaluate: a slipping joined specimen proves composites do not work.','One slipping specimen cannot establish that all composites fail. Repeat with consistent secure joining, matched dimensions, supports and load; record slipping and deflections. Keep observed measurements distinct from a proposed explanation.',sc.t07gold);
-  const homework = ans('L3-T11-common','Write a sourced fact file: components, distinct roles, use and a qualified limit.','Fibreglass: glass fibres give strength/stiffness; resin holds them and transfers loads. Tent poles are a use. Performance depends on fibre direction and amount. Source: C1/TWI. Additional claims need their own evidence.',sc.t11);
-  const homeworkGold = ans('L3-T11-gold','Complete the fact file; judge a changed loading direction or easier-repair requirement.','C1 links performance to fibre direction. Changed loading needs bending evidence in those directions before keeping the design. Easier-repair decisions need repair evidence: the case provides none. Retain both component roles, use and named source.',sc.t11gold);
-  const stages = (blue,green,gold,criteria,answers,goldAnswers,goldCriteria) => ({
-    blue:{html:blue,criteria,answers},green:{html:green,criteria,answers},gold:{html:gold,criteria:goldCriteria||criteria,answers:goldAnswers||answers}
-  });
-  const screens = [
-    {id:'l3-title',family:'Title',title:'Composite materials',kicker:'Year 9 · Friday 6 November 2026',time:'0–3 min',html:'<p>Explaining a school canopy</p><p>Identify components → explain contributions → judge evidence.</p>',criteria:[]},
-    {id:'l3-outcome',family:'Learning outcome',title:'Our destination',kicker:'Topics 19.3–19.4 · components, properties and uses',time:'0–3 min',html:'<p>Explain why combining materials can help a structure do its job.</p>',criteria:sc.overall},
-    {id:'l3-retrieval',family:'Do now',title:'Retrieve and connect',taskId:'L3-T01',time:'0–3 min',html:'<p>Define polymer. Distinguish extension from breaking. Explain why cross-links help a warm thermoset retain shape. Use short phrases.</p>',criteria:sc.t01,answers:[
-      ans('L3-T01-polymer','Define polymer.','A polymer has very large molecules made from many smaller units. Accept “many repeating units joined into long molecules”.',['Describe large molecules','Include many smaller units']),
-      ans('L3-T01-tests','Distinguish extension from breaking.','Extension is an increase in length. Fracture is breaking. A sample can extend without breaking.',['Increased length','Breaking distinguished']),
-      ans('L3-T01-links','Why do cross-links help a warm thermoset retain shape?','Cross-links restrict relative chain movement, helping the network retain its shape when warmed.',['Cross-links named','Restricted chain movement'])]},
-    {id:'l3-homework-check',family:'Do now',title:'Check two codes',taskId:'L3-T01',time:'0–3 min',html:'<p>Check two homework code → polymer entries. Correct a mismatch or mark an uncertain identification as uncertain.</p>',criteria:sc.hw,answers:[ans('L3-T01-homework','Check two code → polymer entries.','1 PET; 2 HDPE; 3 PVC; 4 LDPE; 5 PP; 6 PS; 7 other. Code 7 does not identify one polymer. A resin code alone does not prove local recyclability. Flag uncertainty.',sc.hw)]},
-    {id:'l3-burj',family:'Input',title:'Materials working together',time:'3–9 min',html:`<p>Burj Khalifa uses reinforced concrete in its structure.</p><p>Combining materials can help structures resist bending.</p><p class="source">Sources: ${link(src.som,'SOM designers')} · ${link(src.burj,'Burj Khalifa structural description')}</p>`,criteria:[sc.overall[0],sc.overall[1]],diagram:'burj'},
-    {id:'l3-canopy-brief',family:'Input',title:'Our canopy brief',kicker:'Hypothetical classroom scenario',time:'3–9 min',html:'<p>A school canopy has beams supported at both ends. Loads bend the beams downwards.</p><p>Our explanation will connect each material’s contribution to resisting bending.</p>',criteria:[sc.overall[1]],diagram:'canopy'},
-    {id:'l3-composite',family:'Input',title:'What combines',time:'3–9 min',html:'<p>A <strong>composite</strong> combines two or more materials whose components contribute useful properties.</p><p>They do not simply become one new pure chemical compound.</p>',criteria:[sc.overall[0],sc.overall[1]]},
-    {id:'l3-matrix',family:'Input',title:'Two useful roles',time:'3–9 min',html:'<p>In many composites, a <strong>matrix</strong> holds reinforcement in place and transfers loads.</p><p><strong>Reinforcement</strong> improves a chosen property. Layered composites can use a different arrangement.</p>',criteria:[sc.overall[1]],diagram:'fibreglass'},
-    {id:'l3-forces',family:'Input',title:'Squash and stretch',time:'3–9 min',html:'<p><strong>Compression</strong> squashes. <strong>Tension</strong> stretches.</p><p>Concrete withstands compression well but is relatively weak in tension. Steel reinforcement carries tensile forces.</p>',criteria:[sc.overall[1]],diagram:'forces'},
-    {id:'l3-beam',family:'Input',title:'Bending regions',kicker:'Schematic · supported at both ends; central downward load',time:'3–9 min',html:'<p>In this sagging region, the top is compressed and the bottom stretched.</p><p>Bonded concrete and suitably placed steel share the work. Reinforced concrete can still crack or fail.</p>',criteria:[sc.overall[1]],diagram:'beam'},
-    {id:'l3-worked-row',family:'Input',title:'Explain both roles',time:'3–9 min',html:'<p><strong>Reinforced concrete:</strong> concrete + steel.</p><p>Concrete resists compression; steel carries tension. Together they help the beam resist bending stresses.</p><p>Use: load-bearing construction. Source: SoW/TWI.</p>',criteria:[sc.overall[1]],diagram:'concrete-roles'},
-    {id:'l3-c1-roles',family:'Input',title:'C1 · Fibreglass',kicker:'Case 1 · components and roles',time:'9–18 min',html:'<p>Glass fibres provide strength and stiffness.</p><p>Polymer resin binds the fibres and transfers loads between them.</p>',criteria:[sc.overall[0],sc.overall[1]],diagram:'fibreglass'},
-    {id:'l3-c1-use',family:'Input',title:'C1 · Uses and limits',time:'9–18 min',html:`<p>Tent poles and handrails are uses.</p><p>Fibre direction and amount affect performance. Composites do not all have identical properties.</p><p class="source">C1: ${link(src.grp,'TWI: fibre/matrix functions')} · ${link(src.grpuse,'TWI: GRP guide')}</p>`,criteria:[sc.overall[2]]},
-    {id:'l3-c2-roles',family:'Input',title:'C2 · CFRP',kicker:'Case 2 · carbon-fibre-reinforced polymer',time:'9–18 min',html:'<p>Carbon fibres carry loads, especially along their length.</p><p>A polymer matrix holds them together. “Carbon fibre bike” means this composite, rather than loose fibres.</p>',criteria:[sc.overall[0],sc.overall[1]],diagram:'cfrp'},
-    {id:'l3-c2-use',family:'Input',title:'C2 · Uses and limits',time:'9–18 min',html:`<p>High strength and stiffness for its mass can suit lightweight structures.</p><p>A bike frame is our application context. Fibre direction matters to performance.</p><p class="source">C2: ${link(src.twi,'TWI: composites')} · ${link(src.grp,'TWI: fibre/matrix principles')}</p>`,criteria:[sc.overall[2]]},
-    {id:'l3-board-roles',family:'Thinking',title:'Two arrows',taskId:'L3-T02',kicker:'Mini-whiteboards · write individually; show together',time:'9–18 min',html:'<p>Use C1: draw two component → contribution arrows. Add a short link to a tent pole’s job. Amend after feedback.</p>',criteria:sc.t02,answers:[board],stages:stages(
-      '<p>Use C1. Draw glass fibres → ___ and polymer resin → ___. Link both to a tent pole. Word bank: stiffness · holds · transfers loads.</p>',
-      '<p>Draw two different component → contribution arrows from C1. Link both roles to a tent pole. Show together; amend your own arrows after feedback.</p>',
-      '<p>After five records and a secure explanation, compare C2/C3 for a panel loaded in several directions. State a comparison needed before choosing.</p>',sc.t02,[board],[researchGold],sc.t02gold)},
-    {id:'l3-c3-roles',family:'Input',title:'C3 · Plywood',kicker:'Case 3 · bonded layers',time:'9–18 min',html:'<p>Wood veneers carry loads. Adhesive bonds the layers into a panel.</p><p>Adjacent grain directions commonly cross; the panel depends less on one grain direction than a single thin veneer.</p>',criteria:[sc.overall[0],sc.overall[1]],diagram:'plywood'},
-    {id:'l3-c3-use',family:'Input',title:'C3 · Uses and limits',time:'9–18 min',html:`<p>Plywood forms a stable panel.</p><p>Performance still depends on grade, thickness and loading direction.</p><p class="source">C3: ${link(src.apa,'APA: plywood manufacture')}</p>`,criteria:[sc.overall[2]]},
-    {id:'l3-c4-roles',family:'Input',title:'C4 · Wood',kicker:'Case 4 · natural composite',time:'9–18 min',html:'<p>Cellulose-rich structures reinforce wood.</p><p>A surrounding matrix containing lignin and hemicelluloses binds and supports them.</p><p>Natural materials can be composites.</p>',criteria:[sc.overall[0],sc.overall[1]],diagram:'wood'},
-    {id:'l3-c4-use',family:'Input',title:'C4 · Uses and limits',time:'9–18 min',html:`<p>Together these components form a stiff supporting material in trees.</p><p>Wood’s behaviour depends strongly on grain direction; it is not equally strong in every direction.</p><p class="source">C4: ${link(src.wood,'USDA: wood composites')}</p>`,criteria:[sc.overall[2]]},
-    {id:'l3-c5-roles',family:'Input',title:'C5 · Mudbrick',kicker:'Case 5 · fibre-containing mudbrick',time:'9–18 min',html:'<p>Some mudbricks combine earth, water and plant fibres, then dry.</p><p>Earth forms the body. Plant fibres such as straw can reduce cracking during drying.</p>',criteria:[sc.overall[0],sc.overall[1]],diagram:'mudbrick'},
-    {id:'l3-c5-use',family:'Input',title:'C5 · Uses and limits',time:'9–18 min',html:`<p>These bricks form walls. Performance depends on mix and moisture.</p><p>Sun-dried mudbrick is not kiln-fired. More straw does not necessarily increase strength.</p><p class="source">C5: ${link(src.mud,'Australian Government YourHome: mud brick')}</p>`,criteria:[sc.overall[2]]},
-    {id:'l3-research-record',family:'Thinking',title:'Five short records',taskId:'L3-T02',kicker:'In your science book · five numbered case notes',time:'9–18 min',html:'<p>In books, number C1–C5. For each: components → two roles → use → source. Develop one explanation linking both contributions to a use.</p>',criteria:sc.t02,answers:[...records,explain],stages:stages(
-      '<p>Number C1–C5 book notes: components; two role arrows; use/source. Use the word bank. C2: “Fibres ___; polymer ___; together ___.” Develop one explanation.</p>',
-      '<p>Record C1–C5 components, two roles, use/source in books. Explain how both components help a tent pole or bike frame; cite case evidence, partner-check and correct.</p>',
-      '<p>After five book notes and your own explanation, compare C2/C3 for a panel bending in several directions. Justify one needed comparison.</p>',sc.t02,[...records,explain],[...records,explain,researchGold],sc.t02gold)},
-    {id:'l3-hinge',family:'Assess',title:'Carbon-fibre bike',taskId:'L3-T03',kicker:'Mini-whiteboards · letter + both roles',time:'18–22 min',html:'<p>Why combine carbon fibres and resin?</p><ul><li>A: Always lighter than metals</li><li>B: Fibres stiffen; resin binds</li><li>C: One new pure substance</li><li>D: Fibres become metal</li></ul>',criteria:sc.t03,answers:[ans('L3-T03-hinge','Choose and justify why a bike frame combines carbon fibres and resin.','B: fibres provide strength/stiffness and resin holds them together. A overgeneralises; C confuses composites with a new pure substance; D incorrectly changes the material family. Both roles are needed, beyond “stronger”.',sc.t03)]},
-    {id:'l3-board-recheck',family:'Assess',title:'Explain without the model',taskId:'L3-T04',kicker:'Mini-whiteboards · individual fresh recheck',time:'18–22 min',html:'<p>Without the worked row, state what concrete resists well, where it is weaker and what steel contributes. Explain how the roles help a bending beam.</p>',criteria:sc.t04,answers:[ans('L3-T04-recheck','Explain concrete/steel roles under bending without the worked row.','Concrete resists compression well but is relatively weak in tension. Steel carries tensile forces. Bending produces both compression and tension, so the different contributions complement one another.',sc.t04)],widgets:{resources:[{title:'Try without the row',html:'<p>Keep completed examples closed. Write your own explanation first; use feedback for a fresh attempt.</p>'}],adaptation:[{title:'Useful words',html:'<p>Compression = squashing. Tension = stretching. Rehearse both material roles, then try again with support closed.</p>'}],hot:[]}},
-    {id:'l3-predict',family:'Thinking',title:'Predict the designs',taskId:'L3-T05',time:'22–25 min',html:'<p>Predict bending for all three designs under the same central load. Give a reason, two controls and the deliberate change. Record before testing.</p>',criteria:sc.t05,diagram:'beam-models',answers:[predict],stages:stages(
-      '<p>Predict card-only, straw-only and joined-beam bending. Give a reason: “___ bends least because ___.” Name two controls and the deliberate change.</p>',
-      '<p>Predict bending for card-only, straw-only and joined beams. Explain joining, name two controls and the deliberate change. Keep the same central load.</p>',
-      '<p>Predict card-only, straw-only and joined-beam bending; give a reason and two controls. For equal mass, explain the comparison’s limit and needed measurements/matching. Keep today’s method.</p>',sc.t05,[predict],[equalMass],sc.t05gold)},
-    {id:'l3-method-assemble',family:'Thinking',title:'Assemble and compare',taskId:'L3-T06',kicker:'Follow the demonstrated joining pattern',time:'25–36 min',html:'<p>Assemble the joined card–straw beam using the demonstrated pattern. Use prepared card-only/straw-only controls; keep agreed spacing and loading.</p>',criteria:sc.t06,diagram:'beam-models',answers:[ans('L3-T06-assemble','Assemble the joined design and use matched controls.','Follow the demonstrated joining pattern and prepared controls. Retain agreed support spacing, common load and central loading position. Compare bending response; do not deliberately snap specimens or add unagreed loads.',sc.t06)]},
-    {id:'l3-method-measure',family:'Thinking',title:'Measure and reset',taskId:'L3-T06',time:'25–36 min',html:'<p>Record downward midspan deflection from unloaded/loaded positions in mm. Unload/reset; repeat once/design. Stop for slipping, moving supports or excessive bending; return loads.</p>',criteria:sc.t06,answers:[ans('L3-T06-method','Measure deflection twice per design using the same method.','Deflection is the change from unloaded to loaded midspan position. Record two readings/design in mm, resetting between trials. Keep controls constant and follow the safe stop. Never substitute illustrative numbers for class observations.',sc.t06)]},
-    {id:'l3-record',family:'Thinking',title:'Your own record',taskId:'L3-T06',kicker:'Rotate loader, measurer, observer and recorder',time:'25–36 min',html:'<p>In books: Card/Straws/Joined; Deflection 1/2 (mm). Everyone records both repeats and one joint observation. Rotate roles; put boards aside during testing.</p>',criteria:sc.t06,answers:[record],stages:stages(
-      '<p>In books, use Card/Straws/Joined with Deflection 1/2 (mm). Rehearse unloaded/loaded readings; record both repeats and one joint observation.</p>',
-      '<p>In books, record two deflections/design in mm for Card/Straws/Joined. Keep agreed controls; add a joint observation explaining a result.</p>',
-      '<p>In books, record two deflections/design in mm for Card/Straws/Joined with agreed controls. Use observations to distinguish slipping from joined-beam bending.</p>',sc.t06,[record],[slipping],sc.t06gold)},
-    {id:'l3-interpret',family:'Thinking',title:'Judge your prediction',taskId:'L3-T07',time:'36–40 min',html:'<p>Judge your prediction using two results. Explain how joining might affect bending; distinguish measurement from explanation and state one limit.</p>',criteria:sc.t07,answers:[judge],stages:stages(
-      '<p>Compare two values: “___ bent ___ mm; ___ bent ___ mm.” Judge your prediction; explain joining and state a limit.</p>',
-      '<p>Judge your prediction using two results, a joining explanation and one limit. Explain why this cannot establish every composite’s suitability.</p>',
-      '<p>Judge your prediction with two results; explain joining. Hypothetical: joined beam bends most/tape slips. Evaluate “Composites fail”; justify a controlled retest.</p>',sc.t07,[judge],[judge,retest],sc.t07gold),widgets:{resources:[{title:'Own results first',html:'<p>Use your own measurements when available. The optional data page is labelled illustrative and is not class evidence.</p>',target:'l3-illustrative'}]}},
-    {id:'l3-illustrative',family:'Thinking',title:'Illustrative data only',taskId:'L3-T07',kicker:'Fallback dataset · not class observations · not a loading instruction',time:'36–40 min',html:'<table><caption>Downward deflection / mm</caption><thead><tr><th>Design</th><th>1</th><th>2</th></tr></thead><tbody><tr><td>Card</td><td>12</td><td>13</td></tr><tr><td>Straws</td><td>8</td><td>9</td></tr><tr><td>Joined</td><td>3</td><td>4</td></tr></tbody></table><p>Judge using two values, a joining explanation and a limit.</p>',criteria:['Use two values; explain joining; qualify the conclusion.'],answers:[judge]},
-    {id:'l3-independent-a',family:'Assess',title:'Define · 1 mark',taskId:'L3-T08',kicker:'Original practice · 4 marks total: 1 + 1 + 2',time:'40–45 min',independent:true,html:'<p>Work independently on a fresh book page; cover earlier notes.</p><p><strong>a)</strong> Define a composite. <strong>(1)</strong></p>',criteria:sc.t08,answers:[ans('L3-T08-a','a) Define a composite. (1)','A combination of two or more materials with useful properties contributed by the components.',['Two or more materials','Useful component properties'],1)]},
-    {id:'l3-independent-b',family:'Assess',title:'Example · 1 mark',taskId:'L3-T08',kicker:'Original practice · 4 marks total: 1 + 1 + 2',time:'40–45 min',independent:true,html:'<p><strong>b)</strong> Name a composite other than reinforced concrete. <strong>(1)</strong></p><p>Use your own scientific knowledge.</p>',criteria:sc.t08,answers:[ans('L3-T08-b','b) Name a composite other than reinforced concrete. (1)','Accept fibreglass/GRP, CFRP, plywood, wood, or fibre-containing mudbrick. An individual component alone, such as steel or loose carbon fibres, is insufficient.',['One correct composite','Exclude reinforced concrete'],1)]},
-    {id:'l3-independent-c',family:'Assess',title:'Explain · 2 marks',taskId:'L3-T08',kicker:'Hypothetical canopy · original practice · 4 marks total',time:'40–45 min',independent:true,html:'<p>A concrete canopy beam, supported at both ends, bends downwards under load.</p><p><strong>c)</strong> Explain how appropriately placed steel improves bending response versus concrete alone. <strong>(2)</strong></p>',criteria:sc.t08,answers:[ans('L3-T08-c','c) Explain why appropriately placed steel reinforcement improves the canopy compared with concrete alone. (2)','Concrete withstands compression well but is relatively weak in tension (1). Steel carries tensile forces, helping the combined beam resist bending stresses (1). Accept squashing/stretching with correct meaning. “Makes it stronger” alone is insufficient.',['1: concrete compression/tension contrast','1: steel tension and complementary roles','Do not require “cannot crack”'],2)]},
-    {id:'l3-improve',family:'Assess',title:'Improve one link',taskId:'L3-T09',kicker:'Use feedback, then close it',time:'45–48 min',html:'<p>Compare T08 with its criteria and model. Improve one component-role link. If accurate already, improve its precision. Close the review before moving on.</p>',criteria:sc.t09,answers:[ans('L3-T09-improve','Improve one component-role link in T08.','Replace “steel makes it stronger” with “steel carries tensile forces”. If already accurate, clarify that concrete resists compression but is relatively weak in tension. Make a specific improvement rather than invent an error.',sc.t09)]},
-    {id:'l3-fresh',family:'Assess',title:'Fresh floor beam',taskId:'L3-T09',kicker:'Fresh book page · earlier notes covered · reviews closed',time:'45–48 min',independent:true,html:'<p>A concrete floor beam will be reinforced with steel. Explain concrete’s compression/tension behaviour and steel’s contribution.</p>',criteria:sc.t09,answers:[ans('L3-T09-fresh','Explain concrete’s compression/tension behaviour and steel’s contribution in a floor beam.','Concrete resists compression well but is relatively weak in tension. Steel reinforcement carries tensile forces, helping the combined beam resist bending stresses. The card model suggested a principle; it did not directly test these materials.',sc.t09)]},
-    {id:'l3-exit',family:'Assess',title:'A useful combination',taskId:'L3-T10',time:'48–50 min',independent:true,html:'<p>Name a natural composite and its components.</p><p>Complete “A composite is useful because its components ___”, including a specific example.</p>',criteria:sc.t10,answers:[ans('L3-T10-exit','Name a natural composite/components; explain a specific useful combination.','Wood combines cellulose-rich structures with a matrix containing lignin and hemicelluloses. Its components reinforce and support one another. Alternatively, explain concrete resisting compression and steel carrying tension for the useful-combination part.',sc.t10)]},
-    {id:'l3-homework',family:'Assess',title:'Composite fact file',taskId:'L3-T11',kicker:'Homework · one science-book page · use lesson cases as sources',time:'48–50 min',html:'<p>Create a science-book page using a lesson case: components, distinct roles, property–use link and limitation. Name your source; write the explanation yourself.</p>',criteria:sc.t11,answers:[homework],stages:stages(
-      '<p>Choose a lesson composite. Frame: components → each role → property/use → limit → source. Rehearse both roles; write your own science-book page.</p>',
-      '<p>Write one science-book page from a lesson case: components, both contributions, property–use connection and qualified limitation. Name your source; use your own words.</p>',
-      '<p>Choose a lesson composite: explain components, roles/use; name source. On your science-book page, judge changed loading/easier repair and identify needed evidence.</p>',sc.t11,[homework],[homeworkGold],sc.t11gold)}
-  ];
-  const resources = [
-    {title:'Five book notes',html:'<p>Number C1–C5 in your science book: components → two role arrows → use → source.</p><p>Then develop one own explanation.</p>',target:'l3-research-record'},
-    {title:'Beam record in books',html:'<p>Card/Straws/Joined · Deflection 1/2 (mm).</p><p>Add your joint observation, prediction and conclusion in your science book.</p>',target:'l3-record'},
-    {title:'Compression and tension',html:'<p>Return to the labelled, simply supported beam. Its top/bottom labels apply to this loading arrangement.</p>',target:'l3-beam'},
-    {title:'C1 · Fibreglass',html:'<p>Glass fibres + polymer resin. Open the two-page projected case.</p>',target:'l3-c1-roles'},
-    {title:'C2 · CFRP',html:'<p>Carbon fibres + polymer matrix. Open the two-page projected case.</p>',target:'l3-c2-roles'},
-    {title:'C3 · Plywood',html:'<p>Bonded wood veneers with crossing grain directions.</p>',target:'l3-c3-roles'},
-    {title:'C4 · Wood',html:'<p>A natural composite with cellulose-rich reinforcement and a surrounding matrix.</p>',target:'l3-c4-roles'},
-    {title:'C5 · Mudbrick',html:'<p>Fibre-containing earth bricks; useful roles and qualified limits.</p>',target:'l3-c5-roles'},
-    {title:'Component bank',html:'<p>Glass/carbon fibres · polymer · wood veneers · adhesive · cellulose-rich structures · matrix · earth · plant fibres.</p><p>Use the projected cases to match components and contributions.</p>'},
-    {title:'Role bank',html:'<p>Carries loads · binds · supports · transfers loads · reduces drying cracks.</p><p>Match each role to evidence, then explain the useful combination.</p>'},
-    {title:'Key vocabulary',html:'<p>Composite: combined materials.</p><p>Matrix: holds reinforcement and transfers loads.</p><p>Stiffness: resistance to deformation.</p>',target:'l3-matrix'}
-  ];
-  window.LESSON_DATA = {
-    title:'Composite materials',year:'Year 9',screens,
-    widgets:{
-      resources,
-      assessments:[
-        {title:'Independent explanation',html:'<p>Original 4-mark practice: definition (1), another composite (1), concrete/steel explanation (2).</p>',target:'l3-independent-a'},
-        {title:'Fresh transfer',html:'<p>A new floor-beam explanation after feedback. Close completed support before the attempt.</p>',target:'l3-fresh'},
-        {title:'Exit evidence',html:'<p>Natural composite, components and useful combination.</p>',target:'l3-exit'}
+/* Authored pupil-safe content; generated by private build.py. */
+window.LESSON_DATA = {
+  "title": "Composite materials",
+  "year": "Year 9",
+  "lesson": 3,
+  "date": "Friday 6 November 2026",
+  "outcomes": [
+    "Define a composite material and identify its components.",
+    "Explain the useful contribution of each component.",
+    "Justify a composite material for a particular use."
+  ],
+  "question": "Why combine materials when one material cannot do the whole job?",
+  "screens": [
+    {
+      "id": "l3-recall",
+      "family": "Do now",
+      "title": "What explains a plastic’s behaviour?",
+      "html": "<p>Work from memory in your book.</p><ol><li>What are polymers made of?</li><li>Why can a thermosoftening polymer be reshaped on suitable heating?</li><li>Give one polymer property and explain a useful application.</li></ol>",
+      "criteria": [
+        "Use a causal explanation.",
+        "Connect the property to its use."
       ],
-      adaptation:[
-        {title:'Two-role entry',html:'<p>Use Blue support for component → contribution arrows. Rehearse, close the completed support, then write your Green explanation.</p>',target:'l3-research-record'},
-        {title:'Stress vocabulary',html:'<p>Compression squashes; tension stretches. Revisit the force diagram, then close it for the board recheck.</p>',target:'l3-forces'},
-        {title:'Evidence and judgement',html:'<p>Use the Blue comparison stem with two own values. Move to your own Green explanation when ready.</p>',target:'l3-interpret'}
+      "answers": [
+        {
+          "id": "l3-recall-chains",
+          "question": "What are polymers made of?",
+          "model": "<p>Polymers are made of long-chain molecules formed from joined monomers.</p>",
+          "criteria": [
+            "Identify long chains formed from monomers."
+          ],
+          "marks": null
+        },
+        {
+          "id": "l3-recall-heating",
+          "question": "Why can a thermosoftening polymer be reshaped on suitable heating?",
+          "model": "<p>Suitable heating overcomes weaker forces between chains, allowing relative sliding and reshaping. Strong bonds along the chains remain intact.</p>",
+          "criteria": [
+            "Explain weaker interchain forces and relative sliding.",
+            "Keep the chains intact."
+          ],
+          "marks": null
+        },
+        {
+          "id": "l3-recall-use",
+          "question": "Give one polymer property and explain a useful application.",
+          "model": "<p>Suitable rigid PVC keeps a pipe’s shape and resists water. This helps it contain and carry water. Accept another accurate property–use explanation.</p>",
+          "criteria": [
+            "Give a relevant polymer property.",
+            "Explain its benefit for the use."
+          ],
+          "marks": null
+        }
       ],
-      hot:[
-        {title:'Change the loading',html:'<p>Select Gold in the five-record task: compare C2/C3 for loading in more than one direction.</p>',target:'l3-research-record'},
-        {title:'Equal-mass brief',html:'<p>Select Gold in the prediction task. Keep today’s practical method unchanged.</p>',target:'l3-predict'},
-        {title:'A slipping specimen',html:'<p>Select Gold in the judgement task: use the changed observation to justify a controlled retest.</p>',target:'l3-interpret'}
+      "minutes": 4,
+      "time": "4 min",
+      "layout": "retrieval-sheet"
+    },
+    {
+      "id": "l3-goal",
+      "family": "Learning outcome",
+      "title": "Why combine materials?",
+      "html": "<p><strong>19.3</strong> Composites combine two or more materials and have some properties of each.</p><p><strong>19.4</strong> Names of composites and how their properties relate to uses.</p><ol><li>Define a composite material and identify its components.</li><li>Explain the useful contribution of each component.</li><li>Justify a composite material for a particular use.</li></ol><p>In your book, complete: “My explanation must connect components to ______.”</p>",
+      "criteria": [
+        "Identify both components.",
+        "Explain contributions and benefit."
       ],
-      ai:[{title:'Evidence before fluency',html:'<p>A fluent summary still needs named components, distinct contributions and a traceable source.</p><p>The lesson cases provide checked evidence. Write your own explanation; no live AI is needed.</p>'}],
-      uae:[
-        {title:'Burj Khalifa',html:`<p>Burj Khalifa uses reinforced concrete in its structure.</p><p>Sources: ${link(src.som,'SOM')} · ${link(src.burj,'structural description')}</p>`,target:'l3-burj'},
-        {title:'Apply the same science',html:'<p>The existing concrete/steel recheck applies compression and tension reasoning. The school canopy is a hypothetical classroom scenario.</p>',target:'l3-board-recheck'}
+      "answers": [
+        {
+          "id": "l3-goal-review",
+          "question": "Complete: “My explanation must connect components to ______.”",
+          "model": "<p>Useful contributions and a benefit for the particular job. Naming two components alone is not a complete explanation.</p>",
+          "criteria": [
+            "Recognise the need for an explanatory link."
+          ],
+          "marks": null
+        }
+      ],
+      "minutes": 2,
+      "time": "2 min",
+      "layout": "full-question"
+    },
+    {
+      "id": "l3-components",
+      "family": "Input",
+      "title": "What does each component contribute?",
+      "html": "<p>A <strong>composite</strong> combines two or more different materials for useful properties.</p><p>In fibreglass, glass fibres reinforce; the polymer <strong>matrix</strong> binds, protects and transfers loads.</p><p>Identify both components. Trace a fibre and the matrix.</p>",
+      "criteria": [
+        "Identify each component accurately.",
+        "Distinguish the two roles."
+      ],
+      "answers": [
+        {
+          "id": "l3-components-review",
+          "question": "Name both components of fibreglass.",
+          "model": "<p>Glass fibres and a polymer resin matrix. The fibres provide reinforcement; the matrix surrounds and binds them, protects them and helps transfer loads.</p>",
+          "criteria": [
+            "Name glass fibres.",
+            "Name the polymer matrix."
+          ],
+          "marks": null
+        }
+      ],
+      "minutes": 3,
+      "time": "3 min",
+      "layout": "model-stage",
+      "model": {
+        "type": "composite",
+        "mode": "teach",
+        "variant": "fibreglass"
+      }
+    },
+    {
+      "id": "l3-missing-matrix",
+      "family": "Thinking",
+      "title": "Are strong fibres enough?",
+      "html": "<p><strong>Think alone:</strong> would loose glass fibres make an equally useful tent pole? Explain the missing role.</p><p><strong>Compare</strong> reasons with a partner. Then <strong>improve</strong> your own two-component explanation.</p>",
+      "criteria": [
+        "Explain distinct component roles.",
+        "Link both roles to the pole’s job."
+      ],
+      "answers": [
+        {
+          "id": "l3-missing-review",
+          "question": "Would loose glass fibres make an equally useful tent pole?",
+          "model": "<p>No. Fibres can provide useful reinforcement, but loose fibres do not form the same bound, shaped pole. A polymer matrix binds and protects the fibres and transfers loads between them. The combination can therefore work as a useful pole; strong fibres alone do not establish equivalent performance.</p>",
+          "criteria": [
+            "Give a reasoned judgement.",
+            "Explain the missing matrix contribution.",
+            "Relate the contribution to the pole."
+          ],
+          "marks": null
+        }
+      ],
+      "minutes": 3,
+      "time": "3 min",
+      "layout": "image-led-decision",
+      "model": {
+        "type": "composite",
+        "mode": "static",
+        "variant": "fibres-only"
+      }
+    },
+    {
+      "id": "l3-beam-model",
+      "family": "Input",
+      "title": "How do concrete and steel share the job?",
+      "html": "<p>Predict the load effect. Explain steel’s contribution.</p>",
+      "criteria": [
+        "Match the forces to this load.",
+        "Explain a useful role for each material."
+      ],
+      "answers": [
+        {
+          "id": "l3-beam-model-review",
+          "question": "Explain why adding mass alone is an incomplete explanation.",
+          "model": "<p>Added mass does not explain how the load is resisted. In this sagging beam, concrete contributes useful compressive resistance but is relatively weak in tension. Steel reinforcement carries tensile forces. These complementary contributions help the beam resist bending under the stated load.</p>",
+          "criteria": [
+            "Reject mass as the load-resistance mechanism.",
+            "Explain concrete’s and steel’s useful contributions."
+          ],
+          "marks": null
+        }
+      ],
+      "minutes": 4,
+      "time": "4 min",
+      "layout": "worked-model",
+      "model": {
+        "type": "beam",
+        "mode": "predict",
+        "variant": "supported-concrete"
+      },
+      "steps": [
+        {
+          "label": "Load",
+          "body": "Both ends are supported. A downward load squashes the top (compression) and stretches the bottom (tension)."
+        },
+        {
+          "label": "Roles",
+          "body": "Concrete resists compression well but is relatively weak in tension. Steel reinforcement carries tensile forces."
+        },
+        {
+          "label": "Check",
+          "body": "“Steel only adds mass” does not explain resistance to bending."
+        },
+        {
+          "label": "Benefit",
+          "body": "Their complementary contributions help the beam carry this downward load."
+        }
       ]
+    },
+    {
+      "id": "l3-beam-parallel",
+      "family": "Assess",
+      "title": "Your turn: complete the beam explanation",
+      "html": "<p>On your whiteboard: label B. Explain one contribution from concrete and one from steel.</p><p>Show. Check. Wipe; try a new sketch.</p><svg class=\"beam-diagram\" viewBox=\"0 0 700 275\" role=\"img\" aria-label=\"A beam supported at both ends with a downward load at its centre. Diagram is schematic.\">\n    <path d=\"M100 180L65 230H135Z M600 180L565 230H635Z\" fill=\"#263b52\"/>\n    <path d=\"M90 110Q350 135 610 110L610 178Q350 209 90 178Z\" fill=\"#d9d7d0\" stroke=\"#263b52\" stroke-width=\"4\"/>\n    <path d=\"M115 166Q350 193 585 166\" fill=\"none\" stroke=\"#ad7a27\" stroke-width=\"8\"/>\n    <path d=\"M350 20V78\" fill=\"none\" stroke=\"#263b52\" stroke-width=\"5\"/><path d=\"M350 92l-10 -16h20Z\" fill=\"#263b52\"/>\n    <path d=\"M180 93H275M520 93H425M275 211H180M425 211H520\" stroke=\"#263b52\" stroke-width=\"4\" fill=\"none\"/>\n    <path d=\"M275 93l-14 -8v16ZM425 93l14 -8v16ZM180 211l14 -8v16ZM520 211l-14 -8v16Z\" fill=\"#263b52\"/>\n    <text x=\"370\" y=\"60\" font-size=\"23\" fill=\"#263b52\">downward load</text>\n    <text x=\"350\" y=\"118\" text-anchor=\"middle\" font-size=\"42\" fill=\"#263b52\">compression</text>\n    <text x=\"350\" y=\"238\" text-anchor=\"middle\" font-size=\"42\" fill=\"#263b52\">B</text>\n    <text x=\"24\" y=\"271\" font-size=\"20\" fill=\"#263b52\">Two end supports · bending exaggerated · no measured load</text>\n    </svg>",
+      "criteria": [
+        "Name both force types.",
+        "Match each material to its useful role."
+      ],
+      "answers": [
+        {
+          "id": "l3-parallel-review",
+          "question": "Complete B and explain the contributions of concrete and steel.",
+          "model": "<p>B is tension: the lower region is stretched. Concrete resists compression well, but it is relatively weak in tension. Steel reinforcement contributes tensile resistance in the lower region. The new sketch has the same two end supports and downward load, so the same role explanation applies.</p>",
+          "criteria": [
+            "Name tension correctly.",
+            "Explain both component contributions."
+          ],
+          "marks": null
+        }
+      ],
+      "minutes": 2,
+      "time": "2 min",
+      "layout": "task-and-criteria"
+    },
+    {
+      "id": "l3-hinge",
+      "family": "Assess",
+      "title": "Why add steel to this concrete beam?",
+      "html": "<p>Write a letter <strong>and a scientific reason</strong> on your whiteboard. Show together.</p><ol class=\"letter-options\" type=\"A\"><li>Concrete resists compression; steel contributes tensile resistance.</li><li>Concrete provides the main tensile resistance; steel is only for compression.</li><li>Steel helps only because it adds mass.</li><li>Steel and concrete react to form one new pure substance.</li></ol>",
+      "criteria": [
+        "Justify the choice scientifically.",
+        "Apply the explanation to the recheck."
+      ],
+      "answers": [
+        {
+          "id": "l3-hinge-review",
+          "question": "Choose the best explanation and justify it.",
+          "model": "<p>A. Concrete resists compression well but is relatively weak in tension. Steel carries tensile forces, helping resist bending. Steel can also resist compression; the claim is not that it only resists tension.</p>",
+          "criteria": [
+            "Choose A.",
+            "Explain the complementary roles rather than guessing a letter."
+          ],
+          "marks": null
+        }
+      ],
+      "minutes": 3,
+      "time": "3 min",
+      "layout": "diagnostic-decision",
+      "recheck": {
+        "title": "A different check: a bench seat",
+        "html": "<p>A concrete bench seat rests on supports at both ends. A person sits in the middle. Explain why steel reinforcement helps.</p>",
+        "criteria": [
+          "Explain concrete’s contribution and limitation.",
+          "Explain how steel helps under the bench load."
+        ],
+        "answers": [
+          {
+            "id": "l3-bench-review",
+            "question": "Explain why steel helps this downward-loaded bench seat.",
+            "model": "<p>The seat bends under the downward load. Concrete resists compression well, but its lower region is stretched and concrete is relatively weak in tension. Steel reinforcement provides tensile resistance, so the combination suits this load better than plain concrete alone.</p>",
+            "criteria": [
+              "Apply the two component roles to the bench.",
+              "Connect the contributions to the load."
+            ],
+            "marks": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "l3-composite-evidence",
+      "family": "Thinking",
+      "title": "Choose evidence for two explanations",
+      "html": "<p>Choose <strong>two</strong>: one manufactured and one natural/traditional. Explain each in your book: <strong>components → contributions → use</strong>.</p><p>Partner: challenge one link. Improve your own explanation.</p>",
+      "criteria": [
+        "Explain both component roles.",
+        "Link the contributions to a use."
+      ],
+      "answers": [],
+      "minutes": 7,
+      "time": "7 min",
+      "layout": "evidence-workbench",
+      "pages": [
+        {
+          "title": "Fibreglass · tent pole",
+          "html": "<svg viewBox=\"0 0 620 180\" role=\"img\" class=\"source-diagram\" aria-label=\"glass fibres embedded in a surrounding polymer matrix\"><rect x=\"45\" y=\"28\" width=\"520\" height=\"115\" rx=\"14\" fill=\"#b8d9d5\" stroke=\"#263b52\" stroke-width=\"3\"/><path d=\"M75 60H535\" stroke=\"#e6c36e\" stroke-width=\"10\"/><path d=\"M75 85H535\" stroke=\"#e6c36e\" stroke-width=\"10\"/><path d=\"M75 110H535\" stroke=\"#e6c36e\" stroke-width=\"10\"/></svg><p><strong>Glass fibres:</strong> reinforcement. <strong>Polymer matrix:</strong> binds, protects and transfers loads.</p>",
+          "answers": [
+            {
+              "id": "l3-source-fibreglass",
+              "question": "Explain how both fibreglass components help a tent pole.",
+              "model": "<p>Glass fibres provide useful reinforcement and stiffness. The surrounding polymer matrix binds and protects them and transfers loads. Together they form a useful shaped pole rather than a loose bundle of fibres.</p>",
+              "criteria": [
+                "Name both components.",
+                "Explain distinct contributions and the pole benefit."
+              ],
+              "marks": null
+            }
+          ]
+        },
+        {
+          "title": "Carbon-fibre composite · bicycle frame",
+          "html": "<svg viewBox=\"0 0 620 180\" role=\"img\" class=\"source-diagram\" aria-label=\"carbon fibres embedded in a surrounding polymer matrix\"><rect x=\"45\" y=\"28\" width=\"520\" height=\"115\" rx=\"14\" fill=\"#b8d9d5\" stroke=\"#263b52\" stroke-width=\"3\"/><path d=\"M75 60H535\" stroke=\"#263b52\" stroke-width=\"10\"/><path d=\"M75 85H535\" stroke=\"#263b52\" stroke-width=\"10\"/><path d=\"M75 110H535\" stroke=\"#263b52\" stroke-width=\"10\"/></svg><p><strong>Carbon fibres:</strong> stiff, strong, low mass. <strong>Polymer matrix:</strong> binds, protects, transfers loads.</p>",
+          "answers": [
+            {
+              "id": "l3-source-cfrp",
+              "question": "Explain how both components help a carbon-fibre composite bicycle frame.",
+              "model": "<p>Carbon fibres contribute useful stiffness and strength for low mass. The polymer matrix holds the fibres in the frame’s shape, protects them and transfers loads. Performance also depends on fibre orientation, bonding and construction; the material name alone does not prove a frame is safest or best.</p>",
+              "criteria": [
+                "Name carbon fibres and polymer matrix.",
+                "Explain both contributions and a frame benefit."
+              ],
+              "marks": null
+            }
+          ]
+        },
+        {
+          "title": "Plywood · structural panel",
+          "html": "<svg viewBox=\"0 0 620 180\" role=\"img\" class=\"source-diagram\" aria-label=\"Three wood veneers with alternating grain directions and adhesive between them\"><rect x=\"90\" y=\"20\" width=\"430\" height=\"33\" fill=\"#d8b784\" stroke=\"#263b52\" stroke-width=\"2\"/><path d=\"M105 30H505\" stroke=\"#765c36\" stroke-width=\"2\"/><path d=\"M105 41H505\" stroke=\"#765c36\" stroke-width=\"2\"/><rect x=\"90\" y=\"62\" width=\"430\" height=\"33\" fill=\"#c29a62\" stroke=\"#263b52\" stroke-width=\"2\"/><path d=\"M110 65V92\" stroke=\"#765c36\" stroke-width=\"2\"/><path d=\"M150 65V92\" stroke=\"#765c36\" stroke-width=\"2\"/><path d=\"M190 65V92\" stroke=\"#765c36\" stroke-width=\"2\"/><path d=\"M230 65V92\" stroke=\"#765c36\" stroke-width=\"2\"/><path d=\"M270 65V92\" stroke=\"#765c36\" stroke-width=\"2\"/><path d=\"M310 65V92\" stroke=\"#765c36\" stroke-width=\"2\"/><path d=\"M350 65V92\" stroke=\"#765c36\" stroke-width=\"2\"/><path d=\"M390 65V92\" stroke=\"#765c36\" stroke-width=\"2\"/><path d=\"M430 65V92\" stroke=\"#765c36\" stroke-width=\"2\"/><path d=\"M470 65V92\" stroke=\"#765c36\" stroke-width=\"2\"/><rect x=\"90\" y=\"104\" width=\"430\" height=\"33\" fill=\"#d8b784\" stroke=\"#263b52\" stroke-width=\"2\"/><path d=\"M105 114H505\" stroke=\"#765c36\" stroke-width=\"2\"/><path d=\"M105 125H505\" stroke=\"#765c36\" stroke-width=\"2\"/></svg><p>Crossed <strong>wood veneers</strong> provide structural layers. <strong>Adhesive</strong> bonds them, improving stability across directions.</p>",
+          "answers": [
+            {
+              "id": "l3-source-plywood",
+              "question": "Explain how plywood’s components and arrangement help a structural panel.",
+              "model": "<p>Wood veneers provide structural layers. Adhesive bonds the layers together. Alternating the grain improves dimensional stability and gives useful resistance across directions, helping the panel keep its form. Plywood is not identical in strength or stiffness in every direction.</p>",
+              "criteria": [
+                "Name wood veneers and adhesive.",
+                "Explain the crossed-grain arrangement and useful consequence."
+              ],
+              "marks": null
+            }
+          ]
+        },
+        {
+          "title": "Wood · a natural composite",
+          "html": "<svg viewBox=\"0 0 620 180\" role=\"img\" class=\"source-diagram\" aria-label=\"Simplified microscopic wood cell wall with cellulose-rich structures in a surrounding matrix\"><rect x=\"65\" y=\"25\" width=\"495\" height=\"120\" rx=\"18\" fill=\"#9fbeaf\" stroke=\"#263b52\" stroke-width=\"3\"/><path d=\"M100 52Q310 37 520 52\" stroke=\"#e6c36e\" stroke-width=\"12\" fill=\"none\"/><path d=\"M100 83Q310 68 520 83\" stroke=\"#e6c36e\" stroke-width=\"12\" fill=\"none\"/><path d=\"M100 114Q310 99 520 114\" stroke=\"#e6c36e\" stroke-width=\"12\" fill=\"none\"/></svg><p><strong>Cellulose-rich structures</strong> reinforce. A <strong>lignin/hemicellulose-containing matrix</strong> connects and supports them.</p>",
+          "answers": [
+            {
+              "id": "l3-source-wood",
+              "question": "Explain the useful components of wood.",
+              "model": "<p>Cellulose-rich structures reinforce wood’s cell wall. A matrix containing lignin and hemicelluloses connects and supports them. Together they provide useful structural properties; behaviour depends on grain direction.</p>",
+              "criteria": [
+                "Name cellulose-rich reinforcement and the surrounding matrix.",
+                "Explain their complementary structural roles."
+              ],
+              "marks": null
+            }
+          ]
+        },
+        {
+          "title": "Fibre-containing mudbrick · traditional building",
+          "html": "<svg viewBox=\"0 0 620 180\" role=\"img\" class=\"source-diagram\" aria-label=\"An illustrative earth brick containing plant fibres\"><rect x=\"65\" y=\"25\" width=\"495\" height=\"120\" rx=\"7\" fill=\"#ad8368\" stroke=\"#263b52\" stroke-width=\"3\"/><path d=\"M100 60l45 -13\" stroke=\"#e4c77d\" stroke-width=\"7\"/><path d=\"M210 100l45 -13\" stroke=\"#e4c77d\" stroke-width=\"7\"/><path d=\"M340 53l45 -13\" stroke=\"#e4c77d\" stroke-width=\"7\"/><path d=\"M430 112l45 -13\" stroke=\"#e4c77d\" stroke-width=\"7\"/><path d=\"M150 120l45 -13\" stroke=\"#e4c77d\" stroke-width=\"7\"/><path d=\"M290 80l45 -13\" stroke=\"#e4c77d\" stroke-width=\"7\"/></svg><p><strong>Earth</strong> forms the matrix. <strong>Plant fibres</strong> can limit drying cracks; effects depend on the mixture.</p>",
+          "answers": [
+            {
+              "id": "l3-source-mudbrick",
+              "question": "Explain why plant fibres may be added to an earth brick.",
+              "model": "<p>The earth forms the shaped brick matrix. Suitable plant fibres can help control drying shrinkage cracks and hold the material together. The benefit depends on the soil, fibre amount and processing; the example does not establish that all mudbrick contains fibres or that adding more always makes it stronger.</p>",
+              "criteria": [
+                "Identify earth and plant fibres.",
+                "Explain a qualified drying-crack contribution."
+              ],
+              "marks": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "l3-beam-demonstration",
+      "family": "Thinking",
+      "title": "Predict, observe, then explain the limit",
+      "html": "<p><strong>Before the demonstration:</strong> predict how card, straws and a joined construction will bend. Give a reason.</p><p><strong>Observe:</strong> compare them under the same stated span and load. Record what actually happens.</p><p><strong>Explain:</strong> compare your prediction with the observation. State one thing this model cannot prove.</p>",
+      "criteria": [
+        "Separate prediction from observation.",
+        "Explain one supported conclusion and limit."
+      ],
+      "answers": [
+        {
+          "id": "l3-demo-review",
+          "question": "Compare the prediction with the observation and state a limit.",
+          "model": "<p>Report the actual bending comparison under the same span and load, even if it contradicts your prediction. Construction affects results. This model cannot directly prove concrete/steel behaviour or that every composite performs better.</p>",
+          "criteria": [
+            "Report the actual result rather than the hoped-for result.",
+            "Compare on the stated span/load basis.",
+            "Give a relevant limitation."
+          ],
+          "marks": null
+        }
+      ],
+      "minutes": 4,
+      "time": "4 min",
+      "layout": "observation-theatre",
+      "optional": true
+    },
+    {
+      "id": "l3-canopy-practice",
+      "family": "Assess",
+      "title": "Recommend a material for this canopy",
+      "html": "<p>A school canopy in the UAE has a roof beam supported by columns at <strong>both ends</strong>. The roof loads it downward.</p><ol><li>Explain why reinforced concrete suits the beam and why plain concrete alone is less suitable.</li><li>Explain both component roles in one other composite product.</li></ol><p>Write your first attempt independently in your book.</p>",
+      "criteria": [
+        "Explain both component contributions.",
+        "Connect them to the job."
+      ],
+      "answers": [
+        {
+          "id": "l3-canopy-review",
+          "question": "Why does reinforced concrete suit this supported, downward-loaded canopy beam better than plain concrete?",
+          "model": "<p>Concrete resists compression well but is relatively weak in tension. Steel reinforcement carries tensile forces. Together, these contributions help the beam resist bending under this downward load.</p>",
+          "criteria": [
+            "Explain concrete’s useful role and limitation.",
+            "Explain steel’s contribution and the beam benefit."
+          ],
+          "marks": null
+        },
+        {
+          "id": "l3-canopy-other-product",
+          "question": "Explain both component roles in another composite product.",
+          "model": "<p>For a fibreglass tent pole, glass fibres reinforce. The polymer matrix binds and protects them and transfers loads, forming a useful shaped pole. Accept another accurate two-component product explanation.</p>",
+          "criteria": [
+            "Explain each component’s contribution.",
+            "Link the contributions to the product’s use."
+          ],
+          "marks": null
+        }
+      ],
+      "minutes": 7,
+      "time": "7 min",
+      "layout": "context-brief",
+      "model": {
+        "type": "beam",
+        "mode": "static",
+        "variant": "two-supported-canopy",
+        "initialProgress": 1,
+        "roleLabels": false,
+        "controls": false
+      },
+      "stages": {
+        "blue": {
+          "html": "<p><strong>1.</strong> Explain why concrete needs steel in this beam.</p><p><strong>2.</strong> Explain both roles in another composite product.</p><div class=\"compact-organiser\"><p>Concrete → ____</p><p>Steel → ____</p><p>Together → beam benefit: ____</p></div>",
+          "criteria": [
+            "Match each component to a contribution.",
+            "Explain the combined benefit."
+          ],
+          "answers": [
+            {
+              "id": "l3-canopy-review-2",
+              "question": "Why does reinforced concrete suit this supported, downward-loaded canopy beam better than plain concrete?",
+              "model": "<p>Concrete resists compression well but is relatively weak in tension. Steel reinforcement carries tensile forces. Together, these contributions help the beam resist bending under this downward load.</p>",
+              "criteria": [
+                "Explain concrete’s useful role and limitation.",
+                "Explain steel’s contribution and the beam benefit."
+              ],
+              "marks": null
+            },
+            {
+              "id": "l3-canopy-other-product-2",
+              "question": "Explain both component roles in another composite product.",
+              "model": "<p>For a fibreglass tent pole, glass fibres reinforce. The polymer matrix binds and protects them and transfers loads, forming a useful shaped pole. Accept another accurate two-component product explanation.</p>",
+              "criteria": [
+                "Explain each component’s contribution.",
+                "Link the contributions to the product’s use."
+              ],
+              "marks": null
+            }
+          ]
+        },
+        "green": {
+          "html": "<p><strong>1.</strong> Explain why concrete needs steel in this beam.</p><p><strong>2.</strong> Explain both roles in another composite product.</p>",
+          "criteria": [
+            "Explain both contributions.",
+            "Link the combination to its use."
+          ],
+          "answers": [
+            {
+              "id": "l3-canopy-review-3",
+              "question": "Why does reinforced concrete suit this supported, downward-loaded canopy beam better than plain concrete?",
+              "model": "<p>Concrete resists compression well but is relatively weak in tension. Steel reinforcement carries tensile forces. Together, these contributions help the beam resist bending under this downward load.</p>",
+              "criteria": [
+                "Explain concrete’s useful role and limitation.",
+                "Explain steel’s contribution and the beam benefit."
+              ],
+              "marks": null
+            },
+            {
+              "id": "l3-canopy-other-product-3",
+              "question": "Explain both component roles in another composite product.",
+              "model": "<p>For a fibreglass tent pole, glass fibres reinforce. The polymer matrix binds and protects them and transfers loads, forming a useful shaped pole. Accept another accurate two-component product explanation.</p>",
+              "criteria": [
+                "Explain each component’s contribution.",
+                "Link the contributions to the product’s use."
+              ],
+              "marks": null
+            }
+          ]
+        },
+        "gold": {
+          "html": "<p>Keep the same load requirement, but reduce the canopy beam’s mass.</p><p>Does the evidence justify replacing reinforced concrete with carbon-fibre composite? Name the further comparison needed.</p>",
+          "criteria": [
+            "Preserve the load requirement.",
+            "Make an evidence-based decision and state a limit."
+          ],
+          "answers": [
+            {
+              "id": "l3-gold-decision",
+              "question": "Does lower mass justify replacing reinforced concrete with carbon-fibre composite here?",
+              "model": "<p>Carbon-fibre composite is a candidate for useful stiffness at low mass. The brief does not show that the proposed beam meets the same load requirement.</p>",
+              "criteria": [
+                "Use the supplied property evidence.",
+                "Retain the original load requirement."
+              ],
+              "marks": null
+            },
+            {
+              "id": "l3-gold-comparison",
+              "question": "What comparison would justify changing the beam material?",
+              "model": "<p>Compare beam mass, load capacity and deflection for the proposed span, geometry, connections and service conditions.</p>",
+              "criteria": [
+                "Name relevant design-specific evidence.",
+                "Do not assume a material name proves suitability."
+              ],
+              "marks": null
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "l3-improve",
+      "family": "Assess",
+      "title": "Improve the missing scientific link",
+      "html": "<p>Keep your first answer visible.</p><ol><li>Underline the components.</li><li>Box each useful contribution.</li><li>Find a missing or incorrect link to the job.</li><li>Rewrite your weaker paragraph in a different pen.</li></ol><p>Check that your revision repairs the gap you identified.</p>",
+      "criteria": [
+        "Name the actual gap.",
+        "Repair it accurately in your revision."
+      ],
+      "answers": [
+        {
+          "id": "l3-improve-canopy",
+          "question": "Check and improve the canopy explanation.",
+          "model": "<p>Concrete resists compression well but is relatively weak in tension. Steel reinforcement carries tensile forces. Together, these contributions help the beam resist bending under this downward load.</p>",
+          "criteria": [
+            "Repair a missing or incorrect material role.",
+            "Link the roles to carrying the load."
+          ],
+          "marks": null
+        },
+        {
+          "id": "l3-improve-product",
+          "question": "Check and improve the other composite-product explanation.",
+          "model": "<p>For a fibreglass tent pole, glass fibres reinforce. The polymer matrix binds and protects them and transfers loads, forming a useful shaped pole. Accept another accurate two-component product explanation.</p>",
+          "criteria": [
+            "Explain both component roles.",
+            "Connect the contributions to the product."
+          ],
+          "marks": null
+        },
+        {
+          "id": "l3-improve-revision",
+          "question": "What should change in your revision?",
+          "model": "<p>“Steel makes it stronger” becomes “Steel carries tensile forces where concrete is relatively weak in tension, helping the beam resist bending.” Identify the gap that your revision repairs.</p>",
+          "criteria": [
+            "Identify the actual missing link.",
+            "Add or correct the scientific explanation."
+          ],
+          "marks": null
+        }
+      ],
+      "minutes": 4,
+      "time": "4 min",
+      "layout": "worked-model"
+    },
+    {
+      "id": "l3-fresh-floor",
+      "family": "Assess",
+      "title": "Explain a fresh floor beam without help",
+      "html": "<p><strong>Original practice · 4 marks.</strong> Work independently in your book.</p><ol><li>Define a composite. <strong>[1]</strong></li><li>Name a composite other than reinforced concrete. <strong>[1]</strong></li><li>Explain concrete’s and steel’s roles in this downward-loaded floor beam. <strong>[2]</strong></li></ol><svg class=\"beam-diagram\" viewBox=\"0 0 700 275\" role=\"img\" aria-label=\"A beam supported at both ends with a downward load at its centre. Diagram is schematic.\">\n    <path d=\"M100 180L65 230H135Z M600 180L565 230H635Z\" fill=\"#263b52\"/>\n    <path d=\"M90 110Q350 135 610 110L610 178Q350 209 90 178Z\" fill=\"#d9d7d0\" stroke=\"#263b52\" stroke-width=\"4\"/>\n    <path d=\"M115 166Q350 193 585 166\" fill=\"none\" stroke=\"#ad7a27\" stroke-width=\"8\"/>\n    <path d=\"M350 20V78\" fill=\"none\" stroke=\"#263b52\" stroke-width=\"5\"/><path d=\"M350 92l-10 -16h20Z\" fill=\"#263b52\"/>\n    \n    <text x=\"370\" y=\"60\" font-size=\"23\" fill=\"#263b52\">downward load</text>\n    <text x=\"350\" y=\"118\" text-anchor=\"middle\" font-size=\"42\" fill=\"#263b52\"></text>\n    <text x=\"350\" y=\"238\" text-anchor=\"middle\" font-size=\"42\" fill=\"#263b52\"></text>\n    <text x=\"24\" y=\"271\" font-size=\"20\" fill=\"#263b52\">Two end supports · bending exaggerated · no measured load</text>\n    </svg>",
+      "criteria": [
+        "Answer all three parts.",
+        "Explain how each material helps."
+      ],
+      "answers": [
+        {
+          "id": "l3-fresh-definition",
+          "question": "(a) Define a composite. [1]",
+          "model": "<p>A composite combines two or more different materials. Accept equivalent correct wording.</p>",
+          "criteria": [
+            "Two or more different materials combined: 1."
+          ],
+          "marks": 1
+        },
+        {
+          "id": "l3-fresh-example",
+          "question": "(b) Name a composite other than reinforced concrete. [1]",
+          "model": "<p>Examples: fibreglass, carbon-fibre composite, plywood, wood or fibre-containing mudbrick. Accept another valid composite; exclude reinforced concrete again and loose carbon fibres alone.</p>",
+          "criteria": [
+            "One valid different composite: 1."
+          ],
+          "marks": 1
+        },
+        {
+          "id": "l3-fresh-roles",
+          "question": "(c) Explain how concrete and steel help this downward-loaded floor beam. [2]",
+          "model": "<p>Concrete resists compression well but is relatively weak in tension [1]. Steel reinforcement carries tensile forces, helping this beam resist bending [1]. Accept equivalent correct causal wording.</p>",
+          "criteria": [
+            "Concrete’s useful compression role and limitation: 1.",
+            "Steel’s tensile role linked to the beam: 1."
+          ],
+          "marks": 2
+        }
+      ],
+      "minutes": 5,
+      "time": "5 min",
+      "layout": "quiet-exit",
+      "independent": true,
+      "assessment_label": "Teacher-marked evidence",
+      "secondary": {
+        "title": "Homework · science book",
+        "html": "<p>Create a one-page composite fact file: name, components, useful contributions, one use and a named source.</p>",
+        "criteria": [
+          "Name the composite, its components and a source.",
+          "Explain each contribution and a useful application."
+        ],
+        "answers": [
+          {
+            "id": "l3-homework-review",
+            "question": "Create a one-page composite fact file in your science book: name, components, useful contributions, use and named source.",
+            "model": "<p>Example: <strong>fibreglass</strong>. Glass fibres reinforce; the polymer matrix binds, protects and transfers loads. Together they form a useful tent pole. Source: UNSW, “Introduction 2”. Accept another accurate sourced account.</p>",
+            "criteria": [
+              "Name a composite and its components.",
+              "Explain useful contributions and one use.",
+              "Name the source used."
+            ],
+            "marks": null
+          }
+        ]
+      }
     }
-  };
-})();
+  ],
+  "widgets": {
+    "resources": [
+      {
+        "title": "About the sources",
+        "html": "<p>These sources support the taught scientific claims. Our models are original simplified representations, not experimental measurements.</p>",
+        "answers": []
+      },
+      {
+        "title": "Composite roles",
+        "html": "<p><a href=\"https://www.unsw.edu.au/science/our-schools/materials/engage-with-us/high-school-students-and-teachers/online-tutorials/composites/introduction/introduction-2\" target=\"_blank\" rel=\"noopener\">UNSW: fibres and matrix</a></p><p><a href=\"https://www.crsi.org/reinforcing-basics/reinforcing-steel/\" target=\"_blank\" rel=\"noopener\">CRSI: reinforcing steel</a></p>",
+        "answers": []
+      },
+      {
+        "title": "Beam loading",
+        "html": "<p><a href=\"https://www.teachengineering.org/activities/cub_brid_lesson01_activity1\" target=\"_blank\" rel=\"noopener\">University of Colorado: tension and compression</a></p><p>Use the two-supported, downward-loaded beam example. Changing the supports or load can change the force pattern.</p>",
+        "answers": []
+      },
+      {
+        "title": "Wood and plywood",
+        "html": "<p><a href=\"https://www.apawood.org/engineered-wood-products/plywood-osb/plywood/\" target=\"_blank\" rel=\"noopener\">APA: plywood</a></p><p><a href=\"https://www.unsw.edu.au/science/our-schools/materials/engage-with-us/high-school-students-and-teachers/online-tutorials/composites/wood/wood-composition\" target=\"_blank\" rel=\"noopener\">UNSW: wood composition</a></p>",
+        "answers": []
+      },
+      {
+        "title": "Fibre-containing earth materials",
+        "html": "<p><a href=\"https://doi.org/10.3390/infrastructures11050156\" target=\"_blank\" rel=\"noopener\">Primary research: fibres, moisture and adobe</a></p><p>Use the qualified claim about drying cracks. Do not assume every mudbrick has added fibres.</p>",
+        "answers": []
+      },
+      {
+        "title": "Carbon-fibre properties",
+        "html": "<p><a href=\"https://www.ornl.gov/cftf/\" target=\"_blank\" rel=\"noopener\">Oak Ridge National Laboratory: carbon-fibre technology</a></p><p>Useful strength and stiffness for low mass make it a candidate; a particular beam still needs design-specific evidence.</p>",
+        "answers": []
+      },
+      {
+        "title": "Homework",
+        "html": "<p>In your science book, create a one-page composite fact file: name, components, useful contributions, one use and a named source.</p>",
+        "answers": [
+          {
+            "id": "l3-homework-review-2",
+            "question": "Create a one-page composite fact file in your science book: name, components, useful contributions, use and named source.",
+            "model": "<p>Example: <strong>fibreglass</strong>. Glass fibres reinforce; the polymer matrix binds, protects and transfers loads. Together they form a useful tent pole. Source: UNSW, “Introduction 2”. Accept another accurate sourced account.</p>",
+            "criteria": [
+              "Name a composite and its components.",
+              "Explain useful contributions and one use.",
+              "Name the source used."
+            ],
+            "marks": null
+          }
+        ]
+      }
+    ],
+    "assessments": [
+      {
+        "title": "Explain the component roles",
+        "html": "<p>Go to the parallel-beam task and its own review.</p>",
+        "target": "l3-beam-parallel",
+        "answers": []
+      },
+      {
+        "title": "Check the mechanism",
+        "html": "<p>Go to the reasoned whiteboard hinge and its different bench-seat recheck.</p>",
+        "target": "l3-hinge",
+        "answers": []
+      },
+      {
+        "title": "Recommend and improve",
+        "html": "<p>Go to the canopy recommendation, then preserve its first attempt and revision.</p>",
+        "target": "l3-canopy-practice",
+        "answers": []
+      },
+      {
+        "title": "Fresh independent evidence",
+        "html": "<p>Go to the different floor-beam task. Its sources and completed models close.</p>",
+        "target": "l3-fresh-floor",
+        "answers": []
+      }
+    ],
+    "adaptation": [
+      {
+        "title": "Blue · force directions",
+        "html": "<p>If the forces are confusing, complete B and match concrete and steel to the load. Then write your explanation.</p><svg class=\"beam-diagram\" viewBox=\"0 0 700 275\" role=\"img\" aria-label=\"A beam supported at both ends with a downward load at its centre. Diagram is schematic.\">\n    <path d=\"M100 180L65 230H135Z M600 180L565 230H635Z\" fill=\"#263b52\"/>\n    <path d=\"M90 110Q350 135 610 110L610 178Q350 209 90 178Z\" fill=\"#d9d7d0\" stroke=\"#263b52\" stroke-width=\"4\"/>\n    <path d=\"M115 166Q350 193 585 166\" fill=\"none\" stroke=\"#ad7a27\" stroke-width=\"8\"/>\n    <path d=\"M350 20V78\" fill=\"none\" stroke=\"#263b52\" stroke-width=\"5\"/><path d=\"M350 92l-10 -16h20Z\" fill=\"#263b52\"/>\n    <path d=\"M180 93H275M520 93H425M275 211H180M425 211H520\" stroke=\"#263b52\" stroke-width=\"4\" fill=\"none\"/>\n    <path d=\"M275 93l-14 -8v16ZM425 93l14 -8v16ZM180 211l14 -8v16ZM520 211l-14 -8v16Z\" fill=\"#263b52\"/>\n    <text x=\"370\" y=\"60\" font-size=\"23\" fill=\"#263b52\">downward load</text>\n    <text x=\"350\" y=\"118\" text-anchor=\"middle\" font-size=\"42\" fill=\"#263b52\">compression</text>\n    <text x=\"350\" y=\"238\" text-anchor=\"middle\" font-size=\"42\" fill=\"#263b52\">B</text>\n    <text x=\"24\" y=\"271\" font-size=\"20\" fill=\"#263b52\">Two end supports · bending exaggerated · no measured load</text>\n    </svg>",
+        "answers": [
+          {
+            "id": "l3-widget-blue-force",
+            "question": "Complete B and explain the two useful material roles.",
+            "model": "<p>B is tension. Under this downward sagging load, concrete contributes useful compressive resistance; steel reinforcement carries tensile forces. These contributions help the beam resist bending.</p>",
+            "criteria": [
+              "Name B correctly.",
+              "Explain the complementary roles."
+            ],
+            "marks": null
+          }
+        ]
+      },
+      {
+        "title": "Blue · connect the explanation",
+        "html": "<p>Complete the missing contribution and benefit. Use the organiser, then write a connected paragraph.</p><div class=\"compact-organiser\"><p>Concrete → ____</p><p>Steel → ____</p><p>Together → beam benefit: ____</p></div>",
+        "answers": [
+          {
+            "id": "l3-widget-blue-writing",
+            "question": "Complete the component → contribution → benefit organiser.",
+            "model": "<p>Concrete resists compression well but is relatively weak in tension. Steel reinforcement carries tensile forces. Together, these contributions help the beam resist bending under this downward load.</p>",
+            "criteria": [
+              "Supply correct component roles.",
+              "Link the combination to the job."
+            ],
+            "marks": null
+          }
+        ]
+      },
+      {
+        "title": "Green · independent explanation",
+        "html": "<p>Explain why reinforced concrete suits the supported canopy beam. Explain both roles in a second composite product.</p>",
+        "answers": [
+          {
+            "id": "l3-canopy-review-4",
+            "question": "Why does reinforced concrete suit this supported, downward-loaded canopy beam better than plain concrete?",
+            "model": "<p>Concrete resists compression well but is relatively weak in tension. Steel reinforcement carries tensile forces. Together, these contributions help the beam resist bending under this downward load.</p>",
+            "criteria": [
+              "Explain concrete’s useful role and limitation.",
+              "Explain steel’s contribution and the beam benefit."
+            ],
+            "marks": null
+          },
+          {
+            "id": "l3-canopy-other-product-4",
+            "question": "Explain both component roles in another composite product.",
+            "model": "<p>For a fibreglass tent pole, glass fibres reinforce. The polymer matrix binds and protects them and transfers loads, forming a useful shaped pole. Accept another accurate two-component product explanation.</p>",
+            "criteria": [
+              "Explain each component’s contribution.",
+              "Link the contributions to the product’s use."
+            ],
+            "marks": null
+          }
+        ]
+      }
+    ],
+    "hot": [
+      {
+        "title": "Gold · a changed design requirement",
+        "html": "<p>The canopy beam must carry the same load with lower mass. Does the source evidence justify switching to carbon-fibre composite? State the further comparison needed.</p>",
+        "answers": [
+          {
+            "id": "l3-gold-decision-2",
+            "question": "Does lower mass justify replacing reinforced concrete with carbon-fibre composite here?",
+            "model": "<p>Carbon-fibre composite is a candidate for useful stiffness at low mass. The brief does not show that the proposed beam meets the same load requirement.</p>",
+            "criteria": [
+              "Use the supplied property evidence.",
+              "Retain the original load requirement."
+            ],
+            "marks": null
+          },
+          {
+            "id": "l3-gold-comparison-2",
+            "question": "What comparison would justify changing the beam material?",
+            "model": "<p>Compare beam mass, load capacity and deflection for the proposed span, geometry, connections and service conditions.</p>",
+            "criteria": [
+              "Name relevant design-specific evidence.",
+              "Do not assume a material name proves suitability."
+            ],
+            "marks": null
+          }
+        ]
+      },
+      {
+        "title": "Challenge an absolute claim",
+        "html": "<p>“Any composite is better than either component in every way.” Use one taught example to challenge this claim. State a property or requirement that would need checking.</p>",
+        "answers": [
+          {
+            "id": "l3-widget-hot-absolute",
+            "question": "Challenge the claim that a composite is better in every way.",
+            "model": "<p>For carbon-fibre composite, useful stiffness for low mass does not prove better impact resistance or performance in every direction. Specify the requirement and seek matched comparison evidence.</p>",
+            "criteria": [
+              "Use a taught example.",
+              "Identify a specific property or requirement.",
+              "Explain why the absolute claim exceeds the evidence."
+            ],
+            "marks": null
+          }
+        ]
+      }
+    ],
+    "ai": [
+      {
+        "title": "Disclose, cite and decide · optional",
+        "html": "<p><strong>Prepared scenario:</strong> an AI draft suggested wording. A pupil checked roles against CRSI and made the final judgement.</p><p>After your own explanation, improve: “A tool helped. I checked it.” Identify contribution, source, human decision and one limit.</p>",
+        "answers": [
+          {
+            "id": "l3-ai-record",
+            "question": "Rewrite the record: tool contribution, source check and human decision.",
+            "model": "<p>Example: a prepared AI draft suggested wording. I checked component roles against CRSI and judged suitability for the stated beam load.</p>",
+            "criteria": [
+              "Name the specific assistance.",
+              "Identify the source check and human decision."
+            ],
+            "marks": null
+          },
+          {
+            "id": "l3-ai-limit",
+            "question": "What limit should this assistance record state?",
+            "model": "<p>The draft and model do not establish a safe real load. Disclose only support actually used; viewing a digital 3D model is not live AI use.</p>",
+            "criteria": [
+              "State the evidence limit.",
+              "Describe actual support honestly."
+            ],
+            "marks": null
+          }
+        ]
+      }
+    ],
+    "uae": [
+      {
+        "title": "A shaded school entrance",
+        "html": "<p>A UAE school needs a shaded entrance. Its canopy beam rests on a column at each end and carries a downward roof load.</p><p>Explain why the two components of reinforced concrete help this beam do its job.</p>",
+        "answers": [
+          {
+            "id": "l3-widget-uae-canopy",
+            "question": "Explain the two component roles in the two-supported school canopy.",
+            "model": "<p>Concrete resists compression but is relatively weak in tension. Steel carries tensile forces; together they help the supported canopy beam resist its downward load. Shade gives the use; the load case is unchanged.</p>",
+            "criteria": [
+              "Use the pictured two-support load case.",
+              "Explain concrete’s and steel’s contributions.",
+              "Link them to the canopy beam."
+            ],
+            "marks": null
+          }
+        ]
+      }
+    ]
+  },
+  "sources": [
+    {
+      "title": "UNSW: composite reinforcement and matrix",
+      "url": "https://www.unsw.edu.au/science/our-schools/materials/engage-with-us/high-school-students-and-teachers/online-tutorials/composites/introduction/introduction-2",
+      "claim": "Matrix binds, protects and transfers load; reinforcement supplies useful strength and stiffness."
+    },
+    {
+      "title": "CRSI: reinforcing steel",
+      "url": "https://www.crsi.org/reinforcing-basics/reinforcing-steel/",
+      "claim": "Concrete is weak in tension; steel has useful tensile and compressive resistance."
+    },
+    {
+      "title": "University of Colorado: beam loading",
+      "url": "https://www.teachengineering.org/activities/cub_brid_lesson01_activity1",
+      "claim": "A beam supported at both ends under downward load has upper compression and lower tension in sagging."
+    },
+    {
+      "title": "APA: plywood",
+      "url": "https://www.apawood.org/engineered-wood-products/plywood-osb/plywood/",
+      "claim": "Cross-laminated veneers are bonded into a stable structural panel; properties remain direction-dependent."
+    },
+    {
+      "title": "UNSW: wood composition",
+      "url": "https://www.unsw.edu.au/science/our-schools/materials/engage-with-us/high-school-students-and-teachers/online-tutorials/composites/wood/wood-composition",
+      "claim": "Cellulose-rich structures reinforce a surrounding matrix involving lignin and hemicelluloses."
+    },
+    {
+      "title": "Research: fibres in adobe",
+      "url": "https://doi.org/10.3390/infrastructures11050156",
+      "claim": "Straw fibres may reduce drying shrinkage cracking; behaviour depends on materials and conditions."
+    },
+    {
+      "title": "Composites Knowledge Network: thermosets",
+      "url": "https://compositeskn.org/KPC/A105",
+      "claim": "Covalent crosslinks form thermoset networks; excessive heating causes chemical breakdown rather than ordinary remelting."
+    },
+    {
+      "title": "Oak Ridge National Laboratory: carbon fibre",
+      "url": "https://www.ornl.gov/cftf/",
+      "claim": "Carbon fibre is a strong, stiff, lightweight material; particular composite designs still require relevant performance evidence."
+    }
+  ]
+};
