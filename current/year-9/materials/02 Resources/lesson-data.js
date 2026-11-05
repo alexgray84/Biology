@@ -9,8 +9,8 @@ window.LESSON_DATA = {
       "title": "What do you remember about materials?",
       "html": "<ol><li>Name three material families.</li><li>Give two typical ceramic properties.</li><li>What is a monomer?</li></ol><p class=\"response-place\">Write in your science book. Then check and correct.</p>",
       "criteria": [
-        "Use family names and properties accurately.",
-        "Define monomer as a small molecule."
+        "<strong>Names:</strong> give material families, not objects.",
+        "<strong>Define:</strong> explain a monomer, not just an example."
       ],
       "answers": [
         {
@@ -34,7 +34,8 @@ window.LESSON_DATA = {
       "title": "Why does structure matter?",
       "html": "<p class=\"lesson-question\">Why can some plastics be reshaped by heating?</p><ol><li>Describe polymer chain structures.</li><li>Explain how structure affects heating behaviour.</li><li>Justify a polymer choice for a particular use.</li></ol><p class=\"source\">19.1: names and properties of common polymers and ceramics. 19.2: how their uses relate to their properties. Chain structure: unit outcome.</p>",
       "criteria": [
-        "Identify the outcome that needs an explanation."
+        "<strong>Describe:</strong> say what the structure is like.",
+        "<strong>Explain:</strong> connect a cause to its effect."
       ],
       "answers": [
         {
@@ -56,8 +57,8 @@ window.LESSON_DATA = {
       "title": "Heating and chain movement",
       "html": "<p><strong>Thermosoftening:</strong> suitable heating overcomes weaker forces between chains, allowing sliding and reshaping.</p><p><strong>Thermosetting:</strong> strong cross-links restrict sliding.</p><p>Identify an intact chain. Ordinary softening leaves its along-chain bonds intact.</p>",
       "criteria": [
-        "Distinguish bonds along chains from links between chains.",
-        "Explain the effect on relative movement."
+        "<strong>Trace:</strong> follow one complete, unbroken chain.",
+        "<strong>Distinguish:</strong> connections along a chain and between chains."
       ],
       "answers": [
         {
@@ -86,8 +87,8 @@ window.LESSON_DATA = {
       "title": "Which change matters?",
       "html": "<p>On your whiteboard, compare A and B, then C.</p><p>Predict which can reshape on suitable heating. Give a structural reason <strong>before testing</strong>.</p>",
       "criteria": [
-        "Distinguish bonds along chains from links between chains.",
-        "Explain the effect on relative movement."
+        "<strong>Prediction:</strong> commit before testing the model.",
+        "<strong>Reason:</strong> use structure, not the viewing angle."
       ],
       "answers": [
         {
@@ -113,10 +114,10 @@ window.LESSON_DATA = {
       "id": "model",
       "family": "Input",
       "title": "Build an explanation: a warm electrical fitting",
-      "html": "<p>The fitting must keep its shape when warm.</p><p>Predict the next link as the explanation is built.</p>",
+      "html": "<p>The fitting must keep its shape when warm.</p><p>Why is “it is strong” not enough? Predict the next link.</p>",
       "criteria": [
-        "Connect structure, movement and behaviour.",
-        "Finish with the benefit for this fitting."
+        "<strong>Cause:</strong> connect structure to chain movement.",
+        "<strong>Benefit:</strong> explain how this helps the fitting."
       ],
       "answers": [
         {
@@ -127,6 +128,16 @@ window.LESSON_DATA = {
             "Structure: cross-links between chains.",
             "Movement/behaviour: restricted sliding and shape retention.",
             "Use: shape retention linked to holding parts in place."
+          ],
+          "marks": null
+        },
+        {
+          "id": "L2-SC-MODEL",
+          "question": "Why is “it is strong” not enough?",
+          "model": "It does not explain how the structure restricts chain movement or why that helps this warm fitting keep its shape.",
+          "criteria": [
+            "Name the missing scientific cause.",
+            "Connect the resulting behaviour to the fitting’s need."
           ],
           "marks": null
         }
@@ -158,8 +169,8 @@ window.LESSON_DATA = {
       "title": "Your turn: a tray for warm dishes",
       "html": "<p>A tray’s polymer has strong cross-links. It must remain rigid while holding warm dishes.</p><p><strong>Explain how its structure helps it do this job.</strong> Write your own explanation first.</p>",
       "criteria": [
-        "Explain the chain movement.",
-        "Link the behaviour to this tray’s job."
+        "<strong>Mechanism:</strong> structure → movement → behaviour.",
+        "<strong>Application:</strong> explain how the tray supports warm dishes."
       ],
       "answers": [
         {
@@ -184,7 +195,8 @@ window.LESSON_DATA = {
       "title": "Choose — and explain why",
       "html": "<p>Why does a cross-linked polymer resist melting and reshaping?</p><ol class=\"options\" type=\"A\"><li>Its chains are always shorter.</li><li>Cross-links restrict chain movement.</li><li>Heating must break bonds along every chain.</li><li>Every plastic behaves the same.</li></ol><p class=\"response-place\">Write the letter AND a reason. Show together.</p>",
       "criteria": [
-        "Use structure to justify your choice."
+        "<strong>Choice:</strong> give a letter and your own reason.",
+        "<strong>Evidence:</strong> justify it using the chain structure."
       ],
       "answers": [
         {
@@ -215,6 +227,10 @@ window.LESSON_DATA = {
             ],
             "marks": null
           }
+        ],
+        "criteria": [
+          "Use the new diagram to justify your choice.",
+          "Explain the heating behaviour without copying the first answer."
         ]
       }
     },
@@ -224,8 +240,8 @@ window.LESSON_DATA = {
       "title": "What does this result show?",
       "html": "<p class=\"source\">Illustrative data · same comparison load · not class measurements or loading instructions.</p><div class=\"data-work\"><table><tr><th>Specimen</th><th>Extension</th></tr><tr><td>A</td><td>12 mm</td></tr><tr><td>B</td><td>2 mm</td></tr></table><svg class=\"worked-graph\" viewBox=\"0 0 560 275\" role=\"img\" aria-label=\"Worked bar chart with extension in millimetres from zero to twelve. A is drawn at twelve. B is left blank to complete.\"><g font-size=\"32\" fill=\"#194e68\"><path d=\"M75 176H500\" stroke=\"#b9c3c4\" stroke-width=\"1\"/><text x=\"60\" y=\"185\" text-anchor=\"end\">0</text><path d=\"M75 128H500\" stroke=\"#b9c3c4\" stroke-width=\"1\"/><text x=\"60\" y=\"137\" text-anchor=\"end\">4</text><path d=\"M75 80H500\" stroke=\"#b9c3c4\" stroke-width=\"1\"/><text x=\"60\" y=\"89\" text-anchor=\"end\">8</text><path d=\"M75 32H500\" stroke=\"#b9c3c4\" stroke-width=\"1\"/><text x=\"60\" y=\"41\" text-anchor=\"end\">12</text><path d=\"M75 20V176H510\" fill=\"none\" stroke=\"#194e68\" stroke-width=\"3\"/><rect x=\"140\" y=\"32\" width=\"85\" height=\"144\" fill=\"#194e68\"/><rect x=\"330\" y=\"27\" width=\"110\" height=\"149\" fill=\"none\" stroke=\"#7c929a\" stroke-width=\"2\" stroke-dasharray=\"6 7\"/><text x=\"182\" y=\"210\" text-anchor=\"middle\">A</text><text x=\"385\" y=\"210\" text-anchor=\"middle\">B: draw</text><text x=\"95\" y=\"23\">Extension (mm)</text><text x=\"260\" y=\"265\">Specimen</text></g></svg></div><p>Plot B in your book. Compare extension. What further evidence would justify a strength claim?</p>",
       "criteria": [
-        "Plot with axes and units.",
-        "Separate the measurement from the strength claim."
+        "<strong>Graph:</strong> accurate height, scale, labels and mm.",
+        "<strong>Conclusion:</strong> use measurements; name the missing strength evidence."
       ],
       "answers": [
         {
@@ -249,8 +265,8 @@ window.LESSON_DATA = {
       "title": "Explain your material choice",
       "html": "<p><strong>1.</strong> A water pipe must keep its shape and resist water. Choose a polymer from the reference.</p><p><strong>2.</strong> Explain how foam helps a cup keep a drink warm.</p>",
       "criteria": [
-        "Name a relevant property.",
-        "Explain how it helps the stated job."
+        "<strong>Pipe:</strong> property → effect → useful job.",
+        "<strong>Cup:</strong> explain why energy leaves more slowly."
       ],
       "answers": [
         {
@@ -291,8 +307,8 @@ window.LESSON_DATA = {
         "green": {
           "html": "<p><strong>1.</strong> Choose a pipe polymer. Explain the useful property.</p><p><strong>2.</strong> Explain how foam slows a drink’s cooling.</p>",
           "criteria": [
-            "Name a relevant property.",
-            "Explain how it helps the stated job."
+            "<strong>Pipe:</strong> property → effect → useful job.",
+            "<strong>Cup:</strong> explain why energy leaves more slowly."
           ],
           "answers": [
             {
@@ -320,8 +336,8 @@ window.LESSON_DATA = {
         "blue": {
           "html": "<p>Explain the pipe choice and the foam cup. Complete these links in your book.</p><div class=\"organiser\"><span>PVC → rigidity → pipe benefit: ____</span><span>Foam → trapped air → reduced energy transfer → drink benefit: ____</span></div>",
           "criteria": [
-            "Name a relevant property.",
-            "Explain how it helps the stated job."
+            "<strong>Pipe:</strong> property → effect → useful job.",
+            "<strong>Cup:</strong> explain why energy leaves more slowly."
           ],
           "answers": [
             {
@@ -349,8 +365,8 @@ window.LESSON_DATA = {
         "gold": {
           "html": "<p>The job changes: a product must be <strong>repeatedly reshaped by heating</strong>.</p><p>Would you keep the cross-linked structure? Justify a changed choice and one trade-off.</p>",
           "criteria": [
-            "Explain how the changed job changes the choice.",
-            "Identify a linked trade-off."
+            "<strong>Choice:</strong> justify reshaping from chain movement.",
+            "<strong>Trade-off:</strong> explain what the changed choice loses."
           ],
           "answers": [
             {
@@ -365,6 +381,59 @@ window.LESSON_DATA = {
             }
           ]
         }
+      },
+      "widgets": {
+        "adaptation": [
+          {
+            "title": "Use the criteria · find the missing link",
+            "html": "<p><strong>Claim:</strong> “Foam keeps a drink warm.”</p><p><strong>Explanation:</strong> “Foam traps air, reducing energy transfer, so the drink cools more slowly.”</p><p>Which words supply the cause and the useful effect? Find those links in your own answer.</p>",
+            "answers": [
+              {
+                "id": "L2-SC-EXAMPLE",
+                "question": "Which words supply the cause and useful effect?",
+                "model": "<p>“Traps air, reducing energy transfer” supplies the cause. “The drink cools more slowly” connects it to the use. The claim alone does not explain why.</p>",
+                "criteria": [
+                  "Identify the scientific cause in the example.",
+                  "Point to the useful effect, then check your own answer."
+                ],
+                "marks": null
+              }
+            ]
+          },
+          {
+            "title": "Blue · identify the chain links",
+            "html": "<div class=\"partial-chain\"><svg class=\"chain-diagram\" viewBox=\"0 0 400 150\" role=\"img\" aria-label=\"Three chains joined by cross-links between different chains\"><g fill=\"none\" stroke=\"#194e68\" stroke-width=\"6\"><path d=\"M20 30 C70 12,90 48,140 30 S210 12,250 30 S310 48,360 30\"/><path d=\"M20 75 C70 57,90 93,140 75 S210 57,250 75 S310 93,360 75\"/><path d=\"M20 120 C70 102,90 138,140 120 S210 102,250 120 S310 138,360 120\"/></g><path d=\"M140 30V75M250 75V120\" stroke=\"#ad7a27\" stroke-width=\"7\"/></svg><p><strong>Along one chain:</strong> strong bonds.</p><p><strong>Between two chains:</strong> the gold link is ______.</p><p>Complete: links between chains restrict relative ______.</p></div>",
+            "answers": [
+              {
+                "id": "L2-SCIENCE-SUPPORT",
+                "question": "Complete the gold link and relative-movement labels.",
+                "model": "The gold join connects different chains: it is a cross-link. Cross-links restrict relative sliding. Strong bonds along a chain remain intact during ordinary thermoplastic softening.",
+                "criteria": [
+                  "Identify a cross-link between distinct chains.",
+                  "Explain restricted relative sliding."
+                ],
+                "marks": null
+              }
+            ]
+          },
+          {
+            "title": "Blue · organise the tray explanation",
+            "html": "<p>Explain the warm-dish tray. Complete these connected headings, then write your paragraph.</p><div class=\"organiser\"><span>Cross-links →</span><span>Movement: ____</span><span>Heating behaviour: ____</span><span>Benefit for the tray: ____</span></div>",
+            "answers": [
+              {
+                "id": "L2-P",
+                "question": "Explain why strong cross-links help a serving tray remain rigid under warm dishes.",
+                "model": "Strong cross-links connect different chains and restrict relative sliding when the polymer is warmed. This helps the suitable cured polymer retain its shape, so the tray supports the dishes within its safe operating range.",
+                "criteria": [
+                  "Identify cross-links between chains.",
+                  "Explain restricted movement and shape retention.",
+                  "Connect shape retention to supporting warm dishes."
+                ],
+                "marks": null
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -373,8 +442,8 @@ window.LESSON_DATA = {
       "title": "Make your explanation better",
       "html": "<ol><li>Underline the property in your pipe or cup answer.</li><li>Box the benefit for the product.</li><li>Find a missing causal link. Rewrite the weaker answer in a different pen.</li></ol><p>Keep your first answer beside your improvement.</p>",
       "criteria": [
-        "Name the exact gap.",
-        "Add the missing scientific explanation."
+        "<strong>Diagnose:</strong> mark the missing scientific link.",
+        "<strong>Repair:</strong> show how your revision supplies it."
       ],
       "answers": [
         {
@@ -410,7 +479,60 @@ window.LESSON_DATA = {
       ],
       "minutes": 5,
       "layout": "worked-model",
-      "assessment_label": "Self-assessment"
+      "assessment_label": "Self-assessment",
+      "widgets": {
+        "adaptation": [
+          {
+            "title": "Use the criteria · find the missing link",
+            "html": "<p><strong>Claim:</strong> “Foam keeps a drink warm.”</p><p><strong>Explanation:</strong> “Foam traps air, reducing energy transfer, so the drink cools more slowly.”</p><p>Which words supply the cause and the useful effect? Find those links in your own answer.</p>",
+            "answers": [
+              {
+                "id": "L2-SC-EXAMPLE",
+                "question": "Which words supply the cause and useful effect?",
+                "model": "<p>“Traps air, reducing energy transfer” supplies the cause. “The drink cools more slowly” connects it to the use. The claim alone does not explain why.</p>",
+                "criteria": [
+                  "Identify the scientific cause in the example.",
+                  "Point to the useful effect, then check your own answer."
+                ],
+                "marks": null
+              }
+            ]
+          },
+          {
+            "title": "Blue · identify the chain links",
+            "html": "<div class=\"partial-chain\"><svg class=\"chain-diagram\" viewBox=\"0 0 400 150\" role=\"img\" aria-label=\"Three chains joined by cross-links between different chains\"><g fill=\"none\" stroke=\"#194e68\" stroke-width=\"6\"><path d=\"M20 30 C70 12,90 48,140 30 S210 12,250 30 S310 48,360 30\"/><path d=\"M20 75 C70 57,90 93,140 75 S210 57,250 75 S310 93,360 75\"/><path d=\"M20 120 C70 102,90 138,140 120 S210 102,250 120 S310 138,360 120\"/></g><path d=\"M140 30V75M250 75V120\" stroke=\"#ad7a27\" stroke-width=\"7\"/></svg><p><strong>Along one chain:</strong> strong bonds.</p><p><strong>Between two chains:</strong> the gold link is ______.</p><p>Complete: links between chains restrict relative ______.</p></div>",
+            "answers": [
+              {
+                "id": "L2-SCIENCE-SUPPORT",
+                "question": "Complete the gold link and relative-movement labels.",
+                "model": "The gold join connects different chains: it is a cross-link. Cross-links restrict relative sliding. Strong bonds along a chain remain intact during ordinary thermoplastic softening.",
+                "criteria": [
+                  "Identify a cross-link between distinct chains.",
+                  "Explain restricted relative sliding."
+                ],
+                "marks": null
+              }
+            ]
+          },
+          {
+            "title": "Blue · organise the tray explanation",
+            "html": "<p>Explain the warm-dish tray. Complete these connected headings, then write your paragraph.</p><div class=\"organiser\"><span>Cross-links →</span><span>Movement: ____</span><span>Heating behaviour: ____</span><span>Benefit for the tray: ____</span></div>",
+            "answers": [
+              {
+                "id": "L2-P",
+                "question": "Explain why strong cross-links help a serving tray remain rigid under warm dishes.",
+                "model": "Strong cross-links connect different chains and restrict relative sliding when the polymer is warmed. This helps the suitable cured polymer retain its shape, so the tray supports the dishes within its safe operating range.",
+                "criteria": [
+                  "Identify cross-links between chains.",
+                  "Explain restricted movement and shape retention.",
+                  "Connect shape retention to supporting warm dishes."
+                ],
+                "marks": null
+              }
+            ]
+          }
+        ]
+      }
     },
     {
       "id": "fresh",
@@ -418,8 +540,8 @@ window.LESSON_DATA = {
       "title": "Explain a new material choice",
       "html": "<div class=\"mini-pair\"><div><strong>R</strong><span>Separate chains</span><svg class=\"chain-diagram\" viewBox=\"0 0 400 150\" role=\"img\" aria-label=\"Three separate continuous polymer chains\"><g fill=\"none\" stroke=\"#194e68\" stroke-width=\"6\"><path d=\"M20 30 C70 12,90 48,140 30 S210 12,250 30 S310 48,360 30\"/><path d=\"M20 75 C70 57,90 93,140 75 S210 57,250 75 S310 93,360 75\"/><path d=\"M20 120 C70 102,90 138,140 120 S210 102,250 120 S310 138,360 120\"/></g></svg></div><div><strong>S</strong><span>Cross-linked chains</span><svg class=\"chain-diagram\" viewBox=\"0 0 400 150\" role=\"img\" aria-label=\"Three chains joined by cross-links between different chains\"><g fill=\"none\" stroke=\"#194e68\" stroke-width=\"6\"><path d=\"M20 30 C70 12,90 48,140 30 S210 12,250 30 S310 48,360 30\"/><path d=\"M20 75 C70 57,90 93,140 75 S210 57,250 75 S310 93,360 75\"/><path d=\"M20 120 C70 102,90 138,140 120 S210 102,250 120 S310 138,360 120\"/></g><path d=\"M140 30V75M250 75V120\" stroke=\"#ad7a27\" stroke-width=\"7\"/></svg></div></div><p><strong>(a)</strong> Explain why R can be reshaped on suitable heating. <b>[2]</b></p><p><strong>(b)</strong> Explain why S suits a warm control enclosure that must keep its shape. <b>[2]</b></p><p class=\"source\">Original practice · 4 marks · write independently in your book.</p>",
       "criteria": [
-        "Use evidence from each new structure.",
-        "Explain behaviour and connect it to the stated job."
+        "<strong>Explain:</strong> link each structure to its behaviour.",
+        "<strong>Apply:</strong> connect the behaviour to the enclosure’s job."
       ],
       "answers": [
         {
@@ -445,8 +567,8 @@ window.LESSON_DATA = {
       "title": "Check the link you needed",
       "html": "<p>Check your four-mark answer. Mark one precise gap and correct it.</p><p><strong>For next lesson:</strong> be ready to explain heating from a new chain diagram.</p><p><strong>Homework:</strong> record five plastic resin codes or use the supplied A–E examples. Identify each polymer.</p>",
       "criteria": [
-        "Correct a specific scientific point.",
-        "Separate resin identification from recycling acceptance."
+        "<strong>Correction:</strong> repair one point using the review.",
+        "<strong>Homework:</strong> identify the resin; check recycling separately."
       ],
       "answers": [
         {

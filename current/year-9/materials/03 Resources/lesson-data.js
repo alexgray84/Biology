@@ -17,8 +17,8 @@ window.LESSON_DATA = {
       "title": "What explains a plastic’s behaviour?",
       "html": "<p>Work from memory in your book.</p><ol><li>What are polymers made of?</li><li>Why can a thermosoftening polymer be reshaped on suitable heating?</li><li>Give one polymer property and explain a useful application.</li></ol>",
       "criteria": [
-        "Use a causal explanation.",
-        "Connect the property to its use."
+        "<strong>Recall:</strong> describe chains accurately from memory.",
+        "<strong>Reason:</strong> connect heating or a property to its effect."
       ],
       "answers": [
         {
@@ -61,8 +61,8 @@ window.LESSON_DATA = {
       "title": "Why combine materials?",
       "html": "<p><strong>19.3</strong> Composites combine two or more materials and have some properties of each.</p><p><strong>19.4</strong> Names of composites and how their properties relate to uses.</p><ol><li>Define a composite material and identify its components.</li><li>Explain the useful contribution of each component.</li><li>Justify a composite material for a particular use.</li></ol><p>In your book, complete: “My explanation must connect components to ______.”</p>",
       "criteria": [
-        "Identify both components.",
-        "Explain contributions and benefit."
+        "<strong>Identify:</strong> name the materials in the combination.",
+        "<strong>Explain:</strong> show how their roles help the job."
       ],
       "answers": [
         {
@@ -83,19 +83,19 @@ window.LESSON_DATA = {
       "id": "l3-components",
       "family": "Input",
       "title": "What does each component contribute?",
-      "html": "<p>A <strong>composite</strong> combines two or more different materials for useful properties.</p><p>In fibreglass, glass fibres reinforce; the polymer <strong>matrix</strong> binds, protects and transfers loads.</p><p>Identify both components. Trace a fibre and the matrix.</p>",
+      "html": "<p>A <strong>composite</strong> combines two or more different materials for useful properties.</p><p>In fibreglass, glass fibres reinforce; the polymer <strong>matrix</strong> binds, protects and transfers loads.</p><p>Identify both components. Trace each; say what it does.</p>",
       "criteria": [
-        "Identify each component accurately.",
-        "Distinguish the two roles."
+        "<strong>Locate:</strong> trace fibres and the surrounding matrix.",
+        "<strong>Distinguish:</strong> say what each component contributes."
       ],
       "answers": [
         {
           "id": "l3-components-review",
-          "question": "Name both components of fibreglass.",
+          "question": "Name both fibreglass components and explain their different roles.",
           "model": "<p>Glass fibres and a polymer resin matrix. The fibres provide reinforcement; the matrix surrounds and binds them, protects them and helps transfer loads.</p>",
           "criteria": [
-            "Name glass fibres.",
-            "Name the polymer matrix."
+            "Name glass fibres and polymer matrix accurately.",
+            "Distinguish reinforcement from binding, protection and load transfer."
           ],
           "marks": null
         }
@@ -115,8 +115,8 @@ window.LESSON_DATA = {
       "title": "Are strong fibres enough?",
       "html": "<p><strong>Think alone:</strong> would loose glass fibres make an equally useful tent pole? Explain the missing role.</p><p><strong>Compare</strong> reasons with a partner. Then <strong>improve</strong> your own two-component explanation.</p>",
       "criteria": [
-        "Explain distinct component roles.",
-        "Link both roles to the pole’s job."
+        "<strong>Judgement:</strong> answer the loose-fibre pole question.",
+        "<strong>Reason:</strong> explain the missing role and its consequence."
       ],
       "answers": [
         {
@@ -144,10 +144,10 @@ window.LESSON_DATA = {
       "id": "l3-beam-model",
       "family": "Input",
       "title": "How do concrete and steel share the job?",
-      "html": "<p>Predict the load effect. Explain steel’s contribution.</p>",
+      "html": "<p>Predict the load effect. Why is “steel adds mass” incomplete?</p>",
       "criteria": [
-        "Match the forces to this load.",
-        "Explain a useful role for each material."
+        "<strong>Load:</strong> locate squashing and stretching in this beam.",
+        "<strong>Roles:</strong> connect each material to resisting that load."
       ],
       "answers": [
         {
@@ -194,8 +194,8 @@ window.LESSON_DATA = {
       "title": "Your turn: complete the beam explanation",
       "html": "<p>On your whiteboard: label B. Explain one contribution from concrete and one from steel.</p><p>Show. Check. Wipe; try a new sketch.</p><svg class=\"beam-diagram\" viewBox=\"0 0 700 275\" role=\"img\" aria-label=\"A beam supported at both ends with a downward load at its centre. Diagram is schematic.\">\n    <path d=\"M100 180L65 230H135Z M600 180L565 230H635Z\" fill=\"#263b52\"/>\n    <path d=\"M90 110Q350 135 610 110L610 178Q350 209 90 178Z\" fill=\"#d9d7d0\" stroke=\"#263b52\" stroke-width=\"4\"/>\n    <path d=\"M115 166Q350 193 585 166\" fill=\"none\" stroke=\"#ad7a27\" stroke-width=\"8\"/>\n    <path d=\"M350 20V78\" fill=\"none\" stroke=\"#263b52\" stroke-width=\"5\"/><path d=\"M350 92l-10 -16h20Z\" fill=\"#263b52\"/>\n    <path d=\"M180 93H275M520 93H425M275 211H180M425 211H520\" stroke=\"#263b52\" stroke-width=\"4\" fill=\"none\"/>\n    <path d=\"M275 93l-14 -8v16ZM425 93l14 -8v16ZM180 211l14 -8v16ZM520 211l-14 -8v16Z\" fill=\"#263b52\"/>\n    <text x=\"370\" y=\"60\" font-size=\"23\" fill=\"#263b52\">downward load</text>\n    <text x=\"350\" y=\"118\" text-anchor=\"middle\" font-size=\"42\" fill=\"#263b52\">compression</text>\n    <text x=\"350\" y=\"238\" text-anchor=\"middle\" font-size=\"42\" fill=\"#263b52\">B</text>\n    <text x=\"24\" y=\"271\" font-size=\"20\" fill=\"#263b52\">Two end supports · bending exaggerated · no measured load</text>\n    </svg>",
       "criteria": [
-        "Name both force types.",
-        "Match each material to its useful role."
+        "<strong>Diagram:</strong> name the force at B accurately.",
+        "<strong>Explanation:</strong> match both materials to their useful roles."
       ],
       "answers": [
         {
@@ -219,8 +219,8 @@ window.LESSON_DATA = {
       "title": "Why add steel to this concrete beam?",
       "html": "<p>Write a letter <strong>and a scientific reason</strong> on your whiteboard. Show together.</p><ol class=\"letter-options\" type=\"A\"><li>Concrete resists compression; steel contributes tensile resistance.</li><li>Concrete provides the main tensile resistance; steel is only for compression.</li><li>Steel helps only because it adds mass.</li><li>Steel and concrete react to form one new pure substance.</li></ol>",
       "criteria": [
-        "Justify the choice scientifically.",
-        "Apply the explanation to the recheck."
+        "<strong>Choice:</strong> give a letter and your own reason.",
+        "<strong>Reason:</strong> explain how the combination resists the load."
       ],
       "answers": [
         {
@@ -241,8 +241,8 @@ window.LESSON_DATA = {
         "title": "A different check: a bench seat",
         "html": "<p>A concrete bench seat rests on supports at both ends. A person sits in the middle. Explain why steel reinforcement helps.</p>",
         "criteria": [
-          "Explain concrete’s contribution and limitation.",
-          "Explain how steel helps under the bench load."
+          "Apply the roles to the new supported bench.",
+          "Explain how the combination helps carry its load."
         ],
         "answers": [
           {
@@ -256,7 +256,8 @@ window.LESSON_DATA = {
             "marks": null
           }
         ]
-      }
+      },
+      "independent": true
     },
     {
       "id": "l3-composite-evidence",
@@ -264,8 +265,8 @@ window.LESSON_DATA = {
       "title": "Choose evidence for two explanations",
       "html": "<p>Choose <strong>two</strong>: one manufactured and one natural/traditional. Explain each in your book: <strong>components → contributions → use</strong>.</p><p>Partner: challenge one link. Improve your own explanation.</p>",
       "criteria": [
-        "Explain both component roles.",
-        "Link the contributions to a use."
+        "<strong>Components:</strong> explain two different contributions.",
+        "<strong>Use:</strong> show why the combination helps each product."
       ],
       "answers": [],
       "minutes": 7,
@@ -360,8 +361,8 @@ window.LESSON_DATA = {
       "title": "Predict, observe, then explain the limit",
       "html": "<p><strong>Before the demonstration:</strong> predict how card, straws and a joined construction will bend. Give a reason.</p><p><strong>Observe:</strong> compare them under the same stated span and load. Record what actually happens.</p><p><strong>Explain:</strong> compare your prediction with the observation. State one thing this model cannot prove.</p>",
       "criteria": [
-        "Separate prediction from observation.",
-        "Explain one supported conclusion and limit."
+        "<strong>Observe:</strong> record the result, even if unexpected.",
+        "<strong>Conclude:</strong> compare fairly; state what this cannot prove."
       ],
       "answers": [
         {
@@ -387,8 +388,8 @@ window.LESSON_DATA = {
       "title": "Recommend a material for this canopy",
       "html": "<p>A school canopy in the UAE has a roof beam supported by columns at <strong>both ends</strong>. The roof loads it downward.</p><ol><li>Explain why reinforced concrete suits the beam and why plain concrete alone is less suitable.</li><li>Explain both component roles in one other composite product.</li></ol><p>Write your first attempt independently in your book.</p>",
       "criteria": [
-        "Explain both component contributions.",
-        "Connect them to the job."
+        "<strong>Roles:</strong> explain each component’s useful contribution.",
+        "<strong>Benefit:</strong> link the combination to each product’s job."
       ],
       "answers": [
         {
@@ -427,8 +428,8 @@ window.LESSON_DATA = {
         "blue": {
           "html": "<p><strong>1.</strong> Explain why concrete needs steel in this beam.</p><p><strong>2.</strong> Explain both roles in another composite product.</p><div class=\"compact-organiser\"><p>Concrete → ____</p><p>Steel → ____</p><p>Together → beam benefit: ____</p></div>",
           "criteria": [
-            "Match each component to a contribution.",
-            "Explain the combined benefit."
+            "<strong>Roles:</strong> explain each component’s useful contribution.",
+            "<strong>Benefit:</strong> link the combination to each product’s job."
           ],
           "answers": [
             {
@@ -456,8 +457,8 @@ window.LESSON_DATA = {
         "green": {
           "html": "<p><strong>1.</strong> Explain why concrete needs steel in this beam.</p><p><strong>2.</strong> Explain both roles in another composite product.</p>",
           "criteria": [
-            "Explain both contributions.",
-            "Link the combination to its use."
+            "<strong>Roles:</strong> explain each component’s useful contribution.",
+            "<strong>Benefit:</strong> link the combination to each product’s job."
           ],
           "answers": [
             {
@@ -485,8 +486,8 @@ window.LESSON_DATA = {
         "gold": {
           "html": "<p>Keep the same load requirement, but reduce the canopy beam’s mass.</p><p>Does the evidence justify replacing reinforced concrete with carbon-fibre composite? Name the further comparison needed.</p>",
           "criteria": [
-            "Preserve the load requirement.",
-            "Make an evidence-based decision and state a limit."
+            "<strong>Decision:</strong> keep the same load while reducing mass.",
+            "<strong>Evidence:</strong> name the comparison needed before switching."
           ],
           "answers": [
             {
@@ -511,6 +512,84 @@ window.LESSON_DATA = {
             }
           ]
         }
+      },
+      "widgets": {
+        "adaptation": [
+          {
+            "title": "Use the criteria · distinguish the roles",
+            "html": "<p><strong>Claim:</strong> “Steel makes it stronger.”</p><p><strong>Explanation:</strong> “Steel carries tensile forces where concrete is relatively weak in tension, helping the beam resist bending.”</p><p>Find the different roles and the beam benefit. Check those links in your own answer.</p>",
+            "answers": [
+              {
+                "id": "l3-sc-example",
+                "question": "What does the explanation add to the claim?",
+                "model": "<p>It names the force steel helps resist, identifies concrete’s limitation and links the combination to resisting bending. “Stronger” alone does not explain these roles.</p>",
+                "criteria": [
+                  "Identify the different material roles.",
+                  "Locate the link to the beam’s job."
+                ],
+                "marks": null
+              }
+            ]
+          },
+          {
+            "title": "Blue · force directions",
+            "html": "<p>If the forces are confusing, complete B and match concrete and steel to the load. Then write your explanation.</p><svg class=\"beam-diagram\" viewBox=\"0 0 700 275\" role=\"img\" aria-label=\"A beam supported at both ends with a downward load at its centre. Diagram is schematic.\">\n    <path d=\"M100 180L65 230H135Z M600 180L565 230H635Z\" fill=\"#263b52\"/>\n    <path d=\"M90 110Q350 135 610 110L610 178Q350 209 90 178Z\" fill=\"#d9d7d0\" stroke=\"#263b52\" stroke-width=\"4\"/>\n    <path d=\"M115 166Q350 193 585 166\" fill=\"none\" stroke=\"#ad7a27\" stroke-width=\"8\"/>\n    <path d=\"M350 20V78\" fill=\"none\" stroke=\"#263b52\" stroke-width=\"5\"/><path d=\"M350 92l-10 -16h20Z\" fill=\"#263b52\"/>\n    <path d=\"M180 93H275M520 93H425M275 211H180M425 211H520\" stroke=\"#263b52\" stroke-width=\"4\" fill=\"none\"/>\n    <path d=\"M275 93l-14 -8v16ZM425 93l14 -8v16ZM180 211l14 -8v16ZM520 211l-14 -8v16Z\" fill=\"#263b52\"/>\n    <text x=\"370\" y=\"60\" font-size=\"23\" fill=\"#263b52\">downward load</text>\n    <text x=\"350\" y=\"118\" text-anchor=\"middle\" font-size=\"42\" fill=\"#263b52\">compression</text>\n    <text x=\"350\" y=\"238\" text-anchor=\"middle\" font-size=\"42\" fill=\"#263b52\">B</text>\n    <text x=\"24\" y=\"271\" font-size=\"20\" fill=\"#263b52\">Two end supports · bending exaggerated · no measured load</text>\n    </svg>",
+            "answers": [
+              {
+                "id": "l3-widget-blue-force",
+                "question": "Complete B and explain the two useful material roles.",
+                "model": "<p>B is tension. Under this downward sagging load, concrete contributes useful compressive resistance; steel reinforcement carries tensile forces. These contributions help the beam resist bending.</p>",
+                "criteria": [
+                  "Name B correctly.",
+                  "Explain the complementary roles."
+                ],
+                "marks": null
+              }
+            ]
+          },
+          {
+            "title": "Blue · connect the explanation",
+            "html": "<p>Complete the missing contribution and benefit. Use the organiser, then write a connected paragraph.</p><div class=\"compact-organiser\"><p>Concrete → ____</p><p>Steel → ____</p><p>Together → beam benefit: ____</p></div>",
+            "answers": [
+              {
+                "id": "l3-widget-blue-writing",
+                "question": "Complete the component → contribution → benefit organiser.",
+                "model": "<p>Concrete resists compression well but is relatively weak in tension. Steel reinforcement carries tensile forces. Together, these contributions help the beam resist bending under this downward load.</p>",
+                "criteria": [
+                  "Supply correct component roles.",
+                  "Link the combination to the job."
+                ],
+                "marks": null
+              }
+            ]
+          },
+          {
+            "title": "Green · independent explanation",
+            "html": "<p>Explain why reinforced concrete suits the supported canopy beam. Explain both roles in a second composite product.</p>",
+            "answers": [
+              {
+                "id": "l3-canopy-review-4",
+                "question": "Why does reinforced concrete suit this supported, downward-loaded canopy beam better than plain concrete?",
+                "model": "<p>Concrete resists compression well but is relatively weak in tension. Steel reinforcement carries tensile forces. Together, these contributions help the beam resist bending under this downward load.</p>",
+                "criteria": [
+                  "Explain concrete’s useful role and limitation.",
+                  "Explain steel’s contribution and the beam benefit."
+                ],
+                "marks": null
+              },
+              {
+                "id": "l3-canopy-other-product-4",
+                "question": "Explain both component roles in another composite product.",
+                "model": "<p>For a fibreglass tent pole, glass fibres reinforce. The polymer matrix binds and protects them and transfers loads, forming a useful shaped pole. Accept another accurate two-component product explanation.</p>",
+                "criteria": [
+                  "Explain each component’s contribution.",
+                  "Link the contributions to the product’s use."
+                ],
+                "marks": null
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -519,8 +598,8 @@ window.LESSON_DATA = {
       "title": "Improve the missing scientific link",
       "html": "<p>Keep your first answer visible.</p><ol><li>Underline the components.</li><li>Box each useful contribution.</li><li>Find a missing or incorrect link to the job.</li><li>Rewrite your weaker paragraph in a different pen.</li></ol><p>Check that your revision repairs the gap you identified.</p>",
       "criteria": [
-        "Name the actual gap.",
-        "Repair it accurately in your revision."
+        "<strong>Diagnose:</strong> identify a missing or incorrect role.",
+        "<strong>Repair:</strong> show the corrected link to the job."
       ],
       "answers": [
         {
@@ -556,7 +635,85 @@ window.LESSON_DATA = {
       ],
       "minutes": 4,
       "time": "4 min",
-      "layout": "worked-model"
+      "layout": "worked-model",
+      "widgets": {
+        "adaptation": [
+          {
+            "title": "Use the criteria · distinguish the roles",
+            "html": "<p><strong>Claim:</strong> “Steel makes it stronger.”</p><p><strong>Explanation:</strong> “Steel carries tensile forces where concrete is relatively weak in tension, helping the beam resist bending.”</p><p>Find the different roles and the beam benefit. Check those links in your own answer.</p>",
+            "answers": [
+              {
+                "id": "l3-sc-example",
+                "question": "What does the explanation add to the claim?",
+                "model": "<p>It names the force steel helps resist, identifies concrete’s limitation and links the combination to resisting bending. “Stronger” alone does not explain these roles.</p>",
+                "criteria": [
+                  "Identify the different material roles.",
+                  "Locate the link to the beam’s job."
+                ],
+                "marks": null
+              }
+            ]
+          },
+          {
+            "title": "Blue · force directions",
+            "html": "<p>If the forces are confusing, complete B and match concrete and steel to the load. Then write your explanation.</p><svg class=\"beam-diagram\" viewBox=\"0 0 700 275\" role=\"img\" aria-label=\"A beam supported at both ends with a downward load at its centre. Diagram is schematic.\">\n    <path d=\"M100 180L65 230H135Z M600 180L565 230H635Z\" fill=\"#263b52\"/>\n    <path d=\"M90 110Q350 135 610 110L610 178Q350 209 90 178Z\" fill=\"#d9d7d0\" stroke=\"#263b52\" stroke-width=\"4\"/>\n    <path d=\"M115 166Q350 193 585 166\" fill=\"none\" stroke=\"#ad7a27\" stroke-width=\"8\"/>\n    <path d=\"M350 20V78\" fill=\"none\" stroke=\"#263b52\" stroke-width=\"5\"/><path d=\"M350 92l-10 -16h20Z\" fill=\"#263b52\"/>\n    <path d=\"M180 93H275M520 93H425M275 211H180M425 211H520\" stroke=\"#263b52\" stroke-width=\"4\" fill=\"none\"/>\n    <path d=\"M275 93l-14 -8v16ZM425 93l14 -8v16ZM180 211l14 -8v16ZM520 211l-14 -8v16Z\" fill=\"#263b52\"/>\n    <text x=\"370\" y=\"60\" font-size=\"23\" fill=\"#263b52\">downward load</text>\n    <text x=\"350\" y=\"118\" text-anchor=\"middle\" font-size=\"42\" fill=\"#263b52\">compression</text>\n    <text x=\"350\" y=\"238\" text-anchor=\"middle\" font-size=\"42\" fill=\"#263b52\">B</text>\n    <text x=\"24\" y=\"271\" font-size=\"20\" fill=\"#263b52\">Two end supports · bending exaggerated · no measured load</text>\n    </svg>",
+            "answers": [
+              {
+                "id": "l3-widget-blue-force",
+                "question": "Complete B and explain the two useful material roles.",
+                "model": "<p>B is tension. Under this downward sagging load, concrete contributes useful compressive resistance; steel reinforcement carries tensile forces. These contributions help the beam resist bending.</p>",
+                "criteria": [
+                  "Name B correctly.",
+                  "Explain the complementary roles."
+                ],
+                "marks": null
+              }
+            ]
+          },
+          {
+            "title": "Blue · connect the explanation",
+            "html": "<p>Complete the missing contribution and benefit. Use the organiser, then write a connected paragraph.</p><div class=\"compact-organiser\"><p>Concrete → ____</p><p>Steel → ____</p><p>Together → beam benefit: ____</p></div>",
+            "answers": [
+              {
+                "id": "l3-widget-blue-writing",
+                "question": "Complete the component → contribution → benefit organiser.",
+                "model": "<p>Concrete resists compression well but is relatively weak in tension. Steel reinforcement carries tensile forces. Together, these contributions help the beam resist bending under this downward load.</p>",
+                "criteria": [
+                  "Supply correct component roles.",
+                  "Link the combination to the job."
+                ],
+                "marks": null
+              }
+            ]
+          },
+          {
+            "title": "Green · independent explanation",
+            "html": "<p>Explain why reinforced concrete suits the supported canopy beam. Explain both roles in a second composite product.</p>",
+            "answers": [
+              {
+                "id": "l3-canopy-review-4",
+                "question": "Why does reinforced concrete suit this supported, downward-loaded canopy beam better than plain concrete?",
+                "model": "<p>Concrete resists compression well but is relatively weak in tension. Steel reinforcement carries tensile forces. Together, these contributions help the beam resist bending under this downward load.</p>",
+                "criteria": [
+                  "Explain concrete’s useful role and limitation.",
+                  "Explain steel’s contribution and the beam benefit."
+                ],
+                "marks": null
+              },
+              {
+                "id": "l3-canopy-other-product-4",
+                "question": "Explain both component roles in another composite product.",
+                "model": "<p>For a fibreglass tent pole, glass fibres reinforce. The polymer matrix binds and protects them and transfers loads, forming a useful shaped pole. Accept another accurate two-component product explanation.</p>",
+                "criteria": [
+                  "Explain each component’s contribution.",
+                  "Link the contributions to the product’s use."
+                ],
+                "marks": null
+              }
+            ]
+          }
+        ]
+      }
     },
     {
       "id": "l3-fresh-floor",
@@ -564,8 +721,8 @@ window.LESSON_DATA = {
       "title": "Explain a fresh floor beam without help",
       "html": "<p><strong>Original practice · 4 marks.</strong> Work independently in your book.</p><ol><li>Define a composite. <strong>[1]</strong></li><li>Name a composite other than reinforced concrete. <strong>[1]</strong></li><li>Explain concrete’s and steel’s roles in this downward-loaded floor beam. <strong>[2]</strong></li></ol><svg class=\"beam-diagram\" viewBox=\"0 0 700 275\" role=\"img\" aria-label=\"A beam supported at both ends with a downward load at its centre. Diagram is schematic.\">\n    <path d=\"M100 180L65 230H135Z M600 180L565 230H635Z\" fill=\"#263b52\"/>\n    <path d=\"M90 110Q350 135 610 110L610 178Q350 209 90 178Z\" fill=\"#d9d7d0\" stroke=\"#263b52\" stroke-width=\"4\"/>\n    <path d=\"M115 166Q350 193 585 166\" fill=\"none\" stroke=\"#ad7a27\" stroke-width=\"8\"/>\n    <path d=\"M350 20V78\" fill=\"none\" stroke=\"#263b52\" stroke-width=\"5\"/><path d=\"M350 92l-10 -16h20Z\" fill=\"#263b52\"/>\n    \n    <text x=\"370\" y=\"60\" font-size=\"23\" fill=\"#263b52\">downward load</text>\n    <text x=\"350\" y=\"118\" text-anchor=\"middle\" font-size=\"42\" fill=\"#263b52\"></text>\n    <text x=\"350\" y=\"238\" text-anchor=\"middle\" font-size=\"42\" fill=\"#263b52\"></text>\n    <text x=\"24\" y=\"271\" font-size=\"20\" fill=\"#263b52\">Two end supports · bending exaggerated · no measured load</text>\n    </svg>",
       "criteria": [
-        "Answer all three parts.",
-        "Explain how each material helps."
+        "<strong>Precision:</strong> distinguish a definition from an example.",
+        "<strong>Roles:</strong> link both materials to this beam’s load."
       ],
       "answers": [
         {
@@ -606,8 +763,8 @@ window.LESSON_DATA = {
         "title": "Homework · science book",
         "html": "<p>Create a one-page composite fact file: name, components, useful contributions, one use and a named source.</p>",
         "criteria": [
-          "Name the composite, its components and a source.",
-          "Explain each contribution and a useful application."
+          "<strong>Account:</strong> name the composite, components and source.",
+          "<strong>Explanation:</strong> link both contributions to a useful application."
         ],
         "answers": [
           {
