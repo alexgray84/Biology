@@ -1,0 +1,11 @@
+# Photosynthesis revision pack: provenance
+
+- Original locally authored practice, quizzes, mark schemes and Tarsia pairs. Not an exam-board paper or a reproduction of Friday’s assessment.
+- Curriculum: Pearson Edexcel International GCSE Science (Double Award), 4SD0, Issue 4 September 2024, Biology 2.18–2.23. Local supplied specification, physical PDF page 23 / printed page 17, checked 9 November 2026.
+- Process, atom-count, factor/temperature graphs, limiting-factor analogy, stoma, mineral, deficiency, pondweed apparatus and starch diagrams are original programmatic educational illustrations, redrawn 9 November 2026. All graph/practical numbers are illustrative teaching data, not measurements.
+- Leaf cross-section geometry and labels reused from the teacher-approved Double lesson package (2 November 2026) with restyled fills, and pinned locally.
+- Tarsia is a general edge-matching puzzle format. This square puzzle implementation and content are original; no external service or third-party Tarsia code is used.
+- Arcadia visual conventions: navy, cream, gold, large labelled figures, paged tasks and explicit answer-review controls. This independent responsive revision resource has no fixed classroom period; it does not use the older colour/grade routes in shared lesson helpers.
+- Locally pinned Montserrat/Fraunces font files and OFL licences copied from the existing Arcadia package; diagrams embed a small Montserrat subset under the same licence. No external font/network request is needed. Diagram zoom/pan and text/data equivalents support smaller screens; graph tables are generated from the plotted data arrays.
+- Prepared advice is clearly labelled as a teacher-authored simulated AI response. No live AI, accounts or data submission.
+- No pupil identities or class records are in the pupil package. State is held only in the open tab; closing/reloading clears it.
