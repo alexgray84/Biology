@@ -21,7 +21,7 @@ window.LessonModels.beam = (() => {
     none: 'No visible cracks.',
     held: 'Small cracks on the pulled side. The steel carries the pull.',
     cracking: 'A crack grows up from the pulled side. There is no steel to carry the pull.',
-    failed: 'The crack ran up through the beam. It failed suddenly, because concrete is brittle.',
+    failed: 'It failed suddenly. Concrete is brittle.',
   };
   function readout(p, s) {
     if (s.names === false) return `<p><span class="readout-key">Beam · load 0</span><span class="readout-value" style="font-size:.86em">What is inside it?</span></p>`;
@@ -37,8 +37,8 @@ window.LessonModels.beam = (() => {
     const k = stage(s) === 'failed';
     if (k) return -0.72 * (1 - Math.abs(2 * x / L));
     const u = 1 - Math.pow(2 * x / L, 2);
-    let d = 0.012 * Math.min(s.load, CRACK);
-    if (s.load > CRACK) d += (s.load - CRACK) * (s.steel ? 0.003 : 0.06);
+    let d = 0.007 * Math.min(s.load, CRACK);
+    if (s.load > CRACK) d += (s.load - CRACK) * (s.steel ? 0.0085 : 0.06);
     return -d * u;
   }
   function rng(seed) { let a = seed >>> 0; return () => { a = (a + 0x6D2B79F5) >>> 0; let t = a; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
