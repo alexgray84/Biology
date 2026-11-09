@@ -20,7 +20,7 @@ window.LessonModels.beam = (() => {
   const MESSAGE = {
     none: 'No visible cracks.',
     held: 'Small cracks on the pulled side. The steel carries the pull.',
-    cracking: 'A crack grows up from the pulled side. There is no steel to carry the pull.',
+    cracking: 'A crack grows from the pulled side. No steel to hold it.',
     failed: 'It failed suddenly. Concrete is brittle.',
   };
   function readout(p, s) {
