@@ -1,0 +1,1 @@
+All diagrams and the beam model are original Edu OS schematics. Beam loads, crack points and bending are illustrative. Three.js r160 is used under its MIT licence (THREE-LICENSE.txt). Pinned font licences are in fonts/.
