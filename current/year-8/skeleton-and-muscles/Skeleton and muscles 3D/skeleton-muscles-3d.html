@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Skeleton and muscles 3D</title>
+<style>
+:root{--navy:#14213a;--ink:#0f1a2c;--paper:#f7f2e6;--gold:#c9a24b;--line:#d8cfb9;--text:#1c2536;--muted:#55607a}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--ink);font-family:Montserrat,system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--text)}
+#app{display:grid;grid-template-columns:minmax(0,1fr) 340px;height:100dvh}
+#view{position:relative;min-width:0;background:var(--ink)}
+canvas#stage{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:none;cursor:grab}
+canvas#stage:active{cursor:grabbing}
+#fade{position:absolute;inset:0;background:var(--ink);opacity:0;pointer-events:none;transition:opacity .17s}
+#labels-layer{position:absolute;inset:0;pointer-events:none}
+#labels-layer svg{position:absolute;inset:0;width:100%;height:100%}
+#labels-layer line{stroke:#f4dfa8;stroke-width:1.5}
+#labels-layer circle{fill:var(--gold);stroke:#fff;stroke-width:1.2}
+.lbl{position:absolute;background:rgba(15,26,44,.9);color:#fff;border:1px solid var(--gold);padding:4px 9px;font-size:16px;font-weight:600;white-space:nowrap}
+#loading{position:absolute;inset:0;display:grid;place-items:center;color:#fff;font-size:22px;padding:24px;text-align:center}
+#loading[hidden]{display:none}
+#crumbs{position:absolute;left:14px;top:12px;display:flex;gap:4px;flex-wrap:wrap}
+#crumbs button{background:rgba(15,26,44,.82);color:#f3e5bf;border:1px solid #58658a;padding:6px 11px;font:600 14px inherit;cursor:pointer}
+#crumbs button[aria-current]{background:var(--gold);color:var(--ink);border-color:var(--gold)}
+#tools{position:absolute;right:14px;top:12px;display:grid;grid-template-columns:repeat(2,44px);gap:5px}
+#tools button{height:44px;background:rgba(15,26,44,.86);color:#fff;border:1px solid #58658a;font-size:22px;cursor:pointer}
+#scale{position:absolute;left:14px;bottom:12px;background:rgba(15,26,44,.86);color:#f3e5bf;padding:6px 11px;font-size:14px;font-weight:600}
+aside{background:var(--paper);border-left:3px solid var(--gold);padding:16px 16px 12px;display:flex;flex-direction:column;gap:10px;overflow:auto}
+h1{margin:0;font-size:25px;line-height:1.15;color:var(--navy)}
+#sub{margin:0;color:var(--muted);font-size:15px}
+#body-text{margin:0;font:18px/1.42 Georgia,serif}
+aside .row{display:flex;flex-wrap:wrap;gap:6px}
+aside button{background:#fff;color:var(--navy);border:1.5px solid var(--navy);padding:8px 10px;font:600 15px inherit;cursor:pointer;min-height:44px}
+aside button[aria-pressed=true]{background:var(--navy);color:#fff}
+#inside{background:var(--gold);border-color:var(--gold);color:var(--ink);font-size:17px;width:100%}
+#inside:disabled{background:#e8e0cd;border-color:var(--line);color:var(--muted);cursor:default}
+h2{margin:6px 0 0;font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+button:focus-visible,input:focus-visible{outline:3px solid #4d90fe;outline-offset:2px}
+#contract-wrap label{display:block;font-size:15px;font-weight:600;margin-bottom:4px}
+#contract{width:100%;height:32px}
+[hidden]{display:none!important}
+small{font-size:12.5px;color:var(--muted);line-height:1.4;margin-top:auto}
+small a{color:inherit}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+@media (max-width:820px){#app{grid-template-columns:1fr;grid-template-rows:58vh minmax(0,1fr)}aside{border-left:0;border-top:3px solid var(--gold)}.lbl{font-size:13px;padding:3px 6px}h1{font-size:21px}#body-text{font-size:16px}}
+</style>
+</head>
+<body>
+<div id="app">
+  <div id="view">
+    <canvas id="stage" aria-label="Interactive 3D model of the human skeleton and muscles. Use the buttons or the arrow keys to rotate, and plus or minus to zoom."></canvas>
+    <div id="labels-layer"></div>
+    <div id="fade"></div>
+    <div id="crumbs" aria-label="Zoom level"></div>
+    <div id="tools">
+      <button id="zin" type="button" aria-label="Zoom in">+</button><button id="zout" type="button" aria-label="Zoom out">&minus;</button>
+      <button id="rleft" type="button" aria-label="Turn left">&#8634;</button><button id="rright" type="button" aria-label="Turn right">&#8635;</button>
+    </div>
+    <div id="scale"></div>
+    <div id="loading">Loading the model…</div>
+  </div>
+  <aside>
+    <h1 id="title">The human body</h1>
+    <p id="sub"></p>
+    <p id="body-text"></p>
+    <button id="inside" type="button"></button>
+    <button id="back" type="button">Back out one level</button>
+    <div id="contract-wrap" hidden>
+      <button id="contract-btn" type="button" style="width:100%;margin-bottom:8px">Contract</button>
+      <label for="contract">Contract the sarcomere</label>
+      <input id="contract" type="range" min="0" max="100" value="0">
+    </div>
+    <div data-body-only>
+      <h2>Show</h2>
+      <div class="row">
+        <button type="button" data-preset="skeleton" aria-pressed="true">Skeleton</button>
+        <button type="button" data-preset="muscles" aria-pressed="false">Muscles</button>
+        <button type="button" data-preset="through" aria-pressed="false">Both</button>
+      </div>
+      <h2>Go to</h2>
+      <div class="row">
+        <button type="button" data-preset="arm" aria-pressed="false">Biceps and triceps</button>
+        <button type="button" data-preset="leg" aria-pressed="false">Thigh muscles</button>
+        <button type="button" id="joint">Inside a joint</button>
+      </div>
+    </div>
+    <div class="row">
+      <button type="button" id="labels">Hide labels</button>
+      <button type="button" id="hide" hidden>Remove this part</button>
+      <button type="button" id="reset" data-body-only>Reset</button>
+    </div>
+    <small>Body shapes: <a href="https://dbarchive.biosciencedbc.jp/en/bodyparts3d/download.html" target="_blank" rel="noopener">BodyParts3D</a>, © The Database Center for Life Science, licensed under <a href="https://dbarchive.biosciencedbc.jp/en/bodyparts3d/lic.html" target="_blank" rel="noopener">CC Attribution-Share Alike 2.1 Japan</a>; simplified for this page. One adult male body. This dataset does not include every muscle, for example the rectus abdominis and latissimus dorsi, and only the Achilles tendons are shown. Microscopic views are original schematics, not to scale. Three.js, MIT licence.</small>
+    <div id="live" class="sr" aria-live="polite"></div>
+  </aside>
+</div>
+<script src="assets/data-info.js"></script>
+<script src="assets/data-bone.js"></script>
+<script src="assets/data-cartilage.js"></script>
+<script src="assets/data-ligament.js"></script>
+<script src="assets/data-muscle.js"></script>
+<script src="assets/data-tendon.js"></script>
+<script src="assets/model.js"></script>
+</body>
+</html>
