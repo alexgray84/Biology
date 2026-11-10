@@ -1,0 +1,1 @@
+window.BioDiagrams={render(name){return {"seed-bridge": "<img src=\"10 Resources/seed-bridge.svg\" alt=\"After fertilisation, an ovule develops into a seed and the ovary develops into a fruit. Dispersal moves seeds away. Germination is when growth starts.\">"}[name]||"";}};
