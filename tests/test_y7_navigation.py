@@ -139,7 +139,7 @@ class Year7NavigationTests(unittest.TestCase):
                 page = self.page(f"classes/7-sci-{code}/index.html")
                 cells_links = [
                     link for link in page.links
-                    if has_class(link, "unit-card") and "Cells and living things" in link["text"]
+                    if has_class(link, "hub-unit") and "Cells and living things" in link["text"]
                 ]
                 self.assertEqual(len(cells_links), 1)
                 self.assertEqual(cells_links[0]["attrs"]["href"], "./cells-and-living-things/")
@@ -148,25 +148,62 @@ class Year7NavigationTests(unittest.TestCase):
         for code in ("01", "04"):
             with self.subTest(class_code=code):
                 page = self.page(f"classes/7-sci-{code}/index.html")
-                first_resource = next(link for link in page.links if has_class(link, "unit-card"))
+                first_resource = next(link for link in page.links if in_element(link, "main"))
                 self.assertEqual(first_resource["attrs"]["href"], "../../units/year-7/ap2-revision/")
-                self.assertTrue(in_element(first_resource, "section", element_id="ap2"))
+                self.assertTrue(in_element(first_resource, "section", element_id="revision"))
 
     def test_ap2_has_a_direct_header_link_on_each_navigation_page(self):
         pages = {
-            "classes/7-sci-01/index.html": "../../units/year-7/ap2-revision/",
-            "classes/7-sci-04/index.html": "../../units/year-7/ap2-revision/",
-            "classes/7-sci-01/cells-and-living-things/index.html": "../../../units/year-7/ap2-revision/",
-            "classes/7-sci-04/cells-and-living-things/index.html": "../../../units/year-7/ap2-revision/",
-            "units/year-7/cells-and-living-things/index.html": "../../../units/year-7/ap2-revision/",
+            "classes/7-sci-01/index.html": ("hub-rev-link", "../../units/year-7/ap2-revision/"),
+            "classes/7-sci-04/index.html": ("hub-rev-link", "../../units/year-7/ap2-revision/"),
+            "classes/7-sci-01/cells-and-living-things/index.html": ("y7-ap2-link", "../../../units/year-7/ap2-revision/"),
+            "classes/7-sci-04/cells-and-living-things/index.html": ("y7-ap2-link", "../../../units/year-7/ap2-revision/"),
+            "units/year-7/cells-and-living-things/index.html": ("y7-ap2-link", "../../../units/year-7/ap2-revision/"),
         }
-        for relative_path, expected_href in pages.items():
+        for relative_path, (class_name, expected_href) in pages.items():
             with self.subTest(page=relative_path):
                 page = self.page(relative_path)
-                ap2_links = [link for link in page.links if has_class(link, "y7-ap2-link")]
+                ap2_links = [link for link in page.links if has_class(link, class_name)]
                 self.assertEqual(len(ap2_links), 1)
                 self.assertEqual(ap2_links[0]["attrs"]["href"], expected_href)
                 self.assertTrue(in_element(ap2_links[0], "header", class_name="site-header"))
+
+    def test_every_class_homepage_is_current_and_leads_with_revision(self):
+        import json
+        import subprocess
+        import sys
+        result = subprocess.run(
+            [sys.executable, "tools/build_class_pages.py", "--check"],
+            cwd=ROOT, capture_output=True, text=True,
+        )
+        self.assertEqual(result.returncode, 0, result.stderr)
+        classes = json.loads((ROOT / "tools/classes.json").read_text(encoding="utf-8"))["classes"]
+        self.assertEqual(len(classes), 9)
+        for cls in classes:
+            with self.subTest(class_slug=cls["slug"]):
+                relative_path = f"classes/{cls['slug']}/index.html"
+                page_path = ROOT / relative_path
+                page = self.page(relative_path)
+                main_links = [link for link in page.links if in_element(link, "main")]
+                if cls["revision"]:
+                    self.assertTrue(in_element(main_links[0], "section", element_id="revision"))
+                    self.assertEqual(main_links[0]["attrs"]["href"], "../../" + cls["revision"]["hub"])
+                else:
+                    self.assertTrue(has_class(main_links[0], "hub-lead"))
+                self.assertEqual(sum(has_class(link, "hub-lead") for link in page.links), 1)
+                self.assertEqual(
+                    sum(has_class(link, "hub-unit") for link in page.links), len(cls["units"]),
+                )
+                for link in page.links:
+                    href = urlsplit(link["attrs"].get("href", ""))
+                    if not href.path or href.scheme or href.netloc:
+                        continue
+                    target = page_path.parent / unquote(href.path)
+                    if target.is_dir():
+                        target /= "index.html"
+                    self.assertTrue(target.is_file(), f"Missing link target: {relative_path} → {href.path}")
+                    if href.fragment:
+                        self.assertIn(f'id="{href.fragment}"', target.read_text(encoding="utf-8"))
 
     def test_unit_and_lesson_links_resolve_to_existing_local_pages(self):
         pages = [
@@ -183,6 +220,7 @@ class Year7NavigationTests(unittest.TestCase):
                 for link in page.links:
                     if not any(has_class(link, name) for name in (
                         "unit-card", "lesson-link", "y7-ap2-link", "header-link", "brand",
+                        "hub-rev-link", "hub-btn", "hub-topic", "hub-lead", "hub-row", "hub-unit",
                     )):
                         continue
                     href = urlsplit(link["attrs"].get("href", ""))

@@ -56,3 +56,7 @@ Settings → Pages → Deploy from branch → main → Save
 ---
 
 Created by Alex Gray | Arcadia British School Dubai
+
+## Class homepages are generated
+
+Every `classes/<class-code>/index.html` is written by `python3 tools/build_class_pages.py` from `tools/classes.json`; do not edit those pages by hand. Each page has the same order: revision band, latest lessons, class extras, all units. In `classes.json`, list a class's units newest first: the first is tagged as the current unit and supplies the latest lessons, which are read from the unit pages. Use `"upto": "06"` on a unit to hold back lessons that have not been taught. After adding a lesson to a unit page, re-run the script and `python3 -m unittest discover -s tests -p 'test_y7_navigation.py'`. Styles are in `assets/class-hub.css`.
