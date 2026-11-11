@@ -1,0 +1,1 @@
+window.BioDiagrams={render(name){return {"adequacy-evidence": "<img src=\"01 Resources/adequacy-evidence.svg\" alt=\"Original categorical evidence model; not a measured scale\">", "balance-map": "<img src=\"01 Resources/balance-map.svg\" alt=\"Original categorical evidence model; not a measured scale\">"}[name]||"";}};
