@@ -2,6 +2,7 @@
 
 - Original locally authored practice, quizzes, mark schemes and Tarsia pairs. Not an exam-board paper or a reproduction of Friday’s assessment.
 - Curriculum: Pearson Edexcel International GCSE Science (Double Award), 4SD0, Issue 4 September 2024, Biology 2.18–2.23. Local supplied specification, physical PDF page 23 / printed page 17, checked 9 November 2026.
+- Destarching expansion, 12 November 2026: adapted at the teacher's request from their Year 10 Triple lesson, “How do we know what a plant needs?”, #starch-test and its support/review content: https://alexgray84.github.io/Biology/current/year-10/triple-biology-photosynthesis/05%20How%20do%20we%20know%20what%20a%20plant%20needs.html#starch-test . The new sequence diagram and marked practice/fresh-check questions are original adaptations. The sequence explicitly inserts living-plant exposure to test conditions before the destructive final starch test.
 - Process, atom-count, factor/temperature graphs, limiting-factor analogy, stoma, mineral, deficiency, pondweed apparatus and starch diagrams are original programmatic educational illustrations, redrawn 9 November 2026. All graph/practical numbers are illustrative teaching data, not measurements.
 - Leaf cross-section geometry and labels reused from the teacher-approved Double lesson package (2 November 2026) with restyled fills, and pinned locally.
 - Tarsia is a general edge-matching puzzle format. This square puzzle implementation and content are original; no external service or third-party Tarsia code is used.
