@@ -53,7 +53,7 @@ window.AFW = {
     /* ───────────── How we'll live ───────────── */
 
     L10: {
-      track: "live", mins: 10, team: "alone", years: [7, 11], group: "On your own, then pairs", kit: "Paper or a mini whiteboard",
+      track: "live", mins: 10, team: "alone", years: [7, 11], group: "On your own, then pairs", kit: "Paper",
       title: "Can our homes take care of us?",
       blurb: "Design one way a 2050 Dubai home could look after the people who live in it.",
       question: "Can our homes take care of us?",
@@ -61,13 +61,13 @@ window.AFW = {
       drop: "Old Dubai houses had a wind tower called a barjeel. Its openings catch the breeze and send it down into the room, while warm air rises and escapes, with no electricity. Today scientists are making paints and tiles that cool a building by reflecting sunlight, also with no electricity.",
       example: "“A front door that notices Grandma hasn’t opened it by 10am and messages the family.”",
       steps: [
-        { m: 1, who: "Whole class", t: "Read the fact and the example", d: "Read “Know this first” and the example together. What does the door notice, and who does it help?" },
+        { m: 1, who: "Everyone", t: "Read the fact and the example", d: "Read “Know this first” and the example together. What does the door notice, and who does it help?" },
         { m: 3, who: "On your own", t: "List three ways", d: "List three ways a 2050 home in Dubai could care for the people in it: one for the body, one for the mind, one for the planet." },
-        { m: 3, who: "In pairs", t: "Pick the best and sketch it", d: "Choose your strongest idea. Sketch it and label how it works." },
+        { m: 3, who: "In pairs", t: "Pick the best and sketch it", d: "Choose your strongest idea. Make one sketch between you and label how it works." },
         { m: 1, who: "In pairs", t: "Check it", d: "Tick your sketch against the three-point checklist. Fix anything that is missing." },
         { m: 1, who: "On your own", t: "I used to think… now I think…", d: "Finish both halves of the sentence about homes of the future." }
       ],
-      make: "One labelled sketch on paper or a mini whiteboard.",
+      make: "One labelled sketch on paper.",
       checklist: ["It says who it cares for.", "It says how it works.", "It still works at 45°C."],
       model: {
         intro: "A strong sketch shows a bedroom window with a small sensor beside the bed, and three labels:",
@@ -78,7 +78,8 @@ window.AFW = {
         ]
       },
       support: "Start with: “My home would notice… and then…”",
-      stretch: "Who owns the data your home collects?"
+      stretch: "Who owns the data your home collects?",
+      fewer: "On your own: do the pairs step yourself, then ask someone to tick your sketch against the checklist. Nobody to ask? Leave it for ten minutes, then check it yourself as if a stranger made it, and write down one thing to fix."
     },
 
     L20: {
@@ -95,10 +96,10 @@ window.AFW = {
         items: ["A pupil on a scooter", "A grandparent with a walking stick", "A delivery rider", "A parent with a pram in August"]
       },
       steps: [
-        { m: 2, who: "Whole class", t: "Read the fact and the example", d: "Read “Know this first” and the example. Why does a bench every 100 metres matter to this person?" },
+        { m: 2, who: "Everyone", t: "Read the fact and the example", d: "Read “Know this first” and the example. Why does a bench every 100 metres matter to this person?" },
         { m: 4, who: "In pairs", t: "Map the street at 3pm", d: "Sketch the road outside Arcadia’s gate at 3pm. Who uses it? Mark who finds it hard to use, and where." },
         { m: 7, who: "In pairs", t: "Redesign it for one person", d: "Pick one person card. Draw the street again so it works for them." },
-        { m: 3, who: "In pairs", t: "Swap and check", d: "Swap with another pair. Check their street against the three-point checklist and tell them one thing to fix." },
+        { m: 3, who: "In pairs", t: "Swap and check", d: "Swap with another pair, or show it to someone who has not seen it. They check it against the three-point checklist and tell you one thing to fix." },
         { m: 2, who: "On your own", t: "I used to think… now I think…", d: "Finish both halves of the sentence about who streets are for." }
       ],
       make: "A before-and-after street sketch on A4.",
@@ -111,8 +112,9 @@ window.AFW = {
           "<b>Not worse for others:</b> “The bay is cut into the road, not the pavement, so prams and walking sticks keep a clear path.”"
         ]
       },
-      support: "Ask your teacher to sketch a street outline on the board to copy: two pavements, one road, one gate.",
-      stretch: "Redesign the street for two person cards at once."
+      support: "Draw this first: two pavements, one road and one gate. Then add to it.",
+      stretch: "Redesign the street for two person cards at once.",
+      fewer: "On your own: draw both streets yourself, then ask someone at home or a friend to do the check in step 4. Nobody to ask? Leave it for ten minutes, then check it yourself as if a stranger made it, and write down one thing to fix."
     },
 
     L30: {
@@ -124,10 +126,10 @@ window.AFW = {
       drop: "Dubai Metro has run without drivers since it opened in September 2009. In 2050, today’s Year 7s will be about 35.",
       example: "A journey strip has four parts for each stage: <b>time</b> · <b>how you travel</b> · <b>how it feels</b> · <b>cost to the planet</b>. For example: “7:10 · car · sleepy, stuck in traffic · high: one car for one pupil.”",
       steps: [
-        { m: 3, who: "Whole class", t: "Read the fact and the example", d: "Read “Know this first” and the worked journey strip. Name its four parts." },
-        { m: 5, who: "On your own", t: "Draw today’s journey", d: "Draw your journey to Arcadia this morning as a strip of boxes, one for each stage. Each box needs the time, how you travel, how it feels, and the cost to the planet." },
+        { m: 3, who: "Everyone", t: "Read the fact and the example", d: "Read “Know this first” and the worked journey strip. Name its four parts." },
+        { m: 5, who: "On your own", t: "Draw today’s journey", d: "Draw your last journey to school as a strip of boxes, one for each stage. Each box needs the time, how you travel, how it feels, and the cost to the planet." },
         { m: 10, who: "In pairs", t: "Redesign it for 2050", d: "Choose one journey from your pair. Draw a new strip underneath for the year 2050." },
-        { m: 5, who: "Whole class", t: "Gallery swap", d: "Leave your strips on the desk and move to another pair’s. Check their 2050 strip against the three-point checklist and write one comment on the back." },
+        { m: 5, who: "Everyone", t: "Gallery swap", d: "Swap strips with another pair, or show yours to someone who has not seen it. They check the 2050 strip against the three-point checklist and write one comment on the back." },
         { m: 3, who: "In pairs", t: "Improve it", d: "Go back to your own strip. Use the comment to change one thing." },
         { m: 1, who: "On your own", t: "I used to think… now I think…", d: "Finish both halves of the sentence about how we will travel." }
       ],
@@ -143,11 +145,12 @@ window.AFW = {
       },
       support: "Draw four empty boxes in a row. In each one write the four headings: time, travel, feels, planet.",
       stretch: "Whose job disappears in your 2050 journey, and what do they do instead?",
-      note: "Nobody comments on how anyone travels today. Comments are about the 2050 strip only."
+      rules: "Nobody comments on how anyone travels today. Comments are about the 2050 strip only.",
+      fewer: "On your own: draw both strips yourself, then ask someone at home or a friend for the comment in step 4. Nobody to ask? Leave it for ten minutes, then check it yourself as if a stranger made it, and write down one thing to fix."
     },
 
     L50: {
-      track: "live", mins: 50, team: "group", years: [7, 11], group: "Groups of four", kit: "A3 paper and pens in two colours", comp: "Years 7 to 11",
+      track: "live", mins: 50, team: "group", years: [7, 11], group: "Groups of four", kit: "A3 paper, or two A4 sheets taped together, and pens in two colours", comp: "Years 7 to 11",
       title: "If I owned a city of the future",
       blurb: "Plan one Dubai neighbourhood for 2050, stress-test it, then pitch it.",
       question: "What will an ordinary day feel like in the cities, homes and communities of the future?",
@@ -160,18 +163,29 @@ window.AFW = {
         note: "",
         items: ["What will make future cities feel like home?", "How will we move through the cities of 2050?", "Can our homes take care of us?"]
       },
+      cards3: {
+        title: "The four roles",
+        note: "",
+        items: [
+          { k: "ROLE", t: "Planner", d: "Designs the streets and spaces. Where do people walk, and is it shaded?" },
+          { k: "ROLE", t: "Entrepreneur", d: "Starts new businesses. What new business does this neighbourhood need?" },
+          { k: "ROLE", t: "Teacher", d: "Looks after learning. Where and how do children learn here?" },
+          { k: "ROLE", t: "Responder", d: "An emergency worker, such as a paramedic or firefighter. How does help reach someone fast?" }
+        ]
+      },
       cards2: {
-        title: "Stress-test cards: your teacher gives each group one",
+        title: "Stress-test cards",
+        pick: true,
         note: "",
         items: ["A 50°C day", "A power cut", "10,000 new residents"]
       },
       steps: [
-        { m: 4, who: "Whole class", t: "Read the fact and the example", d: "Read “Know this first” and the example timeline. Which part of that day would you most want?" },
+        { m: 4, who: "Everyone", t: "Read the fact and the example", d: "Read “Know this first” and the example timeline. Which part of that day would you most want?" },
         { m: 6, who: "In your group", t: "Choose your roles", d: "Each choose a role: planner, entrepreneur, teacher or responder. Together, pick the problem your neighbourhood will solve: heat, movement or belonging." },
-        { m: 15, who: "In your group", t: "Design the neighbourhood", d: "Draw one neighbourhood on A3 and label it. Underneath, write an ordinary-day timeline for someone who lives there." },
-        { m: 6, who: "In your group", t: "Stress test", d: "Your teacher points to one stress-test card for your group: a 50°C day, a power cut, or 10,000 new residents. Work out what breaks." },
+        { m: 15, who: "In your group", t: "Design the neighbourhood", d: "Draw one neighbourhood on A3 and label it. Label where your map answers each of the three Live questions: home, move and care. Underneath, write an ordinary-day timeline for someone who lives there." },
+        { m: 6, who: "In your group", t: "Stress test", d: "One of you presses “Pick one for us” on the stress-test cards, once. Work out what breaks in your neighbourhood." },
         { m: 6, who: "In your group", t: "Fix it", d: "Change your map so the neighbourhood survives the stress test. Mark the change in a different colour. Then tick your map against the three-point checklist." },
-        { m: 6, who: "Two groups together", t: "One-minute pitch", d: "Pitch your neighbourhood to another group in one minute, then listen to theirs. Ask each other one hard question." },
+        { m: 6, who: "With another group", t: "One-minute pitch", d: "Pitch your neighbourhood in one minute to another group, or to anyone who has not seen it. Ask them for one hard question, and answer it." },
         { m: 2, who: "On your own", t: "I used to think… now I think…", d: "Finish both halves of the sentence about cities of the future." }
       ],
       make: "An A3 neighbourhood map with an ordinary-day timeline.",
@@ -184,8 +198,9 @@ window.AFW = {
           "<b>Every role:</b> “Planner: shaded paths. Entrepreneur: a repair café on the square. Teacher: an outdoor classroom under the canopy. Responder: one clear route wide enough for an ambulance.”"
         ]
       },
-      support: "Use these role prompts. Planner: where do people walk, and is it shaded? Entrepreneur: what new business does this neighbourhood need? Teacher: where and how do children learn here? Responder: how does help reach someone fast?",
-      stretch: "Add what the city costs and who pays."
+      support: "Answer your own role card’s question first, and put that answer on the map.",
+      stretch: "Add what the city costs and who pays.",
+      fewer: "Three of you: one person takes two roles. Two of you, or on your own: share out all four roles, and pitch to someone at home."
     },
 
     /* ───────────── How we'll think ───────────── */
@@ -204,14 +219,14 @@ window.AFW = {
         items: ["1. Which song plays next", "2. Your exam grade", "3. Which patient a doctor sees first", "4. When a traffic light changes", "5. Who makes the football team", "6. When a driverless car brakes"]
       },
       steps: [
-        { m: 1, who: "Whole class", t: "Read the fact and the example", d: "Read “Know this first” and the example. Who decides in the example, and why?" },
+        { m: 1, who: "Everyone", t: "Read the fact and the example", d: "Read “Know this first” and the example. Who decides in the example, and why?" },
         { m: 3, who: "On your own", t: "Place the six cards", d: "Draw a line across your page. Write each card’s number where you think it belongs: machine decides, machine suggests and human decides, or human only." },
         { m: 3, who: "In pairs", t: "Argue one card, then write your rule", d: "Find a card you placed differently and argue it out. Then each write two sentences: “A machine should only decide when… because…” and “If it goes wrong, … is responsible.”" },
         { m: 1, who: "In pairs", t: "Check it", d: "Tick your rule against the three-point checklist. Fix anything that is missing." },
         { m: 1, who: "On your own", t: "I used to think… now I think…", d: "Finish both halves of the sentence about machines and decisions." }
       ],
       make: "Two sentences on paper: “A machine should only decide when… because…” and “If it goes wrong, … is responsible.”",
-      checklist: ["It gives a reason.", "It says who is responsible if it goes wrong.", "It works for a second card."],
+      checklist: ["It gives a reason.", "It says who is responsible if it goes wrong.", "It works for at least two of the six cards."],
       model: {
         plain: true, intro: "Two strong rules that disagree with each other:",
         marks: [
@@ -221,7 +236,8 @@ window.AFW = {
         ]
       },
       support: "Place three cards instead of six: cards 1, 2 and 6.",
-      stretch: "Write the card your rule can’t handle."
+      stretch: "Write the card your rule can’t handle.",
+      fewer: "On your own: place the cards, then write your two sentences. Ask someone to pick one card and test your rule on it. Nobody to ask? Leave it for ten minutes, then check it yourself as if a stranger made it, and write down one thing to fix."
     },
 
     T20: {
@@ -234,13 +250,13 @@ window.AFW = {
       example: "<b>Weak:</b> “Draw a flag.”<br><b>Strong:</b> “Draw a straight vertical line on the left of the page, about as long as your finger. Draw a rectangle on the right side of the line, touching its top half. Make the rectangle twice as wide as it is tall. Leave the rectangle empty. Do not draw a base, wind lines or a pattern.”",
       targets: true,
       steps: [
-        { m: 2, who: "Whole class", t: "Read the fact and the example", d: "Read “Know this first” and compare the weak and strong prompts. What did the strong one add? Then, in each pair, choose a prompter and a machine." },
-        { m: 3, who: "Prompters", t: "Write prompt v1", d: "Machines, turn away from the board. Prompters, look at the hidden target picture, then write instructions for drawing it. Use shapes, sizes and positions only. Do not say what the picture is." },
-        { m: 2, who: "Machines", t: "Draw exactly what it says", d: "The target is hidden again. Machines, read the prompt and draw exactly what the words say. No guessing, no questions." },
-        { m: 2, who: "Prompters", t: "Compare, in secret", d: "Machines, turn away again. Prompters, look at the target and at the drawing. What was missing from your prompt? Do not tell your machine." },
-        { m: 3, who: "Prompters", t: "Rewrite as v2", d: "Rewrite the prompt to fix what went wrong. Circle everything you changed." },
-        { m: 2, who: "Machines", t: "Redraw", d: "The target is hidden again. Machines, turn back and draw again from v2 only, on a fresh piece of paper." },
-        { m: 2, who: "In pairs", t: "Score it", d: "Now everyone sees the target. Score v2 against the three-point checklist, one point for each. Is the second drawing closer than the first?" },
+        { m: 2, who: "Everyone", t: "Read the fact and the example", d: "Read “Know this first” and compare the weak and strong prompts. What did the strong one add? Then choose who is the prompter and who is the machine." },
+        { m: 3, who: "Prompter", t: "Write prompt v1", d: "Prompter: open this page on your own device and keep the screen hidden from your machine. Tap a target to see it. Target A is the easiest. Write instructions for drawing it. Use shapes, sizes and positions only. Do not say what the picture is. Machine: do not open the targets." },
+        { m: 2, who: "Machine", t: "Draw exactly what it says", d: "Prompter, tap “Hide”. Machine, read the prompt and draw exactly what the words say. No guessing, no questions." },
+        { m: 2, who: "Prompter", t: "Compare, in secret", d: "Prompter: in secret, show yourself the target again and compare it with the drawing. What was missing from your prompt? Do not tell your machine." },
+        { m: 3, who: "Prompter", t: "Rewrite as v2", d: "Rewrite the prompt to fix what went wrong. Circle everything you changed. Machine, while you wait: write down what made v1 hard to follow." },
+        { m: 2, who: "Machine", t: "Redraw", d: "Prompter, tap “Hide” again. Machine, draw again from v2 only, on a fresh piece of paper." },
+        { m: 2, who: "In pairs", t: "Score it", d: "Now both look at the target. Score v2 against the three-point checklist, one point for each. Is the second drawing closer than the first?" },
         { m: 2, who: "On your own", t: "I used to think… now I think…", d: "Finish both halves of the sentence about giving instructions to a machine." }
       ],
       make: "Prompt v1 and v2 on paper, with what changed circled.",
@@ -255,7 +271,8 @@ window.AFW = {
         ]
       },
       support: "Use the word bank: above, below, left, right, centre, inside, touching, half as wide, twice as tall, circle, oval, square, rectangle, straight line.",
-      stretch: "Optional, after you have scored v2: type your v2 prompt into Gemini, or the AI tool you normally use, and ask it to draw the picture. Compare its drawing with the target. What did it get wrong that your partner got right?"
+      stretch: "Optional, after you have scored v2: type your v2 prompt into Gemini, or the AI tool you normally use, and ask it to draw the picture. Compare its drawing with the target. What did it get wrong that your partner got right?",
+      fewer: "Three of you: one prompter and two machines. More than three: work in pairs, each with a different target. On your own: ask someone at home to be the machine."
     },
 
     T30: {
@@ -268,11 +285,11 @@ window.AFW = {
       example: "“Dubai Metro opened in 1999 and has always been driverless.” The three-step check: <b>1</b> underline each claim you could check (the year, driverless). <b>2</b> ask where you would look (the transport authority’s own website). <b>3</b> check it: the Metro opened in 2009, so the year is wrong.",
       paragraph: true,
       steps: [
-        { m: 3, who: "Whole class", t: "Read the fact and the example", d: "Read “Know this first” and the example. Name the three steps of the check." },
-        { m: 6, who: "On your own", t: "Find three planted errors", d: "Read the paragraph about the UAE’s Hope probe. Three facts in it are wrong. You can’t look anything up, so copy down the three claims you would most want to check." },
+        { m: 3, who: "Everyone", t: "Read the fact and the example", d: "Read “Know this first” and the example. Name the three steps of the check." },
+        { m: 6, who: "On your own", t: "Find three planted errors", d: "Read the paragraph about the UAE’s Hope probe. Three facts in it are wrong. Do not look anything up yet. Copy down the three claims you would most want to check." },
         { m: 4, who: "In pairs", t: "How would you check?", d: "Compare your three. For each one, write where you would look to check it." },
         { m: 8, who: "In pairs", t: "Question storm", d: "Write ten questions the paragraph makes you want to ask. Star one you could look up, and one nobody can answer yet." },
-        { m: 4, who: "In pairs", t: "Reveal, then swap and check", d: "Now switch on “Underline the errors” under the paragraph. In a lesson, your teacher does this. How many did you catch? Then swap with another pair and check their work against the three-point checklist." },
+        { m: 4, who: "In pairs", t: "Reveal, then swap and check", d: "Now tap “Underline the errors” under the paragraph. How many did you catch? Then swap with a partner, or check your own work, against the three-point checklist." },
         { m: 2, who: "On your own", t: "I used to think… now I think…", d: "Finish both halves of the sentence about answers that sound confident." }
       ],
       make: "Your three suspect claims, each with a way to check it, and two starred questions.",
@@ -288,11 +305,12 @@ window.AFW = {
         after: "Everything else in the paragraph is true: the launch in July 2020, the journey of about 493 million kilometres in about seven months, the first mission to another planet by an Arab nation, and the study of Mars’s atmosphere and weather. A strong starred pair of questions: “How far is Mars from the Sun?” (you could look it up) and “Will people ever live on Mars?” (nobody can answer yet)."
       },
       support: "Look at the places and the numbers first. Those are the easiest claims to check.",
-      stretch: "Write your own paragraph with one hidden error for a partner to find."
+      stretch: "Write your own paragraph with one hidden error for a partner to find.",
+      fewer: "On your own: do steps 3 and 4 yourself. In step 5, check your own work against the checklist."
     },
 
     T50: {
-      track: "think", mins: 50, team: "group", years: [7, 11], group: "Groups of four", kit: "A3 paper and pens in two colours", comp: "Years 7 to 11",
+      track: "think", mins: 50, team: "group", years: [7, 11], group: "Groups of four", kit: "A3 paper, or two A4 sheets taped together, and pens in two colours", comp: "Years 7 to 11",
       title: "School when AI knows everything",
       blurb: "Design one school day at Arcadia in 2040, and say who does the thinking.",
       question: "What will learning look like when AI knows everything?",
@@ -300,12 +318,12 @@ window.AFW = {
       drop: "An AI can give you an answer, but it can’t do your learning for you. It is much easier to think hard about things you already know.",
       example: "One period from a 2040 Arcadia timetable. “Period 3, Science. <b>Pupil:</b> predicts what would happen to a plant on Mars, then argues it out with a partner. <b>AI:</b> checks the facts each pupil recalled from memory and sets each one a different follow-up question. <b>Teacher:</b> listens in, picks the two best disagreements and runs the debate.”",
       steps: [
-        { m: 4, who: "Whole class", t: "Read the fact and the example", d: "Read “Know this first” and the example period. Who is doing the thinking in it?" },
+        { m: 4, who: "Everyone", t: "Read the fact and the example", d: "Read “Know this first” and the example period. Who is doing the thinking in it?" },
         { m: 6, who: "In your group", t: "Sort today’s timetable", d: "List what you did in your last full day at school. Sort it into two columns: AI could already do this, and this needs a human." },
-        { m: 15, who: "In your group", t: "Design one day in 2040", d: "Draw a one-day timetable on A3 for a Year 9 at Arcadia in 2040. Under each period, write one line: who does the thinking?" },
-        { m: 6, who: "In your group", t: "The head teacher’s challenge", d: "The head teacher reads your timetable and asks: “How will you know they learned anything?” Work out your answer." },
+        { m: 15, who: "In your group", t: "Design one day in 2040", d: "Draw a one-day timetable on A3 for a Year 9 at Arcadia in 2040. Your day must include a time for each of four things: curiosity (wanting to find out), judgement (deciding what is right or best), memory and creativity. Under each period, write one line: who does the thinking?" },
+        { m: 6, who: "In your group", t: "The head teacher’s challenge card", d: "Imagine the head teacher reads your timetable and asks: “How will you know they learned anything?” Work out your answer." },
         { m: 6, who: "In your group", t: "Fix it", d: "Change your timetable so it answers the challenge. Mark the change in a different colour. Then tick it against the three-point checklist." },
-        { m: 6, who: "Two groups together", t: "Pitch it", d: "Pitch your school day to another group in one minute, then listen to theirs. Ask each other one hard question." },
+        { m: 6, who: "With another group", t: "Pitch it", d: "Pitch your school day in one minute to another group, or to anyone who has not seen it. Ask them for one hard question, and answer it." },
         { m: 2, who: "On your own", t: "I used to think… now I think…", d: "Finish both halves of the sentence about school and AI." }
       ],
       make: "A one-day timetable on A3, with a line under each period saying who does the thinking.",
@@ -319,7 +337,8 @@ window.AFW = {
         ]
       },
       support: "Draw a grid with five periods. Under each one write “Who does the thinking?” and answer that first.",
-      stretch: "Write Arcadia’s school rule on AI use for 2040."
+      stretch: "Write Arcadia’s school rule on AI use for 2040.",
+      fewer: "Two of you, or on your own: do every step yourselves, and pitch to someone at home."
     },
 
     /* ───────────── How we'll innovate ───────────── */
@@ -331,7 +350,7 @@ window.AFW = {
       question: "Which discoveries will define the next decade?",
       from: "Dubai Future Week “How we’ll innovate” question 2. The cards come from the Top 10 Emerging Technologies of 2026, a World Economic Forum report produced with Frontiers, with the Dubai Future Foundation helping to choose the list.",
       drop: "Every year a World Economic Forum report names ten new technologies that could soon change everyday life. The Dubai Future Foundation helped to choose the 2026 list.",
-      example: "“I pick passive radiative cooling materials for the UAE, because in summer air conditioning is one of the biggest uses of electricity in our homes and buildings.”",
+      example: "“I pick passive radiative cooling materials for the UAE, because in summer air conditioning is one of the biggest uses of electricity in our homes and buildings. The people who benefit first are those who work outdoors or live without good cooling.”",
       cards: {
         title: "The ten technology cards",
         note: "",
@@ -349,9 +368,9 @@ window.AFW = {
         ]
       },
       steps: [
-        { m: 1, who: "Whole class", t: "Read the fact and the example", d: "Read “Know this first” and the example. Notice it names a technology and a real UAE problem." },
+        { m: 1, who: "Everyone", t: "Read the fact and the example", d: "Read “Know this first” and the example. Notice it names a technology and a real UAE problem." },
         { m: 3, who: "On your own", t: "Pick your three", d: "Read the ten cards. Write down the three that matter most for the UAE." },
-        { m: 3, who: "In pairs", t: "Agree on one", d: "Compare lists and agree on one technology. Write a card together: “We pick… because…”" },
+        { m: 3, who: "In pairs", t: "Agree on one", d: "Compare lists and agree on one technology. Write a card together: “We pick… because… The people who benefit first are…”" },
         { m: 1, who: "In pairs", t: "Check it", d: "Tick your card against the three-point checklist. Fix anything that is missing." },
         { m: 1, who: "On your own", t: "I used to think… now I think…", d: "Finish both halves of the sentence about which discoveries matter." }
       ],
@@ -367,11 +386,12 @@ window.AFW = {
         ]
       },
       support: "Use the first five cards only.",
-      stretch: "Which of the ten could go wrong, and how?"
+      stretch: "Which of the ten could go wrong, and how?",
+      fewer: "On your own: pick your three, choose one, and write the card yourself."
     },
 
     I20: {
-      track: "innovate", mins: 20, team: "class", years: [9, 11], group: "Policy teams of three or four", kit: "Paper",
+      track: "innovate", mins: 20, team: "partner", years: [9, 11], group: "Teams of two to four", kit: "Paper",
       title: "How fast is too fast?",
       blurb: "Driverless taxis are coming to Arcadia’s gate. Write the rules and choose the pace.",
       question: "How fast is too fast for innovation?",
@@ -379,10 +399,10 @@ window.AFW = {
       drop: "Dubai’s target is for one in every four transport trips to be driverless by 2030. Rules usually arrive after the technology does.",
       example: "One rule for delivery drones: “No flights over school grounds between 7am and 4pm.” It protects a named group, pupils, at a named time.",
       steps: [
-        { m: 2, who: "Whole class", t: "Read the fact and the example", d: "Read “Know this first” and the example rule. Who does that rule protect?" },
+        { m: 2, who: "Everyone", t: "Read the fact and the example", d: "Read “Know this first” and the example rule. Who does that rule protect?" },
         { m: 4, who: "In your team", t: "Who gains, who could be hurt?", d: "Driverless taxis start picking up at Arcadia’s gate. Draw two columns: who gains, and who could be hurt." },
-        { m: 6, who: "In your team", t: "Write three rules and choose the pace", d: "As a policy team, write three rules for the taxis. Then choose your pace: ban, trial or go. Say why." },
-        { m: 4, who: "Two teams together", t: "Meet the unknown", d: "Swap cards with another team. They play “the unknown”: they look for one problem your rules did not think of. Add a fix, then tick your card against the three-point checklist." },
+        { m: 6, who: "In your team", t: "Write three rules and choose the pace", d: "As a policy team, write three rules for the taxis. Then choose your pace: ban, trial (test it first) or go. Say why." },
+        { m: 4, who: "With another team", t: "Meet the unknown", d: "Swap cards with another team, or give yours to someone who has not seen it. They play “the unknown”: they look for one problem your rules did not think of. Add a fix, then tick your card against the three-point checklist." },
         { m: 2, who: "On your own", t: "I used to think… now I think…", d: "Finish both halves of the sentence about how fast new technology should arrive." }
       ],
       make: "A policy card: three rules, a pace and one unknown.",
@@ -397,7 +417,8 @@ window.AFW = {
       },
       support: "Use the rule starters: “Nobody may…”, “Every… must…”, “Between… and…, taxis must…”",
       stretch: "Who should enforce your rules?",
-      note: "This is about how to bring in new technology safely, not about whether Dubai’s plan is right."
+      rules: "This is about how to bring in new technology safely, not about whether Dubai’s plan is right.",
+      fewer: "Just two of you: you are one team. Ask a friend or someone at home to play “the unknown”."
     },
 
     I30: {
@@ -414,10 +435,10 @@ window.AFW = {
         items: ["A gardener working outside in the heat", "A new Year 7 lost on campus", "An astronaut growing food on a Mars mission"]
       },
       steps: [
-        { m: 3, who: "Whole class", t: "Read the fact and the example", d: "Read “Know this first” and the example. What did the test show that the maker had missed?" },
+        { m: 3, who: "Everyone", t: "Read the fact and the example", d: "Read “Know this first” and the example. What did the test show that the maker had missed?" },
         { m: 4, who: "In pairs", t: "Pick a person and a problem", d: "Choose one person card. Write down one problem that person has, and sketch one thing that could help." },
         { m: 12, who: "In pairs", t: "Build it from paper", d: "Build a rough version from paper, scissors and tape. It only has to be good enough to test." },
-        { m: 5, who: "Two pairs together", t: "Silent test", d: "Hand your prototype to another pair with no explanation. Watch them try to use it. Write down what goes wrong." },
+        { m: 5, who: "With a tester", t: "Silent test", d: "Hand your prototype to someone who has not seen it. Tell them only who it is for. Watch them try to use it. Write down what goes wrong. In a room of pairs, swap with the pair next to you: they test yours, then you test theirs." },
         { m: 2, who: "In pairs", t: "Fix one thing", d: "Change one thing the test showed you. Write a label: who it is for, and what the test showed." },
         { m: 1, who: "On your own", t: "I used to think… now I think…", d: "Finish both halves of the sentence about making things." }
       ],
@@ -432,11 +453,12 @@ window.AFW = {
         ]
       },
       support: "Start with three simple parts you can cut and fold: a strip, a band and a flap.",
-      stretch: "What would version 3 need that paper can’t do?"
+      stretch: "What would version 3 need that paper can’t do?",
+      fewer: "On your own: build it yourself, then ask someone at home to be the tester in step 4."
     },
 
     I50: {
-      track: "innovate", mins: 50, team: "class", years: [9, 11], group: "Whole class in three teams", kit: "Paper", comp: "Years 9 to 11",
+      track: "innovate", mins: 50, team: "group", years: [9, 11], group: "Three teams, or three people", kit: "Paper", comp: "Years 9 to 11",
       title: "The Future Generations Trial",
       blurb: "Put a policy on trial. The people of 2050 are the prosecution.",
       question: "What future did you promise us?",
@@ -444,7 +466,8 @@ window.AFW = {
       drop: "A decision made today is still being lived with in 2050. In this courtroom, the people of 2050 get to answer back.",
       example: "A different policy, to show how each side argues: “Schools may replace PE lessons with extra computer lessons.” <b>Prosecution, speaking from 2050:</b> “In 2050 this means adults who sat still through eleven years of school. You gave us more screen time and took away the habit of moving.” <b>Defence, speaking today:</b> “By 2050 most jobs need digital skills. Pupils who had more time to learn them are better prepared, and they can still play sport after school.”",
       cards: {
-        title: "The policy on trial: your teacher chooses one",
+        title: "The policy on trial",
+        pick: true,
         note: "",
         items: ["“AI may be used for all homework.”", "“Delivery robots may use every pavement in Dubai.”"]
       },
@@ -454,15 +477,15 @@ window.AFW = {
         items: [{"k": "WORD", "t": "Prosecution", "d": "The side that says the policy is wrong."}, {"k": "WORD", "t": "Defence", "d": "The side that says the policy is right."}, {"k": "WORD", "t": "Jury", "d": "The group that listens and decides."}, {"k": "WORD", "t": "Verdict", "d": "The jury’s decision."}, {"k": "WORD", "t": "Amendment", "d": "A change that makes the policy better."}]
       },
       steps: [
-        { m: 4, who: "Whole class", t: "Read the fact and the example", d: "Read “Know this first” and the two example arguments. Which side is speaking from 2050?" },
-        { m: 3, who: "Whole class", t: "Take your roles", d: "Your teacher names the policy and splits the class into three teams: the 2050 generation (prosecution), today’s decision-makers (defence) and the jury." },
+        { m: 4, who: "Everyone", t: "Read the fact and the example", d: "Read “Know this first” and the two example arguments. Which side is speaking from 2050?" },
+        { m: 3, who: "Everyone", t: "Take your roles", d: "One person presses “Pick one for us” once and reads the policy out. Count 1, 2, 3 round the group: 1 prosecution (the 2050 generation), 2 defence (today’s decision-makers), 3 jury. The jury chooses one judge, who runs the timers, times each speech and calls each speaker." },
         { m: 12, who: "In your team", t: "Prepare the case", d: "Prosecution and defence: split into two smaller groups and plan one speech each. Evidence means a real example you have seen, or a fact from this page. Jury: write three questions for each side." },
-        { m: 10, who: "Whole class", t: "The speeches", d: "Two speeches from each side, taking turns, prosecution first. About two minutes each." },
-        { m: 6, who: "Whole class", t: "Jury questions", d: "The jury questions both sides. Anyone on the team may answer." },
-        { m: 8, who: "Whole class", t: "Verdict and amendment", d: "The jury decides, gives its reasons, and writes one amendment that would make the policy future-proof. Everyone writes three headings and fills them in: Decision. Strongest argument. Amendment. Tick yours against the three-point checklist." },
+        { m: 10, who: "Everyone", t: "The speeches", d: "The judge calls two speeches from each side, taking turns, prosecution first. About two minutes each." },
+        { m: 6, who: "Everyone", t: "Jury questions", d: "The jury questions both sides. Anyone on the team may answer. The judge keeps it fair." },
+        { m: 8, who: "Everyone", t: "Verdict and amendment", d: "The jury votes: is this policy fair to the people of 2050, yes or no? The judge counts hands and has the deciding vote in a tie. The jury gives its reasons and writes one amendment that would make the policy future-proof. Everyone writes three headings and fills them in: Decision. Strongest argument. Amendment. Tick yours against the three-point checklist." },
         { m: 2, who: "On your own", t: "I used to think… now I think…", d: "Finish both halves of the sentence about decisions that last." }
       ],
-      make: "A verdict sheet: the decision, the strongest argument heard, and the amendment.",
+      make: "A verdict sheet: the decision, the strongest argument heard, and the amendment. Each person can enter their own sheet.",
       checklist: ["Both sides used evidence.", "The jury gave reasons.", "The amendment would change something by 2050."],
       model: {
         intro: "A completed verdict sheet for the example policy, “Schools may replace PE lessons with extra computer lessons”:",
@@ -474,13 +497,14 @@ window.AFW = {
       },
       support: "Use the argument frames: “In 2050 this means…”, “The evidence for this is…”, “The other side forgot that…”",
       stretch: "Write the appeal for the side that lost.",
-      note: "These policies are invented. Pupils argue about the policy, not about real leaders or authorities."
+      rules: "These policies are invented. Argue about the policy, not about real leaders or authorities. You are playing a role, so you may be arguing a side you don’t agree with. Attack the argument, never the person. No interrupting. The judge can stop a speaker.",
+      fewer: "Three to five of you: one prosecutor, one defender, and everyone else is the jury. One speech each side, three minutes each. You can use people at home as your jury."
     },
 
     /* ───────────── How we'll feel ───────────── */
 
     F10: {
-      track: "feel", mins: 10, team: "alone", years: [7, 11], group: "Whole class, then pairs", kit: "Paper",
+      track: "feel", mins: 10, team: "alone", years: [7, 11], group: "Everyone, then pairs", kit: "Paper",
       title: "Can technology make us happier?",
       blurb: "Sort six everyday technologies and write the rule for when they help.",
       question: "Can technology make us happier?",
@@ -493,8 +517,8 @@ window.AFW = {
         items: ["Group chat", "Step counter", "Endless video feed", "Family video call", "Gaming with friends", "Sleep tracker"]
       },
       steps: [
-        { m: 1, who: "Whole class", t: "Read the fact and the example", d: "Read “Know this first” and the example. What does the answer depend on?" },
-        { m: 2, who: "Whole class", t: "Check-in", d: "Heads down. Hold up one to five fingers: after using technology yesterday, I felt 1 (tired) to 5 (full of energy). Your teacher tells the class what the hands show." },
+        { m: 1, who: "Everyone", t: "Read the fact and the example", d: "Read “Know this first” and the example. What does the answer depend on?" },
+        { m: 2, who: "Everyone", t: "Check-in", d: "Each write a number from 1 to 5 on a scrap of paper: after using technology yesterday, I felt 1 (tired) to 5 (full of energy). No names. Fold them and pile them up. One person reads the numbers out. Are they mostly high or low?" },
         { m: 3, who: "In pairs", t: "Sort the six cards", d: "Write each of the six cards under one of three headings: happier, depends, less happy. Say why for each." },
         { m: 2, who: "On your own", t: "Write your rule, then check it", d: "Write one rule: “Technology makes us happier when…” Tick it against the three-point checklist." },
         { m: 1, who: "On your own", t: "I used to think… now I think…", d: "Finish both halves of the sentence about technology and happiness." }
@@ -511,11 +535,12 @@ window.AFW = {
       },
       support: "Sort three cards instead of six: family video call, endless video feed, group chat.",
       stretch: "Design the feature that would move one card to “happier”.",
-      note: "The check-in is about technology, not personal feelings, and nobody is asked to explain theirs. Do not ask who uses which app or for how long. If a pupil describes being left out or bullied online, follow the usual safeguarding route afterwards."
+      rules: "This is about technology, not private feelings. Nobody has to explain their number. Don’t ask who uses which app or for how long. If something online is upsetting you, tell your tutor or another adult you trust.",
+      fewer: "Two or three of you: write your number and keep it to yourself. On your own: write your number, then sort the cards and write your rule. Ask someone to check the rule against the checklist. Nobody to ask? Leave it for ten minutes, then check it yourself as if a stranger made it, and write down one thing to fix."
     },
 
     F20: {
-      track: "feel", mins: 20, team: "class", years: [9, 11], group: "Whole class, then on your own", kit: "Paper",
+      track: "feel", mins: 20, team: "alone", years: [9, 11], group: "Everyone, then on your own", kit: "Paper",
       title: "Live to 150?",
       blurb: "Could we, and should we? Take a corner, argue it, then write your verdict.",
       question: "Will we live to 150, and should we?",
@@ -528,9 +553,9 @@ window.AFW = {
         items: ["Yes, for everyone", "Yes, if we stay healthy", "Only if it is fair", "No"]
       },
       steps: [
-        { m: 2, who: "Whole class", t: "Read the fact and the example", d: "Read “Know this first” and the example. Which sentence is the claim, and which is the reason?" },
+        { m: 2, who: "Everyone", t: "Read the fact and the example", d: "Read “Know this first” and the example. Which sentence is the claim, and which is the reason?" },
         { m: 3, who: "On your own", t: "One hope, one worry", d: "Write one hope and one worry about a world where people live to 150." },
-        { m: 6, who: "Whole class", t: "Four corners", d: "Your teacher points to the four corners. Stand in the one that matches your view. Each corner gives its best argument. Move if you are persuaded." },
+        { m: 6, who: "Everyone", t: "Four corners", d: "One person reads out the four corners and points to a corner of the room for each. Stand in the one that matches your view. Each corner chooses one speaker, who has 30 seconds. If a corner is empty, anyone may argue for it. Move if you are persuaded." },
         { m: 5, who: "On your own", t: "Write your verdict", d: "Four sentences: your claim, your reason, the best argument against you, and your condition. Tick it against the three-point checklist." },
         { m: 2, who: "On your own", t: "I used to think… now I think…", d: "Finish both halves of the sentence about living longer." }
       ],
@@ -546,11 +571,12 @@ window.AFW = {
       },
       support: "Use the sentence frames: “I think we will / won’t… and we should / shouldn’t…”, “My reason is…”, “The best argument against me is…”, “My condition is…”",
       stretch: "What changes at school, at work and at home if living to 150 is normal?",
-      note: "Some pupils may have lost someone recently. Nobody shares a personal story unless they choose to. Answers from faith are welcome and are not debated."
+      rules: "Nobody has to share a personal story. Answers that come from faith are welcome and are not debated. If this topic is hard for you today, choose a different activity. If it brings up something upsetting, talk to your tutor or another adult you trust.",
+      fewer: "Fewer than eight of you, or on your own: skip the standing. Write the best argument for each of the four corners, then choose yours."
     },
 
     F30: {
-      track: "feel", mins: 30, team: "alone", years: [7, 11], group: "Whole class, then on your own", kit: "A4 paper", comp: "Years 7 to 11",
+      track: "feel", mins: 30, team: "alone", years: [7, 11], group: "Everyone, then on your own", kit: "A4 paper", comp: "Years 7 to 11",
       title: "Lunch in 2050",
       blurb: "Vote on four future foods, then design the Arcadia canteen tray of 2050.",
       question: "What does it mean to be well in 2050?",
@@ -563,8 +589,8 @@ window.AFW = {
         items: ["Salad from a vertical farm", "Milk protein made by fermentation", "Cultivated meat, grown from cells", "Flour made from insects"]
       },
       steps: [
-        { m: 3, who: "Whole class", t: "Read the fact and the example", d: "Read “Know this first” and the example label. What three things does the label tell you?" },
-        { m: 5, who: "Whole class", t: "Would Dubai eat it?", d: "Vote on each of the four foods: would most people in Dubai eat this in 2050? After each vote, hear one reason for yes and one for no." },
+        { m: 3, who: "Everyone", t: "Read the fact and the example", d: "Read “Know this first” and the example label. What three things does the label tell you?" },
+        { m: 5, who: "Everyone", t: "Would Dubai eat it?", d: "One person reads out each of the four foods. Hands up: would most people in Dubai eat this in 2050? After each vote, hear one reason for yes and one for no." },
         { m: 12, who: "On your own", t: "Design the tray", d: "Draw a 2050 Arcadia lunch tray on A4. Label every item: what it is, where it was grown or made, and why it’s on the tray." },
         { m: 4, who: "In pairs", t: "Swap and check", d: "Swap trays. Check your partner’s against the three-point checklist and tell them one thing to improve." },
         { m: 2, who: "On your own", t: "Improve it", d: "Use the feedback to change one thing on your tray." },
@@ -582,11 +608,12 @@ window.AFW = {
       },
       support: "Draw a tray with four empty spaces and a label line under each. Fill one space at a time.",
       stretch: "Price the tray, and say who can afford it.",
-      note: "Judge trays on source, planet, taste and culture. No calorie counting, and no talk about body size. Faith, family and allergy are all good reasons, and nobody has to explain a no. Do not rule on whether a food is halal: say that scholars and regulators are still deciding."
+      rules: "Judge trays on where the food comes from, the planet, taste and culture. No calorie counting, and no comments about bodies. Faith, family and allergy are all good reasons, and nobody has to explain a no. Don’t argue about whether a food is halal: scholars are still deciding.",
+      fewer: "On your own: for each of the four foods, write one reason for yes and one for no. Then ask someone to check your tray in step 4. Nobody to ask? Leave it for ten minutes, then check it yourself as if a stranger made it, and write down one thing to fix."
     },
 
     F50: {
-      track: "feel", mins: 50, team: "class", years: [7, 9], group: "Pairs. The class splits into three test groups", kit: "30 cm rulers, graph paper and calculators",
+      track: "feel", mins: 50, team: "partner", years: [7, 9], group: "Pairs, in three test groups", kit: "30 cm rulers, graph or squared paper, and a calculator (your device has one)",
       title: "The focus lab",
       blurb: "Run a real experiment: does movement or calm breathing sharpen your reactions?",
       question: "What helps a human perform at their best?", ownQ: true,
@@ -594,17 +621,17 @@ window.AFW = {
       drop: "Reaction time is how long your brain and body take to respond. You can measure it with a falling ruler. The ruler falls further the longer you take to react, so a shorter catch distance means a faster reaction.",
       example: "One pupil’s five catches: 18 cm, 21 cm, 16 cm, <b>34 cm</b>, 19 cm. The 34 is the odd one out, and she knows why: she looked away. Circle it and leave it out. Mean = (18 + 21 + 16 + 19) ÷ 4 = 74 ÷ 4 = <b>18.5 cm</b>. Only leave a catch out if you know what went wrong.",
       steps: [
-        { m: 4, who: "Whole class", t: "Read the fact and the example", d: "Read “Know this first” and the worked example. Why is the 34 cm catch left out of the mean?" },
+        { m: 4, who: "Everyone", t: "Read the fact and the example", d: "Read “Know this first” and the worked example. Why is the 34 cm catch left out of the mean?" },
         { m: 5, who: "In pairs", t: "First test: five ruler drops", d: "Hold the ruler at the top so it hangs straight down. The 0 cm end is level with the top of your partner’s open finger and thumb. They must not touch it. Let go without warning. Read the number just above their thumb. If they miss, drop it again. Take turns until you both have five catches, then each work out your mean." },
-        { m: 3, who: "Whole class", t: "Get your group", d: "Your teacher counts 1, 2, 3 round the room to make three groups. Group 1: jog on the spot. Group 2: sit and breathe in for a count of 4 and out for a count of 6. Group 3: sit still and silent. This is the control: the group that changes nothing, so we can compare. Each group chooses a scribe." },
-        { m: 8, who: "In pairs", t: "Do it, then retest", d: "Do your two minutes. Straight afterwards, take turns, one drop each, until you both have five more catches. Work out your new mean." },
-        { m: 10, who: "Whole class", t: "Class results", d: "Work out your change: your mean before, minus your mean after. Tell your group’s scribe. The scribe adds up the changes and divides by the number of pupils. Draw one bar for each group. A bar goes below zero if the group got slower." },
-        { m: 8, who: "On your own", t: "Write your conclusion", d: "What changed, and by how much? Was it a fair test? Use numbers from the class table, then tick your conclusion against the three-point checklist." },
-        { m: 5, who: "In pairs", t: "Tip card", d: "Write one tip for Arcadia pupils about reacting quickly, based on what the class data showed. Add one thing our data cannot tell us." },
+        { m: 3, who: "Everyone", t: "Get your group", d: "Stay in your pairs. Number the pairs 1, 2, 3 round the group. Pairs numbered 1, movement: jog on the spot. Pairs numbered 2, breathing: sit and breathe in for a count of 4 and out for a count of 6. Pairs numbered 3, still: sit still and silent. This is the control: the group that changes nothing, so we can compare. The person running the timers is the scribe. They do the test too." },
+        { m: 8, who: "In pairs", t: "Do it, then retest", d: "The scribe says “go” and times two minutes. Everyone does their two minutes at the same time. Straight afterwards, take turns, one drop each, until you both have five more catches. Work out your new mean." },
+        { m: 10, who: "Everyone", t: "Shared results", d: "Give your mean before and your mean after to the scribe, who types them into the results table on this page. When every result is in, the scribe reads out the three mean changes, or holds up the screen. Everyone copies the three numbers down. Then draw a bar chart with one bar for each group. A bar goes below zero if the group got slower." },
+        { m: 8, who: "On your own", t: "Write your conclusion", d: "What changed, and by how much? Was it a fair test? Use numbers from the results table, then tick your conclusion against the three-point checklist." },
+        { m: 5, who: "In pairs", t: "Tip card", d: "Write one tip for Arcadia pupils about reacting quickly, based on what the results showed. Add one thing the data cannot tell us." },
         { m: 2, who: "On your own", t: "I used to think… now I think…", d: "Finish both halves of the sentence about focus." }
       ],
       make: "A results table, a bar chart and a tip card.",
-      checklist: ["The mean is calculated correctly.", "The conclusion uses the numbers.", "It names one thing that made the test unfair."],
+      checklist: ["The mean is calculated correctly: your partner has checked it.", "The conclusion uses the numbers.", "It names one thing that made the test unfair."],
       model: {
         intro: "A model conclusion. The numbers here are made up to show the method. Use your own class’s results.",
         marks: [
@@ -613,9 +640,11 @@ window.AFW = {
           "<b>Not a fair test:</b> “There were different people in each group, and everyone had practised by the retest. To be fairer, every pupil should try all three on different days.”"
         ]
       },
-      support: "Copy the results table and the bar chart axes from the board before you start.",
+      support: "Draw your axes first: the three groups along the bottom, and mean change in cm up the side, from −3 to +3.",
       stretch: "Design the better experiment.",
-      note: "Movement is on the spot, in a clear space. Catch with finger and thumb only. Any pupil who should not exercise joins the control group, with no reason needed. Give the breathing group the quietest corner. Before the lesson, draw a table on the board with three rows (Movement, Breathing, Control) and three columns: number of pupils, total change in cm, mean change in cm. Draw bar chart axes too: the three groups along the bottom, and mean change in cm up the side, from −3 to +3."
+      rules: "Jog on the spot, in a clear space. Catch with finger and thumb only. If you should not exercise, join the still group. You don’t need to give a reason. Give the breathing group the quietest corner. Do this indoors. Use a plastic or wooden ruler, and drop it at waist height, away from faces. If you feel dizzy, out of breath or unwell, stop, sit down and tell an adult straight away.",
+      results: true,
+      fewer: "Just two of you: one does movement and the other sits still as the control. Try breathing another day. Three to six of you: at least one person in each of the three groups. Type every result into the table."
     },
 
     /* ───────────── How we'll do business ───────────── */
@@ -634,9 +663,9 @@ window.AFW = {
         items: ["Nurse", "Chef", "Bus driver", "Shopkeeper", "Teacher", "Footballer", "Vet"]
       },
       steps: [
-        { m: 1, who: "Whole class", t: "Read the fact and the example", d: "Read “Know this first” and the example. Which part does the human keep?" },
+        { m: 1, who: "Everyone", t: "Read the fact and the example", d: "Read “Know this first” and the example. Which part does the human keep?" },
         { m: 3, who: "On your own", t: "Split a job into three", d: "Pick a job from the list, or another you know well. Write three lines for the year 2040: the machine does…, the human does…, the new task is…" },
-        { m: 3, who: "In pairs", t: "Invent the 2040 job", d: "Choose one of your two jobs. Give it a 2040 job title and write a one-line advert for it." },
+        { m: 3, who: "In pairs", t: "Invent the 2040 job", d: "Choose one of your two jobs. Give it a 2040 job title and write a one-line advert for it. Make one job card between you." },
         { m: 1, who: "In pairs", t: "Check it", d: "Tick your job card against the three-point checklist. Fix anything that is missing." },
         { m: 1, who: "On your own", t: "I used to think… now I think…", d: "Finish both halves of the sentence about the jobs of the future." }
       ],
@@ -651,7 +680,8 @@ window.AFW = {
         ]
       },
       support: "Copy the three line starters from the example and finish each one: Machine: … Human: … New task: …",
-      stretch: "Which school subject prepares you for your 2040 job, and why?"
+      stretch: "Which school subject prepares you for your 2040 job, and why?",
+      fewer: "On your own: do the pairs step yourself, then ask someone to tick your job card against the checklist. Nobody to ask? Leave it for ten minutes, then check it yourself as if a stranger made it, and write down one thing to fix."
     },
 
     B20: {
@@ -663,7 +693,7 @@ window.AFW = {
       drop: "Dubai set a target for 90% of payments to be cashless by 2026. In October 2026 the government said it had passed that target. Every digital payment leaves a record. Cash does not.",
       example: "One entry on a payment timeline: “8:05 · canteen · card tap. Who can see it: the school, the bank, a parent.”",
       steps: [
-        { m: 2, who: "Whole class", t: "Read the fact and the example", d: "Read “Know this first” and the example entry. Who can see that payment?" },
+        { m: 2, who: "Everyone", t: "Read the fact and the example", d: "Read “Know this first” and the example entry. Who can see that payment?" },
         { m: 4, who: "In pairs", t: "Build the timeline", d: "Draw a timeline of one day. Add every payment a 13-year-old in Dubai might make, with the time, the place and how they pay." },
         { m: 6, who: "In pairs", t: "Who sees it, who is left out?", d: "Under each payment, write who can see it. Then choose one person who is left out if cash disappears: a grandparent, a tourist, an 8-year-old or a market trader." },
         { m: 4, who: "In pairs", t: "Design a fairness fix", d: "Design one rule or one feature that makes cashless fair for the person you chose. Check your work against the three-point checklist." },
@@ -681,27 +711,28 @@ window.AFW = {
       },
       support: "Start with five moments: on the way to school, break, lunch, after school, evening. Add one payment to each.",
       stretch: "If money is only numbers on a screen, what makes it worth anything?",
-      note: "This is an invented teenager. Nobody says what they spend or how much pocket money they get."
+      rules: "This is an invented teenager. Nobody says what they spend or how much pocket money they get.",
+      fewer: "On your own: do every step yourself, then ask someone to tick your timeline against the checklist. Nobody to ask? Leave it for ten minutes, then check it yourself as if a stranger made it, and write down one thing to fix."
     },
 
     B30: {
-      track: "business", mins: 30, team: "class", years: [9, 11], group: "Teams of four", kit: "Paper", comp: "Years 9 to 11",
+      track: "business", mins: 30, team: "group", years: [9, 11], group: "Teams of two to four, and a panel", kit: "Paper", comp: "Years 9 to 11",
       title: "The Pitch",
-      blurb: "Sixty seconds to pitch a Dubai start-up. The other half of the class invests.",
+      blurb: "Sixty seconds to pitch a Dubai start-up. The other teams decide whether to invest.",
       question: "Where will tomorrow’s value be created?",
       from: "Dubai Future Week “How we’ll do business” question 2, and The Pitch, where start-ups pitch live to investors and get feedback from experts.",
       drop: "Investors back a problem worth solving before they back an idea. A pitch answers five things: what problem, for whom, what solution, why now, and what do you need?",
       example: "A 60-second pitch with its five parts labelled. <b>Problem:</b> “People who work outdoors in Dubai’s summer need to know when to rest and drink.” <b>For whom:</b> “Gardeners, builders and delivery riders.” <b>Solution:</b> “CoolBand, a wristband that warns you before your body overheats and tells your supervisor to call a break.” <b>Why now:</b> “Summers are getting hotter, and sensors are now cheap enough to give to every worker.” <b>What we need:</b> “Fifty wristbands and one building site to test them on next July.”",
       steps: [
-        { m: 3, who: "Whole class", t: "Read the fact and the example", d: "Read “Know this first” and the example pitch. Find its five parts." },
+        { m: 3, who: "Everyone", t: "Read the fact and the example", d: "Read “Know this first” and the example pitch. Find its five parts." },
         { m: 9, who: "In your team", t: "Write your pitch", d: "Invent a start-up that could exist in Dubai by 2035. Write a 60-second pitch with all five parts, and choose who will speak." },
-        { m: 6, who: "Whole class", t: "Round one", d: "Half the teams pitch for 60 seconds each. The other half are the panel. Each panel member has three Arcadia dirhams to invest: draw each one as a tick on the pitch card of a team you back. No more than two for one team." },
-        { m: 6, who: "Whole class", t: "Round two", d: "Swap. The panel teams pitch, and the first teams invest." },
-        { m: 2, who: "Whole class", t: "Panel feedback", d: "Each panel member writes one strength and one question on a pitch card they invested in. Teams count their dirhams and read their feedback." },
+        { m: 6, who: "Everyone", t: "Round one", d: "Number the teams. Odd numbers pitch first, 60 seconds each. The other teams are the panel. Each panel member has three Arcadia dirhams to invest. After the last pitch, pitching teams lay their cards on a table and the panel walks round, drawing each dirham as a tick on a card. No more than two ticks for one team." },
+        { m: 6, who: "Everyone", t: "Round two", d: "Swap. The panel teams pitch, and the first teams invest." },
+        { m: 2, who: "Everyone", t: "Panel feedback", d: "Each panel member writes one strength and one question on a pitch card they invested in. Teams count their dirhams and read their feedback." },
         { m: 1, who: "On your own", t: "I used to think… now I think…", d: "Finish both halves of the sentence about what makes an idea worth backing." }
       ],
       make: "A pitch card with the five parts, plus the dirhams you won.",
-      checklist: ["The problem is real and local.", "It says why now.", "It fits in 60 seconds."],
+      checklist: ["The problem is real and local.", "It says why now.", "It fits in 60 seconds: you have timed it."],
       model: {
         intro: "The model pitch as a five-box card. Read aloud at a steady pace, it takes about 45 seconds:",
         marks: [
@@ -711,11 +742,12 @@ window.AFW = {
         ]
       },
       support: "Use the five-box pitch frame: Problem · For whom · Solution · Why now · What we need.",
-      stretch: "Who loses if your start-up wins?"
+      stretch: "Who loses if your start-up wins?",
+      fewer: "Only one team: pitch to another group, to friends or to people at home. They are your panel. Each has three dirhams and writes one strength and one question. Skip round two."
     },
 
     B50: {
-      track: "business", mins: 50, team: "class", years: [7, 11], group: "Five expert groups", kit: "A3 paper and pens", comp: "Years 7 to 11",
+      track: "business", mins: 50, team: "group", years: [7, 11], group: "Five expert groups, or five people", kit: "A3 paper, or two A4 sheets taped together, and pens", comp: "Years 7 to 11",
       title: "Arcadia Future Minds",
       blurb: "Five groups of experts, one future scenario. Leave with priorities, ideas and a commitment.",
       question: "What would you do if this future arrived?", ownQ: true,
@@ -723,7 +755,8 @@ window.AFW = {
       drop: "Experts don’t predict one future. They test several scenarios, which are possible futures, and ask what they would do in each.",
       example: "Scenario: “2040: half of Dubai’s deliveries are made by robots.” For the first responders group: <b>Priority:</b> “Robots must never block an ambulance.” <b>Idea:</b> “Every robot pulls over when it hears a siren.” <b>Commitment:</b> “Next week we ask the site team where deliveries arrive and where pupils walk.”",
       cards: {
-        title: "The five groups and the three scenarios",
+        title: "The three scenarios",
+        pick: true,
         note: "The five groups: teachers · first responders · home-grown entrepreneurs · economy, banking and finance · urban planners, architects and engineers.",
         items: ["2040: half of Dubai’s deliveries are made by robots.", "2040: every pupil has an AI tutor.", "2040: summer lasts a month longer."]
       },
@@ -739,12 +772,12 @@ window.AFW = {
         ]
       },
       steps: [
-        { m: 4, who: "Whole class", t: "Read the fact and the example", d: "Read “Know this first” and the example. Notice how the commitment is small enough to start next week." },
-        { m: 5, who: "In your group", t: "Join your group", d: "Join one of the five expert groups and read your role card. What does your group care about most?" },
-        { m: 10, who: "In your group", t: "Scenario round", d: "Your teacher picks one scenario for the whole class. What changes for your group? List what gets better and what gets harder." },
+        { m: 4, who: "Everyone", t: "Read the fact and the example", d: "Read “Know this first” and the example. Notice how the commitment is small enough to start next week." },
+        { m: 5, who: "Everyone", t: "Join your group", d: "The person running the timers presses “Pick one for us” once and reads the scenario out. Everyone uses that one. Then count 1 to 5 round the group: 1 teachers, 2 first responders, 3 entrepreneurs, 4 finance, 5 planners. Sit with your number and read your role card." },
+        { m: 10, who: "In your group", t: "Scenario round", d: "Think about the scenario. What changes for your group? List what gets better and what gets harder." },
         { m: 8, who: "Mixed tables", t: "Mixed tables", d: "In your group, number yourselves from 1. All the 1s sit together, all the 2s, and so on. Each person has one minute: what does your group need?" },
         { m: 10, who: "In your group", t: "Priorities, ideas, commitment", d: "Back in your group, agree on three priorities, two ideas, and one commitment Arcadia could start next week. Write them on A3, then tick the sheet against the three-point checklist." },
-        { m: 6, who: "Whole class", t: "Share", d: "Each group shares its commitment in one minute." },
+        { m: 6, who: "Everyone", t: "Share", d: "Each group shares its commitment in one minute." },
         { m: 2, who: "On your own", t: "I used to think… now I think…", d: "Finish both halves of the sentence about planning for the future." }
       ],
       make: "A priorities, ideas and commitment sheet on A3.",
@@ -758,7 +791,8 @@ window.AFW = {
         ]
       },
       support: "Answer only the first question on your role card. Then listen to the others before you add more.",
-      stretch: "Write the scenario nobody is planning for."
+      stretch: "Write the scenario nobody is planning for.",
+      fewer: "Five of you: take one role card each and skip step 4. Three or four of you: share out all five role cards, skip step 4, make one sheet together, and in step 6 share it with someone who has not seen it. On your own: choose two role cards and do the same."
     },
 
     /* ───────────── Bonus ───────────── */
@@ -779,7 +813,7 @@ window.AFW = {
         { m: 1, who: "On your own", t: "Improve one sentence", d: "Use the feedback to improve one sentence." },
         { m: 1, who: "On your own", t: "I used to think… now I think…", d: "Finish both halves of the sentence about writing the future." }
       ],
-      make: "A story of up to 300 words, on paper. You can also finish it at home.",
+      make: "A story of up to 300 words, on paper. You can also finish it later.",
       checklist: ["It is set on one day.", "It answers the chosen question without writing it out.", "It has one detail that could only be Dubai."],
       model: {
         intro: "How the model opening meets the checklist:",
@@ -790,7 +824,8 @@ window.AFW = {
         ]
       },
       support: "Start with a time and a place: “At 6:40, on the balcony…” Then let one small thing go wrong.",
-      stretch: "Write the same day again from another person’s point of view."
+      stretch: "Write the same day again from another person’s point of view.",
+      fewer: "On your own: ask someone at home to read your story and guess which question it answers. Nobody to ask? Leave it for ten minutes, then check it yourself as if a stranger made it, and write down one thing to fix."
     }
   },
 
@@ -806,10 +841,9 @@ window.AFW = {
   entry: { formUrl: "https://docs.google.com/forms/d/e/1FAIpQLSfazhH6y8eD-IqzXfYfYEGSeyzJ8ivOPF0W7JpcSXi_qDRGKA/viewform", deadline: "Tuesday 1 December 2026", dropBox: "Hand it to Mr Gray in room 301B, or give it to your Head of Year, who will pass it on.", photoPoint: "" },
 
   teams: {
-    alone: { label: "On your own", note: "You can do this by yourself, at school or at home." },
-    partner: { label: "Needs a partner", note: "You need one other person, such as a friend or someone at home." },
-    group: { label: "Needs a group of four", note: "You need a group of about four. Another group to pitch to helps, but a teacher or family member will do." },
-    class: { label: "Needs a class", note: "This one only works with a class or several teams, led by a teacher." }
+    alone: { label: "On your own", note: "You can do this by yourself, at school or at home. One step asks someone to check your work. If nobody is around, you check it yourself. It also works in a pair or a group." },
+    partner: { label: "Needs a partner", note: "You need one other person, such as a friend or someone at home. It also works with a whole class." },
+    group: { label: "Needs a small group", note: "You need a group of three or more. You can run it yourselves." }
   },
 
   competition: {
