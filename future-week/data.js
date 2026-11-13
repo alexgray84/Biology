@@ -200,7 +200,7 @@ window.AFW = {
       },
       support: "Answer your own role card’s question first, and put that answer on the map.",
       stretch: "Add what the city costs and who pays.",
-      fewer: "Three of you: one person takes two roles. Two of you, or on your own: share out all four roles, and pitch to someone at home."
+      fewer: "Three of you: one person takes two roles. Two of you, or on your own: share out all four roles, and pitch to someone at home. Nobody else around? One of you pitches. The others listen as visitors who have never seen it, and ask the hard question."
     },
 
     /* ───────────── How we'll think ───────────── */
@@ -338,7 +338,7 @@ window.AFW = {
       },
       support: "Draw a grid with five periods. Under each one write “Who does the thinking?” and answer that first.",
       stretch: "Write Arcadia’s school rule on AI use for 2040.",
-      fewer: "Two of you, or on your own: do every step yourselves, and pitch to someone at home."
+      fewer: "Two of you, or on your own: do every step yourselves, and pitch to someone at home. Nobody else around? One of you pitches. The other listens as a visitor who has never seen it, and asks the hard question."
     },
 
     /* ───────────── How we'll innovate ───────────── */
@@ -418,7 +418,7 @@ window.AFW = {
       support: "Use the rule starters: “Nobody may…”, “Every… must…”, “Between… and…, taxis must…”",
       stretch: "Who should enforce your rules?",
       rules: "This is about how to bring in new technology safely, not about whether Dubai’s plan is right.",
-      fewer: "Just two of you: you are one team. Ask a friend or someone at home to play “the unknown”."
+      fewer: "Just two of you: you are one team. Ask a friend or someone at home to play “the unknown”. Nobody else around? Each of you, on your own, writes one problem the rules did not think of. Swap, and fix both."
     },
 
     I30: {
@@ -454,7 +454,7 @@ window.AFW = {
       },
       support: "Start with three simple parts you can cut and fold: a strip, a band and a flap.",
       stretch: "What would version 3 need that paper can’t do?",
-      fewer: "On your own: build it yourself, then ask someone at home to be the tester in step 4."
+      fewer: "On your own: build it yourself, then ask someone at home to be the tester in step 4. Just two of you and nobody else: build one prototype each without showing each other, then test each other’s."
     },
 
     I50: {
@@ -478,8 +478,8 @@ window.AFW = {
       },
       steps: [
         { m: 4, who: "Everyone", t: "Read the fact and the example", d: "Read “Know this first” and the two example arguments. Which side is speaking from 2050?" },
-        { m: 3, who: "Everyone", t: "Take your roles", d: "One person presses “Pick one for us” once and reads the policy out. Count 1, 2, 3 round the group: 1 prosecution (the 2050 generation), 2 defence (today’s decision-makers), 3 jury. The jury chooses one judge, who runs the timers, times each speech and calls each speaker." },
-        { m: 12, who: "In your team", t: "Prepare the case", d: "Prosecution and defence: split into two smaller groups and plan one speech each. Evidence means a real example you have seen, or a fact from this page. Jury: write three questions for each side." },
+        { m: 3, who: "Everyone", t: "Take your roles", d: "One person presses “Pick one for us” once and reads the policy out. Count 1, 2, 3 round the group: 1 prosecution (the 2050 generation), 2 defence (today’s decision-makers), 3 jury. The jury chooses one judge. From now on the judge runs the step timers, calls each speaker, and times each speech with a stopwatch on a second device." },
+        { m: 12, who: "In your team", t: "Prepare the case", d: "Prosecution: split into two halves. Defence: do the same. Each half plans one two-minute speech and chooses its speaker. Evidence means a real example you have seen, or a fact from this page. Jury: write three questions for each side." },
         { m: 10, who: "Everyone", t: "The speeches", d: "The judge calls two speeches from each side, taking turns, prosecution first. About two minutes each." },
         { m: 6, who: "Everyone", t: "Jury questions", d: "The jury questions both sides. Anyone on the team may answer. The judge keeps it fair." },
         { m: 8, who: "Everyone", t: "Verdict and amendment", d: "The jury votes: is this policy fair to the people of 2050, yes or no? The judge counts hands and has the deciding vote in a tie. The jury gives its reasons and writes one amendment that would make the policy future-proof. Everyone writes three headings and fills them in: Decision. Strongest argument. Amendment. Tick yours against the three-point checklist." },
@@ -518,7 +518,7 @@ window.AFW = {
       },
       steps: [
         { m: 1, who: "Everyone", t: "Read the fact and the example", d: "Read “Know this first” and the example. What does the answer depend on?" },
-        { m: 2, who: "Everyone", t: "Check-in", d: "Each write a number from 1 to 5 on a scrap of paper: after using technology yesterday, I felt 1 (tired) to 5 (full of energy). No names. Fold them and pile them up. One person reads the numbers out. Are they mostly high or low?" },
+        { m: 2, who: "Everyone", t: "Check-in", d: "Each write a number from 1 to 5 on a scrap of paper: after using technology yesterday, I felt 1 (tired) to 5 (full of energy). No names. Fold them and pile them up. One person reads the numbers out. In a big room, read out the first ten. Are they mostly high or low?" },
         { m: 3, who: "In pairs", t: "Sort the six cards", d: "Write each of the six cards under one of three headings: happier, depends, less happy. Say why for each." },
         { m: 2, who: "On your own", t: "Write your rule, then check it", d: "Write one rule: “Technology makes us happier when…” Tick it against the three-point checklist." },
         { m: 1, who: "On your own", t: "I used to think… now I think…", d: "Finish both halves of the sentence about technology and happiness." }
@@ -624,8 +624,8 @@ window.AFW = {
         { m: 4, who: "Everyone", t: "Read the fact and the example", d: "Read “Know this first” and the worked example. Why is the 34 cm catch left out of the mean?" },
         { m: 5, who: "In pairs", t: "First test: five ruler drops", d: "Hold the ruler at the top so it hangs straight down. The 0 cm end is level with the top of your partner’s open finger and thumb. They must not touch it. Let go without warning. Read the number just above their thumb. If they miss, drop it again. Take turns until you both have five catches, then each work out your mean." },
         { m: 3, who: "Everyone", t: "Get your group", d: "Stay in your pairs. Number the pairs 1, 2, 3 round the group. Pairs numbered 1, movement: jog on the spot. Pairs numbered 2, breathing: sit and breathe in for a count of 4 and out for a count of 6. Pairs numbered 3, still: sit still and silent. This is the control: the group that changes nothing, so we can compare. The person running the timers is the scribe. They do the test too." },
-        { m: 8, who: "In pairs", t: "Do it, then retest", d: "The scribe says “go” and times two minutes. Everyone does their two minutes at the same time. Straight afterwards, take turns, one drop each, until you both have five more catches. Work out your new mean." },
-        { m: 10, who: "Everyone", t: "Shared results", d: "Give your mean before and your mean after to the scribe, who types them into the results table on this page. When every result is in, the scribe reads out the three mean changes, or holds up the screen. Everyone copies the three numbers down. Then draw a bar chart with one bar for each group. A bar goes below zero if the group got slower." },
+        { m: 8, who: "In pairs", t: "Do it, then retest", d: "The scribe starts this step’s timer and says “go”. Everyone does their activity at the same time. When the timer shows 6:00, the scribe says “stop”. Straight afterwards, take turns, one drop each, until you both have five more catches. Work out your new mean." },
+        { m: 10, who: "Everyone", t: "Shared results", d: "The scribe presses “Clear all” if old results are showing. One test group at a time (movement, then breathing, then still), one person from each pair reads out both partners’ mean before and mean after. The scribe picks the group in the table and types them in. Then the scribe reads out the three mean changes, and everyone copies them down. Draw a bar chart with one bar for each group. A bar goes below zero if the group got slower." },
         { m: 8, who: "On your own", t: "Write your conclusion", d: "What changed, and by how much? Was it a fair test? Use numbers from the results table, then tick your conclusion against the three-point checklist." },
         { m: 5, who: "In pairs", t: "Tip card", d: "Write one tip for Arcadia pupils about reacting quickly, based on what the results showed. Add one thing the data cannot tell us." },
         { m: 2, who: "On your own", t: "I used to think… now I think…", d: "Finish both halves of the sentence about focus." }
@@ -633,7 +633,7 @@ window.AFW = {
       make: "A results table, a bar chart and a tip card.",
       checklist: ["The mean is calculated correctly: your partner has checked it.", "The conclusion uses the numbers.", "It names one thing that made the test unfair."],
       model: {
-        intro: "A model conclusion. The numbers here are made up to show the method. Use your own class’s results.",
+        intro: "A model conclusion. The numbers here are made up to show the method. Use your own group’s results.",
         marks: [
           "<b>Means:</b> “Movement group after: three pupils’ means were 17.5, 16.8 and 17.0 cm, so the mean is 51.3 ÷ 3 = 17.1 cm. Movement group: 19.2 cm before, 17.1 cm after. Breathing group: 19.5 cm before, 18.6 cm after. Control group: 19.0 cm before, 18.4 cm after.”",
           "<b>Uses the numbers:</b> “All three groups caught the ruler sooner, even the control, so some of the improvement is just practice. Movement improved most: 2.1 cm, compared with 0.6 cm for the control. But one person’s own catches can differ by more than that, so we cannot be sure movement caused it.”",
@@ -642,7 +642,7 @@ window.AFW = {
       },
       support: "Draw your axes first: the three groups along the bottom, and mean change in cm up the side, from −3 to +3.",
       stretch: "Design the better experiment.",
-      rules: "Jog on the spot, in a clear space. Catch with finger and thumb only. If you should not exercise, join the still group. You don’t need to give a reason. Give the breathing group the quietest corner. Do this indoors. Use a plastic or wooden ruler, and drop it at waist height, away from faces. If you feel dizzy, out of breath or unwell, stop, sit down and tell an adult straight away.",
+      rules: "Jog on the spot, in a clear space. Catch with finger and thumb only. If you should not exercise, join the still group. You don’t need to give a reason. Give the breathing group the quietest corner. Do this indoors. Use a plastic or wooden ruler, and drop it at waist height, away from faces. If you feel dizzy, out of breath or unwell, stop, sit down and tell an adult straight away. A 15 cm ruler is too short: share a 30 cm one.",
       results: true,
       fewer: "Just two of you: one does movement and the other sits still as the control. Try breathing another day. Three to six of you: at least one person in each of the three groups. Type every result into the table."
     },
@@ -726,7 +726,7 @@ window.AFW = {
       steps: [
         { m: 3, who: "Everyone", t: "Read the fact and the example", d: "Read “Know this first” and the example pitch. Find its five parts." },
         { m: 9, who: "In your team", t: "Write your pitch", d: "Invent a start-up that could exist in Dubai by 2035. Write a 60-second pitch with all five parts, and choose who will speak." },
-        { m: 6, who: "Everyone", t: "Round one", d: "Number the teams. Odd numbers pitch first, 60 seconds each. The other teams are the panel. Each panel member has three Arcadia dirhams to invest. After the last pitch, pitching teams lay their cards on a table and the panel walks round, drawing each dirham as a tick on a card. No more than two ticks for one team." },
+        { m: 6, who: "Everyone", t: "Round one", d: "Number the teams. Odd numbers pitch first, 60 seconds each. The other teams are the panel. Each panel member has three Arcadia dirhams to invest. After the last pitch, pitching teams lay their cards on a table and the panel walks round, drawing each dirham as a tick on a card. No more than two ticks for one team. More than eight teams? Split the room into two halves and run both at once." },
         { m: 6, who: "Everyone", t: "Round two", d: "Swap. The panel teams pitch, and the first teams invest." },
         { m: 2, who: "Everyone", t: "Panel feedback", d: "Each panel member writes one strength and one question on a pitch card they invested in. Teams count their dirhams and read their feedback." },
         { m: 1, who: "On your own", t: "I used to think… now I think…", d: "Finish both halves of the sentence about what makes an idea worth backing." }
@@ -743,7 +743,7 @@ window.AFW = {
       },
       support: "Use the five-box pitch frame: Problem · For whom · Solution · Why now · What we need.",
       stretch: "Who loses if your start-up wins?",
-      fewer: "Only one team: pitch to another group, to friends or to people at home. They are your panel. Each has three dirhams and writes one strength and one question. Skip round two."
+      fewer: "Only one team: pitch to another group, to friends or to people at home. They are your panel. Each has three dirhams and writes one strength and one question. Skip round two. Nobody else around? One of you pitches and the rest are the panel."
     },
 
     B50: {
@@ -792,7 +792,7 @@ window.AFW = {
       },
       support: "Answer only the first question on your role card. Then listen to the others before you add more.",
       stretch: "Write the scenario nobody is planning for.",
-      fewer: "Five of you: take one role card each and skip step 4. Three or four of you: share out all five role cards, skip step 4, make one sheet together, and in step 6 share it with someone who has not seen it. On your own: choose two role cards and do the same."
+      fewer: "Five of you: take one role card each and skip step 4. Three or four of you: share out all five role cards, skip step 4, make one sheet together, and in step 6 share it with someone who has not seen it. On your own: choose two role cards and do the same. Nobody else around? Read your commitment aloud, and each say one reason it might not happen next week."
     },
 
     /* ───────────── Bonus ───────────── */

@@ -108,7 +108,7 @@
     '<main class="wrap amain"><div class="flow">' +
     stage('know this', 'first', '<div class="box drop"><p>' + esc(a.drop) + '</p></div>') +
     stage('an example', 'before you start', '<div class="box eg"><p>' + a.example + '</p></div>') +
-    stage('what to', 'do', '<p class="hint">You can run this yourselves. Start the timer on each step to keep things moving: it beeps when time is up. Working with others? Choose one person to run the timers and read each step out. ' + total + ' minutes of the ' + a.mins + ' are planned, so there is time to settle and pack up.</p>' + (a.fewer ? '<div class="box fewer"><p><b>Fewer of you?</b> ' + esc(a.fewer) + '</p></div>' : '') + (a.rules ? '<div class="box rules"><p><b>Ground rules.</b> ' + esc(a.rules) + '</p></div>' : '') + deck(a.cards) + deck(a.cards3) + deck(a.cards2) + targets + para + allQs + '<ol class="steps" role="list">' + steps + '</ol>' + results + '<div class="box help"><p><b>If you’re stuck.</b> ' + esc(a.support) + '</p><p><b>Go further.</b> ' + esc(a.stretch) + '</p></div>') +
+    stage('what to', 'do', '<p class="hint">You can run this yourselves. Start the timer on each step to keep things moving: it beeps when time is up. Keep this screen open on the timekeeper’s device. Working with others? Choose one person to run the timers and read each step out. ' + total + ' minutes of the ' + a.mins + ' are planned, so there is time to settle and pack up.</p>' + (a.fewer ? '<div class="box fewer"><p><b>Fewer of you?</b> ' + esc(a.fewer) + '</p></div>' : '') + (a.rules ? '<div class="box rules"><p><b>Ground rules.</b> ' + esc(a.rules) + '</p></div>' : '') + deck(a.cards) + deck(a.cards3) + deck(a.cards2) + targets + para + allQs + '<ol class="steps" role="list">' + steps + '</ol>' + results + '<div class="box help"><p><b>If you’re stuck.</b> ' + esc(a.support) + '</p><p><b>Go further.</b> ' + esc(a.stretch) + '</p></div>') +
     stage('check it', 'against the checklist', '<ul class="check" role="list">' + a.checklist.map(function (c, i) { return '<li><label><input type="checkbox" id="c' + i + '"><span>' + esc(c) + '</span></label></li>'; }).join('') + '</ul>') +
     stage('see the', 'model', '<p class="hint">Open this only after you have checked your own work. Find one thing the model does that yours does not.</p>' + modelHtml) +
     stage('one last', 'thought', '<div class="think"><span>I used to think…</span><span>Now I think…</span></div>' + thinkStep) +
@@ -129,6 +129,19 @@
 
     '<footer class="foot2"><div class="wrap"><span class="who"><img src="assets/crest.png" alt=""><span><strong style="font-weight:600">Arcadia British School</strong> <span class="it">Dubai</span></span></span><span>Inspired by Dubai Future Week, 18–21 November 2026. A school project, not an official Dubai Future Week event.</span></div></footer>';
 
+  /* ── random picker: one press, remembered for this visit ── */
+  function showPick(btn, n, save) {
+    var dk = btn.closest('.deck'), lis = dk.querySelectorAll('li'); if (!lis[n]) { return; }
+    lis.forEach(function (li, i) { li.classList.toggle('chosen', i === n); });
+    dk.querySelector('.picked').textContent = 'Picked: ' + lis[n].textContent;
+    btn.textContent = 'Picked'; btn.disabled = true;
+    if (save) { try { sessionStorage.setItem('afw-pick-' + id, String(n)); } catch (e) { /* not stored */ } }
+  }
+  (function () {
+    var btn = document.querySelector('.pickbtn'); if (!btn) { return; }
+    try { var v = sessionStorage.getItem('afw-pick-' + id); if (v !== null) { showPick(btn, Number(v), false); } } catch (e) { /* not stored */ }
+  })();
+
   /* ── F50 results table ── */
   var rows = [], RKEY = 'afw-f50-results';
   try { rows = JSON.parse(localStorage.getItem(RKEY) || '[]').filter(function (r) { return r && r.g >= 0 && r.g < 3 && r.b > 0 && r.a > 0; }); } catch (e) { rows = []; }
@@ -136,7 +149,7 @@
     var host = document.getElementById('rgrid'); if (!host) { return; }
     host.innerHTML = GROUPS.map(function (g, gi) {
       var mine = rows.map(function (r, i) { return { r: r, i: i }; }).filter(function (x) { return x.r.g === gi; });
-      var sum = mine.reduce(function (n, x) { return n + (x.r.b - x.r.a); }, 0);
+      var sum = mine.reduce(function (n, x) { return n + Math.round((x.r.b - x.r.a) * 10); }, 0) / 10;
       var mean = mine.length ? Math.round(sum / mine.length * 10) / 10 : null;
       var mb = mine.length ? mine.reduce(function (n, x) { return n + x.r.b; }, 0) / mine.length : 0, ma = mine.length ? mine.reduce(function (n, x) { return n + x.r.a; }, 0) / mine.length : 0;
       try { localStorage.setItem(RKEY, JSON.stringify(rows)); } catch (e) { /* private mode: keep in memory */ }
@@ -148,13 +161,14 @@
   function addResult() {
     var b = parseFloat(document.getElementById('rb').value), af = parseFloat(document.getElementById('ra').value), msg = document.getElementById('rmsg');
     if (!(b >= 1 && b <= 30) || !(af >= 1 && af <= 30)) { msg.textContent = 'Type both means as numbers between 1 and 30.'; return; }
+    b = Math.round(b * 10) / 10; af = Math.round(af * 10) / 10;
     rows.push({ g: Number(document.getElementById('rg').value), b: b, a: af });
     document.getElementById('rb').value = ''; document.getElementById('ra').value = ''; msg.textContent = 'Added.';
     drawResults(); document.getElementById('rb').focus();
   }
   drawResults();
   if (a.paragraph) { var mb0 = document.getElementById('mbtn'); mb0.disabled = true; mb0.querySelector('span').textContent = 'Locked until you reveal the errors in step 5.'; }
-  document.addEventListener('keydown', function (e) { if (e.key === 'Enter' && e.target && (e.target.id === 'rb' || e.target.id === 'ra')) { addResult(); } });
+  document.addEventListener('keydown', function (e) { if (e.key !== 'Enter' || !e.target) { return; } if (e.target.id === 'rb' && !document.getElementById('ra').value) { document.getElementById('ra').focus(); } else if (e.target.id === 'rb' || e.target.id === 'ra') { addResult(); } });
 
   /* ── timers: one runs at a time ── */
   var active = -1, remaining = 0, running = false, endAt = 0;
@@ -170,6 +184,7 @@
       btn.textContent = !on ? 'Start timer' : done ? 'Restart' : running ? 'Pause' : 'Resume';
     });
   }
+  function awake() { try { if (navigator.wakeLock && document.visibilityState === 'visible') { navigator.wakeLock.request('screen').catch(function () {}); } } catch (e) { /* not supported */ } }
   var actx = null;
   function ding() {
     try { if (navigator.vibrate) { navigator.vibrate([200, 100, 200]); } } catch (e) { /* no vibration */ }
@@ -189,12 +204,13 @@
     if (remaining === 0) { running = false; document.getElementById('tsay').textContent = 'Step ' + (active + 1) + ': time is up'; ding(); }
   }
   setInterval(function () { if (!running) { return; } var b = remaining; sync(); if (remaining !== b) { paint(); } }, 250);
-  document.addEventListener('visibilitychange', function () { if (running) { sync(); paint(); } });
+  document.addEventListener('visibilitychange', function () { if (running) { sync(); paint(); awake(); } });
 
   document.addEventListener('click', function (e) {
     var sb = e.target.closest('button[data-step]');
     if (sb) {
       try { if (!actx) { var AC = window.AudioContext || window.webkitAudioContext; if (AC) { actx = new AC(); } } else if (actx.state === 'suspended') { actx.resume(); } } catch (err) { actx = null; }
+      awake();
       var i = Number(sb.dataset.step), done = i === active && remaining === 0 && !running;
       if (i !== active || done) { active = i; remaining = a.steps[i].m * 60; endAt = Date.now() + remaining * 1000; running = true; document.getElementById('tsay').textContent = ''; }
       else if (running) { sync(); running = false; }
@@ -216,10 +232,8 @@
     }
     var pk = e.target.closest('.pickbtn');
     if (pk) {
-      var lis = pk.closest('.deck').querySelectorAll('li'), n = Math.floor(Math.random() * lis.length);
-      lis.forEach(function (li, i) { li.classList.toggle('chosen', i === n); });
-      pk.parentNode.querySelector('.picked').textContent = 'Picked: ' + lis[n].textContent;
-      pk.textContent = 'Pick again';
+      var lis = pk.closest('.deck').querySelectorAll('li');
+      showPick(pk, Math.floor(Math.random() * lis.length), true);
       return;
     }
     if (e.target.id === 'radd') { addResult(); return; }
@@ -230,7 +244,7 @@
     if (ub) {
       var on = document.getElementById('para').classList.toggle('show');
       var lock = document.getElementById('mbtn'); if (lock) { lock.disabled = false; lock.querySelector('span').textContent = 'Finished your own? Now see the model.'; }
-      ub.setAttribute('aria-pressed', String(on));
+      ub.setAttribute('aria-pressed', String(on)); ub.textContent = on ? 'Hide the underlines' : 'Underline the errors';
     }
   });
 })();
