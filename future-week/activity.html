@@ -41,9 +41,10 @@
   };
   var deck = function (c) {
     if (!c || !c.items.length) { return ''; }
-    return '<div class="deck"><h3>' + esc(c.title) + '</h3>' + (c.note ? '<p>' + esc(c.note) + '</p>' : '') + (c.pick ? '<p><button type="button" class="pill pickbtn">Pick one for us</button> <span class="picked" role="status"></span></p><p class="small">One person presses, once. Everyone uses that card.</p>' : '') + '<ul>' + c.items.map(function (x) {
+    var open = c.fold ? '<details class="deck"><summary>' + esc(c.title) + ' (tap to open)</summary>' : '<div class="deck"><h3>' + esc(c.title) + '</h3>';
+    return open + (c.note ? '<p>' + esc(c.note) + '</p>' : '') + (c.pick ? '<p><button type="button" class="pill pickbtn">Pick one for us</button> <span class="picked" role="status"></span></p><p class="small">One person presses, once. Everyone uses that card.</p>' : '') + '<ul>' + c.items.map(function (x) {
       return typeof x === 'string' ? '<li>' + esc(x) + '</li>' : '<li><span class="k">' + esc(x.k || '') + '</span>' + esc(x.t || '') + '<small>' + esc(x.d || '') + '</small></li>';
-    }).join('') + '</ul></div>';
+    }).join('') + '</ul>' + (c.fold ? '</details>' : '</div>');
   };
 
   /* T20: hidden target pictures */
@@ -53,7 +54,7 @@
     C: '<svg viewBox="0 0 240 240" role="img" aria-label="Target C: a simple robot"><g fill="none" stroke="#0b0b0b" stroke-width="4" stroke-linejoin="round"><rect x="85" y="40" width="70" height="50"/><circle cx="106" cy="62" r="7"/><circle cx="134" cy="62" r="7"/><path d="M120 40V22"/><circle cx="120" cy="17" r="5"/><rect x="70" y="98" width="100" height="80"/><path d="M70 115H42M170 115h28M95 178v34M145 178v34"/></g></svg>'
   };
   var targets = !a.targets ? '' :
-    '<div class="targets"><h3>Hidden target pictures: only the prompter looks</h3><p>Prompter: use your own device. Do not let your partner see the screen. Tap a target to see it. Tap “Hide” before your partner looks. Partner (the machine): do not open the targets on your device. At step 7 you both look.</p>' +
+    '<div class="targets"><h3>Hidden target pictures: only the prompter looks</h3><p>Follow step 2. Partner (the machine): do not open the targets on your device.</p>' +
     '<div class="picks"><button type="button" class="pill" data-target="A" aria-pressed="false">Show target A</button><button type="button" class="pill" data-target="B" aria-pressed="false">Show target B</button><button type="button" class="pill" data-target="C" aria-pressed="false">Show target C</button><button type="button" class="pill" data-target="" aria-pressed="true">Hide</button></div>' +
     '<div class="stagebox" id="tstage">Target hidden</div></div>';
 
@@ -116,9 +117,9 @@
     stage('know this', 'first', '<div class="box drop"><p>' + esc(a.drop) + '</p></div>') +
     stage('an example', 'before you start', '<div class="box eg"><p>' + a.example + '</p></div>') +
     stage('what to', 'do',
-      '<div class="box start"><p><b>No teacher is needed.</b> You run this yourselves.</p><ul class="sub"><li>Choose one timekeeper.</li><li>The timekeeper keeps this page open and reads each step out.</li><li>Press “Start timer” at each step. It beeps when the time is up.</li><li>The steps take ' + total + ' minutes, so you have a few minutes spare.</li></ul>' +
-      '<p><b>You make:</b> ' + esc(a.make) + '</p><p><b>Who you need:</b> ' + esc(lower(D.teams[a.team].label)) + '. ' + esc(D.teams[a.team].note) + '</p></div>' +
-      (a.fewer ? '<div class="box fewer">' + boxed('Working alone or in a smaller group?', a.fewer) + '</div>' : '') + (a.rules ? '<div class="box rules">' + boxed('Rules for this activity.', a.rules) + '</div>' : '') + deck(a.cards) + deck(a.cards3) + deck(a.cards2) + targets + para + allQs + '<ol class="steps" role="list">' + steps + '</ol>' + results + '<div class="box help"><p><b>If you’re stuck:</b> ' + esc(a.support) + '</p><p><b>Finished early? Think or write about this:</b> ' + esc(a.stretch) + '</p></div>') +
+      '<div class="box start"><p><b>No teacher is needed.</b> You run this yourselves.</p><ul class="sub"><li>Choose one timekeeper. They keep this page open and read each step out.' + (a.team === 'alone' ? ' (On your own, that is you.)' : '') + '</li><li>Press “Start timer” at each step. It beeps when the time is up.</li><li>The steps take ' + total + ' minutes. You have ' + (a.mins - total) + (a.mins - total === 1 ? ' minute' : ' minutes') + ' spare.</li></ul>' +
+      '<p><b>You make:</b> ' + esc(a.make) + '</p><p><b>Who you need:</b> ' + { alone: 'Just you. If a step needs other people, open the green box below.', partner: 'At least one other person, such as a friend or someone at home.', group: 'A small group. Fewer of you? Open the green box below.' }[a.team] + ' <b>Best with:</b> ' + esc(lower(a.group)) + '.</p></div>' +
+      (a.fewer ? '<details class="box fewer"><summary>' + (a.team === 'alone' ? 'Working alone or in a smaller group? Tap to open' : 'Fewer people than this? Tap to open') + '</summary>' + (Array.isArray(a.fewer) ? '<ul class="sub">' + a.fewer.map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') + '</ul>' : '<p>' + esc(a.fewer) + '</p>') + '</details>' : '') + deck(a.cards) + deck(a.cards3) + deck(a.cards2) + targets + para + allQs + (a.rules ? '<div class="box rules">' + boxed('Rules for this activity.', a.rules) + '</div>' : '') + '<ol class="steps" role="list">' + steps + '</ol>' + results + '<div class="box help"><p><b>If you’re stuck:</b> ' + esc(a.support) + '</p><p><b>Finished early? Think or write about this:</b> ' + esc(a.stretch) + '</p></div>') +
     stage('check it', 'with the checklist', '<p class="hint">Tick each point your work meets. Fix anything that is missing.</p>' + '<ul class="check" role="list">' + a.checklist.map(function (c, i) { return '<li><label><input type="checkbox" id="c' + i + '"><span>' + esc(c) + '</span></label></li>'; }).join('') + '</ul>') +
     stage('see a', 'model answer', '<p class="hint">Open this only after you have checked your own work. Find one thing the model answer does that yours does not.</p>' + modelHtml) +
     stage('one last', 'thought', '<div class="think"><span>I used to think…</span><span>Now I think…</span></div>' + thinkStep) +
@@ -128,7 +129,7 @@
     '<div class="sbox q"><h2>' + (a.ownQ ? '<span class="it">Arcadia’s</span> question' : a.qLabel ? esc(a.qLabel) : '<span class="it">the big</span> question') + '</h2><p>' + esc(a.question) + '</p></div>' +
     '<div class="sbox dfw"><h2><span class="it">where this idea</span> comes from</h2><p>' + esc(a.from) + '</p></div>' +
 
-    (a.comp ? '<div class="sbox cmp"><h2><span class="it">enter the</span> competition</h2><p>You can enter the competition with this activity (' + esc(a.comp) + '). You send in your own work.</p><ol><li>Check it with the checklist.</li><li>Take a photo of it, or attach an entry slip to the back.</li><li>Send it through the entry form, or hand in the paper.</li></ol><p><a class="btn" href="enter.html">How to enter</a></p></div>' : '') +
+    (a.comp ? '<div class="sbox cmp"><h2><span class="it">enter the</span> competition</h2><p>You can enter the competition with this activity (' + esc(a.comp) + ').' + (a.team === 'group' ? ' You send in your own work, or your team’s.' : ' You send in your own work.') + '</p><ol><li>Check it with the checklist.</li><li>Take a photo of it, or attach an entry slip to the back.</li><li>Send it through the entry form, or hand in the paper.</li></ol><p><a class="btn" href="enter.html">How to enter</a></p></div>' : '') +
 
     '</aside></main><p class="sr" id="tsay" role="status"></p>' +
 
