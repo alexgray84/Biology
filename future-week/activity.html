@@ -53,7 +53,7 @@
     C: '<svg viewBox="0 0 240 240" role="img" aria-label="Target C: a simple robot"><g fill="none" stroke="#0b0b0b" stroke-width="4" stroke-linejoin="round"><rect x="85" y="40" width="70" height="50"/><circle cx="106" cy="62" r="7"/><circle cx="134" cy="62" r="7"/><path d="M120 40V22"/><circle cx="120" cy="17" r="5"/><rect x="70" y="98" width="100" height="80"/><path d="M70 115H42M170 115h28M95 178v34M145 178v34"/></g></svg>'
   };
   var targets = !a.targets ? '' :
-    '<div class="targets"><h3>Hidden target pictures: prompter only</h3><p>Prompter: use this on your own device and keep the screen away from your machine. Tap a target to see it, and tap “Hide” before your machine looks. Show it to both of you only at step 7. Machine: do not open the targets on your own device.</p>' +
+    '<div class="targets"><h3>Hidden target pictures: only the prompter looks</h3><p>Prompter: use your own device. Do not let your partner see the screen. Tap a target to see it. Tap “Hide” before your partner looks. Partner (the machine): do not open the targets on your device. At step 7 you both look.</p>' +
     '<div class="picks"><button type="button" class="pill" data-target="A" aria-pressed="false">Show target A</button><button type="button" class="pill" data-target="B" aria-pressed="false">Show target B</button><button type="button" class="pill" data-target="C" aria-pressed="false">Show target C</button><button type="button" class="pill" data-target="" aria-pressed="true">Hide</button></div>' +
     '<div class="stagebox" id="tstage">Target hidden</div></div>';
 
@@ -65,7 +65,7 @@
   /* F50: shared results table, so no board is needed */
   var GROUPS = ['Movement', 'Breathing', 'Still (control)'];
   var results = !a.results ? '' :
-    '<div class="results" id="results"><h3>Results table</h3><p>The scribe types in each person’s mean before and mean after, in centimetres. Change = before − after, so a plus number means faster. The results stay on this device only and are not sent anywhere.</p>' +
+    '<div class="results" id="results"><h3>Results table</h3><p>The timekeeper types in each person’s mean before and mean after, in centimetres. The mean is the average. Change = before − after, so a plus number means faster. The results stay on this device only and are not sent anywhere.</p>' +
     '<div class="radd"><label>Group <select id="rg">' + GROUPS.map(function (g, i) { return '<option value="' + i + '">' + g + '</option>'; }).join('') + '</select></label>' +
     '<label>Mean before (cm) <input id="rb" type="number" inputmode="decimal" step="0.1" min="1" max="30"></label>' +
     '<label>Mean after (cm) <input id="ra" type="number" inputmode="decimal" step="0.1" min="1" max="30"></label>' +
@@ -76,8 +76,15 @@
       return T[k].questions.map(function (q) { return '<li><span class="k">HOW WE’LL ' + esc(T[k].word.toUpperCase()) + '</span>' + esc(q) + '</li>'; }).join('');
     }).join('') + '</ul></div>';
 
+  var body = function (v) {
+    return Array.isArray(v) ? '<ol class="sub">' + v.map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') + '</ol>' : '<p>' + esc(v) + '</p>';
+  };
+  var boxed = function (label, v) {
+    return Array.isArray(v) ? '<p><b>' + label + '</b></p><ul class="sub">' + v.map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') + '</ul>' : '<p><b>' + label + '</b> ' + esc(v) + '</p>';
+  };
+  var lower = function (t) { return /^[A-Z][a-z ]/.test(t) ? t.charAt(0).toLowerCase() + t.slice(1) : t; };
   var stepHtml = function (s, i) {
-    return '<li class="step" data-i="' + i + '"><span class="big" aria-hidden="true">' + (i + 1) + '</span><div class="mid"><div class="tags"><span class="tag yl">' + s.m + (s.m === 1 ? ' minute' : ' minutes') + '</span><span class="tag">' + esc(s.who) + '</span></div><h3>' + esc(s.t) + '</h3><p>' + esc(s.d) + '</p></div>' +
+    return '<li class="step" data-i="' + i + '"><span class="big" aria-hidden="true">' + (i + 1) + '</span><div class="mid"><div class="tags"><span class="tag yl">' + s.m + (s.m === 1 ? ' minute' : ' minutes') + '</span><span class="tag">' + esc(s.who) + '</span></div><h3>' + esc(s.t) + '</h3>' + body(s.d) + '</div>' +
       '<div class="clockcol"><span class="clock" role="timer" aria-label="Step ' + (i + 1) + ' timer">' + s.m + ':00</span><button type="button" data-step="' + i + '">Start timer</button></div></li>';
   };
   var lastIsThink = /used to think/i.test(a.steps[a.steps.length - 1].t);
@@ -86,7 +93,7 @@
   var thinkStep = lastIsThink ? '<ol class="steps" role="list" start="' + (cut + 1) + '">' + stepHtml(a.steps[cut], cut) + '</ol>' : '';
 
   var model = a.model;
-  var modelHtml = '<div class="model"><button type="button" id="mbtn" aria-expanded="false" aria-controls="minner"><span>Finished your own? Now see the model.</span><span class="tog">Show</span></button><div class="inner" id="minner" hidden>' +
+  var modelHtml = '<div class="model"><button type="button" id="mbtn" aria-expanded="false" aria-controls="minner"><span>Finished your own? Now see a model answer.</span><span class="tog">Show</span></button><div class="inner" id="minner" hidden>' +
     (model.intro ? '<p>' + model.intro + '</p>' : '') +
     '<ol>' + model.marks.map(function (m, i) { return '<li><i aria-hidden="true">' + (i + 1) + '</i><span>' + (model.plain ? '' : '<small>Checklist point ' + (i + 1) + '</small>') + m + '</span></li>'; }).join('') + '</ol>' +
     (model.after ? '<p>' + model.after + '</p>' : '') + '</div></div>';
@@ -99,27 +106,30 @@
     '<header class="bar bar--flat"><a class="brand" href="index.html"><img src="assets/crest.png" alt="Arcadia British School crest"><span><b>Future Week</b><small>Arcadia British School</small></span></a>' +
     '<a class="cta" href="index.html#activities"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"></path></svg>All activities</a></header>' +
     '<div class="row"><div class="copy">' +
-    '<span class="tchip">' + (t ? '<span class="it">' + t.n + ' · how we’ll</span> ' + esc(t.word) : '<span class="it">bonus ·</span> any track') + '</span>' +
+    '<span class="tchip">' + (t ? '<span class="it">' + t.n + ' · how we’ll</span> ' + esc(t.word) : '<span class="it">bonus ·</span> any theme') + '</span>' +
     '<h1>' + esc(a.title) + '</h1><p class="sum">' + esc(a.blurb) + '</p>' +
-    '<ul class="facts"><li class="m">' + a.mins + ' minutes</li><li class="y">' + yrs + '</li><li>' + esc(D.teams[a.team].label) + '</li><li>Kit: ' + esc(a.kit) + '</li>' + (a.comp ? '<li class="c">Competition entry</li>' : '') + '</ul>' +
+    '<ul class="facts"><li class="m">' + a.mins + ' minutes</li><li class="y">' + yrs + '</li><li>' + esc(D.teams[a.team].label) + '</li><li>Best with: ' + esc(lower(a.group)) + '</li><li>You need: ' + esc(lower(a.kit)) + '</li>' + (a.comp ? '<li class="c">Competition entry</li>' : '') + '</ul>' +
     '</div><img class="art" src="' + (t ? t.img : 'assets/hero.jpg') + '" alt="' + esc(t ? t.alt : '') + '"></div>' +
     '</div></section>' +
 
     '<main class="wrap amain"><div class="flow">' +
     stage('know this', 'first', '<div class="box drop"><p>' + esc(a.drop) + '</p></div>') +
     stage('an example', 'before you start', '<div class="box eg"><p>' + a.example + '</p></div>') +
-    stage('what to', 'do', '<p class="hint">You can run this yourselves. Start the timer on each step to keep things moving: it beeps when time is up. Keep this screen open on the timekeeper’s device. Working with others? Choose one person to run the timers and read each step out. ' + total + ' minutes of the ' + a.mins + ' are planned, so there is time to settle and pack up.</p>' + (a.fewer ? '<div class="box fewer"><p><b>Fewer of you?</b> ' + esc(a.fewer) + '</p></div>' : '') + (a.rules ? '<div class="box rules"><p><b>Ground rules.</b> ' + esc(a.rules) + '</p></div>' : '') + deck(a.cards) + deck(a.cards3) + deck(a.cards2) + targets + para + allQs + '<ol class="steps" role="list">' + steps + '</ol>' + results + '<div class="box help"><p><b>If you’re stuck.</b> ' + esc(a.support) + '</p><p><b>Go further.</b> ' + esc(a.stretch) + '</p></div>') +
-    stage('check it', 'against the checklist', '<ul class="check" role="list">' + a.checklist.map(function (c, i) { return '<li><label><input type="checkbox" id="c' + i + '"><span>' + esc(c) + '</span></label></li>'; }).join('') + '</ul>') +
-    stage('see the', 'model', '<p class="hint">Open this only after you have checked your own work. Find one thing the model does that yours does not.</p>' + modelHtml) +
+    stage('what to', 'do',
+      '<div class="box start"><p><b>No teacher is needed.</b> You run this yourselves.</p><ul class="sub"><li>Choose one timekeeper.</li><li>The timekeeper keeps this page open and reads each step out.</li><li>Press “Start timer” at each step. It beeps when the time is up.</li><li>The steps take ' + total + ' minutes, so you have a few minutes spare.</li></ul>' +
+      '<p><b>You make:</b> ' + esc(a.make) + '</p><p><b>Who you need:</b> ' + esc(lower(D.teams[a.team].label)) + '. ' + esc(D.teams[a.team].note) + '</p></div>' +
+      (a.fewer ? '<div class="box fewer">' + boxed('Working alone or in a smaller group?', a.fewer) + '</div>' : '') + (a.rules ? '<div class="box rules">' + boxed('Rules for this activity.', a.rules) + '</div>' : '') + deck(a.cards) + deck(a.cards3) + deck(a.cards2) + targets + para + allQs + '<ol class="steps" role="list">' + steps + '</ol>' + results + '<div class="box help"><p><b>If you’re stuck:</b> ' + esc(a.support) + '</p><p><b>Finished early? Think or write about this:</b> ' + esc(a.stretch) + '</p></div>') +
+    stage('check it', 'with the checklist', '<p class="hint">Tick each point your work meets. Fix anything that is missing.</p>' + '<ul class="check" role="list">' + a.checklist.map(function (c, i) { return '<li><label><input type="checkbox" id="c' + i + '"><span>' + esc(c) + '</span></label></li>'; }).join('') + '</ul>') +
+    stage('see a', 'model answer', '<p class="hint">Open this only after you have checked your own work. Find one thing the model answer does that yours does not.</p>' + modelHtml) +
     stage('one last', 'thought', '<div class="think"><span>I used to think…</span><span>Now I think…</span></div>' + thinkStep) +
     '</div>' +
 
     '<aside class="side">' +
     '<div class="sbox q"><h2>' + (a.ownQ ? '<span class="it">Arcadia’s</span> question' : a.qLabel ? esc(a.qLabel) : '<span class="it">the big</span> question') + '</h2><p>' + esc(a.question) + '</p></div>' +
-    '<div class="sbox dfw"><h2><span class="it">from</span> Dubai Future Week</h2><p>' + esc(a.from) + '</p></div>' +
-    '<div class="sbox"><h2><span class="it">you</span> make</h2><p>' + esc(a.make) + '</p></div>' +
-    (a.comp ? '<div class="sbox cmp"><h2><span class="it">competition</span> entry</h2><p>This is an entry route for ' + esc(a.comp) + '. You send in your own work.</p><ol><li>Tick it against the three-point checklist.</li><li>Photograph it, or fix an entry slip to the back.</li><li>Send it through the entry form, or hand in the paper.</li></ol><p><a class="btn" href="enter.html">How to enter</a></p></div>' : '') +
-    '<div class="sbox alone"><h2><span class="it">who you</span> need</h2><p><b>' + esc(D.teams[a.team].label) + '.</b> ' + esc(D.teams[a.team].note) + ' No teacher is needed: you run it yourselves.</p></div>' +
+    '<div class="sbox dfw"><h2><span class="it">where this idea</span> comes from</h2><p>' + esc(a.from) + '</p></div>' +
+
+    (a.comp ? '<div class="sbox cmp"><h2><span class="it">enter the</span> competition</h2><p>You can enter the competition with this activity (' + esc(a.comp) + '). You send in your own work.</p><ol><li>Check it with the checklist.</li><li>Take a photo of it, or attach an entry slip to the back.</li><li>Send it through the entry form, or hand in the paper.</li></ol><p><a class="btn" href="enter.html">How to enter</a></p></div>' : '') +
+
     '</aside></main><p class="sr" id="tsay" role="status"></p>' +
 
     '<section class="wrap next"><h2><span class="it">try</span> next</h2><div class="row">' + picks.map(function (n) {
@@ -243,7 +253,7 @@
     var ub = e.target.closest('#uline');
     if (ub) {
       var on = document.getElementById('para').classList.toggle('show');
-      var lock = document.getElementById('mbtn'); if (lock) { lock.disabled = false; lock.querySelector('span').textContent = 'Finished your own? Now see the model.'; }
+      var lock = document.getElementById('mbtn'); if (lock) { lock.disabled = false; lock.querySelector('span').textContent = 'Finished your own? Now see a model answer.'; }
       ub.setAttribute('aria-pressed', String(on)); ub.textContent = on ? 'Hide the underlines' : 'Underline the errors';
     }
   });
