@@ -841,9 +841,9 @@ window.AFW = {
   entry: { formUrl: "https://docs.google.com/forms/d/e/1FAIpQLSfazhH6y8eD-IqzXfYfYEGSeyzJ8ivOPF0W7JpcSXi_qDRGKA/viewform", deadline: "Tuesday 1 December 2026", dropBox: "Hand it to Mr Gray in room 301B, or give it to your Head of Year, who will pass it on.", photoPoint: "" },
 
   teams: {
-    alone: { label: "On your own", note: "You can do this by yourself, at school or at home. One step asks someone to check your work. If nobody is around, you check it yourself. It also works in a pair or a group." },
-    partner: { label: "Needs a partner", note: "You need one other person, such as a friend or someone at home. It also works with a whole class." },
-    group: { label: "Needs a small group", note: "You need a group of three or more. You can run it yourselves." }
+    alone: { label: "1 or more people", note: "You can do this by yourself, at school or at home. One step asks someone to check your work. If nobody is around, you check it yourself. It also works in a pair or a group." },
+    partner: { label: "2 or more people", note: "You need one other person, such as a friend or someone at home. It also works with a whole class." },
+    group: { label: "3 or more people", note: "You need a group of three or more. You can run it yourselves." }
   },
 
   competition: {
