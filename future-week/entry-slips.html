@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Entry slips · Arcadia Future Week</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400..700&display=swap" rel="stylesheet">
+<style>
+@page{size:A4 portrait;margin:10mm}
+*{box-sizing:border-box}
+body{margin:0;background:#f5f096;color:#0b0b0b;font-family:'Inter Tight',system-ui,-apple-system,sans-serif;font-size:10pt;line-height:1.3}
+.top{max-width:190mm;margin:0 auto;padding:18px 0;display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between}
+.top a,.top button{min-height:44px;padding:0 20px;border-radius:999px;border:0;background:#0d2d6e;color:#fff;font:inherit;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;text-decoration:none}
+.sheet{width:190mm;margin:0 auto 24px;background:#fff;display:grid;grid-template-columns:1fr 1fr;grid-auto-rows:138mm}
+.slip{padding:5mm 6mm;border:1px dashed #555;display:flex;flex-direction:column;gap:2.2mm;overflow:hidden}
+.slip h2{margin:0;font-size:13pt;letter-spacing:-.02em;color:#0d2d6e}
+.slip h2 span{font-weight:400;color:#0b0b0b}
+.f{display:flex;align-items:flex-end;gap:2mm;font-weight:600}
+.f i{flex:1;border-bottom:1px solid #0b0b0b;height:5.5mm}
+.g{font-weight:600;margin-top:1mm}
+ul{margin:0;padding:0;list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:1mm 3mm;font-size:9pt}
+li{display:flex;gap:2mm;align-items:flex-start}
+li::before{content:"";flex:0 0 3.6mm;height:3.6mm;border:1px solid #0b0b0b;margin-top:.4mm}
+.dec{margin-top:auto;font-size:9pt;border-top:1px solid #0b0b0b;padding-top:2.5mm}
+@media print{body{background:#fff}.top{display:none}.sheet{margin:0}}
+</style>
+</head>
+<body>
+<div class="top"><a href="enter.html">Back to how to enter</a><button type="button" onclick="window.print()">Print this page</button></div>
+<div class="sheet" id="sheet"></div>
+<script src="data.js"></script>
+<script>
+(function () {
+  var D = window.AFW; if (!D) { return; }
+  var esc = function (s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); };
+  var routes = D.competition.routes.map(function (r) { return '<li>' + esc(D.acts[r.id].title) + '</li>'; }).join('');
+  var slip = '<div class="slip"><h2>Arcadia Future Week <span>entry slip</span></h2>' +
+    '<div class="f">Name <i></i></div><div class="f">Year <i></i> Tutor group <i></i></div>' +
+    '<div class="f">Team members <i></i></div><div class="f"><i></i></div>' +
+    '<div class="g">Activity (tick one)</div><ul>' + routes + '</ul>' +
+    '<div class="g">Where I did it (tick one)</div><ul><li>Form time</li><li>A lesson or intervention</li><li>At home</li><li>My own time in school</li></ul>' +
+    '<div class="f">AI used for <i></i></div>' +
+    '<div class="dec">This is my own work, or my team’s own work. I ticked it against the three-point checklist.<div class="f" style="margin-top:2mm">Signed <i></i></div></div></div>';
+  document.getElementById('sheet').innerHTML = slip + slip + slip + slip;
+})();
+</script>
+</body>
+</html>
