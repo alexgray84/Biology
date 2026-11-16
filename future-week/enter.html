@@ -85,6 +85,8 @@
 <footer class="foot2" style="margin-top:80px"><div class="wrap"><span class="who"><img src="assets/crest.png" alt=""><span><strong style="font-weight:600">Arcadia British School</strong> <span class="it">Dubai</span></span></span><span>Inspired by Dubai Future Week, 18–21 November 2026. A school project, not an official Dubai Future Week event.</span></div></footer>
 
 <script src="data.js"></script>
+<script src="bands.js"></script>
+<script src="band.js"></script>
 <script>
 (function () {
   var D = window.AFW; if (!D) { return; }
@@ -109,6 +111,31 @@
   $('dropline').textContent = E.dropBox || 'Hand it in at the school office.';
   if (E.deadline) { $('sendhint').textContent += ' Entries close on ' + E.deadline + '.'; }
   $('deadrule').innerHTML = '<b>The deadline.</b> ' + (E.deadline ? 'Entries close on ' + esc(E.deadline) + '. Late entries are not judged.' : 'The closing date will be shown here. Late entries are not judged.');
+
+  /* Years 3 to 6: the class teacher sends the entry in */
+  if (window.AFW_PRIMARY) {
+    document.querySelector('.ahero .sum').textContent = 'You make the work. Your class teacher sends it in for you.';
+    $('facts').innerHTML = '<li class="m">8 competition activities</li><li class="y">' + esc(window.AFW_BAND_LABEL) + '</li>' + (E.deadline ? '<li class="c">Closes ' + esc(E.deadline) + '</li>' : '');
+    var stages = document.querySelectorAll('.flow > .stage');
+    stages[1].querySelector('.box').innerHTML = '<p>Follow the steps on the activity page. Work on paper. When you finish, check your work with the checklist. Tick each thing it does. Fix what is missing.</p>';
+    stages[2].innerHTML = '<h2><span class="n" aria-hidden="true">3</span><span><span class="it">give it to</span> your teacher</span></h2>' +
+      '<div class="way"><ol><li>Write your name, your year, your class and the activity’s name on the back.</li><li>If you worked in a team, write every name.</li><li>Give your work to your class teacher.</li><li>Your teacher sends it in for you.</li></ol>' +
+      (E.deadline ? '<p>Your teacher will tell you when to give it in. Entries close on ' + esc(E.deadline) + '.</p>' : '') + '</div>' +
+      '<details class="forstaff"><summary>For teachers: how to send in a class’s entries</summary>' +
+      '<p>Send one entry at a time. Photograph the work and complete the entry form for the pupil, choosing the activity. ' + (okUrl ? '<a href="' + esc(E.formUrl) + '" target="_blank" rel="noopener">Open the entry form</a>.' : '') + '</p>' +
+      '<p>Or attach an entry slip to each piece and pass the paper on. ' + esc(E.dropBox || '') + ' <a href="entry-slips.html">Print entry slips</a>.</p>' +
+      '<p>Please check each entry is the pupil’s own work before sending it.</p></details>';
+    stages[3].querySelector('.check').innerHTML =
+      '<li><div class="rule"><b>Your own work.</b> You can get ideas from anyone. You must make the work yourself, or with your team.</div></li>' +
+      '<li><div class="rule"><b>No AI.</b> Do your own thinking. Do not send in words or pictures that a computer made.</div></li>' +
+      '<li><div class="rule"><b>Teams.</b> A team gives in one piece of work, with every name on the back.</div></li>' +
+      '<li><div class="rule"><b>One entry for each activity.</b> You can enter more than one activity.</div></li>' +
+      '<li><div class="rule"><b>The deadline.</b> ' + (E.deadline ? 'Entries close on ' + esc(E.deadline) + '.' : 'Your teacher knows the closing date.') + '</div></li>';
+    var side = document.querySelectorAll('.side .sbox');
+    side[1].innerHTML = '<h2><span class="it">the</span> awards</h2><p>Ask your teacher about awards for your year group.</p>';
+    side[2].innerHTML = '<h2><span class="it">before you</span> give it in</h2><p>Is your name on the back? Does it do all three checklist things? Did you write which activity it is?</p>';
+  }
+  if (window.afwLinks) { window.afwLinks(); }
 })();
 </script>
 </body>

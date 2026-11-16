@@ -13,11 +13,13 @@
 <div id="app"><noscript><p style="padding:40px">This page needs JavaScript. <a href="index.html">Back to all activities</a>.</p></noscript></div>
 
 <script src="data.js"></script>
+<script src="bands.js"></script>
+<script src="band.js"></script>
 <script>
 (function () {
   var D = window.AFW;
   if (!D) { document.getElementById('app').innerHTML = '<p style="padding:40px">Could not load the activities. <a href="index.html">Go back and try again</a>.</p>'; return; }
-  var T = D.tracks;
+  var T = D.tracks, PRIMARY = !!window.AFW_PRIMARY;
   var id = (new URLSearchParams(location.search).get('id') || '').toUpperCase();
   var a = D.acts[id];
   var app = document.getElementById('app');
@@ -66,7 +68,7 @@
   /* F50: shared results table, so no board is needed */
   var GROUPS = ['Movement', 'Breathing', 'Still (control)'];
   var results = !a.results ? '' :
-    '<div class="results" id="results"><h3>Results table</h3><p>The timekeeper types in each person’s mean before and mean after, in centimetres. The mean is the average. Change = before − after, so a plus number means faster. The results stay on this device only and are not sent anywhere.</p>' +
+    '<div class="results" id="results"><h3>Results table</h3><p>' + (window.AFW_PRIMARY ? 'The timekeeper types two numbers for each person. They are the mean before and the mean after, in cm. The table works out the change. A plus number means faster. The results stay on this device.' : 'The timekeeper types in each person’s mean before and mean after, in centimetres. The mean is the average. Change = before − after, so a plus number means faster. The results stay on this device only and are not sent anywhere.') + '</p>' +
     '<div class="radd"><label>Group <select id="rg">' + GROUPS.map(function (g, i) { return '<option value="' + i + '">' + g + '</option>'; }).join('') + '</select></label>' +
     '<label>Mean before (cm) <input id="rb" type="number" inputmode="decimal" step="0.1" min="1" max="30"></label>' +
     '<label>Mean after (cm) <input id="ra" type="number" inputmode="decimal" step="0.1" min="1" max="30"></label>' +
@@ -117,11 +119,13 @@
     stage('know this', 'first', '<div class="box drop"><p>' + esc(a.drop) + '</p></div>') +
     stage('an example', 'before you start', '<div class="box eg"><p>' + a.example + '</p></div>') +
     stage('what to', 'do',
-      '<div class="box start"><p><b>No teacher is needed.</b> You run this yourselves.</p><ul class="sub"><li>Choose one timekeeper. They keep this page open and read each step out.' + (a.team === 'alone' ? ' (On your own, that is you.)' : '') + '</li><li>Press “Start timer” at each step. It beeps when the time is up.</li><li>Read the checklist under the steps before you start. Your work must meet all three points.</li><li>The steps take ' + total + ' minutes. You have ' + (a.mins - total) + (a.mins - total === 1 ? ' minute' : ' minutes') + ' spare.</li></ul>' +
-      '<p><b>You make:</b> ' + esc(a.make) + '</p><p><b>Who you need:</b> ' + { alone: 'Just you. If a step needs other people, open the green box below.', partner: 'At least one other person, such as a friend or someone at home. A different number of you? Open the green box below.', group: 'A small group. Fewer of you? Open the green box below.' }[a.team] + ' <b>Best with:</b> ' + esc(lower(a.group)) + '.</p></div>' +
+      '<div class="box start">' + (PRIMARY
+        ? (a.adultLed ? '<p><b>Ask a grown-up to lead this one.</b> You still do the thinking and the making.</p>' : '<p><b>You can do this yourselves.</b> A grown-up can help you read it.</p>') + '<ul class="sub"><li>Pick one timekeeper. They read each step out loud.' + (a.team === 'alone' ? ' (On your own, that is you.)' : '') + '</li><li>Press “Start timer” for each step. It beeps at the end.</li><li>Read the checklist under the steps first. Your work must do all three things.</li><li>The steps take ' + total + ' minutes. You have ' + (a.mins - total) + (a.mins - total === 1 ? ' minute' : ' minutes') + ' spare.</li></ul>'
+        : '<p><b>No teacher is needed.</b> You run this yourselves.</p><ul class="sub"><li>Choose one timekeeper. They keep this page open and read each step out.' + (a.team === 'alone' ? ' (On your own, that is you.)' : '') + '</li><li>Press “Start timer” at each step. It beeps when the time is up.</li><li>Read the checklist under the steps before you start. Your work must meet all three points.</li><li>The steps take ' + total + ' minutes. You have ' + (a.mins - total) + (a.mins - total === 1 ? ' minute' : ' minutes') + ' spare.</li></ul>') +
+      '<p><b>You make:</b> ' + esc(a.make) + '</p><p><b>Who you need:</b> ' + (PRIMARY ? { alone: 'Just you. If a step needs a partner, open the green box.', partner: 'You and one more person. More or fewer of you? Open the green box.', group: 'A small group. Fewer of you? Open the green box.' } : { alone: 'Just you. If a step needs other people, open the green box below.', partner: 'At least one other person, such as a friend or someone at home. A different number of you? Open the green box below.', group: 'A small group. Fewer of you? Open the green box below.' })[a.team] + ' <b>Best with:</b> ' + esc(lower(a.group)) + '.</p></div>' +
       (a.fewer ? '<details class="box fewer"><summary>' + (a.team === 'alone' ? 'Working alone or in a smaller group? Tap to open' : a.team === 'partner' ? 'A different number of people? Tap to open' : 'Fewer people than this? Tap to open') + '</summary>' + (Array.isArray(a.fewer) ? '<ul class="sub">' + a.fewer.map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') + '</ul>' : '<p>' + esc(a.fewer) + '</p>') + '</details>' : '') + deck(a.cards) + deck(a.cards3) + deck(a.cards2) + targets + para + allQs + (a.rules ? '<div class="box rules">' + boxed('Rules for this activity.', a.rules) + '</div>' : '') + '<ol class="steps" role="list">' + steps + '</ol>' + results + '<div class="box help"><p><b>If you’re stuck:</b> ' + esc(a.support) + '</p><p><b>Finished early? Think or write about this:</b> ' + esc(a.stretch) + '</p></div>') +
-    stage('check it', 'with the checklist', '<p class="hint">Tick each point your work meets. Fix anything that is missing.</p>' + '<ul class="check" role="list">' + a.checklist.map(function (c, i) { return '<li><label><input type="checkbox" id="c' + i + '"><span>' + esc(c) + '</span></label></li>'; }).join('') + '</ul>') +
-    stage('see a', 'model answer', '<p class="hint">Open this only after you have checked your own work. Find one thing the model answer does that yours does not.</p>' + modelHtml) +
+    stage('check it', 'with the checklist', '<p class="hint">' + (PRIMARY ? 'Tick each thing your work does. Fix what is missing.' : 'Tick each point your work meets. Fix anything that is missing.') + '</p>' + '<ul class="check" role="list">' + a.checklist.map(function (c, i) { return '<li><label><input type="checkbox" id="c' + i + '"><span>' + esc(c) + '</span></label></li>'; }).join('') + '</ul>') +
+    stage('see a', 'model answer', '<p class="hint">' + (PRIMARY ? 'Check your own work first. Then open this. Find one thing it does that yours does not.' : 'Open this only after you have checked your own work. Find one thing the model answer does that yours does not.') + '</p>' + modelHtml) +
     stage('one last', 'thought', '<div class="think"><span>I used to think…</span><span>Now I think…</span></div>' + thinkStep) +
     '</div>' +
 
@@ -129,7 +133,9 @@
     '<div class="sbox q"><h2>' + (a.ownQ ? '<span class="it">Arcadia’s</span> question' : a.qLabel ? esc(a.qLabel) : '<span class="it">the big</span> question') + '</h2><p>' + esc(a.question) + '</p></div>' +
     '<div class="sbox dfw"><h2><span class="it">where this idea</span> comes from</h2><p>' + esc(a.from) + '</p></div>' +
 
-    (a.comp ? '<div class="sbox cmp"><h2><span class="it">enter the</span> competition</h2><p>You can enter the competition with this activity (' + esc(a.comp) + ').' + (a.team === 'group' ? ' You send in your own work, or your team’s.' : ' You send in your own work.') + '</p><ol><li>Check it with the checklist.</li><li>Take a photo of it, or attach an entry slip to the back.</li><li>Send it through the entry form, or hand in the paper.</li></ol><p><a class="btn" href="enter.html">How to enter</a></p></div>' : '') +
+    (a.comp ? '<div class="sbox cmp"><h2><span class="it">enter the</span> competition</h2>' + (PRIMARY
+      ? '<p>You can enter the competition with this activity. Your teacher sends it in for you.</p><ol><li>Check it with the checklist.</li><li>Write your name, year, class and the activity’s name on the back.</li><li>Give it to your class teacher.</li></ol>'
+      : '<p>You can enter the competition with this activity (' + esc(a.comp) + ').' + (a.team === 'group' ? ' You send in your own work, or your team’s.' : ' You send in your own work.') + '</p><ol><li>Check it with the checklist.</li><li>Take a photo of it, or attach an entry slip to the back.</li><li>Send it through the entry form, or hand in the paper.</li></ol>') + '<p><a class="btn" href="enter.html">How to enter</a></p></div>' : '') +
 
     '</aside></main><p class="sr" id="tsay" role="status"></p>' +
 
@@ -139,6 +145,8 @@
     }).join('') + '</div></section>' +
 
     '<footer class="foot2"><div class="wrap"><span class="who"><img src="assets/crest.png" alt=""><span><strong style="font-weight:600">Arcadia British School</strong> <span class="it">Dubai</span></span></span><span>Inspired by Dubai Future Week, 18–21 November 2026. A school project, not an official Dubai Future Week event.</span></div></footer>';
+
+  if (window.afwLinks) { window.afwLinks(); }
 
   /* ── random picker: one press, remembered for this visit ── */
   function showPick(btn, n, save) {

@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Arcadia Future Week</title>
-<meta name="description" content="Activities for Years 7 to 11, from ten minutes to a full lesson, led by the questions of Dubai Future Week 2026.">
+<meta name="description" content="Activities for Years 3 to 11, from ten minutes to a full lesson, led by the questions of Dubai Future Week 2026.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400..700&family=Newsreader:ital,opsz,wght@1,6..72,400..500&display=swap" rel="stylesheet">
@@ -34,7 +34,7 @@
 <p class="strap"><span class="it">for the</span> <strong>human</strong> <span class="it">of the</span> <strong>future</strong></p>
 <div class="datebar">
 <p class="when"><strong>18–21</strong> <span class="it">November 2026</span></p>
-<p>Years 7 to 11 <span class="it">in every classroom</span></p>
+<p>Years 3 to 11 <span class="it">in every classroom</span></p>
 <span class="go">
 <a href="#activities">Find an activity</a>
 <a href="#activities" aria-hidden="true" tabindex="-1"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M9 7h8v8"></path></svg></a>
@@ -51,7 +51,7 @@
 <section id="time" class="wrap sec">
 <div class="sechead">
 <h2 class="h2"><span class="it">how long</span> have you got?</h2>
-<p class="lede">Ten minutes or a whole lesson. Every activity is written so you can run it yourselves, with no teacher. Tap a time and we’ll show what fits.</p>
+<p class="lede" id="timelede">Ten minutes or a whole lesson. Every activity is written so you can run it yourselves, with no teacher. Tap a time and we’ll show what fits.</p>
 </div>
 <div class="tiles" id="tiles"></div>
 </section>
@@ -68,9 +68,10 @@
 <div class="wrap">
 <div class="head">
 <h2 class="h2" id="acts-h" tabindex="-1"><span class="it">pick one and</span> start</h2>
-<p>Twenty activities and one bonus for Years 7 to 11, from ten minutes to a full lesson. Paper and a pen is all most of them need.</p>
+<p>Twenty activities and one bonus, from ten minutes to a full lesson. Pick your year group first. Paper and a pen is all most of them need.</p>
 </div>
 <div class="filters">
+<div role="group" aria-label="Choose your year group" id="f-band" class="bandrow"></div>
 <div role="group" aria-label="Filter by time" id="f-time"></div>
 <div role="group" aria-label="Filter by year group" id="f-year"></div>
 <div role="group" aria-label="Filter by theme" id="f-track"></div>
@@ -94,15 +95,15 @@
 </div>
 <div class="panel" style="background:var(--yellow)">
 <h3><span class="it">how to</span> enter</h3>
-<p>You send in your own work. Do the activity on paper and check it with its checklist. Then send a photo through the entry form from your own device. If you can’t, hand in the paper with an entry slip.</p>
-<p><a class="btn" href="enter.html">How to enter, step by step</a></p>
+<div id="cmp-how"><p>You send in your own work. Do the activity on paper and check it with its checklist. Then send a photo through the entry form from your own device. If you can’t, hand in the paper with an entry slip.</p>
+<p><a class="btn" href="enter.html">How to enter, step by step</a></p></div>
 <h3 style="margin-top:8px"><span class="it">how it is</span> judged</h3>
 <p>Judges use the checklist for your activity. They also ask one more thing: does your work answer the activity’s question?</p>
 </div>
 <div class="panel" style="background:var(--navy);color:#fff;border:2px solid var(--gold)">
 <h3 style="color:var(--yellow)"><span class="it">the</span> awards</h3>
-<p><strong style="font-size:64px;line-height:1;letter-spacing:-.05em;color:var(--gold2)">11</strong></p>
-<p>One award for each of the five themes in two age groups, Years 7 to 8 and Years 9 to 11, plus one Future Stories award. Year 9 entries are judged in the Years 9 to 11 group.</p>
+<div id="cmp-awards"><p><strong style="font-size:64px;line-height:1;letter-spacing:-.05em;color:var(--gold2)">11</strong></p>
+<p>One award for each of the five themes in two age groups, Years 7 to 8 and Years 9 to 11, plus one Future Stories award. Year 9 entries are judged in the Years 9 to 11 group.</p></div>
 </div>
 </div>
 </section>
@@ -137,6 +138,8 @@
 </footer>
 
 <script src="data.js"></script>
+<script src="bands.js"></script>
+<script src="band.js"></script>
 <script src="assets/three.min.js" defer></script>
 <script>
 (function () {
@@ -170,8 +173,14 @@
   var pills = function (host, key, opts) {
     $(host).innerHTML = opts.map(function (o) { return '<button type="button" class="pill" data-key="' + key + '" data-val="' + o[0] + '">' + o[1] + '</button>'; }).join('');
   };
+  var BAND = window.AFW_BAND || 'sec', PRIMARY = !!window.AFW_PRIMARY;
+  $('f-band').innerHTML = '<span class="bandq">I am in</span>' + [['y34', 'Years 3–4'], ['y56', 'Years 5–6'], ['y79', 'Years 7–9'], ['y1011', 'Years 10–11']].map(function (o) {
+    return '<button type="button" class="pill band" data-band="' + o[0] + '" aria-pressed="' + String(BAND === o[0]) + '">' + o[1] + '</button>';
+  }).join('');
+  var BR = window.AFW_BAND_YEARS || null;
+  if (PRIMARY || BAND === 'y1011') { $('f-year').hidden = true; }
   pills('f-time', 'time', [[0, 'Any time'], [10, '10 min'], [20, '20 min'], [30, '30 min'], [50, '50 min']]);
-  pills('f-year', 'year', [[0, 'All years'], [7, 'Y7'], [8, 'Y8'], [9, 'Y9'], [10, 'Y10'], [11, 'Y11']]);
+  pills('f-year', 'year', (window.AFW_BAND === 'y79' ? [[0, 'Years 7–9'], [7, 'Y7'], [8, 'Y8'], [9, 'Y9']] : [[0, 'All years'], [7, 'Y7'], [8, 'Y8'], [9, 'Y9'], [10, 'Y10'], [11, 'Y11']]));
   pills('f-track', 'track', [['', 'All themes']].concat(tk.map(function (k) { return [k, T[k].label]; })));
 
   pills('f-team', 'team', [['', 'Any group size'], ['alone', 'Just me'], ['partner', 'Two of us'], ['group', 'Three or more']]);
@@ -198,10 +207,10 @@
     var n = 0, bonusOnly = true;
     document.querySelectorAll('#grid .card').forEach(function (el) {
       var a = D.acts[el.dataset.id];
-      var ok = (!state.time || a.mins === state.time) && (!state.year || (state.year >= a.years[0] && state.year <= a.years[1])) && (!state.track || !a.track || a.track === state.track) && (!state.team || RANK[a.team] <= RANK[state.team]);
+      var ok = (!state.time || a.mins === state.time) && (PRIMARY || !state.year || (state.year >= a.years[0] && state.year <= a.years[1])) && (!BR || (a.years[0] <= BR[1] && a.years[1] >= BR[0])) && (!state.track || !a.track || a.track === state.track) && (!state.team || RANK[a.team] <= RANK[state.team]);
       el.hidden = !ok; if (ok) { n += 1; if (a.track) { bonusOnly = false; } }
     });
-    document.querySelectorAll('.pill').forEach(function (b) {
+    document.querySelectorAll('.pill:not(.band)').forEach(function (b) {
       b.setAttribute('aria-pressed', String(String(state[b.dataset.key]) === b.dataset.val));
     });
     $('count').textContent = (n && state.track && bonusOnly) ? 'No ' + T[state.track].label + ' activity fits those filters. Showing the bonus activity.' : n === 1 ? 'Showing 1 activity' : 'Showing ' + n + ' activities';
@@ -215,6 +224,8 @@
   }
 
   document.addEventListener('click', function (e) {
+    var bp = e.target.closest('.pill.band');
+    if (bp) { if (bp.dataset.band !== BAND) { window.afwSetBand(bp.dataset.band); } return; }
     var p = e.target.closest('.pill');
     if (p) { state[p.dataset.key] = (p.dataset.key === 'track' || p.dataset.key === 'team') ? p.dataset.val : Number(p.dataset.val); apply(); return; }
     var tile = e.target.closest('.tile');
@@ -224,6 +235,12 @@
     if (e.target.id === 'clear') { state = { time: 0, year: 0, track: '', team: '' }; apply(); }
   });
   apply();
+  if (PRIMARY) {
+    $('timelede').textContent = 'Ten minutes or a whole lesson. You can do each activity yourselves, and a grown-up can help you read. Tap a time and we’ll show what fits.';
+    $('cmp-how').innerHTML = '<p>Do the activity on paper. Check it with its checklist. Write your name, year, class and the activity’s name on the back. Then give it to your class teacher. Your teacher sends it in for you.</p><p><a class="btn" href="enter.html">How to enter, step by step</a></p>';
+    $('cmp-awards').innerHTML = '<p>Entries from Years 3 to 6 are judged with the checklist on each activity page. Ask your teacher about awards for your year group.</p>';
+  }
+  if (window.afwLinks) { window.afwLinks(); }
 
   var paused = false, kickScene = function () {};
   $('pause').addEventListener('click', function () {
