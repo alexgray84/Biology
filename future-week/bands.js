@@ -28,7 +28,7 @@ window.AFW_BANDS = {
      ]
     },
     "support": "Start with: “My home would notice… and then…”",
-    "stretch": "Your home collects information about you. Who owns it?",
+    "stretch": "Your home collects information about you. Who owns that information?",
     "fewer": "On your own? Do the pairs steps yourself. Then ask someone to check your drawing. They use the checklist. Nobody to ask? Leave it for ten minutes. Then check it yourself. Pretend someone else made it. Write down one thing to fix.",
     "group": "On your own, then pairs",
     "kit": "Paper",
@@ -248,7 +248,7 @@ window.AFW_BANDS = {
     "from": "From a Dubai Future Week workshop for schools. It is called “If I Owned a City of the Future: Dubai Edition”. It is at Emirates Towers from 18 November. The team roles come from 500 Future Minds. The big question comes from the Dubai Media Office.",
     "drop": "Dubai Future Week brings 500 people together. They plan for things that could happen in the future. Some are teachers. Some are emergency workers. Some start businesses. Some design cities. Your group plays four of those roles (jobs).",
     "example": "One small part of a neighbourhood. It shows a normal day for a 13-year-old, with times: “6:45 the shutters open as it gets light · 7:20 walk to school on the shaded path · 3:15 football under the solar canopy (a roof of solar panels) · 6:00 dinner from the rooftop farm · 8:30 the street lights dim so you can see the stars.”",
-    "make": "A neighbourhood map on A3. It has a timeline of a normal day.",
+    "make": "A neighbourhood map on A3. It has a timeline (a list of times) of a normal day.",
     "checklist": [
      "It answers all three questions: home, move and care.",
      "It still works after the stress test.",
@@ -267,7 +267,7 @@ window.AFW_BANDS = {
     "fewer": [
      "Three of you: one person takes two roles.",
      "Two of you: take two roles each.",
-     "On your own? Think about all four roles yourself. Then show it to someone at home.",
+     "On your own? Think about all four roles yourself. Then show your map to someone at home.",
      "Nobody to show? Read it aloud. Then write one hard question a visitor might ask. Answer it."
     ],
     "group": "Groups of four",
@@ -346,7 +346,7 @@ window.AFW_BANDS = {
        "Write HOME where it feels like home.",
        "Write MOVE where people travel.",
        "Write CARE where a home looks after people.",
-       "Write a timeline (a list of times) under the map.",
+       "Write a timeline under the map.",
        "It shows a normal day for one person there."
       ]
      },
@@ -603,7 +603,7 @@ window.AFW_BANDS = {
      "marks": [
       "<b>“Blasted off from the UAE”</b> is wrong. Hope took off from Japan. The place was the Tanegashima Space Center. The rocket was a Japanese H-IIA rocket.",
       "<b>“Landed safely on the surface of Mars”</b> is wrong. Hope is an orbiter. An orbiter flies round a planet. Hope began to circle Mars on 9 February 2021. It has never landed.",
-      "<b>“Five science instruments”</b> is wrong. Hope carries three. One is a camera. One is an infrared spectrometer. One is an ultraviolet spectrometer."
+      "<b>“Five science instruments”</b> is wrong. Hope carries three. One is a camera. Two are spectrometers (tools that measure light). One is infrared. One is ultraviolet."
      ],
      "after": "Everything else in the paragraph is true. Hope did take off in July 2020. It did travel about 493 million kilometres. That took about seven months. It was the first Arab trip to another planet. It does study the air and weather on Mars. Here are two strong starred questions. “How far is Mars from the Sun?” You could look that up. “Will people ever live on Mars?” Nobody can answer that yet."
     },
@@ -779,7 +779,7 @@ window.AFW_BANDS = {
     "make": "One “We pick… because…” card.",
     "checklist": [
      "It has the right name for the technology.",
-     "It names a real UAE problem it can help.",
+     "It names a real UAE problem the technology helps with.",
      "It says who is helped first."
     ],
     "model": {
@@ -813,7 +813,7 @@ window.AFW_BANDS = {
       {
        "k": "3",
        "t": "Passive radiative cooling materials",
-       "d": "Paints, films and tiles that bounce sunlight away. They send heat out to space. They cool things down with no electricity."
+       "d": "Paints, films (thin sheets) and tiles that bounce sunlight away. They send heat out to space. They cool things down with no electricity."
       },
       {
        "k": "4",
@@ -903,9 +903,9 @@ window.AFW_BANDS = {
     "title": "How fast is too fast?",
     "blurb": "Taxis with no driver are coming to Arcadia’s gate. They are called driverless taxis. Write the rules. Choose how fast to bring them in.",
     "from": "This comes from Dubai Future Week. It is question 3 of “How we’ll innovate”. It also comes from The Policy Room. And from a Big Stage talk on 20 November. The talk is called “How Do We Legislate the Unknown?”",
-    "drop": "Dubai has a goal for 2030. One in every four trips should be driverless. That means no driver. New rules often come after the new technology.",
+    "drop": "Dubai has a goal for 2030. One in every four trips should be driverless. New rules often come after the new technology.",
     "example": "Here is one rule for delivery drones. Drones are flying machines that bring parcels. “No flights over school grounds between 7am and 4pm.” It keeps pupils safe. It says who: pupils. It says when: 7am to 4pm.",
-    "make": "A rules card. It has three rules. It has your choice: ban, trial or go. It has one fix.",
+    "make": "A rules card. It has three rules. It has your choice: ban (stop them), trial (test them first) or go. It has one fix.",
     "checklist": [
      "Each rule says who it keeps safe.",
      "You say why you chose ban, trial or go.",
@@ -937,7 +937,7 @@ window.AFW_BANDS = {
      {
       "t": "Who is helped? Who could be hurt?",
       "d": [
-       "Driverless taxis start to pick people up at Arcadia’s gate.",
+       "Pretend driverless taxis now pick people up at Arcadia’s gate.",
        "Make two lists side by side.",
        "List 1: who it helps.",
        "List 2: who could be hurt."
@@ -950,7 +950,7 @@ window.AFW_BANDS = {
        "Write three rules for the taxis on one sheet.",
        "This is your rules card.",
        "Choose how fast to bring the taxis in.",
-       "Pick one: ban (stop them), trial (test them first) or go.",
+       "Pick one: ban, trial or go.",
        "Say why."
       ]
      },
@@ -1082,8 +1082,8 @@ window.AFW_BANDS = {
     "model": {
      "intro": "A finished verdict sheet for the example policy. The policy was “Schools may swap PE lessons for extra computer lessons”:",
      "marks": [
-      "<b>Strongest argument from each side:</b> “Prosecution: Habits you build as a child stay for life. Defence: Most jobs already need computer skills. That will only grow.”",
-      "<b>Decision, with reasons:</b> “The policy is not fair to 2050 as written. The word ‘swap’ is the problem. It swaps health for skills. The adults of 2050 will need both.”",
+      "<b>Strongest argument from each side:</b> “Prosecution: Habits you build as a child stay for life. Defence: Most jobs already need computer skills. More jobs will need them soon.”",
+      "<b>Decision, with reasons:</b> “The policy is not fair to 2050 the way it is written. The word ‘swap’ is the problem. It swaps health for skills. The adults of 2050 will need both.”",
       "<b>The amendment:</b> “Schools may add computer lessons. But PE time must stay the same. Then the adults of 2050 have the skills. They still have the habit of moving.”"
      ]
     },
@@ -1270,7 +1270,7 @@ window.AFW_BANDS = {
      "items": [
       "Group chat",
       "Step counter",
-      "Video feed that never ends",
+      "Video feed (a list of videos) that never ends",
       "Family video call",
       "Gaming with friends",
       "Sleep tracker"
@@ -1343,7 +1343,7 @@ window.AFW_BANDS = {
      "plain": true,
      "intro": "Two full verdicts. They do not agree. Each one meets all three checks:",
      "marks": [
-      "<b>Verdict A:</b> “Most of us will not reach 150, and should not try. The longest proved life is 122. The best point against me: medicine has surprised us before. Only try if the extra years are healthy years.”",
+      "<b>Verdict A:</b> “Most of us will not reach 150, and should not try. The longest proved life is 122. The best point against me: medicine has surprised us before. Only if the extra years are healthy years.”",
       "<b>Verdict B:</b> “Some people may one day reach 150, and we should try. More years means more time with family. The best point against me: only rich people might get them. Only if everyone can have them, or no one.”",
       "<b>Notice:</b> Both answer “will we” and “should we”. Both give the best point against. Both end with “only if…”."
      ]
@@ -1457,7 +1457,7 @@ window.AFW_BANDS = {
      "items": [
       "Salad from a vertical farm",
       "Milk protein made by fermentation",
-      "Cultivated meat, grown from cells",
+      "Cultivated meat, grown from cells (tiny living parts)",
       "Flour made from insects"
      ]
     },
@@ -1531,7 +1531,7 @@ window.AFW_BANDS = {
      "intro": "A model conclusion. These numbers are made up. They show you how to do it. Use your own group’s results.",
      "marks": [
       "<b>Means:</b> “Movement group after: three pupils had means of 17.5, 16.8 and 17.0 cm. Add them: 51.3. Divide by 3: 51.3 ÷ 3 = 17.1 cm. Movement group: 19.2 cm before, 17.1 cm after. Breathing group: 19.5 cm before, 18.6 cm after. Still group: 19.0 cm before, 18.4 cm after.”",
-      "<b>Uses the numbers:</b> “All three groups got faster. Even the still group did. So some of the change is just practice. The movement group got better by the most: 2.1 cm. The still group got better by only 0.6 cm. But one person’s catches can change by over 2 cm. So we cannot be sure movement caused it.”",
+      "<b>Uses the numbers:</b> “All three groups got faster. Even the still group did. So some of the change is just practice. The movement group changed the most: 2.1 cm. The still group changed by only 0.6 cm. But one person’s catches can change by over 2 cm. So we cannot be sure movement caused it.”",
       "<b>Not a fair test:</b> “Each group had different people. Everyone had practised by the second test. To be fairer, every pupil should try all three. They should do them on different days.”"
      ]
     },
@@ -1573,8 +1573,9 @@ window.AFW_BANDS = {
        "Read the number just above their thumb.",
        "If they miss, drop it again.",
        "Take turns until you each have five catches.",
-       "Work out your mean. Add your five numbers.",
-       "Divide by 5. Use a calculator.",
+       "Work out your mean.",
+       "Add your five numbers. Divide by 5.",
+       "Use a calculator.",
        "Left one catch out? Add four. Divide by 4.",
        "Check your partner’s mean."
       ]
@@ -1764,7 +1765,7 @@ window.AFW_BANDS = {
     "model": {
      "intro": "A finished timeline and fix:",
      "marks": [
-      "<b>Five payments, and who can see them:</b> “7:30 Metro, Nol card (the people who run transport). 10:30 break snack, school card (the school, a parent). 1:10 vending machine, phone (the bank). 4:20 corner shop, phone (the bank, the shop). 7:00 extra for a game, a parent’s saved card. The parent said yes (the game company, the bank, the parent).”",
+      "<b>Five payments, and who can see them:</b> “7:30 Metro, Nol card (the people who run transport). 10:30 break snack, school card (the school, a parent). 1:10 vending machine, phone (the bank). 4:20 corner shop, phone (the bank, the shop). 7:00 extra for a game, a parent’s saved card, and the parent said yes (the game company, the bank, the parent).”",
       "<b>Who is left out:</b> “An 8-year-old. She has no phone and no card. She can’t buy her own snack at the shop.”",
       "<b>The fix:</b> “A wristband. Her parents put money on it. It has a limit for each day. It needs no bank account. She can pay. She can’t spend too much.”"
      ]
@@ -1806,7 +1807,7 @@ window.AFW_BANDS = {
      {
       "t": "Make it fair",
       "d": [
-       "Invent one rule or one helpful thing.",
+       "Invent one fix: a rule or a helpful thing.",
        "It must make cashless paying fair for your person.",
        "Check your work with the checklist."
       ]
@@ -1823,7 +1824,7 @@ window.AFW_BANDS = {
    },
    "B30": {
     "title": "The Pitch",
-    "blurb": "You have sixty seconds to pitch (talk about) a new Dubai company. The other teams choose if they will give money.",
+    "blurb": "Tell people about a new Dubai company in sixty seconds. The other teams choose if they will give money.",
     "from": "From Dubai Future Week. Theme: “How we’ll do business”, question 2. It also copies The Pitch. There, start-ups pitch live to investors. Experts give them feedback.",
     "drop": "A start-up is a new, small company. Investors give money to help it grow. A pitch is a short talk. It tries to make investors say yes. Investors look for a real problem first. Then they look for a good idea. A pitch answers five things. What is the problem? Who is it for? What is your solution (your answer)? Why now? What do you need?",
     "example": "A 60-second pitch. Its five parts have labels. <b>Problem:</b> “People work outside in Dubai’s summer. They need to know when to rest and drink.” <b>Who for:</b> “Gardeners, builders and delivery riders.” <b>Solution:</b> “CoolBand. It is a wristband. It warns you before your body gets too hot. It tells your boss to call a break.” <b>Why now:</b> “Summers are getting hotter. Sensors (small measuring parts) are now cheap. Every worker can have one.” <b>What we need:</b> “Fifty wristbands. One building site to test them on next July.”",
@@ -2064,7 +2065,7 @@ window.AFW_BANDS = {
    },
    "FS": {
     "title": "Future Stories",
-    "blurb": "Write up to 300 words. Tell one normal day in Dubai in 2050.",
+    "blurb": "Write up to 300 words. Tell the story of one normal day in Dubai in 2050.",
     "from": "Future Stories is a short story competition for adults. The Dubai Future Foundation runs it. This is Arcadia’s school version.",
     "drop": "A good future story does not explain the future. It shows one person on a normal day. The reader spots what has changed.",
     "example": "Here is a story opening. It has about 65 words. Yours can sound different. Look at what it does: “The shutters opened at 6:40, like every morning. The desert was pink behind the Burj Khalifa. Maryam’s grandmother was on the balcony. She was cross with the garden. ‘It gave the tomatoes too much water again,’ she said. ‘It measures the soil, Teta,’ said Maryam. ‘It doesn’t guess.’ ‘I don’t guess. I know,’ said her grandmother. A shuttle hummed past with no driver. Nobody looked up.”",
@@ -2316,7 +2317,7 @@ window.AFW_BANDS = {
     "model": {
      "intro": "A map of a neighbourhood with labels. It is built to solve heat. Each of the three questions is marked where the map answers it:",
      "marks": [
-      "<b>Home, move and care:</b> “Home: a shaded square in the middle, where every path meets. Move: nobody lives more than five minutes’ walk from the shuttle stop. Care: each building has a cool room that neighbours can use.”",
+      "<b>Home, move and care:</b> “Home: a shaded square in the middle, where every path meets. Move: nobody lives more than five minutes’ walk from the shuttle (small bus) stop. Care: each building has a cool room that neighbours can use.”",
       "<b>Stress test, power cut:</b> “Added in red: wind towers on the cool rooms. Now they still work with no electricity.”",
       "<b>Every role:</b> “Planner: shaded paths. Entrepreneur: a repair café on the square. Teacher: an outdoor classroom under the canopy. Responder: one clear route wide enough for an ambulance.”"
      ]
@@ -2416,8 +2417,8 @@ window.AFW_BANDS = {
     "blurb": "Sort six real decisions. Then write your own rule for when a machine may decide.",
     "from": "Dubai Future Week “How we’ll think” question 3. Topic: ethics (what is right and wrong) and trust in AI.",
     "drop": "Computer programs already make decisions, or help to make them. They choose which advert you see. They choose which route a car takes. They choose what a search shows first.",
-    "example": "“Marking my homework: the machine suggests. The teacher decides, because a teacher can ask me what I meant.”",
-    "make": "Two sentences on paper. Sentence 1: “A machine should only decide when… because…” Sentence 2: “If it goes wrong, … is responsible.”",
+    "example": "“Marking my homework: the machine suggests (gives an idea). The teacher decides, because a teacher can ask me what I meant.”",
+    "make": "Two sentences on paper. Sentence 1: “A machine should only decide when… because…” Sentence 2: “If it goes wrong, … is responsible.” (Responsible means they must put it right.)",
     "checklist": [
      "It gives a reason.",
      "It says who is responsible if it goes wrong.",
@@ -2456,7 +2457,7 @@ window.AFW_BANDS = {
      },
      {
       "t": "Place the six cards",
-      "d": "Draw a line across your page. At the left end write “machine decides”. In the middle write “machine suggests, human decides”. (Suggests means gives an idea.) At the right end write “human only”. Write each card’s number where you think it belongs on the line."
+      "d": "Draw a line across your page. At the left end write “machine decides”. In the middle write “machine suggests, human decides”. At the right end write “human only”. Write each card’s number where you think it belongs on the line."
      },
      {
       "t": "Explain one card, then write your rule",
@@ -2464,7 +2465,7 @@ window.AFW_BANDS = {
        "Find one card you and your partner put in different places. Each explain why you put it there.",
        "Then each write two sentences.",
        "Sentence 1: “A machine should only decide when… because…”",
-       "Sentence 2: “If it goes wrong, … is responsible.”"
+       "Sentence 2: “If it goes wrong, … is responsible.” (Responsible means they must put it right.)"
       ]
      },
      {
@@ -2494,8 +2495,8 @@ window.AFW_BANDS = {
      "intro": "A top-level prompt for each target. Read the one for the picture you used:",
      "marks": [
       "<b>Target A:</b> “Draw a tall, thin rectangle standing in the middle of the page. Make it about as tall as your hand. Draw a second rectangle sitting on top of it. Make the second one a little wider. Make it a little less than half as tall. Inside the top rectangle, draw four short vertical lines. Leave the same gap between them. Draw one horizontal line (side to side) under the tall rectangle. It must touch the bottom edge. It must be wider than the whole shape. Do not add doors, windows or people.”",
-      "<b>Target B:</b> “Draw a large oval lying on its side in the centre of the page. Make it about as wide as your hand. Draw a smaller oval inside it, the same shape. The gap between them is about one finger wide all the way round. Draw one straight horizontal line under the large oval. Make it a little wider than the oval. It must touch the lowest point of the oval. Leave the middle empty. Do not add windows, doors or shading.”",
-      "<b>Target C:</b> “Near the top of the page, draw a rectangle. Make it wider than it is tall. Inside it, draw two small circles side by side. Find the middle of its top edge. From there, draw a short vertical line going up. Put a small circle on the end of that line. Just below the first rectangle, leave a small gap. Under the gap, draw a bigger rectangle. Make it wider than the first one. Draw one short horizontal line out from each side of it. Put these lines near its top. Draw two vertical lines down from its bottom edge. Do not draw a mouth, hands or feet.”"
+      "<b>Target B:</b> “Draw a large oval lying on its side in the centre of the page. Make it about as wide as your hand. Draw a smaller oval inside it, the same shape. The gap between them is about one finger wide all the way round. Draw one straight horizontal line (side to side) under the large oval. Make it a little wider than the oval. It must touch the lowest point of the oval. Leave the middle empty. Do not add windows, doors or shading.”",
+      "<b>Target C:</b> “Near the top of the page, draw a rectangle. Make it wider than it is tall. Inside it, draw two small circles side by side. Find the middle of its top edge. From there, draw a short vertical line going up. Put a small circle on the end of that line. Just below the first rectangle, leave a small gap. Under the gap, draw a bigger rectangle. Make it wider than the first one. Draw one short horizontal line (side to side) out from each side of it. Put these lines near its top. Draw two vertical lines down from its bottom edge. Do not draw a mouth, hands or feet.”"
      ]
     },
     "support": "Use the word bank. Place words: above, below, left, right, centre, inside, touching. Size words: half as wide, twice as tall. Shape words: circle, oval, square, rectangle, straight line.",
@@ -2621,7 +2622,7 @@ window.AFW_BANDS = {
     "model": {
      "intro": "A 2040 day with five periods, with notes:",
      "marks": [
-      "<b>All four words:</b> “Period 1: memory quiz, no devices (memory). Period 2: maths. The AI tutor gives each pupil their next problem. Pupils explain their method to a partner (judgement). Period 3: wonder hour. Pupils work on their own question (curiosity). Period 4: design studio. Pupils build something new (creativity). Period 5: sport.”",
+      "<b>All four words:</b> “Period 1: memory quiz, no devices (memory). Period 2: maths. The AI tutor (an AI that teaches) gives each pupil their next problem. Pupils explain their method to a partner (judgement). Period 3: wonder hour. Pupils work on their own question (curiosity). Period 4: design studio. Pupils build something new (creativity). Period 5: sport.”",
       "<b>The head teacher’s question:</b> “Added in red: every Friday, pupils answer questions out loud with no AI. Then the teacher hears what they really know.”",
       "<b>What it keeps:</b> “The teacher is at the front for part of every lesson. This is because a person notices when you are confused before you say so.”"
      ]
@@ -2675,7 +2676,7 @@ window.AFW_BANDS = {
     "blurb": "Here are ten new technologies. Pick the one that matters most for the UAE.",
     "from": "Dubai Future Week “How we’ll innovate” question 2. The cards come from a report called the Top 10 Emerging Technologies of 2026. The World Economic Forum made the report with Frontiers. The Dubai Future Foundation helped to choose the list.",
     "drop": "Every year a World Economic Forum report names ten new technologies. These could soon change everyday life. The Dubai Future Foundation helped to choose the 2026 list.",
-    "example": "“I pick passive radiative cooling materials for the UAE. Air conditioning uses a lot of electricity in summer. It is one of the biggest uses in our homes and buildings. The people helped first are those who work outdoors or live without good cooling.”",
+    "example": "“I pick passive radiative cooling materials for the UAE. Air conditioning uses a lot of electricity in summer. It is one of the biggest uses of electricity in our homes and buildings. The people helped first are those who work outdoors or live without good cooling.”",
     "make": "One “We pick… because…” card.",
     "checklist": [
      "It gives the right name of the technology.",
@@ -2688,7 +2689,7 @@ window.AFW_BANDS = {
      "marks": [
       "<b>Pair A:</b> “We pick everything-to-grid energy because the UAE has strong sunshine by day. But it uses a lot of electricity in the evening. Car batteries can store electricity. They could send it back when it is needed. Families with electric cars and solar panels are helped first.”",
       "<b>Pair B:</b> “We pick lattice-based cryptography because Dubai uses very little cash now. About nine in every ten payments are made without cash. So keeping payment information safe matters more each year. Anyone who pays by phone or card is helped first.”",
-      "<b>Notice:</b> both cards name the technology exactly as the card does. Both link it to something true about the UAE. Both say who is helped first."
+      "<b>Notice:</b> both pairs write the technology’s name exactly as it is on the technology card. Both link it to something true about the UAE. Both say who is helped first."
      ]
     },
     "support": "Too many cards? Use cards 1 to 5 only.",
@@ -2780,11 +2781,11 @@ window.AFW_BANDS = {
     "blurb": "Driverless taxis have no human driver. They are coming to Arcadia’s gate. Write the rules. Choose how fast to bring them in.",
     "from": "Dubai Future Week “How we’ll innovate” question 3 and The Policy Room. Also the Big Stage session “How Do We Legislate the Unknown?” on 20 November.",
     "drop": "Dubai has a goal for 2030. One in every four transport trips should be driverless. Rules usually arrive after the technology does.",
-    "example": "One rule for delivery drones: “No flights over school grounds between 7am and 4pm.” It protects a named group: pupils. It names the time too.",
-    "make": "A policy card (a sheet of rules). It has three rules, a pace and one fix.",
+    "example": "One rule for delivery drones (small flying machines): “No flights over school grounds between 7am and 4pm.” It protects a named group: pupils. It names the time too.",
+    "make": "A policy card (a sheet of rules). It has three rules, a pace (how fast to go) and one fix.",
     "checklist": [
      "Each rule protects a named person.",
-     "You say why you chose your pace (how fast to go).",
+     "You say why you chose your pace.",
      "You added a fix for the problem the other team found."
     ],
     "model": {
@@ -3001,7 +3002,7 @@ window.AFW_BANDS = {
       ]
      },
      {
-      "t": "Prepare the case",
+      "t": "Plan your speeches",
       "d": [
        "Prosecution: split into two halves. Defence: do the same.",
        "Each half plans one two-minute speech. Each half chooses its speaker.",
@@ -3020,7 +3021,7 @@ window.AFW_BANDS = {
      {
       "t": "Verdict and amendment",
       "d": [
-       "The jury votes: is this policy fair to the people of 2050, yes or no?",
+       "The jury votes. Is this policy fair to the people of 2050? Yes or no?",
        "The judge counts hands. If the votes are equal, the judge decides.",
        "The jury gives its reasons. It writes one amendment. The amendment must keep the policy fair in 2050.",
        "Everyone writes three headings and fills them in: Decision. Strongest argument. Amendment.",
@@ -3180,7 +3181,7 @@ window.AFW_BANDS = {
     "blurb": "Vote on four future foods. Then design the Arcadia canteen tray of 2050.",
     "from": "Dubai Future Week “How we’ll feel” question 1. Topic: food and nutrition. The Dubai Media Office says this theme includes vertical farming. That means growing plants indoors on stacked shelves. It also includes proteins grown in a lab. New food companies also show their ideas during the week.",
     "drop": "Microbes are tiny living things, such as yeast. Scientists can change microbes so that they make one chosen ingredient. One example is the proteins found in milk. This is called precision fermentation. No animal is needed. It is on a 2026 list of ten important new technologies.",
-    "example": "One item on a 2050 Arcadia canteen tray, with its label: “Salad leaves. Grown in a vertical farm in Dubai. (This is a building where plants grow indoors on stacked shelves.) On the tray because they were picked this morning.”",
+    "example": "One item on a 2050 Arcadia canteen tray, with its label. A vertical farm is a building where plants grow indoors on stacked shelves. “Salad leaves. Grown in a vertical farm in Dubai. On the tray because they were picked this morning.”",
     "make": "A tray drawing with labels, on A4.",
     "checklist": [
      "Every item says where it came from.",
@@ -3422,7 +3423,7 @@ window.AFW_BANDS = {
      "marks": [
       "<b>Five payments, and who can see them:</b> “7:30 Metro, Nol card. Seen by the people who run the Metro. 10:30 break-time snack, school card. Seen by the school and a parent. 1:10 vending machine, phone. Seen by the bank. 4:20 corner shop, phone. Seen by the bank and the shop. 7:00 game add-on, a parent’s saved card, with permission. Seen by the game company, the bank and the parent.”",
       "<b>Who is left out:</b> “An 8-year-old. She has no phone and no card. She cannot buy her own snack from the shop.”",
-      "<b>The fix:</b> “A wristband that her parents put money on. It has a daily limit. There is no bank account behind it. She can pay, and she cannot spend too much.”"
+      "<b>The fix:</b> “A wristband that her parents put money on. It has a daily limit. It is not linked to a bank account. She can pay, and she cannot spend too much.”"
      ]
     },
     "support": "Start with five moments: on the way to school, break, lunch, after school, evening. Add one payment to each moment.",
@@ -3459,7 +3460,7 @@ window.AFW_BANDS = {
     "blurb": "Give a sixty-second talk about your idea for a new Dubai company. The other teams decide whether to put money into it.",
     "from": "Dubai Future Week “How we’ll do business” question 2. Also from The Pitch. There, start-ups pitch live to investors. Experts give them feedback.",
     "drop": "A start-up is a new, small company. Investors are people who give money to help it grow. A pitch is a short talk to persuade them. Investors look for a real problem first, then a good idea. A pitch answers five questions. What is the problem? Who is it for? What is the solution? Why now? What do you need?",
-    "example": "A 60-second pitch with its five parts labelled. <b>Problem:</b> “Outdoor workers in Dubai’s summer need to know when to rest and drink.” <b>Who for:</b> “Gardeners, builders and delivery riders.” <b>Solution:</b> “CoolBand, a wristband. It warns you before your body gets too hot. It tells your boss to call a break.” <b>Why now:</b> “Summers are getting hotter. Sensors (small parts that measure things) are now cheap enough for every worker.” <b>What we need:</b> “Fifty wristbands and one building site to test them on next July.”",
+    "example": "A 60-second pitch with its five parts labelled. <b>Problem:</b> “Outdoor workers in Dubai’s summer need to know when to rest and drink.” <b>Who for:</b> “Gardeners, builders and delivery riders.” <b>Solution:</b> “CoolBand, a wristband. It warns you before your body gets too hot. It tells your boss to give you a break.” <b>Why now:</b> “Summers are getting hotter. Sensors (small parts that measure things) are now cheap enough for every worker.” <b>What we need:</b> “Fifty wristbands and one building site to test them on next July.”",
     "make": "A pitch card with the five parts, plus the dirhams you won.",
     "checklist": [
      "The problem is real and local (close to home).",
@@ -3498,7 +3499,7 @@ window.AFW_BANDS = {
        "More than eight teams? First split the room into two halves. Each half runs its own rounds.",
        "Number the teams. Teams 1, 3, 5 and so on pitch first. Each team has 60 seconds.",
        "The other teams are the panel. The panel are the people who listen and judge.",
-       "Each panel member has three Arcadia dirhams (pretend money) to invest.",
+       "Each panel member has three Arcadia dirhams (pretend money) to invest (give to a team).",
        "After the last pitch, the pitching teams put their pitch cards on a table.",
        "Panel members walk round. Draw one tick on a card for each dirham you give. Give one team no more than two ticks."
       ]
@@ -3552,7 +3553,7 @@ window.AFW_BANDS = {
      "note": "",
      "items": [
       "2040: half of Dubai’s deliveries are made by robots.",
-      "2040: every pupil has an AI tutor.",
+      "2040: every pupil has an AI tutor (an AI that teaches them).",
       "2040: summer lasts a month longer."
      ]
     },
