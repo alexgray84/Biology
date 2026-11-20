@@ -188,6 +188,15 @@ class Year7NavigationTests(unittest.TestCase):
                 if cls["revision"]:
                     self.assertTrue(in_element(main_links[0], "section", element_id="revision"))
                     self.assertEqual(main_links[0]["attrs"]["href"], "../../" + cls["revision"]["hub"])
+                elif cls.get("assessment"):
+                    assessment_links = [link for link in page.links if in_element(link, "section", element_id="biology-psa")]
+                    self.assertEqual(main_links[0], assessment_links[0])
+                    self.assertEqual(len(assessment_links), len(cls["assessment"]["tasks"]))
+                    self.assertEqual(
+                        [link["attrs"]["href"] for link in assessment_links],
+                        ["../../" + task["href"] for task in cls["assessment"]["tasks"]],
+                    )
+                    self.assertIn(f'datetime="{cls["assessment"]["deadline"]}"', page_path.read_text(encoding="utf-8"))
                 else:
                     self.assertTrue(has_class(main_links[0], "hub-lead"))
                 self.assertEqual(sum(has_class(link, "hub-lead") for link in page.links), 1)
