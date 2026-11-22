@@ -188,6 +188,39 @@ def short_date(day: date) -> str:
     return f"{day.day} {day.strftime('%b')}"
 
 
+def render_assessment_lessons(config: dict, page_dir: Path) -> str:
+    lessons = config.get("lessons")
+    if not lessons:
+        return ""
+
+    tasks = {task["label"]: task for task in config["tasks"]}
+    cards = []
+    for number, lesson in enumerate(lessons, 1):
+        day = date.fromisoformat(lesson["date"])
+        label = f"{day.strftime('%A')} {day.day} {day.strftime('%B')}"
+        steps = "".join(f"<li>{esc(step)}</li>" for step in lesson["steps"])
+        prep = " · ".join(
+            f'<a href="{href_from(page_dir, ROOT / item["href"])}" target="_blank" rel="noopener">{esc(item["title"])}</a>'
+            for item in lesson["support"]
+        )
+        assessed = " · ".join(
+            f'<a href="{href_from(page_dir, ROOT / tasks[part]["href"])}" target="_blank" rel="noopener">Open PSA {esc(part)}</a>'
+            for part in lesson["parts"]
+        )
+        cards.append(f'''<article class="psa-assessment__lesson">
+            <h4>Lesson {number} · {esc(lesson['focus'])}</h4>
+            <p><time datetime="{day.isoformat()}">{label}</time> · 50 minutes</p>
+            <ol>{steps}</ol>
+            <p><strong>Preparation:</strong> {prep}</p>
+            <p><strong>Independent work:</strong> {assessed}</p>
+          </article>''')
+    return f'''
+        <section aria-labelledby="biology-psa-lessons-heading">
+          <h3 id="biology-psa-lessons-heading">This week’s two lessons</h3>
+          <div class="psa-assessment__lessons">{''.join(cards)}</div>
+        </section>'''
+
+
 def render_assessment(config: dict, page_dir: Path) -> str:
     """Render the same assessment notice on its class and unit pages."""
     deadline = date.fromisoformat(config["deadline"])
@@ -203,7 +236,7 @@ def render_assessment(config: dict, page_dir: Path) -> str:
     return f'''<section class="psa-assessment" id="biology-psa" aria-labelledby="biology-psa-heading">
         <p class="psa-assessment__deadline">Hand in by <time datetime="{deadline.isoformat()}">{deadline_text}</time></p>
         <h2 id="biology-psa-heading">{esc(config['title'])}</h2>
-        <p>{esc(config['intro'])}</p>
+        <p>{esc(config['intro'])}</p>{render_assessment_lessons(config, page_dir)}
         <div class="psa-assessment__tasks">{''.join(tasks)}</div>
         <h3>Complete and hand in your work</h3>
         <ol>{instructions}</ol>
