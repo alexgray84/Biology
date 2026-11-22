@@ -136,10 +136,13 @@ def unit_lessons(unit: dict) -> list[dict]:
 
 
 def latest_lessons(units: list[dict]) -> list[dict]:
-    """Newest lessons: walk the units newest first, each unit's lessons latest first."""
+    """Walk newest units first, with teaching order available for current material."""
     found: list[dict] = []
     for unit in units:
-        for lesson in reversed(unit_lessons(unit)):
+        lessons = unit_lessons(unit)
+        if not unit.get("latest_in_teaching_order"):
+            lessons.reverse()
+        for lesson in lessons:
             if len(found) == LATEST_COUNT:
                 return found
             found.append(lesson)
@@ -274,9 +277,10 @@ def render(cls: dict) -> str:
     side = cls.get("side", [])
     first, rest = lessons[0], lessons[1:]
     first_day = added(first["target"])
+    latest_label = "Current unit in teaching order" if cls["units"][0].get("latest_in_teaching_order") else "Newest first"
     add(f"""      <div class="hub-now{'' if side else ' hub-now--solo'}">
         <section aria-labelledby="latest-heading">
-          <div class="hub-h"><h2 id="latest-heading">Latest lessons</h2><span>Newest first</span></div>
+          <div class="hub-h"><h2 id="latest-heading">Latest lessons</h2><span>{latest_label}</span></div>
           <a class="hub-lead" href="{href_from(class_dir, first['target'], first['suffix'])}">
             {icon(first['icon'], up)}
             <div><h3>{esc(first['title'])}</h3><p class="hub-meta"><b>{esc(first['unit'])}</b> · {esc(first['label'])} · added <time datetime="{first_day.isoformat()}">{short_date(first_day)}</time></p></div>
