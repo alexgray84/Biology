@@ -150,12 +150,12 @@ def latest_lessons(units: list[dict]) -> list[dict]:
 
 
 def revision(config: dict | None) -> dict | None:
-    """Read pack, mock paper and topic groups from a revision hub page."""
+    """Read pack, revision lesson, mock paper and topics from a revision hub."""
     if not config:
         return None
     hub_dir = ROOT / config["hub"]
     page = (hub_dir / "index.html").read_text("utf-8")
-    info = {"name": config["name"], "hub": hub_dir, "topics": [], "mock": None, "plan": False, "units": 0}
+    info = {"name": config["name"], "hub": hub_dir, "topics": [], "mock": None, "lesson": None, "plan": False, "units": 0}
     sections = re.split(r'(?=<h2 id="[^"]+">)', page)[1:]
     for section in sections:
         anchor, heading = re.match(r'<h2 id="([^"]+)">(.*?)</h2>', section, re.S).groups()
@@ -165,6 +165,8 @@ def revision(config: dict | None) -> dict | None:
                 if label.lower() == "mock paper":
                     minutes = re.search(r"(\d+)-minute", title)
                     info["mock"] = {"target": site_path(hub_dir, href), "minutes": minutes.group(1) if minutes else None}
+                elif label.lower() == "revision lesson":
+                    info["lesson"] = {"target": site_path(hub_dir, href), "title": title}
                 elif "countdown" in text(block).lower():
                     info["plan"] = True
             continue
@@ -296,6 +298,10 @@ def render(cls: dict) -> str:
         <div><h2 id="revision-heading">{esc(rev['name'])}</h2><p>{esc(copy)}</p></div>
         <div class="hub-band__actions">
           <a class="hub-btn hub-btn--band" href="{hub_href}">Open revision pack {arrow}</a>""")
+        if rev["lesson"]:
+            target, suffix = rev["lesson"]["target"]
+            title = esc(rev["lesson"]["title"])
+            add(f'          <a class="hub-btn hub-btn--ghost" href="{href_from(class_dir, target, suffix)}">{title}</a>')
         if rev["mock"]:
             target, suffix = rev["mock"]["target"]
             add(f'          <a class="hub-btn hub-btn--ghost" href="{href_from(class_dir, target, suffix)}">Mock paper</a>')
