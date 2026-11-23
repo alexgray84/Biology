@@ -189,8 +189,8 @@ class Year7NavigationTests(unittest.TestCase):
                     self.assertTrue(in_element(main_links[0], "section", element_id="revision"))
                     self.assertEqual(main_links[0]["attrs"]["href"], "../../" + cls["revision"]["hub"])
                 elif cls.get("assessment"):
-                    assessment_links = [link for link in page.links if in_element(link, "section", element_id="biology-psa")]
-                    self.assertEqual(main_links[0], assessment_links[0])
+                    self.assertTrue(in_element(main_links[0], "section", element_id="biology-psa"))
+                    assessment_links = [link for link in page.links if in_element(link, "article", class_name="psa-assessment__task")]
                     self.assertEqual(len(assessment_links), len(cls["assessment"]["tasks"]))
                     self.assertEqual(
                         [link["attrs"]["href"] for link in assessment_links],
