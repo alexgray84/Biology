@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Y9 AP2 fix-it</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root { --navy:#14284b; --gold:#c9a227; --paper:#fbf8f1; --line:#d3d8e2; --soft:#eef1f6; --red:#b03a2e; --redbg:#fdf3f1; --bio:#1e8449; --chem:#b85c14; --phys:#2c5aa0; --text:#15171c; --bg:#f4f5f8; --card:#fff; }
+  * { box-sizing: border-box; }
+  html, body { margin:0; }
+  body { font-family: Montserrat, Arial, sans-serif; background: var(--bg); color: var(--text); font-size: 17px; line-height: 1.5; }
+  header { background: var(--navy); color:#fff; border-bottom: 5px solid var(--gold); padding: 14px 16px; }
+  header h1 { margin:0; font-size: 1.75rem; font-weight:800; line-height:1.25; }
+  header p { margin: 4px 0 0; font-size: .9rem; opacity: .9; }
+  main { max-width: 980px; margin: 0 auto; padding: 16px; }
+  .steps { display:grid; grid-template-columns: repeat(auto-fit, minmax(220px,1fr)); gap: 10px; margin-bottom: 16px; }
+  .steps div { background: var(--card); border-left: 5px solid var(--gold); padding: 10px 12px; border-radius: 6px; font-size: .92rem; }
+  .steps b { color: var(--navy); }
+  .finder { display:grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-bottom: 18px; }
+  .finder button { font: inherit; font-weight: 800; border: 2px solid transparent; border-radius: 8px; padding: 10px 4px; color:#fff; cursor:pointer; line-height:1.15; }
+  .finder button small { display:block; font-weight:600; font-size: .7rem; opacity: .92; margin-top: 3px; }
+  .finder button.b { background: var(--bio); } .finder button.c { background: var(--chem); } .finder button.p { background: var(--phys); }
+  .finder button[aria-pressed="true"] { border-color: var(--gold); box-shadow: 0 0 0 3px var(--gold); }
+  .finder button:focus-visible, .reveal:focus-visible, .nav button:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
+  .card { background: var(--card); border-radius: 10px; box-shadow: 0 1px 4px rgba(0,0,0,.08); overflow:hidden; }
+  .card .top { padding: 12px 16px; color:#fff; display:flex; justify-content:space-between; align-items:baseline; gap: 10px; flex-wrap: wrap; }
+  .card .top h2 { margin:0; font-size: 1.5rem; line-height:1.3; }
+  .card .top span { font-weight:600; font-size: .9rem; }
+  .card.b .top { background: var(--bio); } .card.c .top { background: var(--chem); } .card.p .top { background: var(--phys); }
+  .body { padding: 14px 16px 18px; display:grid; gap: 14px; }
+  h3 { margin: 0 0 6px; font-size: .85rem; letter-spacing: .06em; text-transform: uppercase; color: var(--navy); }
+  .part { display:grid; grid-template-columns: 42px 1fr; gap: 4px; margin-bottom: 6px; }
+  .part > b { color: var(--navy); }
+  .m { font-weight: 800; color: var(--navy); white-space: nowrap; background: #e7ecf5; border-radius: 4px; padding: 0 4px; }
+  .wo { background: var(--redbg); border-left: 5px solid var(--red); padding: 10px 14px; border-radius: 6px; }
+  .wo h3 { color: var(--red); }
+  .wo ul, .model ul { margin: 0; padding-left: 20px; }
+  .wo li { margin-bottom: 4px; }
+  .corr { background: #fff4d6; border: 2px solid var(--gold); padding: 10px 14px; border-radius: 6px; }
+  .fixit { background: var(--soft); border-radius: 6px; padding: 12px 14px; }
+  .fixit ol { margin: 0 0 10px; padding-left: 22px; }
+  .try { background: #fff; border: 1px solid var(--line); border-radius: 6px; padding: 10px 12px; }
+  .try p { margin: 0 0 8px; }
+  .reveal { font: inherit; font-weight: 700; background: var(--navy); color:#fff; border:0; border-radius: 6px; padding: 9px 14px; cursor:pointer; }
+  .ans { display:none; margin-top: 10px; border-top: 1px dashed var(--line); padding-top: 8px; }
+  .ans.show { display:block; }
+  .check { list-style:none; padding:0; margin: 4px 0 8px; display:grid; grid-template-columns: repeat(auto-fit,minmax(260px,1fr)); gap: 4px 14px; }
+  .check li::before { content:"☐ "; color: var(--navy); font-weight:800; }
+  table.lv { width:100%; border-collapse: collapse; font-size: .88rem; margin: 6px 0 10px; }
+  table.lv th, table.lv td { border:1px solid var(--line); padding: 6px 8px; text-align:left; vertical-align: top; }
+  table.lv th { background: var(--soft); color: var(--navy); }
+  .nav { display:flex; justify-content: space-between; margin-top: 14px; gap: 10px; }
+  .nav button { font: inherit; font-weight:700; background: #fff; border: 2px solid var(--navy); color: var(--navy); border-radius: 6px; padding: 9px 14px; cursor:pointer; }
+  .nav button:disabled { opacity: .35; cursor: default; }
+  .fresh { margin-top: 22px; background: var(--card); border-radius: 10px; border: 3px solid var(--navy); padding: 14px 16px; }
+  .fresh h2 { margin: 0 0 4px; color: var(--navy); font-size: 1.2rem; }
+  .fresh ol li { margin-bottom: 6px; }
+  footer { text-align:center; font-size: .78rem; color:#666; padding: 18px 16px 26px; }
+  @media (max-width: 560px) { .finder { grid-template-columns: repeat(5, 1fr); gap: 5px; } .finder button { padding: 8px 2px; font-size: .9rem; } .finder button small { display:none; } .part { grid-template-columns: 34px 1fr; } }
+  @media (min-width: 1200px) { body { font-size: 20px; } main { max-width: 1180px; } }
+</style>
+</head>
+<body>
+<header>
+  <h1>AP2 fix-it: Year 9 Science</h1>
+  <p>Mark scheme, common mistakes and a fix-it task for every question · 45 marks</p>
+</header>
+<main>
+  <div class="steps">
+    <div><b>1 Pick a red question</b> from your evaluation sheet. Tap its number below.</div>
+    <div><b>2 Correct it in green pen.</b> Each <span class="m">(1)</span> is one mark. Read <b style="color:var(--red)">Watch out</b>.</div>
+    <div><b>3 Fix it.</b> Do the fix-it task in your book without looking, then tap <b>Show answer</b> and mark it.</div>
+  </div>
+
+  <nav class="finder" id="finder" aria-label="Question finder"></nav>
+  <section id="panel" aria-live="polite"></section>
+  <div class="nav"><button id="prev">← Previous</button><button id="next">Next →</button></div>
+
+  <section class="fresh">
+    <h2>Now check yourself</h2>
+    <p style="margin:0 0 8px">Close this page and your notes. Answer in your book. Your teacher will show the answers.</p>
+    <ol>
+      <li>Rubidium is between potassium and caesium in Group 1. Give one similarity and one difference between the reactions of sodium and rubidium with water. (2)</li>
+      <li>A runner covers 360 m in 45 s. Calculate her speed. Show your working and give the unit. (2)</li>
+      <li>A 600 N adult sits 1.5 m from a see-saw pivot. How far from the pivot must a 400 N child sit to balance it? (2)</li>
+      <li>Write the electronic configuration of aluminium (atomic number 13) and state its group and period. (2)</li>
+    </ol>
+  </section>
+</main>
+<footer>Arcadia Science Department · KS3 Science Year 9 · AP2 fix-it · Fix-it tasks use new numbers, not the ones from the paper</footer>
+
+<script>
+const M = s => s.replace(/\((\d)\)/g, '<span class="m">($1)</span>');
+const Q = [
+ { n:1, s:"b", sci:"Biology", t:"Respiration and mitochondria", marks:7,
+   parts:[["(a)","B mitochondria (1)"],["(b)","glucose + oxygen → carbon dioxide + water: oxygen (1), water (1)"],["(c)","Muscle cells need a lot of energy to contract (1). More mitochondria means more aerobic respiration, so more energy is released (1)."],["(d)","Any two (2): aerobic needs oxygen, anaerobic does not · anaerobic produces lactic acid, aerobic produces carbon dioxide and water · anaerobic releases less energy."]],
+   wo:["“Energy” is not a product in the word equation. It is not a substance.","Mitochondria do not “make” energy. Respiration <b>releases</b> it.","Anaerobic respiration releases <b>less</b> energy, not none."],
+   fix:["Rewrite every part you lost marks on, using the words next to each (1)."],
+   tryq:"Write the word equation for anaerobic respiration in muscle cells. Then give one difference between anaerobic and aerobic respiration. (2)",
+   tryA:"glucose → lactic acid (1). Any one difference (1): anaerobic needs no oxygen · makes lactic acid, not carbon dioxide and water · releases less energy." },
+ { n:2, s:"b", sci:"Biology", t:"Planning an investigation", marks:8, plan:true,
+   parts:[["(b)","Any two (2): more step-ups, so muscles need more energy · so muscle cells respire faster · the heart beats faster to deliver more oxygen and glucose / remove more carbon dioxide."]],
+   wo:["A list of equipment is not a method.","“Make it fair” earns nothing. Name what you keep the same.","A risk needs a way to reduce it.","(b) “Pulse goes up” only describes the pattern = 0 marks. Explain <b>why</b>."],
+   fix:["Tick the checklist against your own plan. Which boxes are empty?","Rewrite only the missing parts in green pen."],
+   tryq:"New investigation: <i>How does the number of star jumps affect breathing rate?</i> Write the independent variable, the dependent variable with its unit, two control variables, and one risk with a way to reduce it.",
+   tryA:"IV: number of star jumps. DV: breathing rate in breaths per minute. Controls (any two): same person · same speed of star jumps · count breaths for the same time (60 s) · rest until breathing is back to resting rate. Risk: tripping or over-exertion → clear space around you, stop if dizzy." },
+ { n:3, s:"c", sci:"Chemistry", t:"Protons, neutrons and electrons", marks:4,
+   parts:[["(a)","proton +1 · neutron 0 · electron −1. All three = (2), two = (1)"],["(b)","protons 11 · neutrons 12 (23 − 11) · electrons 11. All three = (2), two = (1)"]],
+   wo:["The neutron has no charge (0).","Neutrons = mass number − atomic number.","In an atom, electrons = protons."],
+   fix:["Correct your paper in green."],
+   tryq:"A fluorine atom has atomic number 9 and mass number 19. How many protons, neutrons and electrons does it have? (2)",
+   tryA:"protons 9 · neutrons 10 (19 − 9) · electrons 9. All three = 2 marks, two = 1." },
+ { n:4, s:"c", sci:"Chemistry", t:"Electron shells and the periodic table", marks:3,
+   parts:[["(a)","One electron in the outer shell, so Group 1 (1). Three shells, so Period 3 (1)."],["(b)","2.8.6 (or a correct shell diagram) (1)"]],
+   wo:["Group = outer-shell electrons. Period = number of shells.","Shells hold 2, then 8, then 8. Fill inner shells first (not 2.6.8)."],
+   fix:["Correct your paper in green."],
+   tryq:"Element Z has the electronic configuration 2.8.5. State its group and period and explain how you know. Then write the configuration of nitrogen (atomic number 7). (3)",
+   tryA:"Group 5: five electrons in the outer shell (1). Period 3: three shells (1). Nitrogen: 2.5 (1)." },
+ { n:5, s:"c", sci:"Chemistry", t:"Group 1 metals and water", marks:4,
+   parts:[["(a)","Tick: reacts more vigorously than sodium · lilac flame · moves around on the surface. All three = (2), two = (1). Each extra tick loses a mark."],["(b)","Similarity (1): both fizz / produce hydrogen / form a hydroxide (alkaline solution) / release heat. Difference (1): caesium reacts more vigorously / faster / may explode."]],
+   corr:"<b>Science correction:</b> “both float” is <b>not</b> a correct similarity here. Caesium is denser than water and sinks. Only lithium, sodium and potassium float. If you wrote “float”, write a correct similarity in green.",
+   wo:["The gas is hydrogen, not oxygen.","The product is a hydroxide, not an oxide.","Not all Group 1 metals float: rubidium and caesium sink."],
+   fix:["Correct your paper in green."],
+   tryq:"Lithium is added to water. Give two ways its reaction is different from potassium's. Then write the word equation. (3)",
+   tryA:"Any two (2): fizzes more slowly / less vigorous · does not usually catch fire, so no lilac flame · does not melt into a ball. lithium + water → lithium hydroxide + hydrogen (1)." },
+ { n:6, s:"c", sci:"Chemistry", t:"Making a method safe and fair", marks:4,
+   parts:[["(a)","Step 2: use a much smaller piece, e.g. the size of a grain of rice (1). Step 3: use a large volume of water, e.g. a trough (1). So less sodium reacts / less heat and hydrogen / the reaction is less violent (1)."],["(b)","Any one (1): size of the piece of metal · volume of water · temperature of the water · the same container"]],
+   wo:["A safety screen is extra. It does not replace the two changes.","“Smaller” needs a reason <b>why</b> it is safer.","(b) The type of metal is what you change, so it is not a control."],
+   fix:["Correct your paper in green."],
+   tryq:"A student compares how vigorously lithium, sodium and potassium react with water. Name one control variable and explain why it must stay the same. (2)",
+   tryA:"e.g. size of the piece of metal (1). A bigger piece would react more vigorously anyway, so you could not tell whether the metal or the size caused the difference (1)." },
+ { n:7, s:"p", sci:"Physics", t:"Speed and distance–time graphs", marks:4,
+   parts:[["(a)","speed = distance ÷ time (1)"],["(b)","200 ÷ 40 (1) = 5 m/s (1)"],["(c)","A ruled straight line from (80 s, 350 m) to (100 s, 500 m) (1)"]],
+   wo:["Not time ÷ distance.","Read the graph at the right point: 200 m at 40 s.","(c) Do not start the line from 0 or draw a curve."],
+   fix:["Correct your paper in green. Write: equation → numbers → answer → unit."],
+   tryq:"A car travels 180 m in 30 s, then stops for 10 s. Calculate its speed for the first 30 s. Describe the line on a distance–time graph while it is stopped. (3)",
+   tryA:"180 ÷ 30 (1) = 6 m/s (1). A flat (horizontal) line, because the distance does not change (1)." },
+ { n:8, s:"p", sci:"Physics", t:"Forces on a skydiver", marks:5,
+   parts:[["(a)","B: the arrows are equal, so air resistance = weight (1)"],["(b)","700 − 400 = 300 N (1), downwards (1)"],["(c)","Air resistance increases and becomes bigger than weight, so the resultant force is upwards (1). She slows down until the forces balance at a new, lower terminal velocity (1)."]],
+   wo:["Terminal velocity needs balanced forces.","Subtract the forces (not 1100 N), and give the direction.","(c) She slows down. She does not move upwards."],
+   fix:["Correct your paper in green. Every resultant force needs a size <b>and</b> a direction."],
+   tryq:"A skydiver's weight is 650 N. Air resistance is 250 N. Calculate the resultant force and give its direction. Is she speeding up, slowing down or at a steady speed? (3)",
+   tryA:"650 − 250 = 400 N (1), downwards (1). Speeding up, because the resultant force is downwards (1)." },
+ { n:9, s:"p", sci:"Physics", t:"Moments", marks:3,
+   parts:[["(a)","450 × 1.6 = 720 (1), unit N m (1)"],["(b)","720 ÷ 360 = 2.0 m (1). If your (a) was wrong but you used it correctly, you still get this mark."]],
+   wo:["moment = force × distance from the pivot.","The unit is N m (not N, J or N/m).","(b) Divide, do not multiply."],
+   fix:["Correct your paper in green."],
+   tryq:"A 250 N force acts 0.8 m from a pivot. Calculate its moment with the unit. What force at 0.5 m on the other side would balance it? (3)",
+   tryA:"250 × 0.8 = 200 (1) N m (1). 200 ÷ 0.5 = 400 N (1)." },
+ { n:10, s:"p", sci:"Physics", t:"Springs and Hooke's law", marks:3,
+   parts:[["(a)","Extension is directly proportional to the force (up to the limit of proportionality) (1)"],["(b)","Up to 4 N the graph is a straight line through the origin, so it obeys Hooke's law (1). After 4 N the line curves, so it no longer obeys it; L marked at about (4 N, 6.0 cm) (1)."]],
+   wo:["“Force up, extension up” is not enough. Say <b>directly proportional</b>.","L is where the straight line ends, not the end of the graph.","Use the graph as your evidence."],
+   fix:["Correct your paper in green."],
+   tryq:"A spring stretches 2.5 cm for every 1 N. Predict the extension for 3 N. State the assumption you made. (2)",
+   tryA:"3 × 2.5 = 7.5 cm (1). Assumes the spring has not gone past its limit of proportionality (1)." }
+];
+const finder = document.getElementById('finder'), panel = document.getElementById('panel');
+let cur = 0;
+Q.forEach((q,i) => { const b = document.createElement('button'); b.className = q.s; b.innerHTML = 'Q' + q.n + '<small>' + q.sci + '</small>'; b.setAttribute('aria-label', 'Question ' + q.n + ': ' + q.t); b.onclick = () => show(i, true); finder.appendChild(b); });
+const planHTML = `<div class="part"><b>(a)</b><span>6-mark plan, marked in levels. Tick what your plan had:</span></div>
+<ul class="check"><li>IV: number of step-ups (0, 20, 40, 60)</li><li>DV: pulse rate in beats per minute</li><li>Two controls: same person, step height, stepping speed (metronome)</li><li>Steps in order: resting pulse → step-ups → pulse straight after → rest</li><li>Repeat 3 times, ignore anomalies, calculate a mean</li><li>Risk + control: tripping → stable, non-slip step</li></ul>
+<table class="lv"><tr><th>Level 3 · 5–6</th><th>Level 2 · 3–4</th><th>Level 1 · 1–2</th></tr><tr><td>All six ticks. Someone else could follow it and get valid results.</td><td>Workable, some steps missing. IV, DV and one control.</td><td>Some relevant steps, or only lists equipment or variables.</td></tr></table>`;
+function show(i, focus) {
+  cur = i; const q = Q[i];
+  [...finder.children].forEach((b,j) => b.setAttribute('aria-pressed', j === i ? 'true' : 'false'));
+  panel.innerHTML = `<article class="card ${q.s}">
+    <div class="top"><h2>Q${q.n} ${q.t}</h2><span>${q.sci} · ${q.marks} marks</span></div>
+    <div class="body">
+      <div class="model"><h3>Model answer</h3>${q.plan ? planHTML : ''}${q.parts.map(p => `<div class="part"><b>${p[0]}</b><span>${M(p[1])}</span></div>`).join('')}</div>
+      ${q.corr ? `<div class="corr">${q.corr}</div>` : ''}
+      <div class="wo"><h3>Watch out</h3><ul>${q.wo.map(w => `<li>${w}</li>`).join('')}</ul></div>
+      <div class="fixit"><h3>Fix it</h3><ol>${q.fix.map(f => `<li>${f}</li>`).join('')}<li>Now try this new question in your book <b>without looking</b> at the model answer.</li></ol>
+        <div class="try"><p>${q.tryq}</p><button class="reveal" aria-expanded="false">Show answer</button><div class="ans">${M(q.tryA)}<p style="margin:8px 0 0;font-size:.9rem;color:#444">Mark it in green. Still wrong? Ask for help, then try the next red question.</p></div></div>
+      </div>
+    </div></article>`;
+  const r = panel.querySelector('.reveal'), a = panel.querySelector('.ans');
+  r.onclick = () => { const s = a.classList.toggle('show'); r.setAttribute('aria-expanded', s); r.textContent = s ? 'Hide answer' : 'Show answer'; };
+  document.getElementById('prev').disabled = i === 0;
+  document.getElementById('next').disabled = i === Q.length - 1;
+  if (focus) panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+document.getElementById('prev').onclick = () => show(Math.max(0, cur - 1), true);
+document.getElementById('next').onclick = () => show(Math.min(Q.length - 1, cur + 1), true);
+show(0, false);
+</script>
+</body>
+</html>
