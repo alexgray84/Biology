@@ -228,6 +228,10 @@ def render_assessment(config: dict, page_dir: Path) -> str:
     deadline = date.fromisoformat(config["deadline"])
     deadline_text = f"{deadline.strftime('%A')} {deadline.day} {deadline.strftime('%B %Y')}"
     instructions = "".join(f"<li>{esc(item)}</li>" for item in config["instructions"])
+    classroom_material = ""
+    if material := config.get("classroom_material"):
+        classroom_material = f'''
+        <p><a href="{esc(material['href'])}">{esc(material['title'])} (Google Classroom)</a>. Use your school Google account.</p>'''
     tasks = []
     for task in config["tasks"]:
         href = href_from(page_dir, ROOT / task["href"])
@@ -238,7 +242,7 @@ def render_assessment(config: dict, page_dir: Path) -> str:
     return f'''<section class="psa-assessment" id="biology-psa" aria-labelledby="biology-psa-heading">
         <p class="psa-assessment__deadline">Hand in by <time datetime="{deadline.isoformat()}">{deadline_text}</time></p>
         <h2 id="biology-psa-heading">{esc(config['title'])}</h2>
-        <p>{esc(config['intro'])}</p>{render_assessment_lessons(config, page_dir)}
+        <p>{esc(config['intro'])}</p>{classroom_material}{render_assessment_lessons(config, page_dir)}
         <div class="psa-assessment__tasks">{''.join(tasks)}</div>
         <h3>Complete and hand in your work</h3>
         <ol>{instructions}</ol>
