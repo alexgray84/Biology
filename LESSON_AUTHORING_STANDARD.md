@@ -2,6 +2,8 @@
 
 **Locked in by the teacher on 13 September 2026. Use this approach until the teacher changes it.** The teacher's instruction was: “Lock in these approaches to building lessons for now.” This fixes the authoring approach; it does not freeze every lesson into the same activity sequence.
 
+**Confirmed refinement, 16 October 2026.** Review the canonical T&L cards when planning and confirm the core sequence before layering activities and building. Preserve a repeated attempt → feedback → improve → different unaided attempt cycle, with substantial pupil practice at the actual timetable duration. Accurate integrated diagrams and purposeful models must support the science; simulations use prediction before revealing results and a fresh transfer check. Adapt useful PhET approaches with proper attribution/permissions. Support must address the task's actual barrier and fade; HOT deepens the same learning; UAE tasks need an authentic scientific purpose. Every layer has its own review. Use the local AI literacy pack and course progression record to create bounded pupil activities that retain human reasoning, verification and authorship. Prepared or teacher-mediated AI is the default when live pupil access is unconfirmed.
+
 ## Teaching content
 
 1. Give each lesson a clear title, specification-linked learning outcomes and a purposeful do now. Use retrieval, a prediction or a thinking task according to the learning need.
@@ -10,6 +12,7 @@
 4. Balance explanation with guided attempts, checks and substantial independent thinking. Use Rosenshine principles, visible-thinking routines and Bloom's categories where they serve the content. Do not force every routine or use the same task sequence for every lesson.
 5. Make language easy, informative and directional. Say what pupils should do and what their explanation should connect. Pupils normally respond in books or on a designed resource.
 6. Build adaptations around the actual barrier: precise support, a fresh attempt and reduced help when appropriate. Keep the destination ambitious for everyone. HOT should deepen reasoning through comparison, counterexamples, evaluation or transfer.
+7. Supply usable visual scaffolds and partial examples, including printable versions where helpful. Check every pupil's first response, select the support from the observed barrier, then recheck before fading content hints. Keep normal access arrangements. Give HOT tasks precise criteria for the counterexample, changed condition or justified judgement they require; do not reserve challenge for pupils who volunteer or finish fastest.
 
 ## Questions, answers and assessment
 
