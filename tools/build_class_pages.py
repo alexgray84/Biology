@@ -155,7 +155,7 @@ def revision(config: dict | None) -> dict | None:
         return None
     hub_dir = ROOT / config["hub"]
     page = (hub_dir / "index.html").read_text("utf-8")
-    info = {"name": config["name"], "hub": hub_dir, "topics": [], "mock": None, "lesson": None, "plan": False, "units": 0}
+    info = {"name": config["name"], "hub": hub_dir, "topics": [], "mock": None, "lesson": None, "fix_it": None, "plan": False, "units": 0}
     sections = re.split(r'(?=<h2 id="[^"]+">)', page)[1:]
     for section in sections:
         anchor, heading = re.match(r'<h2 id="([^"]+)">(.*?)</h2>', section, re.S).groups()
@@ -167,6 +167,8 @@ def revision(config: dict | None) -> dict | None:
                     info["mock"] = {"target": site_path(hub_dir, href), "minutes": minutes.group(1) if minutes else None}
                 elif label.lower() == "revision lesson":
                     info["lesson"] = {"target": site_path(hub_dir, href), "title": title}
+                elif label.lower() == "after the test" and title.casefold().startswith("ap2 fix-it:"):
+                    info["fix_it"] = site_path(hub_dir, href)
                 elif "countdown" in text(block).lower():
                     info["plan"] = True
             continue
@@ -309,6 +311,9 @@ def render(cls: dict) -> str:
         if rev["mock"]:
             target, suffix = rev["mock"]["target"]
             add(f'          <a class="hub-btn hub-btn--ghost" href="{href_from(class_dir, target, suffix)}">Mock paper</a>')
+        if rev["fix_it"]:
+            target, suffix = rev["fix_it"]
+            add(f'          <a class="hub-btn hub-btn--ghost" href="{href_from(class_dir, target, suffix)}">AP2 fix-it</a>')
         add("""        </div>
         <div class="hub-band__topics"><span>Jump to a topic</span>""")
         for name, anchor, count in rev["topics"]:
