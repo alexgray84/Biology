@@ -22,147 +22,47 @@
   const state=()=>states[phase().id]??(states[phase().id]=initialState(phase()));
   const names=[['resources','Resources'],['assessments','Assessments'],['adaptation','Adaptation'],['hot','HOT'],['ai','AI literacy'],['uae','UAE National Agenda']];
   const button=(label,action,value,attrs='')=>`<button type="button" data-action="${action}" data-value="${esc(value)}" ${attrs}>${label}</button>`;
-/* Rock lesson interaction inside the existing Arcadia projector and device frame. */
+/* Optional lesson tools. The shared Arcadia arrows handle all slide navigation. */
 const rock = window.RockLesson;
 const rockReviews = window.RockReviews;
 const rockDevice = document.body.dataset.device === 'true';
-const rockProgress = new Set(['start']);
-const rockWork = new Map();
-let rockRoute = '';
 let rockCorrection = '';
 let rockCard = '';
 let rockLarge = false;
 let rockReview = 0;
-let rockDecisionOpen = false;
 let rockView = '';
-let rockExamProjected = false;
 
 const rockEsc = value => String(value).replace(/[&<>"']/g, letter => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[letter]));
 const rockBtn = (id, label, attributes = '') => `<button class="rock-button" type="button" id="rock-${id}" ${attributes}>${rockEsc(label)}</button>`;
 const rockId = () => phase().id === 'H1' && rockCorrection ? rockCorrection : phase().id;
-const rockState = id => {
-  if (!rockWork.has(id)) rockWork.set(id, {begun:false, ended:false, attempted:false, read:false, pairedVerified:false, returned:false, reviewOpened:false, assisted:false, revisionChecked:false});
-  return rockWork.get(id);
-};
-const rockProtected = id => id === rock.readyTask || id === 'F1';
-const rockReadiness = () => rockState(rock.readyTask);
-const rockCanCheckLate = () => ['unchecked','checked-pending'].includes(rockRoute) && !rockState('E1').assisted && !rockState('E1').attempted;
-const rockCanReleaseOriginal = () => !rockRoute && rockReadiness().read && rockReadiness().pairedVerified && !rockState('E1').assisted;
-const rockCanConfirmPair = id => rockReadiness().read && !rockReadiness().pairedVerified && !rockState('E1').assisted &&
-  (id === rock.readyTask && !rockRoute || id === 'E1' && rockRoute === 'checked-pending' && rockCanCheckLate());
-const rockClosedRoute = () => rockReadiness().read ? 'checked-closed' : 'unchecked-closed';
-const rockExamActive = id => id === 'E1' && rockRoute === 'ready' && rockReached(id) && !rockState(id).attempted;
-const rockExamPending = id => id === 'E1' && (rockCanCheckLate() || !rockDevice && !rockExamProjected);
-const rockRecallActive = id => id === 'M2R' && rockReached(id) && !rockState(id).attempted;
-const rockActive = id => rockExamActive(id) || rockRecallActive(id) || rockProtected(id) && rockState(id).begun && !rockState(id).ended;
-const rockReached = id => rockProgress.has(id);
-const rockReviewAllowed = id => rockProtected(id) ? rockState(id).read : rockState(id).attempted;
-const rockCloseHelp = () => {rockCard = ''; window.speechSynthesis?.cancel();};
 
-function rockRecordContentHelp() {
-  const original = rockState('E1');
-  if (!rockReadiness().ended || original.attempted) return;
-  original.assisted = true;
-  if (['unchecked','checked-pending','ready'].includes(rockRoute)) rockRoute = rockClosedRoute();
+function rockCloseHelp() {
+  rockCard = '';
+  window.speechSynthesis?.cancel();
 }
 
-function rockNavigate(destination) {
-  if ($('rock-photo-zoom')?.open) return true;
-  const targetIndex = typeof destination === 'number' ? destination : lesson.phases.findIndex(item => item.id === destination);
-  const target = lesson.phases[targetIndex]?.id;
-  if (!target) return true;
-  const current = rockId();
-  if (rockActive(current) || current === 'F1' && rockState(current).begun) return true;
-  if (rockCorrection && targetIndex > index && !rockState(current).attempted) return true;
-  if (targetIndex === index + 1 && rockMayAdvance(current)) rockProgress.add(target);
-  if (!rockReached(target)) return true;
-  if (target === 'M1' || target === 'M2') rockRecordContentHelp();
+function rockResetSlideTools() {
   rockCorrection = '';
+  rockReview = 0;
   rockView = '';
-  rockDecisionOpen = false;
   rockCloseHelp();
-  return false;
 }
 
-function rockMayAdvance(id) {
-  if (!rockReached(phase().id)) return false;
-  if (id === 'M2R') return rockState(id).returned;
-  if (id === rock.readyTask) return Boolean(rockRoute);
-  if (id === 'E1') return rockState(id).attempted && rockState(id).returned;
-  if (id === 'G1' || id === 'G1V') return rockState(id).attempted && (rockDevice ? rockState(id).returned : rockState(id).reviewOpened);
-  if (id === 'V1' || id === 'H1' || rock.cardKeys[id]) return rockState(id).attempted;
-  return true;
+function rockHeader(title, context, extra = '') {
+  return `<header class="rock-head"><div><p class="rock-time">${rockEsc(context)}</p><h1 class="screen-heading" tabindex="-1">${rockEsc(title)}</h1></div><div class="rock-access">${rockBtn('larger', 'Larger text', `aria-pressed="${rockLarge}"`)}${rockBtn('read', 'Read aloud')}${extra}</div></header>`;
 }
 
-function rockToolbar(id, protectedActive) {
-  const status = rockState(id);
-  const isCheck = id === rock.readyTask;
-  const menu = [];
-  if (!rockDevice && rock.tasks[id] && !rockProtected(id) && id !== 'M2R' && !rockExamPending(id)) {
-    const label = id === 'V1' ? 'Confirm written repairs checked' : 'Record completed attempt';
-    menu.push(rockBtn('mark', status.attempted ? 'Attempt recorded' : label, `aria-pressed="${status.attempted}"`));
+function rockSupportChoices(id) {
+  if (activeWidget) return '';
+  if (id === 'H1') {
+    const labels = {names:'Help with names', B:'Help with option B', C:'Help with option C', D:'Help with option D'};
+    return `<details class="rock-help-choices"><summary>Hinge support</summary><div class="rock-inline">${Object.entries(rock.corrections).map(([choice, task]) => rockBtn('correction-' + task, labels[choice])).join('')}</div></details>`;
   }
-  if (!rockProtected(id) && status.attempted && rockReviews) {
-    menu.push(rockBtn('review-open', 'Model answer & mark scheme'));
-    rockReviews[id].slice(1).forEach((_, index) => menu.push(rockBtn('review-part-' + (index + 1), 'Review part ' + (index + 2))));
+  if (rockCorrection) return rockBtn('back-to-hinge', 'Back to the hinge question');
+  if (id === 'E1') {
+    return `<details class="rock-help-choices"><summary>Help with the question</summary><div class="rock-inline">${rock.cardCodes.map(code => rockBtn('help-' + code, 'Use card ' + code)).join('')}</div></details>`;
   }
-  if (id === 'E1' && status.attempted && (rockDevice || status.reviewOpened)) {
-    menu.push(rockBtn('returned', status.returned ? 'Feedback recorded' : 'Feedback has been given', `aria-pressed="${status.returned}"`));
-  }
-  if (id === 'H1' && status.attempted || rock.cardKeys[id]) {
-    Object.entries(rock.corrections).forEach(([choice, task]) => {
-      if (task !== id) {
-        const label = rockReadiness().ended ? 'Reopen card ' + rock.cardKeys[task] : choice === 'names' ? 'Revisit the three names' : 'Revisit option ' + choice;
-        menu.push(rockBtn('correction-' + task, label));
-      }
-    });
-    if (!rockDevice && id === 'H1' && !rockReadiness().ended) menu.push(rockBtn('no-correction', 'Go to the new check'));
-  }
-  if (rockCanConfirmPair(id)) {
-    menu.push('<p class="rock-pair-evidence" id="rock-pair-evidence">Check that the original H1 was correct or its matched repair was verified before R1. The unchanged, unaided R1 must meet every criterion.</p>');
-    menu.push(rockBtn('verify-pair', rockDevice ? 'My teacher verified both checks' : 'Confirm both checks', 'aria-describedby="rock-pair-evidence"'));
-  } else if (rockReadiness().pairedVerified && (isCheck && !rockRoute || id === 'E1' && rockRoute === 'checked-pending')) {
-    menu.push('<p class="rock-pair-evidence" id="rock-pair-verified" role="status">H1 and R1 verified.</p>');
-  }
-  if (isCheck && status.ended) {
-    menu.push(rockBtn('unchecked', 'Continue with support · unchecked', status.read || rockRoute ? 'disabled' : ''));
-    menu.push(rockBtn('not-ready', 'Continue with support · checked', (!rockRoute || rockCanCheckLate()) && status.read ? '' : 'disabled'));
-    menu.push(rockBtn('ready', 'Continue independently · both verified', rockCanReleaseOriginal() ? '' : 'disabled'));
-    if (rockRoute && rockRoute !== 'ready') {
-      for (const code of rock.cardCodes) menu.push(rockBtn('help-' + code, 'Use card ' + code));
-    }
-  }
-  if (id === 'E1' && rockRoute && rockRoute !== 'ready') {
-    if (!rockExamPending(id)) {
-      for (const code of rock.cardCodes) menu.push(rockBtn('help-' + code, 'Use card ' + code));
-    }
-    if (rockCanCheckLate() && rockRoute === 'unchecked') {
-      menu.push(rockBtn('late-read', rockDevice ? 'My teacher checked the same answer' : 'Confirm the original, unchanged answer has been checked'));
-    }
-    if (rockCanCheckLate() && rockRoute === 'checked-pending') {
-      menu.push(rockBtn('late-not-ready', 'Continue with guidance · checked'));
-      menu.push(rockBtn('late-ready', rockDevice ? 'My teacher cleared me to write on my own' : 'Release pupil with both checks verified',
-        rockReadiness().pairedVerified ? '' : 'disabled'));
-    }
-    if (rockCanCheckLate()) menu.push(rockBtn('late-close', 'Close late checks · continue with guidance'));
-  }
-  if (!menu.length || protectedActive) return '';
-  if (rockDevice) return `<div class="rock-inline" aria-label="Lesson controls">${menu.join('')}</div>`;
-  return `<details class="rock-decisions" ${rockDecisionOpen ? 'open' : ''}><summary id="rock-controls">Teacher controls</summary><div>${menu.join('')}</div></details>`;
-}
-
-function rockHeader(title, context, toolbar = '') {
-  return `<header class="rock-head"><div><p class="rock-time">${rockEsc(context)}</p><h1 class="screen-heading" tabindex="-1">${rockEsc(title)}</h1></div><div class="rock-access">${rockBtn('larger', 'Larger text', `aria-pressed="${rockLarge}"`)}${rockBtn('read', 'Read aloud')}${toolbar}</div></header>`;
-}
-
-function rockHold(id) {
-  const status = rockState(id);
-  if (!rockReached(phase().id)) return `<div class="rock-hold" id="rock-hold"><p>Complete the earlier tasks with your teacher before starting this screen.</p>${rockBtn('restart', 'Return to start')}</div>`;
-  if (id === 'E1' && !rockRoute) return '<p class="rock-hold" id="rock-hold">Complete the new check and wait for your teacher’s direction.</p>';
-  if (id === 'V1' && !rockState('E1').returned) return '<p class="rock-hold" id="rock-hold">Keep your original answer. Wait for feedback before improving it.</p>';
-  if (!rockProtected(id) || status.begun) return '';
-  const message = id === 'F1' ? 'Close earlier work and help. Keep your usual access arrangements and get ready to write on your own.' : 'Close any help and put the previous answer away. Write your new answer on your own.';
-  return `<div class="rock-hold" id="rock-hold"><p>${message}</p>${rockBtn('begin', id === 'F1' ? 'Begin the final check' : 'Begin the new check')}</div>`;
+  return '';
 }
 
 function rockContent(p) {
@@ -176,88 +76,32 @@ function rockContent(p) {
     return rockHeader(p.title, 'Year 8 Rock Cycle · Scheme of Work Lesson 2') + '<ul class="rock-outcomes">' +
       rock.outcomes.map(outcome => `<li>${rockEsc(outcome)}</li>`).join('') + '</ul>';
   }
-  const task = rock.tasks[id], state = rockState(id);
-  let taskHtml = task.html;
-  const finishedCheck = id === rock.readyTask && state.ended && activeWidget !== 'answers';
-  if (finishedCheck) {
-    taskHtml = '<p class="rock-hold" id="rock-check-ended" role="status">Check finished. Keep your original response.</p>';
-  }
+  const task = rock.tasks[id];
   const context = rock.times[p.id] + (id === 'E1' ? ' · Original exam-style practice' : '') + (task.marks ? ' · ' + task.marks + ' marks' : '');
-  const held = rockHold(id);
-  const teacherTools = held || activeWidget ? '' : rockToolbar(id, rockActive(id));
-  const waitingForExam = rockExamPending(id);
+  const reviewing = activeWidget === 'answers';
+  const reviewButton = rockReviews?.[id] ? rockBtn('review-open', 'Model answer & mark scheme', `aria-controls="student-drawer" aria-expanded="${reviewing}"`) : '';
+  let taskHtml = task.html;
   let details = '';
-  if (waitingForExam) {
-    const late = rockCanCheckLate();
-    const waiting = late ? 'Keep your original H1 and R1 responses. Wait for your teacher or start guided work.' :
-      'Follow your teacher’s directions. The question will appear here when the late checks have finished.';
-    const action = late ? rockBtn('start-guided', 'Start guided work') :
-      rockBtn('project-exam', 'Confirm late checks are closed and project the question');
-    taskHtml = `<p id="rock-exam-wait" class="rock-hold" data-route="${rockRoute}" role="status">${waiting}</p><div class="rock-inline rock-lower">${action}</div>`;
-  } else if (id === 'E1') {
-    const direction = rockRoute === 'ready'
-      ? 'Work on your own when your teacher has checked your answer and given you permission to start.'
-      : 'Use the support your teacher gives you for this question.';
-    details = `<p id="rock-route" class="rock-route" data-route="${rockRoute}">${direction}</p>`;
-  }
-  if (id === 'M2R' && !held && !activeWidget) {
-    if (rockRecallActive(id)) {
-      details += '<div class="rock-inline rock-lower">' + rockBtn('submit-recall', rockDevice ? 'I wrote my three terms' : 'Record the written recall') + '</div>';
-    } else if (!state.returned && (rockDevice || state.reviewOpened)) {
-      details += '<p class="rock-given">Compare with your teacher’s model. Keep the terms that fit. Correct any that do not.</p><div class="rock-inline rock-lower">' +
-        rockBtn('correct-recall', rockDevice ? 'I checked and corrected my terms' : 'Confirm pupils checked and corrected their terms') + '</div>';
-    }
-  }
-  if (rockExamActive(id) && !held && !waitingForExam) {
-    details += `<div class="rock-inline rock-lower">${rockBtn('submit-exam', rockDevice ? 'I have submitted my original answer' : 'Confirm original answers submitted')}</div>`;
-  } else if (rockDevice && !held && !waitingForExam && (['G1','G1V','H1','E1','V1'].includes(id) || rock.cardKeys[id])) {
-    const labels = {G1:'I finished my first table',G1V:'I revised the observation and evidence', H1:'I have shown my answer', E1:'I finished my first attempt', V1:'My teacher checked my written repairs'};
-    details += `<div class="rock-inline rock-lower">${rockBtn('mark', state.attempted ? 'Attempt recorded' : labels[id] || 'I made the correction', `aria-pressed="${state.attempted}"`)}${['G1','G1V'].includes(id) && state.attempted && !state.returned ? rockBtn('photo-review-seen',id === 'G1' ? 'My teacher has shown the photo review' : 'I checked my revision against the model') : ''}</div>`;
-  }
-  if (rockProtected(id) && !held && !activeWidget) {
-    let checkControls = '';
-    if (!state.ended && (rockDevice || id !== 'F1')) {
-      checkControls += rockBtn('finish-unchecked', id === 'F1' ? 'I finished my answer' : (rockDevice ? 'I finished · waiting for a check' : 'End the check · answers unchecked'));
-    }
-    if (!state.read && (!rockDevice || state.ended && id !== 'F1')) {
-      checkControls += rockBtn('confirm-read', rockDevice ? 'My teacher has checked my answer' : id === 'F1' ? 'Confirm work collected' : 'Confirm individual answers checked');
-    }
-    if (!rockDevice) {
-      const attrs = state.read ? '' : 'disabled';
-      checkControls += rockBtn('review-open', 'Model answer & mark scheme', attrs);
-      rockReviews[id].slice(1).forEach((_, index) => {checkControls += rockBtn('review-part-' + (index + 1), 'Review part ' + (index + 2), attrs);});
-    } else if (id === 'F1' && state.ended) {
-      checkControls += '<p>Hand in your work as your teacher directs.</p>';
-    }
-    details += `<div class="rock-inline rock-lower">${checkControls}</div>`;
-  }
-  if (id === 'V1' && !held) {
-    details += '<section class="rock-mark-points" id="rock-mark-points"><h2>Four mark points from your first answer</h2><ol>' + rock.markPoints.map(criterion => `<li>${rockEsc(criterion)}</li>`).join('') + '</ol>' + rockBtn('read-mark-points', 'Read mark points aloud') + '</section>';
-    if (!state.revisionChecked && !state.attempted) details += '<div class="rock-inline rock-lower">' + rockBtn('revision-unverified', rockDevice ? 'I wrote the repairs · still need a check' : 'Continue after written repairs · unchecked') + '</div>';
-  }
-  if (id === 'F1' && !held && !rockState('V1').revisionChecked) {
-    details += '<p class="rock-given" id="rock-final-diagnostic">Your teacher will use this check to see what you still need to practise.</p>';
-  }
   if (id === 'G1' || id === 'G1V') {
-    const photoTools = id === 'G1' || activeWidget === 'answers' || rockDevice
-      ? '<nav class="rock-photo-tools" aria-label="Enlarge a specimen">' + ['A','B','C'].map(letter => rockBtn('zoom-' + letter, 'Enlarge ' + letter, 'aria-haspopup="dialog"')).join('') + '</nav>'
-      : '';
-    taskHtml = taskHtml.replace('<!-- photo tools -->', photoTools);
+    const tools = '<nav class="rock-photo-tools" aria-label="Enlarge a specimen">' + ['A','B','C'].map(letter => rockBtn('zoom-' + letter, 'Enlarge ' + letter, 'aria-haspopup="dialog"')).join('') + '</nav>';
+    taskHtml = taskHtml.replace('<!-- photo tools -->', tools);
   }
-  if (id === 'M1' && !held && !activeWidget) {
+  if (id === 'M1' && !reviewing) {
     const selected = rock.mechanisms.find(view => view.id === rockView);
     const choices = [{id:'summary', title:'Three routes'}, ...rock.mechanisms];
-    let views = '<nav class="rock-inline rock-mechanisms" aria-label="Formation teaching diagrams">' + choices.map(view =>
+    const views = '<nav class="rock-inline rock-mechanisms" aria-label="Formation teaching diagrams">' + choices.map(view =>
       rockBtn('view-' + view.id, view.title, `aria-pressed="${(rockView || 'summary') === view.id}"`)).join('') + '</nav>';
-    if (selected) views += rockMechanism(selected);
-    taskHtml = taskHtml.replace('<!-- mechanism views -->', views);
+    taskHtml = taskHtml.replace('<!-- mechanism views -->', views + (selected ? rockMechanism(selected) : ''));
   }
-  if (task.scaffold && activeWidget === 'answers') details += `<p class="rock-given" id="rock-review-scaffold">${rockEsc(task.scaffold)}</p>`;
-  const help = '<aside class="rock-support" id="rock-support"' + (!held && !activeWidget && !waitingForExam && rockCard ? '' : ' hidden') + '></aside>';
-  const credits = id === 'G1' && activeWidget === 'answers' ? '<p class="rock-links"><a href="assets/Photo%20credits.md" target="_blank" rel="noopener">Photo credits</a></p>' : '<p class="rock-links" hidden></p>';
-  return rockHeader(finishedCheck ? 'Readiness check' : task.title, context, teacherTools) + (held || (taskHtml + details + help + credits));
+  if (id === 'V1') {
+    details += '<details class="rock-mark-points" id="rock-mark-points"><summary>Four mark points from your first answer</summary><ol>' +
+      rock.markPoints.map(criterion => `<li>${rockEsc(criterion)}</li>`).join('') + '</ol>' + rockBtn('read-mark-points', 'Read mark points aloud') + '</details>';
+  }
+  if (task.scaffold && reviewing) details += `<p class="rock-given" id="rock-review-scaffold">${rockEsc(task.scaffold)}</p>`;
+  const help = rockCard && !reviewing ? '<aside class="rock-support" id="rock-support"></aside>' : '';
+  const credits = id === 'G1' && reviewing ? '<p class="rock-links"><a href="assets/Photo%20credits.md" target="_blank" rel="noopener">Photo credits</a></p>' : '';
+  return rockHeader(task.title, context, reviewButton) + taskHtml + details + rockSupportChoices(id) + help + credits;
 }
-
 
 function rockMechanism(view) {
   let visual = `<img id="rock-model-diagram" src="assets/${rockEsc(view.asset)}" alt="${rockEsc(view.alt)}">`;
@@ -274,26 +118,18 @@ function rockMechanism(view) {
 
 function rockFrame() {
   const id = rockId();
-  const ready = rockActive(id);
   document.body.dataset.rockLarge = String(rockLarge);
   if (document.body.dataset.rockTask !== id) $('screen').scrollTop = 0;
   document.body.dataset.rockTask = id;
-  document.body.dataset.rockActive = String(ready);
   document.body.dataset.rockReview = String(activeWidget === 'answers');
-  document.body.dataset.rockReference = String(Boolean(rockCard) && rockReadiness().ended);
-  if (id === rock.readyTask && rockState(id).ended && activeWidget !== 'answers') $('phase-name').textContent = 'Readiness check';
-  const previous = $('previous-screen'), next = $('next-screen');
-  previous.disabled = index === 0 || ready || id === 'F1' && rockState(id).begun;
-  next.disabled = index === lesson.phases.length - 1 || ready || !rockMayAdvance(id);
   $('student-tools').hidden = true;
   if ($('rock-formation-summary')) $('rock-formation-summary').hidden = Boolean(rockView && !activeWidget);
-  if (activeWidget) return;
   const support = $('rock-support');
-  if (!support || support.hidden) return;
+  if (!support) return;
   if (id === 'E1') {
     const card = rock.examHelp[rockCard];
     const body = rockEsc(card.content).replace(/_{3,}/g, '<span class="blank"><span class="vh">blank</span></span>');
-    support.innerHTML = `<section id="card-${rockEsc(rockCard)}"><h2>${rockEsc(card.title)}</h2><p id="rock-exam-help-text" class="rock-exam-help" data-part="support">${body}</p><div class="rock-inline"><button type="button" data-say="rock-exam-help-text">Read this help aloud</button><button type="button" data-close-card>Close help</button></div></section>`;
+    support.innerHTML = `<section id="card-${rockEsc(rockCard)}"><h2 tabindex="-1">${rockEsc(card.title)}</h2><p id="rock-exam-help-text" class="rock-exam-help" data-part="support">${body}</p><div class="rock-inline"><button type="button" data-say="rock-exam-help-text">Read this help aloud</button><button type="button" data-close-card>Close help</button></div></section>`;
     return;
   }
   const clone = $('rock-support-template').content.cloneNode(true);
@@ -303,31 +139,19 @@ function rockFrame() {
   for (const key of clone.querySelectorAll('#sc-key-list li')) {
     if (key.dataset.code !== rockCard) key.remove();
   }
-  if (rockReadiness().ended) {
-    const check = clone.querySelector('[data-part="recheck"]');
-    check.innerHTML = '<p>Your new check has finished. Use this card as a reference.</p>';
-    if (rock.cardReferences[rockCard]) check.querySelector('p').textContent = 'Your new check has finished. ' + rock.cardReferences[rockCard];
-    clone.querySelector('[data-sc="reminder-strip"] p').textContent = 'Use the card your teacher gives you. Record the help you used in your book.';
-    clone.querySelector('[data-close-card]').textContent = 'Close help';
-    clone.querySelector('[data-retry-read]').remove();
-    clone.querySelector('[data-retry-finish]').remove();
-  }
+  clone.querySelector('[data-close-card]').textContent = 'Close help';
+  clone.querySelector('[data-retry-read]')?.remove();
+  clone.querySelector('[data-retry-finish]')?.remove();
   support.append(clone);
 }
 
 function rockDrawer(drawer, focus) {
-  if (!rockReviews || activeWidget !== 'answers') return false;
+  if (activeWidget !== 'answers' || !rockReviews?.[rockId()]) return false;
   const id = rockId(), parts = rockReviews[id], task = rock.tasks[id];
-  if (!rockReviewAllowed(id)) {
-    drawer.hidden = true;
-    activeWidget = null;
-    return true;
-  }
   const part = parts[rockReview];
   const pages = parts.length > 1 ? '<nav class="rock-inline" aria-label="Review parts">' +
     parts.map((_, index) => rockBtn('part-' + index, 'Part ' + (index + 1), `aria-pressed="${index === rockReview}"`)).join('') + '</nav>' : '';
-  const canClear = rockProtected(id) && (id !== rock.readyTask || !rockRoute);
-  drawer.innerHTML = `<header class="drawer-head"><h2 id="drawer-title" tabindex="-1">Model answer &amp; mark scheme</h2>${rockBtn('review-close', 'Close')}</header>${pages}<div class="rock-review-panel" id="rock-review-panel"><p id="rock-model">${rockEsc(part.model)}</p><h3>${task.marks ? 'Mark points' : 'Success criteria'}</h3><ul id="rock-criteria">${part.criteria.map(line => `<li>${rockEsc(line)}</li>`).join('')}</ul>${canClear ? rockBtn('clear-read', 'Close and clear confirmation') : ''}</div>`;
+  drawer.innerHTML = `<header class="drawer-head"><h2 id="drawer-title" tabindex="-1">Model answer &amp; mark scheme</h2>${rockBtn('review-close', 'Close')}</header>${pages}<div class="rock-review-panel" id="rock-review-panel"><p id="rock-model">${rockEsc(part.model)}</p><h3>${task.marks ? 'Mark points' : 'Success criteria'}</h3><ul id="rock-criteria">${part.criteria.map(line => `<li>${rockEsc(line)}</li>`).join('')}</ul></div>`;
   if (focus) $('drawer-title').focus({preventScroll:true});
   return true;
 }
@@ -374,7 +198,6 @@ document.addEventListener('click', event => {
     return;
   }
   const button = event.target.closest('button');
-  const id = rockId();
   if (button?.matches('#rock-support [data-say]')) {
     rockRead($(button.dataset.say));
     return;
@@ -386,7 +209,7 @@ document.addEventListener('click', event => {
     return;
   }
   if (!button || button.disabled || !button.id.startsWith('rock-')) return;
-  const action = button.id.slice(5), status = rockState(id);
+  const action = button.id.slice(5), id = rockId();
   if (action === 'zoom-close') {
     $('rock-photo-zoom').close();
     return;
@@ -402,106 +225,45 @@ document.addEventListener('click', event => {
     rockZoom(action.slice(5), button);
     return;
   }
-  rockDecisionOpen = Boolean(button.closest('details')?.open);
-  if (action === 'read-mark-points') {
-    rockRead($('rock-mark-points'));
+  if (action === 'read' || action === 'read-mark-points') {
+    const topic = (id === 'M1' && rockView) ? $('rock-mechanism-' + rockView) : null;
+    rockRead(action === 'read-mark-points' ? $('rock-mark-points') : ($('rock-review-panel') || topic || $('task-' + id) || $('screen')));
     return;
   }
-  if (action === 'read') {
-    rockRead($('rock-review-panel') || (id === 'M1' && rockView ? $('rock-mechanism-' + rockView) : null) || $('task-' + id) || $('rock-exam-wait') || $('rock-check-ended') || $('rock-hold') || $('screen'));
-    return;
-  }
-  if (action === 'restart') {
-    go(0);
-    return;
-  }
-  if (action === 'begin') {
-    status.begun = true;
-    rockCloseHelp();
-  } else if (action === 'finish-unchecked') {
-    status.ended = true;
-  } else if (action === 'confirm-read') {
-    status.ended = true;
-    status.read = true;
-  } else if (action === 'verify-pair' && rockCanConfirmPair(id)) {
-    rockReadiness().pairedVerified = true;
-  } else if (action === 'submit-recall' && rockRecallActive(id)) {
-    status.attempted = true;
-  } else if (action === 'correct-recall' && id === 'M2R' && status.attempted && (rockDevice || status.reviewOpened)) {
-    status.returned = true;
-  } else if (action === 'start-guided' && id === 'E1' && rockCanCheckLate()) {
-    rockRoute = rockClosedRoute();
-  } else if (action === 'project-exam' && id === 'E1' && !rockDevice && rockRoute && !rockCanCheckLate()) {
-    rockExamProjected = true;
-  } else if (action === 'submit-exam' && rockExamActive(id) && !rockExamPending(id)) {
-    status.attempted = true;
-  } else if (action === 'mark') {
-    status.attempted = true;
-    if (id === 'E1' && rockRoute !== 'ready') status.assisted = true;
-    if (id === 'V1') status.revisionChecked = true;
-  } else if (action === 'revision-unverified' && id === 'V1') {
-    status.attempted = true;
-  } else if (action === 'photo-review-seen' && ['G1','G1V'].includes(id) && status.attempted) {
-    status.returned = true;
-  } else if (action.startsWith('late-') && id === 'E1' && rockCanCheckLate()) {
-    if (action === 'late-read' && rockRoute === 'unchecked') {
-      rockReadiness().read = true;
-      rockRoute = 'checked-pending';
-    } else if (action === 'late-close') {
-      rockRoute = rockClosedRoute();
-    } else if (rockRoute === 'checked-pending' && (action === 'late-not-ready' || action === 'late-ready' && rockReadiness().pairedVerified)) {
-      rockRoute = action === 'late-ready' ? 'ready' : 'not-ready';
-      rockCloseHelp();
-    }
-  } else if (action === 'returned') {
-    if (status.attempted && (rockDevice || status.reviewOpened)) status.returned = true;
-  } else if (action === 'ready' || action === 'not-ready' || action === 'unchecked') {
-    if (id !== rock.readyTask || !status.ended) return;
-    if (action === 'ready' && !rockCanReleaseOriginal()) return;
-    if (action === 'unchecked' && (status.read || rockRoute)) return;
-    if (action === 'not-ready' && (!status.read || rockRoute && !rockCanCheckLate())) return;
-    rockRoute = action === 'unchecked' && rockState('E1').assisted ? rockClosedRoute() : action;
-  } else if (action.startsWith('view-') && id === 'M1') {
+  if (action.startsWith('view-') && id === 'M1') {
     rockView = action === 'view-summary' ? '' : action.slice(5);
-  } else if (action === 'review-open' || action.startsWith('review-part-')) {
-    if (!rockReviewAllowed(id)) return;
-    rockRecordContentHelp();
+  } else if (action === 'review-open' && rockReviews?.[id]) {
+    activeWidget = activeWidget === 'answers' ? null : 'answers';
+    rockReview = 0;
     rockView = '';
-    status.reviewOpened = true;
-    activeWidget = 'answers';
-    rockReview = action === 'review-open' ? 0 : Number(action.slice(12));
     rockCloseHelp();
-  } else if (action === 'review-close' || action === 'clear-read') {
-    if (action === 'clear-read') {
-      if (id === rock.readyTask && rockRoute) return;
-      status.read = false;
-      status.pairedVerified = false;
-    }
+  } else if (action === 'review-close') {
     activeWidget = null;
-  } else if (action === 'no-correction') {
-    go(index + 1);
-    return;
-  } else if (action.startsWith('part-')) {
+  } else if (action.startsWith('part-') && activeWidget === 'answers') {
     rockReview = Number(action.slice(5));
-  } else if (action.startsWith('correction-') && rockState('H1').attempted) {
-    const task = action.slice(11);
-    if (rockReadiness().ended) rockRecordContentHelp();
-    else rockCorrection = task;
-    rockDecisionOpen = false;
-    rockCard = rock.cardKeys[task] || '';
-    activeWidget = null;
-  } else if (action.startsWith('help-')) {
-    rockRecordContentHelp();
-    rockDecisionOpen = false;
+  } else if (action.startsWith('correction-') && id === 'H1') {
+    rockCorrection = action.slice(11);
+    rockCard = rock.cardKeys[rockCorrection];
+  } else if (action === 'back-to-hinge') {
+    rockCorrection = '';
+    rockCloseHelp();
+  } else if (action.startsWith('help-') && id === 'E1') {
     rockCard = action.slice(5);
   } else {
     return;
   }
   render(false);
-  const replacement = $(button.id);
-  if (replacement?.offsetParent) replacement.focus({preventScroll:true});
-  else if (activeWidget) $('drawer-title')?.focus({preventScroll:true});
-  else $('screen').querySelector('h1')?.focus({preventScroll:true});
+  if (action === 'review-open' && activeWidget) {
+    $('drawer-title')?.focus({preventScroll:true});
+  } else if (action === 'review-close') {
+    $('rock-review-open')?.focus({preventScroll:true});
+  } else if (action.startsWith('help-')) {
+    $('rock-support')?.querySelector('h2')?.focus();
+  } else {
+    const replacement = $(button.id);
+    if (replacement?.offsetParent) replacement.focus({preventScroll:true});
+    else $('screen').querySelector('h1')?.focus({preventScroll:true});
+  }
 });
 
   const list=items=>`<ul class="bio-list">${items.map(s=>`<li>${s}</li>`).join('')}</ul>`;
@@ -617,9 +379,9 @@ document.addEventListener('click', event => {
     if(focusHeading)$('screen').querySelector('h1')?.focus({preventScroll:true});
   }
   function go(id) {
-    if (rockNavigate(id)) return;
     const target=typeof id==='number'?id:lesson.phases.findIndex(p=>p.id===id);
     if(target<0||target>=lesson.phases.length)return;
+    rockResetSlideTools();
     index=target;answerContext=null;activeWidget=phase().type==='outcome'?'resources':null;render(true);
   }
   function panelKey(){return phase().id+':'+activeWidget+(activeWidget==='answers'&&answerContext?':'+answerContext.widget+':'+answerContext.tab+':'+answerContext.page:'');}
@@ -696,7 +458,7 @@ document.addEventListener('click', event => {
   document.addEventListener('keydown',e=>{
     if(e.key==='Escape'&&activeWidget){e.preventDefault();const old=activeWidget;activeWidget=null;answerContext=null;render();focusTrigger(old);return;}
     if(e.target.closest('[role="tablist"]')&&['ArrowLeft','ArrowRight'].includes(e.key)){e.preventDefault();const w=widgetStates[panelKey()];const tabs=(activeWidget==='answers'?LessonAnswers.panel(phase(),lesson,state(),answerContext):LessonWidgets.panel(activeWidget,phase(),lesson)).tabs;w.tab=(w.tab+(e.key==='ArrowRight'?1:-1)+tabs.length)%tabs.length;w.page=0;renderPanel();document.getElementById('widget-tab-'+w.tab)?.focus();return;}
-    if(e.target.closest('button,a,canvas,input,select,textarea'))return;
+    if(e.target.closest('dialog,canvas,input,select,textarea,[contenteditable]'))return;
     if(e.key==='ArrowRight'){e.preventDefault();go(index+1);}if(e.key==='ArrowLeft'){e.preventDefault();go(index-1);}
   });
   window.addEventListener('hashchange',()=>{const id=location.hash.slice(1);if(id&&id!==phase().id&&lesson.phases.some(p=>p.id===id))go(id);});
