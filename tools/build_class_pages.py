@@ -356,8 +356,9 @@ def render(cls: dict) -> str:
       <section class="hub-all" id="units" aria-labelledby="units-heading">
         <div class="hub-h"><h2 id="units-heading">All units</h2><span>Newest first</span></div>
         <ul class="hub-units">""")
-    for position, unit in enumerate(cls["units"]):
-        pill = '<span class="hub-pill">Current unit</span>' if position == 0 else ""
+    current_unit = next((unit for unit in cls["units"] if not unit.get("supplemental")), None)
+    for unit in cls["units"]:
+        pill = '<span class="hub-pill">Current unit</span>' if unit is current_unit else ""
         href = href_from(class_dir, ROOT / unit["index"], folder=True)
         add(f'          <li><a class="hub-unit" href="{href}">{icon(unit["icon"], up)}<div><h3><span>{esc(unit["title"])}</span>{pill}</h3><p class="hub-meta">{esc(unit["meta"])}</p></div>{arrow}</a></li>')
     add(f"""        </ul>

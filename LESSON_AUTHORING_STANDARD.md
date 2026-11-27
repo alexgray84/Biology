@@ -33,6 +33,16 @@ Learning outcomes open Resources alongside the task. Input, Assess and Thinking 
 
 Panels sit beside the question, preserve interaction state, and use their own tabs/pages. Page content before shrinking projected text or relying on scrolling. Preserve keyboard access, focus return and reduced-motion support.
 
+### Projected slide density
+
+Teacher-confirmed on 27 November 2026. Build each slide around one pupil action. Use a short heading, one brief instruction and the evidence required to act. For a single multi-part response, put the steps on separate short lines. Present numbers and units in a compact table or clearly grouped labels. Keep task wording, data and labels close together so pupils can start after one reading.
+
+Use the available projection area for the teaching content. On a sparse slide, scale up the pupil action and its evidence and spread them across the central area. Give the prompt the strongest type hierarchy and make values, units and diagram labels legible from the back of the room. Check reviews, support and pupil devices in their own layouts and at their own reading sizes.
+
+Cut repeated prompts, labels and explanatory copy. Put teacher narration in the companion. Reveal worked reasoning one step at a time when several steps need explaining. Give support, depth and feedback separate views or tabs. In review, retain the exact question and complete stimulus, and page longer answers or criteria at a meaningful boundary. Keep any exact assessment wording and scientific givens needed for a valid answer.
+
+During visual QA, inspect the initial slide and opened review or support at 1280 × 720 and 1920 × 1080, with ordinary and enlarged text. At a glance, a pupil should be able to point to what to do and the evidence to use. If that action competes with a wall of text, cut or split the content and recheck. If small text occupies a corner of a mostly empty slide, enlarge and reposition the task before release. Fit the projected content without scrolling and check the pupil-device view. Use the existing practice, feedback, revision and fresh-check allocation when splitting views.
+
 Use scientifically accurate original diagrams, suitable interactive models or properly sourced/licensed images. Label schematic diagrams and illustrative data. A visual should explain a relationship or support reasoning. Local assets belong with each lesson so later template changes do not silently alter it.
 
 ## Files and publishing
